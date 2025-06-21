@@ -1,0 +1,63 @@
+.rfq-vendor-panel {
+        max-height: 310px;
+        min-height: 310px;
+        .no-data {
+            padding: 15px;
+            margin: 12px;
+            border: 2px solid #80808029;
+            border-radius: 4px;
+        }
+   ::ng-deep .ui-accordion .ui-accordion-header {
+        margin-bottom: 9px;
+        width: 98%;
+    }
+    ::ng-deep .ui-accordion .ui-accordion-content {
+        border: 1px solid #007ad9;
+        width: 98%;
+        margin-top: -10px;
+        margin-bottom: 10px;
+    }
+    ::ng-deep .ui-accordion .ui-accordion-header a {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #174caa;
+        text-decoration: none;
+    }
+
+    ::ng-deep .ui-accordion.ui-widget.ui-helper-reset {
+        margin: 1em;
+        border: none !important;
+    }
+
+    .vendor-ul li {
+        list-style: none;
+        display: inline-flex;
+        width: 48%;
+        padding: 12px;
+        font-size: 1.2rem;
+        color: #1d1d1f;
+        font-variant: all-petite-caps;
+        background: #3f51b50d;
+        margin-right: 1%;
+        margin-top: 10px;
+    }
+
+    .vendor-loc-cls {
+            width: 100%;
+            display: inline-flex;
+        i.fa.fa-map-marker {
+            color: #007ad9;
+            margin-left: 10px;
+        }
+
+        .v-name{
+            padding-right: 10px;
+            width: 50%;
+        }
+
+        .loc-name{
+            padding-left: 10px;
+            width: 50%;
+        }
+    }
+}

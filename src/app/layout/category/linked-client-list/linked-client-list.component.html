@@ -1,0 +1,54 @@
+<p-table dataKey="id" #pposGrid [columns]="clientHeaders" [value]="clientList" sortMode="multiple" [paginator]="true"
+    [rows]="pageRecordSize" id="quoteTable" [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}"
+    exportFilename="venRequest" [(selection)]="selectedData" [scrollable]="true">
+    <ng-template pTemplate="caption">
+        <div class="table-search">
+            <div class="row">
+                <div class="col-sm-6">
+                    <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                        (input)="pposGrid.filterGlobal($event.target.value, 'contains')" />
+                </div>
+                <div class="col-sm-6">
+                    <button *ngIf="roleName == 'VendorManager'" class="btn btn-primary" (click)="linkNewClientToItems()" type="button" [disabled]="itemData.status=='Rejected'"><i class="fa fa-link"
+                            aria-hidden="true"></i> Link New Client</button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th style="width: 3em">
+                <!-- <p-tableHeaderCheckbox></p-tableHeaderCheckbox> -->
+            </th>
+            <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+                {{col.header}}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr [pSelectableRow]="rowData">
+            <td style="width: 3em">
+                <!-- <p-tableCheckbox [value]="rowData"></p-tableCheckbox> -->
+            </td>
+            <td *ngFor="let col of columns" [style.width]="col.width" [ngClass]="{'table-cell-overflow-ellipse' : col.field == 'clientName' }">
+                
+                <span *ngIf="col.field == 'clientName'" [title]="rowData[col.field]">{{rowData[col.field]}}</span>
+                <span *ngIf="col.field != 'clientName'">{{rowData[col.field]}}</span>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+            <td [attr.colspan]="5" style="text-align:center;">
+                No Records Found.
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft">
+        <div  *ngIf="pposGrid._totalRecords > 0">
+            <b>Showing {{pposGrid.first+1}} to {{pposGrid.first+pposGrid.rows > pposGrid.totalRecords?pposGrid.totalRecords: pposGrid.first+pposGrid.rows}} of {{pposGrid.totalRecords}}</b>            
+            <!-- <app-page-info [totalRecords]="clientList?.length" [pageData]="paginatoryDetails"></app-page-info> -->
+        </div>
+    </ng-template>
+</p-table>

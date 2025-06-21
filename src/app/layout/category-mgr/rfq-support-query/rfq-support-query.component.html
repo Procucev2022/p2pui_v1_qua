@@ -1,0 +1,46 @@
+<div class="container-fluid">
+    <h4 style=" color: #c16d27;"><i class="fa fa-question-circle" aria-hidden="true" style="
+        font-size: 1.5rem;"></i> Quick  Support </h4>
+    <div class="mail-container row">
+        <div class="mail-rfq-dropdown col-6 ">
+            <div class="form-group">
+                <label class="form-label required">RFQ Id</label>
+                <p-autoComplete  showEmptyMessage="true"
+                [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
+                 [suggestions]="filtered_rfqList" panelInputClass="p-auto-panel-cls" [minLength]="1"
+                   [dropdown]="true" [(ngModel)]="messageObj.rfqId"
+                  (completeMethod)="filterAutoCompleteData($event, 'rfqList','filtered_rfqList',   true)"
+                   >
+                            <ng-template let-segment pTemplate="item">
+                                <div class="segment-item">
+                                    <div>{{segment}}</div>
+                                </div>
+                            </ng-template>
+                </p-autoComplete>
+            </div>
+            <div class="form-group">
+                <label class="form-label required">Subject </label>
+                <input type="text" class="form-control" placeholder="subject"  [(ngModel)]="messageObj.subject">
+            </div>
+            <div class="form-group">
+                <label class="form-label required" style="display: block;    ">Message</label>
+                <textarea class="form-control" rows="15" cols="95"  [(ngModel)]="messageObj.message" placeholder="Feel free to drop your contact details. Our team will connect to discuss your needs"></textarea>
+            </div>
+
+        </div>
+        <div class="col-6">
+            <div class="note-cls">
+                <label style="color: orange;
+                font-size: 2rem ! IMPORTANT;" >Note: </label>
+                <p> We offer expert service support for specific RFQs, like e-auctions, vendor development, and negotiations.</p>
+
+                 <p>   Feel free to drop your contact details. Our team will connect to discuss your needs.</p>
+            </div>
+
+        </div>
+        <div class="col-6">
+            <button class="btn btn-blue" style="float:right" (click)="sendSupportRequest()" [disabled]="!messageObj.rfqId || !messageObj.subject || !messageObj.message">Submit</button>
+            <button class="btn btn-orange" style="float:right" (click)="resetForm()">Reset</button>
+        </div>
+    </div>
+</div>

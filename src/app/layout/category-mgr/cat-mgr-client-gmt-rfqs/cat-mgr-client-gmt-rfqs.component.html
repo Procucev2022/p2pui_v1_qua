@@ -1,0 +1,349 @@
+<div class="col-12 pad-nill" >
+    <div class="table-title">
+        <div class="row">
+          <div class="col-sm-6">
+            <h2>Client RFQ's</h2>
+            <p><span class="dot"></span>{{rfqDataList.length}} Total</p>
+          </div>
+          <div class="col-sm-6">
+          </div>
+        </div>
+      </div>
+    <div *ngIf="currentRole == 'Vendor' || currentRole == 'Registration' || currentRole == 'PartialVendor'; else catMgrTemplate"  >
+    <p-table [ngClass]="{'gmt-container': isGMTView}"  #rfqTable [columns]="rfqsTableHeadersForGMTVendor" [value]="rfqDataList" sortMode="multiple"
+      [paginator]="true" [rows]="pageRecordSize" id="rfqTable" [rowsPerPageOptions]="pageOptions"
+          [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData"  [scrollable]="true" [scrollHeight]="'calc(100vh - 214px)'">
+          <ng-template pTemplate="caption">
+            <div class="table-search">
+              <div class="row">
+                <div class="col-sm-6">
+                  <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                    (input)="rfqTable.filterGlobal($event.target.value, 'contains')" />
+                </div>
+                <div class="col-sm-6">
+                </div>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="header" let-columns>
+          <tr>
+              <!-- <th style="width: 3em">
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th> -->
+              <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+              {{col.header}}
+              <p-sortIcon [field]="col.field"></p-sortIcon>
+              </th>
+
+          </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr [pSelectableRow]="rowData">
+                <!-- <td style="width: 3em">
+                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td> -->
+                <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
+                <span *ngIf="!col.isLink">
+                        <span *ngIf="col.fieldType != 'date'">
+                            {{rowData[col.field]}}
+                        </span>
+                        <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
+                          {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
+                        </span>
+
+                </span>
+                <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);"
+                    (click)="getRFQLineItems(rowData, $event)"> {{rowData[col.field]}} </a></span>
+
+                </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage" let-columns>
+          <tr>
+              <td [attr.colspan]="6" style="text-align:center;">
+              No Records Found.
+              </td>
+          </tr>
+          </ng-template>
+          <ng-template pTemplate="paginatorleft">
+          <div *ngIf="rfqTable._totalRecords > 0">
+            <b>Showing {{rfqTable.first+1}} to {{rfqTable.first+rfqTable.rows > rfqTable.totalRecords?rfqTable.totalRecords: rfqTable.first+rfqTable.rows}} of {{rfqTable.totalRecords}}</b>
+          </div>
+          </ng-template>
+    </p-table>
+    </div>
+
+
+    <!-- For CategoryManger or CategoryManger2 -->
+    <ng-template #catMgrTemplate>
+
+        <p-table [ngClass]="{'gmt-container': isGMTView}" dataKey="id" #prqTable [columns]="rfqsTableHeadersForCategoryManger" [value]="rfqDataList" sortMode="multiple" [paginator]="true"
+        [rows]="pageRecordSize" id="prqTable" [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}"
+        exportFilename="roles details" [(selection)]="selectedData" [scrollable]="true" [expandedRowKeys]="expandedRows"
+        [scrollable]="true" [scrollHeight]="'calc(100vh - 214px)'">
+        <ng-template pTemplate="caption">
+            <div class="table-search">
+            <div class="row">
+                <div class="col-sm-6">
+                <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                    (input)="prqTable.filterGlobal($event.target.value, 'contains')" />
+                </div>
+                <div class="col-sm-6">
+                <!-- <img  (click)="exportAsXLSX()" class="export-excel-icon" src="assets/images/export-excel.png" width="40" height="40" data-toggle="tooltip" title=" Export As Excel"  /> -->
+                </div>
+            </div>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+            <th style="width: 3em"></th>
+            <th [style.width]="col.width" *ngFor="let col of columns" [pSortableColumn]="col.field">
+                {{col.header}}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+            </th>
+            <th style="width: 8em;">Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
+            <tr [pSelectableRow]="rowData">
+            <td style="width: 3em">
+                <button type="button" pButton pRipple [pRowToggler]="rowData"
+                    class="grid-expand"   (click)="expanded ? getCloseRFQs(rowData,$event) : getRFQs(rowData,$event)" >
+                    <span *ngIf="expanded"><i class="fa fa-chevron-down"></i></span>
+                    <span *ngIf="!expanded"><i class="fa fa-chevron-right"></i></span>
+                </button>
+            </td>
+            <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
+                    <span *ngIf="!col.isLink">
+                            <span *ngIf="col.fieldType != 'date'" [ngClass]="{'blueCls': col.field == 'rfqId' && rowData.byClient == true}">
+                                {{rowData[col.field]}}
+                            </span>
+                            <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
+                              {{rowData['createdTs'] | date: 'dd-MMM-yyyy'}}
+                            </span>
+
+                    </span>
+            </td>
+            <td style="width: 8em;">
+                <img class="cursor-pointer" src="/assets/images/new/edit-data.png"  width="28" style="width:28px;margin-right: 10px;" title="Edit RFQ"  (click)="onViewRFQDetails(rowData, true, false)">
+
+                <img src="/assets/images/new/forward.png" class="forward"  (click)="onForwardRFQ(rowData)"width="44" height="34"
+                    title="Forward RFQ Details">
+
+            </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="rowexpansion" let-rowData>
+            <tr class="child-grid" *ngIf=" selectedData && selectedData?.length ==1">
+                <td colspan="9">
+                    <p> <label>RFQ Id:</label> {{rfqId}}</p>
+                     <div class="p-p-4" *ngIf="isChildGridShow">
+                    <mat-tab-group class="" (selectedTabChange)="getLineItems($event)">
+                        <mat-tab label="Vendors"  >
+                            <ng-container *ngTemplateOutlet="vendorTemplate"></ng-container>
+                        </mat-tab>
+                        <mat-tab label="RFQ - Line Items">
+                            <ng-container *ngTemplateOutlet="itemsTemplate"></ng-container>
+                        </mat-tab>
+                    </mat-tab-group>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+            <td [attr.colspan]="5" style="text-align:center;">
+                No Records Found.
+            </td>
+            </tr>
+        </ng-template>
+        </p-table>
+    </ng-template>
+
+</div>
+<ng-template #vendorTemplate>
+    <div class="">
+    <p-table  #vendorTable [columns]="vendorTableHeaders" [value]="vendorsList" sortMode="multiple"
+    [paginator]="true" [rows]="pageRecordSize" id="vendorTable" [rowsPerPageOptions]="pageOptions"
+        [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData"  [scrollable]="true" [scrollHeight]="'calc(100vh - 200px)'">
+        <ng-template pTemplate="caption">
+          <div class="table-search">
+            <div class="row">
+              <div class="col-sm-6">
+                <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                  (input)="vendorTable.filterGlobal($event.target.value, 'contains')" />
+              </div>
+              <div class="col-sm-6">
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+            {{col.header}}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+            </th>
+            <!-- <th style="width: 11em;" *ngIf="currentRole == 'CategoryManager'">Actions</th> -->
+        </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+          <tr [pSelectableRow]="rowData">
+              <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
+              <span *ngIf="!col.isLink">
+                      <span *ngIf="col.fieldType != 'date'">
+                        <i class="fa fa-info-circle" style="font-size: 1.2rem;cursor: pointer;color:rgb(255, 106, 0)" *ngIf="col.field =='vendorName' " (click)="getVendorInfo(rowData)"></i> {{rowData[col.field]}}
+
+                      </span>
+                      <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
+                        {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
+                      </span>
+
+              </span>
+              <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);"
+                  (click)="getRFQLineItems(rowData, $event)"> {{rowData[col.field]}} </a></span>
+
+              </td>
+              <!-- <td style="width: 11em;" *ngIf="currentRole == 'CategoryManager'">
+
+                <span >
+                    <button (click)="onAcceptOrRejectVendor(rowData, true)" class="btn btn-blue pr-l" >Approve</button>
+                        <button (click)="onAcceptOrRejectVendor(rowData, false)" class="btn btn-orange" >Reject</button>
+                </span>
+              </td> -->
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+            <td [attr.colspan]="5" style="text-align:center;">
+            No Records Found.
+            </td>
+        </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorleft">
+        <div *ngIf="vendorTable?._totalRecords > 0">
+          <b>Showing {{vendorTable.first+1}} to {{vendorTable.first+vendorTable.rows > vendorTable.totalRecords?vendorTable.totalRecords: vendorTable.first+vendorTable.rows}} of {{vendorTable.totalRecords}}</b>
+        </div>
+        </ng-template>
+  </p-table>
+</div>
+</ng-template>
+<ng-template #itemsTemplate>
+    <div class="">
+        <p-table  #itemTable [columns]="itemsTableHeaders" [value]="itemsList" sortMode="multiple"
+        [paginator]="true" [rows]="pageRecordSize" id="itemTable" [rowsPerPageOptions]="pageOptions"
+            [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData"  [scrollable]="true" [scrollHeight]="'calc(100vh - 200px)'">
+            <ng-template pTemplate="caption">
+              <div class="table-search">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                      (input)="itemTable.filterGlobal($event.target.value, 'contains')" />
+                  </div>
+                  <div class="col-sm-6">
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+                {{col.header}}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+                <!-- <th style="width: 16em;">Actions</th> -->
+            </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                  <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
+                  <span *ngIf="!col.isLink">
+                          <span *ngIf="col.fieldType != 'date'" >
+                              {{rowData[col.field]}}
+                          </span>
+                          <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
+                            {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
+                          </span>
+
+                  </span>
+                  <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);"
+                      (click)="getRFQLineItems(rowData, $event)"> {{rowData[col.field]}} </a></span>
+
+                  </td>
+                  <!-- <td style="width: 16em;">
+
+                      <span >
+                        <button (click)="onAcceptOrRejectVendor(rowData, true)" class="btn btn-blue pr-l" >Accept</button>
+                        <button (click)="onAcceptOrRejectVendor(rowData, false)" class="btn btn-blue" >Reject</button>
+                      </span>
+                  </td> -->
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+                <td [attr.colspan]="5" style="text-align:center;">
+                No Records Found.
+                </td>
+            </tr>
+            </ng-template>
+            <ng-template pTemplate="paginatorleft">
+            <div *ngIf="itemTable?._totalRecords > 0">
+              <b>Showing {{itemTable.first+1}} to {{itemTable.first+itemTable.rows > itemTable.totalRecords?itemTable.totalRecords: itemTable.first+itemTable.rows}} of {{itemTable.totalRecords}}</b>
+            </div>
+            </ng-template>
+      </p-table>
+    </div>
+</ng-template>
+
+<ng-template #raiseQueryRef>
+    <form (ngSubmit)="onRaiseQuery(editSubCatForm)" name="editSubCatForm" #editSubCatForm="ngForm" novalidate>
+      <mat-dialog-content>
+        <div class=" border-bottom col-12 h5 p-2">
+         Raise Query
+        </div>
+         <div class="col-12 pb-4">
+          <div class="form-group row">
+
+            <div class="col-12">
+              <label><b>Enter Your Query?</b></label>
+              <input  #queryDesc=ngModel [(ngModel)]="queryDescContent" name="queryDesc" class="form-control"
+                 placeholder="Enter Your Query here..."/>
+              <div>
+                <small style="color: red" *ngIf="queryDesc.touched && queryDescContent == null">Query details is required</small>
+              </div>
+            </div>
+            <div class="col-12 btn-container">
+                <button type="button" class="btn btn-danger btn-red" mat-dialog-close>Cancel</button>
+                <button type="submit" class="btn btn-success btn-green">Send</button>
+            </div>
+            <div class="col-12">
+                <h5 class="mt-4">Previous Queries</h5>
+                <ul class="ul-content" *ngIf="queryList.length>0">
+                    <li *ngFor="let cont of queryList">{{cont}}</li>
+                </ul>
+                <p  *ngIf="queryList.length<=0">No Data Available</p>
+            </div>
+          </div>
+        </div>
+
+
+      </mat-dialog-content>
+
+      <mat-dialog-actions align="end">
+
+      </mat-dialog-actions>
+    </form>
+  </ng-template>
+
+  <p-sidebar [(visible)]="isSendRFQ" position="right"
+    styleClass="ui-sidebar-lg" [style]="{width:'100vw'}">
+
+    <app-create-rfq-shared *ngIf="selectedRfqData" (onCloseRFQForwardScreen)="closeForwardRFQScreen()" [rfqDetails]="selectedRfqData"></app-create-rfq-shared>
+
+</p-sidebar>
+
+
+
+<ng-template #vendorInfoTemplate>
+    <app-gmt-vendor-info-modal [selectedVendor]="selectedVendor" [vendorInfo]="vendorInfo"></app-gmt-vendor-info-modal>
+</ng-template>

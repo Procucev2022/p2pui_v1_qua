@@ -1,0 +1,54 @@
+<p-table [ngClass]="{  'gmt-container': isGMTView}" dataKey="id" #poLineItemsViewTable  #commonGridTableRef [columns]="commonGridTableHeaders" [value]="commonGridList"   [scrollable]="true" [scrollHeight]="'170px'">
+    <ng-template pTemplate="caption" >
+        <div class="table-search">
+           <div class="row">
+             <div class="col-sm-6">
+               <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                 (input)="poLineItemsViewTable.filterGlobal($event.target.value, 'contains')" />
+             </div>
+             <div class="col-sm-6">
+
+             </div>
+           </div>
+         </div>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th style="width: 3em" *ngIf="gridData.isMultiSelectAllows">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width"> {{col.header}}
+
+            </th>
+            <th style="width: 6em;" *ngIf="commonGridActions.length>0"  [ngStyle]="{width: commonGridActions.length >= 2 ? '16rem': '6em' }">Actions</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr [pSelectableRow]="rowData">
+            <td style="width: 3em" *ngIf="gridData.isMultiSelectAllows">
+                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+            <td [style.width]="col.width" *ngFor="let col of columns"
+                [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }"
+                [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"
+                [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
+                <span *ngIf=" col.field == 'sellPrice'">{{ (rowData?.buyPriceDisclosure == true ||  rowData[col.field] >0) ? (rowData[col.field]) : 'QYP' }}</span>
+                <span *ngIf=" col.field != 'sellPrice'">  {{rowData[col.field]}}</span>
+            </td>
+            <td style="width: 6em;" *ngIf="commonGridActions.length>0" [ngStyle]="{width: commonGridActions.length >= 2 ? '16rem': '6em' }">
+                <ng-container *ngFor="let event of commonGridActions" >
+                    <img class="cursor-pointer" *ngIf="event.eventType == 'img'" [src]="'assets/images/new/'+event?.eventImg+'.png'"  width="28" style="width:28px;margin-right: 10px;"
+                 [title]="event?.eventDesc"  (click)="onActionEvent(event,rowData)" [ngClass]="event?.className" />
+                    <button [ngClass]="event.className"  *ngIf="event?.eventType == 'button'" (click)="onActionEvent(event,rowData)"  >{{event?.eventText}}</button>
+                </ng-container>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+            <td [attr.colspan]="gridData.isMultiSelectAllows ? commonGridTableHeaders.length+1 : commonGridTableHeaders.length" style="text-align:center;">
+               {{gridData.gridEmptyMsg}}
+            </td>
+        </tr>
+    </ng-template>
+</p-table>

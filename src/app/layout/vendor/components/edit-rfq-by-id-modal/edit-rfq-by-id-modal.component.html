@@ -1,0 +1,288 @@
+<div class="modal-header">
+    <!-- <button class="btn-skelton modal-close-btn" mat-dialog-close>✖</button> -->
+    <div class="col-6">
+        <h5>RFQ Details</h5>
+    </div>
+
+    <div class="col-6  text-right" >
+        <i class="fa fa-plus plusMinus plusColor" style="padding-right: 10px;cursor:pointer"  data-toggle="tooltip" title="zoom in" (click)="zoomin()"></i>
+        <i class="fa fa-minus plusMinus minusColor " style="padding-right: 11px; cursor:pointer"  data-toggle="tooltip" title="zoom out" (click)="zoomout()"></i>
+        <i class="fa fa-window-close"  (click)="closeModal()" aria-hidden="true"></i>
+    </div>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-12">
+            <div class="view-details-panel-cls">
+                <div class="panel-content-box">
+                    <div class="col-12 cust-card">
+                        <div class="form-group row" style="margin-top: 15px"  >
+                            <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
+                                class="col-sm-5 col-form-label">Project Description/Reference </label>
+                            <div class="col-sm-5 content-value" style="padding: 7px 16px">
+                                <input class="form-control" type="text" [(ngModel)] ="viewRFQbyIDdetails.projectDesc" name="projectDesc"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group row" style="margin-top: 15px">
+                            <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
+                                class="col-sm-5 col-form-label">RFQ ID</label>
+                            <div class="col-sm-5 content-value" style="padding: 7px 16px">
+                                {{viewRFQbyIDdetails.rfqId}}
+                            </div>
+                        </div>
+
+                        <div class="form-group row" style="margin-top: 15px"  >
+                            <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
+                                class="col-sm-5 col-form-label">Division </label>
+                            <div class="col-sm-5 content-value" style="padding: 7px 16px" >
+                                <select class="form-control" name="s1"  *ngIf="this.viewRFQbyIDdetails.isCreateRFQScreen == true"    [(ngModel)] ="viewRFQbyIDdetails.division" (change)="onChangeDivision(false)">
+                                    <option [value]="null || '' " selected="selected" disabled >Select</option>
+                                   <option *ngFor="let dp of divisionsList; let j = index" [value]="dp">
+                                       {{dp}}</option>
+                               </select>
+                               <!--isCreateRFQScreen = false means => categoryManger-->
+                               <span *ngIf="!this.viewRFQbyIDdetails.isCreateRFQScreen"> {{viewRFQbyIDdetails.division}} </span>
+                            </div>
+                        </div>
+                        <div class="form-group row" style="margin-top: 15px" *ngIf="!this.viewRFQbyIDdetails.isCreateRFQScreen" >
+                            <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
+                                class="col-sm-5 col-form-label">Category</label>
+                            <div class="col-sm-5 content-value" style="padding: 7px 16px">
+                              <span *ngIf="roleName == 'ClientInitiator'">
+                                {{!viewRFQbyIDdetails.category? '-':viewRFQbyIDdetails.category}}
+                              </span>
+                              <select class="form-control" name="s2"      [(ngModel)] ="viewRFQbyIDdetails.category"   *ngIf="roleName != 'ClientInitiator'" >
+                                    <option [value]="null || '' " selected="selected" disabled >Select</option>
+                                <option *ngFor="let dp of categoryList; let j = index" [value]="dp">
+                                    {{dp}}</option>
+                            </select>
+                              <!-- <p-autoComplete [(ngModel)] ="viewRFQbyIDdetails.category" showEmptyMessage="true"
+                              [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
+                               [suggestions]="filtered_categoryList" panelInputClass="p-auto-panel-cls" [minLength]="1"
+                                 [dropdown]="true"
+                                (completeMethod)="filterAutoCompleteData($event, 'categoryList','filtered_categoryList',   true)"
+                                 >
+                                          <ng-template let-segment pTemplate="item">
+                                              <div class="segment-item">
+                                                  <div>{{segment}}</div>
+                                              </div>
+                                          </ng-template>
+                              </p-autoComplete>  -->
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <p-table #rfqDetailsViewTable [columns]="rfqDetailsHeaders" [value]="viewRFQbyIDdetails.rfqItem"
+                            sortMode="multiple" [paginator]="true" [rows]="pageRecordSize" id="rfqDetailsViewTable"
+                            [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}" exportFilename="services"
+                            [(selection)]="selectedData" [scrollable]="true">
+                            <ng-template pTemplate="caption">
+                                <div class="table-title">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <h2>Items</h2>
+                                            <p><span class="dot"></span>{{viewRFQbyIDdetails.rfqItem?.length}} Total</p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <input class="main-input" type="text" pInputText size="50"
+                                                placeholder="Search.."
+                                                (input)="rfqDetailsViewTable.filterGlobal($event.target.value, 'contains')"
+                                                style="float: right;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                        {{col.header}}
+                                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                <tr [pSelectableRow]="rowData">
+
+                                    <td *ngFor="let col of columns">
+                                        <input class="form-control" *ngIf="col.fieldType=='text' ||  col.fieldType=='number'" [type]="col.fieldType" [(ngModel)] ="rowData[col.field]" [name]="rowData[col.field]"/>
+                                        <select class="form-control"    *ngIf="col.fieldType=='list' && col.field == 'division'"  [(ngModel)] ="rowData[col.field]">
+                                            <option [value]="null || '' " selected="selected" disabled >Select</option>
+                                           <option *ngFor="let dp of dropdownItems; let j = index" [value]="dp">
+                                               {{dp}}</option>
+                                       </select>
+                                       <select class="form-control"    *ngIf="col.fieldType=='list' && col.field == 'category'"  [(ngModel)] ="rowData[col.field]">
+                                        <option [value]="null || '' " selected="selected" disabled >Select</option>
+                                       <option *ngFor="let dp of categoryList; let j = index" [value]="dp">
+                                           {{dp}}</option>
+                                   </select>
+                                       <!-- <p-autoComplete  [(ngModel)] ="rowData[col.field]" showEmptyMessage="true" *ngIf="col.fieldType=='autolist'"
+                                       [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
+                                        [suggestions]="filtered_categoryList" panelInputClass="p-auto-panel-cls" [minLength]="1"
+                                          [dropdown]="true"
+                                         (completeMethod)="filterAutoCompleteData($event, 'categoryList','filtered_categoryList',   true)"
+                                          >
+                                                   <ng-template let-segment pTemplate="item">
+                                                       <div class="segment-item">
+                                                           <div>{{segment}}</div>
+                                                       </div>
+                                                   </ng-template>
+                                       </p-autoComplete> -->
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage" let-columns>
+                                <tr>
+                                    <td [attr.colspan]="5" style="text-align:center;">
+                                        No Records Found.
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="paginatorleft">
+                                <div  *ngIf="rfqDetailsViewTable._totalRecords > 0">
+                                    <b>Showing {{rfqDetailsViewTable.first+1}} to {{rfqDetailsViewTable.first+rfqDetailsViewTable.rows > rfqDetailsViewTable.totalRecords?rfqDetailsViewTable.totalRecords: rfqDetailsViewTable.first+rfqDetailsViewTable.rows}} of {{rfqDetailsViewTable.totalRecords}}</b>
+                                </div>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+
+                <div *ngIf="viewRFQbyIDdetails.clientdeliverylocationrfq.length>0">
+                    <div class="card" style="margin-top: 15px;">
+                        <div class="col-12 page-title">
+                            <h5>Delivery Address Location : </h5>
+                        </div>
+                        <mat-card class="col-12" *ngFor="let location of viewRFQbyIDdetails.clientdeliverylocationrfq; let i = index;">
+
+
+                            <div class="form-group row">
+                                <label for="city" style="font-size: medium; font-weight: bolder;"
+                                    class="col-sm-5 col-form-label">City</label>
+                                <div class="col-sm-5 col-form-label">
+                                    <input class="form-control" type="text" [(ngModel)] ="location.city" name="city"/>
+                                </div>
+
+                            </div>
+                            <div class="form-group row">
+                                <label for="state" style="font-size: medium; font-weight: bolder;"
+                                    class="col-sm-5 col-form-label">State:</label>
+                                <div class="col-sm-5 col-form-label">
+                                    <input class="form-control" type="text" [(ngModel)] ="location.state" name="state"/>
+                                </div>
+                            </div>
+                            <div class="form-group row"  >
+                                <label for="state" style="font-size: medium; font-weight: bolder;"
+                                    class="col-sm-5 col-form-label">Zip Code:</label>
+                                <div class="col-sm-5 col-form-label">
+                                    <input class="form-control" type="number" #zipCodeInput="ngModel" [(ngModel)] ="location.pincode" minlength="6"
+                                     maxlength="6"  name="pincode" onkeydown="return event.keyCode !== 69"  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"/>
+
+                                    <div *ngIf="zipCodeInput.errors">
+                                        Zip Code must be 6 digits.
+                                      </div></div>
+                            </div>
+                        </mat-card>
+                    </div>
+                </div>
+
+                <div class="col-12 row cust-card pad-nill"  >
+                    <div class="col-12 pb-3 pt-3" >
+                        <div class="commentPanel">
+
+                         <div class="row">
+                            <div class="col-12">
+                                <div class="form-group row m-3">
+                                    <div class="fileUploadCls " fileDragDrop (files)="fileUploadEvent($event.target.files)" (click)="fileInput.click()"
+                                    id="d_commentFile">
+                                    <input type="file" (click)="fileInput.value = null" #fileInput [(ngModel)]="fileData"
+                                        (change)="fileUploadEvent($event.target.files)" hidden class="form-control" id="i_commentFile" />
+                                    </div>
+                                    <div class="fileInfoCls">
+                                        <i class="fa fa-info-circle" ></i> File Validation : <span style="color: #000;">
+                                          File  should be either (.xls/.xlsx) / (.doc/.docx) / (Jpg/Jpeg/Png) or (.txt/.pdf) document
+                                        </span>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col-12 " *ngIf="commentFilesDataList.length>0" style="margin-top: 5px; font-size: 13px;">
+                              <span class="choosenFileCls"><b>New Uploads : </b></span>
+                              <ul>
+                                <li *ngFor="let file of commentFilesDataList;index as i ">
+                                    <span class="" style="font-size: 16px;font-weight: 600;
+                                    padding-left: 16px;padding:4px;border-radius:4px;">  {{file.fileName}}</span>
+                                   <span class="removeIcon"   style="cursor: pointer; color:red" (click)="removeFile(i)" title="Remove File"> <i class="fa fa-times-circle"
+                                       aria-hidden="true"></i> Remove</span>
+                                </li>
+                              </ul>
+
+                            </div>
+                        </div>
+                        </div>
+                     </div>
+                    <label class="col-md-12" for="text"><b>Uploaded Documents(Existed)</b></label>
+                    <div class="col-md-12">
+                        <ng-container *ngFor="let file of viewRFQbyIDdetails.rfqDocument;let i=index">
+                            <div class="col-12 uploadedFiles">
+                                <div class="col-8">
+                                    <img class="doc-icon" [src]="getImageURL(file)" src="/assets/images/file.svg" width="30" height="30">
+                                    <span style="margin-right: 2rem">{{ file?.fileName }}</span>
+                                    <!-- <span>{{ file?.name }}</span> -->
+
+                                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'xlsx' || file['fileName'].split('.').splice(-1) == 'xls' || file['fileName'].split('.').splice(-1) == 'csv'"
+                                        [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe"
+                                        download="{{file['fileName']}}" data-toggle="tooltip"
+                                        [title]="'Download '+ file['fileName']">
+                                        <img class="cursor-pointer" src="/assets/images/new/download.svg" data-toggle="tooltip" [title]="'Download '+ file['fileName']" width="30" height="30"  aria-hidden="true" title="Download Attachment" /></a>
+                                    <!-- For PDF doucment download -->
+                                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'pdf'"
+                                        [href]="'data:application/pdf;base64,' + file['file'] | filePipe"
+                                        download="{{file['fileName']}}" data-toggle="tooltip"
+                                        [title]="'Download '+ file['fileName']" data-toggle="tooltip"
+                                        [title]="'Download '+ file['fileName']">
+                                        <img class="cursor-pointer" src="/assets/images/new/download.svg" data-toggle="tooltip" [title]="'Download '+ file['fileName']" width="30" height="30"  aria-hidden="true" title="Download Attachment" />
+                                    </a>
+                                    <!-- For jpeg/jpg & png download -->
+                                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'png'|| file['fileName'].split('.').splice(-1) == 'jpeg' || file['fileName'].split('.').splice(-1) == 'jpg' ||file['fileName'].split('.').splice(-1) == 'JPG'"
+                                        [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe"
+                                        download="{{file['fileName']}}">
+                                        <img class="cursor-pointer" src="/assets/images/new/download.svg" data-toggle="tooltip" [title]="'Download '+ file['fileName']" width="30" height="30"  aria-hidden="true" title="Download Attachment" />
+                                    </a>
+                                    <!-- For PPT & document download -->
+                                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'txt'  ||file['fileName'].split('.').splice(-1) == 'pptx'|| file['fileName'].split('.').splice(-1) == 'docx'|| file['fileName'].split('.').splice(-1) == 'doc' || file['fileName'].split('.').splice(-1) == 'ppt'"
+                                        [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe"
+                                        download="{{file['fileName']}}" data-toggle="tooltip"
+                                        [title]="'Download '+ file['fileName']">
+                                        <img class="cursor-pointer" src="/assets/images/new/download.svg" data-toggle="tooltip" [title]="'Download '+ file['fileName']" width="30" height="30"  aria-hidden="true" title="Download Attachment" />
+                                    </a>
+                                    <i class="fa fa-trash" style="font-size: 1.5rem;color:red ;margin-left:10px; cursor: pointer;" (click)="onDeleteExistedAttachment(i)"></i>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <div class="content-value" *ngIf="viewRFQbyIDdetails.rfqDocument.length == 0">
+                            No Documents uploaded.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<mat-dialog-actions align="end">
+    <button type="button" class="btn btn-red" (click)="closeModal()">Close</button>
+    <div *ngIf="!viewRFQbyIDdetails.isCreateRFQScreen">
+        <button type="button" class="btn btn-green" (click)="saveAndAccept()" *ngIf="roleName != 'ClientInitiator'">Save & Accept</button>
+        <button type="button" class="btn btn-orange" (click)="onSaveAndSend()" *ngIf="roleName != 'ClientInitiator'">Save & Resend</button>
+        <button type="button" class="btn btn-blue" (click)="onSaveRFQByClientInitiator()" *ngIf="roleName == 'ClientInitiator'">Save</button>
+
+    </div>
+    <div *ngIf="viewRFQbyIDdetails.isCreateRFQScreen == true">
+        <button type="button" class="btn btn-blue" (click)="onSaveRFQByClientInitiator()">Save</button>
+
+    </div>
+   </mat-dialog-actions>

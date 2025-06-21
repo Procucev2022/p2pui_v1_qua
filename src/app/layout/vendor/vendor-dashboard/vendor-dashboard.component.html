@@ -1,0 +1,136 @@
+<!-- <div class="col-12">
+  <div class="row">
+
+    <div class="col-12 page-title">
+      <h5>Dashboard</h5>
+    </div>
+
+    <div class="col-12 page-body-pane">
+      <div class="prqContainer row">
+        <div class="col-12">
+          <div>
+            <label class="col-12 c_rfq" style="text-align:left;"> RFQ : {{rfqName}}
+              <span style="float:right;">
+                <label class="col-12"> Client Name : {{clientName}}</label>
+              </span>
+            </label>
+            <label class="col-12 c_duedate"> Due Date : {{dueDate}}</label>
+
+          </div>
+          <p-table #rfqTable [columns]="rfqHeaders" [value]="rfqTableData" [scrollable]="true" sortMode="multiple"
+            [paginator]="true" [rows]="pageRecordSize" id="rfqTable" [rowsPerPageOptions]="pageOptions"
+            [style]="{width:'100%'}" exportFilename="ref details" [(selection)]="selectedData" [resizableColumns]="true"
+            [autoLayout]="true">
+            <ng-template pTemplate="caption">
+              <div class="searchPanel">
+                <button class="grid-button-row" mat-raised-button color="primary"
+                (click)="downloadBOQ()">Download BOQ</button>
+                <button class="grid-button-row" mat-raised-button color="primary"
+                (click)="raiseQuery()">Raise Query</button>
+
+                <input type="text" pInputText size="50" placeholder="Search.."
+                  (input)="rfqTable.filterGlobal($event.target.value, 'contains')" style="width:auto; float: right;" />
+              </div>
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th style="width: 3em">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                  {{col.header}}
+                  <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+                <th>Actions</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-columns="columns" let-rowData>
+              <tr [pSelectableRow]="rowData">
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns">
+                  <span *ngIf="!col.isLink"> {{rowData[col.field]}}</span>
+                  <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);"
+                      (click)="getRFQs(rowData)"> {{rowData[col.field]}} </a></span>
+
+                </td>
+                <td>
+                  <span class="crud-icons">
+                    <img src="/assets/images/edit1.png"> Edit
+                  </span>
+                  <span class="crud-icons">
+                    <img src="/assets/images/eye.png"> View
+                  </span>
+                  <span class="crud-icons">
+                    <img src="/assets/images/delete.png"> Remove
+                  </span>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage" let-columns>
+              <tr>
+                <td [attr.colspan]="5" style="text-align:center;">
+                  No Records Found.
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="paginatorleft">
+              <div *ngIf="rfqTableData?.length > 0">
+                <app-page-info [totalRecords]="rfqTableData.length" [pageData]="paginatoryDetails"></app-page-info>
+              </div>
+            </ng-template>
+          </p-table>
+
+          <button type="button" id="i_terms&conditions" class="btn btn-secondary" >Terms & Conditions </button>
+        </div>
+
+      </div>
+
+      <div class="accordion">
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Comments
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>This is the primary content of the panel.</p>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+
+      <div class="accordion">
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Quotation History
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>This is the primary content of the panel.</p>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+
+      <div class="accordion">
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Quotes
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>This is the primary content of the panel.</p>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+
+
+    </div>
+
+
+
+
+  </div>
+</div> -->

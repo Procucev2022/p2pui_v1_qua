@@ -1,0 +1,68 @@
+<p>
+  <div class="">
+    <p-table #prqTable [columns]="forwardVendorReqHeaders" [value]="forwardVendorsList" sortMode="multiple"
+      [paginator]="true" [rows]="pageRecordSize" id="prqTable" [rowsPerPageOptions]="pageOptions"
+      [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData" [scrollable]="true">
+      <ng-template pTemplate="caption">
+        <div class="table-search">
+          <div class="row">
+            <div class="col-sm-6">
+              <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                (input)="prqTable.filterGlobal($event.target.value, 'contains')" />
+            </div>
+            <div class="col-sm-6">
+              <button type="button" class="btn btn-green" (click)="acceptVendor()"
+                *ngIf="loggedUserDetails.role.roleName === 'VendorManager'">Accept</button>
+
+            </div>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th style="width: 3em">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th [style.width]="col.width" *ngFor="let col of columns" [pSortableColumn]="col.field" [title]="col.titleHead">
+            {{col.header}}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+          </th>
+          <th style="width: 9em">
+            View
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-columns="columns" >
+        <tr [pSelectableRow]="rowData">
+          <td style="width: 3em">
+            <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+          </td>
+          <td  [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse' : col.field == 'companyName' ||  col.field == 'details'  }">
+            <span *ngIf="col.field == 'createdTS'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
+              {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
+            </span>
+            <span *ngIf="col.field != 'createdTS'" >
+              <span *ngIf="col.field == 'companyName'  ||  col.field == 'details'" [title]="rowData[col.field]">{{rowData[col.field]}}</span>
+              <span *ngIf="col.field != 'companyName' &&  col.field != 'details'">{{rowData[col.field]}}</span>
+            </span>
+          </td>
+          <td style="width: 9em">
+              <img src="/assets/images/new/view-doc.png" width="32" (click)="viewVendor(rowData)" alt="View">
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+          <td [attr.colspan]="5" style="text-align:center;">
+            No Records Found.
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="paginatorleft">
+        <div  *ngIf="prqTable._totalRecords > 0">
+          <!-- <app-page-info [totalRecords]="vendorNameRequestList.length" [pageData]="paginatoryDetails"></app-page-info> -->
+          <b>Showing {{prqTable.first+1}} to {{prqTable.first+prqTable.rows > prqTable.totalRecords?prqTable.totalRecords: prqTable.first+prqTable.rows}} of {{prqTable.totalRecords}}</b>
+        </div>
+      </ng-template>
+    </p-table>
+  </div>

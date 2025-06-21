@@ -1,0 +1,484 @@
+<div class="col-12 pad-nill item-catlog-request-screen">
+  <div class="table-title">
+    <div class="row">
+      <div class="col-sm-6">
+        <h2>Catalogue Request</h2>
+       <!-- <div class=""style="height: 400px;">
+        <p-chart type="line" width="600" height="350" [options]="options" [data]="chartData"  ></p-chart>
+       </div> -->
+        <p><span class="dot"></span>{{itemList.length}} Total</p>
+      </div>
+      <div class="col-sm-6">
+        <button class="btn btn-primary btn-blue" type="button" (click)="newItemRequest(newItemModal)"><i
+            class="fa fa-plus"> </i>  New Item Request </button>
+      </div>
+      <div class="col-12 sub-cat-filter-sec" >
+        <app-sub-category-dropdown (updateSelection)="onSubCategoryChange($event)" [isMultipleSelect]="false"></app-sub-category-dropdown>
+     </div>
+    </div>
+
+  </div>
+    <p-table dataKey="id" #itemCatalogueTable [columns]="itemHeaders" [value]="itemList" sortMode="multiple" [expandedRowKeys]="expandedRows"
+    [paginator]="true" [rows]="pageRecordSize" id="prqTable" [rowsPerPageOptions]="pageOptions"
+    [style]="{'width': '100%'}" exportFilename="itemCatalogue Details" [(selection)]="selectedData" [scrollable]="true" [scrollHeight]="'calc(100vh - 310px)'">
+    <ng-template pTemplate="caption">
+      <div class="table-search">
+        <div class="row">
+          <div class="col-sm-6">
+            <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+              (input)="itemCatalogueTable.filterGlobal($event.target.value, 'contains')" />
+          </div>
+          <div class="col-sm-6">
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th style="width: 3em"></th>
+        <ng-container *ngFor="let col of columns">
+          <th [style.width]="col.width" [pSortableColumn]="col.field">
+            {{col.header}}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+          </th>
+
+        </ng-container>
+        <th style="width: 3em;">Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
+      <tr [pSelectableRow]="rowData">
+        <td style="width: 3em">
+          <button type="button" pButton pRipple [pRowToggler]="rowData"
+            class="grid-expand" (click)="expanded ? getCloseVendorByItem(rowData,$event) : getVendorByItem(rowData)">
+            <span *ngIf="expanded"><i class="fa fa-chevron-down"></i></span>
+            <span *ngIf="!expanded"><i class="fa fa-chevron-right"></i></span>
+          </button>
+        </td>
+        <td  *ngFor="let col of columns" [style.width]="col.width" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }">
+
+          <span   [ngClass]="{'price-icon-alignment': col.field == 'price'}">
+
+
+
+            <!-- <img class="ml-2 cursor-pointer"  (click)="op1.toggle($event) ;generateChart(rowData, false)" *ngIf="col.field == 'price' && rowData?.priceFlag == 'GT' "  width="30" height="40" src="assets/images/new/trade-up.svg"/> -->
+            <!-- <img class="ml-2 cursor-pointer"  (click)="op1.toggle($event) ;generateChart(rowData, false)" *ngIf="col.field == 'price' && rowData?.priceFlag == 'LT' " width="50" height="30" src="assets/images/new/trade-down.svg"/> -->
+           <span [ngClass]="{'price-content': col.field == 'price'}"> {{rowData[col.field]}} </span>
+            <i class="pi pi-sort-amount-up" #targetEl (click)="showAnalyticsForSelectedItem(rowData, false)" style="font-size: 2rem" *ngIf="isAnalyticsScreenShow && col.field == 'price' && rowData?.priceFlag == 'GT' "></i>
+            <i class="pi pi-sort-amount-down" #targetEl2 (click)="showAnalyticsForSelectedItem(rowData, false)" style="font-size: 2rem" *ngIf="isAnalyticsScreenShow && col.field == 'price' && rowData?.priceFlag == 'LT' "></i>
+            <i class="pi pi-sort-alt" #targetEl style="font-size: 2rem" (click)="showAnalyticsForSelectedItem(rowData, false)" *ngIf="isAnalyticsScreenShow && col.field == 'price' && rowData?.priceFlag == 'EQ' "></i>
+
+            <!-- <p-overlayPanel #op appendTo="body" [showTransitionOptions]="'0ms'" [hideTransitionOptions]="'0ms'">
+                <div class="p-2">
+                    <div class="mt-1 mb-1" style="font-size: 14px;
+                        font-weight: 600;
+                        color: #673AB7;"><p>Analytics For Price Trend:</p></div>
+                        <div class="chart-panel p-3"  *ngIf="isShowChart" >
+                        <app-price-trend-chart [rowData]="chartData" [isItemLevel]="isItemLevel"></app-price-trend-chart>
+
+                    </div>
+                </div>
+                </p-overlayPanel> -->
+          </span>
+          <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);" (click)="getVendorByItem(rowData)"
+              pButton pRipple [pRowToggler]="rowData"> {{rowData[col.field]}} </a></span>
+
+        </td>
+        <td style="width: 3em;">
+            <img class="mr-3" *ngIf="rowData.clientItemFlag == true" (click)="viewItemData(rowData, editItemModal)"   src="/assets/images/new/view-doc.png" width="30" height="30" title="View/Edit Item">
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="rowexpansion" let-parentRowData>
+      <tr class="child-grid">
+        <td colspan="7">
+          <div class="p-p-3">
+            <div class="table-title">
+              <div class="row">
+                <div class="col-sm-6">
+                  <h2>{{parentRowData.description}}</h2>
+                  <p><span class="dot"></span>{{parentRowData?.childs?.length}} Total</p>
+                </div>
+                <div class="col-sm-6">
+                  <input type="text" class="main-input" pInputText size="50" placeholder="Search.."
+                    (input)="linkedVendorsTable.filterGlobal($event.target.value, 'contains')" style="float: right;" />
+                </div>
+              </div>
+            </div>
+            <p-table dataKey="id" #linkedVendorsTable [columns]="linkedVendorHeaders" [value]="parentRowData.childs"
+              sortMode="multiple" [paginator]="true" [rows]="secondPageRecordSize" id="prqTable"
+              [rowsPerPageOptions]="secondPageOptions" [style]="{'width': '100%'}" exportFilename="roles details"
+              [(selection)]="selectedVendorData" >
+              <ng-template pTemplate="header" let-columns>
+                <tr class="child-header">
+                  <!-- <th style="width: 2em">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                  </th> -->
+                  <ng-container *ngFor="let col of columns">
+                    <th [style.width]="col.width" [pSortableColumn]="col.field">
+                      {{col.header}}
+                      <p-sortIcon [field]="col.field"></p-sortIcon>
+                    </th>
+                  </ng-container>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-columns="columns">
+                <tr [pSelectableRow]="rowData">
+                  <!-- <td style="width: 2em">
+                    <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                  </td> -->
+                  <ng-container *ngIf="loggedUserDetails.role.roleName === 'ClientInitiator' || loggedUserDetails.role.roleName == 'PRApprover'">
+                    <td *ngFor="let col of columns" [style.width]="col.width" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?   rowData[col.field]: ''" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }">
+                   <span *ngIf="col.field == 'vendorName'"  >
+                        <app-vendor-info-icon-dialog [vendorData]="rowData"></app-vendor-info-icon-dialog>
+                        <span class="blurText" *ngIf="!rowData.linked">
+                          <img *ngIf="rowData['status']['uiDisplay'] == 'Completed'" width="20" src="assets/images/insta-verified.png"/> {{rowData['vendorName']}}
+
+                        </span>
+                        <span *ngIf="rowData.linked"> <img *ngIf="rowData['status']['uiDisplay'] == 'Completed'" width="20" src="assets/images/insta-verified.png"/> {{rowData['vendorName']}}
+
+                        </span>
+                        <img  width="18"  *ngIf="rowData['status'] == 'Completed'"
+                            src="https://img.icons8.com/color/48/000000/instagram-verification-badge.png" />
+
+                      </span>
+                      <span *ngIf="col.field == 'vendorMaskedId'">
+                        <span *ngIf="!rowData.linked">{{rowData['vendorMaskedId']}}</span>
+                        <span *ngIf="rowData.linked">{{rowData['companyId']}}</span>
+                      </span>
+                      <span class="align-items-center price-icon-alignment"   [ngClass]="{'price-icon-alignment': col.field == 'pricePerUnit'}" *ngIf="col.field != 'vendorName' && col.field != 'vendorMaskedId'">
+                        <!-- <img class="ml-2 cursor-pointer"  (click)="op.toggle($event) ;generateChart(rowData, false)" *ngIf="col.field == 'pricePerUnit'" width="30" height="40" [src]="'assets/images/new/trade-' + (rowData?.priceFlag == 'LT' ? 'up.svg' : (rowData?.priceFlag == 'GT' ? 'down.svg': 'eq.svg'))" />  -->
+                        <span [ngClass]="{'price-content': col.field == 'pricePerUnit'}"> {{rowData[col.field]}}</span>
+
+                        <i class="pi pi-sort-amount-up"  #targetEl4 (click)="showAnalyticsForSelectedItem(rowData, true, parentRowData)" style="font-size: 2rem" *ngIf="isAnalyticsScreenShow && col.field == 'pricePerUnit' && rowData?.priceFlag == 'GT' "></i>
+                        <i class="pi pi-sort-amount-down"  #targetEl5 (click)="showAnalyticsForSelectedItem(rowData, true, parentRowData)" style="font-size: 2rem" *ngIf="isAnalyticsScreenShow && col.field == 'pricePerUnit' && rowData?.priceFlag == 'LT' "></i>
+                        <i class="pi pi-sort-alt" #targetEl style="font-size: 2rem" (click)="showAnalyticsForSelectedItem(rowData, true, parentRowData)" *ngIf="isAnalyticsScreenShow && col.field == 'pricePerUnit' && rowData?.priceFlag == 'EQ' "></i>
+                        <i class="pi pi-sort-alt"  #targetEl6 style="font-size: 2rem" (click)="showAnalyticsForSelectedItem(rowData, true, parentRowData)" *ngIf="isAnalyticsScreenShow && col.field == 'pricePerUnit' && !rowData?.priceFlag  "></i>
+
+
+                      </span>
+
+                    </td>
+                  </ng-container>
+                  <ng-container *ngIf="loggedUserDetails.role.roleName !== 'ClientInitiator' && loggedUserDetails.role.roleName != 'PRApprover'">
+                    <td *ngFor="let col of columns" [style.width]="col.width" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?   rowData[col.field]: ''" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }">
+                      <span *ngIf="col.field == 'vendorName'"  >
+                        <app-vendor-info-icon-dialog [vendorData]="rowData"></app-vendor-info-icon-dialog>  <img  width="18"  *ngIf="rowData['status'] == 'Completed'"
+                        src="https://img.icons8.com/color/48/000000/instagram-verification-badge.png" />
+                         <span class="blurText">{{rowData['vendorName']}}</span>
+
+
+                      </span>
+                      <span *ngIf="col.field != 'vendorName'">{{rowData[col.field]}}</span>
+                    </td>
+                  </ng-container>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage" let-columns>
+                <tr>
+                  <td [attr.colspan]="5" style="text-align:center;">
+                    No Records Found.
+                  </td>
+                </tr>
+              </ng-template>
+              <!-- <ng-template pTemplate="paginatorleft">
+                <div *ngIf="vendorsList?.length > 0">
+                  <app-page-info [totalRecords]="vendorsList.length" [pageData]="secondPaginatoryDetails"></app-page-info>
+                </div>
+              </ng-template> -->
+            </p-table>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage" let-columns>
+      <tr>
+        <td [attr.colspan]="5" style="text-align:center;">
+          No Records Found.
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+
+<ng-template #newItemModal>
+  <div class="modal-header">
+    <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+    <div class="col-6 pad-nill">
+      <h5>Request Item in Catalogue</h5>
+    </div>
+  </div>
+  <div class="modal-body ml-3" style="min-height: 59vh;">
+    <div class=" row col-md-12 pad-nill">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="itemUploadType" id="Product" [(ngModel)]="itemUploadType" value="single">
+            <label class="form-check-label" for="Product">For Single Item</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="itemUploadType" id="Service" (click)="removeFile()" [(ngModel)]="itemUploadType" value="bulk">
+            <label class="form-check-label" for="Service" (click)="removeFile()"> For Bulk Item</label>
+        </div>
+    </div>
+    <div class="row  ">
+        <form name="addNewItem" (ngSubmit)="addNewItem.form.valid && onAddNewItemSubmit(addNewItem)" #addNewItem="ngForm"
+      novalidate>
+
+      <div class="col-md-12 row pad-nill" *ngIf="itemUploadType == 'single'">
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <label for="description">Item Description: <b style="color: red;">*</b></label>
+            <textarea type="text" required [(ngModel)]="userModel.description" name="description"
+              [ngClass]="{ 'is-invalid': addNewItem.submitted && description.invalid }" #description="ngModel"
+              id="description" class="form-control" placeholder="Item description " minlength="3"></textarea>
+            <div *ngIf="addNewItem.submitted && description.invalid" class="invalid-feedback">
+              <div *ngIf="description.errors.required">Item description is required</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="specification">Specification: <b style="color: red;">*</b></label>
+            <input type="text" class="form-control" placeholder="Specification" name="specification"
+              [(ngModel)]="userModel.specification" #specification="ngModel"
+              [ngClass]="{ 'is-invalid': addNewItem.submitted && specification.invalid }" required />
+            <div *ngIf="addNewItem.submitted && specification.invalid" class="invalid-feedback">
+              <div *ngIf="specification.errors.required">Specification is required</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="uom">UOM: <b style="color: red;">*</b></label>
+            <input type="text" class="form-control" placeholder="UOM" name="uom" [(ngModel)]="userModel.uom"
+              #uom="ngModel" [ngClass]="{ 'is-invalid': addNewItem.submitted && uom.invalid }" required />
+            <div *ngIf="addNewItem.submitted && uom.invalid" class="invalid-feedback">
+              <div *ngIf="uom.errors.required">UOM is required</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="clientItemCode">Customer Item Code: <b style="color: red;">*</b></label>
+            <input type="text" class="form-control" placeholder="Customer Item Code" name="clientItemCode"
+              [(ngModel)]="userModel.clientItemCode" #clientItemCode="ngModel"
+              [ngClass]="{ 'is-invalid': addNewItem.submitted && clientItemCode.invalid }" required />
+            <div *ngIf="addNewItem.submitted && clientItemCode.invalid" class="invalid-feedback">
+              <div *ngIf="clientItemCode.errors.required">Customer Item Code is required</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="qty">Quantity: <b style="color: red;">*</b></label>
+            <input type="number" class="form-control" placeholder="Quantity" name="qty" [(ngModel)]="userModel.quantity"
+              #qty="ngModel" [ngClass]="{ 'is-invalid': addNewItem.submitted && qty.invalid }" required />
+            <div *ngIf="addNewItem.submitted && qty.invalid" class="invalid-feedback">
+              <div *ngIf="qty.errors.required">Quantity is required</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="category">Category: <b style="color: red;">*</b></label>
+            <input type="text" class="form-control" placeholder="Category" name="category"
+              [(ngModel)]="userModel.category" #category="ngModel"
+              [ngClass]="{ 'is-invalid': addNewItem.submitted && category.invalid }" required />
+            <div *ngIf="addNewItem.submitted && category.invalid" class="invalid-feedback">
+              <div *ngIf="category.errors.required ">Category is required</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-11 mt-3  ">
+            <label for="description">Add Attachments(If Any):  </label>
+            <div class="fileUploadCls"  (click)="fileInput.click()"
+             id="d_commentFile2" draggable="true" ngClass="{{dragAreaClass}}" (files)="filesDropped($event, true)" fileDragDrop>
+               <input type="file"
+               #fileInput [(ngModel)]="fileData" (change)="fileUploadEvent($event.target.files, true)" hidden
+               class="form-control" id="i_commentFile2" />
+
+            </div>
+
+          </div>
+          <div class="fileInfoCls col-md-12">
+            <i class="fa fa-info-circle"></i> File Validation : <span style="color: #000;">
+              File  should be only (.xls/.xlsx, pdf, .doc  and .txt) document
+            </span>
+           </div>
+           <div class="col-md-12 " *ngIf="commentFilesDataList.length>0" style="margin-top: 5px;
+           font-size: 13px;">
+             <div class="choosenFileCls">File Chosen :
+
+                <div *ngFor="let file of commentFilesDataList;let i=index">
+                <span>    {{file.fileName}} </span>
+               <span class="removeIcon"  (click)="removeFileFromList(i)" title="Remove File"><i class="fa fa-times-circle"
+                   aria-hidden="true"></i> Remove</span>
+                </div>
+            </div>
+           </div>
+      <div class="col-12 mt-3">
+        <button class="btn btn-primary btn-green" style="float: right" type="submit">Raise Request for Item</button>
+      </div>
+      </div>
+
+
+    </form>
+    </div>
+    <div class="row col-md-12  pad-nill" *ngIf="itemUploadType == 'bulk'" >
+        <div class="col-12">
+            <label> <b style="color:rgb(170, 41, 41)">Note :</b>  For Sample Catalogue Item File Format, </label>
+           <a   [href]="sampleCatalogueFormatFile | filePipe" download="sampleCatalogueFormatFile.xlsx" data-toggle="tooltip" [title]="'Download sampleCatalogueFormatFile.xlsx'"> Click here.. <img class="export-excel-icon" src="assets/images/export-excel.png" width="20" height="20"   /></a>
+        </div>
+        <div class="col-12">
+            <div class="fileUploadCls"  (click)="fileInput.click()"
+             id="d_commentFile1" draggable="true" ngClass="{{dragAreaClass}}" (files)="filesDropped($event, false)" fileDragDrop>
+               <input type="file" (click)="fileInput.value = null"
+               #fileInput [(ngModel)]="fileData" (change)="fileUploadEvent($event.target.files,false)" hidden
+               class="form-control" id="i_commentFile2" />
+
+            </div>
+
+          </div>
+          <div class="fileInfoCls">
+            <i class="fa fa-info-circle"></i> File Validation : <span style="color: #000;">
+              File  should be only (.xls/.xlsx) document
+            </span>
+           </div>
+           <div class="col-12 " *ngIf="commentFileData" style="margin-top: 5px;
+           font-size: 13px;">
+             <span class="choosenFileCls">File Chosen : <span> <img class="export-excel-icon" src="assets/images/export-excel.png" width="30" height="30"   />
+
+              {{this.commentFileType}}</span>
+               <span class="removeIcon"  (click)="removeFile()" title="Remove File"><i class="fa fa-times-circle"
+                   aria-hidden="true"></i> Remove</span>
+             </span>
+           </div>
+           <div class="col-12">
+            <button class="btn btn-primary btn-green" style="float: right" type="button" (click)="createItemCatalogueByRequestBOQFile()">Upload</button>
+           </div>
+      </div>
+  </div>
+</ng-template>
+<ng-template #editItemModal>
+    <div class="modal-header">
+        <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+        <div class="col-6 pad-nill">
+          <h5>Update Item Details</h5>
+        </div>
+      </div>
+      <div class="modal-body " style="min-height: 59vh;">
+        <div class="row readonly-cls">
+            <div class="col-6">
+                <label>Description</label>
+                <p>{{editItemModel.description}}</p>
+            </div>
+            <div class="col-6">
+                <label>Curstomer Item Code</label>
+                <p>{{editItemModel.clientItemCode}}</p>
+            </div>
+            <div class="col-6">
+                <label>Category</label>
+                <p>{{editItemModel.category}}</p>
+            </div>
+            <div class="col-6">
+                <label>Category</label>
+                <p>{{editItemModel.category}}</p>
+            </div>
+            <div class="col-6">
+                <label>Quantity</label>
+                <p>{{editItemModel.quantity}}</p>
+            </div>
+            <div class="col-md-12">
+                <label>
+                    Attached Documents
+                </label>
+                <div class="file-content" *ngIf="editItemModel?.documents?.length>0 " >
+                    <div class="value" *ngFor="let comment of editItemModel?.documents">
+                      <p *ngIf="comment['fileName']">{{comment['fileName']}}
+                       <ng-container  >
+                        <a *ngIf="comment['fileName'].split('.').splice(-1) == 'xlsx' || comment['fileName'].split('.').splice(-1) == 'xls' || comment['fileName'].split('.').splice(-1) == 'csv'"  [href]="'data:application/octet-stream;base64,' + comment['file'] | filePipe" download="{{comment['fileName']}}" data-toggle="tooltip" [title]="'Download '+ comment['fileName']"> <img class="cursor-pointer ml-3" src="/assets/images/new/download.svg" width="25" height="25"   aria-hidden="true"  data-toggle="tooltip" [title]="'Download '+ comment['fileName']"/> </a>
+
+                        <a *ngIf="comment['fileName'].split('.').splice(-1) == 'pdf'"  [href]="'data:application/pdf;base64,' + comment['file'] | filePipe" download="{{comment['fileName']}}" data-toggle="tooltip" [title]="'Download '+ comment['fileName']" data-toggle="tooltip" [title]="'Download '+ comment['fileName']"> <img class="cursor-pointer ml-3" src="/assets/images/new/download.svg" width="25" height="25"   aria-hidden="true"  data-toggle="tooltip" [title]="'Download '+ comment['fileName']"/> ></a>
+
+
+
+                        <a *ngIf="comment['fileName'].split('.').splice(-1) == 'PNG'|| comment['fileName'].split('.').splice(-1) == 'png'|| comment['fileName'].split('.').splice(-1) == 'jpeg' || comment['fileName'].split('.').splice(-1) == 'JPEG' || comment['fileName'].split('.').splice(-1) == 'JPG' || comment['fileName'].split('.').splice(-1) == 'jpg'"  [href]="'data:application/octet-stream;base64,' + comment['file'] | filePipe" download="{{comment['fileName']}}">
+                            <img class="cursor-pointer ml-3" src="/assets/images/new/download.svg" width="25" height="25"   aria-hidden="true"  data-toggle="tooltip" [title]="'Download '+ comment['fileName']"/>  </a>
+
+
+                        <a *ngIf="comment['fileName'].split('.').splice(-1) == 'txt'  ||comment['fileName'].split('.').splice(-1) == 'pptx'|| comment['fileName'].split('.').splice(-1) == 'docx'|| comment['fileName'].split('.').splice(-1) == 'doc' || comment['fileName'].split('.').splice(-1) == 'ppt'"  [href]="'data:application/octet-stream;base64,' + comment['file'] | filePipe" download="{{comment['fileName']}}" data-toggle="tooltip" [title]="'Download '+ comment['fileName']"> <img class="cursor-pointer ml-3" src="/assets/images/new/download.svg" width="25" height="25"   aria-hidden="true"  data-toggle="tooltip" [title]="'Download '+ comment['fileName']"/> </a>
+                       </ng-container>
+
+
+                        </p>
+
+                    </div>
+
+                </div>
+                <div class="noDataFoundCls pl-3" *ngIf="editItemModel?.documents?.length<=0 ">No Attachements available</div>
+            </div>
+
+
+ <ng-container *ngIf="isEditable">
+        <div class="col-md-11">
+            <div class="form-group">
+              <label for="description">Item Description: <b style="color: red;">*</b></label>
+              <textarea type="text" required [(ngModel)]="editItemModel.description" name="description"
+                [ngClass]="{ 'is-invalid': !editItemModel.description }" #description1="ngModel"
+                id="description1" class="form-control" placeholder="Item description " minlength="3"></textarea>
+              <div *ngIf="description1.invalid" class="invalid-feedback">
+                <div *ngIf="description1.errors.required">Item description is required</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-11 mt-3  ">
+            <label for="description">Add Attachments(If Any):  </label>
+            <div class="fileUploadCls"  (click)="fileInput.click()"
+             id="d_commentFile2" draggable="true" ngClass="{{dragAreaClass}}" (files)="filesDropped($event, true)" fileDragDrop>
+               <input type="file"
+               #fileInput [(ngModel)]="fileData" (change)="fileUploadEvent($event.target.files, true)" hidden
+               class="form-control" id="i_commentFile2" />
+
+            </div>
+
+          </div>
+          <div class="fileInfoCls col-md-12">
+            <i class="fa fa-info-circle"></i> File Validation : <span style="color: #000;">
+              File  should be only (.xls/.xlsx, pdf, .doc  and .txt) document
+            </span>
+           </div>
+           <div class="col-md-12 " *ngIf="commentFilesDataList.length>0" style="margin-top: 5px;
+           font-size: 13px;">
+             <div class="choosenFileCls">File Chosen :
+
+                <div *ngFor="let file of commentFilesDataList;let i=index">
+                <span> <img class="export-excel-icon" src="assets/images/export-excel.png" width="30" height="30"   />
+
+              {{file.fileName}}</span>
+               <span class="removeIcon"  (click)="removeFileFromList(i)" title="Remove File"><i class="fa fa-times-circle"
+                   aria-hidden="true"></i> Remove</span>
+                </div>
+            </div>
+           </div>
+           <div class="col-md-12 mt-3">
+
+            <button class="btn btn-primary btn-green" style="float: right" type="button" (click)="uploadItemCatalogueByRequest()">Update</button>
+            <button class="btn btn-primary btn-orange" style="float: right" type="button" (click)="closeModal()">Close</button>
+           </div>
+        </ng-container>
+        <div class="col-md-12" *ngIf="!isEditable">
+            <button class="btn btn-primary btn-orange" style="float: right" type="button" (click)="closeModal()">Close</button>
+           </div>
+        </div>
+    </div>
+</ng-template>
+<p-overlayPanel #op1 appendTo="body" [showTransitionOptions]="'0ms'" [hideTransitionOptions]="'0ms'">
+    <div class="p-1">
+            <div class="chart-panel"  *ngIf="isShowChart" >
+            <app-price-trend-chart [rowData]="chartData" [isItemLevel]="isItemLevel"></app-price-trend-chart>
+
+        </div>
+    </div>
+    </p-overlayPanel>

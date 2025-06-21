@@ -1,0 +1,135 @@
+
+
+
+:host ::ng-deep .ui-table table {
+        width: auto;
+        min-width: 100%;
+        table-layout: fixed;
+}
+
+.blurText {
+        color: transparent;
+        text-shadow: 0 0 8px #000;
+}
+
+.table-cell-overflow-ellipse {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        max-width: 155px;
+}
+
+.sub-cat-filter-sec {
+        margin: 12px;
+        border: 1px solid;
+        padding: 11px;
+        margin-left: 0px;
+        background: #fbf8f8;
+        color: #fff;
+
+        ::ng-deep .label-subcat {
+                font-weight: 600 !important;
+        }
+
+        ::ng-deep .filter-cls {
+                font-weight: 600 !important;
+        }
+}
+.table-cell-overflow-ellipse{
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        max-width: 155px;
+        width: 155px;
+    }
+    .align-items-center{
+        display: flex;
+        align-items: center;
+    }
+      ::ng-deep.ui-overlaypanel-content {
+        padding: 0 !important;
+        border: 2px solid #cad4dc !important;
+        border-radius: 4px !important;
+        background-color: #fff !important;
+        background: #fff !important;
+        padding: 10px !important;
+    }
+
+    .price-icon-alignment{
+        display: flex;
+        align-items: center;
+        .pi{
+            cursor: pointer;
+        }
+        .pi-sort-amount-up{
+            color: #ff5d5d;
+
+        }
+        .pi-sort-amount-down{
+            color: #85d046;
+        }
+        .pi-sort-alt{
+            color: #5858ef;
+        }
+        span.price-content {
+            min-width: 90px;
+            text-align: right;
+            max-width: 180px;
+        }
+    }
+    .table-cell-overflow-ellipse-desc {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+.table-title .btn {
+    display: flex;
+    align-items: center;
+}
+
+input[type='radio']{
+    width: 20px;
+    height: 20px;
+}
+
+.addAddress{
+    background: #F9FAFB;
+    border: 2px dashed #828CC2;
+    box-sizing: border-box;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    min-height: 30vh;
+    > div {
+        text-align: center; font-size:larger;
+    }
+    .addr{
+        font-size: 3rem;
+        color: #707071;
+    }
+}
+.removeAddress{
+    color: red;
+    cursor: pointer;
+    span{
+        padding: 0px 4px;
+    }
+}
+
+.readonly-cls {
+    label{
+        font-weight: 600;
+    }
+    p{
+        margin-left :10px;
+
+    }
+}
+
+.fileUploadCls {
+    height: 150px;
+    background: #edf4f8;
+    width: 91%;
+}

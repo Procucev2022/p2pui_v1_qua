@@ -1,0 +1,39 @@
+<div class="col-12 card-layout">
+    <div class="row">
+        <div class="col-12 page-title">
+            <h5>UOM(s)</h5>
+        </div>
+        <div class="col-12 " style="padding-top: 6px;" #pposRef>
+            <div class="prqContainer row">
+                <div class="col-12" *ngIf="uomGridCoreData">
+                    <app-common-grid [gridData]="uomGridCoreData" [parentId]="''" (actionEvent)="onClickCommonGrid($event)">
+                    </app-common-grid>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<ng-template #createModal>
+    <div class="modal-header">
+        <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+        <p>Create UOM</p>
+    </div>
+    <div class="modal-body">
+        <div class="row form-group">
+            <div class="col-3">
+                <label class="required-label">Description</label>
+            </div>
+            <div class="col-9">
+                <input [(ngModel)]="description" class="form-control" placeholder="Description" />
+            </div>
+        </div>
+    </div>
+    <mat-dialog-actions align="end">
+        <!-- <button mat-raised-button color="primary" type="button" (click)="close()">Cancel </button> -->
+        <button  class="btn btn-green" color="primary" type="button" (click)="saveUOM()">
+         <span *ngIf="!selectedUOM">Save</span>
+         <span *ngIf="selectedUOM">Update</span>
+        </button>
+    </mat-dialog-actions>
+</ng-template>

@@ -1,0 +1,140 @@
+<mat-dialog-content>
+    <div class="col-12 page-title-pane">
+        <h5>PR View</h5>
+    </div>
+    <div class="col-md-12">
+
+        <p-table #viewPRByIdTable [columns]="viewPRByIdDetailHeaders" [value]="viewPrByIdList" sortMode="multiple"
+                    [paginator]="true" [rows]="pageRecordSize" id="viewPRByIdTable" [rowsPerPageOptions]="pageOptions"
+                        [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData" [scrollable]="true">
+                        <ng-template pTemplate="caption">
+                        <div class="searchPanel">
+                            <input type="text" pInputText size="50" placeholder="Search.."
+                            (input)="viewPRByIdTable.filterGlobal($event.target.value, 'contains')" style="width:auto; float: right;" />
+                        </div>
+                        </ng-template>
+                        <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <!-- <th style="width: 3em">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th> -->
+                            <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                            {{col.header}}
+                            <!-- <p-dropdown *ngSwitchCase="'discountType'" appendTo="body" [options]="discountType"  [style]="{'width':'100%'}" (onChange)="rfqTable.filter($event.value, col.field, 'equals')"></p-dropdown> -->
+                            </th>
+                        </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-columns="columns">
+                        <tr [pSelectableRow]="rowData">
+                            <!-- <td  style="width: 3em">
+                                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                            </td> -->
+                            <td *ngFor="let col of columns">
+                                <span *ngIf="!col.isLink">
+                                  <span *ngIf="col.field == 'clientStatus'">{{rowData[col.field].uiDisplay}}</span>
+                                  <span *ngIf="col.field != 'clientStatus'">{{rowData[col.field]}}</span>
+                                </span>
+                            </td>
+                        </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage" let-columns>
+                        <tr>
+                            <td [attr.colspan]="5" style="text-align:center;">
+                            No Records Found.
+                            </td>
+                        </tr>
+                        </ng-template>
+                        <ng-template pTemplate="paginatorleft">
+                        <div *ngIf="viewPRByIdTable._totalRecords > 0">
+                            <b>Showing {{viewPRByIdTable.first+1}} to {{viewPRByIdTable.first+viewPRByIdTable.rows > viewPRByIdTable.totalRecords?viewPRByIdTable.totalRecords: viewPRByIdTable.first+viewPRByIdTable.rows}} of {{viewPRByIdTable.totalRecords}}</b>
+                            <!-- <app-page-info [totalRecords]="viewPrByIdList?.length" [pageData]="paginatoryDetails"></app-page-info> -->
+                        </div>
+                        </ng-template>
+                </p-table>
+
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+</mat-dialog-actions>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="container">
+    <div class="row">
+        <div class="col-12 page-title-pane">View Created PR Details</div>
+        <div class="col-12 page-body-pane">
+                <fieldset class="col-md-12">
+                    <legend>PR Details</legend>
+
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table" style="text-align: justify;">
+                                        <thead>
+                                          <tr>
+                                            <th>ITEM DESCRIPTION</th>
+                                            <th>MATERIAL SPECIFICATIONS</th>
+                                            <th>UNITS</th>
+                                            <th>QUANTITY</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <tr *ngFor="let clientBank of prDetails ">
+                                            <td>{{ clientBank.item_description}}</td>
+                                            <td>{{ clientBank.material_specfications}}</td>
+                                            <td>{{ clientBank.units}}</td>
+                                            <td>{{ clientBank.quantity}}</td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="col-md-12">
+                    <legend>BOQ</legend>
+
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="col-md-12">
+                    <legend>Documents</legend>
+
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+        </div>
+    </div>
+</div> -->

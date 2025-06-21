@@ -1,0 +1,32 @@
+<div class="modal-header">
+  <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+  <ng-container *ngIf="!selectedData.id">
+    <div class="col-6" *ngIf="selectedData.type != 'Item'">Create Sub Category</div>
+    <div class="col-6" *ngIf="selectedData.type == 'Item'">Create Item</div>
+  </ng-container>
+  <ng-container *ngIf="selectedData.id">
+    <div class="col-6" *ngIf="selectedData.type != 'Item'">Assign Sub Category</div>
+    <div class="col-6" *ngIf="selectedData.type == 'Item'">Assign Category for {{selectedData.description}}</div>
+  </ng-container>
+</div>
+<div class="modal-body">
+  <form  name="productCategory" (ngSubmit)="productCategory.form.valid " #productCategory="ngForm" novalidate>
+    <div class="col-12 row" style="border-bottom: 2px solid #dcc4ba8f;; margin-bottom: 15px;">
+      <div class="col-5 text-right">
+          <label>Type</label>
+      </div>
+      <div class="col-7">
+          <mat-radio-group name="type" [(ngModel)]="type" #radioGroup="matRadioGroup">
+            <mat-radio-button value="hsn">Product</mat-radio-button>
+            <mat-radio-button value="sac">Services</mat-radio-button>
+          </mat-radio-group>
+      </div>
+    </div>
+    <div class="col-md-12 row" *ngIf="type == 'hsn'">
+      <app-product-sub-category [selecteItemData]="selectedData"></app-product-sub-category>
+    </div>
+    <div class="col-md-12 row" *ngIf="type == 'sac'">
+      <app-service-sub-category  [selecteItemData]="selectedData"></app-service-sub-category>
+    </div>
+  </form>
+</div>

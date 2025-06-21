@@ -1,0 +1,15 @@
+.ui-table-scrollable-body {
+    overflow: auto;
+    position: relative;
+    height: auto;
+    max-height: auto !important;
+    overflow-y: auto;
+}
+.modal-body {
+    position: relative;
+    flex: 1 1 auto;
+    padding: 1rem;
+    max-height: 52vh;
+    overflow-y: auto;
+    border-top: 1px solid #ed581780;
+}

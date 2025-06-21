@@ -1,0 +1,109 @@
+<div  *ngIf="this.loggedUserType === 'CategoryManager'" class="refresh-bid"
+ style="position: relative; background: none;" data-toggle="tooltip" title="Refresh Auction">
+ <i class="fa fa-refresh ref-bac" aria-hidden="true" (click)="refresh(bidsData?.description)"></i></div>
+
+<div class="col-12" >
+  <div class="col-12 bid-panel"  *ngIf="this.loggedUserType === 'CategoryManager'">
+
+    <div class="row">
+      <div class="col-3"></div>
+      <div class="col-3"></div>
+      <div class="col-3"></div>
+      <div class="col-3">
+        <div *ngIf="!auctionExpired">
+          <div  id="countdowntimer">
+            <div class="count-down-timer-panel" *ngIf="auctionType != 'sealed bid'">
+            <i class="fa fa-clock-o" aria-hidden="true"></i>
+            <countdown #countdown  [config]="{leftTime: auctionEndsInSeconds}" (finished)="finishTest()">$!h!<span class="timeText">Hr.</span>:$!m!<span class="timeText">Min.</span>:$!s!<span class="timeText">Secs.</span></countdown>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="auctionExpired" style="color: red;">
+          <h6 class="label-text">&nbsp;</h6>
+          <label class="label-value">Time Up!</label>
+          </div>
+      </div>
+      <div class="col-3">
+
+          <label>Auction Name</label>
+           <h6>{{bidsData?.auctionName}} </h6>
+      </div>
+      <div class="col-3">
+        <label>Auction Start Date</label>
+        <h6>{{bidsData?.auctionstarttime | date: 'dd-MM-yyyy hh:mm:ss a'}} </h6>
+      </div>
+      <div class="col-3">
+        <label>Auction End Date</label>
+        <h6> {{bidsData?.auctionendtime | date: 'dd-MM-yyyy hh:mm:ss a'}}</h6>
+      </div>
+      <div class="col-3">
+        <label>Auction Status1</label>
+         <h6> {{bidsData?.auctionstatus?.uiDisplay}} </h6>
+      </div>
+    </div>
+  </div>
+    <div class="row bid-panel bids-panel">
+      <div class="col-3">
+        <p>Start Price</p>
+        <p>{{bidsData?.startpricevalue}}</p>
+      </div>
+      <div class="col-3">
+        <p>Bid Difference</p>
+        <p>{{bidsData?.minimumBidReductionPrice}}</p>
+      </div>
+      <div class="col-3">
+        <p>Leading Price</p>
+        <p>{{bidsData?.leadingPrice}}</p>
+      </div>
+      <div class="col-3">
+        <p>Savings</p>
+        <p>{{bidsData?.savings}}</p>
+      </div>
+    </div>
+</div>
+<div class="col-12">
+  <div class="table-title">
+    <div class="row">
+      <div class="col-sm-6">
+        <h2>Bids</h2>
+        <p><span class="dot"></span>{{auctionBidsList?.length}} Total</p>
+      </div>
+      <div class="col-sm-6">
+        <input class="main-input" style="float: right;" type="text" pInputText size="50" placeholder="Search.."
+              (input)="prTable.filterGlobal($event.target.value, 'contains')" />
+      </div>
+    </div>
+  </div>
+  <p-table #prTable [columns]="auctionBidTableHeaders" [value]="auctionBidsList" [scrollable]="true" sortMode="multiple" [paginator]="true" [rows]="pageRecordSize"  id="prTable"
+  [rowsPerPageOptions]="pageOptions"  [style]="{width:'100%'}" exportFilename="roles details">
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th *ngFor="let col of columns" [pSortableColumn]="col.field"
+      [style.width]="col.width">
+        {{col.header}}
+        <p-sortIcon [field]="col.field"></p-sortIcon>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-columns="columns" let-rowData>
+    <tr [pSelectableRow]="rowData" >
+      <td *ngFor="let col of columns" [style.width]="col.width">
+        <span *ngIf="!col.isLink"> {{rowData[col.field]}}</span>
+        <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);" > {{rowData[col.field]}} </a></span>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage" let-columns>
+    <tr>
+      <td [attr.colspan]="5" style="text-align:center;">
+        No Records Found.
+      </td>
+    </tr>
+  </ng-template>
+  <!-- <ng-template pTemplate="paginatorleft">
+    <div *ngIf="auctionBidsList?.length > 0">
+      <app-page-info [totalRecords]="auctionBidsList.length" [pageData]="paginatoryDetails"></app-page-info>
+    </div>
+  </ng-template> -->
+</p-table>
+</div>

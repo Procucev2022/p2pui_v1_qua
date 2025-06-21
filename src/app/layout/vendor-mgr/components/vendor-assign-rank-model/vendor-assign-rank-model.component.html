@@ -1,0 +1,28 @@
+<div class="modal-header">
+  <button class="btn btn-warning modal-close-btn"  mat-dialog-close>✖</button>
+    <div class="col-6">
+          <h5>Assign Class</h5>
+      </div>
+</div>
+<div class="modal-body">
+      <div class="col-12 page-body-pane">
+          <div class="prqContainer row">
+              <div class="col-12">
+                  <form #viewIssue="ngForm">
+                      <div class="form-group">
+                        <label for="priority" style="font-size: medium; font-weight: bolder;" class="form-label">Assign Class</label>
+                        <select class="form-control" id="rank" placeholder="Add HSN Code"
+                          name="rank" [(ngModel)]="ranksModal" #rank="ngModel">
+                          <option [value]="undefined" selected>Select</option>
+                          <option *ngFor = "let opt of ranksList" [value]="opt">{{opt}}</option>
+                        </select>
+                      </div>
+                        <div>
+                            <button class="btn btn-primary btn-blue" style="float: right;" (click)="sumbitRank()" type="button">Send</button>
+                        </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
+

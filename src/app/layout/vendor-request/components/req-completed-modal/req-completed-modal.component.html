@@ -1,0 +1,80 @@
+<div class="col-12">
+    <div class="modal-header">
+        <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+        <div class="col-6">
+            <h5>Vendor Details</h5>
+        </div>
+    </div>
+    <form [formGroup]="vendorsFrom" (ngSubmit)="onSubmit()">
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-12 ">
+                <div class="prqContainer row">
+                    <div class="col-12">
+                            <div>
+                                <div formArrayName="vendors" class="vendor-input"
+                                    *ngFor="let vendor of vendorsFrom.get('vendors')['controls']; let i = index">
+                                    <div [formGroupName]="i" class="row mb-3">
+                                        <div  class="col-md-6 form-group  input-block">
+                                            <label for="text"     class="  col-form-label">Vendor Id:<b  style="color: red;">*</b></label>
+                                            <input type="text" required
+                                                class="form-control"
+                                                formControlName="vendorId"
+                                                id="{{i}}_vendorId"
+                                                placeholder="Vendor id">
+                                        </div>
+                                        <div class="col-md-6 form-group">
+                                            <label for=" text" class=" col-form-label">Vendor  Name:<b  style="color: red;">*</b></label>
+
+                                            <input type="text" required
+                                                class="form-control"
+                                                formControlName="vendorName"
+                                                id="{{i}}_vendor_name"
+                                                placeholder="Vendor Name">
+
+                                        </div>
+
+                                    </div>
+                                    <div class="btn-block">
+                                        <button class="btn btn-green"
+                                        color="primary" cdkFocusInitial
+                                        type="button"
+                                        (click)="addVendor()"
+                                        *ngIf="i == vendorsFrom.get('vendors')['controls']?.length-1"
+                                        style="margin-right: 5px;float: right;border-radius: 20px;">Add</button>
+                                    <button class="btn btn-orange" color="warn"
+                                        cdkFocusInitial type="button"
+                                        *ngIf="i < vendorsFrom.get('vendors')['controls']?.length-1"
+                                        (click)="removeVendor(i)"
+                                        style="margin-right: 5px;float: right;border-radius: 20px;">Delete</button>
+                                    <button class="btn btn-red"
+                                        style="margin-right: 5px;float: right;border-radius: 20px;"
+                                        type="button"
+                                        color="warn" (click)="vendor.reset()">Reset</button>
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+
+
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div style=" " class="modal-footer">
+        <mat-dialog-actions align="end">
+            <button class="btn btn-green"
+                color="primary" cdkFocusInitial
+                type="submit">Submit</button>
+            <button class="btn btn-red" color="warn"
+                (click)="closeDialog()" mat-dialog-close>Cancel</button>
+        </mat-dialog-actions>
+    </div>
+</form>
+</div>

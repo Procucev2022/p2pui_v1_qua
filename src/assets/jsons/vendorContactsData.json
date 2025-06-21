@@ -1,0 +1,29 @@
+[{
+    "id": 1,
+    "firstName" : "s",
+    "lastName" : "pratap",
+    "email" : "pratap@gmail.com",
+    "phone" : "098765434233"
+},
+{
+    "id": 2,
+    "firstName" : "s",
+    "lastName" : "pratap",
+    "email" : "pratap@gmail.com",
+    "phone" : "098765434233"
+},
+{
+    "id": 3,
+    "firstName" : "s",
+    "lastName" : "pratap",
+    "email" : "pratap@gmail.com",
+    "phone" : "098765434233"
+},
+{
+    "id": 4,
+    "firstName" : "s",
+    "lastName" : "pratap",
+    "email" : "pratap@gmail.com",
+    "phone" : "098765434233"
+}
+]

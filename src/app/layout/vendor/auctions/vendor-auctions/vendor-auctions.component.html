@@ -1,0 +1,11 @@
+<mat-tab-group>
+  <mat-tab label="Closed Auctions">
+    <app-scheduled-auctions [isBidNow]="'closed'"></app-scheduled-auctions>
+  </mat-tab>
+  <mat-tab label="Upcoming Auctions"> 
+    <app-scheduled-auctions [isBidNow]="'future'"></app-scheduled-auctions>
+  </mat-tab>
+  <mat-tab label="Live Auctions"> 
+    <app-scheduled-auctions [isBidNow]="'live'"></app-scheduled-auctions>
+  </mat-tab>
+</mat-tab-group>

@@ -1,0 +1,86 @@
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="navbar-brand" [ngClass]="{ logoAdjust: !sidebar, transition: !sidebar}" [hidden]="sidebar">
+        <img src="assets/images/Procucev_Logo.svg" width="230px" [routerLink]="['/dashboard']"
+            [ngClass]="{ logoAdjust: !sidebar, transition: !sidebar}">
+    </div>
+    <div class="navbar-brand logo-adjust" [ngClass]="{addCustomCls: sidebar, transition: sidebar}" [hidden]="!sidebar">
+        <img src="/assets/images/logo_mini_procuceve.png" [routerLink]="['/dashboard']">
+    </div>
+    <button class="navbar-toggler" type="button" (click)="toggleSidebar()">
+        <i class="fa fa-bars text-muted" aria-hidden="true"></i>
+    </button>
+
+    <div class="collapse navbar-collapse">
+
+        <div class="navbar-nav ml-auto">
+            <li *ngIf="roleName =='CategoryManager' || roleName =='CategoryManager2'">
+                <div class="visitor-count">
+                    <label>Login Visitor's Count :</label>
+                    <span>{{visitorsCount}}</span>
+                </div>
+            </li>
+            <li class="profile_menu" #profileMenu>
+                <img class="prof" (click)="onProfileClick()" width="45" src="/assets/images/menu/userProfile.png">
+                <!-- <img src="/assets/images/menu/help-circle.svg"> -->
+                <div  [hidden] ="profileCheck">
+                    <ul  class="profile_info_block">
+                        <div class="col-12" style="padding: 12px;">
+                            <div class="userInfo">{{loggedUserName}}</div>
+                            <div class="userInfoEmail">{{loggedUserName}}</div>
+                        </div>
+                        <div class="col-12 role alg">
+                            <div class="userValue"><span>Organization:</span> {{orgName}}</div>
+                            <div class="userValue"><span>Role:</span> {{roleName}}</div>
+                        </div>
+                        <div class="col-12 alg">
+                            <div class="userValue" style="cursor:not-allowed;">Profile Settings<img src="/assets/images/menu/users.svg"></div>
+                        </div>
+                        <div class="col-12 alg">
+                            <div class="userValue" (click)="onSupport()" style="cursor: pointer;">Support<img src="/assets/images/menu/help-circle.svg" ></div>
+                        </div>
+                        <div class="col-12 alg" *ngIf="roleName == 'CategoryManager'">
+                            <div class="userValue" style="cursor:pointer;"> <i class="fa fa-refresh" (click)="reAuthenticate()"></i>  {{authenticateData?.status}}
+                                <span class="auth-icon">
+                                    <img [src]="authenticateData?.imgURL" width="40" height="40" style="padding:0" />
+                                    <i   class=" {{ authenticateData.isAuthenticated == true ? 'fa fa-check' :'fa fa-times' }}" aria-hidden="true"
+                                    ></i>
+
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 alg" *ngIf="roleName=='Registration' || roleName=='PartialVendor' || roleName=='Vendor' || roleName == 'CategoryManager2'|| roleName == 'CategoryManager'">
+                            <div class="userValue" style="cursor:pointer;">
+                                <div class="btn-container">
+                                    <label>Current View <i class="fa fa-window-restore" aria-hidden="true"></i></label>
+                                    <div class="" role="group" aria-label="Basic example">
+                                        <button   type="button" class="btn btn-primary" (click)="onSelectSystem('gmtName')" [ngClass]="{'enable-btn': currentView == SystemViewConfig.GMT_BASIC || currentView == SystemViewConfig.GMT_BASIC_PLUS}">{{ loggedUserDetails.org.gmtName}}</button>
+                                        <button   type="button" class="btn btn-primary" (click)="onSelectSystem('dpsName')"  [ngClass]="{'enable-btn': currentView == SystemViewConfig.DPS_BASIC || currentView == SystemViewConfig.DPS_BASIC_PLUS}" >{{loggedUserDetails.org.dpsName}}</button>
+                                        <button   type="button" class="btn btn-primary" (click)="onSelectSystem('bfsName')"  [ngClass]="{'enable-btn': currentView ==   SystemViewConfig.BFS_PRO}" >{{loggedUserDetails.org.bfsName}}</button>
+                                      </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-12 alg">
+                            <div class="userValue" style="cursor: pointer;"  (click)="onLoggedout()">Logout<img src="/assets/images/menu/log-out.svg"></div>
+                        </div>
+                    </ul>
+                </div>
+            </li>
+        </div>
+
+    </div>
+
+</nav>
+
+<ng-template #supportRef>
+    <div class="modal-header">
+        <h3>For Support</h3>
+        <button class="btn-skelton modal-close-btn" mat-dialog-close>✖</button>
+    </div>
+    <div class="modal-body">
+        <div>
+            <h5 class="mt-5" style="    text-align: center;">For Any Support Please send mail to <b>info@procucev.com</b></h5>
+        </div>
+    </div>
+</ng-template>

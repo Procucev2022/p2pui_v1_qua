@@ -1,0 +1,56 @@
+<div class="col-12 row pad-nill spec-header mrg-nill">
+  <h4 class="card-name chart-head">{{"PR Lead Time"}}</h4>
+</div>
+<div class="col-md-12 row">
+  <div class="col-md-4 chart">
+    <div class="chart-specs">
+      <div class="color-wrapper" *ngIf="disableColorWrapper">
+          <div *ngFor="let item of chartBackgroundList">
+              <div class="color-ref" [ngStyle]="{background: item}"></div>
+          </div>
+      </div>
+      <div class="label-ref">
+          <div *ngFor="let item of prLeadTimeHeaders">
+              {{ item }}
+          </div>
+      </div>
+      <div class="percent">
+          <div *ngFor="let item of prLeadTimeList">
+              {{item}}
+          </div>
+      </div>
+  </div>
+  </div>
+  <div class="col-md-7">
+    <div class="card-section sec-space">
+      <div class="card-body">
+        <!-- <h4 class="card-name">{{"PR Lead Time"}}</h4> -->
+        <div class="col-md-12">
+          <div class="card-body" style="padding: 0px;">
+            <!-- <h4 class="card-name">{{"Total Auctions"}}</h4> -->
+            <div class="row" style="align-items: end;">
+              <div class="col-md-4">
+                <label for="prTimeFromdate">From Date</label>
+                <p-calendar [(ngModel)]="prTimeFromDate" placeholder="DD-MM-YYYY" dateFormat="dd-mm-yy" showIcon="true"></p-calendar>
+
+              </div>
+              <div class="col-md-4">
+                <label for="prTimeTodate">To Date</label>
+                <p-calendar [(ngModel)]="prTimeToDate" placeholder="DD-MM-YYYY" dateFormat="dd-mm-yy" showIcon="true"></p-calendar>
+
+              </div>
+              <button type="button" class="btn btn-primary btn-blue" (click)="onSubmit('Time')">Submit</button>
+            </div>
+          </div>
+        </div>
+        <div class="chart-panel col-md-12 m-3 p-5">
+          <canvas id="canvas"  height="150"></canvas>
+        </div>
+        <div *ngIf="isDataPresent" style="text-align: center">
+          <h3><b>No Data Avilable in selected dates</b></h3>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3"></div>
+</div>

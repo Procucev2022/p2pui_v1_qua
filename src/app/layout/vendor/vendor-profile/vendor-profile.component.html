@@ -1,0 +1,978 @@
+<div class="col-12">
+    <div class="row" style="border: 0px solid #efefef; box-shadow: 0px 0px 4px 1px #cecece;">
+        <div class="col-12 page-title" style="text-align: center;background: #cfd7e3; border-radius: 6px 6px 0px 0px;">
+            <h5 style="color: rgb(15, 11, 133);font-size: 20px;"> Profile Details </h5>
+        </div>
+        <div class="col-12 " style="padding-top: 6px;">
+            <fieldset class="col-md-12">
+                <legend>GENERAL</legend>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="view-details-panel-cls">
+                            <div class="panel-content-box">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
+                                                class="col-sm-6 col-form-label">COMPANY NAME</label>
+                                            <div class="col-sm-6 content-value generaltext">
+                                                {{vendorRegData?.companyName}}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="deptName" style="font-size: medium; font-weight: bolder;"
+                                                class="col-sm-6 col-form-label">MSME</label>
+                                            <div class="col-sm-6 content-value generaltext">
+                                                {{vendorRegData?.msme}}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="deptName" style="font-size: medium; font-weight: bolder;"
+                                                class="col-sm-6 col-form-label">STATE</label>
+                                            <div class="col-sm-6 content-value generaltext">
+                                                {{vendorRegData?.state}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label for="deptName" style="font-size: medium; font-weight: bolder;"
+                                                class="col-sm-6 col-form-label">PAN</label>
+                                            <div class="col-sm-6 content-value generaltext">
+                                                {{vendorRegData?.pan}}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
+                                                class="col-sm-6 col-form-label">ADDRESS1</label>
+                                            <div class="col-sm-6 content-value generaltext">
+                                                {{vendorRegData?.address1}}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="deptName" style="font-size: medium; font-weight: bolder;"
+                                                class="col-sm-6 col-form-label">PIN CODE</label>
+                                            <div class="col-sm-6 content-value generaltext">
+                                                {{vendorRegData?.zipCode}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
+                                                class="col-sm-6 col-form-label">GSTIN</label>
+                                            <div class="col-sm-6 content-value generaltext">
+                                                {{vendorRegData?.gstin}}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="deptName" style="font-size: medium; font-weight: bolder;"
+                                                class="col-sm-6 col-form-label">CITY</label>
+                                            <div class="col-sm-6 content-value generaltext">
+                                                {{vendorRegData?.city}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- </mat-card> -->
+
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <!-- <fieldset class="col-md-12">
+                <legend>Branch Details</legend>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="view-details-panel-cls" >
+                            <div class="panel-content-box">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
+                                                class="col-sm-6 col-form-label">BRANCH NAME</label>
+                                            <div class="col-sm-6 content-value">
+                                                {{vendorRegData?.branchName}}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="deptName" style="font-size: medium; font-weight: bolder;"
+                                                class="col-sm-6 col-form-label">CITY</label>
+                                            <div class="col-sm-6 content-value">
+                                                {{vendorRegData?.city}}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="deptName" style="font-size: medium; font-weight: bolder;"
+                                                class="col-sm-6 col-form-label">OTHERS</label>
+                                            <div class="col-sm-6 content-value">
+                                                {{vendorRegData?.others}}
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
+                                            class="col-sm-6 col-form-label">GSTIN</label>
+                                            <div class="col-sm-6 content-value">
+                                                {{vendorRegData?.gstin}}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="deptName" style="font-size: medium; font-weight: bolder;"
+                                                class="col-sm-6 col-form-label">STATE</label>
+                                            <div class="col-sm-6 content-value">
+                                                {{vendorRegData?.city}}
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group row">
+                                            <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
+                                            class="col-sm-6 col-form-label">BRANCH ADDRESS</label>
+                                            <div class="col-sm-6 content-value">
+                                                {{vendorRegData?.city}}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="deptName" style="font-size: medium; font-weight: bolder;"
+                                                class="col-sm-6 col-form-label">PIN CODE</label>
+                                            <div class="col-sm-6 content-value">
+                                                {{vendorRegData?.city}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </fieldset> -->
+
+            <fieldset class="col-md-12">
+                <legend>BRANCH DETAILS</legend>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+
+                        <p-table #branchTable [columns]="branchHeaders" [value]="vendorRegData?.orgBranches"
+                            sortMode="multiple" [paginator]="true" [rows]="pageRecordSize" id="branchTable"
+                            [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}" exportFilename="products"
+                            [(selection)]="selectedData" [scrollable]="true">
+                            <ng-template pTemplate="caption">
+                                <div class="table-search">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <input class="main-input" type="text" pInputText size="50"
+                                                placeholder="Search.."
+                                                (input)="branchTable.filterGlobal($event.target.value, 'contains')" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                        {{col.header}}
+                                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                <tr [pSelectableRow]="rowData">
+                                    <td *ngFor="let col of columns">
+                                        <span *ngIf="!col.isLink"> {{rowData[col.field]}}</span>
+                                        <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);">
+                                                {{rowData[col.field]}} </a></span>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage" let-columns>
+                                <tr>
+                                    <td [attr.colspan]="5" style="text-align:center;">
+                                        No Records Found.
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="paginatorleft">
+                                <div  *ngIf="branchTable._totalRecords > 0">
+                                    <b>Showing {{branchTable.first+1}} to {{branchTable.first+branchTable.rows > branchTable.totalRecords?branchTable.totalRecords: branchTable.first+branchTable.rows}} of {{branchTable.totalRecords}}</b>
+                                    <!-- <app-page-info [totalRecords]="vendorRegData?.orgBranches.length"
+                                        [pageData]="paginatoryDetails">
+                                    </app-page-info> -->
+                                </div>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset class="col-md-12">
+                <legend> PRODUCTS</legend>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+
+                        <p-table #productsTable [columns]="productsHeaders" [value]="productsList" sortMode="multiple"
+                            [paginator]="true" [rows]="pageRecordSize" id="productsTable"
+                            [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}" exportFilename="products"
+                            [(selection)]="selectedData" [scrollable]="true">
+                            <ng-template pTemplate="caption">
+                                <div class="table-search">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <input class="main-input" type="text" pInputText size="50"
+                                                placeholder="Search.."
+                                                (input)="productsTable.filterGlobal($event.target.value, 'contains')" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <button type="button" class="btn btn-primary btn-blue"
+                                                (click)="onAddProduct('Add',{})">Add</button>
+                                            <button type="button" class="btn btn-danger btn-orange"
+                                                (click)='onDelete("productsList")'>Delete</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th style="width: 3em">
+                                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                    </th>
+                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                        {{col.header}}
+                                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                                    </th>
+                                    <th>Actions</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                <tr [pSelectableRow]="rowData">
+                                    <td style="width: 3em">
+                                        <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                                    </td>
+                                    <td *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse' : col.field == 'description' }">
+                                        <span *ngIf="!col.isLink">
+                                            <span *ngIf="col.field == 'description'" [title]="rowData[col.field]">{{rowData[col.field]}}</span>
+                                            <span *ngIf="col.field != 'description'">{{rowData[col.field]}}</span>
+                                        </span>
+                                        <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);">
+                                                {{rowData[col.field]}} </a></span>
+                                        <span class="crud-icons actionIcons"
+                                            *ngIf="rowData['fileName'] && rowData['file'] && col.fieldType">
+                                            <a [href]="'data:application/octet-stream;base64,' + rowData['file'] | filePipe"
+                                                download="{{rowData['fileName']}}"><i class="fa fa-download"
+                                                    aria-hidden="true" data-toggle="tooltip"
+                                                    [title]="'Download '+ rowData['fileName']"></i></a>
+                                        </span>
+
+                                    </td>
+                                    <td>
+                                        <button class="btn-skelton" (click)="onEditProduct(rowData)">
+                                            <img src="/assets/images/new/edit-data.png" title="Edit Product Details">
+                                        </button>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage" let-columns>
+                                <tr>
+                                    <td [attr.colspan]="5" style="text-align:center;">
+                                        No Records Found.
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="paginatorleft">
+                                <div  *ngIf="productsTable._totalRecords > 0">
+                                    <b>Showing {{productsTable.first+1}} to {{productsTable.first+productsTable.rows > productsTable.totalRecords?productsTable.totalRecords: productsTable.first+productsTable.rows}} of {{productsTable.totalRecords}}</b>
+                                    <!-- <app-page-info [totalRecords]="productsList.length" [pageData]="paginatoryDetails">
+                                    </app-page-info> -->
+                                </div>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <!-- <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        SERVICES
+                    </mat-panel-title>
+
+                </mat-expansion-panel-header> -->
+
+            <fieldset class="col-md-12">
+                <legend>SERVICES</legend>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+
+                        <p-table #servicesTable [columns]="servicesHeaders" [value]="servicesList" sortMode="multiple"
+                            [paginator]="true" [rows]="pageRecordSize" id="servicesTable"
+                            [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}" exportFilename="services"
+                            [(selection)]="selectedData" [scrollable]="true">
+                            <ng-template pTemplate="caption">
+                                <div class="table-search">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <input class="main-input" type="text" pInputText size="50"
+                                                placeholder="Search.."
+                                                (input)="servicesTable.filterGlobal($event.target.value, 'contains')" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <button type="button" class="btn btn-primary btn-blue"
+                                                (click)="onAddService('Add',{})">Add</button>
+                                            <button type="button" class="btn btn-danger btn-orange"
+                                                (click)='onDelete("servicesList")'>Delete</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th style="width: 3em">
+                                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                    </th>
+                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                        {{col.header}}
+                                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                                    </th>
+                                    <th>Actions</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                <tr [pSelectableRow]="rowData">
+                                    <td style="width: 3em">
+                                        <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                                    </td>
+                                    <td *ngFor="let col of columns"  [ngClass]="{'table-cell-overflow-ellipse' : col.field == 'description' }">
+                                        <span *ngIf="!col.isLink">
+                                            <span *ngIf="col.field == 'description'" [title]="rowData[col.field]">{{rowData[col.field]}}</span>
+                                            <span *ngIf="col.field != 'description'">{{rowData[col.field]}}</span>
+                                        </span>
+                                        <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);">
+                                                {{rowData[col.field]}} </a></span>
+
+                                    </td>
+                                    <td>
+                                        <button class="btn-skelton" (click)="onEditService(rowData)">
+                                            <img src="/assets/images/new/edit-data.png" title="Edit Service Detials">
+                                        </button>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage" let-columns>
+                                <tr>
+                                    <td [attr.colspan]="5" style="text-align:center;">
+                                        No Records Found.
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="paginatorleft">
+                                <div  *ngIf="servicesTable._totalRecords > 0">
+                                    <!-- <app-page-info [totalRecords]="servicesList.length" [pageData]="paginatoryDetails">
+                                    </app-page-info> -->
+                                    <b>Showing {{servicesTable.first+1}} to {{servicesTable.first+servicesTable.rows > servicesTable.totalRecords?servicesTable.totalRecords: servicesTable.first+servicesTable.rows}} of {{servicesTable.totalRecords}}</b>
+                                </div>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+
+            </fieldset>
+
+
+            <fieldset class="col-md-12">
+                <legend>CONTACTS</legend>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+
+
+                        <p-table #contactsTable [columns]="contactHeaders" [value]="vendorRegData?.vendorContact"
+                            sortMode="multiple" [paginator]="true" [rows]="pageRecordSize" id="contactsTable"
+                            [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}" exportFilename="services"
+                            [(selection)]="selectedData" [scrollable]="true">
+                            <ng-template pTemplate="caption">
+                                <div class="table-search">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <input class="main-input" type="text" pInputText size="50"
+                                                placeholder="Search.."
+                                                (input)="contactsTable.filterGlobal($event.target.value, 'contains')" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <!-- <th style="width: 3em">
+                                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                    </th> -->
+                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                        {{col.header}}
+                                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                                    </th>
+                                    <!-- <th>Actions</th> -->
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                <tr [pSelectableRow]="rowData">
+                                    <!-- <td style="width: 3em">
+                                        <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                                    </td> -->
+                                    <td *ngFor="let col of columns">
+                                        <span *ngIf="!col.isLink"> {{rowData[col.field]}}</span>
+                                        <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);"
+                                                (click)="getRFQs(rowData)">
+                                                {{rowData[col.field]}} </a></span>
+
+                                    </td>
+
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage" let-columns>
+                                <tr>
+                                    <td [attr.colspan]="5" style="text-align:center;">
+                                        No Records Found.
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="paginatorleft">
+                                <div  *ngIf="contactsTable._totalRecords > 0">
+                                    <b>Showing {{contactsTable.first+1}} to {{contactsTable.first+contactsTable.rows > contactsTable.totalRecords?contactsTable.totalRecords: contactsTable.first+contactsTable.rows}} of {{contactsTable.totalRecords}}</b>
+                                    <!-- <app-page-info [totalRecords]="vendorRegData?.vendorContact.length"
+                                        [pageData]="paginatoryDetails">
+                                    </app-page-info> -->
+                                </div>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+
+            </fieldset>
+
+
+            <fieldset class="col-md-12">
+                <legend>CLIENT REFERENCES</legend>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+
+                        <p-table #clientReferenceTable [columns]="clientRefHeaders"
+                            [value]="vendorRegData?.clientReference" sortMode="multiple" [paginator]="true"
+                            [rows]="pageRecordSize" id="clientReferenceTable" [rowsPerPageOptions]="pageOptions"
+                            [style]="{'width': '100%'}" exportFilename="services" [(selection)]="selectedData"
+                            [scrollable]="true">
+                            <ng-template pTemplate="caption">
+                                <div class="table-search">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <input class="main-input" type="text" pInputText size="50"
+                                                placeholder="Search.."
+                                                (input)="clientReferenceTable.filterGlobal($event.target.value, 'contains')" />
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <button type="button" class="btn btn-primary btn-blue"
+                                                (click)="onAddClientRef('Add',{})">Add</button>
+                                            <button type="button" class="btn btn-danger btn-orange"
+                                                (click)='onDelete("productsList")'>Delete</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th style="width: 3em">
+                                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                    </th>
+                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                        {{col.header}}
+                                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                                    </th>
+                                    <th>Actions</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                <tr [pSelectableRow]="rowData">
+                                    <td style="width: 3em">
+                                        <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                                    </td>
+                                    <td *ngFor="let col of columns"  [ngClass]="{'table-cell-overflow-ellipse' : col.field == 'comments' }">
+                                        <span *ngIf="!col.isLink">
+                                            <span *ngIf="col.field == 'comments'" [title]="rowData[col.field]">{{rowData[col.field]}}</span>
+                                            <span *ngIf="col.field != 'comments'">{{rowData[col.field]}}</span>
+                                        </span>
+                                        <span *ngIf="col.isLink && col.field == 'files'" class="cellLinkCls">
+                                            <a *ngFor="let file of rowData[col.field]">
+                                                <p *ngIf="file['fileName']" style="margin-bottom: 0px;">
+
+                                                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'xlsx' || file['fileName'].split('.').splice(-1) == 'xls' || file['fileName'].split('.').splice(-1) == 'csv'"
+                                                        [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe"
+                                                        download="{{file['fileName']}}" data-toggle="tooltip"
+                                                        [title]="'Download '+ file['fileName']">{{ file?.fileName }}</a>
+
+                                                    <!-- For PDF doucment download -->
+                                                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'pdf'"
+                                                        [href]="'data:application/pdf;base64,' + file['file'] | filePipe"
+                                                        download="{{file['fileName']}}" data-toggle="tooltip"
+                                                        [title]="'Download '+ file['fileName']" data-toggle="tooltip"
+                                                        [title]="'Download '+ file['fileName']">{{ file?.fileName }}</a>
+
+
+
+                                                    <!-- For jpeg/jpg & png download -->
+                                                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'png'|| file['fileName'].split('.').splice(-1) == 'jpeg' || file['fileName'].split('.').splice(-1) == 'jpg'"
+                                                        [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe"
+                                                        download="{{file['fileName']}}" data-toggle="tooltip"
+                                                        [title]="'Download '+ file['fileName']">{{ file?.fileName }}</a>
+
+
+                                                    <!-- For PPT & document download -->
+                                                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'txt'  ||file['fileName'].split('.').splice(-1) == 'pptx'|| file['fileName'].split('.').splice(-1) == 'docx'|| file['fileName'].split('.').splice(-1) == 'doc' || file['fileName'].split('.').splice(-1) == 'ppt'"
+                                                        [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe"
+                                                        download="{{file['fileName']}}" data-toggle="tooltip"
+                                                        [title]="'Download '+ file['fileName']">{{ file?.fileName }}</a>
+
+                                                </p>
+                                            </a>
+
+                                        </span>
+
+                                    </td>
+                                    <td>
+                                        <i style="margin-right: 5px;font-size: 16px;color: #2894f0; cursor: pointer;"
+                                            class="fa fa-pencil-square-o edit" (click)="EditClientRef(rowData)"><span
+                                                class="icontext">Edit</span></i>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage" let-columns>
+                                <tr>
+                                    <td [attr.colspan]="5" style="text-align:center;">
+                                        No Records Found.
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="paginatorleft">
+                                <div  *ngIf="clientReferenceTable._totalRecords > 0">
+                                    <b>Showing {{clientReferenceTable.first+1}} to {{clientReferenceTable.first+clientReferenceTable.rows > clientReferenceTable.totalRecords?clientReferenceTable.totalRecords: clientReferenceTable.first+clientReferenceTable.rows}} of {{clientReferenceTable.totalRecords}}</b>
+                                    <!-- <app-page-info [totalRecords]="vendorRegData?.clientReference.length"
+                                        [pageData]="paginatoryDetails">
+                                    </app-page-info> -->
+                                </div>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset class="col-md-12">
+                <legend>BANK DETAILS</legend>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+
+                        <div class="view-details-panel-cls">
+                            <div class="panel-content-box">
+                                <div class="row" *ngFor="let bankdetails of vendorRegData?.orgBankDetails">
+                                    <div class="col-sm-6">
+                                        <div class="form-group row">
+                                            <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
+                                                class="col-sm-6 col-form-label">BANK NAME</label>
+                                            <div class="col-sm-6 content-value">
+                                                {{bankdetails.bankName}}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="deptName" style="font-size: medium; font-weight: bolder;"
+                                                class="col-sm-6 col-form-label">BRANCH NAME</label>
+                                            <div class="col-sm-6 content-value">
+                                                {{bankdetails.branchName}}
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group row">
+                                            <label for="deptName" style="font-size: medium; font-weight: bolder;"
+                                                class="col-sm-6 col-form-label">ACCOUNT NUMBER</label>
+                                            <div class="col-sm-6 content-value">
+                                                {{bankdetails.accountNumber}}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
+                                                class="col-sm-6 col-form-label">IFSC CODE</label>
+                                            <div class="col-sm-6 content-value">
+                                                {{bankdetails.ifscCode}}
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                                <div class="content-value" *ngIf="vendorRegData?.orgBankDetails.length == 0">
+                                    No Records uploaded.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset class="col-md-12">
+                <legend>TURNOVER</legend>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+
+                        <div class="view-details-panel-cls">
+                            <div class="panel-content-box">
+                                <div class="row" *ngFor="let turnover of vendorRegData?.orgTurnOver">
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group row">
+                                            <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
+                                                class="col-sm-6 col-form-label">YEAR</label>
+                                            <div class="col-sm-6 content-value">
+                                                {{turnover.year}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group row">
+                                            <label for="deptName" style="font-size: medium; font-weight: bolder;"
+                                                class="col-sm-6 col-form-label">AMOUNT</label>
+                                            <div class="col-sm-6 content-value">
+                                                {{turnover.amount}}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="content-value" *ngIf="vendorRegData?.orgTurnOver.length == 0">
+                                    No Records uploaded.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </fieldset>
+
+
+            <fieldset class="col-md-12">
+                <legend>AUTHORIZED</legend>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <p>Authorized Distributor:<span
+                                style="font-size: 13px; margin-left: 10px;font-weight: bold;">{{vendorRegData?.authorizedDistributor}}</span>
+                        </p>
+                        <mat-card *ngIf="vendorRegData?.authorizedDistributor">
+                            <div class="view-details-panel-cls">
+                                <div class="panel-content-box">
+                                    <div class="row" *ngFor="let authorized  of vendorRegData?.distributors">
+
+                                        <div class="col-sm-4">
+                                            <div class="form-group row">
+                                                <label for="prCorrespondend"
+                                                    style="font-size: medium; font-weight: bolder;"
+                                                    class="col-sm-6 col-form-label">BRAND NAME</label>
+                                                <div class="col-sm-6 content-value">
+                                                    {{authorized.company}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group row">
+                                                <label for="deptName" style="font-size: medium; font-weight: bolder;"
+                                                    class="col-sm-6 col-form-label">TYPE OF ASSOCIATION</label>
+                                                <div class="col-sm-6 content-value">
+                                                    {{authorized.type}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group row">
+                                                <label for="deptName" style="font-size: medium; font-weight: bolder;"
+                                                    class="col-sm-6 col-form-label">DESCRIPTION</label>
+                                                <div class="col-sm-6 content-value">
+                                                    {{authorized.description}}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-card>
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset class="col-md-12">
+                <legend>DOCUMENTS</legend>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+
+                        <!-- <mat-card *ngIf="vendorRegData?.authorizedDistributor">
+                            <div class="view-details-panel-cls" >
+                                <div class="panel-content-box">
+                                    <div class="row" *ngFor="let documents of vendorRegData?.clientDocuments">
+
+                                        <div class="col-sm-6">
+                                            <div class="form-group row">
+                                                <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
+                                                    class="col-sm-6 col-form-label">Year</label>
+                                                <div class="col-sm-6 content-value">
+                                                    {{turnover.year}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group row">
+                                                <label for="deptName" style="font-size: medium; font-weight: bolder;"
+                                                    class="col-sm-6 col-form-label">Amount</label>
+                                                <div class="col-sm-6 content-value">
+                                                    {{turnover.amount}}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-card> -->
+                        <div class="form-group row" *ngFor="let file of vendorRegData?.documents;let i=index">
+                            <label style="font-size: medium; font-weight: bolder; margin-top: -5px;"
+                                class="col-sm-5 col-form-label">{{i+1}}.{{ file?.fileName }} </label>
+                            <div class="col-sm-5 content-value">
+                                <p *ngIf="file['fileName']" style="margin-bottom: 0px;"> Download Attachment
+                                    &nbsp;&nbsp;
+
+                                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'xlsx' || file['fileName'].split('.').splice(-1) == 'xls' || file['fileName'].split('.').splice(-1) == 'csv'"
+                                        [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe"
+                                        download="{{file['fileName']}}" data-toggle="tooltip"
+                                        [title]="'Download '+ file['fileName']"><i class="fa fa-download"
+                                            aria-hidden="true"></i></a>
+
+                                    <!-- For PDF doucment download -->
+                                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'pdf'"
+                                        [href]="'data:application/pdf;base64,' + file['file'] | filePipe"
+                                        download="{{file['fileName']}}" data-toggle="tooltip"
+                                        [title]="'Download '+ file['fileName']" data-toggle="tooltip"
+                                        [title]="'Download '+ file['fileName']"><i class="fa fa-download"
+                                            aria-hidden="true"></i></a>
+
+
+
+                                    <!-- For jpeg/jpg & png download -->
+                                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'png'|| file['fileName'].split('.').splice(-1) == 'jpeg' || file['fileName'].split('.').splice(-1) == 'jpg'"
+                                        [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe"
+                                        download="{{file['fileName']}}"><i class="fa fa-download" aria-hidden="true"
+                                            data-toggle="tooltip" [title]="'Download '+ file['fileName']"></i></a>
+
+
+                                    <!-- For PPT & document download -->
+                                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'txt'  ||file['fileName'].split('.').splice(-1) == 'pptx'|| file['fileName'].split('.').splice(-1) == 'docx'|| file['fileName'].split('.').splice(-1) == 'doc' || file['fileName'].split('.').splice(-1) == 'ppt'"
+                                        [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe"
+                                        download="{{file['fileName']}}" data-toggle="tooltip"
+                                        [title]="'Download '+ file['fileName']"><i class="fa fa-download"
+                                            aria-hidden="true"></i></a>
+
+                                </p>
+                            </div>
+                            <!-- <label for="contactPerson" style="font-size: medium; font-weight: bolder;"
+                                class="col-sm-3 col-form-label">Description</label>
+                            <div class="col-sm-3 content-value">
+                                {{rfq.description}}
+                            </div> -->
+                        </div>
+                        <div class="content-value" *ngIf="vendorRegData?.documents.length == 0">
+                            No Documents uploaded.
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset class="col-md-12">
+                <legend>CERTIFICATES</legend>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="col-md-12" style="display: flex;padding: 0px;">
+                            <button type="submit" class="btn btn-primary btn-blue"
+                                (click)="onAddCertificates('Add',{},certify)">Add</button>
+                        </div>
+                        <!-- <mat-card *ngIf="vendorRegData?.authorizedDistributor">
+                            <div class="view-details-panel-cls" >
+                                <div class="panel-content-box">
+                                    <div class="row" *ngFor="let documents of vendorRegData?.clientDocuments">
+
+                                        <div class="col-sm-6">
+                                            <div class="form-group row">
+                                                <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
+                                                    class="col-sm-6 col-form-label">Year</label>
+                                                <div class="col-sm-6 content-value">
+                                                    {{turnover.year}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group row">
+                                                <label for="deptName" style="font-size: medium; font-weight: bolder;"
+                                                    class="col-sm-6 col-form-label">Amount</label>
+                                                <div class="col-sm-6 content-value">
+                                                    {{turnover.amount}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-card> -->
+                        <div class="form-group row" *ngFor="let file of vendorRegData?.certificates;let i=index">
+                            <label style="font-size: medium; font-weight: bolder; margin-top: -5px;"
+                                class="col-sm-5 col-form-label">{{i+1}}.{{ file?.fileName }} </label>
+                            <div class="col-sm-5 content-value">
+                                <p *ngIf="file['fileName']" style="margin-bottom: 0px;"> Download Attachment
+                                    &nbsp;&nbsp;
+
+                                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'xlsx' || file['fileName'].split('.').splice(-1) == 'xls' || file['fileName'].split('.').splice(-1) == 'csv'"
+                                        [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe"
+                                        download="{{file['fileName']}}" data-toggle="tooltip"
+                                        [title]="'Download '+ file['fileName']"><i class="fa fa-download"
+                                            aria-hidden="true"></i></a>
+
+                                    <!-- For PDF doucment download -->
+                                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'pdf'"
+                                        [href]="'data:application/pdf;base64,' + file['file'] | filePipe"
+                                        download="{{file['fileName']}}" data-toggle="tooltip"
+                                        [title]="'Download '+ file['fileName']" data-toggle="tooltip"
+                                        [title]="'Download '+ file['fileName']"><i class="fa fa-download"
+                                            aria-hidden="true"></i></a>
+
+
+
+                                    <!-- For jpeg/jpg & png download -->
+                                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'png'|| file['fileName'].split('.').splice(-1) == 'jpeg' || file['fileName'].split('.').splice(-1) == 'jpg'"
+                                        [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe"
+                                        download="{{file['fileName']}}"><i class="fa fa-download" aria-hidden="true"
+                                            data-toggle="tooltip" [title]="'Download '+ file['fileName']"></i></a>
+
+
+                                    <!-- For PPT & document download -->
+                                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'txt'  ||file['fileName'].split('.').splice(-1) == 'pptx'|| file['fileName'].split('.').splice(-1) == 'docx'|| file['fileName'].split('.').splice(-1) == 'doc' || file['fileName'].split('.').splice(-1) == 'ppt'"
+                                        [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe"
+                                        download="{{file['fileName']}}" data-toggle="tooltip"
+                                        [title]="'Download '+ file['fileName']"><i class="fa fa-download"
+                                            aria-hidden="true"></i></a>
+
+                                </p>
+                            </div>
+                            <!-- <label for="contactPerson" style="font-size: medium; font-weight: bolder;"
+                                class="col-sm-3 col-form-label">Description</label>
+                            <div class="col-sm-3 content-value">
+                                {{rfq.description}}
+                            </div> -->
+                        </div>
+                        <div class="content-value" *ngIf="vendorRegData?.certificates.length == 0">
+                            No Certificates uploaded.
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </fieldset>
+
+        </div>
+
+
+
+    </div>
+</div>
+<!-- <div class="form-group row"> -->
+<!-- <div class="submitbtn">
+        <button  mat-raised-button color="primary" cdkFocusInitial tabindex="-1" type="submit"
+            (click)='submitProfile()'>Save</button>
+    </div> -->
+<!-- </div> -->
+
+<ng-template #certify>
+    <div class="modal-header">
+        <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+        <div class="col-12">
+            <h5>Add Certificates</h5>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-12">
+                <form name="certificatesForm" #certificatesForm="ngForm">
+                    <div class="col-md-12 row" style="padding: 0px; margin: 0px;">
+                        <div class="col-md-12" (click)="certificatesInput.click()" fileDragDrop
+                            (onFileDropped)="uploadFile($event)">
+                            <div class="addAddress">
+                                <input multiple hidden type="file" #certificatesInput class="form-control"
+                                    (change)="uploadCertificates($event.target.files)">
+                                <div>
+                                    <img src="/assets/images/upload-cloud.svg"><br>
+                                    <div class="uploadInfo">Click to Upload <br><span> File should be either
+                                            (.xls/.xlsx) / (.doc/.docx) /
+                                            (Jpg/Jpeg/Png) or (.txt/.pdf) document</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="padding-top: 10px;">
+                            <ng-container *ngFor="let file of certificatesArray;let i=index">
+                                    <div class="col-12 uploadedFiles">
+                                        <div class="col-8">
+                                            <img src="/assets/images/file.svg">
+                                            <span>{{ file?.name }}</span> <br>
+                                            <!-- <span>{{ file?.name }}</span> -->
+                                        </div>
+                                        <div class="col-4">
+                                            <i class="fa fa-trash" aria-hidden="true" (click)="deleteAttachment(i,'certificatesArray')"></i>
+                                        </div>
+                                    </div>
+                            </ng-container>
+                        </div>
+                    </div>
+
+                    <mat-dialog-actions align="end">
+                        <button type="button" class="btn btn-primary btn-green" (click)="onCertificateAdd()">Submit</button>
+                        <button type="button" class="btn btn-danger btn-red" mat-dialog-close>Cancel</button>
+                    </mat-dialog-actions>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>

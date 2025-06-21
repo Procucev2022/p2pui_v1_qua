@@ -1,0 +1,10 @@
+.form-group label:first-child {
+    display: inline-block;
+    width: 150px;
+    content: ':';
+}
+
+.form-group label:last-child::before {
+    content: ':';
+    padding-right: 20px;
+}

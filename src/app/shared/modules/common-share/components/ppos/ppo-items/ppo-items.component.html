@@ -1,0 +1,120 @@
+<div class="col-12 tableCls" *ngFor="let vendor of vendorsList">
+
+            <ng-container *ngFor="let vendorName of vList">
+                <div class="prqContainer row">
+                    <div class="col-md-12" style="display: flex;
+                    align-items: center;">
+                        <input type="radio" *ngIf="vendor == vendorName.org.id" id="org1" name="vendor_id"
+                            (click)="onSelectedVendor(vendorName.org.id)" style=" height: 1.5rem;
+                            width: 1.5rem;" />
+                        <label *ngIf="vendor == vendorName.org.id">Vendor Name : {{vendorName.org.companyName}} <img *ngIf="vendorName['org']['status']['uiDisplay'] == 'Completed'" width="20" src="assets/images/insta-verified.png"/> &nbsp;&nbsp;&nbsp;
+
+
+                                    <img (click)="downloadViewPPO(vendor)"
+                                    style="   cursor: pointer;z-index: 999;" data-toggle="tooltip" title="Export PDF" class="cursor-pointer" src="/assets/images/new/download-pdf.svg" width="35" height="35" />
+
+                        </label>
+                    </div>
+                </div>
+            </ng-container>
+
+            <!-- <label>Vendor Name : {{vendorName}}  </label> -->
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h2>PPO Items</h2>
+                        <p><span class="dot"></span>{{groupItemsByVendorId[vendor].length}} Total</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <input class="main-input" style="float: right;" type="text" pInputText size="50" placeholder="Search.."
+                            (input)="ppoItemsGrid.filterGlobal($event.target.value, 'contains')" />
+                    </div>
+                </div>
+            </div>
+            <p-table dataKey="id" #ppoItemsGrid [columns]="ppoItemsHeaders" [value]="groupItemsByVendorId[vendor]"
+                sortMode="multiple" [paginator]="true" [rows]="pageRecordSize" id="quoteTable"
+                [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}" exportFilename="venRequest"
+                [(selection)]="selectedData" [scrollable]="true">
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th style="width: 3em"></th>
+                        <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+                            {{col.header}}
+                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
+
+                    <tr [pSelectableRow]="rowData" class="itemRow">
+                        <td style="width: 3em">
+                            <button type="button" pButton pRipple [pRowToggler]="rowData"
+                              class="grid-expand" (click)="expanded ? closeLinedVendorDetails(rowData,$event) : getLinkedVendorDetails(rowData,$event)">
+                              <span *ngIf="expanded"><i class="fa fa-chevron-down"></i></span>
+                              <span *ngIf="!expanded"><i class="fa fa-chevron-right"></i></span>
+                            </button>
+                          </td>
+                        <td *ngFor="let col of columns" [style.width]="col.width">
+                            <span>{{rowData[col.field]}}</span>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="rowexpansion" let-rowData>
+                    <tr class="child-grid">
+                        <td colspan="12">
+                          <div class="p-p-8">
+                            <div class="table-title">
+                                <div class="row" style="padding-left:12px">
+                                    <h2>Vendors</h2>
+                                </div>
+                            </div>
+                            <p-table dataKey="id" #linkedVendorListByItemGrid [columns]="vendorHeaders"
+                                    [value]="linkedVendorListByItem"
+                                        id="linkedVendorListByItemGrid"
+                                    [style]="{'width': '100%'}"
+                                [scrollable]="true">
+                                    <ng-template pTemplate="header" let-columns>
+                                        <tr>
+                                            <th *ngFor="let col of columns" [pSortableColumn]="col.field"
+                                                [style.width]="col.width">
+                                                {{col.header}}
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                        <tr>
+                                            <td *ngFor="let col of columns" [style.width]="col.width">
+                                                <span *ngIf="col.field == 'vendorName'">{{rowData[col.field]}}
+                                                    <img *ngIf="rowData['status'] == 'Completed'" width="18"
+                                                        src="https://img.icons8.com/color/48/000000/instagram-verification-badge.png" />
+                                                </span>
+                                                <span *ngIf="col.field != 'vendorName'">{{rowData[col.field]}}</span>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="emptymessage" let-columns>
+                                        <tr>
+                                            <td [attr.colspan]="5" style="text-align:center;">
+                                                No Records Found.
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+
+                          </div>
+                        </td>
+                      </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage" let-columns>
+                    <tr>
+                        <td [attr.colspan]="5" style="text-align:center;">
+                            No Records Found.
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+</div>
+
+
+

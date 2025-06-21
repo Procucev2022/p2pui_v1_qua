@@ -1,0 +1,21 @@
+<div class="row" *ngIf="!isAdjustCol">
+  <div class="col-6"  >
+      <label class="label-subcat">Filter Items By Sub Category :</label>
+     <ngx-select-dropdown name="subCategory" id="subCategory" class="sub-cat-dropdown" (change)="onSubCategoryChange($event.value)" [multiple]="isMultipleSelect"  [(ngModel)]="selectedSubCategory" [config]="dropDownConfig"  [options]="filtered_subCategoryList">
+</ngx-select-dropdown>
+  </div>
+  <div class="col-6" *ngIf="selectedSubCategory != ''">
+    <label class="label-subcat"> &nbsp;</label> <br />
+    <label class="filter-cls" (click)="onSubCategoryChange(null)"> <i class="fa fa-times-circle" aria-hidden="true"></i> Clear Filter</label>
+  </div>
+</div>
+
+<div class="row" *ngIf="isAdjustCol">
+    <div class="col-12"  >
+        <label class="label-subcat">Filter Items By Sub Category :</label>
+       <ngx-select-dropdown name="subCategory" id="subCategory" class="sub-cat-dropdown" (change)="onSubCategoryChange($event.value)" [multiple]="isMultipleSelect"  [(ngModel)]="selectedSubCategory" [config]="dropDownConfig"  [options]="filtered_subCategoryList">
+  </ngx-select-dropdown>
+  <label class="filter-cls" *ngIf="selectedSubCategory != ''" (click)="onSubCategoryChange(null)"> <i class="fa fa-times-circle" aria-hidden="true"></i> Clear Filter</label>
+    </div>
+
+  </div>

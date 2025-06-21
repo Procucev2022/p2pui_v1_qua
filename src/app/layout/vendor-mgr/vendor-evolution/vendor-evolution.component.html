@@ -1,0 +1,17 @@
+<div class="modal-header">
+  <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+  <div class="col-6">Vendor Evaluation - {{selecetedVendor?.companyId}}</div>
+</div>
+<div class="modal-body">
+  <mat-tab-group mat-stretch-tabs #tabGroup [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndex = $event">
+    <mat-tab label="Vendor Info" class="mat-tabs"> <app-vendor-info (vendoeDetails)="vendorInfoSubmit($event)" (next)="onNext($event)" [selectedVendorData]="selecetedVendor"></app-vendor-info> </mat-tab>
+    <mat-tab label="Capability" class="mat-tabs"> <app-vendor-capability (vendorCapability)="onVendorCapabilitySubmit($event)" [selectedVendorData]="selecetedVendor" (next)="onNext($event)" (back)="onBack($event)"></app-vendor-capability> </mat-tab>
+    <mat-tab label="Quality" class="mat-tabs"> <app-vendor-quality (vendorQuality)="onVendorQualitySubmit($event)" [selectedVendorData]="selecetedVendor" (next)="onNext($event)" (back)="onBack($event)"></app-vendor-quality> </mat-tab>
+    <mat-tab label="Commercial" class="mat-tabs"> <app-vendor-commercial (vendorCommercial)="onVendorCommercialSubmit($event)" [selectedVendorData]="selecetedVendor"(next)="onNext($event)" (back)="onBack($event)"></app-vendor-commercial> </mat-tab>
+    <mat-tab label="Client Reference" class="mat-tabs"> <app-vendor-client (vendorClient)="onVendorClientSubmit($event)"[selectedVendorData]="selecetedVendor" (back)="onBack($event)"></app-vendor-client> </mat-tab>
+</mat-tab-group>
+</div>
+<!-- <mat-dialog-actions align="end">
+  <button mat-raised-button color="warn" type="button" (click)="reset()" *ngIf="vendoryEntryType == 'singleEntry'">Reset</button>
+  <button mat-raised-button color="primary" type="submit" (click)="saveVendor()">Save</button>
+</mat-dialog-actions> -->

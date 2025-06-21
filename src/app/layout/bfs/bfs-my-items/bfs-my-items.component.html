@@ -1,0 +1,246 @@
+
+
+<div class="col-12 pad-nill" >
+    <div class="table-title">
+        <div class="row">
+          <div class="col-sm-6">
+            <h2>My Items</h2>
+            <p><span class="dot"></span>{{itemList.length}} Total</p>
+          </div>
+          <div class="col-sm-6">
+          </div>
+        </div>
+      </div>
+
+      <p-table dataKey="id"  [ngClass]="{  'bfs-container': isBFSView}"  #itemCatalogueTable [columns]="itemHeaders" [value]="itemList" sortMode="multiple" [paginator]="true"
+      [rows]="pageRecordSize" id="prqTable" [rowsPerPageOptions]="pageOptions"  [tableStyle]="{ minWidth: '100%'}"
+      exportFilename="items details" [(selection)]="selectedData" [scrollable]="true" [scrollHeight]="'calc(100vh - 218px)'"  >
+      <!-- [expandedRowKeys]="expandedRows" -->
+      <ng-template pTemplate="caption">
+        <div class="table-search">
+          <div class="row">
+            <!-- <div class="col-sm-6 btns">
+                <button class="btn btn-blue" [ngClass]="{'activeButton': selectedView == 'Rejected'}" (click)="getAllBids('Rejected')">Accepted/Rejected Bids</button>
+                <button class="btn btn-blue" [ngClass]="{'activeButton': selectedView == 'All'}" (click)="getAllBids('All')">All Bids</button>
+            </div> -->
+            <div class="col-sm-6">
+                <input style=" " class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                  (input)="itemCatalogueTable.filterGlobal($event.target.value, 'contains')" />
+              </div>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th style="width: 3em">
+          </th>
+          <ng-container *ngFor="let col of columns">
+            <th [style.width]="col.width" [pSortableColumn]="col.field" [title]="col.fieldTitle">
+              {{col.header}}
+              <p-sortIcon [field]="col.field"></p-sortIcon>
+            </th>
+          </ng-container>
+          <th   style="width:6rem">Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
+        <tr [pSelectableRow]="rowData">
+          <td style="width: 3em">
+            <button  type="button" pButton pRipple [pRowToggler]="rowData"
+            (click)="expanded ? getCloseRFQs(rowData,$event) : getRFQs(rowData,$event)"
+                class="grid-expand">
+                <i class="fa fa-chevron-down" [ngClass]="{'fa-chevron-down': expanded, 'fa-chevron-right': !expanded}"></i>
+            </button>
+
+        </td>
+          <td *ngFor="let col of columns" [style.width]="col.width"
+          [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }"
+          [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"
+          [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
+
+            <span *ngIf="!col.isLink && col.fieldType != 'date' && col.field != 'description' && col.field != 'specification'"  class="align-items-center price-icon-alignment"   [ngClass]="{'price-icon-alignment': col.field == 'price'}">
+                    <span [ngClass]="{'price-content': col.field == 'price'}">
+                    <span *ngIf="col.field == 'itemNumber'">
+                        <span *ngIf="rowData?.itemNumber != null && rowData?.itemNumber != ''">{{rowData[col.field]}}</span>
+                        <span *ngIf="rowData?.itemNumber == null || rowData?.itemNumber  == ''" class="cellLinkCls" (click)=" getVendorAndClientListByItemId(rowData,$event, true)">Assign Category</span>
+                    </span>
+                    <span *ngIf="col.field != 'itemNumber'"> {{rowData[col.field]}} </span>
+                </span>
+            </span>
+
+            <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
+              {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
+            </span>
+            <span *ngIf="col.field == 'description' || col.field == 'specification'" [title]="rowData[col.field]" >
+                <button type="button" class="btn-skelton" >  <app-bfs-images-view [selectedId]="rowData.id" *ngIf="rowData?.imagesFlag == true && col.field == 'description'"></app-bfs-images-view>
+                </button> {{rowData[col.field]}}
+            </span>
+
+          </td>
+          <td   style="width:6rem">
+            <button type="button" class="btn-skelton" >
+                <img src="/assets/images/new/view-doc.png" (click)="onViewItemDetails(rowData, false)"
+                    title="View Item Details">
+            </button>
+
+
+            <button *ngIf="rowData.status == 'New'" type="button" mat-raised-button color="secondary" cdkFocusInitial
+              color="primary" (click)="approve(rowData)">Approve</button>
+            <button *ngIf="rowData.status == 'New'" type="button" mat-raised-button color="primary" cdkFocusInitial
+              color="primary" (click)="reject(rowData)">Reject</button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="rowexpansion" let-rowData>
+        <tr class="child-grid" *ngIf="selectedRowData">
+            <td colspan="8">
+                <div class="p-p-3">
+                  <mat-tab-group>
+                    <mat-tab label="Requested Buyers " *ngIf="selectedRowData">
+                        <div class="rfqContainer ">
+                            <div class="table-title">
+                                <div class="row">
+                                  <div class="col-sm-6 mt-2">
+                                    <h2 style="margin: 10px 0 0;
+                                    font-size: 18px;
+                                    float: left;
+                                    font-weight: 500;
+                                    color: #1a6895;">Requested Buyers</h2>
+                                    <p><span class="dot"></span>{{requestUserGridData.gridValue?.length}} Total</p>
+                                  </div>
+                                  <div class="col-sm-6">
+                                  </div>
+                                </div>
+                              </div>
+                            <app-bfs-common-grid *ngIf="isShowGrid" [gridData]="requestUserGridData" (onGridAction)="onGridAction($event)"></app-bfs-common-grid>
+
+                        </div>
+                    </mat-tab>
+                  </mat-tab-group>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+      <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+          <td [attr.colspan]="5" style="text-align:center;">
+            No Records Found.
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="paginatorleft">
+        <div  *ngIf="itemCatalogueTable._totalRecords > 0">
+          <b>Showing {{itemCatalogueTable.first+1}} to {{itemCatalogueTable.first+itemCatalogueTable.rows > itemCatalogueTable.totalRecords?itemCatalogueTable.totalRecords: itemCatalogueTable.first+itemCatalogueTable.rows}} of {{itemCatalogueTable.totalRecords}}</b>
+          <!-- <app-page-info [totalRecords]="itemList.length" [pageData]="paginatoryDetails"></app-page-info> -->
+        </div>
+      </ng-template>
+    </p-table>
+</div>
+
+
+<ng-template #viewItemDetailsTemplate>
+    <div class="modal-header">
+        <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+        <div class="col-6">
+            <h5>Item Details</h5>
+        </div>
+
+    </div>
+    <div class="modal-body">
+        <div class="row itemDetailsView">
+          <div class="col-6">
+            <label>Item Number</label>
+            <label>{{selectedRowData.itemNumber}}</label>
+          </div>
+          <div class="col-6">
+            <label>Item Description</label>
+            <label>{{selectedRowData.description}}</label>
+          </div>
+          <div class="col-6">
+            <label>Specification</label>
+            <label>{{selectedRowData.specification}}</label>
+          </div>
+          <div class="col-6">
+            <label>UOM</label>
+            <label>{{selectedRowData?.unitofMeasures}}</label>
+          </div>
+          <div class="col-6">
+            <label>Item Category</label>
+            <label>{{selectedRowData.category}}</label>
+          </div>
+          <div class="col-6">
+            <label>Age Of Asset</label>
+            <label>{{selectedRowData.ageOfAsset}}</label>
+          </div>
+          <div class="col-6">
+            <label>Available Quantity</label>
+            <label>{{selectedRowData.availableQuantity}}</label>
+          </div>
+          <div class="col-6">
+            <label>Total Quantity</label>
+            <label>{{selectedRowData.totalQuantity}}</label>
+          </div>
+          <div class="col-6">
+            <label>Buy Price(Per Unit)</label>
+            <label>{{selectedRowData.sellPrice}}</label>
+          </div>
+          <div class="col-6">
+            <label>Discount(%)</label>
+            <label>{{selectedRowData.discount}}</label>
+          </div>
+          <div class="col-6">
+            <label>Sale Price(Per Unit)</label>
+            <label>{{selectedRowData.askPrice}}</label>
+          </div>
+          <div class="col-6">
+            <label>BFS Group</label>
+            <label>{{selectedRowData.bfsGroup}}</label>
+          </div>
+          <div class="col-6">
+            <label>Location</label>
+            <label>{{selectedRowData.location}}</label>
+          </div>
+          <div class="col-6">
+            <label>Created Time</label>
+            <label>{{selectedRowData.createdTS | date: 'dd-MMM-yyyy hh:MM:ss a'}}</label>
+          </div>
+          <div class="col-12" [ngClass]="{'col-4': isBidRequest}">
+            <label>Remarks</label>
+            <label>{{selectedRowData.remarks ? selectedRowData.remarks: '--'}}</label>
+          </div>
+          <div class="col-12" [ngClass]="{'col-4': isBidRequest}">
+            <label for="attachments">Attachment</label>
+            <app-download-attachments *ngIf="selectedRowData.bfsDocuments" [filesList]="selectedRowData.bfsDocuments"></app-download-attachments>
+          </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #editBFSItemTemplate>
+    <div class="modal-header">
+        <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+        <div class="col-6">
+            <h5>Edit Item Details</h5>
+        </div>
+
+    </div>
+    <div class="modal-body">
+        <div class="row itemDetailsView">
+          <div class="col-12">
+            <form [formGroup]="bfsForm"  novalidate (ngSubmit)="updateQuantity()">
+                <div class="form-group">
+                    <label>Quantity</label> {{numberInput | json }}
+                    <input class="form-control" formControlName="quantity" #qty placeholder="Enter Quanity" type="number" />
+                    <p *ngIf="(bfsForm.controls?.quantity?.touched && bfsForm.controls.quantity.errors) && (bfsForm.controls.quantity.errors.invalid || bfsForm.controls.quantity.errors.required)">Quantity is requied  and should be number </p>
+                 </div>
+                 <div class="mt-4 pull-right pullRight">
+                    <button class="btn btn-red" type="reset">Reset</button>
+                    <button class="btn btn-blue" type="submit">Submit</button>
+                 </div>
+            </form>
+
+          </div>
+        </div>
+    </div>
+</ng-template>
+

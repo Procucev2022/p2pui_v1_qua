@@ -1,0 +1,279 @@
+<div class="col-md-12">
+  <div class="table-title">
+    <div class="row">
+      <div class="col-sm-6">
+        <h2>Auctions</h2>
+        <p><span class="dot"></span>{{auctionsList?.length}} Total</p>
+      </div>
+      <div class="col-sm-6">
+      </div>
+    </div>
+  </div>
+  <p-table #pposGrid [columns]="auctionHeaders" [value]="auctionsList" sortMode="multiple" [paginator]="true"
+    [rows]="pageRecordSize" id="quoteTable" [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}"
+    exportFilename="venRequest" [(selection)]="selectedData" [scrollable]="true" [scrollHeight]="'calc(100vh - 214px)'">
+    <ng-template pTemplate="caption">
+      <div class="table-search">
+        <div class="row">
+          <div class="col-sm-6">
+            <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+              (input)="pposGrid.filterGlobal($event.target.value, 'contains')" />
+          </div>
+          <div class="col-sm-6">
+            <button *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_PR_PAGE.AUCTION_CANCEL) != -1"
+              type="button" class="btn btn-transparent btn-red" (click)="onCancelAuction()">Cancel Auction</button>
+            <button class="btn btn-success btn-orange" (click)="refreshAuction()"> <i class="fa fa-refresh"></i> Refresh</button>
+            <button class="btn btn-success btn-blue" *ngIf="loggedUserType == 'CategoryManager'"  (click)="auctionChart(auctionPriceBar, selectedData)">Graph</button>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="col-12 row pad-nill">
+            <div class="col-4 pad-nill">
+                <h5 class="screen-head">Auctions</h5>
+            </div>
+            <div class="col-8 searchPanel pad-nill">
+          <input type="text" pInputText size="50" placeholder="Search.."
+          (input)="pposGrid.filterGlobal($event.target.value, 'contains')" style="width:auto; float: right;" />
+          <button *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_PR_PAGE.AUCTION_CANCEL) != -1 " class="btn btn-warning auctionCancelBtn" (click)="onCancelAuction()">Cancel Auction</button>
+          <button type="button" class="btn auctionCancelBtn" (click)="refreshAuction()" style="background: #eaeaea;"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+            </div>
+      </div> -->
+    </ng-template>
+
+    <ng-template pTemplate="header" let-columns >
+      <tr>
+        <th style="width: 3rem" *ngIf="loggedUserType === 'CategoryManager'">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+          {{col.header}}
+          <p-sortIcon [field]="col.field"></p-sortIcon>
+        </th>
+        <th style="width: 22rem">Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr [pSelectableRow]="rowData">
+        <td style="width: 3rem" *ngIf="loggedUserType === 'CategoryManager'">
+          <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+        </td>
+        <td [style.width]="col.width" *ngFor="let col of columns" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" >
+
+          <span *ngIf="col.field == 'auctionId' && col.field != 'noOfDoc'"
+            [ngClass]="{'liveCls':rowData['auctionstatus']['uiDisplay']==='Inprogress'}" class="cellLinkCls"
+            (click)="getBidsByAuctionId(rowData, $event)" >
+            <a href="javascript:void(0);"></a>
+           {{rowData["displayAuctionId"]}}
+           <div class="tooltipText">{{rowData.tooltiptext}}</div>
+          </span>
+
+          <span *ngIf="col.field == 'auctionType'">
+            <span *ngIf = "rowData['auctionType'] == 'sealed bid'"> Sealed Bid</span>
+            <span *ngIf = "rowData['auctionType'] == 'Forward Auction'"> Forward</span>
+            <span *ngIf = "rowData['auctionType'] == 'reverse auction'"> Reverse</span>
+          </span>
+
+
+          <span *ngIf="col.field != 'auctionId' && col.field != 'auctionType'">
+            <span *ngIf="col.field == 'auctionstatus'">
+              <span *ngIf="rowData[col.field].uiDisplay =='Closed'"><img src="/assets/images/new/closed-label3.png" style="width: 70px;"></span>
+              <span *ngIf="rowData[col.field].uiDisplay !='Closed'"><img src="/assets/images/status/{{rowData[col.field].uiDisplay}}.svg">{{rowData['auctionstatus']['uiDisplay']}}</span>
+            </span>
+
+            <span *ngIf="col.field != 'auctionstatus'">
+              <span *ngIf="col.fieldType == 'text'">{{rowData[col.field]}}</span>
+              <span *ngIf="col.fieldType == 'date'"
+                [title]="rowData[col.field] | date: 'dd-MMM-yyyy hh:mm a'">{{rowData[col.field] | date:
+                'dd-MMM-yyyy hh:mm a'}}</span>
+            </span>
+            <!-- <span
+              *ngIf="col.field =='procucevStatus' || col.field =='clientStatus'">{{rowData[col.field]?.uiDisplay}}</span> -->
+            <span *ngIf="col.field == 'noOfDoc'">
+              <span *ngIf="rowData[col.field] != 0">
+
+                  <img class="cursor-pointer" src="/assets/images/new/download.svg" width="40" height="40" (click)="documents(addUserModal, rowData)" aria-hidden="true" title="Download Bid" />
+
+              </span>
+            </span>
+          </span>
+          <!-- <span *ngIf="col.field == 'auctionId'">
+            {{rowData["displayAuctionId"]}}
+          </span> -->
+
+        </td>
+        <td style="width: 22rem">
+          <span class="crud-icons actionIcons">
+            <span class="linkCls" (click)="editAuction(rowData)" data-toggle="tooltip"
+              *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_PR_PAGE.AUCTION_DETAILS_VIEW) != -1">
+              <img class="mr-3"   src="/assets/images/new/view-doc.png" width="30" height="30" title="View/Edit Auction">
+
+            </span>
+            <span class="linkCls" (click)="viewBidDetails(rowData, auctionBidDetailsTemplate)"
+              *ngIf="
+              (rowData['auctionstatus']['uiDisplay'] == 'Closed' && loggedUserType === 'Vendor') || (rowData['auctionstatus']['uiDisplay'] == 'Closed' && loggedUserType === 'PartialVendor') ||
+            (rowData['auctionstatus']['uiDisplay'] == 'Inprogress' && (loggedUserType === 'ClientInitiator' || loggedUserType === 'clientInitiator1.1') && rowData['auctionType']=='reverse auction') ||
+              (rowData['auctionstatus']['uiDisplay'] == 'Closed' && (loggedUserType === 'ClientInitiator' || loggedUserType === 'clientInitiator1.1') && rowData['auctionType']=='sealed bid') ||
+               (rowData['auctionstatus']['uiDisplay'] == 'Closed' && rowData['auctionType']=='sealed bid' && loggedUserType === 'PRApprover') ||
+            (rowData['auctionstatus']['uiDisplay'] == 'Inprogress' && loggedUserType === 'PRApprover') ||
+              (rowData['auctionstatus']['uiDisplay'] == 'Closed'|| rowData['auctionstatus']['uiDisplay'] == 'New' && rowData['auctionType']=='sealed bid' && loggedUserType === 'CategoryManager') ||
+              ((rowData['auctionstatus']['uiDisplay'] == 'Closed'|| rowData['auctionstatus']['uiDisplay'] == 'Inprogress') && rowData['auctionType']=='Forward Auction' && (loggedUserType === 'ClientInitiator' ||loggedUserType === 'CategoryManager'))
+              || ( rowData['auctionType']=='reverse auction'&& rowData['auctionstatus']['uiDisplay'] == 'Inprogress'|| rowData['auctionstatus']['uiDisplay'] == 'Closed' &&loggedUserType === 'CategoryManager')">
+              <img class="bids-icon" src="/assets/images/new/view-bids.svg" width="108" height="40" title="View Bids" />
+
+            </span>
+            <span *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_PR_PAGE.AUCTION_REPORTS) != -1"
+              class="linkCls  " (click)="viewAuctionReports(rowData)">
+               <img class="cursor-pointer ml-3" src="/assets/images/new/download.svg" width="30" height="30"   aria-hidden="true" title="Download Auction Reports" />
+            </span>
+
+            <span style="display: inline-flex;
+            align-items: center;" class="btn btn-blue"
+              *ngIf="rowData['auctionstatus']['uiDisplay']==='Inprogress' && (loggedUserType === 'Vendor'||loggedUserType === 'PartialVendor') && loggedUserPermissions?.indexOf(defaultPermissions.PC_VR_PAGE.BID_LIVE_VIEW) != -1"
+              (click)="bidAuction(rowData)">
+            <i style="font-size: 18px;" class="fa fa-gavel" aria-hidden="true" data-toggle="tooltip"
+                title="Bid Now"></i>  Bid Now
+            </span>
+
+            <!-- <i *ngIf="getEndDate(rowData.auctionEndtime) < currentDate " class="fa fa-gavel view disabledCls" aria-hidden="true" data-toggle="tooltip"
+              title="Not Available"></i> -->
+            <!-- <app-comment-alert-bell-blink [rowData]="rowData"></app-comment-alert-bell-blink>
+            *ngIf="rowData['auctionstatus']['uiDisplay'] == 'Closed' && loggedUserType === 'Vendor'"-->
+          </span>
+        </td>
+        <!-- <td>
+          <span *ngIf="">
+            <i class="fa fa-download" aria-hidden="true" data-toggle="tooltip" title="Documents"></i>
+          </span>
+        </td> -->
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage" let-columns>
+      <tr>
+        <td [attr.colspan]="5" style="text-align:center;">
+          No Records Found.
+        </td>
+      </tr>
+    </ng-template>
+    <!-- <ng-template pTemplate="paginatorleft">
+      <div *ngIf="auctionsList?.length > 0">
+        <app-page-info [totalRecords]="auctionsList?.length" [pageData]="paginatoryDetails"></app-page-info>
+      </div>
+    </ng-template> -->
+  </p-table>
+
+</div>
+
+<div class="col-12" *ngIf="auctionData">
+  <div *ngIf="selectedData.length ==1">
+    <mat-tab-group class="" (selectedTabChange)="getBidItems($event)">
+      <mat-tab label="BIDs">
+        <app-auction-bids [auctionId]="auctionId" [auctionData]="auctionData"></app-auction-bids>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>
+
+<ng-template #auctionBidDetailsTemplate>
+  <div class="modal-header">
+    <button class="btn-skelton modal-close-btn" mat-dialog-close>✖</button>
+   <div class="col-6">
+      <h6>Bid Details</h6>
+      <button
+      *ngIf="selectedAuctionData.auctionCategory == 'rfq total wise' && (this.loggedUserType === 'Vendor'||this.loggedUserType === 'PartialVendor')"
+      type="button" class="btn btn-primary" (click)="exportPdf()">PDF Document</button>
+    <button
+      *ngIf="selectedAuctionData.auctionCategory == 'item wise' && (this.loggedUserType === 'Vendor'||this.loggedUserType === 'PartialVendor')"
+      type="button" class="btn btn-primary" (click)="itemWiseExportPdf()">PDF Document</button>
+
+   </div>
+
+   <!-- <div class="col-6">
+    <i class="fa fa-plus plusMinus plusColor" style="padding-right: 10px;cursor:pointer"  data-toggle="tooltip" title="zoom in" (click)="zoomin()"></i>
+    <i class="fa fa-minus plusMinus minusColor " style="padding-right: 30px; cursor:pointer"  data-toggle="tooltip" title="zoom out" (click)="zoomout()"></i>
+    <button class="btn btn-warning modal-close-btn" mat-dialog-close><i class="fa fa-window-close" aria-hidden="true"></i></button>
+
+   </div> -->
+
+    <!-- <div *ngIf="refreshBtn" class="refresh-bid" style="position: relative; background: none;" data-toggle="tooltip" title="Refresh Auction"><i class="fa fa-refresh ref-bac" aria-hidden="true" (click)="refresh()"></i></div> -->
+
+  </div>
+  <div class="modal-body">
+    <div class="col-12 bid-panel" *ngIf="this.loggedUserType === 'Vendor'|| this.loggedUserType === 'PartialVendor'">
+      <div class="row">
+        <div class="col-3">
+          <label>Auction Name</label>
+          <h6>{{selectedAuctionData.auctionName}}</h6>
+        </div>
+        <div class="col-3">
+          <label>Auction Start Date</label>
+          <h6>{{selectedAuctionData.auctionStarttime | date: 'dd-MM-yyyy hh:mm:ss a'}} </h6>
+        </div>
+        <div class="col-3">
+          <label>Auction End Date</label>
+          <h6> {{selectedAuctionData.auctionEndtime | date: 'dd-MM-yyyy hh:mm:ss a'}}</h6>
+        </div>
+        <div class="col-3">
+          <label>Auction Status</label>
+          <h6> {{selectedAuctionData.auctionstatus.uiDisplay}} </h6>
+        </div>
+      </div>
+    </div>
+    <div class="" *ngIf="selectedAuctionData.auctionCategory == 'item wise'">
+      <div class="col-12" *ngIf="viewAuctionResponseData">
+        <mat-tab-group class="" (selectedTabChange)="getBidItems($event)">
+          <ng-container *ngFor="let item of viewAuctionResponseData;let i = index">
+            <mat-tab [label]="item.description" (click)="getBids(item)" [id]="i">
+              <app-auction-bid-details [bidsData]="item" [auctionType]="selectedAuctionData.auctionCategory"
+                [selectedRowdata]="selectedAuctionData"></app-auction-bid-details>
+            </mat-tab>
+          </ng-container>
+
+        </mat-tab-group>
+      </div>
+    </div>
+    <div class="" *ngIf="selectedAuctionData.auctionCategory == 'rfq total wise'">
+      <app-auction-bid-details [bidsData]="viewAuctionResponseData" *ngIf="viewAuctionResponseData"
+        [auctionType]="selectedAuctionData.auctionCategory" [selectedRowdata]="selectedAuctionData">
+      </app-auction-bid-details>
+    </div>
+
+  </div>
+  <div class="moda-footer">
+  </div>
+</ng-template>
+<!-- multiple Documents -->
+
+<ng-template #addUserModal>
+  <div class="modal-header">
+    <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+    <div class="col-6">
+      <h5>Documents</h5>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div *ngFor="let doc of actDocList let i = index" class="col-md-12 form-group row">
+      <label for="rateCardDoc" style="font-size: medium; font-weight: bolder;" class="col-sm-6 col-form-label">Document
+        {{i+1}}</label>
+      <div class="col-sm-6 col-form-label">
+        {{doc?.fileName}}
+        <a [href]="'data:application/octet-stream;base64,' + doc?.file | filePipe" download="{{doc?.fileName}}"><i
+            class="fa fa-download" aria-hidden="true" data-toggle="tooltip"
+            [title]="'Download '+ doc?.fileName"></i></a>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #auctionPriceBar>
+  <div class="modal-header">
+    <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+    <div class="col-6">
+      <h5>Graph</h5>
+      <button type="button" class="btn btn-primary" (click)="refresh()"><i class="fa fa-refresh"></i></button>
+    </div>
+  </div>
+  <div class="modal-body" style="zoom: 115%;">
+    <canvas id="ctx"></canvas>
+  </div>
+</ng-template>

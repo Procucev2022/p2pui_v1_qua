@@ -1,0 +1,30 @@
+[
+    {
+
+        "hsnCode": 11,
+        "productName": "DER1",
+        "description": "des",
+        "others": "yes"
+    },
+    {
+
+        "hsnCode": 12,
+        "productName": "DER2",
+        "description": "des",
+        "others": "yes"
+    },
+    {
+
+        "hsnCode": 13,
+        "productName": "DER3",
+        "description": "des",
+        "others": "yes"
+    },
+    {
+        "hsnCode": 14,
+        "productName": "DER4",
+        "description": "des",
+        "others": "yes"
+    }
+
+]

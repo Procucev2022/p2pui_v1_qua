@@ -1,0 +1,33 @@
+.common-grid-page-title{
+    float: left;
+    line-height: 34px;
+    color: #0C2146;
+}
+
+i.create-Asn-icon::before {
+    content: '+ ASN';
+    font-style: italic;
+    text-decoration: underline;
+    font-style: normal;
+    font-size: 14px;
+}
+i.create-Invoice-icon::before {
+    content: '+ INV.';
+    font-style: italic;
+    text-decoration: underline;
+    font-style: normal;
+    font-size: 14px;
+}
+i.create-adv-icon::before {
+    content: 'Request Advance';
+    font-style: italic;
+    text-decoration: underline;
+    font-style: normal;
+    font-size: 14px;
+}
+.table-cell-overflow-ellipse {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+   
+}

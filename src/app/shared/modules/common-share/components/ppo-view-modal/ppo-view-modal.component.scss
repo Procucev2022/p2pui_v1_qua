@@ -1,0 +1,18 @@
+.mat-dialog-actions {
+    padding: 12px 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 0;
+}
+i{
+    cursor: pointer;
+}
+.modal-body {
+    position: relative;
+    flex: 1 1 auto;
+    padding: 1rem;
+    max-height: 68vh;
+    min-height: 68vh;
+    overflow-y: auto;
+    border-top: 1px solid #ed581780;
+}

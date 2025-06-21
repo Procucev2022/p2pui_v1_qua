@@ -1,0 +1,358 @@
+<div class="modal-header">
+    <!-- <i class="fa fa-plus plusMinus plusColor" style="padding-right: 10px;"  data-toggle="tooltip" title="zoom in" (click)="zoomin()"></i>
+    <i class="fa fa-minus plusMinus minusColor " style="padding-right: 30px;"  data-toggle="tooltip" title="zoom out" (click)="zoomout()"></i>
+    <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button> -->
+    <div class="col-6">Quotation Submission</div>
+    <div class="col-6  text-right" >
+        <i class="fa fa-plus plusMinus plusColor" style="padding-right: 10px;cursor:pointer"  data-toggle="tooltip" title="zoom in" (click)="zoomin()"></i>
+        <i class="fa fa-minus plusMinus minusColor " style="padding-right: 30px;cursor:pointer"  data-toggle="tooltip" title="zoom out" (click)="zoomout()"></i>
+        <button class="btn btn-warning modal-close-btn" mat-dialog-close><i class="fa fa-window-close" aria-hidden="true"></i></button>
+    </div>
+</div>
+<div class="modal-body">
+    <mat-tab-group mat-stretch-tabs [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndex = $event">
+        <mat-tab label="Create Quotation">
+            <div class="col-md-12 pad-nill">
+
+                <p-table #rfqTable [columns]="rfqDetailHeaders" [value]="rfqdetailsList" sortMode="multiple"
+                    [paginator]="true" [rows]="pageRecordSize" id="rfqTable" [rowsPerPageOptions]="pageOptions"
+                    [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData"
+                    [scrollable]="true">
+                    <ng-template pTemplate="caption">
+                        <div class="table-title">
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <h2>Total Amount :{{total}}</h2>
+                              </div>
+                              <div class="col-sm-6">
+                                <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                                  (input)="rfqTable.filterGlobal($event.target.value, 'contains')" style="float: right;" />
+                              </div>
+                            </div>
+                          </div>
+                    </ng-template>
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <!-- <th style="width: 3em">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th> -->
+                            <th *ngFor="let col of columns" [ngSwitch]="col.field"  [style.width]="col.width">
+                                {{col.header}}
+                                <!-- <p-dropdown *ngSwitchCase="'discountType'" appendTo="body" [options]="discountType"  [style]="{'width':'100%'}" (onChange)="rfqTable.filter($event.value, col.field, 'equals')"></p-dropdown> -->
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                        <tr [pSelectableRow]="rowData">
+                            <!-- <td  style="width: 3em">
+                                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                            </td> -->
+                            <td style="width:5%" >
+                                <span> {{rowData.serialNo}}</span>
+                            </td>
+                            <td style="width:25%" >
+                                <span> {{rowData.description}}</span>
+                            </td>
+                            <td style="width:15%" >
+                                <span> {{rowData.brand}}</span>
+                            </td>
+                            <!-- <td>
+                                <span> {{rowData.category}}</span>
+                            </td> -->
+                        <td style="width:10%">
+                                <span> {{rowData.itemcode}}</span>
+                            </td>
+                            <td style="width:5%" >
+                                <span> {{rowData.quantity}}</span>
+                            </td>
+                            <td style="width:5%" >
+                                <span> {{rowData.unitofMeasures}}</span>
+                            </td>
+                            <ng-container>
+                                <td pEditableColumn  style="width:10%" *ngIf="rowData.quantity!=0">
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText type="number" [(ngModel)]="rowData.unitprice"
+                                                (blur)="onUnitPriceChange(rowData)" (keyup)="onUnitPriceChange(rowData)">
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{rowData.unitprice}}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td *ngIf="rowData.quantity==0">
+                                    {{rowData.unitprice}}
+                                </td>
+                            </ng-container>
+                        
+
+                            <!-- <td pEditableColumn>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <input pInputText type="text" [(ngModel)]="rowData.cgstPercentage"
+                                            (blur)="onCgstPercentageChange(rowData)" (keyup)="onCgstPercentageChange(rowData)">
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{rowData.cgstPercentage}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+
+                            <td>
+                                <span> {{rowData.cgstValue}}</span>
+                            </td> -->
+                            <ng-container>
+                            <td pEditableColumn  style="width:5%"  *ngIf="rowData.quantity!=0">
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <input pInputText type="text" [(ngModel)]="rowData.gstPercentage"
+                                            (blur)="onGstPercentageChange(rowData)" (keyup)="onGstPercentageChange(rowData)">
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{rowData.gstPercentage}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td *ngIf="rowData.quantity==0">
+                                {{rowData.gstPercentage}}
+                            </td>
+                        </ng-container>
+
+                            <td style="width:10%">
+                                <span> {{rowData.gstValue}}</span>
+                            </td>
+
+                        
+                            <!-- <td pEditableColumn>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <p-dropdown appendTo="body" placeholder="select" [options]="discountTypes"
+                                            [(ngModel)]="rowData.discountType" [style]="{'width':'100%'}"
+                                            (onChange)="onDiscountTypeChange(rowData)"></p-dropdown>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{rowData.discountType}}
+                                    </ng-template>
+                                    <ng-template pTemplate="input">
+                                        <p-dropdown  appendTo="body" [options]="discountType"   [style]="{'width':'100%'}"></p-dropdown>
+
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{rowData.discountType}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td> -->
+                            <!-- <td pEditableColumn>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <input pInputText type="number" [(ngModel)]="rowData.discountValue"
+                                            (blur)="onDiscountValueChange(rowData)"
+                                            (keyup)="onDiscountValueChange(rowData)">
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{rowData.discountValue}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td> -->
+                            <td style="width:120px">
+                                <span > {{rowData.totalamount}}</span>
+                            </td>
+                            <!-- <td pEditableColumn *ngFor="let col of columns">
+                                <p-cellEditor [ngSwitch]="col.field">
+                                    <ng-template pTemplate="input">
+                                        <input pInputText *ngSwitchCase="'discountValue'" type="text" [(ngModel)]="rowData[col.field]">
+                                        <input pInputText *ngSwitchCase="'discountType'" type="text" [(ngModel)]="rowData[col.field]">
+                                        <input pInputText *ngSwitchCase="'unitprice'" type="text" [(ngModel)]="rowData[col.field]">
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{rowData[col.field]}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td> -->
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage" let-columns>
+                        <tr>
+                            <td [attr.colspan]="5" style="text-align:center;">
+                                No Records Found.
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="paginatorleft">
+                        <div  *ngIf="rfqTable._totalRecords > 0">
+                            <b>Showing {{rfqTable.first+1}} to {{rfqTable.first+rfqTable.rows > rfqTable.totalRecords?rfqTable.totalRecords: rfqTable.first+rfqTable.rows}} of {{rfqTable.totalRecords}}</b>
+                            <!-- <app-page-info [totalRecords]="rfqdetailsList?.length" [pageData]="paginatoryDetails">
+                            </app-page-info> -->
+                        </div>
+                    </ng-template>
+                </p-table>
+
+            </div>
+        </mat-tab>
+        <mat-tab label="Upload Documents">
+            <mat-card>
+                <div style="width: auto !important;" class="branchesForm form-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="text" style="background: #ced1d4;color: #00427a;padding: 6px;"
+                                class="col-form-label">Upload Documents:</label>
+                            <!-- <div class="col-sm-7">
+                                <input type="file" multiple class="form-control" id="fileupload" placeholder="Browse Your Files"
+                                name="file" (change)="uploadingDocuments($event)">
+                            </div> -->
+
+                            <div class="uploadfilecontainer" style="margin: 0px 0px;border-radius: 0px;"
+                                (click)="documentsInput.click()" fileDragDrop (onFileDropped)="uploadFile($event)">
+                                <input multiple hidden type="file" #documentsInput
+                                    (change)="uploadDocuments($event.target.files)">
+                                <div class="browseFiles">Browse Files</div>
+                            </div>
+                            <small style="color: red;"> Note: Please upload products/services details, quotations
+                            </small>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="text" style="background: #ced1d4;color: #00427a;padding: 6px;"
+                                class="col-form-label">Uploaded Documents:</label>
+                            <div style="border: 1px solid lightgray;height: 100px;overflow: auto;">
+                                <div class="files-list" *ngFor="let file of documentsArray;let i=index">
+                                    <p style="margin-bottom: 0px;">{{ file?.fileName }}</p>
+                                    <button class="delete-file" (click)="deleteAttachment(i,'documentsArray')">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+
+        </mat-tab>
+        <mat-tab label="Terms & Conditions">
+            <mat-card>
+                <div class="form-group row">
+                    <label for="deliveryTerms" style="font-size: medium; font-weight: bolder;"
+                        class="col-sm-5 col-form-label">Delivery Terms :</label>
+                    <div class="col-sm-5">
+                        <textarea type="number" [(ngModel)]="deliveryTerms" name="deliveryTerms" ngModel
+                            id="i_deliveryTerms" class="form-control" placeholder="Delivery Terms"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="paymentTerms" style="font-size: medium; font-weight: bolder;"
+                        class="col-sm-5 col-form-label">Payment Terms :</label>
+                    <div class="col-sm-5">
+                        <textarea type="number" [(ngModel)]="paymentTerms" name="paymentTerms" ngModel
+                            id="i_paymentTerms" class="form-control" placeholder="Payment Terms"
+                            ></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="otherTerms" style="font-size: medium; font-weight: bolder;"
+                        class="col-sm-5 col-form-label">Other Terms :</label>
+                    <div class="col-sm-5">
+                        <textarea type="number" [(ngModel)]="otherTerms" name="otherTerms" ngModel
+                            id="i_otherTerms" class="form-control" placeholder="Other Terms "></textarea>
+                    </div>
+                </div>
+            </mat-card>
+
+        </mat-tab>
+    </mat-tab-group>
+</div>
+<mat-dialog-actions align="end">
+    <button mat-raised-button *ngIf="selectedIndex != 0" color="primary" (click)="back()" cdkFocusInitial>Back</button>
+    <button mat-raised-button *ngIf="selectedIndex != 2" color="primary" (click)="next()" cdkFocusInitial>Next</button>
+    <button mat-raised-button *ngIf="selectedIndex == 2" color="primary" (click)="onSubmit(rfqTable.value)"
+        cdkFocusInitial>Submit</button>
+    <button mat-raised-button color="warn" mat-dialog-close>Cancel</button>
+</mat-dialog-actions>
+
+<!-- <div class="col-md-6 offset-md-3" style="margin-top: 20px;">
+    <form (ngSubmit)="onSubmit(quotationSubmission)" #quotationSubmission="ngForm">
+        <div class="form-group row">
+          <label for="itemDescription" class="col-sm-5 col-form-label">Item Description:</label>
+          <div class="col-sm-7">
+            <input type="text" class="form-control" id="i_itemDescription" placeholder="Item Description"
+            ngModel #itemDescription="ngModel" name="itemDescription">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="materialSpecifications" class="col-sm-5 col-form-label">Material Specifications:</label>
+          <div class="col-sm-7">
+            <input type="text" class="form-control" id="i_materialSpecifications" placeholder="Material Specifications"
+            ngModel #materialSpecifications="ngModel" name="materialSpecifications">
+          </div>
+        </div>
+        <div class="form-group row">
+            <label for="unitOfMeasures" class="col-sm-5 col-form-label">Unit of Measures:</label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" id="i_unitOfMeasures" placeholder="Unit of Measures"
+              ngModel #unitOfMeasures="ngModel" name="unitOfMeasures">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="quantity" class="col-sm-5 col-form-label">Quantity:</label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" id="i_quantity" placeholder="Quantity"
+              ngModel #quantity="ngModel" name="quantity">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="amount" class="col-sm-5 col-form-label">Amount:</label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" id="i_amount" placeholder="Amount"
+              ngModel #amount="ngModel" name="amount">
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-6 offset-md-5 ">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </form>
+    <form (ngSubmit)="onSubmit(quotationSubmission)" #quotationSubmission="ngForm">
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-md-6">
+                <div class="form-group row">
+                    <label for="itemDescription" class="col-sm-5 col-form-label">Item Description:</label>
+                    <div class="col-sm-7">
+                      <input type="text" class="form-control" id="i_itemDescription" placeholder="Item Description"
+                      ngModel #itemDescription="ngModel" name="itemDescription">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="unitOfMeasures" class="col-sm-5 col-form-label">Unit of Measures:</label>
+                    <div class="col-sm-7">
+                      <input type="text" class="form-control" id="i_unitOfMeasures" placeholder="Unit of Measures"
+                      ngModel #unitOfMeasures="ngModel" name="unitOfMeasures">
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-6">
+                <div class="form-group row">
+                    <label for="materialSpecifications" class="col-sm-5 col-form-label">Material Specifications:</label>
+                    <div class="col-sm-7">
+                      <input type="text" class="form-control" id="i_materialSpecifications" placeholder="Material Specifications"
+                      ngModel #materialSpecifications="ngModel" name="materialSpecifications">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="quantity" class="col-sm-5 col-form-label">Quantity:</label>
+                    <div class="col-sm-7">
+                      <input type="text" class="form-control" id="i_quantity" placeholder="Quantity"
+                      ngModel #quantity="ngModel" name="quantity">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6 offset-md-5 ">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div> -->

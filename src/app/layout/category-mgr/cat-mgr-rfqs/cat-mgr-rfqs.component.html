@@ -1,0 +1,87 @@
+<div class="col-12 pad-nill">
+    <div class="table-title">
+        <div class="row">
+          <div class="col-sm-6">
+            <h2>RFQ's</h2>
+            <p><span class="dot"></span>{{rfqDataList.length}} Total</p>
+          </div>
+          <div class="col-sm-6">
+          </div>
+        </div>
+      </div>
+    <p-table #rfqTable [columns]="rfqsTableHeaders" [value]="rfqDataList" sortMode="multiple"
+      [paginator]="true" [rows]="pageRecordSize" id="rfqTable" [rowsPerPageOptions]="pageOptions"
+          [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData"  [scrollable]="true" [scrollHeight]="'calc(100vh - 214px)'">
+          <ng-template pTemplate="caption">
+            <div class="table-search">
+              <div class="row">
+                <div class="col-sm-6">
+                  <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                    (input)="rfqTable.filterGlobal($event.target.value, 'contains')" />
+                </div>
+                <div class="col-sm-6">
+                </div>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="header" let-columns>
+          <tr>
+              <!-- <th style="width: 3em">
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th> -->
+              <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+              {{col.header}}
+              <p-sortIcon [field]="col.field"></p-sortIcon>
+              </th>
+              <th style="width: 11rem;">Actions</th>
+          </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr [pSelectableRow]="rowData">
+                <!-- <td style="width: 3em">
+                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td> -->
+                <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
+                <span *ngIf="!col.isLink">
+                    <span *ngIf="col.field == 'status'">{{rowData[col.field]?.uiDisplay}}</span>
+                    <span *ngIf="col.field != 'status'">
+                        <span *ngIf="col.fieldType != 'date'">
+                            {{rowData[col.field]}}
+                        </span>
+                        <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
+                          {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
+                        </span>
+                    </span>
+
+                </span>
+                <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);"
+                    (click)="getRFQLineItems(rowData, $event)"> {{rowData[col.field]}} </a></span>
+
+                </td>
+                <td style="width: 11rem;">
+                    <button type="button" class="btn-skelton" (click)="viewRFQDetails(rowData)">
+                        <img src="/assets/images/new/view-doc.png" title="View RFQ Details">
+                    </button>
+                    <button type="button" class="btn-skelton" (click)="viewCorresspondance(rowData)">
+                        <img src="/assets/images/new/comments-write.png" title="Comments">
+                    </button>
+                    <app-comment-alert-bell-blink [rowData]= "rowData"></app-comment-alert-bell-blink>
+                </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage" let-columns>
+          <tr>
+              <td [attr.colspan]="5" style="text-align:center;">
+              No Records Found.
+              </td>
+          </tr>
+          </ng-template>
+          <ng-template pTemplate="paginatorleft">
+          <div *ngIf="rfqTable._totalRecords > 0">
+            <b>Showing {{rfqTable.first+1}} to {{rfqTable.first+rfqTable.rows > rfqTable.totalRecords?rfqTable.totalRecords: rfqTable.first+rfqTable.rows}} of {{rfqTable.totalRecords}}</b>
+              <!-- <app-page-info [totalRecords]="rfqDataList?.length" [pageData]="paginatoryDetails"></app-page-info> -->
+          </div>
+          </ng-template>
+    </p-table>
+
+</div>

@@ -1,0 +1,111 @@
+<div class="">
+    <div class=" page-body-content">
+      <div class="">
+
+        <p-table #vendorRegPendingTable [columns]="vendorRegPendingHeaders" [value]="vendorRegPendingList" sortMode="multiple" [paginator]="true" [rows]="pageRecordSize"  id="vendorRegPendingTable"
+            [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}" exportFilename="vendorRegistrationPending"  [(selection)]="selectedData" [scrollable]="true"  [scrollHeight]="'calc(100vh - 242px)'">
+            <ng-template pTemplate="caption">
+              <div class="table-search">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                      (input)="vendorRegPendingTable.filterGlobal($event.target.value, 'contains')" />
+                  </div>
+                  <div class="col-sm-6">
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <!-- <th style="width: 3em">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th> -->
+                <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width"  >
+                  {{col.header}}
+                  <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+                <th style="width: 5em">Is Upgraded?</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData" >
+                <!-- <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td> -->
+                <td *ngFor="let col of columns" [style.width]="col.width"  [ngClass]="{'table-cell-overflow-ellipse' : col.field == 'vendorName' }" >
+               <span *ngIf ="col.fieldType == 'date'">
+                {{rowData[col.field] ? ( rowData[col.field] | date: 'dd-MM-yyyy' ) : '-'}}
+               </span>
+               <span  *ngIf="col.fieldType !='date'"  style=" margin-right: 4px;">
+
+                <i class="fa fa-info-circle" style="font-size: 1.2rem;cursor: pointer;color:rgb(255, 106, 0);padding-right: 10px;" *ngIf="col.field =='companyName' " (click)="getVendorInfo(rowData)"></i>
+
+
+                <img *ngIf="rowData['status']== 'Completed' && col.field =='vendorName'" width="20" src="assets/images/insta-verified.png"/>
+                <span [title]="rowData[col.field]">{{rowData[col.field]}} </span>
+              </span>
+                </td>
+                <td style="width:5em">
+                  <div class="custom-control custom-switch" >
+
+                      <!-- <label class="custom-control-label" for="customSwitch1"> </label> -->
+                      <label class="switch">
+                        <input type="checkbox" [disabled]="rowData.upgradeVendor == true" (click)="onChangeCheckBoxValue(rowData)"  [id]="rowData.id" [name]="rowData.id" [(ngModel)]="rowData.upgradeVendor">
+                        <span class="slider round"></span>
+                      </label>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage" let-columns>
+              <tr>
+                <td [attr.colspan]="5" style="text-align:center;">
+                  No Records Found.
+                </td>
+              </tr>
+
+            </ng-template>
+            <ng-template pTemplate="paginatorleft">
+              <div  *ngIf="vendorRegPendingTable._totalRecords > 0">
+                <b>Showing {{vendorRegPendingTable.first+1}} to {{vendorRegPendingTable.first+vendorRegPendingTable.rows > vendorRegPendingTable.totalRecords?vendorRegPendingTable.totalRecords: vendorRegPendingTable.first+vendorRegPendingTable.rows}} of {{vendorRegPendingTable.totalRecords}}</b>
+                <!-- <app-page-info [totalRecords]="vendorRegPendingList.length" [pageData]="paginatoryDetails"></app-page-info> -->
+              </div>
+            </ng-template>
+          </p-table>
+          </div>
+
+    </div>
+  </div>
+  <ng-template #otpTemplate>
+      <div class="modal-header">
+          <h4>Upgrade Vendor</h4>
+          <button class="btn-skelton modal-close-btn" mat-dialog-close>✖</button>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+              <label>OTP</label>
+              <input type="number" class="form-control" minlength="6" maxlength="6" placeholder="Enter OTP here.."  [(ngModel)]="otp"/>
+          </div>
+          <div class="form-group mt-3">
+            <label>
+                Subscription For {{subscriptionDays}}
+            </label>
+            <div class="form-inline">
+                <input class="form-check-input" type="radio" name="prCorrespond" id="Product" [(ngModel)]="subscriptionDays" [value]="180">180 Days &nbsp;&nbsp;
+                <input class="form-check-input" type="radio" name="prCorrespond" id="Product" [(ngModel)]="subscriptionDays" [value]="365">365 Days &nbsp;&nbsp;
+
+            </div>
+
+          </div>
+          <div class="input-group mt-4 " style="justify-content: right;">
+              <button class="btn btn-blue" [disabled]="!otp" type="button" (click)="onVerifyAndUpdate()">Verify & Update</button>
+              <button class="btn btn-red" (click)="resetForm()">Reset</button>
+          </div>
+      </div>
+  </ng-template>
+
+
+<ng-template #vendorInfoTemplate>
+    <app-gmt-vendor-info-modal [selectedVendor]="selectedVendor" [vendorInfo]="vendorInfo"></app-gmt-vendor-info-modal>
+</ng-template>

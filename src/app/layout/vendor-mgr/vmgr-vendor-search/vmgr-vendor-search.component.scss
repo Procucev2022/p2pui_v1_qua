@@ -1,0 +1,52 @@
+mat-card{
+    margin-top: 10px;
+    padding: 2px;
+    box-shadow: none !important;
+}
+
+.addFieldsbtn{
+    float: right;
+    margin-top: 30px;
+    margin-right: 50px;
+}
+.removeFields{
+    margin-right: 140px;
+    margin-top: 30px;
+}
+.addformInputs{
+    float: right;
+}
+// section{
+//     margin-bottom: 15px !important;
+// }
+.searchSubmit{
+    margin-top: 15px !important;
+    float: right !important;
+}
+.section-css{
+    border: 1px solid lightgray;
+    padding: 10px;
+    border-radius: 2px;
+    box-shadow: 0 6px 1px -2px rgba(0, 0, 0, 0.05), 0 1px 0px 0 rgba(0, 0, 0, 0.14), 0 1px 1px 0 rgba(0, 0, 0, 0.18);
+}
+.search-card{
+    background: #FFFFFF;
+    border: 1px solid #E9E9E9;
+    box-shadow: 0px 4px 14px #35a9ea08;
+    border-radius: 4px;
+    padding: 10px 0px;
+}
+
+#prqTable{
+    -moz-user-select: none;  
+    -webkit-user-select: none;  
+    -ms-user-select: none;  
+    -o-user-select: none;  
+    user-select: none;
+}
+.table-cell-overflow-ellipse {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 170px;
+}

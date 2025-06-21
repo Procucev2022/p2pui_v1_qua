@@ -1,0 +1,19 @@
+<div class="row">
+    <div class="col-12 btn-pnl">
+
+        <button class="btn btn-red" (click)="getData('yearly')" [ngClass]="{'activeBtn2': activeBtnPosition == 2}"> Y</button>
+        <button class="btn btn-blue" (click)="getData('monthly')" [ngClass]="{'activeBtn1': activeBtnPosition == 1}">M</button>
+        <button class="btn btn-orange" (click)="getData('daily')" [ngClass]="{'activeBtn0': activeBtnPosition == 0}">D</button>
+        <span class="report-title">Report By</span>
+    </div>
+    <div class="col-12 chart-panel mt-3 mb-3 p-3">
+        <p-chart *ngIf="apiData" type="line" width="400" height="320"
+            [data]="chartData" [options]="options"></p-chart>
+        <p *ngIf="!apiData">No Analytics Available</p>
+    </div>
+    <!-- <div class="col-3">
+        <ul class="data-set-cls mt-4 p-1">
+            <li *ngFor="let item of dataSet.dates; index as i" [ngClass]="{'current-price-row': i == dataSet.dates.length-1 }"><label>{{item}}</label> : <span>{{ dataSet.data[i]}}</span></li>
+        </ul>
+    </div> -->
+</div>

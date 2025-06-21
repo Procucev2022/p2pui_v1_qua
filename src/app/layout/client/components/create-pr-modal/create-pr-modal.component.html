@@ -1,0 +1,323 @@
+
+
+    <div class="col-12 pad-nill" style="position: relative;margin-bottom: 50px;">
+    <div class="table-title">
+        <div class="row pr-header">
+          <div class="col-sm-6">
+            <h2 *ngIf="editPrId">Edit Procurement Request</h2>
+            <h2 *ngIf="!editPrId">Create New Procurement Request</h2>
+          </div>
+          <div class="col-sm-6"*ngIf="createPrForm.invalid || createPrForm.touched"  style="text-align: end;">
+            <small *ngIf="createPrForm.invalid && createPrForm.touched" class="error-text" uppercase>All marked
+                <b style="color: red;">*</b> fields are mandatory.
+            </small>
+          </div>
+        </div>
+    </div>
+    <div class="col-12 general">
+        <form #createPrForm="ngForm" novalidate>
+
+            <mat-tab-group #tabGroup1 mat-stretch-tabs [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndex = $event">
+                <mat-tab label="General">
+                    <div class="col-12 row">
+                    <div class="col-md-6 form-group row">
+                        <label for="prCorrespondend" class="col-sm-12">PR Corresponds:<b style="color: red;">*</b></label>
+                        <div class="col-sm-12">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="prCorrespond" id="Product" [(ngModel)]="prCorrespond" value="Product">
+                                <label class="form-check-label" for="Product">Product</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="prCorrespond" id="Service" [(ngModel)]="prCorrespond" value="Service">
+                                <label class="form-check-label" for="Service">Service</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="prCorrespond" id="TurnKey" [(ngModel)]="prCorrespond" value="TurnKey_Projects">
+                                <label class="form-check-label" for="TurnKey">TurnKey Projects</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group row">
+                        <label for="deptName" class="col-sm-12">Department Name:</label>
+                        <div class="col-sm-12">
+                            <input type="text" required #departmentName="ngModel" name="departmentName" [(ngModel)]="deptName" id="i_departmentName" class="form-control" placeholder="Department Name" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group row">
+                        <label for="prDescription" class="col-sm-12"> Product/Service Description:<b style="color: red;">*</b></label>
+                        <div class="col-sm-12">
+                            <input type="text" required [(ngModel)]="prDescription" name="prDescription" ngModel pattern="/^[A-Za-z]+$/" id="i_prDescription" class="form-control" placeholder="Description">
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group row">
+                        <label for="singleVendor" class="col-sm-12">Single vendor <br>
+                                <!-- if Yes for Single Vendor -->
+                            </label>
+                        <div class="col-sm-12">
+                            <div class="col-5 form-check form-check-inline">
+                                <input class="form-check-input" type="radio" [(ngModel)]="singleVendor" (change)="onChangeVendor($event)" name="singleVendor" id="i_Yes" [value]="true">
+                                <label class="form-check-label" for="singleVendor">Yes</label>
+                            </div>
+                            <div class="col-5 form-check form-check-inline">
+                                <input class="form-check-input" type="radio" [(ngModel)]="singleVendor" (change)="onChangeVendor($event)" name="singleVendor" id="i_No" [value]="false">
+                                <label class="form-check-label" for="singleVendor">No</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group row" *ngIf="singleVendor==false">
+                        <label for="singleVendor" class="col-sm-12">Do you want suggest new vendors ? <br>
+                                <!-- if Yes for Single Vendor -->
+                            </label>
+                        <div class="col-sm-12">
+                            <div class="col-5 form-check form-check-inline">
+                                <input class="form-check-input" type="radio" [(ngModel)]="suggestNewVendor" name="suggestNewVendor" id="i_suggest_new_vendor_Yes" [value]="true">
+                                <label class="form-check-label" for="suggestNewVendor">Yes</label>
+                            </div>
+                            <div class="col-5 form-check form-check-inline">
+                                <input class="form-check-input" type="radio" [(ngModel)]="suggestNewVendor" name="suggestNewVendor" id="i_suggest_new_vendor_No" [value]="false">
+                                <label class="form-check-label" for="suggestNewVendor">No</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <label style="text-align: center;" for="vendor" class="col-sm-5">if Yes for Single Vendor :</label> -->
+                    <div class="col-md-12" *ngIf="singleVendor || suggestNewVendor">
+                        <ng-container *ngFor="let singleVendor of singleVendorform; let i = index;">
+                            <div class="child-form row">
+                                <div class="col-md-10 row">
+                                    <div class="col-6 form-group row">
+                                        <label for="companyName" class="col-sm-12">Company Name:</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" required #companyName="ngModel" name="companyName_{{i}}" [(ngModel)]="singleVendor.companyName" id="companyName" class="form-control" placeholder="Company Name" minlength="3">
+                                        </div>
+                                    </div>
+                                    <div class="col-6 form-group row">
+                                        <label for="contactPerson" class="col-sm-12">Contact Person:</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" required #contactPerson="ngModel" name="contactPerson_{{i}}" [(ngModel)]="singleVendor.contactPerson" id="contactPerson" class="form-control" placeholder="Contact Person" minlength="3">
+                                        </div>
+                                    </div>
+                                    <div class="col-6 form-group row">
+                                        <label for="email" class="col-sm-12">Email:</label>
+                                        <div class="col-sm-12">
+                                            <input type="email" required #email="ngModel" name="email_{{i}}" [(ngModel)]="singleVendor.email" id="email" class="form-control" placeholder="Email" minlength="3">
+                                        </div>
+                                    </div>
+                                    <div class="col-6 form-group row">
+                                        <label for="phone" class="col-sm-12">Contact Number:</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" required #phone="ngModel" name="phone_{{i}}" [(ngModel)]="singleVendor.phone" id="phone" class="form-control" placeholder="Contact Number" maxlength="10" (keypress)="numberOnly($event)">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 addRemove">
+                                    <span *ngIf="!singleVendor || (i == singleVendorform.length-1 && suggestNewVendor)">
+                                        <button type="button" class="btn btn-success btn-blue" (click)="addNewVendor()"><i class="fa fa-plus"></i></button>
+                                    </span>
+                                    <span *ngIf="i < singleVendorform.length-1">
+                                        <button type="button" class="btn btn-danger btn-red" (click)="removing(i)">✖</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="col-md-6 form-group row">
+                        <label for="rateCardAvailable" class="col-sm-12">Quote/Rate Card Available ?</label>
+                        <div class="col-sm-12">
+                            <div class="col-5 form-check form-check-inline">
+                                <input class="form-check-input" type="radio" [(ngModel)]="rateCardAvailable" name="rateCardAvailable" [value]="true">
+                                <label class="form-check-label" for="Product">Yes</label>
+                            </div>
+                            <div class="col-5 form-check form-check-inline">
+                                <input class="form-check-input" type="radio" [(ngModel)]="rateCardAvailable" name="rateCardAvailable" [value]="false">
+                                <label class="form-check-label" for="Service">No</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group row" *ngIf="rateCardAvailable">
+                        <label for="rateCardDoc" class="col-sm-12">Upload Rate Card</label>
+                        <!-- <div class="col-sm-5">
+                                    <div class="uploadfilecontainer" style="margin: 0px 0px;border-radius: 0px;"
+                                        (click)="documentsInput.click()" fileDragDrop
+                                        (onFileDropped)="dropRateCard($event)">
+                                        <input multiple hidden type="file" #documentsInput
+                                            (change)="uploadRateCard($event.target.files)">
+                                        <div class="browseFiles">Browse Files</div>
+                                    </div>
+
+                                </div> -->
+                        <div class="col-sm-12">
+                            <input type="file" style="padding: 3px;" class="form-control" id="rate_card" placeholder="Upload Rate Card" name="rateCard" ngModel [(ngModel)]="rateCard" (change)="uploadRateCard($event)">
+                            <span *ngIf="rateCardFieldName">{{rateCardFieldName}}</span>
+                        </div>
+                    </div>
+                    <!-- <div class="form-group row" *ngIf="documentsInput.value">
+                                <label for="text" style="background: #ced1d4;color: #00427a;padding: 6px;"
+                                    class="col-form-label">Uploaded Documents:</label>
+                                <div style="border: 1px solid lightgray;height: 100px;overflow: auto;">
+                                    <div class="files-list" *ngFor="let file of rateCardArray;let i=index">
+                                        <p style="margin-bottom: 0px;">{{ file?.name }}</p>
+                                        <button class="delete-file" (click)="deleteRateCard(i)">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div> -->
+                    <div class="col-md-6 form-group row">
+                        <label for="futureRequirement" class="col-sm-12">Future Requirement Plan :</label>
+                        <div class="col-sm-12">
+                            <textarea type="number" required [(ngModel)]="futureRequirement" name="futureRequirement" ngModel id="i_futureRequirement" class="form-control" placeholder="Future Requirement " minlength="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group row">
+                        <label for="priority" class="col-sm-12">Priority :</label>
+                        <div class="col-sm-12">
+                            <select name="priority" [(ngModel)]="priority" id="i_priority" class="form-control">
+                                    <option selected disabled [ngValue]="null">Select</option>
+                                    <option *ngFor="let priority of priorities" [value]="priority">
+                                        {{priority}}</option>
+                                </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group row">
+                        <label for="dueDate" class="col-sm-12">Expected Date : <b style="color: red;">*</b></label>
+                        <!-- <div class="col-sm-5">
+                                    <input type="date" required #phone="ngModel" name="dueDate" ngModel id="i_phone"
+                                        class="form-control" placeholder="Contact Number" minlength="3">
+                                </div> -->
+                        <div class="col-sm-12">
+                            <mat-form-field class="example-full-width">
+                                <mat-label>Choose a date</mat-label>
+                                <input matInput [min]="minDate" [matDatepicker]="picker" name="dueDate" ngModel id="i_phone" [(ngModel)]="dueDate" required>
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group row">
+                        <label for="costCentre" class="col-sm-12">Cost Centre:</label>
+                        <div class="col-sm-12">
+                            <!-- <ng-multiselect-dropdown [placeholder]="'Select Cost Centres'" [data]="costCentreList" name="costCentre" [(ngModel)]="selectedCostCentreItems" [settings]="dropdownSettings" (onSelect)="onItemSelect($event)" (onSelectAll)="onSelectAll($event)">
+                            </ng-multiselect-dropdown> -->
+                            <p-multiSelect [options]="costCentreList" [(ngModel)]="selectedCostCentreItems" defaultLabel="Select Cost Centres" name="costCentre" optionLabel="name" (onChange)="onChangeCostCenter($event)" display="chip"></p-multiSelect>
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-6 form-group row">
+                        <label for="inputPassword" class="col-sm-12">Estimated PR Value  (in INR):<b
+                                style="color: red;">*</b></label>
+                        <div class="col-sm-12">
+                            <input type="text" style="padding: 3px;" class="form-control" id="estimatedPrvalue" placeholder="Enter Estimated PR Value (in INR)" name="estimatedPrvalue" [(ngModel)]="estimatedPrvalue">
+                        </div>
+                    </div> -->
+                </div>
+                </mat-tab>
+                <mat-tab label="PR Items">
+                    <div class="col-12 pad-nill">
+                        <app-pr-items-grid-panel [createPRformList]="createPRformList" [prItemsFromInvoice]="prItemsFromInvoice" (updatedPrList)="updatePRList($event)"></app-pr-items-grid-panel>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Delivery Locations">
+                    <mat-card *ngFor="let location of deliveryLocationList; let i = index;">
+                        <div class="col-12 row">
+                            <div class="col-6">
+                                <div class="col-12 form-group row">
+                                    <label for="address" class="col-sm-12">Address:<b style="color: red;">*</b></label>
+                                    <div class="col-sm-12">
+                                        <input type="text" required #addressRef="ngModel" name="address_{{i}}" [(ngModel)]="location.address" id="address_{{i}}" class="form-control" placeholder="Address">
+                                        <div *ngIf="addressRef.invalid && addressRef.touched">
+                                            <small *ngIf="addressRef.errors?.required" class="text-danger">Address
+                                                    is required</small>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 form-group row">
+                                    <label for="city" class="col-sm-12">City:<b style="color: red;">*</b> </label>
+                                    <div class="col-sm-12">
+                                        <input type="text" required #cityRef="ngModel" name="city_{{i}}" [(ngModel)]="location.city" id="citycity_{{i}}" class="form-control" placeholder="City">
+                                        <div *ngIf="cityRef.invalid && cityRef.touched">
+                                            <small *ngIf="cityRef.errors?.required" class="text-danger">City
+                                                    is required</small>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-12 form-group row">
+                                    <label for="state" class="col-sm-12">State:<b style="color: red;">*</b> </label>
+                                    <div class="col-sm-12">
+                                        <input type="text" required #state="ngModel" name="state_{{i}}" [(ngModel)]="location.state" id="state_{{i}}" class="form-control" placeholder="State">
+                                        <div *ngIf="state.invalid && state.touched">
+                                            <small *ngIf="state.errors?.required" class="text-danger">City
+                                                    is required</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 removeAddress" *ngIf="i >= 0 && deliveryLocationList.length-1" (click)="removeLocation(i)">
+                                        <i class="fa fa-trash" aria-hidden="true"><span>Remove Address</span></i>
+                                </div>
+                            </div>
+                            <div class="col-6 addAddress" *ngIf="i == deliveryLocationList.length-1" (click)="addLocation()">
+                                <div>
+                                    <span class="addr"> &#x2B; </span><br> Add Another Address
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card>
+                </mat-tab>
+                <mat-tab label="Documents">
+                    <mat-card>
+                            <div class="col-md-12 row">
+                                <div class="col-md-6 addAddress" (click)="documentsInput.click()" draggable="true" ngClass="{{dragAreaClass}}">
+                                    <input multiple hidden type="file" #documentsInput (change)="uploadDocuments($event.target.files)">
+                                    <div>
+                                        <img src="/assets/images/upload-cloud.svg"><br>
+                                        <div class="uploadInfo">Click to Upload <br><span> PDF, XLS, MSW (max. 10MB/File)</span></div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                        <ng-container *ngFor="let file of documentsArray;let i=index">
+                                            <div class="col-12 uploadedFiles">
+                                                <div class="col-8">
+                                                    <img src="/assets/images/file.svg">
+                                                    <span>{{ file?.name }}</span> <br>
+                                                    <!-- <span>{{ file?.name }}</span> -->
+                                                </div>
+                                                <div class="col-4">
+                                                    <i class="fa fa-trash" aria-hidden="true" (click)="deleteAttachment(i,'documentsArray')"></i>
+                                                </div>
+                                            </div>
+                                        </ng-container>
+                                </div>
+                            </div>
+                    </mat-card>
+                </mat-tab>
+            </mat-tab-group>
+        </form>
+    </div>
+    <!-- footer -->
+<div class="footer">
+    <div class="table-title" style="padding: 4px;">
+        <div class="row">
+          <div class="col-sm-5 cancel-button pl-3">
+            <button type="button" (click)="backToCreatePR()" class="btn btn rippel-btn-size btn-red ml-3" style="float: left;">Cancel PR Creation</button>
+        </div>
+        <!-- <div class="col-sm-3">
+            <p-steps [model]="items" [activeIndex]="selectedIndex"></p-steps></div> -->
+          <div class="col-sm-7 button-block">
+            <button class="btn btn-primary rippel-btn-size btn-green" *ngIf="selectedIndex == 3" type="button" (click)="onSubmit(createPrForm)">
+               Submit
+            </button>
+            <button class="btn btn-primary rippel-btn-size btn-blue" *ngIf="selectedIndex != 3" type="button" (click)="next(createPrForm)">
+                Next <i class="fa fa-angle-double-right"></i>
+            </button>
+            <button class="btn btn-primary  rippel-btn-size btn-orange" *ngIf="selectedIndex != 0" type="button" (click)="back()">
+            <i class="fa fa-angle-double-left"> </i>   Back
+            </button>
+            <span class="step">Step {{selectedIndex+1}}/4</span>
+          </div>
+        </div>
+    </div>
+</div>
+</div>
+
+

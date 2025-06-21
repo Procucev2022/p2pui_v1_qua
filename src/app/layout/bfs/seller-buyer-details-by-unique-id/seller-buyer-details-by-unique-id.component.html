@@ -1,0 +1,75 @@
+
+<div class="row">
+    <div class="col-6">
+        <div class="form-group input-group">
+            <label>UniqueId</label>
+            <input class="form-control" [(ngModel)]="uniqueId" placeholder="Enter UniqueId" />
+            <button class="btn btn-blue" (click)="searchByUniqueId()">Search</button>
+        </div>
+    </div>
+    <div class="col-12 mt-4">
+        <div class="row" *ngIf="detailsSellerBuyer">
+            <div class="col-6 content-box">
+                <label>Description</label>
+                <div>{{detailsSellerBuyer?.description}}</div>
+            </div>
+            <div class="col-6 content-box">
+                <label>Specification</label>
+                <div>{{detailsSellerBuyer?.specification}}</div>
+            </div>
+            <div class="col-6 content-box">
+                <label>UOM</label>
+                <div>{{detailsSellerBuyer?.unitofMeasures}}</div>
+            </div>
+            <div class="col-6 content-box">
+                <label>Buy Price</label>
+                <div>{{detailsSellerBuyer?.sellPrice}}</div>
+            </div>
+            <div class="col-6 content-box">
+                <label>Discount</label>
+                <div>{{detailsSellerBuyer?.discount}}</div>
+            </div>
+            <div class="col-6 content-box">
+                <label>Sale Price</label>
+                <div>{{detailsSellerBuyer?.buyPrice}}</div>
+            </div>
+            <div class="col-6 content-box">
+                <label>Buyer Discount</label>
+                <div>{{detailsSellerBuyer?.buyerDiscount}}</div>
+            </div>
+            <div class="col-6 content-box">
+                <label>Buyer Email</label>
+                <div>{{detailsSellerBuyer?.buyerEmail}}</div>
+            </div>
+
+            <div class="col-6 content-box">
+                <label>Buyer CompanyName</label>
+                <div>{{detailsSellerBuyer?.buyerCompanyName}}</div>
+            </div>
+            <div class="col-6 content-box">
+                <label>Buyer Name</label>
+                <div><app-bfs-user-info-details [selectedId]="detailsSellerBuyer?.buyerId" [labelName]="'Buyer'"></app-bfs-user-info-details>  {{detailsSellerBuyer?.buyerName}}</div>
+            </div>
+            <div class="col-6 content-box">
+                <label>Seller Name</label>
+                <div><app-bfs-user-info-details [selectedId]="detailsSellerBuyer?.sellerId" [labelName]="'Seller'"></app-bfs-user-info-details>{{detailsSellerBuyer?.sellerName}}</div>
+            </div>
+            <div class="col-6 content-box">
+                <label>Status</label>
+                <div>{{detailsSellerBuyer?.status?.uiDisplay}}</div>
+            </div>
+            <div class="col-6 content-box">
+                <label>Created Time</label>
+                <div>{{detailsSellerBuyer?.createdTS | date: 'dd-MMM-yyyy HH:MM:SS a'}}</div>
+            </div>
+        </div>
+        <div class="row" *ngIf="!detailsSellerBuyer && isSearched">
+            <div class="col-12">
+                <div class=""> <h3>Seller & Buyer Details </h3></div>
+                <div>No Details Found with {{uniqueId}} </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+

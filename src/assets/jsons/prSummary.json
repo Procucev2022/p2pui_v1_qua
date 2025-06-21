@@ -1,0 +1,14 @@
+[
+    {
+        "prNumber": "1",
+        "status": "approved"
+    },
+    {
+        "prNumber": "2",
+        "status": "rejected"
+    },
+    {
+        "prNumber": "3",
+        "status": "pending"
+    }
+]

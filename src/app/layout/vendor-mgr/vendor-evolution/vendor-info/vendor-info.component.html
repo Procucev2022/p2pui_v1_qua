@@ -1,0 +1,99 @@
+<form  name="vendorInfo" (ngSubmit)="vendorInfo.form.valid && onVendorInfoSubmit()" #vendorInfo="ngForm" novalidate>
+  <div class="col-md-12 row pad-nill">
+      <div class="col-md-4">
+          <div class="form-group">
+            <label for="vendorName">Vendor Name <span style="color:red">*</span></label>
+            <input type="text" class="form-control" placeholder="Vendor Name" name="vendorName" [(ngModel)]="model.vendorName" #vendorName="ngModel"
+            [ngClass]="{ 'is-invalid': vendorInfo.submitted && vendorName.invalid }" required />
+            <div *ngIf="vendorInfo.submitted && vendorName.invalid" class="invalid-feedback">
+                <div *ngIf="vendorName.errors.required">Vendor Name is required</div>
+            </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label for="address">Address <span style="color:red">*</span></label>
+          <input type="text" class="form-control" placeholder="Address" name="address" [(ngModel)]="model.address" #address="ngModel"
+          [ngClass]="{ 'is-invalid': vendorInfo.submitted && address.invalid }" required />
+          <div *ngIf="vendorInfo.submitted && address.invalid" class="invalid-feedback">
+              <div *ngIf="address.errors.required">Address is required</div>
+          </div>
+        </div>
+      </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label for="location">Location <span style="color:red">*</span></label>
+        <input type="text" class="form-control" placeholder="location" name="location" [(ngModel)]="model.location" #location="ngModel"
+        [ngClass]="{ 'is-invalid': vendorInfo.submitted && location.invalid }" required />
+        <div *ngIf="vendorInfo.submitted && location.invalid" class="invalid-feedback">
+            <div *ngIf="location.errors.required">Location is required</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label for="pan">PAN <span style="color:red">*</span></label>
+        <input type="text" class="form-control" placeholder="PAN" name="pan" [(ngModel)]="model.pan" #pan="ngModel"
+        [ngClass]="{ 'is-invalid': vendorInfo.submitted && pan.invalid }" required />
+        <div *ngIf="vendorInfo.submitted && pan.invalid" class="invalid-feedback">
+            <div *ngIf="pan.errors.required">PAN is required</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label for="gst">GST Number <span style="color:red">*</span></label>
+        <input type="text" class="form-control" placeholder="GST Number" name="gst" [(ngModel)]="model.gst" #gst="ngModel"
+        [ngClass]="{ 'is-invalid': vendorInfo.submitted && gst.invalid }" required />
+        <div *ngIf="vendorInfo.submitted && gst.invalid" class="invalid-feedback">
+            <div *ngIf="gst.errors.required">GST Number is required</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label for="annualTurnOver">Annual Turnover <span style="color:red">*</span></label>
+        <input type="text" class="form-control" placeholder="Annual Turnover" name="annualTurnOver" [(ngModel)]="model.annualTurnOver" #annualTurnOver="ngModel"
+        [ngClass]="{ 'is-invalid': vendorInfo.submitted && annualTurnOver.invalid }" required />
+        <div *ngIf="vendorInfo.submitted && annualTurnOver.invalid" class="invalid-feedback">
+            <div *ngIf="annualTurnOver.errors.required">Annual Turnover is required</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <label for="goodsType">Types of Goods & Services <span style="color:red">*</span></label>
+        <select name="goodsType" [(ngModel)]="model.goodsType" id="i_goodsType"
+        class="form-control" #goodsType="ngModel" [ngClass]="{'is-invalid':vendorInfo.submitted && goodsType.invalid}" required>
+          <option selected disabled [ngValue]="undefined">Select</option>
+          <option *ngFor="let serv of servicesList" [value]="serv">{{serv}}</option>
+      </select>
+      <div *ngIf="vendorInfo.submitted && goodsType.invalid" class="invalid-feedback">
+        <div *ngIf="goodsType.errors.required">Types of Goods & Services is required</div>
+    </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <ng-container *ngFor="let clients of clientsList; let index=index">
+          <div class="row">
+              <div class="col-md-4">
+                  <div class="form-group">
+                      <label for="client">Current Clients</label>
+                      <input class="form-control" placeholder="Current Clients" name="client_{{index}}" [(ngModel)]="clients.clientName" #client_{{index}}="ngModel">
+                  </div>
+              </div>
+              <div class="col-md-2 plusminus-container">
+                  <i #addInternalElement *ngIf="index == clientsList.length-1" class="fa fa-plus plusMinus plusColor" data-toggle="tooltip" title="Add Client" (click)="addOneMoreinternals()"></i>
+                  <i *ngIf="index >= 0 && clientsList.length-1" class="fa fa-minus plusMinus minusColor" data-toggle="tooltip" title="Remove Client" (click)="removeinternals(index)"></i>
+              </div>
+          </div>
+      </ng-container>
+  </div>
+  <div class="col-12">
+    <button style="float: right;" class="btn btn-primary btn-green" type="submit">Save & Continue</button>
+    <button style="float: right;" class="btn btn-primary btn-blue" type="button" (click)="onVendorInfoSaveAndExit()">Save & Exit</button>
+    <button style="float: right;" class="btn btn-secondary btn-red" type="button" (click)="onReset()">Reset</button>
+    <!-- <button style="float: right;" mat-raised-button  color="success" type="button" cdkFocusInitial (click)="onNext()">Next</button> -->
+  </div>
+  </div>
+</form>

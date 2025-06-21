@@ -1,0 +1,190 @@
+<div class="login-page row" [@routerTransition]>
+  <!-- <div class="">
+      <h3>Welcome to
+          <span class="scroll-cap">P</span><span class="scroll-cap1">rocurement </span>
+          <span class="scroll-cap">A</span><span class="scroll-cap1">utomation and </span>
+          <span class="scroll-cap">TE</span><span class="scroll-cap1">chnified </span>
+          <span class="scroll-cap">S</span><span class="scroll-cap1">ourcing </span>
+          <span class="scroll-cap1">Service </span> </h3>
+      </div>
+  <div class="row justify-content-md-center">
+      <div class="col-md-4 procucevlogin">
+          <img src="assets/images/logo_procuceve.JPG" width="250px" class="" />
+          <h1 class="marginTop20">Login</h1>
+          <form role="form">
+              <div class="" *ngIf="isCreadentialsEmpty" style="font-size: 14px; color: rgb(255, 253, 253);">Please Enter User Name & Password</div>
+              <div class="form-content">
+                  <div class="form-group">
+                      <input type="text" name="userName" [(ngModel)]="userName" (keydown)="resetCredentialsMsg()" class="form-control input-underline input-lg" id="" placeholder="Enter Your Email">
+                  </div>
+
+                  <div class="form-group">
+                      <input type="password" name="userPassword" [(ngModel)]="userPassword" (keydown)="resetCredentialsMsg()" class="form-control input-underline input-lg" id="" placeholder="Password">
+                  </div>
+              </div>
+
+              &nbsp;
+              <button class="btn rounded-btn" style=" width: 217px; margin-bottom: 25px;"  (click)="onLoggedin()">{{ 'Log in'}}</button>
+              <div ><span class="" style="color: #b5cde2;"> Forgot password ? &nbsp;<span (click)="forgotpassword()" style="    color: #fff;border-bottom: 1px dashed; cursor: pointer;">Click Here</span> </span></div>
+
+          </form>
+      </div>
+  </div> -->
+  <div class="col-md-4 left-section curved-line">
+      <img src="/assets/images/Graphic_branding.svg" width="350">
+      <div id="demo" class="carousel slide" data-ride="carousel">
+          <!-- Indicators -->
+          <ul class="carousel-indicators">
+              <li data-target="#demo" data-slide-to="0" class="active"></li>
+              <li data-target="#demo" data-slide-to="1"></li>
+              <li data-target="#demo" data-slide-to="2"></li>
+          </ul>
+          <!-- The slideshow -->
+          <div class="carousel-inner">
+              <div class="carousel-item active">
+                  <h4>Welcome to Procurement Automation and TEchnified Sourcing Service</h4><br />
+                  <small>Procucev is a pioneer in providing digital procurement as a service with latest technology
+                      and unique service.</small>
+              </div>
+              <div class="carousel-item">
+                  <h4>We use our in-house cloud-based technology platform, armed with latest tools</h4><br />
+                  <small>This results in streamlined business processes and enables proper control mechanism which can
+                      be customized as per clients’ internal controls.</small>
+              </div>
+              <div class="carousel-item">
+                  <h4>Procucev spreads its identity across sectors by expanding its clientele</h4><br />
+                  <small>Retail, Manufacturing, F&B and many more sectors while establishing strong presence in
+                      enterprise capex procurements.</small>
+              </div>
+          </div>
+          <div class="more-info">
+              For more details visit <a href="https://www.procucev.com" target="_blank" style="color: #FF9800;"><b>
+                      www.procucev.com </b></a>
+          </div>
+      </div>
+  </div>
+
+  <div class="col-md-8 " style="    background: #0f2d9a;">
+      <div class="row" style="margin-bottom: 63px;">
+          <div class="col-6" style=" margin-top:15px;padding-left:20px ; text-align:left;">
+              <label><span style="font-size: 20px;color: #fffbff;">
+                      For Buyer - Start Registration - <a [routerLink]="['/login/reg-client']"> <span
+                              class="blink testing" style="color: #79de7f;">Click Here</span></a> </span>
+              </label>
+          </div>
+          <div class="col-6" style=" margin-top:15px;padding-right:20px ; text-align:right;">
+              <label><span style="font-size: 20px;color: #fffbff;">
+                      For Seller - Start Registration - <a [routerLink]="['registervendor']"> <span
+                              class="blink testing" style="color: #79de7f;">Click Here</span></a> </span>
+              </label>
+          </div>
+      </div>
+      <div class="row right-section">
+          <div class=" col-md-5 col-xs-12 subc-log-sec circle-container2">
+              <!-- <div class="dps-panel">
+              <div class="dps">
+                  <img src="assets/images/new/DPS.png" class="card-img-top" alt="assets/images/new/DPS.png">
+                  <div class="content">
+                      <h5 class="card-title">Digital Procurement Service</h5>
+                      <p> <i class="fa fa-hand-o-right" aria-hidden="true"></i> Source to Pay Technology with Dynamic Pricing. Streamlining procurement operations & bringing transparency</p>
+                  </div>
+
+              </div>
+              <div class="dps">
+
+                  <div class="content">
+                      <h5 class="card-title">Get My Quote</h5>
+                      <p> <i class="fa fa-hand-o-right" aria-hidden="true"></i> Buyers find their perfect vendor fit and sellers expand their business opportunities</p>
+
+                  </div>
+                  <img src="assets/images/new/GMT.png" class="card-img-top" alt="assets/images/new/DPS.png">
+              </div>
+              <div class="dps">
+                  <img src="assets/images/new/BFS.png" class="card-img-top" alt="assets/images/new/DPS.png">
+                  <div class="content">
+                      <h5 class="card-title">Buy From Stock</h5>
+                      <p><i class="fa fa-hand-o-right" aria-hidden="true"></i> Acting as a marketplace where Enterprises can easily buy and sell excess inventory</p>
+
+                  </div>
+
+              </div>
+              <div class="dps">
+                  <img src="assets/images/new/proCPX -White.svg" class="card-img-top" alt="assets/images/new/DPS.png">
+                  <div class="content">
+                      <h5 class="card-title">Buy From Stock</h5>
+                      <p><i class="fa fa-hand-o-right" aria-hidden="true"></i> Acting as a marketplace where Enterprises can easily buy and sell excess inventory</p>
+
+                  </div>
+
+              </div>
+              </div> -->
+              <div class="circle">
+                  <div class="item">
+                      <img src="assets/images/new/proCPX -White.svg" class="card-img-top img" alt="assets/images/new/DPS.png">  </div>
+                  <div class="item">
+                      <img src="assets/images/new/DPS.svg" class="card-img-top img" alt="assets/images/new/DPS.png">
+
+                  </div>
+                  <div class="item">
+                      <img src="assets/images/new/GMT.png" class="card-img-top img" alt="assets/images/new/DPS.png">
+                  </div>
+                  <div class="item">
+                      <img src="assets/images/new/BFS.svg" class="card-img-top img" alt="assets/images/new/DPS.png">
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-7  col-xs -12 login-form">
+              <div class="col-md-8 col-xs-12 d ">
+
+                  <!-- <div > -->
+                  <img src="assets/images/Procucev_Logo.svg" width="250px" class="" />
+                  <p>Login to access your account</p>
+                  <form role="form">
+                      <div class="col-md-12">
+                          <p *ngIf="isCreadentialsEmpty">Please Enter User Name & Password</p>
+                          <div class="form-content">
+                              <div class="form-group">
+                                  <div class="col-12 input-label"><label for="email">Email:</label></div>
+                                  <input type="text" name="userName" [(ngModel)]="userName"
+                                      (keydown)="resetCredentialsMsg()" class="form-control" id=""
+                                      placeholder="Enter Your Email" style="margin-bottom: 30px;">
+                              </div>
+                              <!-- <div class="form-group">
+                                  <div class="col-12 input-label"><label for="paswd">Password:</label></div>
+                                  <input type="password" name="userPassword" [(ngModel)]="userPassword"
+                                      (keydown)="resetCredentialsMsg()" class="form-control" id="" placeholder="Password">
+                              </div> -->
+
+                              <div class="form-group">
+                                  <div class="col-12 input-label"><label for="paswd">Password:</label></div>
+                                  <input [type]="visiblePassword?'text':'password'" name="userPassword"
+                                      [(ngModel)]="userPassword" (keydown)="resetCredentialsMsg()"
+                                      class="form-control" id="" placeholder="Password">
+                                  <span class="eyeicon" (click)="viewPassword()"><i
+                                          [ngClass]="visiblePassword?'fa fa-eye fa-lg':'fa fa-eye-slash fa-lg'"></i></span>
+                              </div>
+                          </div>
+                          <div style="text-align: end;">
+                              <small (click)="forgotpassword()">Forgot password</small>
+                              <!-- <small>Click Here</small> -->
+                          </div>
+                          <div class="row">
+                              <!-- <div class="col-6"> -->
+                              <button class="btn btn-primary" (click)="onLoggedin()">Login</button>
+                              <!-- </div> -->
+                              <!-- <div class="col-6"> -->
+                              <button class="btn btn-primary" type="reset" style="margin-top: 0px;">Reset</button>
+                              <!-- </div> -->
+                          </div>
+
+                          <!-- <button class="btn btn-success mt-0" type="reset" (click) ="registerVendor()">Register here - for Vendors</button> -->
+                      </div>
+                  </form>
+                  <!-- </div> -->
+              </div>
+          </div>
+
+      </div>
+
+  </div>
+</div>

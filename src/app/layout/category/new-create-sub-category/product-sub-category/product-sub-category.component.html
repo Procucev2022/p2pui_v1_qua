@@ -1,0 +1,112 @@
+<form  name="productCategory" (ngSubmit)="productCategory.form.valid" #productCategory="ngForm" novalidate>
+  <div class="col-md-12 row">
+    <div class="col-md-3">
+      <label class="control-label" style="font-size: medium; font-weight: bolder;">Segment</label>
+      <p-autoComplete name="productSegment" [ngModel]="model.selectedProductSegments" [suggestions]="productSegments"
+        (completeMethod)="filterSegment($event)" field="name" [dropdown]="true"  (ngModelChange)="onSelect($event, 'segment')">
+        <ng-template let-segment pTemplate="item">
+          <div>
+            <div>{{segment.name +' - '+ segment.code}}</div>
+          </div>
+        </ng-template>
+      </p-autoComplete>
+    </div>
+    <div class="col-md-3">
+      <label class="control-label" style="font-size: medium; font-weight: bolder; display: block;">Family</label>
+      <p-autoComplete name="productFamily" [ngModel]="model.selectedProductFamilys" [suggestions]="productFamilys"
+        (completeMethod)="filterFamily($event)" field="name" [dropdown]="true"  (ngModelChange)="onSelect($event, 'family')">
+        <ng-template let-family pTemplate="item">
+          <div>
+            <div>{{family.name +' - '+ family.code}}</div>
+          </div>
+        </ng-template>
+      </p-autoComplete>
+    </div>
+    <div class="col-md-3">
+      <label class="control-label" style="font-size: medium; font-weight: bolder; display: block;">Class</label>
+      <p-autoComplete name="productClass" [ngModel]="model.selectedProductClass" [suggestions]="productClass"
+        (completeMethod)="filterClass($event)" field="name" [dropdown]="true"  (ngModelChange)="onSelect($event, 'categoryClass')">
+        <ng-template let-class pTemplate="item">
+          <div>
+            <div>{{class.name +' - '+ class.code}}</div>
+          </div>
+        </ng-template>
+      </p-autoComplete>
+    </div>
+    <div class="col-md-3">
+      <label class="control-label" style="font-size: medium; font-weight: bolder;">Commodity</label>
+      <p-autoComplete name="productCommodity" [ngModel]="model.selectedProductCommodity" [suggestions]="productCommodity"
+        (completeMethod)="filterCommodity($event)" field="name" [dropdown]="true"  (ngModelChange)="onSelect($event, 'commodity')">
+        <ng-template let-commodity pTemplate="item">
+          <div>
+            <div>{{commodity.name +' - '+ commodity.code}}</div>
+          </div>
+        </ng-template>
+      </p-autoComplete>
+    </div>
+
+    <div class="row col-12">
+      <div class="col-12 form-group" *ngIf="model.categoryName">
+          <label class="control-label required" style="font-size: medium; font-weight: bolder; display: block;">Category Name</label>
+          <textarea class="form-control" disabled name="categoryName" [(ngModel)]="model.categoryName"> </textarea>
+      </div>
+      <div class="col-12 row mt-3">
+          <div class="col-6" *ngIf="model.categoryName">
+              <label class="control-label" style="font-size: medium; font-weight: bolder; display: block;">Sub Category Name</label>
+                  <p-autoComplete name="subCategoryName" [ngModel]="model.selectedSubCategoryName" [suggestions]="subCategoryList"
+                  panelInputClass="p-auto-panel-cls" [minLength]="1" inputStyleClass="p-auto-cls"
+                  (completeMethod)="filterAutoCompleteData($event)" field="subCategoryName" [dropdown]="true"  (ngModelChange)="onSelect($event, 'subCategory')">
+                  <ng-template let-sub pTemplate="item">
+                      <div class="sub-item">
+                          <div>{{sub.subCategoryName}}</div>
+                      </div>
+                  </ng-template>
+              </p-autoComplete>
+          </div>
+          <div class="col-6" *ngIf="model.subCategoryNumber">
+              <label class="control-label required" style="font-size: medium; font-weight: bolder;">Sub Category Number</label>
+              <input class="form-control" disabled name="subCategoryNumber" [(ngModel)]="model.subCategoryNumber"/>
+          </div>
+      </div>
+      <div class="col-12 row mt-2" *ngIf="data.type == 'Item'">
+          <div class="col-6" *ngIf="model.subCategoryNumber">
+              <label class="control-label" style="font-size: medium; font-weight: bolder;">Item Name</label><br />
+              <p-autoComplete name="itemName" [ngModel]="model.selectedItemName" [suggestions]="itemList" *ngIf="!isExistedItem"
+                  panelInputClass="p-auto-panel-cls" [minLength]="1" inputStyleClass="p-auto-cls"
+                  (completeMethod)="filterItems($event)" field="description" [dropdown]="true" [disabled]="isExistedItem"  (ngModelChange)="onSelect($event, 'item')">
+                  <ng-template let-sub pTemplate="item">
+                      <div class="sub-item">
+                          <div>{{sub.description}}</div>
+                      </div>
+                  </ng-template>
+              </p-autoComplete>
+              <input class="form-control" name="x" disabled [(ngModel)]="this.data.description"    [ngModelOptions]="{standalone: true}" *ngIf="isExistedItem" />
+          </div>
+          <div class="col-6" *ngIf="model.subCategoryNumber ">
+              <label class="control-label required" style="font-size: medium; font-weight: bolder;">Item Number</label>
+              <input class="form-control" disabled name="itemNumber" [(ngModel)]="model.itemNumber"/>
+          </div>
+          <div class="col-6" *ngIf="newItemName && model.subCategoryNumber">
+            <label class="control-label required" style="font-size: medium; font-weight: bolder;">UPC Code</label>
+            <input class="form-control" name="upcCode" [(ngModel)]="model.upcCode"/>
+          </div>
+          <div class="col-6" *ngIf="newItemName && model.subCategoryNumber">
+            <label class="control-label required" style="font-size: medium; font-weight: bolder;">Specification</label>
+            <input class="form-control" name="specification" [(ngModel)]="model.specification" [disabled]="isExistedItem" />
+          </div>
+      </div>
+      <div class="col-5">
+        <label  class="control-label required" style="font-size: medium; font-weight: bolder;">UOM</label>
+        <select class="form-control" [(ngModel)]="model.uom" [ngModelOptions]="{standalone: true}" >
+            <option value="undefined" selected disabled>Select</option>
+            <option *ngFor="let item of uomList" [value]="item.id">{{item.description}}</option>
+        </select>
+      </div>
+  </div>
+  </div>
+  <mat-dialog-actions align="end">
+    <button class="btn btn-success btn-green" *ngIf="data.type == 'Item'" [disabled]="!newItemName" type="button" (click)="createItemProd()">Submit</button>
+    <button class="btn btn-success btn-green" *ngIf="data.type == 'Categories'" [disabled]="!newSubCategoryName" type="button" (click)="createCategoryProduct()">Submit </button>
+    <button class="btn btn-secondary btn-red"  type="reset">Reset </button>
+  </mat-dialog-actions>
+</form>

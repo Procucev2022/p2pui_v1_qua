@@ -1,0 +1,162 @@
+<div class="" >
+
+    <!-- <img  (click)="downloadAsPDF()" style="    margin: 1rem auto;
+    float: right;" data-toggle="tooltip" title="Export PDF"class="cursor-pointer" src="/assets/images/new/download-pdf.svg" width="45" height="45" /> -->
+
+
+
+<!-- <span style="margin-top: 14px; padding: 10px;  background: #0c2146; cursor: pointer; color: white; display: inline-flex;"  (click)="downloadAsPDF()">
+ </span> -->
+<div id="download">
+  <img #canvas>
+  <a #downloadLink></a>
+</div>
+
+<!-- <div class="row itempanel" #screen *ngIf="itemArray.length>0 && isPageLoad && selectedPr">
+  <div class="col-1 item-serial-num-cls" >
+
+    <div class="itemContainer">
+      <div class="vendorHeaderCls">
+        <div class="vendorHeaderLabel1" >
+          <div class="vendorNameCls1" >s.no</div>
+          <div class="quotIdCls-custom1"></div>
+        </div>
+      </div>
+    </div>
+    <div class="item-panel" *ngFor="let itemCol of itemRowHeaders">
+      <div class="itemVendorContentLabel1" style="display: table-cell;"><td>{{itemCol.serialNo}} </td></div>
+    </div>
+    <div class="item-panel">
+      <div class="itemVendorContentLabel1" style="display: table-cell;"><td></td></div>
+    </div>
+    <div class="item-panel">
+      <div class="itemVendorContentLabel1" style="display: table-cell;"><td></td></div>
+    </div>
+    <div class="item-panel">
+      <div class="itemVendorContentLabel1" style="display: table-cell;"><td></td></div>
+    </div>
+
+  </div>
+
+  <div class="col-2 itemHeaderCls">
+
+    <div class="vendor-header-panel1">
+      <div class="itemHeaderLabel1" style="margin-bottom: 2px;">Item / Vendor</div>
+    </div>
+    <div class="itemHeaderLabel" *ngFor="let itemCol of itemRowHeaders">
+      <span title="{{itemCol.description}}">
+        {{itemCol.description}}
+      </span>
+    </div>
+    <div class="itemHeaderLabel">Delivery Terms</div>
+    <div class="itemHeaderLabel">Other Terms</div>
+    <div class="itemHeaderLabel">Payment Terms</div>
+  </div>
+  <div class="col-9 vendorHeaderCls">
+    <div class="itemContainer">
+      <div class="vendor-header-panel">
+        <div class="vendorHeaderLabel" *ngFor="let vendor of vendorColHeaders" [ngClass]="{'vendorHeaderLabel1': vendor.vendorName == 'qty' || vendor.vendorName == 'uom'}" >
+          <div [ngClass]="{'vendorNameCls1': vendor.vendorName == 'qty' || vendor.vendorName == 'uom'}" class="vendorNameCls" [title]="vendor.vendorName">{{vendor?.vendorName}} </div>
+          <div class="quotIdCls-custom" [title]="vendor.quoteId">{{vendor?.quoteId}} </div>
+        </div>
+      </div>
+      <div class="">
+        <div class="item-panel" *ngFor="let itemHead of itemRowHeaders; let i = index"
+          style="display: block;margin: 0px 0px;">
+          <div class="itemVendorContentLabel1" style="display: table-cell;"><td>{{itemHead.quantity}}</td></div>
+          <div class="itemVendorContentLabel1" style="display: table-cell;"><td>{{itemHead.unitofMeasures}}</td></div>
+
+          <ng-container *ngFor="let venHead of vendorColHeaders">
+            <ng-container *ngFor="let item of itemArray; let idx = index">
+              <div class="itemVendorContentLabel"
+                *ngIf="selectedCategoryType !='RFQ Wise'&& item.quotationId == venHead.quotationId && item.pritemId == itemHead.id && item.vendorId == venHead.vendorId"
+                [ngStyle]="item?.pritemId != 'quotTotId1234' && item?.pritemId != 'quotTotId12345'? {'background': item['isActive'] == true ? (item?.pritemId == 'quotTotId123' ?   'green':'rgb(248, 97, 31)'):'#fff', 'color':  item['isActive'] == true ?'#fff':'#0C2146', 'cursor':item.item_NA ? 'not-allowed': 'pointer'}: ''"
+                style="display: table-cell;" [ngClass]="item?.pritemId != 'quotTotId1234'&& item?.pritemId != 'quotTotId12345' ? {'l1ValueClass': item['unitprice'] == itemHead['l1Value']}:''"
+                [ngClass]="{'vendorHeaderLabel1': vendor.vendorName == 'qty' || vendor.vendorName == 'uom'}"
+                (click)="itemClicked($event, item, itemHead, venHead, idx)">
+
+                <span *ngIf="!item.item_NA">{{item.basicAmount}} </span>
+                <span *ngIf="!item.item_NA">{{item.gstValues}} </span>
+                <span *ngIf="!item.item_NA">{{item.unitprice}} </span>
+                <span *ngIf="item.item_NA" style="color: rgb(224, 30, 30);"> N/A </span>
+              </div>
+
+              <div class="itemVendorContentLabel"
+                *ngIf="selectedCategoryType =='RFQ Wise'&& item.quotationId == venHead.quotationId && item.rfqitemId == itemHead.id && item.vendorId == venHead.vendorId"
+                [ngStyle]="item?.rfqitemId != 'quotTotId1234'&& item?.rfqitemId !='quotTotId12345' ? {'background': item['isActive'] == true ? (item?.rfqitemId == 'quotTotId123' ?   'green':'rgb(248, 97, 31)'):'#fff', 'color':  item['isActive'] == true ?'#fff':'#0C2146', 'cursor':item.item_NA ? 'not-allowed': 'pointer'}: ''"
+                style="display: table-cell;"
+                [ngClass]="item?.rfqitemId != 'quotTotId1234'&& item?.rfqitemId != 'quotTotId12345'?{'l1ValueClass': item['unitprice'] == itemHead['l1Value']}:''"
+                (click)="itemClicked($event, item, itemHead, venHead, idx)">
+                <span *ngIf="!item.item_NA">{{item.basicAmount}} </span>
+                <span *ngIf="!item.item_NA">{{item.gstValues}} </span>
+                <span *ngIf="!item.item_NA">{{item.unitprice}} </span>
+                <span *ngIf="item.item_NA" style="color: rgb(224, 30, 30);"> N/A </span>
+              </div>
+
+            </ng-container>
+          </ng-container>
+        </div>
+        <table>
+          <tr></tr>
+        </table>
+      </div>
+      <div class="vendor-header-panel">
+        <div   *ngFor="let vendor of vendorColHeaders" [ngClass]="{'vendorHeaderLabel3-1': vendor.vendorName == 'qty' || vendor.vendorName == 'uom', 'vendorHeaderLabel3': vendor.vendorName !== 'qty'&& vendor.vendorName !== 'uom'}">
+          <div class="vendorNameCls" [title]="vendor.deliveryTerms">{{vendor.deliveryTerms}}</div>
+        </div>
+      </div>
+      <div class="vendor-header-panel">
+        <div  *ngFor="let vendor of vendorColHeaders" [ngClass]="{'vendorHeaderLabel3-1': vendor.vendorName == 'qty' || vendor.vendorName == 'uom', 'vendorHeaderLabel3': vendor.vendorName !== 'qty'&& vendor.vendorName !== 'uom'}">
+          <div class="vendorNameCls" [title]="vendor.otherTerms">{{vendor.otherTerms}}</div>
+        </div>
+      </div>
+      <div class="vendor-header-panel">
+        <div  *ngFor="let vendor of vendorColHeaders" [ngClass]="{'vendorHeaderLabel3-1': vendor.vendorName == 'qty' || vendor.vendorName == 'uom', 'vendorHeaderLabel3': vendor.vendorName !== 'qty'&& vendor.vendorName !== 'uom'}">
+          <div class="vendorNameCls" [title]="vendor.paymentTerms">{{vendor.paymentTerms}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+<!-- <div class="alert alert-warning margintTop10" *ngIf="itemArray.length==0 && isPageLoad">
+  <h5>No Data Available</h5>
+</div> -->
+</div>
+<div class="row">
+    <div class="col-6 m-5">
+        <div class="form-group">
+            <label>Export Quote Comparision</label>
+            <button class="btn btn-blue" (click)="exportToExcel()">Excel
+                <img class="cursor-pointer" src="/assets/images/new/download.svg" data-toggle="tooltip" [title]="'Download Excel'" width="20" height="20"  aria-hidden="true" title="Download Attachment" /></button>
+        </div>
+    </div>
+</div>
+
+<table *ngIf="itemData" class="table table-bordered table-stripped" style='display: none' #exportTable>
+    <thead>
+      <tr>
+        <th>s.no</th>
+        <th>Item/Vendor</th>
+        <th>qty</th>
+        <th>unitof Measures</th>
+        <th *ngFor="let vendor of itemData.headers">
+          {{vendor.vname}} - {{vendor.qid}}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of itemData.items let idx = index">
+        <td>{{item.data[0].serialNo}}</td>
+        <td>{{ item.description }}</td>
+        <td>{{item.data[0].quantity}}</td>
+        <td>{{item.data[0].uom}}</td>
+        <span *ngFor="let header of itemData.headers ; let i=index;">
+          <ng-container *ngFor="let d of itemData.items[idx].data let idxx = index">
+            <div *ngIf="header.quote == d.quote">
+              <td>{{ d.totalamount }}</td>
+            </div>
+          </ng-container>
+        </span>
+      </tr>
+    </tbody>
+  </table>

@@ -1,0 +1,214 @@
+<div class="col-12 pad-nill" *ngIf="!showSecondScreen">
+<div class="table-title">
+    <div class="row">
+    <div class="col-sm-6">
+        <h2>Procurement Request Summary</h2>
+        <p><span class="dot"></span>{{prSummaryList.length}} Total</p>
+    </div>
+    <div class="col-sm-6">
+        <button class="btn btn-primary btn-blue" type="button" (click)="openCreateModal()"
+        *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_C_PR_PAGE.CREATE) != -1">
+        <i class="fa fa-plus"> </i> Create New PR </button>
+    </div>
+    </div>
+</div>
+<p-table dataKey="id" #prSummaryTable [columns]="prSummaryHeaders" [value]="prSummaryList" sortMode="multiple" [expandedRowKeys]="expandedRows"
+    [paginator]="true" [rows]="pageRecordSize" id="prqTable" [rowsPerPageOptions]="pageOptions"
+    [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData" [scrollable]="true" [scrollHeight]="'calc(100vh - 220px)'">
+    <ng-template pTemplate="caption">
+    <div class="table-search">
+        <div class="row">
+        <div class="col-sm-6">
+            <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+            (input)="prSummaryTable.filterGlobal($event.target.value, 'contains')" />
+            <div style="float: left; padding-left: 10px;">
+            <p-dropdown [options]="statusList" [ngModel]="selectedStatus" (ngModelChange)="onSelectStatus($event)" placeholder="View All" optionLabel="name">
+            </p-dropdown>
+            </div>
+        </div>
+        <div class="col-sm-6 export-cls">
+            <!-- <button type="button" class="btn btn-transparent">Clear All</button> -->
+            <img  (click)="exportAsXLSX()" class="export-excel-icon" src="assets/images/export-excel.png" width="40" height="40" data-toggle="tooltip" title=" Export As Excel"  />
+
+            <!-- <button class="btn btn-danger"><i class="fa fa-file-pdf-o"></i></button> -->
+        </div>
+        </div>
+    </div>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+    <tr>
+        <!-- <th style="width: 3em">
+        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th> -->
+        <th style="width: 3em"></th>
+        <ng-container *ngFor="let col of columns">
+        <th
+            *ngIf="(loggedUserDetails.role.roleName == 'ClientInitiator' || loggedUserDetails.role.roleName == 'clientInitiator1.1') && col.field != 'userStatus'"
+            [title]="col.head" [style.width]="col.width" [pSortableColumn]="col.field">
+            {{col.header}}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+        </th>
+        <th *ngIf="loggedUserDetails.role.roleName == 'PRApprover'" [style.width]="col.width"
+            [pSortableColumn]="col.field">
+            {{col.header}}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+        </th>
+        </ng-container>
+        <th style="width:14rem">Actions</th>
+    </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
+    <tr [pSelectableRow]="rowData">
+        <!-- <td style="width: 3em">
+        <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+        </td> -->
+        <td style="width: 3em">
+        <button type="button" pButton pRipple [pRowToggler]="rowData"
+            class="grid-expand" (click)="expanded ? getCloseRowDetails(rowData,$event) : getRowDetails(rowData,$event)">
+            <span *ngIf="expanded"><i class="fa fa-chevron-down"></i></span>
+            <span *ngIf="!expanded"><i class="fa fa-chevron-right"></i></span>
+        </button>
+        </td>
+        <ng-container *ngFor="let col of columns">
+
+        <td *ngIf="(loggedUserDetails.role.roleName == 'ClientInitiator' || loggedUserDetails.role.roleName == 'clientInitiator1.1') && col.field != 'userStatus'" [style.width]="col.width"  [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" >
+            <span *ngIf="!col.isLink">
+            <span [ngStyle]="{'color': loggedUserDetails.role.roleName == 'PRApprover' && rowData[col.field].uiDisplay == 'Submitted' ? '#DC4300': '#000' }" *ngIf="col.field == 'clientStatus'"><img src="/assets/images/status/{{rowData[col.field].uiDisplay}}.svg">{{rowData[col.field].uiDisplay}}</span>
+            <span *ngIf="col.field != 'clientStatus' && col.field != 'userStatus'">
+                <span *ngIf="col.fieldType == 'text'">{{rowData[col.field]}}</span>
+                <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">{{rowData[col.field] | date:'dd-MMM-yyyy'}}</span>
+            </span>
+            </span>
+            <!-- <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);"
+                (click)="getRowDetails(rowData,$event)"> {{rowData[col.field]}}
+            </a></span> -->
+        </td>
+        <td *ngIf="loggedUserDetails.role.roleName == 'PRApprover'" [style.width]="col.width" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }">
+            <span *ngIf="!col.isLink">
+            <span
+                [ngStyle]="{'color': loggedUserDetails.role.roleName == 'PRApprover' && rowData[col.field].uiDisplay == 'Submitted' ? '#DC4300': '#000' }"
+                *ngIf="col.field == 'clientStatus'">{{rowData[col.field].uiDisplay}}</span>
+            <span *ngIf="col.field == 'userStatus'">{{rowData?.status}} </span>
+            <span *ngIf="col.field != 'clientStatus' && col.field != 'userStatus'">
+                <span *ngIf="col.fieldType == 'text'">{{rowData[col.field]}}</span>
+                <span *ngIf="col.fieldType == 'date'"
+                [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">{{rowData[col.field]
+                | date:
+                'dd-MMM-yyyy'}}</span>
+            </span>
+            </span>
+            <!-- <span *ngIf="col.isLink" class="cellLinkCls">
+            <a href="javascript:void(0);" (click)="getRowDetails(rowData,$event)"> {{rowData[col.field]}} </a>
+            </span> -->
+        </td>
+        </ng-container>
+        <td style="width:14rem">
+        <span
+            *ngIf="(loggedUserDetails.role.roleName == 'ClientInitiator' || loggedUserDetails.role.roleName == 'clientInitiator1.1')" >
+            <button class="btn-skelton"
+            [disabled]="!(rowData['clientStatus']?.uiDisplay == 'Submitted' || rowData['clientStatus']?.uiDisplay == 'InProgress')"
+            (click)="openCreateModal(rowData)">
+            <img src="/assets/images/new/edit-data.png" title="Edit">
+            </button>
+        </span>
+
+        <button class="btn-skelton"
+            *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_C_PR_PAGE.VIEW_PR) != -1"
+            (click)="viewPrbyId(rowData)">
+            <img src="/assets/images/new/view-doc.png" title="View">
+        </button>
+
+        <button class="btn-skelton" [disabled]="rowData['clientStatus']?.uiDisplay == 'InProgress' || rowData['clientStatus']?.uiDisplay == 'Submitted' || rowData['clientStatus']?.uiDisplay == 'Rejected'"
+            (click)="viewCorresspondance(rowData, false)">
+            <img src="/assets/images/new/comments-write.png" title="Procucev Comments">
+        </button>
+
+        <app-comment-alert-bell-blink [rowData]="rowData"></app-comment-alert-bell-blink>
+        <button class="btn-skelton"
+            (click)="viewCorresspondance(rowData, true)">
+            <img src="/assets/images/new/comments-write1.png" title="Internal Comments b/w Initiator & Approver">
+        </button>
+        <app-comment-alert-bell-blink [rowData]="rowData" [isInternalComments]="'true'"></app-comment-alert-bell-blink>
+        </td>
+    </tr>
+    </ng-template>
+    <ng-template pTemplate="rowexpansion" let-rowData>
+    <!-- <app-view-pr-id-details [prData]="selectedPrData" [prId]="prId" [prSummaryList]="prSummaryList"></app-view-pr-id-details> -->
+    <tr class="child-grid">
+        <td colspan="12">
+        <div class="p-p-3">
+            <div class="table-title">
+            <div class="row">
+                <div class="col-sm-3">
+                <h2>PR ID : {{rowData?.prId}}</h2>
+                <p><span class="dot"></span>{{rowData?.childs?.length}} Total</p>
+                </div>
+
+                <!-- step progress bar-->
+                <div class="col-sm-5" >
+
+                <div  *ngFor="let item of prStatusData">
+                    <div class="step-done" *ngIf ="item.status">{{item.name}}</div>
+                    <div class="step-pending" *ngIf ="!item.status">{{item.name}}</div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                <input type="text" class="main-input" pInputText size="50" placeholder="Search.."
+                    (input)="rfqTable.filterGlobal($event.target.value, 'contains')" style="float: right;" />
+                </div>
+            </div>
+            </div>
+            <p-table dataKey="id" #rfqTable [columns]="prIDTableHeaders" [value]="rowData?.childs" sortMode="multiple"
+            [paginator]="true" [rows]="secondPageRecordSize" id="rfqTable" [rowsPerPageOptions]="secondPageOptions"
+            [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedPrIdData"
+            [scrollable]="true">
+            <ng-template pTemplate="header" let-columns>
+                <tr class="child-header">
+                <!-- <th style="width: 2em">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th> -->
+                <ng-container *ngFor="let col of columns">
+                    <th [style.width]="col.width" [pSortableColumn]="col.field">
+                    {{col.header}}
+                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                    </th>
+                </ng-container>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                <tr [pSelectableRow]="rowData">
+                <!-- <td style="width: 2em">
+                    <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td> -->
+                <td [style.width]="col.width" *ngFor="let col of columns" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }">
+                    <span *ngIf="!col.isLink"> {{rowData[col.field]}}</span>
+                    <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);"
+                        (click)="getRFQs(rowData, $event)"> {{rowData[col.field]}} </a></span>
+                </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage" let-columns>
+                <tr>
+                <td [attr.colspan]="5" style="text-align:center;">
+                    No Records Found.
+                </td>
+                </tr>
+            </ng-template>
+            </p-table>
+        </div>
+        </td>
+    </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage" let-columns>
+    <tr>
+        <td [attr.colspan]="5" style="text-align:center;">
+        No Records Found.
+        </td>
+    </tr>
+    </ng-template>
+</p-table>
+</div>
+<div class="col-12 pad-nill" *ngIf="showSecondScreen">
+<app-create-pr-modal [dialogData]="selectedPrDataObj" (closeCreatePR)="closeCreatePR()"></app-create-pr-modal>
+</div>

@@ -1,0 +1,219 @@
+<div class="bg-container container-fluid">
+    <!-- <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+
+    </nav> -->
+
+    <div class=" ">
+        <div class="header-logo row">
+
+            <div class="col-md-4 col-xs-12 text-left">
+                <img src="assets/images/new/GMT.svg" width="150" height="150" />
+            </div>
+            <div class="col-md-4 col-xs-12 text-center">
+                <img style="" src="assets/images/Procucev_Logo.svg" width="250" height="80" />
+                <h5 class="card-title"><b>Sellers Registration</b></h5>
+            </div>
+            <div class="col-md-4 col-xs-12 bfs-logo text-right">
+                <img src="assets/images/new/bfs-logo-reg-cl.svg" width="140" height="120" />
+
+            </div>
+        </div>
+        <div class="card card-content ">
+            <div class="card-body" style="padding-top: 0 !IMPORTANT;">
+                <div  style="color: red;" class="error-block" >
+                    <p *ngIf="vendorRegistrationForm?.controls?.india.value == 'true' && vendorRegistrationForm?.controls?.phoneNumber?.touched && vendorRegistrationForm?.controls?.phoneNumber?.errors?.invalidPhoneNumber ">
+                       * Mobile number must be  10 digits and Not Preceeded with 0.</p>
+                    <p *ngIf="vendorRegistrationForm?.controls?.pan?.touched && vendorRegistrationForm?.controls?.pan?.errors?.pattern ">* Invalid PAN Details  </p>
+                    <p *ngIf="vendorRegistrationForm?.controls?.mail?.touched && vendorRegistrationForm?.controls?.mail?.errors?.pattern ">* Invalid EmailId  </p>
+                </div>
+                <form name="vendorRegistrationForm" class="row" [formGroup]="vendorRegistrationForm">
+                    <div class="col-md-4  col-xs-12 mt-2">
+                        <label for="companyName">Country: <b   style="color: red;">*</b></label>
+                       <div class="">
+
+                        <span style="display: flex; align-items: center;">
+                           <input type="radio"  formControlName="india" id="india1" (click)="changeCountryValue(true)" value="true" class="form-control mr-1" name="india"> <label for="india1">India</label>
+                           <input type="radio"   formControlName="india" id="india2"  (click)="changeCountryValue(false)"value="false" class="form-control ml-5 mr-1" name="india"> <label for="india2">Out Of India</label>
+                        </span>
+                       </div>
+                    </div>
+                    <div class="col-md-4  col-xs-12   mt-2">
+                        <label for="name">Company Name: <b style="color: red;">*</b></label>
+                        <input type="text" required id="name" class="form-control" name="name" formControlName="name"
+                            placeholder="Company Name">
+                        <div
+                            *ngIf="(vendorRegistrationForm?.controls?.name?.touched) && vendorRegistrationForm?.controls?.name.status=='INVALID'">
+                            <div style="color: red;">Company Name is required</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4  col-xs-12  mt-2">
+                        <label for="email">EMail Id: <b style="color: red;">*</b></label>
+                        <input type="email" required id="mail" class="form-control" name="mail"
+                            pattern="^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$" formControlName="mail" placeholder="EMail Id">
+                        <div
+                            *ngIf="(vendorRegistrationForm?.controls?.mail?.touched) && vendorRegistrationForm?.controls?.mail.status=='INVALID'">
+                            <div *ngIf="(vendorRegistrationForm?.controls?.mail.errors.required)" style="color: red;">
+                                Email Id is
+                                required</div>
+                            <div *ngIf="(vendorRegistrationForm?.controls?.mail.errors.pattern)" style="color: red;">
+                                Please
+                                enter valid Email Id</div>
+                        </div>
+                    </div>
+
+
+                    <ng-container  *ngIf="vendorRegistrationForm?.controls?.india.value == 'true'">
+
+
+                    <div class="col-md-4 col-xs-12   mt-2">
+                        <label for="name">PAN: <b style="color: red;">*</b></label>
+                        <input type="text" required id="pan" class="form-control" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
+                            placeholder="PAN" name="pan" formControlName="pan">
+                        .<div
+                            *ngIf="(vendorRegistrationForm?.controls?.pan?.touched) && vendorRegistrationForm?.controls?.pan.status=='INVALID'">
+                            <div *ngIf="(vendorRegistrationForm?.controls?.pan.errors.required)" style="color: red;">PAN
+                                is
+                                required</div>
+                            <div *ngIf="(vendorRegistrationForm?.controls?.pan.errors.pattern)" style="color: red;">Please
+                                enter valid PAN number</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4  col-xs-12  mt-2">
+                        <label for="email">GSTIN <b style="color: red;">*</b></label>
+                        <input type="text" required id="gstin" class="form-control" name="gstin" formControlName="gstin"
+                            placeholder="GSTIN">
+                        <div
+                            *ngIf="(vendorRegistrationForm?.controls?.gstin?.touched) && vendorRegistrationForm?.controls?.gstin.status=='INVALID'">
+                            <div style="color: red;">GSTIN is required</div>
+                        </div>
+                    </div>
+                 </ng-container>
+                 <ng-container  *ngIf="vendorRegistrationForm?.controls?.india.value == 'false'">
+                    <div class="col-md-4  col-xs-12 mb-1"  >
+                        <label for="crn">Company Registration Number(CRN): <b style="color: red;">*</b></label>
+                        <input type="text" id="crn" class="form-control" name="crn" placeholder="Company Registration Number(CRN)"
+                            formControlName="crn">
+                        <div
+                            *ngIf="(vendorRegistrationForm?.controls?.crn?.touched  ) && vendorRegistrationForm?.controls?.crn?.errors">
+                            <div style="color: red;">CRN is required</div>
+                        </div>
+                    </div>
+                </ng-container>
+                <div class="col-md-4 col-xs-12 mb-1">
+                    <label for="name">Mobile Number:<b style="color: red;">*</b></label>
+                    <input type="text" maxlength="10" minlength="10" id="adress" class="form-control"
+                    *ngIf="vendorRegistrationForm?.controls?.india.value == 'true'"  name="phoneNumber" formControlName="phoneNumber" placeholder="Mobile Number">
+                    <input type="text"  id="adress" class="form-control"
+                    *ngIf="vendorRegistrationForm?.controls?.india.value != 'true'"name="phoneNumber" formControlName="phoneNumber" placeholder="Mobile Number">
+                    <div
+                        *ngIf="(vendorRegistrationForm?.controls?.phoneNumber?.touched ) && vendorRegistrationForm?.controls?.phoneNumber?.errors">
+                        <div *ngIf="(vendorRegistrationForm?.controls?.phoneNumber.errors.required)"
+                            style="color: red;">Mobile
+                            number is required</div>
+                            <div  style="color: red;" *ngIf="vendorRegistrationForm?.controls?.phoneNumber?.errors?.invalid">
+                                Mobile number must be exactly 10 digits.
+                              </div>
+                    </div>
+                </div>
+
+
+                    <div class="col-md-4  col-xs-12  mt-2">
+                        <label for="name">Registered Office Adress: <b style="color: red;">*</b></label>
+                        <textarea type="text" required id="adress" class="form-control" name="address" formControlName="address"
+                            placeholder="Registered Office Adress"> </textarea>
+                        <div
+                            *ngIf="(vendorRegistrationForm?.controls?.address?.touched) && vendorRegistrationForm?.controls?.address.status=='INVALID'">
+                            <div style="color: red;">Address is required</div>
+                        </div>
+                    </div>
+                    <!-- <div class="col-4  mt-2">
+                        <label for="text">MSME: <b style="color: red;">*</b></label>
+                        <div class="rd-box">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" required type="radio" name="msme" id="i_Yes" [value]="true"
+                                    formControlName="testCtrl">
+                                <label class="form-check-label" for="Product">Yes</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="msme" id="i_No" [value]="false" formControlName="testCtrl">
+                                <label class="form-check-label" for="Service">No</label>
+                            </div>
+                        </div>
+                    </div> -->
+
+
+
+
+
+
+
+                    <div class="col-md-6  col-xs-12  mt-2">
+                        <label for="name">Product/Service Details:(Multiple products seperated by comma) <b
+                                style="color: red;">*</b></label>
+                        <input type="text" required id="adress" class="form-control" name="products" formControlName="products"
+                            placeholder="Product/Service Details">
+                        <div
+                            *ngIf="(vendorRegistrationForm?.controls?.products?.touched) && vendorRegistrationForm?.controls?.products.status=='INVALID'">
+                            <div style="color: red;">Product details is required</div>
+                        </div>
+                    </div>
+                    <div class="col-md-8  col-xs-12   link-cont" style="">
+                        <b>Note :</b> If Already Registered! Click here for <a routerLink="/login"
+                            style="margin-left: 5px;font-weight: 600;border-bottom: 2px solid;">Login</a>
+                    </div>
+                    <div class="col-md-4  col-xs-12   btn-blocks">
+                        <button class="btn btn-primary btn-blue" type="button"
+                            (click)='registerVendor(vendorRegistrationForm)' style="float: right;">
+                            <span>Register</span>
+                        </button>
+                        <button class="btn btn-primary btn-red" type="button" (click)="vendorRegistrationForm.reset()"
+                            style="float: right;">
+                            <span>Reset</span>
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="">
+        <div class="row">
+            <div class="col-md-6 col-xs-12 ">
+                <h1 style="    font-weight: 600;  color: #3245aa;" class="text-center">
+                    <b class="orange-cls">G</b>et <b class="orange-cls">M</b>y quo<b class="orange-cls">T</b>e
+                </h1>
+                <h4 style="    font-weight: 600;  font-size: 20px;color: #3245aa;" class="orange-cls">GMT is a powerful tool that connects vendors directly with buyers actively seeking your services.
+                </h4>
+                <p style=" margin-bottom: 0;" class="orange-cls"><b>Benefits:</b></p>
+                <ul style="font-weight: 600;">
+                    <li>Register on GMT for free and unlock new business opportunities.</li>
+                    <li>Reach a wider audience of potential clients who need what you offer </li>
+                    <li>Respond to relevant quote requests quickly and easily through our user-friendly <br /> platform.</li>
+                </ul>
+                <h5   style="font-weight: 600;color: #3245aa;">Get More Leads & Win More Deals with Get My quoTe(GMT)
+                </h5>
+            </div>
+
+            <div class="col-md-6 col-xs-12">
+                <div class="content-card" style="">
+
+                    <h1
+                        style="font-weight: 600;  text-align: center; color: #3245aa;">
+                        <b class="orange-cls">B</b>uy <b class="orange-cls">F</b>rom <b class="orange-cls">S</b>tock
+                    </h1>
+                    <h4 style="  font-weight: 600;   font-size: 18px; color: #3245aa;">BFS is a platform connecting Enterprises with Excess Stock/Inventory with wider network of ready buyers
+                    </h4>
+                    <p style=" margin-bottom: 0; " class="orange-cls"><b>Benefits:</b></p>
+                    <ul style="font-weight: 600;margin-bottom: 1.2rem;    text-align: left;">
+                        <li>Reduce storage costs and free up valuable space.   </li>
+                        <li>Generate immediate revenue from dead stock    </li>
+                        <li>Minimize financial losses associated with dead inventory.  </li>
+                        <li>Streamlined platform for easy listing and Sales & Marketing. </li>
+                    </ul>
+                    <h5 class="" style="font-weight: 600; font-size: 18px;color: #3245aa;"  >Register for Buy From Stock(BFS) and turn your excess stock into cashflow</h5>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,217 @@
+<div class="modal-header">
+    <button class="btn-skelton modal-close-btn" mat-dialog-close>✖</button>
+    <div class="col-6">
+        <h5>RFQ Details</h5>
+    </div>
+
+    <div class="col-6  text-right" >
+        <i class="fa fa-plus plusMinus plusColor" style="padding-right: 10px;cursor:pointer"  data-toggle="tooltip" title="zoom in" (click)="zoomin()"></i>
+        <i class="fa fa-minus plusMinus minusColor " style="padding-right: 30px; cursor:pointer"  data-toggle="tooltip" title="zoom out" (click)="zoomout()"></i>
+        <button class="btn btn-warning modal-close-btn" mat-dialog-close><i class="fa fa-window-close" aria-hidden="true"></i></button>
+    </div>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-12">
+            <div class="view-details-panel-cls">
+                <div class="panel-content-box">
+                    <div class="col-12 cust-card">
+                        <div class="form-group row" style="margin-top: 15px" *ngIf="viewRFQbyIDdetails.projectDesc">
+                            <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
+                                class="col-sm-5 col-form-label">Project Description/Reference </label>
+                            <div class="col-sm-5 content-value" style="padding: 7px 16px">
+                                {{viewRFQbyIDdetails.projectDesc}}
+                            </div>
+                        </div>
+
+                        <div class="form-group row" style="margin-top: 15px">
+                            <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
+                                class="col-sm-5 col-form-label">RFQ ID</label>
+                            <div class="col-sm-5 content-value" style="padding: 7px 16px">
+                                {{viewRFQbyIDdetails.rfqId}}
+                            </div>
+                        </div>
+                        <div class="form-group row" style="margin-top: 15px" *ngIf="viewRFQbyIDdetails.category">
+                            <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
+                                class="col-sm-5 col-form-label">Category</label>
+                            <div class="col-sm-5 content-value" style="padding: 7px 16px">
+                                {{viewRFQbyIDdetails.category}}
+                            </div>
+                        </div>
+                        <div class="form-group row" style="margin-top: 15px" [hidden]="viewRFQbyIDdetails.hideSpecialRFQClosingDate">
+                            <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
+                                class="col-sm-5 col-form-label">Special Instruction</label>
+                            <div class="col-sm-5 content-value" style="padding: 7px 16px">
+                                {{viewRFQbyIDdetails.specialInstruction ? viewRFQbyIDdetails.specialInstruction: '-'}}
+                            </div>
+                        </div>
+                        <div class="form-group row" style="margin-top: 15px"  [hidden]="viewRFQbyIDdetails.hideSpecialRFQClosingDate">
+                            <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
+                                class="col-sm-5 col-form-label">RFQ Closing Date</label>
+                            <div class="col-sm-5 content-value" style="padding: 7px 16px">
+                                {{viewRFQbyIDdetails.rfqClosingDate ? (viewRFQbyIDdetails.rfqClosingDate | date: 'dd-MMM-yyyy hh:mm a'): '-' }}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div>
+                    <div *ngIf="viewRFQbyIDdetails.rfqItem.length>0">
+                        <p-table #rfqDetailsViewTable [columns]="rfqDetailsHeaders" [value]="viewRFQbyIDdetails.rfqItem"
+                            sortMode="multiple" [paginator]="true" [rows]="pageRecordSize" id="rfqDetailsViewTable"
+                            [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}" exportFilename="services"
+                            [(selection)]="selectedData" [scrollable]="true">
+                            <ng-template pTemplate="caption">
+                                <div class="table-title mb-2">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <h2>Items</h2>
+                                            <p><span class="dot"></span>{{viewRFQbyIDdetails.rfqItem?.length}} Total</p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <input class="main-input" type="text" pInputText size="50"
+                                                placeholder="Search.."
+                                                (input)="rfqDetailsViewTable.filterGlobal($event.target.value, 'contains')"
+                                                style="float: right;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <!-- <th style="width: 3em">
+                                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                        </th> -->
+                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field"  [style.width]="col.width">
+                                        {{col.header}}
+                                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                                    </th>
+                                    <!-- <th>Actions</th> -->
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                <tr [pSelectableRow]="rowData">
+                                    <!-- <td style="width: 3em">
+                                            <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                                        </td> -->
+                                    <td *ngFor="let col of columns"  [style.width]="col.width" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
+                                        <span *ngIf="!col.isLink"> {{rowData[col.field]}}</span>
+                                        <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);"
+                                                (click)="getRFQs(rowData)">
+                                                {{rowData[col.field]}} </a></span>
+
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage" let-columns>
+                                <tr>
+                                    <td [attr.colspan]="5" style="text-align:center;">
+                                        No Records Found.
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="paginatorleft">
+                                <div  *ngIf="rfqDetailsViewTable._totalRecords > 0">
+                                    <b>Showing {{rfqDetailsViewTable.first+1}} to {{rfqDetailsViewTable.first+rfqDetailsViewTable.rows > rfqDetailsViewTable.totalRecords?rfqDetailsViewTable.totalRecords: rfqDetailsViewTable.first+rfqDetailsViewTable.rows}} of {{rfqDetailsViewTable.totalRecords}}</b>
+                                    <!-- <app-page-info [totalRecords]="viewRFQbyIDdetails.rfqItem.length"
+                                        [pageData]="paginatoryDetails">
+                                    </app-page-info> -->
+                                </div>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+
+                <div *ngIf="viewRFQbyIDdetails.clientdeliverylocationrfq.length>0 && !isShowItemsSectionOnly">
+                    <div class="card" style="margin-top: 15px;">
+                        <div class="col-12 page-title">
+                            <h5>Delivery Address Location : </h5>
+                        </div>
+                        <mat-card class="col-12" *ngFor="let location of viewRFQbyIDdetails.clientdeliverylocationrfq; let i = index;">
+
+                            <div class="form-group row">
+                                <label for="address" style="font-size: medium; font-weight: bolder;"
+                                    class="col-sm-5 col-form-label">Address</label>
+                                <div class="col-sm-5 col-form-label">
+                                    {{location.address}}
+
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="city" style="font-size: medium; font-weight: bolder;"
+                                    class="col-sm-5 col-form-label">City</label>
+                                <div class="col-sm-5 col-form-label">
+                                    {{location.city}}
+                                </div>
+
+                            </div>
+                            <div class="form-group row">
+                                <label for="state" style="font-size: medium; font-weight: bolder;"
+                                    class="col-sm-5 col-form-label">State:</label>
+                                <div class="col-sm-5 col-form-label">
+                                    {{location.state}}
+                                </div>
+                            </div>
+                            <div class="form-group row" *ngIf="location.pincode">
+                                <label for="state" style="font-size: medium; font-weight: bolder;"
+                                    class="col-sm-5 col-form-label">Zip Code:</label>
+                                <div class="col-sm-5 col-form-label">
+                                    {{location.pincode}}
+                                </div>
+                            </div>
+                        </mat-card>
+                    </div>
+                </div>
+
+                <div class="col-12 row cust-card pad-nill" *ngIf="!isShowItemsSectionOnly">
+                    <label class="col-md-12" for="text">Uploaded Documents</label>
+                    <div class="col-md-12">
+                        <ng-container *ngFor="let file of viewRFQbyIDdetails.rfqDocument;let i=index">
+                            <div class="col-12 uploadedFiles">
+                                <div class="col-8">
+                                    <img class="doc-icon" [src]="getImageURL(file)" src="/assets/images/file.svg" width="30" height="30">
+                                    <span>{{ file?.fileName }}</span> <br>
+                                    <!-- <span>{{ file?.name }}</span> -->
+                                </div>
+                                <div class="col-4">
+                                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'xlsx' || file['fileName'].split('.').splice(-1) == 'xls' || file['fileName'].split('.').splice(-1) == 'csv'"
+                                        [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe"
+                                        download="{{file['fileName']}}" data-toggle="tooltip"
+                                        [title]="'Download '+ file['fileName']">
+                                        <img class="cursor-pointer" src="/assets/images/new/download.svg" data-toggle="tooltip" [title]="'Download '+ file['fileName']" width="30" height="30"  aria-hidden="true" title="Download Attachment" /></a>
+                                    <!-- For PDF doucment download -->
+                                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'pdf'"
+                                        [href]="'data:application/pdf;base64,' + file['file'] | filePipe"
+                                        download="{{file['fileName']}}" data-toggle="tooltip"
+                                        [title]="'Download '+ file['fileName']" data-toggle="tooltip"
+                                        [title]="'Download '+ file['fileName']">
+                                        <img class="cursor-pointer" src="/assets/images/new/download.svg" data-toggle="tooltip" [title]="'Download '+ file['fileName']" width="30" height="30"  aria-hidden="true" title="Download Attachment" />
+                                    </a>
+                                    <!-- For jpeg/jpg & png download -->
+                                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'png'|| file['fileName'].split('.').splice(-1) == 'jpeg' || file['fileName'].split('.').splice(-1) == 'jpg' ||file['fileName'].split('.').splice(-1) == 'JPG'"
+                                        [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe"
+                                        download="{{file['fileName']}}">
+                                        <img class="cursor-pointer" src="/assets/images/new/download.svg" data-toggle="tooltip" [title]="'Download '+ file['fileName']" width="30" height="30"  aria-hidden="true" title="Download Attachment" />
+                                    </a>
+                                    <!-- For PPT & document download -->
+                                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'txt'  ||file['fileName'].split('.').splice(-1) == 'pptx'|| file['fileName'].split('.').splice(-1) == 'docx'|| file['fileName'].split('.').splice(-1) == 'doc' || file['fileName'].split('.').splice(-1) == 'ppt'"
+                                        [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe"
+                                        download="{{file['fileName']}}" data-toggle="tooltip"
+                                        [title]="'Download '+ file['fileName']">
+                                        <img class="cursor-pointer" src="/assets/images/new/download.svg" data-toggle="tooltip" [title]="'Download '+ file['fileName']" width="30" height="30"  aria-hidden="true" title="Download Attachment" />
+                                    </a>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <div class="content-value" *ngIf="viewRFQbyIDdetails.rfqDocument.length == 0">
+                            No Documents uploaded.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <mat-dialog-actions align="end">
+    <button type="button" class="btn btn-danger" mat-dialog-close>Cancel</button>
+</mat-dialog-actions> -->

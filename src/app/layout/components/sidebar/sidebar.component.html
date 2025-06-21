@@ -1,0 +1,641 @@
+<div [ngClass]="{  'gmt-container': isGMTView, 'bfs-container': isBFSView}">
+    <div class="showMobileMenu" (click)="onShowMobileMenu()"> <i class="fa fa-th-list" aria-hidden="true" [ngClass]="{'fa-th-list': !showMenuNav, 'fa-times' : showMenuNav}"></i>{{ showMenuNav ? 'Hide ': 'Show '}}  Menu</div>
+    <nav [ngClass]="{sidebarPushRight: isActive, collapsed: collapsed }" class="sidebar" *ngIf="showMenuNav">
+        <div class="list-group" *ngIf="!currentView || currentView == 'null' || currentView == SystemViewConfig.DPS_BASIC || currentView == SystemViewConfig.DPS_BASIC_PLUS">
+            <div class="nested-menu">
+
+                <a *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_C_DASHBOARD_PAGE.VIEW) != -1 "
+                    class="list-group-item" [routerLink]="['/client/dashboard']"
+                    [routerLinkActive]="['router-link-active']">
+                    <i class="fa fa-user"></i> &nbsp;
+                    <span>Dashboard</span>
+                </a>
+
+                <!-- For CI & CA -->
+                <a *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_C_PR_PAGE.VIEW) != -1 "
+                    class="list-group-item" [routerLink]="['/client/procurerequest']"
+                    [routerLinkActive]="['router-link-active']">
+                    <img src="/assets/images/menu/PR.svg">
+                    <span>Procurement Summary</span>
+                </a>
+
+                <!-- FOR CM & CM2 -->
+                <a *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_PR_PAGE.VIEW) != -1 " class="list-group-item"
+                    [routerLink]="['/categorymgr/procurequests']" [routerLinkActive]="['router-link-active']">
+                    <img src="/assets/images/menu/PR.svg">
+                    <span>Procurement Summary</span>
+                </a>
+
+
+
+
+                <!-- <ul style="padding: 0px; margin: 0px;"   *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_PR_PAGE.VIEW) != -1 || loggedUserPermissions?.indexOf(defaultPermissions.PC_C_PR_PAGE.VIEW) != -1 ">
+                    <li style="display: block;">
+                    <a   class="list-group-item"  (click)="toggleAccordian($event, 'procureRequrest')" data-toggle="collapse" aria-expanded="false" >
+                        <img src="/assets/images/menu/PR.svg">
+                        <span>Opex</span>
+                        <i style="float: right;padding: 3px;" class="fa fa-chevron-down"></i>
+                    </a>
+                    <ul [ngStyle]="{'display':(rep == 'procureRequrest' && repCollapsed) ? 'block' : 'none' }"
+                    style="padding: 0px 0px 0px 32px;;" class="collapse list-unstyled">
+                            <li>
+                                <a class="list-group-item"
+                                [routerLink]="['/client/pr-opex']" [routerLinkActive]="['router-link-active']">
+                                    <i class="fa fa-info"></i> &nbsp;
+                                    <span>PR Summary</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+
+                    </ul> -->
+                <a *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_VENDOR_DASHBOARD_PAGE.VIEW) != -1 "
+                    class="list-group-item" [routerLink]="['/vendormgr/dashboard']"
+                    [routerLinkActive]="['router-link-active']">
+                    <i class="fa fa-user"></i> &nbsp;
+                    <span>Dashboard</span>
+                </a>
+
+
+                <a class="list-group-item"
+                    *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_PR_CLIENT_REGISTER_PAGE.VIEW) != -1"
+                    [routerLink]="['/categorymgr/clientReg']" [routerLinkActive]="['router-link-active']">
+                    <i class="fa fa-user"></i>&nbsp;
+                    <span>Client Registration</span>
+                </a>
+
+                <a *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_V_REG_PAGE.VIEW) != -1"
+                    class="list-group-item" [routerLink]="['/vendor/vendorReg']"
+                    [routerLinkActive]="['router-link-active']">
+                    <i class="fa fa-user"></i>&nbsp;
+                    <span>Registration</span>
+                </a>
+
+                <a *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_PRE_VENDOR_PAGE.VIEW) != -1 "
+                    class="list-group-item" [routerLink]="['/vendormgr/vendors']"
+                    [routerLinkActive]="['router-link-active']">
+                    <i class="fa fa-user"></i>&nbsp;
+                    <span>Vendor Connect</span>
+                </a>
+
+                <a *ngIf="loggedUserDetails?.role.roleName == 'VendorExecutive2'"
+                    class="list-group-item" [routerLink]="['/vendor/forwardedVendors']"
+                    [routerLinkActive]="['router-link-active']">
+                    <i class="fa fa-user"></i>&nbsp;
+                    <span>Forward Vendors</span>
+                </a>
+                <a  class="list-group-item" *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.CLIENT_VENDOR_PAGE.VIEW) != -1"
+                [routerLink]="['/vendor/clientvendorComponent']" [routerLinkActive]="['router-link-active']">
+                <i class="fa fa-user"></i>&nbsp;
+                <span>Reference Vendors</span>
+            </a>
+
+                <a *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_V_RFQ_PAGE.VIEW) != -1 "
+                    class="list-group-item" [routerLink]="['/vendor/rfq']" [routerLinkActive]="['router-link-active']">
+                    <i class="fa fa-user"></i> &nbsp;
+                    <span>RFQ's</span>
+                </a>
+
+                <a *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_V_QUOTE_PAGE.VIEW) != -1 "
+                    class="list-group-item" [routerLink]="['/vendor/quotsubmit']"
+                    [routerLinkActive]="['router-link-active']">
+                    <i class="fa fa-user"></i> &nbsp;
+                    <span>Quotation</span>
+                </a>
+
+                <a *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_V_PROFILE_PAGE.VIEW) != -1"
+                    class="list-group-item" [routerLink]="['/vendor/profile']" [routerLinkActive]="['router-link-active']">
+                    <i class="fa fa-user"></i>&nbsp;
+                    <span>Edit Profile</span>
+                </a>
+
+                <ul style="padding: 0px; margin: 0px;"
+                    *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_CLIENT_PAGE.RFQS_VIEW) != -1 || loggedUserPermissions?.indexOf(defaultPermissions.PC_QUOTE_PAGE.VIEW) != -1 || loggedUserPermissions?.indexOf(defaultPermissions.PC_QUOTE_COMPARE_PAGE.VIEW) != -1">
+                    <li style="display: block;">
+                        <a class="list-group-item" (click)="toggleAccordian($event, 'Quotations')" data-toggle="collapse"
+                            aria-expanded="false">
+                            <i class="fa fa-user"></i> &nbsp; Quotations
+                            <i style="float: right;padding: 3px;" class="fa fa-chevron-down"></i>
+                        </a>
+                        <ul [ngStyle]="{'display':(rep == 'Quotations' && repCollapsed) ? 'block' : 'none' }"
+                            style="padding: 0px 0px 0px 32px;;" class="collapse list-unstyled">
+                            <li>
+                                <a class="list-group-item"
+                                    *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_CLIENT_PAGE.RFQS_VIEW) != -1 "
+                                    [routerLink]="['/categorymgr/rfqs']" [routerLinkActive]="['router-link-active']">
+                                    <i class="fa fa-user"></i> &nbsp;
+                                    <span>RFQ's</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a data-toggle="tooltip" data-placement="right" title="Quotations"
+                                    *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_QUOTE_PAGE.VIEW) != -1"
+                                    class="list-group-item" [routerLink]="['/categorymgr/quotations']"
+                                    [routerLinkActive]="['router-link-active']">
+                                    <i class="fa fa-user"></i>&nbsp;
+                                    <span>Quotation</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_QUOTE_COMPARE_PAGE.VIEW) != -1"
+                                    class="list-group-item" [routerLink]="['/categorymgr/quotCompare']"
+                                    [routerLinkActive]="['router-link-active']">
+                                    <i class="fa fa-user"></i>&nbsp;
+                                    <span>Quote Comparison</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+                </ul>
+
+
+                <ul style="padding: 0px; margin: 0px;"
+                    *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_VENDOR_SEARCH_PAGE.VIEW) != -1 || loggedUserPermissions?.indexOf(defaultPermissions.PC_VR_PAGE.VIEW) != -1 || loggedUserPermissions?.indexOf(defaultPermissions.PC_RI_PAGE.VIEW) != -1">
+                    <li style="display: block;">
+                        <a class="list-group-item" (click)="toggleAccordian($event, 'Vendors')" data-toggle="collapse"
+                            aria-expanded="false">
+                            <i class="fa fa-user"></i> &nbsp; Vendors
+                            <i style="float: right;padding: 3px;" class="fa fa-chevron-down"></i>
+                        </a>
+                        <ul [ngStyle]="{'display':(rep == 'Vendors' && repCollapsed) ? 'block' : 'none' }"
+                            style="padding: 0px 0px 0px 32px;;" class="collapse list-unstyled">
+                            <li>
+                                <a *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_VENDOR_SEARCH_PAGE.VIEW) != -1 "
+                                    class="list-group-item" [routerLink]="['/vendormgr/vendorsearch']"
+                                    [routerLinkActive]="['router-link-active']">
+                                    <i class="fa fa-user"></i>&nbsp;
+                                    <span>Search Vendor</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_VR_PAGE.VIEW) != -1 "
+                                    class="list-group-item" [routerLink]="['/vendorReq/req']"
+                                    [routerLinkActive]="['router-link-active']">
+                                    <i class="fa fa-user"></i> &nbsp;
+                                    <span>Request New Vendor</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_RI_PAGE.VIEW) != -1"
+                                    class="list-group-item" [routerLink]="['/raise-issue/issues']"
+                                    [routerLinkActive]="['router-link-active']">
+                                    <i class="fa fa-user"></i> &nbsp;
+                                    <span>Raise Vendor Issue</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <ul style="padding: 0px; margin: 0px;"
+                    *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_PPO_PAGE.VIEW) != -1 || loggedUserPermissions?.indexOf(defaultPermissions.PC_C_PPO_PAGE.VIEW) != -1 || loggedUserPermissions?.indexOf(defaultPermissions.PC_CLIENT_PAGE.PO_VIEW) != -1">
+                    <li style="display: block;">
+                        <a class="list-group-item" (click)="toggleAccordian($event, 'Orders')" data-toggle="collapse"
+                            aria-expanded="false">
+                            <img src="/assets/images/menu/Orders.svg">
+                            Orders
+                            <i style="float: right;padding: 3px;" class="fa fa-chevron-down"></i>
+                        </a>
+                        <ul [ngStyle]="{'display':(rep == 'Orders' && repCollapsed) ? 'block' : 'none' }"
+                            style="padding: 0px 0px 0px 32px;;" class="collapse list-unstyled">
+                            <li>
+                                <a *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_PPO_PAGE.VIEW) != -1 || loggedUserPermissions?.indexOf(defaultPermissions.PC_C_PPO_PAGE.VIEW) != -1"
+                                    class="list-group-item" [routerLink]="['/ppos/ppos']"
+                                    [routerLinkActive]="['router-link-active']">
+                                    <i class="fa fa-user"></i> &nbsp;
+                                    <span>PPOs</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_CLIENT_PAGE.PO_VIEW) != -1 "
+                                    class="list-group-item" [routerLink]="['/pos/pos']"
+                                    [routerLinkActive]="['router-link-active']">
+                                    <i class="fa fa-user"></i> &nbsp;
+                                    <span>POs</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+
+                <a *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.ITEM_CATALOGUE_PAGE.CAT_MGR_VIEW) != -1 "
+                    class="list-group-item" [routerLink]="['/categorymgr/itemCatalogueforcategorymgr']"
+                    [routerLinkActive]="['router-link-active']">
+                    <img src="/assets/images/menu/ItemCatalouge.svg">
+                    <span>Catalogue Request </span>
+                </a>
+
+                <a *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_PR_PAGE.AUCTION_VIEW) != -1 "
+                    class="list-group-item" [routerLink]="['/categorymgr/auctions']"
+                    [routerLinkActive]="['router-link-active']">
+                    <img src="/assets/images/menu/Auction.svg">
+                    <span>Auctions</span>
+                </a>
+
+                <ul style="padding: 0px; margin: 0px;"
+                    *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_CLIENT_PAGE.INVOICE_VIEW) != -1 || loggedUserPermissions?.indexOf(defaultPermissions.PC_CLIENT_PAGE.PAYMENT_VIEW) != -1">
+                    <li style="display: block;">
+                        <a class="list-group-item" (click)="toggleAccordian($event, 'Invoices/Payments')"
+                            data-toggle="collapse" aria-expanded="false">
+                            <img src="/assets/images/menu/Invoice.svg">
+                            Invoices/Payments
+                            <i style="float: right;padding: 3px;" class="fa fa-chevron-down"></i>
+                        </a>
+                        <ul [ngStyle]="{'display':(rep == 'Invoices/Payments' && repCollapsed) ? 'block' : 'none' }"
+                            style="padding: 0px 0px 0px 32px;;" class="collapse list-unstyled">
+                            <li>
+                                <a *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_CLIENT_PAGE.INVOICE_VIEW) != -1 "
+                                    class="list-group-item" [routerLink]="['/invoices/invoices']"
+                                    [routerLinkActive]="['router-link-active']">
+                                    <i class="fa fa-user"></i> &nbsp;
+                                    <span>Invoices</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="list-group-item"
+                                    *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_CLIENT_PAGE.PAYMENT_VIEW) != -1 "
+                                    [routerLink]="['/invoices/advance-payments']"
+                                    [routerLinkActive]="['router-link-active']">
+                                    <i class="fa fa-user"></i> &nbsp;
+                                    <span>Advance Payments</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+
+
+
+                <ul style="padding: 0px; margin: 0px;"
+                    *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.REPORTS_PAGE.REPORTS_VIEW) != -1 || loggedUserPermissions?.indexOf(defaultPermissions.REPORTS_PAGE.PR_REPORTS_VIEW) != -1 || loggedUserPermissions?.indexOf(defaultPermissions.REPORTS_PAGE.PPO_REPORTS_VIEW) != -1">
+                    <li style="display: block;">
+                        <a class="list-group-item" (click)="toggleAccordian($event, 'Auctions/Reports')"
+                            data-toggle="collapse" aria-expanded="false">
+                            <img src="/assets/images/menu/Auction.svg">
+                            Reports
+                            <i style="float: right;padding: 3px;" class="fa fa-chevron-down"></i>
+                        </a>
+                        <ul [ngStyle]="{'display':(rep == 'Auctions/Reports' && repCollapsed) ? 'block' : 'none' }"
+                            style="padding: 0px 0px 0px 32px;;" class="collapse list-unstyled">
+                            <li>
+                                <a
+                                    class="list-group-item"  [routerLink]="['/categorymgr/reports']" *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.REPORTS_PAGE.REPORTS_VIEW) != -1 "
+                                    [routerLinkActive]="['router-link-active']">
+                                    <img src="/assets/images/menu/Invoice.svg">
+                                    <span>Auction Reports</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="list-group-item"  [routerLink]="['/categorymgr/prreports']" *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.REPORTS_PAGE.PR_REPORTS_VIEW) != -1"
+                                    [routerLinkActive]="['router-link-active']">
+                                    <img src="/assets/images/menu/Invoice.svg">
+                                    <span>PR Reports</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="list-group-item"  [routerLink]="['/categorymgr/pporeports']" *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.REPORTS_PAGE.PPO_REPORTS_VIEW) != -1"
+                                    [routerLinkActive]="['router-link-active']">
+                                    <img src="/assets/images/menu/Invoice.svg">
+                                    <span>PPO Reports</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="nested-menu">
+                <a *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.ITEM_CATALOGUE_PAGE.PR_VIEW) != -1 "
+                    class="list-group-item" [routerLink]="['/client/itemCatalogue']"
+                    [routerLinkActive]="['router-link-active']">
+                    <img src="/assets/images/menu/ItemCatalouge.svg">
+                    <span>Catalogue Request </span>
+                </a>
+            </div>
+
+            <div class="nested-menu"
+                *ngIf="loggedUserDetails?.role.roleName == 'VendorManager2' || loggedUserDetails?.role.roleName == 'VendorManager'">
+                <a class="list-group-item" [routerLink]="['/category/list']" [routerLinkActive]="['router-link-active']">
+                    <i class="fa fa-user"></i> &nbsp;
+                    <span>Categories</span>
+                </a>
+            </div>
+
+            <div class="nested-menu" *ngIf="loggedUserDetails?.role.roleName == 'CategoryManager2'">
+                <a class="list-group-item" [routerLink]="['/config/uom']" [routerLinkActive]="['router-link-active']">
+                    <i class="fa fa-user"></i> &nbsp;
+                    <span>UOM(s)</span>
+                </a>
+            </div>
+            <div class="nested-menu" *ngIf="loggedUserDetails?.role.roleName == 'VendorManager2'">
+                <a class="list-group-item" [routerLink]="['/category/item-price-approvals']"
+                    [routerLinkActive]="['router-link-active']">
+                    <i class="fa fa-user"></i> &nbsp;
+                    <span>Item Price Approvals</span>
+                </a>
+            </div>
+
+            <div *ngIf="(loggedUserPermissions?.indexOf(defaultPermissions.PC_CLIENT_PAGE.ITEMS_VIEW) != -1 || loggedUserOwnPermissions?.indexOf(DEfAULT_OWN_PERMISSIONS_LIST.ITEMS_LIST_PAGE.ITEMS_LIST_VIEW) != -1) || (loggedUserDetails?.role.roleName == 'VendorManager' || loggedUserOwnPermissions?.indexOf(DEfAULT_OWN_PERMISSIONS_LIST.DYNAMIC_PRICING_PAGE.DYNAMIC_PRICING_VIEW) != -1) || (loggedUserDetails?.role.roleName == 'VendorManager' || loggedUserOwnPermissions?.indexOf(DEfAULT_OWN_PERMISSIONS_LIST.DYNAMIC_PRICING_ITEMS_PAGE.DYNAMIC_PRICING_ITEMS_VIEW) != -1)"
+                class="nested-menu">
+                <ul style="padding: 0px; margin: 0px;">
+                    <li style="display: block;">
+                        <a class="list-group-item" (click)="toggleAccordian($event, 'Catalogue')" data-toggle="collapse"
+                            aria-expanded="false">
+                            <img src="/assets/images/menu/Analytics.svg">
+                            Item Catalogue
+                            <i style="float: right;padding: 3px;" class="fa fa-chevron-down"></i>
+                        </a>
+                        <ul [ngStyle]="{'display':(rep == 'Catalogue' && repCollapsed) ? 'block' : 'none' }"
+                        style="padding: 0px 0px 0px 32px;;" class="collapse list-unstyled" id="pageSubmenu">
+                            <li *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_CLIENT_PAGE.ITEMS_VIEW) != -1 || loggedUserOwnPermissions?.indexOf(DEfAULT_OWN_PERMISSIONS_LIST.ITEMS_LIST_PAGE.ITEMS_LIST_VIEW) != -1">
+                            <a class="list-group-item" [routerLink]="['/category/itemsList']"
+                                [routerLinkActive]="['router-link-active']">
+                                <i class="fa fa-user"></i> &nbsp;
+                                <span>Items</span>
+                            </a>
+                            </li>
+                            <li *ngIf="loggedUserDetails?.role.roleName == 'VendorManager' || loggedUserOwnPermissions?.indexOf(DEfAULT_OWN_PERMISSIONS_LIST.DYNAMIC_PRICING_PAGE.DYNAMIC_PRICING_VIEW) != -1">
+                                <a class="list-group-item" [routerLink]="['/vendormgr/create-vendor-time']"
+                                    [routerLinkActive]="['router-link-active']">
+                                    <i class="fa fa-user"></i> &nbsp;
+                                    <span>Dynamic Pricing</span>
+                                </a>
+                            </li>
+                            <li  *ngIf="loggedUserDetails?.role.roleName == 'VendorManager' || loggedUserOwnPermissions?.indexOf(DEfAULT_OWN_PERMISSIONS_LIST.DYNAMIC_PRICING_ITEMS_PAGE.DYNAMIC_PRICING_ITEMS_VIEW) != -1">
+                                <a class="list-group-item" [routerLink]="['/vendormgr/dynamic-price-items']"
+                                    [routerLinkActive]="['router-link-active']">
+                                    <i class="fa fa-user"></i> &nbsp;
+                                    <span>Dynamic Pricing Items</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="nested-menu" *ngIf="loggedUserDetails?.role.roleName == 'VendorManager2'">
+                <a class="list-group-item" [routerLink]="['/vendormgr/gmt-vendors']"
+                    [routerLinkActive]="['router-link-active']">
+                    <i class="fa fa-user"></i> &nbsp;
+                    <span>GMT Vendors</span>
+                </a>
+            </div>
+             <div class="nested-menu" *ngIf=" loggedUserDetails?.role.roleName == 'CategoryManager2' || loggedUserDetails?.role.roleName == 'CategoryManager' || loggedUserDetails?.role.roleName == 'CategoryManagerBasic'">
+                <ul style="padding: 0px; margin: 0px;">
+                    <li style="display: block;">
+                        <a class="list-group-item" (click)="toggleAccordian($event, 'GMT')" data-toggle="collapse"
+                            aria-expanded="false">
+                            <img src="/assets/images/menu/Analytics.svg">
+                            GMT
+                            <i style="float: right;padding: 3px;" class="fa fa-chevron-down"></i>
+                        </a>
+                        <ul [ngStyle]="{'display':(rep == 'GMT' && repCollapsed) ? 'block' : 'none' }"
+                        style="padding: 0px 0px 0px 32px;;" class="collapse list-unstyled" id="pageSubmenu">
+                            <li *ngIf="loggedUserDetails?.role.roleName == 'CategoryManager' ">
+                                <a class="list-group-item" [routerLink]="['/categorymgr/create-rfq']"
+                                [routerLinkActive]="['router-link-active']">
+                                <i class="fa fa-user"></i> &nbsp;
+                                <span>Send RFQ</span>
+                            </a>
+                            </li>
+                            <li *ngIf="loggedUserDetails?.role.roleName == 'CategoryManager2'">
+                                <a class="list-group-item" [routerLink]="['/categorymgr/gmt-summary']"
+                                [routerLinkActive]="['router-link-active']">
+                                <i class="fa fa-user"></i> &nbsp;
+                                <span>Summary</span>
+                            </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+            <div class="nested-menu"
+                *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_CLIENT_PAGE.ANALYTICS_VIEW) != -1 ">
+                <ul style="padding: 0px; margin: 0px;">
+                    <li style="display: block;">
+                        <a class="list-group-item" (click)="toggleAccordian($event, 'Analytics')" data-toggle="collapse"
+                            aria-expanded="false">
+                            <img src="/assets/images/menu/Analytics.svg">
+                            Analytics
+                            <i style="float: right;padding: 3px;" class="fa fa-chevron-down"></i>
+                        </a>
+                        <ul [ngStyle]="{'display':(rep == 'Analytics' && repCollapsed) ? 'block' : 'none' }"
+                            style="padding: 0px 0px 0px 32px;;" class="collapse list-unstyled" id="pageSubmenu">
+                            <li>
+                                <a class="list-group-item" [routerLink]="['/client/prs-count']"
+                                    [routerLinkActive]="['router-link-active']">
+                                    <i class="fa fa-user"></i> &nbsp; <span>PR</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="list-group-item" [routerLink]="['/client/pr-lead-time']"
+                                    [routerLinkActive]="['router-link-active']">
+                                    <i class="fa fa-user"></i> &nbsp; <span>PR Lead Time</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="list-group-item" [routerLink]="['/client/auctions-count']"
+                                    [routerLinkActive]="['router-link-active']">
+                                    <i class="fa fa-user"></i> &nbsp; <span>Auctions</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="list-group-item" [routerLink]="['/client/pr-ppo']"
+                                    [routerLinkActive]="['router-link-active']">
+                                    <i class="fa fa-user"></i> &nbsp; <span>PR-PPO</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        <!-- <div class="toggle-button" [ngClass]="{collapsed: collapsed}" (click)="toggleCollapsed()">
+            <i class="fa fa-fw fa-angle-double-{{collapsed?'right':'left'}}"></i>&nbsp;
+            <span>Collapse Sidebar</span>
+        </div> -->
+        <div class="list-group"  >
+            <div class="nested-menu" *ngIf="(loggedUserDetails?.role.roleName == 'ClientInitiator' || loggedUserDetails?.role.roleName == 'PRApprover' ||loggedUserDetails?.role.roleName == 'CategoryManager2' ||
+             loggedUserDetails?.role.roleName == 'CategoryManager' || loggedUserDetails?.role.roleName == 'Vendor'|| loggedUserDetails?.role.roleName == 'Registration'||
+             loggedUserDetails?.role.roleName == 'PartialVendor') && !isGMTView ">
+                <ul style="padding: 0px; margin: 0px;">
+                    <li style="display: block;">
+                        <a class="list-group-item" (click)="toggleAccordian($event, 'CAPEX')" data-toggle="collapse"
+                            aria-expanded="false">
+                            <img src="/assets/images/menu/Analytics.svg">
+                            proCPX
+                            <i style="float: right;padding: 3px;" class="fa fa-chevron-down"></i>
+                        </a>
+                        <ul [ngStyle]="{'display':(rep == 'CAPEX' && repCollapsed) ? 'block' : 'none' }"
+                        style="padding: 0px 0px 0px 32px;;" class="collapse list-unstyled" id="pageSubmenu">
+                            <li *ngIf="loggedUserDetails?.role.roleName == 'CategoryManager'">
+                                <a
+                                    class="list-group-item" [routerLink]="['/categorymgr/capex-quoteCompare']"
+                                    [routerLinkActive]="['router-link-active']">
+                                    <i class="fa fa-user"></i>&nbsp;
+                                    <span>Quote Comparison</span>
+                                </a>
+                            </li>
+                            <li *ngIf="loggedUserDetails?.role.roleName != 'PRApprover'">
+                                <a   class="list-group-item" [routerLink]="['/categorymgr/capex-auctions']"
+                                    [routerLinkActive]="['router-link-active']">
+                                    <img src="/assets/images/menu/Auction.svg">
+                                    <span>Auctions</span>
+                                </a>
+
+                            </li>
+                            <li *ngIf="loggedUserDetails?.role.roleName == 'CategoryManager2' ||
+                            loggedUserDetails?.role.roleName == 'CategoryManager'">
+                                <a   class="list-group-item" [routerLink]="['/categorymgr/capex-post-auctions-comp']"
+                                    [routerLinkActive]="['router-link-active']">
+                                    <img src="/assets/images/menu/Auction.svg">
+                                    <span>Post Auction Comp.</span>
+                                </a>
+
+                            </li>
+                            <li *ngIf="!( loggedUserDetails?.role.roleName == 'Vendor'||
+                            loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor')">
+                                <a class="list-group-item"
+                                    [routerLink]="['/client/pr-capex']" [routerLinkActive]="['router-link-active']">
+                                        <i class="fa fa-info"></i> &nbsp;
+                                        <span>PR Summary</span>
+                                </a>
+                            </li>
+                            <li *ngIf="( loggedUserDetails?.role.roleName == 'CategoryManager2'||
+                            loggedUserDetails?.role.roleName == 'CategoryManager'|| loggedUserDetails?.role.roleName == 'ClientInitiator' || loggedUserDetails?.role.roleName == 'PRApprover')">
+                                <a class="list-group-item"
+                                    [routerLink]="['/client/cient-summary']" [routerLinkActive]="['router-link-active']">
+                                        <i class="fa fa-info"></i> &nbsp;
+                                        <span>Vendor Summary</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+        <div class="list-group" *ngIf="!!currentView && ( currentView == SystemViewConfig.GMT_BASIC || currentView == SystemViewConfig.GMT_PROF )">
+        <div class="nested-menu" *ngIf="loggedUserDetails?.role.roleName == 'ClientInitiator' || loggedUserDetails?.role.roleName == 'CategoryManager2' || loggedUserDetails?.role.roleName == 'CategoryManager' || loggedUserDetails?.role.roleName == 'Vendor'|| loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor'">
+            <ul style="padding: 0px; margin: 0px;">
+                <li style="display: block;">
+                    <a class="list-group-item" (click)="toggleAccordian($event, 'GMT')" data-toggle="collapse"
+                        aria-expanded="false">
+                        <img src="/assets/images/menu/Analytics.svg">
+                        GMT
+                        <i style="float: right;padding: 3px;" class="fa fa-chevron-down"></i>
+                    </a>
+                    <ul [ngStyle]="{'display':(rep == 'GMT' && repCollapsed) ? 'block' : 'none' }"
+                    style="padding: 0px 0px 0px 32px;;" class="collapse list-unstyled" id="pageSubmenu">
+                        <li *ngIf="loggedUserDetails?.role.roleName == 'ClientInitiator' ||loggedUserDetails?.role.roleName == 'CategoryManager' ">
+                            <a class="list-group-item" [routerLink]="['/categorymgr/create-rfq']"
+                            [routerLinkActive]="['router-link-active']">
+                            <i class="fa fa-user"></i> &nbsp;
+                            <span>Create RFQ</span>
+                        </a>
+                        </li>
+                        <li *ngIf="loggedUserDetails?.role.roleName == 'CategoryManager2'">
+                            <a class="list-group-item" [routerLink]="['/categorymgr/gmt-summary']"
+                            [routerLinkActive]="['router-link-active']">
+                            <i class="fa fa-user"></i> &nbsp;
+                            <span>Summary</span>
+                        </a>
+                        </li>
+                        <li *ngIf="loggedUserDetails?.role.roleName == 'Vendor' || loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor' || loggedUserDetails?.role.roleName == 'CategoryManager' ||  loggedUserDetails?.role.roleName == 'CategoryManager2'">
+                            <a class="list-group-item" [routerLink]="['/categorymgr/gmt-rqfs']"
+                            [routerLinkActive]="['router-link-active']">
+                            <i class="fa fa-user"></i> &nbsp;
+                            <span>RFQ Summary</span>
+                        </a>
+                        </li>
+                        <li *ngIf=" loggedUserDetails?.role.roleName == 'CategoryManager2'">
+                            <a class="list-group-item" [routerLink]="['/categorymgr/gmt-reg-clients']"
+                            [routerLinkActive]="['router-link-active']">
+                            <i class="fa fa-user"></i> &nbsp;
+                            <span>Clients</span>
+                        </a>
+                        </li>
+                        <li *ngIf="loggedUserDetails?.role.roleName ==    'CategoryManager' ||  loggedUserDetails?.role.roleName == 'CategoryManager2'">
+                            <a class="list-group-item" [routerLink]="['/categorymgr/client-gmt-rqfs']"
+                            [routerLinkActive]="['router-link-active']">
+                            <i class="fa fa-user"></i> &nbsp;
+                            <span>Client RFQs</span>
+                        </a>
+                        </li>
+                        <li *ngIf="loggedUserDetails?.role.roleName ==    'ClientInitiator' ">
+                            <a class="list-group-item" [routerLink]="['/categorymgr/gmt-rfq-support']"
+                            [routerLinkActive]="['router-link-active']">
+                            <i class="fa fa-user"></i> &nbsp;
+                            <span>RFQ's Support</span>
+                        </a>
+                        </li>
+                        <li *ngIf="loggedUserDetails?.role.roleName ==    'Vendor' || loggedUserDetails?.role.roleName ==    'ClientInitiator' || loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor'">
+                            <a class="list-group-item" [routerLink]="['/categorymgr/gmt-rfq-faqs']"
+                            [routerLinkActive]="['router-link-active']">
+                            <i class="fa fa-user"></i> &nbsp;
+                            <span>FAQs</span>
+                        </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+        </div>
+        </div>
+
+        <div class="list-group" *ngIf="!!currentView && ( currentView == SystemViewConfig.BFS_PRO)">
+            <div class="nested-menu" *ngIf="loggedUserDetails?.role.roleName == 'ClientInitiator' || loggedUserDetails?.role.roleName == 'CategoryManager2' || loggedUserDetails?.role.roleName == 'CategoryManager' || loggedUserDetails?.role.roleName == 'Vendor'|| loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor'">
+                <a class="list-group-item"
+                    [routerLink]="['/bfs/items']" [routerLinkActive]="['router-link-active']">
+                    <img src="/assets/images/menu/PR.svg">
+                    <span>Item Stock</span>
+                </a>
+                <a class="list-group-item"  *ngIf="['CategoryManager','CategoryManager2'].includes(loggedUserDetails?.role.roleName) "
+                    [routerLink]="['/bfs/requested-items']" [routerLinkActive]="['router-link-active']">
+                    <img src="/assets/images/menu/PR.svg">
+                    <span>Bid Items</span>
+                </a>
+                <a class="list-group-item"  *ngIf="!['CategoryManager','CategoryManager2'].includes(loggedUserDetails?.role.roleName)   "
+                    [routerLink]="['/bfs/my-items']" [routerLinkActive]="['router-link-active']">
+                    <img src="/assets/images/menu/PR.svg">
+                    <span>My Items</span>
+                </a>
+                <a class="list-group-item"  *ngIf="!['CategoryManager','CategoryManager2'].includes(loggedUserDetails?.role.roleName) "
+                    [routerLink]="['/bfs/my-bids']" [routerLinkActive]="['router-link-active']">
+                    <img src="/assets/images/menu/PR.svg">
+                    <span>My Bids</span>
+                </a>
+                <a class="list-group-item"  *ngIf="loggedUserDetails?.role.roleName == 'CategoryManager2'"
+                    [routerLink]="['/bfs/buyer-seller-details']" [routerLinkActive]="['router-link-active']">
+                    <img src="/assets/images/menu/PR.svg">
+                    <span>Buyer/Seller Details</span>
+                </a>
+                <!-- <ul style="padding: 0px; margin: 0px;">
+                    <li style="display: block;">
+                        <a class="list-group-item" (click)="toggleAccordian($event, 'GMT')" data-toggle="collapse"
+                            aria-expanded="false">
+                            <img src="/assets/images/menu/Analytics.svg">
+                            GMT
+                            <i style="float: right;padding: 3px;" class="fa fa-chevron-down"></i>
+                        </a>
+                    </li>
+                </ul> -->
+            </div>
+        </div>
+        <h4 class="expiry-text" style="position: fixed;  padding: 10px;  color: #fff;      width: 266px;bottom: -8px;font-size: 12px;">{{expiredTimeInSeconds}}</h4>
+    </nav>
+
+
+</div>

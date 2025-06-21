@@ -1,0 +1,22 @@
+.modal-body {
+    min-height: 504px;
+    max-height: 516px;
+}
+
+
+::ng-deep .ui-autocomplete{
+    width : 100%  !important
+}
+::ng-deep  body .ui-autocomplete .ui-autocomplete-input {
+    min-width: 80% !important;
+}
+
+::ng-deep{
+    .ui-autocomplete-panel .ui-autocomplete-list {
+        min-width: 100%;
+    }
+    .ui-autocomplete .ui-autocomplete-panel {
+        max-width: 80% !important;
+        min-width: 86% !important;
+    }
+}

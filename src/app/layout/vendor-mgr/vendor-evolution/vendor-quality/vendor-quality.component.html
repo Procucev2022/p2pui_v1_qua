@@ -1,0 +1,222 @@
+<form  name="vendorQuality" (ngSubmit)="vendorQuality.form.valid && onVendorQuallitySubmit()" #vendorQuality="ngForm" novalidate>
+  <div class="col-md-12 row pad-nill">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="qualityCertification">Quality Certification</label>
+        <div class="row check-css">
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.qualityCertification"  #qualityCertification="ngModel" name="qualityCertification"
+              id="yes" value="yes" required>
+            <label class="form-check-label" for="yes">
+              YES
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.qualityCertification"  #qualityCertification="ngModel" name="qualityCertification"
+              id="no" value="no" required>
+            <label class="form-check-label" for="no">
+              NO
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="model.qualityCertification == 'yes'" class="col-md-6">
+      <div class="form-group">
+        <label for="certification">Certification</label>
+        <input type="text" class="form-control" placeholder="Certification" name="certification" [(ngModel)]="model.certification" #certification="ngModel"
+        [ngClass]="{ 'is-invalid': vendorQuality.submitted && certification.invalid }" />
+        <div *ngIf="vendorQuality.submitted && certification.invalid" class="invalid-feedback">
+            <div *ngIf="certification.errors.required">Certification is required</div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="col-md-6">
+        <div class="form-group">
+          <label for="managerial">Managerial</label>
+          <input type="text" class="form-control" placeholder="Managerial" name="managerial" [(ngModel)]="model.managerial" #managerial="ngModel"
+          [ngClass]="{ 'is-invalid': vendorQuality.submitted && managerial.invalid }" required />
+          <div *ngIf="vendorQuality.submitted && managerial.invalid" class="invalid-feedback">
+              <div *ngIf="managerial.errors.required">Managerial is required</div>
+          </div>
+      </div>
+    </div> -->
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="materialSource">Raw Material Sources</label>
+        <div class="row check-css">
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.materialSource"  #materialSource="ngModel" name="materialSource"
+              id="manufactures" value="manufactures" required>
+            <label class="form-check-label" for="manufactures">
+              Manufactures
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.materialSource"  #materialSource="ngModel" name="materialSource"
+              id="dealer" value="dealer" required>
+            <label class="form-check-label" for="dealer">
+              Dealer
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.materialSource"  #materialSource="ngModel" name="materialSource"
+              id="Trader" value="Trader" required>
+            <label class="form-check-label" for="Trader">
+              Trader
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="testCertifcates">Raw Material Test Certificates</label>
+        <div class="row check-css">
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.testCertifcates"  #testCertifcates="ngModel" name="testCertifcates"
+              id="yes" value="yes" required>
+            <label class="form-check-label" for="yes">
+              YES
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.testCertifcates"  #testCertifcates="ngModel" name="testCertifcates"
+              id="no" value="no" required>
+            <label class="form-check-label" for="no">
+              NO
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="qualityTesting">Quality Testing</label>
+        <div class="row check-css">
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.qualityTesting"  #qualityTesting="ngModel" name="qualityTesting"
+              id="yes" value="yes" required>
+            <label class="form-check-label" for="yes">
+              YES
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.qualityTesting"  #qualityTesting="ngModel" name="qualityTesting"
+              id="no" value="no" required>
+            <label class="form-check-label" for="no">
+              NO
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="model.qualityTesting == 'no'" class="col-md-6">
+      <div class="form-group">
+        <label for="ensureQuality">How do you ensure quality</label>
+        <input type="text" class="form-control" placeholder="How do you ensure quality" name="ensureQuality" [(ngModel)]="model.ensureQuality" #ensureQuality="ngModel"
+        [ngClass]="{ 'is-invalid': vendorQuality.submitted && ensureQuality.invalid }" />
+        <div *ngIf="vendorQuality.submitted && ensureQuality.invalid" class="invalid-feedback">
+            <div *ngIf="ensureQuality.errors.required">How do you ensure quality is required</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="packingQuality">Packing Quality</label>
+        <div class="row check-css">
+          <div class="form-check check-align">
+            <input class="form-check-input " type="radio" [(ngModel)]="model.packingQuality"  #packingQuality="ngModel" name="packingQuality"
+              id="one" value="one" required>
+            <label class="form-check-label" for="one">
+              1
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.packingQuality"  #packingQuality="ngModel" name="packingQuality"
+              id="two" value="two" required>
+            <label class="form-check-label" for="two">
+              2
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.packingQuality"  #packingQuality="ngModel" name="packingQuality"
+              id="three" value="three" required>
+            <label class="form-check-label" for="three">
+              3
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.packingQuality"  #packingQuality="ngModel" name="packingQuality"
+              id="four" value="four" required>
+            <label class="form-check-label" for="four">
+              4
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.packingQuality"  #packingQuality="ngModel" name="packingQuality"
+              id="five" value="five" required>
+            <label class="form-check-label" for="five">
+              5
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="clientRejections">Client rejections in a month</label>
+        <div class="row check-css">
+          <div class="form-check check-align">
+            <input class="form-check-input " type="radio" [(ngModel)]="model.clientRejections"  #clientRejections="ngModel" name="clientRejections"
+              id="<1%" value="<1%" required>
+            <label class="form-check-label" for="<1%">
+              {{'<'}} 01%
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.clientRejections"  #clientRejections="ngModel" name="clientRejections"
+              id="1-3%" value="1-3%" required>
+            <label class="form-check-label" for="1-3%">
+              01 {{'-'}} 03%
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.clientRejections"  #clientRejections="ngModel" name="clientRejections"
+              id=">3%" value=">3%" required>
+            <label class="form-check-label" for=">3%">
+              {{'>'}} 3%
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="subContracting">Sub Contracting</label>
+        <div class="row check-css">
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.subContracting"  #subContracting="ngModel" name="subContracting"
+              id="yes" value="yes" required>
+            <label class="form-check-label" for="yes">
+              YES
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.subContracting"  #subContracting="ngModel" name="subContracting"
+              id="no" value="no" required>
+            <label class="form-check-label" for="no">
+              NO
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <button style="float: right;" class="btn btn-primary btn-green" type="submit">Save</button>
+      <button style="float: right;" class="btn btn-secondary btn-red" type="button" (click)="onReset()">Reset</button>
+      <!-- <button style="float: right;" mat-raised-button  color="success" type="button" cdkFocusInitial (click)="onNext()">Next</button>
+      <button style="float: right;" mat-raised-button  color="accent" type="button" cdkFocusInitial (click)="onBack()">Back</button> -->
+    </div>
+  </div>
+</form>

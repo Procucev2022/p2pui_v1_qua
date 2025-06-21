@@ -1,0 +1,44 @@
+<div class="modal-header">
+    <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+    <div class="col-6">Item Details - {{data.itemNumber}}</div>
+</div>
+<div class="modal-body">
+    <form [formGroup]="createForm" action="" class="row">
+        <div class="col-3">
+            <label class=" form-label required">Description</label>
+            <input formControlName="description" class="form-control" placeholder="Enter Description" />
+        </div>
+        <div class="col-3">
+            <label class=" form-label required">Minimum Order Quantity</label>
+            <input type="number" formControlName="minQuantity" class="form-control" placeholder="Enter Minimum Order Quantity" />
+        </div>
+        <div class="col-3">
+            <label class="form-label required">Per Unit Price</label>
+            <input formControlName="pricePerUnit" type="number" class="form-control" placeholder="Enter Unit Price" />
+        </div>
+        <div class="col-3">
+            <label class="label-cls">Vendor Item Code</label>
+            <input formControlName="vendorItemCode" class="form-control" placeholder="Enter Vendor Item Code" />
+        </div>
+        <div class="col-3">
+            <label class="label-cls">Unit Of Measures</label>
+            <select class="form-control" formControlName="uom">
+                <option value="undefined" selected disabled>Select</option>
+             <option *ngFor="let item of uomList" [value]="item.id">{{item.label}}</option>
+           </select>
+        </div>
+        <div class="col-3">
+            <label class="label-cls">Montly Manufacturing Capacity</label>
+            <input formControlName="monthlyMfCapability" type="number" class="form-control" placeholder="Enter Monthly Manufacturing Capacity" />
+        </div>
+        <div class="col-3">
+            <label class="label-cls">Lead Time (In Days)</label>
+            <input formControlName="leadTimeDay" type="number" class="form-control" placeholder="Enter Lead Time" />
+        </div>
+
+    </form>
+</div>
+<mat-dialog-actions align="end">
+    <button type="button" mat-raised-button color="warn" type="button" (click)="reset()">Reset</button>
+    <button mat-raised-button color="primary" cdkFocusInitial type="submit" (click)="submitForm()">Save</button>
+</mat-dialog-actions>

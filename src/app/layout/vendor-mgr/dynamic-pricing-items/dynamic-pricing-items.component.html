@@ -1,0 +1,130 @@
+<div class="col-md-12 pad-nill" >
+  <div class="table-title">
+    <div class="row">
+      <div class="col-sm-6">
+        <h2>Dynamic Pricing Items</h2>
+      </div>
+      <div class="col-sm-6">
+        </div>
+    </div>
+  </div>
+  <p-table dataKey="id" #prqTable [columns]="itemPricingTableHeaders"
+  [value]="itemsList" sortMode="multiple" [paginator]="true"
+  [rows]="pageRecordSize" id="prqTable" [rowsPerPageOptions]="pageOptions"
+  [style]="{'width': '100%'}"
+  exportFilename="roles details" [(selection)]="selectedData"
+  [scrollable]="true" [expandedRowKeys]="expandedRows" [scrollHeight]="'calc(100vh - 210px)'">
+  <ng-template pTemplate="caption">
+    <div class="table-search">
+      <div class="row">
+        <div class="col-sm-6">
+          <input class="main-input" type="text" pInputText size="50"
+            placeholder="Search.."
+            (input)="prqTable.filterGlobal($event.target.value, 'contains')" />
+        </div>
+
+      </div>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th style="width: 4rem"></th>
+      <th [style.width]="col.width" *ngFor="let col of columns"
+        [pSortableColumn]="col.field">
+        {{col.header}}
+        <p-sortIcon [field]="col.field"></p-sortIcon>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-rowData let-columns="columns"
+    let-expanded="expanded">
+    <tr [pSelectableRow]="rowData">
+      <td style="width: 4rem">
+        <button type="button" pButton pRipple [pRowToggler]="rowData"
+          (click)="expanded ? getCloseVendors(rowData,$event) :
+          getVendorsByItem(rowData,$event)"
+          class="grid-expand">
+          <span *ngIf="expanded"><i class="fa fa-chevron-down"></i></span>
+          <span *ngIf="!expanded"><i class="fa fa-chevron-right"></i></span>
+        </button>
+      </td>
+      <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc' : col.field == 'description',
+      'table-cell-overflow-ellipse-brand' : col.field == 'specification' }" >
+        <span  *ngIf="col.field == 'description' || col.field == 'specification'"   [title]="rowData[col.field]" >
+          {{rowData[col.field]}}
+
+        </span>
+        <span   *ngIf="col.field != 'description'" class="alignItems">
+         <span *ngIf="col.field == 'dynamicPricingEnabled'">
+          <i class="fa " [ngClass]="{'fa-check-circle-o greenCls': rowData[col.field] == 'Yes' , 'fa-times-circle redCls': rowData[col.field] !== 'Yes'}" aria-hidden="true"></i>
+         </span> {{rowData[col.field]}}
+
+        </span>
+      </td>
+
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="rowexpansion" let-rowData>
+    <tr class="child-grid">
+      <td colspan="5">
+        <div class="p-p-4">
+          <div class="table-title">
+              <div class="row col-12" >
+                  <h2>Vendors</h2>
+              </div>
+          </div>
+          <p-table dataKey="id" #linkedVendorListByItemGrid [columns]="vendorHeaders"
+                  [value]="linkedVendorListByItem"
+                      id="linkedVendorListByItemGrid"
+                  [style]="{'width': '100%'}"
+              [scrollable]="true">
+                  <ng-template pTemplate="header" let-columns>
+                      <tr>
+
+                          <th *ngFor="let col of columns" [pSortableColumn]="col.field"
+                              [style.width]="col.width">
+                              {{col.header}}
+                          </th>
+                      </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-rowData let-columns="columns"  let-index="rowIndex1">
+                      <tr [pSelectableRow]="rowData">
+
+                          <td *ngFor="let col of columns" [style.width]="col.width" [ngClass]="{'table-cell-overflow-ellipse-brand' : col.field == 'vendorName'}">
+                              <span *ngIf="col.field == 'vendorName'">
+                                  <app-vendor-info-icon-dialog [vendorData]="rowData"></app-vendor-info-icon-dialog>
+                                  <img *ngIf="rowData['status'] == 'Completed'" width="18"
+                                      src="https://img.icons8.com/color/48/000000/instagram-verification-badge.png" />
+                                      <span [title]="rowData[col.field]">{{rowData[col.field]}}</span>
+                              </span>
+                              <span *ngIf="col.field != 'vendorName'" class="alignItems">
+                                  <span *ngIf="col.field == 'vDynamicPricingEnabled'">
+                                   <i class="fa " [ngClass]="{'fa-check-circle-o greenCls': rowData[col.field] == 'Yes' , 'fa-times-circle redCls': rowData[col.field] != 'Yes'}" aria-hidden="true"></i>
+                                  </span> {{rowData[col.field]}}
+
+                              </span>
+                          </td>
+                      </tr>
+                  </ng-template>
+                  <ng-template pTemplate="emptymessage" let-columns>
+                      <tr>
+                          <td [attr.colspan]="5" style="text-align:center;">
+                              No Records Found.
+                          </td>
+                      </tr>
+                  </ng-template>
+              </p-table>
+
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage" let-columns>
+    <tr>
+      <td [attr.colspan]="5" style="text-align:center;">
+        No Records Found.
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+</div>

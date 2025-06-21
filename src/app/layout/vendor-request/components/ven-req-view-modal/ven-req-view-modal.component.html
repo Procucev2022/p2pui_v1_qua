@@ -1,0 +1,281 @@
+<div class="modal-header">
+    <button class="btn btn-warning modal-close-btn"  mat-dialog-close>✖</button>
+      <div class="col-6">
+            <h5>Vendor Classification</h5>
+        </div>
+</div>
+<div class="modal-body">
+        <div class="col-12 page-body-pane">
+            <div class="prqContainer row">
+                <div class="col-12">
+                    <form #approvalForm="ngForm">
+                        <div>
+                          <div>
+                            <div class="row">
+                                <div class="col-sm-6 form-group">
+                                    <label for="priority" style="font-size: medium; font-weight: bolder;"
+                                        class="form-label">Priority :</label>
+
+                                    <select name="selectedPriority" id="selectedPriority" required
+                                        #priorityType="ngModel" [(ngModel)]="selectedPriority" class="form-control"
+                                        disabled>
+                                        <option selected disabled [ngValue]="null">Select
+                                        </option>
+                                        <option *ngFor="let priority of priorityTypes" [value]="priority"
+                                            [selected]="selectedPriority">
+                                            {{priority}}</option>
+                                    </select>
+
+                                </div>
+
+                                <div class="col-sm-6 form-group">
+                                    <label for="priority" style="font-size: medium; font-weight: bolder;"
+                                        class="form-label">Select your Product/Service :</label>
+
+                                    <select name="ProductorService" id="ProductorService" required
+                                        #ProductorService_{{i}}="ngModel" disabled [(ngModel)]="type"
+                                        class="form-control">
+                                        <option selected disabled [ngValue]="null">Select your Product/Service
+                                        </option>
+                                        <option *ngFor="let selectedvalue of selectProductorService"
+                                            [value]="selectedvalue" [selected]="type">{{selectedvalue}}</option>
+                                    </select>
+
+                                </div>
+                            </div>
+                                <div class="form-group">
+                                    <label for="description" style="font-size: medium; font-weight: bolder;"
+                                        class="form-label">Description :</label>
+
+                                    <textarea name="description" id="description" #descriptionRef="ngModel"
+                                        [(ngModel)]="description" class="form-control" disabled>
+
+                                        </textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="vDoc" style="font-size: medium; font-weight: bolder;"
+                                        class="form-label">Vendor Documents</label>
+                                        <div class="row col-md-12">
+                                <div class="col-md-4" *ngFor="let doc of vendorDocuments" style="margin: 6px 0px;">
+                                    <div class="crud-icons actionIcons multiDoc">
+                                        <a 
+                                            [href]="'data:application/octet-stream;base64,' + doc['file'] | filePipe"
+                                            download="{{doc['fileName']}}"><i class="fa fa-download"
+                                            aria-hidden="true" data-toggle="tooltip" [title]="'Download '+ doc['fileName']"><span class="singleDoc">{{doc.fileName}}</span></i></a>
+                                    </div>
+                                </div>
+                                </div>
+                                </div>
+                                <div class="row" *ngIf="type == 'Product' && productList != null">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label"
+                                                style="font-size: medium; font-weight: bolder;">Segment</label>
+
+
+                                            <textarea type="text" class="form-control" name="segmentName_"
+                                                id="category_segment" disabled
+                                                [(ngModel)]="productList.segmentName"></textarea>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label"
+                                                style="font-size: medium;font-weight: bolder;">Family
+                                            </label>
+
+                                            <textarea type="text" class="form-control" name="familyName" id="familyName"
+                                                [(ngModel)]="productList.familyName" disabled></textarea>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label"
+                                                style="font-size: medium;font-weight: bolder;">Class</label>
+
+                                            <textarea type="text" class="form-control" name="className" id="className"
+                                                disabled [(ngModel)]="productList.className"></textarea>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label"
+                                                style="font-size: medium;font-weight: bolder;">Commodity</label>
+
+                                            <textarea type="text" class="form-control" name="commodityName"
+                                                id="commodityName" [(ngModel)]="productList.commodityName"
+                                                disabled></textarea>
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row" *ngIf="type == 'Service' && serviceList != null">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label"
+                                                style="font-size: medium; font-weight: bolder;">Section</label>
+
+                                            <textarea type="text" class="form-control" name="categoryService_section"
+                                                id="categoryService_section" [(ngModel)]="serviceList.section"
+                                                disabled></textarea>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label"
+                                                style="font-size: medium;font-weight: bolder;">Heading</label>
+                                            <textarea type="text" class="form-control" name="heading" id="heading"
+                                                [(ngModel)]="serviceList.heading" disabled></textarea>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label"
+                                                style="font-size: medium;font-weight: bolder;">Group
+                                                Description</label>
+
+                                            <textarea type="text" class="form-control" name="groupdescription"
+                                                id="groupdescription" [(ngModel)]="serviceList.groupdescription"
+                                                disabled></textarea>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label"
+                                                style="font-size: medium;font-weight: bolder;">Sac</label>
+
+                                            <textarea type="text" class="form-control" name="sac" id="sacs"
+                                                [(ngModel)]="serviceList.sac" disabled></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                               <!-- <div class="card"> -->
+
+                                <!-- <h5 class="page-title">Available Vendors</h5> -->
+                                <!-- <div class="row" *ngFor="let vendor of vendorDetails; let i = index">
+                                        <div class="col-sm-6">
+
+                                                <label class="control-label"
+                                                    style="font-size: medium; font-weight: bolder;">Vendor Id
+                                                    <span> : </span>
+                                                    <p style="display: inline-block;">{{vendor.vendorId}}</p>
+                                                </label>
+                                        </div>
+                                        <div class="col-sm-6">
+
+                                                <label class="control-label"
+                                                    style="font-size: medium;font-weight: bolder;">Vendor Name
+                                                    <span> : </span>
+                                                    <p style="display: inline-block;">{{vendor.vendorName}}</p>
+                                                </label>
+                                        </div>
+                                    </div> -->
+
+                                <p-table #venReq [columns]="vendorDetailsHeaders" [value]="vendorDetails"
+                                    sortMode="multiple" [paginator]="true" [rows]="pageRecordSize" id="quoteTable"
+                                    [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}"
+                                    exportFilename="venRequest" [scrollable]="true">
+                                    <!-- <ng-template pTemplate="caption">
+                                        <div class="col-12 row pad-nill">
+                                            <div class="col-7 pad-nill">
+                                                <h5 class="screen-head">Available Vendors</h5>
+                                            </div>
+                                            <div class="col-5 searchPanel pad-nill">
+                                                <input type="text" pInputText size="50" placeholder="Search.."
+                                                    (input)="venReq.filterGlobal($event.target.value, 'contains')"
+                                                    style="width:auto; float: right;" />
+                                            </div>
+                                        </div>
+                                    </ng-template> -->
+
+                                    <ng-template pTemplate="caption">
+                                        <div class="table-search">
+                                          <div class="row">
+                                            <div class="col-sm-6">
+                                                <h4 style="float: left;">Available Vendors</h4>
+                                            </div>
+                                            <div class="col-sm-6">
+                                              <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                                                (input)="venReq.filterGlobal($event.target.value, 'contains')" style="float:right;"/>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </ng-template>
+
+                                    <ng-template pTemplate="header" let-columns>
+                                        <tr>
+                                            <!-- <th style="width: 3em">
+                                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                            </th> -->
+                                            <th *ngFor="let col of columns" [pSortableColumn]="col.field"
+                                                [style.width]="col.field == 'id'? '270px': 'auto'">
+                                                {{col.header}}
+                                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                                            </th>
+                                            <!-- <th>Actions</th> -->
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                        <tr [pSelectableRow]="rowData">
+                                            <!-- <td style="width: 3em">
+                                                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                                            </td> -->
+                                            <td *ngFor="let col of columns"
+                                                [style.width]="col.field == 'id'? '270px': 'auto'">
+                                                <span *ngIf="!col.isLink">
+                                                   <span
+                                                        *ngIf="col.field == 'procucevStatus'">{{rowData[col.field].uiDisplay}}</span>
+                                                    <span
+                                                        *ngIf="col.field != 'procucevStatus'">{{rowData[col.field]}}</span>
+
+                                                </span>
+                                                <span *ngIf="col.isLink" class="cellLinkCls"> <a
+                                                        href="javascript:void(0);"> {{rowData[col.field]}} </a></span>
+
+                                            </td>
+
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="emptymessage" let-columns>
+                                        <tr>
+                                            <td [attr.colspan]="5" style="text-align:center;">
+                                                No Records Found.
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="paginatorleft">
+                                        <div  *ngIf="venReq._totalRecords > 0">
+                                            <b>Showing {{venReq.first+1}} to {{venReq.first+venReq.rows > venReq.totalRecords?venReq.totalRecords: venReq.first+venReq.rows}} of {{venReq.totalRecords}}</b>
+                                            <!-- <app-page-info [totalRecords]="vendorDetails?.length"
+                                                [pageData]="paginatoryDetails"></app-page-info> -->
+                                        </div>
+                                    </ng-template>
+                                </p-table>
+                               <!-- </div> -->
+
+
+                            </div>
+                        </div>
+
+
+                        <!-- <mat-dialog-actions align="end">
+                            <button type="button" class="btn btn-danger" (click)="closeDialog()" mat-dialog-close>Cancel</button>
+                        </mat-dialog-actions> -->
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>

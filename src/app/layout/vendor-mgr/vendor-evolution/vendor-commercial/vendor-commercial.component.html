@@ -1,0 +1,220 @@
+<form  name="vendorCommercial" (ngSubmit)="vendorCommercial.form.valid && onVendorCommercialSubmit()" #vendorCommercial="ngForm" novalidate>
+  <div class="col-md-12 row pad-nill">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="enquires">No of new enquires per month</label>
+        <div class="row check-css">
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.enquires"  #enquires="ngModel" name="enquires"
+              id="<5" value="<5" required>
+            <label class="form-check-label" for="<5">
+              {{'<'}} 05
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.enquires"  #enquires="ngModel" name="enquires"
+              id="5-15" value="5-15" required>
+            <label class="form-check-label" for="5-15">
+              05-15
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.enquires"  #enquires="ngModel" name="enquires"
+              id="15-25" value="15-25" required>
+            <label class="form-check-label" for="15-25">
+              15-25
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.enquires"  #enquires="ngModel" name="enquires"
+              id=">25" value=">25" required>
+            <label class="form-check-label" for=">25">
+              {{'>'}} 25
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="conversionRate">New Client Conversion Rate</label>
+        <div class="row check-css">
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.conversionRate"  #conversionRate="ngModel" name="conversionRate"
+              id="<25%" value="<25%" required>
+            <label class="form-check-label" for="<25%">
+              {{'<'}} 25%
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.conversionRate"  #conversionRate="ngModel" name="conversionRate"
+              id="25-50%" value="25-50%" required>
+            <label class="form-check-label" for="25-50%">
+              25-50%
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.conversionRate"  #conversionRate="ngModel" name="conversionRate"
+              id="50-75%" value="50-75%" required>
+            <label class="form-check-label" for="50-75%">
+              50-75%
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.conversionRate"  #conversionRate="ngModel" name="conversionRate"
+              id="75-100%" value="75-100%" required>
+            <label class="form-check-label" for="75-100%">
+              75-100%
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="clientService">Existing Client Service Life</label>
+        <div class="row check-css">
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.clientService"  #clientService="ngModel" name="clientService"
+              id="<1year" value="<1year" required>
+            <label class="form-check-label" for="<1year">
+              {{'<'}} 1 Year
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.clientService"  #clientService="ngModel" name="clientService"
+              id="1-3years" value="1-3years" required>
+            <label class="form-check-label" for="1-3years">
+              1 {{'-'}} 3 Years
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.clientService"  #clientService="ngModel" name="clientService"
+              id="3-5years" value="3-5years" required>
+            <label class="form-check-label" for="3-5years">
+              3 {{'-'}} 5 Years
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.clientService"  #clientService="ngModel" name="clientService"
+              id=">5years" value=">5years" required>
+            <label class="form-check-label" for=">5years">
+              {{'>'}} 5years
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="billDiscounting">Bill Discounting Opted</label>
+        <div class="row check-css">
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.billDiscounting"  #billDiscounting="ngModel" name="billDiscounting"
+              id="occassinally" value="occassinally" required>
+            <label class="form-check-label" for="occassinally">
+              Occassinally
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.billDiscounting"  #billDiscounting="ngModel" name="billDiscounting"
+              id="regularly" value="regularly" required>
+            <label class="form-check-label" for="regularly">
+              Regularly
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.billDiscounting"  #billDiscounting="ngModel" name="billDiscounting"
+              id="never" value="never" required>
+            <label class="form-check-label" for="never">
+              Never
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="financialStability">Financial Stability</label>
+        <div class="row check-css">
+          <div class="form-check check-align">
+            <input class="form-check-input " type="radio" [(ngModel)]="model.financialStability"  #financialStability="ngModel" name="financialStability"
+              id="one" value="one" required>
+            <label class="form-check-label" for="one">
+              1
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.financialStability"  #financialStability="ngModel" name="financialStability"
+              id="two" value="two" required>
+            <label class="form-check-label" for="two">
+              2
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.financialStability"  #financialStability="ngModel" name="financialStability"
+              id="three" value="three" required>
+            <label class="form-check-label" for="three">
+              3
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.financialStability"  #financialStability="ngModel" name="financialStability"
+              id="four" value="four" required>
+            <label class="form-check-label" for="four">
+              4
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.financialStability"  #financialStability="ngModel" name="financialStability"
+              id="five" value="five" required>
+            <label class="form-check-label" for="five">
+              5
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="paymentCycle">Regular Client Payment Cycle</label>
+        <div class="row check-css">
+          <div class="form-check check-align">
+            <input class="form-check-input " type="radio" [(ngModel)]="model.paymentCycle"  #paymentCycle="ngModel" name="paymentCycle"
+              id="30days" value="30days" required>
+            <label class="form-check-label" for="30days">
+              30 Day's
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.paymentCycle"  #paymentCycle="ngModel" name="paymentCycle"
+              id="30-60days" value="30-60days" required>
+            <label class="form-check-label" for="30-60days">
+              30-60 Day's
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.paymentCycle"  #paymentCycle="ngModel" name="paymentCycle"
+              id="60-90days" value="60-90days" required>
+            <label class="form-check-label" for="60-90days">
+              60-90 Day's
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.paymentCycle"  #paymentCycle="ngModel" name="paymentCycle"
+              id=">90days" value=">90days" required>
+            <label class="form-check-label" for=">90days">
+              {{'>'}} 90 Day's
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12">
+    <button style="float: right;" class="btn btn-primary btn-green" type="submit">Save</button>
+    <button style="float: right;" class="btn btn-secondary btn-red" type="button" (click)="onReset()">Reset</button>
+    <!-- <button style="float: right;" mat-raised-button  color="success" type="button" cdkFocusInitial (click)="onNext()">Next</button>
+    <button style="float: right;" mat-raised-button  color="accent" type="button" cdkFocusInitial (click)="onBack()">Back</button> -->
+  </div>
+</form>

@@ -1,0 +1,373 @@
+<div class="col-md-12 pad-nill">
+  <div class="table-title">
+    <div class="row">
+      <div class="col-sm-6">
+        <h2>Client Registration</h2>
+        <p><span class="dot"></span>{{clientList.length}} Total</p>
+      </div>
+      <div class="col-sm-6">
+        <button class="btn btn-primary btn-blue" type="button" (click)="createClient(createClientModal)"
+          *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_PR_CLIENT_REGISTER_PAGE.CREATE_CLIENT_REGISTER) != -1">
+          <i class="material-icons">&#43;</i> <span>New Client</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <p-table #prqTable [columns]="clientTableHeaders" [value]="clientList" sortMode="multiple" [paginator]="true"
+    [rows]="pageRecordSize" id="prqTable" [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}"
+    exportFilename="roles details" [(selection)]="selectedData"   [scrollable]="true" [scrollHeight]="'calc(100vh - 219px)'">
+    <ng-template pTemplate="caption">
+      <div class="table-search">
+        <div class="row">
+          <div class="col-sm-6">
+            <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+              (input)="prqTable.filterGlobal($event.target.value, 'contains')" />
+          </div>
+          <div class="col-sm-6">
+            <button type="button" class="btn btn-transparent btn-blue" id="b_addUser"
+              [disabled]="selectedData.length==0 || selectedData.length > 1" (click)="addUser(addUserModal)">Add User</button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th style="width: 3rem">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th *ngFor="let col of columns" [pSortableColumn]="col.field"
+          [style.width]="col.width" class="testingautosize">
+          {{col.header}}
+          <p-sortIcon [field]="col.field"></p-sortIcon>
+        </th>
+        <th style="width: 8rem;">Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr [pSelectableRow]="rowData">
+        <td style="width: 3rem">
+          <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+        </td>
+
+        <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
+
+          {{rowData[col.field]}}
+        </td>
+        <td style="width: 8rem;">
+          <button type="button" class="btn-skelton" (click)="onEditClient(createClientModal, rowData, false)"
+            *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_PR_CLIENT_REGISTER_PAGE.UPDATE_CLIENT_REGISTER) != -1">
+            <img src="/assets/images/new/edit-data.png" title="Edit Client Detials">
+          </button>
+          <button type="button" class="btn-skelton" (click)="onEditClient(createClientModal, rowData, true)"
+            *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_PR_CLIENT_REGISTER_PAGE.CLIENT_REGISTER_DATA_VIEW) != -1">
+            <img src="/assets/images/new/view-doc.png" title="View Client Detials">
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage" let-columns>
+      <tr>
+        <td [attr.colspan]="5" style="text-align:center;">
+          No Records Found.
+        </td>
+      </tr>
+    </ng-template>
+    <!-- <ng-template pTemplate="paginatorleft">
+      <div *ngIf="clientList?.length > 0">
+        <app-page-info [totalRecords]="clientList?.length" [pageData]="paginatoryDetails"></app-page-info>
+      </div>
+    </ng-template> -->
+  </p-table>
+
+</div>
+
+<ng-template #createClientModal>
+  <div class="modal-header">
+    <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+    <div class="col-6">
+      <h5>Client Registration</h5>
+    </div>
+  </div>
+  <div class="modal-body">
+    <form name="f" (ngSubmit)="onSubmit(f)" #f="ngForm" novalidate>
+      <div class="row">
+        <div class="col-6">
+          <label for="comapny">Company Name :<b style="color: red;">*</b></label>
+          <input type="text" class="form-control" name="companyName" [(ngModel)]="clientModel.companyName" maxlength="25"
+            #companyName="ngModel" [ngClass]="{ 'is-invalid': f.submitted && companyName.invalid }" required
+            [disabled]="isClientDataView" placeholder="Enter Company Name">
+            <small *ngIf="f.submitted && companyName.errors?.required" class="text-danger">Company Name
+              is required</small>
+        </div>
+        <div class="col-6">
+          <label for="comapny">Client Vertical :<b style="color: red;">*</b></label>
+          <select class="form-control" name="clientVertical" [(ngModel)]="clientModel.clientVertical"
+            #clientVertical="ngModel" [ngClass]="{ 'is-invalid': f.submitted && clientVertical.invalid }" required
+            [disabled]="isClientDataView">
+            <option [value]="undefined" selected disable>Select</option>
+            <option *ngFor="let vertical of clientVerticals; let j = index" [value]="vertical">{{vertical}}</option>
+          </select>
+          <small *ngIf="f.submitted && clientVertical.errors?.required" class="text-danger">Client Vertical
+            is required</small>
+        </div>
+        <div class="col-6">
+          <label for="comapny">Category :</label>
+          <input type="text" class="form-control" name="clientCategory" [(ngModel)]="clientModel.clientCategory"
+            #clientCategory="ngModel" [ngClass]="{ 'is-invalid': f.submitted && clientCategory.invalid }"
+            [disabled]="isClientDataView">
+        </div>
+        <div class="col-6">
+          <label for="pan">PAN</label>
+          <input type="text" class="form-control" name="pan" [(ngModel)]="clientModel.pan" #panNumber="ngModel"  maxlength="10"
+          pattern="^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}"
+            [disabled]="isClientDataView">
+            <small *ngIf="f.submitted && panNumber.status=='INVALID'" class="text-danger">Please Enter Valid PAN details</small>
+        </div>
+        <div class="col-6">
+          <label for="gstin">GSTIN</label>
+          <input type="text" class="form-control" name="gstin" [(ngModel)]="clientModel.gstin" #gstin="ngModel"
+            [disabled]="isClientDataView">
+        </div>
+        <div class="col-6">
+          <label for="tan">TAN</label>
+          <input type="text" class="form-control" name="tan" [(ngModel)]="clientModel.tan" #category="ngModel"
+            [disabled]="isClientDataView">
+        </div>
+        <div class="col-6">
+          <label for="city">City</label>
+          <input type="text" class="form-control" name="city" [(ngModel)]="clientModel.city" #city="ngModel"
+            [disabled]="isClientDataView">
+        </div>
+        <div class="col-6">
+          <label for="state">State</label>
+          <select class="form-control" name="state" [(ngModel)]="clientModel.state" #state="ngModel"
+            [disabled]="isClientDataView" id="state" placeholder="State">
+            <option disabled [value]="undefined" selected>Select</option>
+            <option *ngFor="let state of states; let j = index" [ngValue]="state">{{state}}
+            </option>
+          </select>
+        </div>
+        <div class="col-6  form-group">
+          <label for="address1">Address1</label>
+          <input type="text" class="form-control" name="address1" [(ngModel)]="clientModel.address1" #address1="ngModel"
+            [disabled]="isClientDataView">
+        </div>
+        <div class="col-6">
+          <label for="pincode">Pincode</label>
+          <input type="number" class="form-control" name="zipCode"  [(ngModel)]="clientModel.zipCode" #zipCode="ngModel"
+          oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+          maxlength = "6"
+            [disabled]="isClientDataView">
+        </div>
+        <div class="col-12 form-group">
+          <label for="others">Others</label>
+          <textarea class="form-control" name="others" rows="2" cols="30" [(ngModel)]="clientModel.others"
+            #others="ngModel" [disabled]="isClientDataView"></textarea>
+        </div>
+        <div class="col-12 form-group">
+          <div class="row" *ngFor="let costCenter of costCentersList; let index=index">
+            <div class="col-6 form-group">
+              <label for="costCenter">Cost Center </label>
+              <input class="form-control" name="costcenter_{{index}}" [(ngModel)]="costCenter.name"
+                #costcenter_{{index}}="ngModel" [disabled]="isClientDataView">
+            </div>
+            <div class="col-6">
+              <button *ngIf="index>0 && !isClientDataView" style="margin-top: 31px;" type="button" class="btn btn-danger removeIconCls btn-red"
+                (click)="removeCostCenter(index)">✖ Remove</button>
+              <button #addCostCenterElement style="margin-top: 31px;margin-left: 20px"
+                *ngIf="index == costCentersList.length-1" type="button" class="btn btn-primary btn-blue"
+                (click)="addOneMoreCostCenter()" [disabled]="isClientDataView"> Add One More </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 form-group">
+            <div class="row" *ngFor="let clientReg of clientRegionList; let index=index">
+              <div class="col-6 form-group">
+                <label>Client Region  </label>
+                <input class="form-control" name="clientReg_{{index}}" [(ngModel)]="clientReg.region"
+                #clientReg_{{index}}="ngModel" [disabled]="isClientDataView">
+              </div>
+              <div class="col-6">
+                <button *ngIf="index>0  && !isClientDataView" style="margin-top: 31px;" type="button" class="btn btn-danger removeIconCls btn-red"
+                  (click)="removeClientRegion(index)">✖ Remove</button>
+                <button #addClientRegElement style="margin-top: 31px;margin-left: 20px"
+                  *ngIf="index == clientRegionList.length-1" type="button" class="btn btn-primary btn-blue"
+                  (click)="addOneMoreClientRegion()" [disabled]="isClientDataView"> Add One More </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 form-group">
+            <div class="row" *ngFor="let clientSubCat of clientSubCategoryList; let index=index">
+              <div class="col-6 form-group">
+                <label>Client Sub Category  </label>
+                <input class="form-control" name="clientSubCat_{{index}}" [(ngModel)]="clientSubCat.subCategory"
+                #clientSubCat_{{index}}="ngModel" [disabled]="isClientDataView">
+              </div>
+              <div class="col-6">
+                <button *ngIf="index>0  && !isClientDataView" style="margin-top: 31px;" type="button" class="btn btn-danger removeIconCls btn-red"
+                  (click)="removeClientSubCategory(index)">✖ Remove</button>
+                <button #addClientSubCatElement style="margin-top: 31px;margin-left: 20px"
+                  *ngIf="index == clientSubCategoryList.length-1" type="button" class="btn btn-primary btn-blue"
+                  (click)="addOneMoreClientSubCategory()" [disabled]="isClientDataView"> Add One More </button>
+              </div>
+            </div>
+          </div>
+        <div class="col-12 form-group">
+          <div class="row" *ngFor="let clientDepartment of clientDepartmentList; let index=index">
+            <div class="col-6 form-group">
+              <label for="clientDepartment">Department </label>
+              <input class="form-control" name="department_{{index}}" [(ngModel)]="clientDepartment.department"
+                #department_{{index}}="ngModel" [disabled]="isClientDataView">
+
+            </div>
+            <div class="col-6">
+              <button *ngIf="index>0  && !isClientDataView" style="margin-top: 31px;" type="button" class="btn btn-danger removeIconCls btn-red"
+                (click)="removeDepartment(index)">✖ Remove</button>
+              <button #addDepartment style="margin-top: 31px;margin-left: 20px"
+                *ngIf="index == clientDepartmentList.length-1" type="button" class="btn btn-primary btn-blue"
+                (click)="addOneMoreDepartment()" [disabled]="isClientDataView"> Add One More </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <button style="float: right;" type="button" class="btn btn-danger" mat-dialog-close>Cancel</button> -->
+      <button style="float: right;" type="submit" class="btn btn-success btn-green" *ngIf="!isClientDataView">Save</button>
+    </form>
+  </div>
+</ng-template>
+
+
+<!-- Add User -->
+
+<ng-template #addUserModal >
+  <div class="modal-header">
+    <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+    <div class="col-6">
+      <h5>Create User</h5>
+    </div>
+  </div>
+  <div class="modal-body">
+    <form name="AddUserForm" (ngSubmit)="AddUserForm.form.valid && onAddUserSubmit(AddUserForm)" #AddUserForm="ngForm"
+      novalidate>
+      <div class="col-md-12 row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" class="form-control" placeholder="First Name" name="firstName"
+              [(ngModel)]="userModel.firstName" #firstName="ngModel"
+              [ngClass]="{ 'is-invalid': AddUserForm.submitted && firstName.invalid }" required />
+            <div *ngIf="AddUserForm.submitted && firstName.invalid" class="invalid-feedback">
+              <div *ngIf="firstName.errors.required">First Name is required</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" class="form-control" placeholder="Last Name" name="lastName"
+              [(ngModel)]="userModel.lastName" #lastName="ngModel"
+              [ngClass]="{ 'is-invalid': AddUserForm.submitted && lastName.invalid }" required />
+            <div *ngIf="AddUserForm.submitted && lastName.invalid" class="invalid-feedback">
+              <div *ngIf="lastName.errors.required">Last Name is required</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" class="form-control" placeholder="Email" name="email" [(ngModel)]="userModel.email"
+              #email="ngModel" [ngClass]="{ 'is-invalid': AddUserForm.submitted && email.invalid }" required email />
+            <div *ngIf="AddUserForm.submitted && email.invalid" class="invalid-feedback">
+              <div *ngIf="email.errors.required">Email is required</div>
+              <div *ngIf="email.errors.email">Email must be a valid email address</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="text" class="form-control" placeholder="Phone Number" name="phone" maxlength="10"
+              minlength="10" [(ngModel)]="userModel.phone" #phone="ngModel"
+              [ngClass]="{ 'is-invalid': AddUserForm.submitted && phone.invalid }" required />
+            <div *ngIf="AddUserForm.submitted && phone.invalid" class="invalid-feedback">
+              <div *ngIf="phone.errors.required">Phone Number is required</div>
+              <div *ngIf="phone.value.length != 10">Please Enter valid Phone Number</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="role">Roles</label>
+            <select class="form-control" id="role" placeholder="Select Role" name="role" [(ngModel)]="userModel.role"
+              #role="ngModel">
+              <option [value]="undefined" selected>Select</option>
+              <option *ngFor="let opt of rolesList" [value]="opt.id">{{opt.roleName}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="department">Department</label>
+            <select class="form-control" id="department" placeholder="Select Department" name="department"
+              [(ngModel)]="userModel.department" #department="ngModel">
+              <option [value]="undefined" selected>Select</option>
+              <option *ngFor="let opt of DepartmentsLists" [value]="opt.id">{{opt.department}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <button style="float: right; margin-top:12px" type="submit" class="btn btn-primary btn-green">Submit</button>
+        </div>
+      </div>
+    </form>
+
+    <div class="col-md-12 pt-2">
+      <p-table #userTable [columns]="createdUserHeaders" [value]="createdUserList" sortMode="multiple"
+        [paginator]="true" [rows]="pageRecordSize" id="prqTable" [rowsPerPageOptions]="pageOptions"
+        [style]="{'width': '100%'}" exportFilename="roles details" [scrollable]="true">
+        <ng-template pTemplate="caption">
+          <div class="table-search">
+              <div class="row">
+                  <div class="col-sm-6">
+                      <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                          (input)="userTable.filterGlobal($event.target.value, 'contains')" />
+                  </div>
+                  <div class="col-sm-6"></div>
+              </div>
+          </div>
+      </ng-template>
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th *ngFor="let col of columns" [pSortableColumn]="col.field"
+              [style.width]="col.field == 'id'? '255px': 'auto'" class="testingautosize">
+              {{col.header}}
+              <p-sortIcon [field]="col.field"></p-sortIcon>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+          <tr [pSelectableRow]="rowData">
+            <td *ngFor="let col of columns" [style.width]="col.field == 'id'? '255px': 'auto'" class="testingautosize">
+              <span *ngIf="col.field == 'role'"> {{rowData['role']['description']}}</span>
+
+              <span *ngIf="col.field != 'role'">{{rowData[col.field]}}</span>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage" let-columns>
+          <tr>
+            <td [attr.colspan]="5" style="text-align:center;">
+              No Records Found.
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorleft">
+          <div *ngIf="userTable._totalRecords > 0">
+            <b>Showing {{userTable.first+1}} to {{userTable.first+userTable.rows > userTable.totalRecords?userTable.totalRecords: userTable.first+userTable.rows}} of {{userTable.totalRecords}}</b>
+            <!-- <app-page-info [totalRecords]="createdUserList?.length" [pageData]="paginatoryDetails"></app-page-info> -->
+          </div>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</ng-template>

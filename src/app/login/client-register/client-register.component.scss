@@ -1,0 +1,126 @@
+.error {
+    color: red;
+}
+
+.otp-box {
+    display: flex;
+}
+
+.bg-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    background-repeat: round;
+}
+
+.card {
+    background: none;
+    border: none;
+    box-shadow: none !important;
+    border: 0 !important;
+    // // width: 50%;
+    // position: absolute;
+    // right: 0;
+    // top: 20%;
+}
+
+
+.error-block p {
+    margin: 0 !important;
+}
+
+.form-control:disabled,
+.form-control[readonly] {
+    background-color: #d2d9e0 !important;
+    opacity: 1;
+}
+
+.pan-field input#pan {
+    width: 70%;
+    display: inline;
+}
+
+span.pan-validate {
+    padding: 8px 20px;
+    border: 2px solid green;
+    border-radius: 4px;
+    margin: 4px 10px;
+    color: green;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+span.pan-validate.disabledCss {
+    opacity: 0.2;
+}
+
+
+form label {
+    font-weight: 600;
+}
+
+.header-logo {
+    position: relative;
+    top: 20px;
+    width: 100%;
+}
+
+.gmt-logo-icon {
+    position: absolute;
+    right: 0;
+    top: -41%;
+
+    img {
+        position: absolute;
+        right: 8%;
+    }
+}
+
+.content-card{
+    text-align: justify;
+    margin: 1.5rem;
+}
+.margin3{
+    margin: 3rem;
+}
+
+@media only screen and (max-width: 767px) {
+    .pan-field input#pan {
+        width: 58%;
+        display: inline;
+    }
+    .content-card{
+        text-align: justify;
+        margin: 1.5rem;
+    }
+    .gmt-logo-icon{
+        position: relative;
+        text-align: center;
+        img{
+            position: relative;
+            right: 0;
+        }
+    }
+    .bg-container  {
+        position: absolute;
+        left: 0;
+        top: 0;
+        background-size: cover;
+        width: 100%;
+        height: auto;
+        background-repeat: round;
+    }
+
+
+    .mt-5{
+        margin-top: 0 !important;
+    }
+    .btn-block{
+        margin-top: 1.5rem;
+    }
+
+}

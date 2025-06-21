@@ -1,0 +1,38 @@
+<div class="modal-header">
+    <h4>Vendor Info</h4>
+    <button class="btn-skelton modal-close-btn" mat-dialog-close>✖</button>
+</div>
+<div class="modal-body" *ngIf="vendorInfo">
+    <div class="form-group">
+        <label><b>Company Name</b></label>
+        <label>{{selectedVendor?.vendorName}}</label>
+    </div>
+    <div class="form-group">
+        <label><b>EmailId</b></label>
+        <label>{{vendorInfo.email}}</label>
+    </div>
+    <div class="form-group">
+        <label><b>Category</b></label>
+        <label>{{vendorInfo.category}}</label>
+    </div>
+    <div class="form-group">
+        <label><b>Sub Category</b></label>
+        <label>{{vendorInfo.subCategory}}</label>
+    </div>
+    <div class="form-group">
+        <label><b>Bussiness Age</b></label>
+        <label>{{vendorInfo.bussinessAge ? vendorInfo.bussinessAge: '-'}}</label>
+    </div>
+    <div class="form-group">
+        <label><b> Phone Number</b></label>
+        <label>{{vendorInfo.organizationPhonenumber}}</label>
+    </div>
+
+    <div class="form-group">
+        <label><b>Vendor Class</b></label>
+        <label>{{vendorInfo.vendorClass}}</label>
+    </div>
+</div>
+<div *ngIf="!vendorInfo">
+    No Details Found
+</div>

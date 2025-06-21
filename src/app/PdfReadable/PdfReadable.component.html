@@ -1,0 +1,237 @@
+<div class="file-upload-screen">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12" style="background: #f8f8ff;
+            box-shadow: 4px 4px 4px #a3a8ce8f;
+            margin-bottom: 12px;">
+                <h1 style="font-size: 2.5rem !important;
+                font-weight: 600;
+                color: #007ad9;">Adnoc - Safety Data Sheets Upload</h1>
+            </div>
+            <div class="col-2" style="    height: 110vh;
+            box-shadow: 7px 0px 8px #a3a8ce3d;
+            margin-top: -9px;
+            padding-left: 0;
+            padding: 0;">
+               <ul class="left-menu-nav">
+                <li>Upload SDS</li>
+                <li>Approve SDS</li>
+               </ul>
+            </div>
+            <div class="col-10">
+                <div class="container">
+                    <div class="row">
+
+                        <div class="col-12" style="padding: 0;">
+                            <div class="  input-sec">
+                                <div class="row" style="    align-items: center;">
+                                    <div class="col-2">
+                                        <h5>File Upload </h5>
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="form-group  ">
+                                            <div class="fileUploadCls" fileDragDrop (files)="uploadBOQFile($event)"
+                                                (click)="fileInput1.click()" id="d_commentFile">
+                                                <input type="file" (click)="fileInput1.value = null" #fileInput1 [(ngModel)]="fileData"
+                                                    (change)="uploadBOQFile($event)" hidden class="form-control" id="i_commentFile" />
+                                            </div>
+                                            <div class="fileInfoCls">
+                                                <i class="fa fa-info-circle"></i> File Validation : <span style="color: #000;">
+                                                    File should be (.pdf) document
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-2  ">
+                                        <button class="btn btn-blue " type="button" [disabled]="!boqFile"
+                                            (click)="onUploadFile()">Upload</button>
+                                    </div>
+                                    <div class="col-12 " *ngIf="boqFile" style="margin-top: 5px;   font-size: 11px;">
+                                        <span class="choosenFileCls">File Chosen : <span>
+                                                <img class="export-excel-icon" src="assets/images/file.svg" width="30"
+                                                    height="30" />
+                                                {{boqFile?.fileName}}</span>
+                                            <span class="removeIcon" (click)="removeFile()" title="Remove File"><i
+                                                    class="fa fa-times-circle" aria-hidden="true"></i> Remove</span>
+                                        </span>
+                                    </div>
+
+                                </div>
+                                <!-- <div class="col-2">
+                                    <label class="pull-right" style="font-weight: 700;">Upload Your PDF</label>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group row">
+                                        <div class="fileUploadCls" fileDragDrop (files)="uploadBOQFile($event)" (click)="fileInput1.click()"
+                                        id="d_commentFile">
+                                        <input type="file" (click)="fileInput1.value = null" #fileInput1 [(ngModel)]="fileData"
+                                            (change)="uploadBOQFile($event)" hidden class="form-control" id="i_commentFile" />
+                                        </div>
+                                        <div class="fileInfoCls">
+                                        <i class="fa fa-info-circle"></i> File Validation : <span style="color: #000;">
+                                            File should be either (.xls/.xlsx) document
+                                        </span>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-8  mt-2" *ngIf="boqFile" style="margin-top: 5px;   font-size: 11px;">
+                                        <span class="choosenFileCls">File Chosen : <span>
+                                            <img   class="export-excel-icon" src="assets/images/export-excel.png" width="30" height="30"   />
+                                            {{boqFile?.fileName}}</span>
+                                            <span class="removeIcon" (click)="removeFile()" title="Remove File"><i class="fa fa-times-circle"
+                                                aria-hidden="true"></i> Remove</span>
+                                        </span>
+                                </div>
+                                <div class="col-4 mt-2" [ngClass]="{'col-12': !boqFile, 'col-4':boqFile}" style="display: flex;align-items: center;flex-direction: row-reverse;">
+                                    <button class="btn btn-blue " type="button">Upload</button>
+                                </div>
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-primary"  [disabled]="!boqFile" style="width: 150px;" (click)="onUploadFile()">Upload</button>
+                                </div> -->
+
+                            </div>
+                        </div>
+
+                        <div class="col-12" *ngIf="boqDataList" style="background: #007ad91a;
+                        margin-top: 12px;">
+                            <div class="row">
+                                <div class="col-12">
+                                   <div class="row">
+                                    <div class="col-6 pull-left mt-3 mb-1">
+                                        <h5 class="bold-text">Digital Version</h5>
+                                    </div>
+                                    <div class="col-6 pull-right mt-3 mb-1">
+
+                                        <div class="btn-sec cursor" *ngIf="!isToggleEditIcon" (click)="onEditSection( )">
+                                              <img src="/assets/images/new/edit-data.png"  width="20" height="20"
+                                            title="Edit Details" />Edit</div>
+                                        <div class="btn-sec cursor"  *ngIf="isToggleEditIcon" (click)="onEditSection( )"   >
+                                            <img src="/assets/images/new/view-doc.png"  width="20" height="20"
+                                            title="Save Changes" />Save</div>
+
+                                    </div>
+                                   </div>
+                                </div>
+                                <div class="col-12 " style="background: #fff;
+                                padding: 10px;
+                                margin: 8px auto;">
+                                    <div class="row mb-3">
+                                        <div class="col-2"><label class="semi-cls bold-text">Product Name &nbsp;&nbsp;&nbsp; :</label></div>
+                                        <div class="col-6  " style="    display: flex;
+                                        align-items: center;">
+                                            <span    *ngIf="!isToggleEditIcon && boqDataList['General Information'] ">{{boqDataList['General Information']['Product']}}  </span>
+                                             <input  *ngIf="isToggleEditIcon && boqDataList['General Information'] "   class="form-control" [(ngModel)]="boqDataList['General Information']['Product']" />
+                                        </div>
+                                    </div>
+                                    <div class="row ">
+                                        <div class="col-2"><label  class="semi-cls bold-text">Product Version  &nbsp;:</label></div>
+                                        <div class="col-6 "style="    display: flex;
+                                        align-items: center;">
+                                            <span    *ngIf="!isToggleEditIcon && boqDataList['General Information'] ">{{boqDataList['General Information']['Version']}}  </span>
+                                             <input  *ngIf="isToggleEditIcon && boqDataList['General Information'] "   class="form-control" [(ngModel)]="boqDataList['General Information']['Version']" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <p-accordion>
+                                        <ng-container *ngFor="let sec of boqDataList.sectionsList;index as sec_index">
+                                            <p-accordionTab [header]="sec.sectionTitle" [selected]="true">
+
+                                                <h4  class="bold-text">{{sec.sectionTitle}}  </h4>
+                                                <!-- <div class="col-12 form-group mt-3" *ngIf="isToggleEditIcon">
+                                                    <input class="form-control" [(ngModel)]="boqDataList.sectionsList[sec_index].sectionTitle" />
+                                                </div> -->
+                                                <ng-container *ngFor="let dt of sec.dataList;index as sec_data_index">
+                                                    <!-- <ng-container  *ngTemplateOutlet="secDataTemplate; context: { $implicit: {dtList: dt, id: i }}"></ng-container> -->
+                                                    <div class="row mt-2">
+                                                        <div class="col-2 bold-text pl-5" >
+                                                            <p   >{{dt?.title}}  </p>
+                                                            <!-- <input   *ngIf="isToggleEditIcon"class="form-control" [(ngModel)]="boqDataList.sectionsList[sec_index].dataList[sec_data_index].data.title" /> -->
+                                                        </div>
+                                                        <div class="col-4"  *ngIf="!isToggleEditIcon">
+                                                            <span  > {{dt.text}}</span>
+                                                        </div>
+                                                        <div class="col-8"  *ngIf="isToggleEditIcon">
+                                                            <input  *ngIf="isToggleEditIcon && dt?.type == 'text'"   class="form-control" [(ngModel)]="boqDataList.sectionsList[sec_index].dataList[sec_data_index].text" />
+                                                            <textarea  *ngIf="isToggleEditIcon && dt?.type == 'textarea'" rows="3"   class="form-control" [(ngModel)]="boqDataList.sectionsList[sec_index].dataList[sec_data_index].text" > </textarea>
+                                                        </div>
+                                                    </div>
+                                                </ng-container>
+                                                <ng-container *ngFor="let subSec of sec.subSectionList;index as sub_sec_index">
+                                                    <!-- <ng-container  *ngTemplateOutlet="secSubSecTemplate; context: { $implicit: subSec }"></ng-container> -->
+                                                    <!-- SUB SECTION STARTS... -->
+                                                    <div class="col-12 row mt-2">
+                                                        <div class="col-12"   >
+                                                            <h5 class="bold-text">{{subSec.subSectionTitle}}</h5>
+                                                        </div>
+                                                        <!-- <div class="col-12 form-group mt-3" *ngIf="isToggleEditIcon">
+                                                            <input class="form-control" [(ngModel)]="boqDataList.sectionsList[sec_index].subSectionList[sub_sec_index].subSectionTitle" />
+                                                        </div> -->
+                                                        <div class="col-12">
+                                                            <ng-container *ngFor="let dt of subSec.dataList; index as sub_sec_data_index">
+                                                                <div class="row mt-2">
+                                                                    <div class="col-2 bold-text pl-5"  >
+                                                                        <p>{{dt?.title}}  </p>
+                                                                    </div>
+                                                                    <div class="col-4" *ngIf="!isToggleEditIcon">{{dt?.text}}</div>
+                                                                    <div class="col-8"  *ngIf="isToggleEditIcon">
+                                                                        <input  *ngIf="dt?.type == 'text'" class="form-control" [(ngModel)]="boqDataList.sectionsList[sec_index].subSectionList[sub_sec_index].dataList[sub_sec_data_index].text" />
+                                                                        <textarea  *ngIf="dt?.type == 'textarea'" class="form-control" [(ngModel)]="boqDataList.sectionsList[sec_index].subSectionList[sub_sec_index].dataList[sub_sec_data_index].text"  rows="3"></textarea>
+                                                                    </div>
+                                                                </div>
+                                                            </ng-container>
+                                                        </div>
+                                                    </div>
+                                                </ng-container>
+                                            </p-accordionTab>
+                                        </ng-container>
+
+
+
+                                    </p-accordion>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<ng-template #secDataTemplate let-data>
+    <div class="row mt-2">
+        <div class="col-2 bold-text pl-5" *ngIf="data?.dtList?.data?.title">
+            <p>{{data?.dtList?.data?.title}} {{data?.id}}</p>
+        </div>
+        <div class="col-4">{{data?.dtList.data.text}}</div>
+    </div>
+</ng-template>
+
+<ng-template #secSubSecTemplate let-data>
+    <div class="row mt-2">
+        <div class="col-12">
+            <h5 class="bold-text">{{data.subSectionTitle}}</h5>
+        </div>
+        <div class="col-12">
+            <ng-container *ngFor="let dt of data.dataList; index as i">
+                <!-- <ng-container  *ngTemplateOutlet="secDataTemplate; context: { $implicit: {dtList: dt, id: i }}"></ng-container> -->
+                <div class="row mt-2">
+                    <div class="col-2 bold-text pl-5" *ngIf="dt.data?.title">
+                        <p>{{dt?.data?.title}} {{data?.id}}</p>
+                    </div>
+                    <div class="col-4">{{dt.data.text}}</div>
+                </div>
+            </ng-container>
+        </div>
+        <!-- <div class="col-2">
+            <p>{{data?.data.title}}</p>
+        </div>
+        <div class="col-4">{{data?.data.text}}</div> -->
+    </div>
+</ng-template>

@@ -1,0 +1,234 @@
+<div class="modal-header">
+    <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+    <div class="col-6">Create Sub Category</div>
+</div>
+<div class="modal-body">
+    <form [formGroup]="subCategoryForm" class="row">
+        <div class="col-12 row" style="border-bottom: 2px solid #dcc4ba8f;; margin-bottom: 15px;">
+            <div class="col-5 text-right">
+                <label>Type</label>
+            </div>
+            <div class="col-7">
+                <mat-radio-group formControlName="type">
+                    <mat-radio-button class="example-margin" [value]="'hsn'">Product </mat-radio-button>
+                    <mat-radio-button class="example-margin" [value]="'sac'">Service</mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </div>
+        <div class="col-12 row" *ngIf="type.value == 'hsn'">
+            <div class="col-12 row">
+                <div class="col-3 form-group">
+                    <label class="control-label required" style="font-size: medium; font-weight: bolder;">Segment</label>
+                    <p-autoComplete [disabled]="!productCodeCheck" formControlName="segment" showEmptyMessage="true" styleClass="form-control" inputStyleClass="p-auto-cls" [suggestions]="filtered_segmentList" panelInputClass="p-auto-panel-cls" [minLength]="1" (onSelect)="onSelect($event, 'segment')" (completeMethod)="filterAutoCompleteData($event, 'segmentList','filtered_segmentList', 'value', false)"
+                        field="value" [dropdown]="true" [emptyMessage]="'No data available'">
+                        <ng-template let-segment pTemplate="item">
+                            <div class="segment-item">
+                                <div>{{segment.value}}</div>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                </div>
+                <div class="col-3 form-group">
+                    <label class="control-label" style="font-size: medium; font-weight: bolder;">Family</label>
+                    <p-autoComplete formControlName="family" showEmptyMessage="true" styleClass="form-control" inputStyleClass="p-auto-cls" [suggestions]="filtered_familyList" panelInputClass="p-auto-panel-cls" [minLength]="1" (onSelect)="onSelect($event, 'family')" (completeMethod)="filterAutoCompleteData($event, 'familyList','filtered_familyList', 'value', false)"
+                        field="value" [dropdown]="true" [emptyMessage]="'No data available'">
+                        <ng-template let-family pTemplate="item">
+                            <div class="family-item">
+                                <div>{{family.value}}</div>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                </div>
+                <div class="col-3 form-group">
+                    <label class="control-label" style="font-size: medium; font-weight: bolder;">Class</label>
+                    <p-autoComplete formControlName="categoryClass" showEmptyMessage="true" styleClass="form-control" inputStyleClass="p-auto-cls" [suggestions]="filtered_categoryClassList" panelInputClass="p-auto-panel-cls" [minLength]="1" (onSelect)="onSelect($event, 'categoryClass')"
+                        (completeMethod)="filterAutoCompleteData($event, 'categoryClassList','filtered_categoryClassList', 'value', false)" field="value" [dropdown]="true" [emptyMessage]="'No data available'">
+                        <ng-template let-categoryClass pTemplate="item">
+                            <div class="categoryClass-item">
+                                <div>{{categoryClass.value}}</div>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                </div>
+                <div class="col-3 form-group">
+                    <label class="control-label" style="font-size: medium; font-weight: bolder;">Commodity</label>
+                    <p-autoComplete formControlName="commodity" showEmptyMessage="true" [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls" [suggestions]="filtered_commodityList" panelInputClass="p-auto-panel-cls" [minLength]="1" (onSelect)="onSelect($event, 'commodity')"
+                        (completeMethod)="filterAutoCompleteData($event, 'commodityList','filtered_commodityList', 'value', false)" field="value" [dropdown]="true">
+                        <ng-template let-commodity pTemplate="item">
+                            <div class="commodity-item">
+                                <div>{{commodity.value}}</div>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                </div>
+            </div>
+            <div class="col-12 row">
+                <div class="col-3 form-group">
+                    <label class="control-label required" style="font-size: medium; font-weight: bolder;">Segment Name</label>
+                    <p-autoComplete [disabled]="!productNameCheck" formControlName="segmentName" showEmptyMessage="true" [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls" [suggestions]="filtered_segmentNameList" panelInputClass="p-auto-panel-cls" [minLength]="1" (onSelect)="onSelect($event, 'segmentName')"
+                        (completeMethod)="filterAutoCompleteData($event, 'segmentNameList','filtered_segmentNameList', 'value', false)" field="value" [dropdown]="true">
+                        <ng-template let-segmentName pTemplate="item">
+                            <div class="segment-item">
+                                <div>{{segmentName.value}}</div>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                </div>
+                <div class="col-3 form-group">
+                    <label class="control-label" style="font-size: medium; font-weight: bolder;">Family Name</label>
+                    <p-autoComplete formControlName="familyName" showEmptyMessage="true" [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls" [suggestions]="filtered_familyNameList" panelInputClass="p-auto-panel-cls" [minLength]="1" (onSelect)="onSelect($event, 'familyName')"
+                        (completeMethod)="filterAutoCompleteData($event, 'familyNameList','filtered_familyNameList', 'value', false)" field="value" [dropdown]="true">
+                        <ng-template let-familyName pTemplate="item">
+                            <div class="family-item">
+                                <div>{{familyName.value}}</div>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                </div>
+                <div class="col-3 form-group">
+                    <label class="control-label" style="font-size: medium; font-weight: bolder;">Class Name</label>
+                    <p-autoComplete formControlName="className" showEmptyMessage="true" [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls" [suggestions]="filtered_categoryClassNameList" panelInputClass="p-auto-panel-cls" [minLength]="1"
+                        (onSelect)="onSelect($event, 'className')" (completeMethod)="filterAutoCompleteData($event, 'categoryClassNameList','filtered_categoryClassNameList', 'value', false)" field="value" [dropdown]="true">
+                        <ng-template let-className pTemplate="item">
+                            <div class="categoryClass-item">
+                                <div>{{className.value}}</div>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                </div>
+                <div class="col-3 form-group">
+                    <label class="control-label" style="font-size: medium; font-weight: bolder;">Commodity Name</label>
+                    <p-autoComplete formControlName="commodityName" showEmptyMessage="true" [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls" [suggestions]="filtered_commodityNameList" panelInputClass="p-auto-panel-cls" [minLength]="1" (onSelect)="onSelect($event, 'commodityName')"
+                        (completeMethod)="filterAutoCompleteData($event, 'commodityNameList','filtered_commodityNameList', 'value', false)" field="value" [dropdown]="true">
+                        <ng-template let-commodityName pTemplate="item">
+                            <div class="commodity-item">
+                                <div>{{commodityName.value}}</div>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 row" *ngIf="type.value == 'sac'">
+            <div class="col-12 row">
+                <div class="col-3 form-group">
+                    <label class="control-label required" style="font-size: medium; font-weight: bolder;">Section Code</label>
+                    <p-autoComplete [disabled]="!serviceCodeCheck" formControlName="sectionCode" showEmptyMessage="true" [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls" [suggestions]="filtered_sectionCodeList" panelInputClass="p-auto-panel-cls" [minLength]="1"
+                        (onSelect)="onSelect($event, 'sectionCode')" (completeMethod)="filterAutoCompleteData($event, 'sectionCodeList','filtered_sectionCodeList', 'value', false)" field="value" [dropdown]="true">
+                        <ng-template let-sectionCode pTemplate="item">
+                            <div class="sectionCode-item">
+                                <div>{{sectionCode.value}}</div>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                </div>
+                <div class="col-3 form-group">
+                    <label class="control-label" style="font-size: medium; font-weight: bolder;">Heading Code</label>
+                    <p-autoComplete formControlName="headingCode" showEmptyMessage="true" [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls" [suggestions]="filtered_headingCodeList" panelInputClass="p-auto-panel-cls" [minLength]="1"
+                        (onSelect)="onSelect($event, 'headingCode')" (completeMethod)="filterAutoCompleteData($event, 'headingCodeList','filtered_headingCodeList', 'value', false)" field="value" [dropdown]="true">
+                        <ng-template let-headingCode pTemplate="item">
+                            <div class="headingCode-item">
+                                <div>{{headingCode.value}}</div>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                </div>
+                <div class="col-3 form-group">
+                    <label class="control-label" style="font-size: medium; font-weight: bolder;">Group Code</label>
+                    <p-autoComplete formControlName="groupCode" showEmptyMessage="true" [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls" [suggestions]="filtered_groupCodeList" panelInputClass="p-auto-panel-cls" [minLength]="1" (onSelect)="onSelect($event, 'groupCode')"
+                        (completeMethod)="filterAutoCompleteData($event, 'groupCodeList','filtered_groupCodeList', 'value', false)" field="value" [dropdown]="true">
+                        <ng-template let-groupCode pTemplate="item">
+                            <div class="groupCode-item">
+                                <div>{{groupCode.value}}</div>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                </div>
+                <div class="col-3 form-group">
+                    <label class="control-label required" style="font-size: medium; font-weight: bolder;">Sac Code</label>
+                    <p-autoComplete formControlName="sacCode" showEmptyMessage="true" [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls" [suggestions]="filtered_sacCodeList" panelInputClass="p-auto-panel-cls" [minLength]="1" (onSelect)="onSelect($event, 'sacCode')"
+                        (completeMethod)="filterAutoCompleteData($event, 'sacCodeList','filtered_sacCodeList', 'value', false)" field="value" [dropdown]="true">
+                        <ng-template let-sacCode pTemplate="item">
+                            <div class="sacCode-item">
+                                <div>{{sacCode.value}}</div>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                </div>
+            </div>
+            <div class="col-12 row">
+                <div class="col-3 form-group">
+                    <label class="control-label required" style="font-size: medium; font-weight: bolder;">Section Name</label>
+                    <p-autoComplete [disabled]="!serviceNameCheck" formControlName="section" showEmptyMessage="true" [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls" [suggestions]="filtered_sectionNameList" panelInputClass="p-auto-panel-cls" [minLength]="1"
+                        (onSelect)="onSelect($event, 'section')" (completeMethod)="filterAutoCompleteData($event, 'sectionNameList','filtered_sectionNameList', 'value', false)" field="value" [dropdown]="true">
+                        <ng-template let-section pTemplate="item">
+                            <div class="sectionCode-item">
+                                <div>{{section.value}}</div>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                </div>
+                <div class="col-3 form-group">
+                    <label class="control-label" style="font-size: medium; font-weight: bolder;">Heading Name</label>
+                    <p-autoComplete formControlName="heading" showEmptyMessage="true" [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls" [suggestions]="filtered_headingNameList" panelInputClass="p-auto-panel-cls" [minLength]="1"
+                        (onSelect)="onSelect($event, 'heading')" (completeMethod)="filterAutoCompleteData($event, 'headingNameList','filtered_headingNameList', 'value', false)" field="value" [dropdown]="true">
+                        <ng-template let-heading pTemplate="item">
+                            <div class="headingCode-item">
+                                <div>{{heading.value}}</div>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                </div>
+                <div class="col-3 form-group">
+                    <label class="control-label" style="font-size: medium; font-weight: bolder;">Group Name</label>
+                    <p-autoComplete formControlName="groupdescription" showEmptyMessage="true" [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls" [suggestions]="filtered_groupNameList" panelInputClass="p-auto-panel-cls" [minLength]="1" (onSelect)="onSelect($event, 'groupdescription')"
+                        (completeMethod)="filterAutoCompleteData($event, 'groupNameList','filtered_groupNameList', 'value', false)" field="value" [dropdown]="true">
+                        <ng-template let-groupdescription pTemplate="item">
+                            <div class="groupCode-item">
+                                <div>{{groupdescription.value}}</div>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                </div>
+                <div class="col-3 form-group">
+                    <label class="control-label required" style="font-size: medium; font-weight: bolder;">Sac Name</label>
+                    <p-autoComplete formControlName="sac" showEmptyMessage="true" [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls" [suggestions]="filtered_sacNameList" panelInputClass="p-auto-panel-cls" [minLength]="1" (onSelect)="onSelect($event, 'sac')"
+                        (completeMethod)="filterAutoCompleteData($event, 'sacNameList','filtered_sacNameList', 'value', false)" field="value" [dropdown]="true">
+                        <ng-template let-sac pTemplate="item">
+                            <div class="sacCode-item">
+                                <div>{{sac.value}}</div>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                </div>
+            </div>
+        </div>
+        <div class="row col-12">
+            <div class="col-12 form-group" *ngIf="commodity.value?.value || sacCode.value?.value || commodityName.value?.value || sac.value?.value">
+                <label class="control-label required" style="font-size: medium; font-weight: bolder;">Category Name</label>
+                <textarea class="form-control" formControlName="categoryName"> </textarea>
+            </div>
+
+            <div class="col-12 row" *ngIf="(type.value == 'sac' && (sacCode.value?.value || sac.value?.value) ) || (type.value == 'hsn' && hsncodeobj?.code)">
+                <div class="col-6 form-group">
+                    <label class="control-label required" style="font-size: medium; font-weight: bolder;">Sub Category Name</label>
+                    <p-autoComplete formControlName="subCategoryName" showEmptyMessage="true" [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls" [suggestions]="filtered_subCategoryList" panelInputClass="p-auto-panel-cls" [minLength]="1"
+                        (onSelect)="onSelect($event, 'subCategoryName')" (completeMethod)="filterAutoCompleteData($event, 'subCategoryList','filtered_subCategoryList', 'label', true)" field="label" [dropdown]="true">
+                        <ng-template let-sub pTemplate="item">
+                            <div class="sub-item">
+                                <div>{{sub.label}}</div>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                </div>
+                <div class="col-6" *ngIf="!!subCategoryName.value?.value">
+                    <label class="control-label required" style="font-size: medium; font-weight: bolder;">Sub Category Number</label>
+                    <input class="form-control" formControlName="subCategoryNumber" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<mat-dialog-actions align="end" *ngIf="subCategoryName.value && (!subCategoryNumber.value || filtered_subCategoryList.length <= 0)">
+    <button class="btn btn-green"   color="primary" type="button" (click)="createSubCategory()">Submit </button>
+</mat-dialog-actions>

@@ -1,0 +1,22 @@
+[
+        {
+            "vendorName": "Kia",
+            "city": "vijayawada",
+            "hsnCode": 34566
+        },
+        {
+            "vendorName": "Maruthi",
+            "city": "Hyderabad",
+            "hsnCode": 12345
+        },
+        {
+            "vendorName": "Toyoto",
+            "city": "kakinada",
+            "hsnCode": 124434
+        },
+        {
+            "vendorName": "Honda",
+            "city": "Vizag",
+            "hsnCode": 55234
+        }
+]

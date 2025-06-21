@@ -1,0 +1,289 @@
+<div class="modal-header">
+  <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+  <div class="col-6 pad-nill">
+    <h5>Vendor Classification</h5>
+  </div>
+</div>
+<div class="modal-body">
+  <!-- grid for products -->
+  <div class="col-12 mb-2">
+    <p-table #productTable [columns]="vendorProductHeaders" [value]="productsData" sortMode="multiple"
+      [paginator]="true" [rows]="pageRecordSize" id="productTable" [rowsPerPageOptions]="pageOptions"
+      [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData" [scrollable]="true">
+      <!-- <ng-template pTemplate="caption">
+        <div class="searchPanel col-md-12 row">
+          <div class="col-md-4 main-head">
+            <h6>Products</h6>
+          </div>
+          <div class="col-md-8">
+            <input type="text" pInputText size="50" placeholder="Search.."
+              (input)="productTable.filterGlobal($event.target.value, 'contains')" style="width:auto; float: right;" />
+          </div>
+        </div>
+      </ng-template> -->
+      <ng-template pTemplate="caption">
+        <div class="table-search">
+          <div class="row">
+            <div class="col-sm-6">
+              <h4 style="float:left;">Products</h4>
+            </div>
+            <div class="col-sm-6">
+              <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                (input)="productTable.filterGlobal($event.target.value, 'contains')" style="float:right;" />
+            </div>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th style="width: 3em">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th [style.width]="col.width" *ngFor="let col of columns" [pSortableColumn]="col.field">
+            {{col.header}}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr [pSelectableRow]="rowData">
+          <td style="width: 3em">
+            <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+          </td>
+          <td [style.width]="col.width" *ngFor="let col of columns">
+            {{rowData[col.field]}}
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+          <td [attr.colspan]="5" style="text-align:center;">
+            No Records Found.
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="paginatorleft">
+        <div  *ngIf="productTable._totalRecords > 0">
+          <b>Showing {{productTable.first+1}} to {{productTable.first+productTable.rows > productTable.totalRecords?productTable.totalRecords: productTable.first+productTable.rows}} of {{productTable.totalRecords}}</b>
+          <!-- <app-page-info [totalRecords]="productsData?.length" [pageData]="paginatoryDetails"></app-page-info> -->
+        </div>
+      </ng-template>
+    </p-table>
+  </div>
+  <!-- grid for products -->
+  <div class="col-12">
+    <p-table #serviceTable [columns]="vendorServiceHeaders" [value]="servicesData" sortMode="multiple"
+      [paginator]="true" [rows]="pageRecordSize1" id="serviceTable" [rowsPerPageOptions]="pageOptions1"
+      [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData" [scrollable]="true">
+      <ng-template pTemplate="caption">
+        <div class="table-search">
+          <div class="row">
+            <div class="col-sm-6">
+              <h4 style="float:left;">Services</h4>
+            </div>
+            <div class="col-sm-6">
+              <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                (input)="serviceTable.filterGlobal($event.target.value, 'contains')" style="float:right;" />
+            </div>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th style="width: 3em">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th [style.width]="col.width" *ngFor="let col of columns" [pSortableColumn]="col.field">
+            {{col.header}}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr [pSelectableRow]="rowData">
+          <td style="width: 3em">
+            <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+          </td>
+          <td [style.width]="col.width" *ngFor="let col of columns">
+            {{rowData[col.field]}}
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+          <td [attr.colspan]="5" style="text-align:center;">
+            No Records Found.
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="paginatorleft">
+        <div  *ngIf="serviceTable._totalRecords > 0">
+          <b>Showing {{serviceTable.first+1}} to {{serviceTable.first+serviceTable.rows > serviceTable.totalRecords?serviceTable.totalRecords: serviceTable.first+serviceTable.rows}} of {{serviceTable.totalRecords}}</b>
+          <!-- <app-page-info [totalRecords]="servicesData?.length" [pageData]="paginatoryDetails"></app-page-info> -->
+        </div>
+      </ng-template>
+    </p-table>
+  </div>
+  <div class="col-12 pad-nill">
+    <form #approvalForm="ngForm" (ngSubmit)="onSubmit(approvalForm,selectedProductor_Service)">
+      <div class="col-md-12 row">
+        <div class="col-md-4 form-group">
+          <label>Vendor Type</label>
+          <select name="vendorType" class="form-control" [(ngModel)]="vendorType" required>
+            <option selected disabled [ngValue]="undefined">Select</option>
+            <option *ngFor="let opt of vendorTypes" [value]="opt.name">{{opt.name}}</option>
+          </select>
+        </div>
+        <div class="col-md-4 form-group" *ngIf="approvalForm.value.vendorType == 'Others'">
+          <label>Others</label>
+          <input type="text" name="others" class="form-control" [(ngModel)]="others">
+        </div>
+        <div class="col-md-4 form-group">
+          <label for="eagerNess">Eagerness</label>
+          <select name="eagerNess" class="form-control" [(ngModel)]="eagerNess" required>
+            <option selected disabled [ngValue]="undefined">Select</option>
+            <option *ngFor="let opt of eagerNessTypes" [value]="opt">{{opt}}</option>
+          </select>
+        </div>
+        <div class="col-md-12 row" *ngFor="let approval of approvalList; let i = index;">
+          <div class="col-md-6 form-group">
+            <label for="priority" style="font-size: medium; font-weight: bolder;" class="form-label">Select
+              your Product/Service :</label>
+
+            <select (change)="selectChangeHandler($event, i, classificationList[i].typeName)"
+              name="ProductorService_{{i}}" id="ProductorService_{{i}}" required #ProductorService_{{i}}="ngModel"
+              [(ngModel)]="classificationList[i].typeName" class="form-control">
+              <option selected disabled [ngValue]="null">Select your Product/Service
+              </option>
+              <option *ngFor="let selectedvalue of selectProductorService" [value]="selectedvalue">
+                {{selectedvalue}}</option>
+            </select>
+          </div>
+          <div class="col-md-4 df">
+            <div class="col-md-12" *ngIf="i == approvalList.length-1">
+                <button type="button" class="btn btn-success btn-green"
+                  (click)="add(i, classificationList[i].typeName)"><i class="fa fa-plus"></i> Add</button>
+            </div>
+            <div class="col-md-12" *ngIf="i < approvalList.length -1">
+                <button type="button" class="btn btn-danger btn-red"
+                  (click)="remove(i)">✖ Remove</button>
+            </div>
+          </div>
+          <div class="col-md-12 row" *ngIf="classificationList[i].typeName == 'Product'">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="control-label" style="font-size: medium; font-weight: bolder;">Segment</label>
+                <ngx-select-dropdown name="segmentName_{{i}}" id="category_segment_{{i}}"
+                  (change)="onSegmentChange($event.value,i)" [multiple]="false"
+                  [(ngModel)]="classificationList[i].segmentName" [config]="dropDownConfig"
+                  [options]="approval.segmentNames">
+                </ngx-select-dropdown>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="control-label" style="font-size: medium;font-weight: bolder;">Family
+                </label>
+                <ngx-select-dropdown name="familyName_{{i}}" id="familyName_{{i}}"
+                  (change)="onFamilyChange($event.value, classificationList[i].segmentName,i)" [multiple]="false"
+                  [(ngModel)]="classificationList[i].familyName" [config]="dropDownConfig"
+                  [options]="approval.familyNames" [disabled]="approval.familyNames.length == 0">
+                </ngx-select-dropdown>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="control-label" style="font-size: medium;font-weight: bolder;">Class</label>
+                <ngx-select-dropdown name="className_{{i}}" id="className_{{i}}"
+                  (change)="onClassChange($event.value, classificationList[i].segmentName, classificationList[i].familyName,i)"
+                  [multiple]="false" [(ngModel)]="classificationList[i].className" [config]="dropDownConfig"
+                  [options]="approval.classNames" [disabled]="approval.classNames.length == 0">
+                </ngx-select-dropdown>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="control-label" style="font-size: medium;font-weight: bolder;">Commodity</label>
+                <ngx-select-dropdown name="commodityName_{{i}}" id="commodityName_{{i}}" [multiple]="false"
+                  (change)="onCommodityChange($event.value, classificationList[i].segmentName, classificationList[i].familyName, classificationList[i].className ,i)"
+                  [(ngModel)]="classificationList[i].commodityName" [config]="dropDownConfig"
+                  [options]="approval.commodityNames" [disabled]="approval.commodityNames.length == 0">
+                </ngx-select-dropdown>
+              </div>
+            </div>
+          </div>
+          <!-- for service-->
+          <div class="col-md-12 row" *ngIf="classificationList[i].typeName == 'Service'">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="control-label" style="font-size: medium; font-weight: bolder;">Section</label>
+                <ngx-select-dropdown name="categoryService_section_{{i}}" id="categoryService_section_{{i}}"
+                  (change)="onSectionChange($event.value,i)" [multiple]="false"
+                  [(ngModel)]="classificationList[i].section" [config]="dropDownConfig" [options]="approval.sections">
+                </ngx-select-dropdown>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="control-label" style="font-size: medium;font-weight: bolder;">Heading</label>
+                <ngx-select-dropdown name="heading_{{i}}" id="headings_{{i}}"
+                  (change)="onHeadingChange($event.value, classificationList[i].section,i)" [multiple]="false"
+                  [(ngModel)]="classificationList[i].heading" [config]="dropDownConfig" [options]="approval.headings"
+                  [disabled]="approval.headings.length == 0">
+                </ngx-select-dropdown>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="control-label" style="font-size: medium;font-weight: bolder;">Group
+                  Description</label>
+                <ngx-select-dropdown name="groupdescription_{{i}}" id="groupdescription_{{i}}"
+                  (change)="onGroupDescriptionChange($event.value, classificationList[i].section, classificationList[i].heading,i)"
+                  [multiple]="false" [(ngModel)]="classificationList[i].groupdescription" [config]="dropDownConfig"
+                  [options]="approval.groupdescriptions" [disabled]="approval.groupdescriptions.length == 0">
+                </ngx-select-dropdown>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="control-label" style="font-size: medium;font-weight: bolder;">Sac</label>
+                <ngx-select-dropdown name="sac_{{i}}" id="sacs_{{i}}" [multiple]="false"
+                  (change)="onSacChange($event.value, classificationList[i].section, classificationList[i].heading,classificationList[i].groupdescription,i)"
+                  [(ngModel)]="classificationList[i].sac" [config]="dropDownConfig" [options]="approval.sacs"
+                  [disabled]="approval.sacs.length == 0">
+                </ngx-select-dropdown>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 row" *ngIf="classificationList[i].typeName == 'Product'">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="priority" class="control-label col-sm-5">HSN Code : </label>
+                <div class="col-sm-12 pad-nill">
+                  <input [disabled]="hsnCodeed" class="form-control" name="hsnCode_{{i}}" id="hsnCode_{{i}}"
+                    (blur)="onHsnCoded()" [(ngModel)]="classificationList[i].hsnCode">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 row" *ngIf="classificationList[i].typeName == 'Service'">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="priority" class="control-label col-sm-5">SAC Code : </label>
+                  <div class="col-sm-12 pad-nill">
+                    <input [disabled]="sacCodeed" class="form-control" name="sacCode_{{i}}" id="sacCode_{{i}}"
+                      (blur)="onSacCoded()" [(ngModel)]="classificationList[i].sacCode">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <mat-dialog-actions align="end">
+        <button type="button" class="btn btn-secondary btn-red" (click)="resetPanel()">Reset</button>
+        <button type="submit" class="btn btn-success btn-green">Submit</button>
+        <!-- <button (click)="closeDialog()" class="btn btn-danger" mat-dialog-close>Cancel</button> -->
+      </mat-dialog-actions>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,223 @@
+<!-- <form name="activeTimeForm" #auctionForm="ngForm" (ngSubmit)="createTime(activeTimeForm)">
+</form> -->
+<div class="col-12 pad-nill">
+  <div class="row">
+    <div class="col-3 form-group">
+      <label>Select Type</label>
+      <select class="form-control" name="categoryType" [(ngModel)]="selectedType" (change)="typeSelect()">
+        <option *ngFor="let item of typeList">{{item}}</option>
+        <option value="undefined" selected disabled hidden>Select</option>
+      </select>
+    </div>
+    <div class="col-3 form-group input-text-fields-area">
+      <label>Start Time*</label>
+        <!-- <input class="form-control"
+               placeholder="Start Time"
+               [(ngModel)]="startTime"
+               [owlDateTimeTrigger]="dt1" [owlDateTime]="dt1">
+        <owl-date-time [pickerType]="'timer'" #dt1></owl-date-time> -->
+    </div>
+    <div class="col-3 form-group input-text-fields-area">
+      <label>End Time*</label>
+        <!-- <input class="form-control"
+               placeholder="End Time"
+               [(ngModel)]="endTime"
+               [owlDateTimeTrigger]="dt2" [owlDateTime]="dt2">
+        <owl-date-time [pickerType]="'timer'" #dt2></owl-date-time> -->
+    </div>
+    <div class="col-3 form-group input-text-fields-area" *ngIf = "selectedType && selectedType != 'Daily'">
+      <label>Day*</label>
+      <select name="day" [(ngModel)]="day" id="i_day" class="form-control">
+        <option selected disabled [ngValue]="undefined">Select</option>
+        <option *ngFor="let d of daysList" [value]="d">{{d}}</option>
+      </select>
+    </div>
+    <div class="col-d-12">
+      <small *ngIf="!requiredCheck" class="text-danger" uppercase>
+        All marked <b style="color: red;">*</b> fields are mandatory.</small>
+    </div>
+  </div>
+</div>
+<div class="cust-card" style="padding: 10px;">
+  <form class="row" [formGroup]="searchForm">
+    <!-- <div class="col-12 row" style="margin-bottom: 15px;">
+        <div class="col-12">
+            <mat-radio-group formControlName="type">
+                <mat-radio-button class="example-margin" [value]="'hsn'">Product </mat-radio-button>
+                <mat-radio-button class="example-margin" [value]="'sac'">Service</mat-radio-button>
+            </mat-radio-group>
+        </div>
+    </div> -->
+    <div class="col-12">
+        <div class="row">
+            <!-- <div class="col-3">
+                <label>Orgnization Name</label>
+                <input formControlName="companyName" class="form-control" placeholder="Enter Organization Name" />
+            </div>
+            <div class="col-3">
+                <label>City</label>
+                <input formControlName="city" class="form-control" placeholder="Enter City/Location" />
+            </div>
+            <div class="col-3" *ngIf="type.value == 'hsn'">
+                <label>HSN Code</label>
+                <input formControlName="hsncode" class="form-control" placeholder="Enter HSN Code" />
+            </div>
+            <div class="col-3" *ngIf="type.value == 'sac'">
+                <label>SAC Code</label>
+                <input formControlName="saccode" class="form-control" placeholder="Enter SAC Code" />
+            </div> -->
+            <div class="col-6">
+              <label>Item Code</label>
+              <input formControlName="itemCode" class="form-control" placeholder="Enter Item Code" style="width:450px" />
+            </div>
+            <div class="col-6" style="top: 28px;">
+                <button (click)="searchVendor()" class="btn btn-secondary btn-red" type="button" (click)="resetForm()" style=" float: right;"> Reset</button>
+                <button class="btn btn-primary btn-blue" (click)="searchVendor()" type="submit" style=" float: right;"><i class="fa fa-search" aria-hidden="true" ></i> Search</button>
+            </div>
+        </div>
+    </div>
+  </form>
+</div>
+      <!-- <p-table #vDt [columns]="itemHeaders" [value]="itemList" sortMode="multiple" [paginator]="true" [rows]="itemList.length" id="quoteTable" [style]="{'width': '100%'}" [paginator]="true" [rows]="pageRecordSize"
+          [(selection)]="selectedData" dataKey="id"> -->
+          <p-table #vDt dataKey="id" #ppoItemsGrid [columns]="itemHeaders" [value]="itemList"
+                sortMode="multiple" [paginator]="true" [rows]="pageRecordSize" id="quoteTable"
+                [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}" exportFilename="venRequest"
+               [scrollable]="true" >
+
+          <ng-template pTemplate="caption">
+            <div class="table-search">
+              <div class="row">
+                <div class="col-sm-6">
+                  <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                    (input)="vDt.filterGlobal($event.target.value, 'contains')" />
+                </div>
+                <div class="col-sm-6">
+                    <button type="button" *ngIf="roleName== 'VendorManager' || roleName == 'CategoryManager'" (click)="onSubmit()" type="button" class="btn btn-success btn-green">Submit</button>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="header" let-columns>
+              <tr>
+                  <!-- <th style="width: 3em">
+                      <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                  </th> -->
+                  <th style="width: 3em"></th>
+                  <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width"> {{col.header}}
+                      <p-sortIcon [field]="col.field"></p-sortIcon>
+                  </th>
+                  <th style="width: 20em" *ngIf="roleName== 'VendorManager' || roleName == 'CategoryManager' ">Actions</th>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-columns="columns"  let-expanded="expanded">
+              <tr [pSelectableRow]="rowData">
+                  <!-- <td style="width: 3em">
+                      <p-tableCheckbox [pSelectableRow]="rowData" [value]="rowData"></p-tableCheckbox>
+                  </td> -->
+                  <td style="width: 3em">
+                    <button type="button" pButton pRipple [pRowToggler]="rowData"
+                      class="grid-expand" (click)="expanded ? closeLinedVendorDetails(rowData,$event) : getLinkedVendorDetails(rowData)">
+                      <span *ngIf="expanded"><i class="fa fa-chevron-down"></i></span>
+                      <span *ngIf="!expanded"><i class="fa fa-chevron-right"></i></span>
+                    </button>
+                  </td>
+                  <td *ngFor="let col of columns" [style.width]="col.width"  [ngClass]="{'table-cell-overflow-ellipse1' : col.field == 'description' }">
+                      <span *ngIf="col.field == 'description' " [title]="rowData[col.field]">{{rowData[col.field]}}</span>
+                      <span *ngIf="col.field != 'description' ">{{rowData[col.field]}}</span>
+                  </td>
+                  <td style="width: 20em" *ngIf="roleName== 'VendorManager' || roleName == 'CategoryManager'">
+                    <span class="crud-icons actionIcons">
+                        <span class="linkCls" *ngIf="rowData['dynamicPricingEnabled'] == false || rowData['dynamicPricingEnabled'] == true"
+                            (click)="addItem($event, rowData, 'itemLevel')"> Select Item
+                        </span>
+                        <span class="linkCls" *ngIf="rowData['dynamicPricingEnabled'] == true"
+                            (click)="deactivateItem($event, rowData)">|| Deactivate
+                        </span>
+                         <!-- <span class="linkCls" *ngIf="rowData['dynamicPricingEnabled'] == true"
+                            (click)="activateItem($event, rowData)"> Activate
+                        </span> -->
+                    </span>
+                </td>
+
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="rowexpansion" >
+            <tr class="child-grid">
+                <td [attr.colspan]="roleName== 'VendorManager' || roleName == 'CategoryManager'? '4' : '3'">
+                  <div class="p-p-4">
+                    <div class="table-title">
+                        <div class="row" style="padding-left:12px">
+                            <h2>Vendors</h2>
+                        </div>
+                    </div>
+                    <p-table dataKey="id" #linkedVendorListByItemGrid [columns]="vendorHeaders"
+                            [value]="linkedVendorListByItem"
+                                id="linkedVendorListByItemGrid"
+                            [style]="{'width': '100%'}"
+                        [scrollable]="true">
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+
+                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field"
+                                        [style.width]="col.width">
+                                        {{col.header}}
+                                    </th>
+                                    <th style="width: 11em" *ngIf="roleName== 'VendorManager' || roleName == 'CategoryManager'"> Actions</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns"  let-index="rowIndex1">
+                                <tr [pSelectableRow]="rowData">
+
+                                    <td *ngFor="let col of columns" [style.width]="col.width"  [ngClass]="{'table-cell-overflow-ellipse' : col.field == 'vendorName' }">
+                                        <span *ngIf="col.field == 'vendorName'">
+                                            <app-vendor-info-icon-dialog [vendorData]="rowData"></app-vendor-info-icon-dialog>
+                                            <img *ngIf="rowData['status'] == 'Completed'" width="18"
+                                                src="https://img.icons8.com/color/48/000000/instagram-verification-badge.png" />
+                                                 <span [title]="rowData[col.field]">{{rowData[col.field]}}</span>
+                                        </span>
+                                        <span *ngIf="col.field != 'vendorName'">{{rowData[col.field]}}</span>
+                                    </td>
+                                    <td style="width: 11em" *ngIf="roleName== 'VendorManager' || roleName == 'CategoryManager'">
+                                      <span class="crud-icons actionIcons">
+                                          <span class="linkCls" *ngIf="rowData['vDynamicPricingEnabled'] == false"
+                                              (click)="addItem($event, rowData, 'vendorLevel')">
+                                               Select Vendor ||
+                                          </span>
+                                          <span class="linkCls" *ngIf="rowData['vDynamicPricingEnabled'] == true"
+                                              (click)="deactivateVendor($event, rowData, 'itemLevel')"> Deactivate
+                                          </span>
+                                          <span class="linkCls" *ngIf="rowData['vDynamicPricingEnabled'] == false"
+                                              (click)="activateVendor($event, rowData, 'itemLevel')"> Activate
+                                          </span>
+                                      </span>
+                                  </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage" let-columns>
+                                <tr>
+                                    <td [attr.colspan]="5" style="text-align:center;">
+                                        No Records Found.
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+
+                  </div>
+                </td>
+              </tr>
+        </ng-template>
+          <ng-template pTemplate="emptymessage" let-columns>
+              <tr>
+                  <td [attr.colspan]="5" style="text-align:center;">
+                      No Records Found.
+                  </td>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="paginatorleft">
+              <div  *ngIf="vDt._totalRecords > 0">
+                <b>Showing {{vDt.first+1}} to {{vDt.first+vDt.rows > vDt.totalRecords?vDt.totalRecords: vDt.first+vDt.rows}} of {{vDt.totalRecords}}</b>
+                  <!-- <app-page-info [totalRecords]="vendorList?.length" [pageData]="paginatoryDetails"></app-page-info> -->
+              </div>
+          </ng-template>
+      </p-table>

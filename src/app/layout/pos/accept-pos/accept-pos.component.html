@@ -1,0 +1,180 @@
+<div class="modal-header">
+    <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+    <div class="col-6">PO View</div>
+</div>
+<div class="modal-body row">
+    <div class="col-6">
+        <div class="row">
+            <div class="col-6">
+                <label>PO Id : <span class="label-value"></span> </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ poData.poId }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <div class="col-6">
+                <label>PO Value : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ poData.poValue }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <div class="col-6">
+                <label>PO Description : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ poData.podesc }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <div class="col-6">
+                <label>Delivery Terms : </label>
+            </div>
+            <div class="col-6">
+                <label><span class="label-value">{{ poData.deliveryTerms }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <div class="col-6">
+                <label>PPO Id : </label>
+            </div>
+            <div class="col-6">
+                <label><span class="label-value">{{ poData.ppo.ppoId }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <div class="col-6">
+                <label>PR Id :</label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ poData.pr.prId }} </span></label>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <form #deliveryForm="ngForm" anme (ngSubmit)="onSubmit(deliveryForm)">
+            <div class="row" style="border: 1px solid rgb(226, 223, 223)">
+                <div class="col-3">
+                    <label>Delivery Type :</label>
+                </div>
+
+                <div class="radio" *ngFor="let delivery of deliveryTypes">
+                    <label>
+            <input type="radio" [(ngModel)]="deliveryMode" [value]="delivery.type" name="dType" (click)="deliveryTypeChange(delivery.type)"
+           > {{delivery.name}}
+          </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <ng-container *ngFor="let delivery of deliveryData; let i = index;trackBy:customTB;">
+                        <div class="row delivery-panel-cls">
+                            <div class="col-12" style="position: relative;">
+                                <span class="delivery-close-icon" *ngIf="deliveryData.length>1" (click)="removeDeliveryItem(i, deliveryData[i]['itemsData_'])"><i class="fa fa-times-circle"
+                style="cursor: pointer;"></i></span>
+                                <!-- <app-po-delivery-items [tableData]="poData?.poitems" [tableIndex]="i" [tableHeaders]="poItemsHeaders" (actionOnData)="actionOnData($event)"></app-po-delivery-items> -->
+                                <p-table #poItemsGrid [columns]="poItemsHeaders" [value]="deliveryData[i]['itemsData_']" sortMode="multiple" [style]="{'width': '100%'}" exportFilename="venRequest" [scrollable]="true" id="table_{{i}}" dataKey="id">
+                                    <ng-template pTemplate="caption">
+                                        <div class="searchPanel">
+                                            Delivery {{i+1}}
+                                            <!-- Rs. <span *ngIf="deliveryData[i] &&  deliveryData[i]['itemsData_'+i] && deliveryData[i]['itemsData_'+i]['totalDeliveryAmount']">{{deliveryData[i]['itemsData_'+i]['totalDeliveryAmount']}} </span>
+                    <span *ngIf="deliveryData[i] &&  deliveryData[i]['itemsData_'+i] && !deliveryData[i]['itemsData_'+i]['totalDeliveryAmount']">{{deliveryData[i]['itemsData_'+i]['totalDeliveryAmount']}} 0 </span> -->
+                                            <input type="text" pInputText size="50" placeholder="Search.." (input)="poItemsGrid.filterGlobal($event.target.value, 'contains')" style="width:auto; float: right;" />
+
+                                        </div>
+                                    </ng-template>
+
+                                    <ng-template pTemplate="header" let-columns>
+                                        <tr>
+                                            <!-- <th style="width: 3em">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                  </th> -->
+                                            <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+                                                {{col.header}}
+                                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                                        <tr [pSelectableRow]="rowData">
+                                            <!-- <td style="width: 3em">
+                      <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                    </td> -->
+                                            <ng-container *ngFor="let col of columns">
+                                                <td [style.width]="col.width" *ngIf="col.field != 'deliveryQuantity' || deliveryMode == 'single'">
+                                                    <span>{{rowData[col.field]}}</span>
+                                                </td>
+                                                <td pEditableColumn [style.width]="col.width" *ngIf="col.field=='deliveryQuantity' &&  deliveryMode != 'single'" style="position: relative;" [ngClass]="{'invalid-qty-cls': ((deliveryData[i]['itemsData_'][rowIndex]['isInValid'] && deliveryData[i]['itemsData_'][rowIndex]['isInValid'] == true) || ( deliveryData[i]['itemsData_'][rowIndex]['isDeliveryQtyEmpty'] == true))}">
+                                                    <p-cellEditor>
+                                                        <ng-template pTemplate="input">
+                                                            <input pInputText type="number" class="form-control" [ngClass]="{'invalid-qty-cls': deliveryData[i]['itemsData_'][rowIndex]['isInValid'] && deliveryData[i]['itemsData_'][rowIndex]['isInValid'] == true}" [value]="deliveryData[i]['itemsData_'][rowIndex]['deliveryQuantity']"
+                                                                (blur)="onGetPoTotal($event,  rowData, i, rowIndex)" name="first_{{i}}_{{rowIndex}}" (change)="onGetPoTotal($event,  rowData, i, rowIndex)" name="first_{{i}}_{{rowIndex}}">
+                                                        </ng-template>
+                                                        <ng-template pTemplate="output">
+                                                            <span *ngIf="deliveryData[i]['itemsData_'][rowIndex]['deliveryQuantity'] >=0">{{deliveryData[i]['itemsData_'][rowIndex]['deliveryQuantity']}}<i class="fa fa-pencil pull-right"
+                                style="cursor: pointer;"></i></span>
+                                                            <span *ngIf="deliveryData[i]['itemsData_'][rowIndex]['deliveryQuantity'] == null || deliveryData[i]['itemsData_'][rowIndex]['deliveryQuantity'] == undefined || deliveryData[i]['itemsData_'][rowIndex]['deliveryQuantity'] < 0" style="color:rgb(143, 143, 143)">Delivery
+                              Quantity</span>
+                                                        </ng-template>
+                                                    </p-cellEditor>
+                                                </td>
+                                            </ng-container>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="emptymessage" let-columns>
+                                        <tr>
+                                            <td [attr.colspan]="5" style="text-align:center;">
+                                                No Records Found.
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                    <!-- <ng-template pTemplate="paginatorleft">
+                  <div *ngIf="tableData?.length > 0">
+                    <app-page-info [totalRecords]="tableData?.length" [pageData]="paginatoryDetails"></app-page-info>
+                  </div>
+                </ng-template> -->
+                                </p-table>
+                            </div>
+
+                            <!-- table data end -->
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-6 form-group ">
+                                        <label>Delivery Date </label>
+                                        <mat-form-field class="example-full-width">
+                                            <mat-label>Choose Delivery Date</mat-label>
+                                            <input matInput [matDatepicker]="picker" name="deliveryDate_{{i}}" [(ngModel)]="deliveryData[i].deliveryDate" id="deliveryDate_{{i}}" required [min]="minDate" id="prClosureData">
+                                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-6 form-group ">
+                                        <label>Remarks </label>
+                                        <textarea class="form-control" name="remarks_{{i}}" [(ngModel)]="deliveryData[i].remarks" id="remarks_{{i}}"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </ng-container>
+                    <button mat-raised-button style="margin-top:10px" class="pull-right btn btn-primary" type="button" (click)="addOneMoreDelivery(false)" *ngIf="deliveryData.length>0 && deliveryMode == 'multiple'"> + Delivery</button>
+                </div>
+            </div>
+            <mat-dialog-actions align="end">
+                <button mat-raised-button color="primary" type="submit">Approve PO</button>
+            </mat-dialog-actions>
+        </form>
+    </div>
+</div>

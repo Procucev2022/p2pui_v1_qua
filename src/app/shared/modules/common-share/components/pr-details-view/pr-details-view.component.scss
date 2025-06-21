@@ -1,0 +1,11 @@
+.view-details-panel-cls label::after {
+    content: ':';
+    position: absolute;
+    right: 0;
+    top: 6px;
+}
+.view {
+    font-weight: bold !important;
+    margin-left: 20px !important;
+    color: #014178 !important;
+}

@@ -1,0 +1,16 @@
+<div class="modal-header">
+  <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+  <div class="col-6">PO View</div>
+</div>
+<div class="modal-body row">
+  <div class="col-12">
+    <label>Reason</label>
+    <textarea  class="form-control"  #reasons="ngModel" name="reasons"
+    [(ngModel)]="reason" [ngClass]="{'isInvalid': isInvalid}">
+
+    </textarea>
+  </div>
+  <div class="col-12 text-right marginTop20">
+    <button mat-raised-button  color="primary" (click)="cancelPo()" >Cancel PO</button>
+  </div>
+</div>

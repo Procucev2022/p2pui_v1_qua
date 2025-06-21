@@ -1,0 +1,72 @@
+<div class="modal-header">
+    <button class="modal-close-btn" mat-dialog-close>✖</button>
+    <div class="col-12">
+        <h5>Add Service</h5>
+    </div>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-12">
+            <form class="form-horizontal" name="form" (ngSubmit)="onAddService(addForm)" #addForm="ngForm" novalidate>
+                <div *ngIf="addForm.invalid && addForm.touched">
+                    <small *ngIf="addForm.invalid && addForm.touched" class="text-danger">
+                        All Marked <b style="color: red;">*</b> fields are mandatory.</small>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <label class="control-label col-sm-4" for="text">SAC Code (6 digits):<b
+                                style="color: red;">*</b></label>
+                        <div class="col-sm-8">
+                            <input type="text" pattern="[0-9]{6}" required class="form-control" id="sacCode" placeholder="Enter SAC Code"
+                                name="sacCode" [(ngModel)]="model.sacCode" #hsnCode="ngModel">
+                                <div *ngIf="(addForm.controls.sacCode.touched|| addForm.submitted) && addForm.controls.sacCode.status=='INVALID'">
+                                    <div style="color: red;">Please enter valid HSN code</div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <label class="control-label col-sm-4" for="text">Service Name:<b
+                                style="color: red;">*</b></label>
+                        <div class="col-sm-8">
+                            <input type="text" required class="form-control" id="serviceName"
+                                placeholder="Add Service Name" name="serviceName" [(ngModel)]="model.serviceName"
+                                #serviceName="ngModel">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <label class="control-label col-sm-4" for="text">Description:<b
+                                style="color: red;">*</b></label>
+                        <div class="col-sm-8">
+                            <input type="text" required class="form-control" id="description"
+                                placeholder="Add Description" name="description" [(ngModel)]="model.description"
+                                #description="ngModel">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <label class="control-label col-sm-4" for="text">Others:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="others" placeholder="Add others" name="others"
+                                [(ngModel)]="model.others" #others="ngModel">
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <mat-dialog-actions align="end">
+                    <button type="button" class="btn btn-secondary" (click)="addForm.reset()">Reset</button>
+                    <button type="button" class="btn btn-primary" type="submit">Submit</button>
+                    <button type="button" class="btn btn-danger" (click)="closeDialog()" mat-dialog-close>Cancel</button>
+                </mat-dialog-actions>
+            </form>
+
+
+
+
+        </div>
+    </div>
+</div>

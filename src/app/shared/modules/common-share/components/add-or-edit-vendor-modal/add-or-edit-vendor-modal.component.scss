@@ -1,0 +1,54 @@
+.fileIconPanel input {
+    margin-left: 26px;
+    margin-right: 4px;
+    /* margin-top: 6px; */
+    height: 24px;
+    cursor: pointer;
+    width: 24px;
+}
+::ng-deep .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start !important;
+}
+.radio-btns{
+    display: flex;
+    align-items: center;
+    vertical-align: middle;
+    font-size: 1rem;
+}
+.title{
+    font-size: 1.2rem;
+}
+h5{
+    font-weight: 600;
+    font-size: 1rem;
+}
+.modal-body {
+    position: relative;
+    flex: 1 1 auto;
+    padding: 1rem;
+    max-height: 62vh !important;
+    overflow-y: auto;
+    border-top: 2px solid #b0a5a180;
+    min-height: 62vh;
+}
+
+.fileIconPanel {
+    color: #0C2146;
+    font-size: 12px;
+    /* padding-top: 3px; */
+    text-align: right;
+}
+.fileUploadCls {
+    height: 42vh;
+    background: #edf4f8;
+    width: 100%;
+    border: dashed 2px #2894f0;
+    cursor: pointer;
+}
+.choosenFileCls{
+    margin-top: 5px;
+    font-size: 13px;
+    font-weight: 600;
+}

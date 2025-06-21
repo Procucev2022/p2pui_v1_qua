@@ -1,0 +1,82 @@
+
+<div class="row">
+    <div class="col-12">
+        <h3>CPX - Post Auction Comparison</h3>
+    </div>
+    <div class="col-3"  >
+        <label class="">Select PR</label>
+      <p-autoComplete  [(ngModel)]="selectedPr" styleClass="form-control" inputStyleClass="p-auto-cls"
+       panelInputClass="p-auto-panel-cls" [suggestions]="filteredprList" (completeMethod)="filterPr($event)"
+        field="prId" [dropdown]="true"
+         (onSelect)="prChange($event)">
+          <ng-template let-pr pTemplate="item">
+              <div class="pr-item">
+                  <div>{{pr.prId}}</div>
+              </div>
+          </ng-template>
+      </p-autoComplete>
+      </div>
+
+        <div class="col-3">
+          <label class="aucCategory">Auction</label>
+          <select class="form-control" name="aucCategory" [(ngModel)]="selectedAucCategoryId" #aucCategory="ngModel" required (change)="auctionIdChange($event)" >
+            <option [value]="undefined" selected disable>Select</option>
+            <option *ngFor="let auc of auctionCategoryList; let j = index" [value]="auc.id">{{auc.auctionId}}</option>
+          </select>
+        </div>
+
+        <div class="col-3">
+            <label class="aucCategory">AuctionType</label>
+            <input [disabled] placeholder="Auction Type" type="text" class="form-control" name="aucType" [(ngModel)]="selectedAucType" #aucType="ngModel" required />
+          </div>
+          <div class="col-3">
+            <label class="aucCategory"> </label>
+            <button class="btn btn-blue" style="margin-top: 24px;" [disabled]="!(selectedAucType && selectedAucCategoryId && selectedPr && selectedVendor)"  (click)="onCreatePPO()">Create PPO</button>
+          </div>
+
+</div>
+    <div class="text-center">
+      <label>&nbsp;</label><img class="cursor-pointer pb-2" style="float: right;" src="/assets/images/new/download-export.svg" [ngStyle]="{display: itemData ? 'block' : 'none'}" (click)="exportAsXLSX()" width="40" height="40" data-toggle="tooltip" title="Export Excel"/>
+    </div>
+    <p *ngIf="selectedAucType && selectedAucCategoryId && selectedPr  && selectedPr"><b>Note: </b>Please select Highlighted Cell Area for Vendor Selection</p>
+    <div class="prqContainer row" style="display: block;" *ngIf="selectedAucType && selectedAucCategoryId && selectedPr">
+      <div class="col-md-12" >
+        <div *ngIf="!itemData">No Data Available</div>
+        <table *ngIf="itemData" class="table table-bordered table-stripped"  #exportTable>
+          <thead>
+            <tr>
+              <th>Item/Vendor</th>
+              <th>Project Category</th>
+              <th>Project SubCategory</th>
+              <th>UOM</th>
+              <th>Qty.</th>
+              <th *ngFor="let vendor of itemData.headers" (click)="selectVendor(vendor)"   [ngClass]="{'activeCell': vendor.selected && vendor.selected == true, 'highlightCell': vendor?.vid?.split('-')?.includes('auctionprice')}" >
+                {{vendor.vname}} - {{vendor.qid}}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr *ngFor="let item of itemData.items let idx = index">
+              <td>{{ item.description }}</td>
+              <td>{{ item.projectCategory }}</td>
+              <td>{{ item.projectSubCategory }}</td>
+
+              <td>{{ item.unitofMeasures }}</td>
+              <td>{{ item.quantity }}</td>
+              <td *ngFor="let header of itemData.headers ; let i=index;" [ngClass]="{'activeCell': header.selected && header.selected == true}" >
+                <ng-container *ngFor="let d of itemData.items[idx].data let idxx = index">
+                    <div *ngIf="header.vid == d.vendorid">
+                      {{ d.totalamount }}
+                      <!-- <input type="checkbox" *ngIf="showCheckBox(header, d)" /> -->
+                    </div>
+
+                </ng-container>
+            </td>
+            </tr>
+
+          </tbody>
+        </table>
+
+      </div>
+    </div>

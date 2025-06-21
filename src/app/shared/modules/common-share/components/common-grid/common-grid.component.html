@@ -1,0 +1,119 @@
+<div class="col-12 pad-nill" *ngIf="gridShow">
+    <div class="table-title">
+        <div class="row">
+          <div class="col-sm-6">
+            <h2>{{gridTitle}}  {{selectedParenLabel}} {{selectedParentId}} </h2>
+            <p><span class="dot"></span>{{gridColumnData?.length}} Total</p>
+          </div>
+          <div class="col-sm-6">
+          </div>
+        </div>
+      </div>
+  <p-table dataKey="id" #poLineItemsViewTable [columns]="gridHeaders"   [value]="gridColumnData" [scrollable]="true"  [paginator]="true" [rows]="pageRecordSize" dataKey="id"
+  [rowsPerPageOptions]="pageOptions" [style]="{width:'100%'}" [exportFilename]="exportFileName" [(selection)]="selectedData"
+  [scrollable]="true" [scrollHeight]="scrollHeight ? 'calc(100vh - 214px)': 'auto'">
+         <ng-template pTemplate="caption" >
+             <div class="table-search">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                      (input)="poLineItemsViewTable.filterGlobal($event.target.value, 'contains')" />
+                  </div>
+                  <div class="col-sm-6">
+                    <ng-container *ngFor="let button of actionEvents;">
+                        <button class="btn btn-primary btn-blue" (click)="onClickButton(button)" type="button">{{button.btnName}}</button>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+         </ng-template>
+         <ng-template pTemplate="header" let-columns>
+             <tr>
+                <th style="width: 3rem" *ngIf="showSelctionCheckBox">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th>
+                 <th [style.width]="col.width" *ngFor="let col of columns" [pSortableColumn]="col.field">
+                     {{col.header}}
+                     <p-sortIcon [field]="col.field"></p-sortIcon>
+                 </th>
+                 <th *ngIf="gridActionEvents.length>0" style="width: 17rem">
+                    Actions
+                 </th>
+             </tr>
+         </ng-template>
+         <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+             <tr [pSelectableRow]="rowData">
+                <td style="width: 3rem" *ngIf="showSelctionCheckBox">
+                        <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <ng-container *ngFor="let col of columns">
+                <!-- for not editable cell if editable cells have no data -->
+                <td *ngIf="editableCells.length <= 0" [style.width]="col.width"  [ngClass]="{'table-cell-overflow-ellipse': col.field == 'podesc' || col.field == 'invoiceDesc'  || col.isExceedContent == true}"  [ngStyle]="{'max-width':col.width }" [title]="col.isExceedContent == true ?  rowData[col.field]: ''" >
+                    <span *ngIf="col.fieldType != 'date'">
+                            <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);"
+                            (click)="onSelectedActionEvent(rowData, rowClickEventName, rowIndex) "> {{rowData[col.field]}} </a></span>
+                            <span *ngIf="!col.isLink">
+                              <span [title]="rowData[col.field]" *ngIf="col.field == 'invoiceDesc'">{{rowData[col.field]}}</span>
+                              <span  *ngIf="col.field != 'invoiceDesc'">{{rowData[col.field]}}</span>
+                            </span>
+                        </span>
+                    <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'"> {{rowData[col.field] | date: 'dd-MMM-yyyy'}}</span>
+               </td>
+
+               <!-- for editable cell if editable cells have data -->
+               <td *ngIf="editableCells.length > 0 && editableCells.indexOf(col.field) <= -1" [style.width]="col.width">
+                 <span *ngIf="col.fieldType != 'date'">
+                        <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);"
+                        (click)="onSelectedActionEvent(rowData, rowClickEventName, rowIndex) "> {{rowData[col.field]}} </a></span>
+                        <span *ngIf="!col.isLink"> {{rowData[col.field]}}</span>
+                    </span>
+                 <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'"> {{rowData[col.field] | date: 'dd-MMM-yyyy'}}</span>
+                </td>
+                <td pEditableColumn [style.width]="col.width" *ngIf="editableCells.length>0 && editableCells.indexOf(col.field) != -1" style="position: relative;"   [ngClass]="{'invalid-qty-cls': ((rowData['isInValid'] && rowData['isInValid'] == true) || ( rowData['isEmpty'] == true))}" >
+                        <p-cellEditor>
+                          <ng-template pTemplate="input">
+                            <input pInputText type="number" style="border: 1px solid;"  class="form-control"  [ngClass]="{'invalid-qty-cls': rowData['isInValid'] && rowData['isInValid'] == true}"
+                            [value]="rowData[col.field]" [(ngModel)]="gridColumnData[rowIndex][col.field]"
+                            (blur)="onSelectedActionEvent(rowData, 'cellEditEvent', rowIndex)"
+                              (change)="onSelectedActionEvent(rowData, 'cellEditEvent', rowIndex)" name="first_{{rowIndex}}"  >
+                          </ng-template>
+                          <ng-template pTemplate="output">
+                            <span *ngIf="rowData[col.field] >=0"  [ngClass]="{'invalid-qty-cls': rowData['isInValid'] && rowData['isInValid'] == true}"
+                             >{{rowData[col.field]}}<i class="fa fa-pencil pull-right"
+                                style="cursor: pointer;"></i></span>
+                            <span *ngIf="rowData[col.field] == null || rowData[col.field] == undefined ||rowData[col.field] < 0" style="color:rgb(143, 143, 143)">
+                              Quantity</span>
+                          </ng-template>
+                        </p-cellEditor>
+                      </td>
+                 </ng-container>
+                <td *ngIf="gridActionEvents.length> 0" style="width: 17rem">
+                    <span class="crud-icons actionIcons" >
+                        <span  *ngFor="let action of gridActionEvents" >
+                            <i *ngIf="action['iconType'] == 'regular' && (action.className !== 'fa fa-eye view' && action.className !== 'fa fa-pencil view')" [class]="action.className" style="cursor: pointer;"
+                            (click)="onSelectedActionEvent(rowData, action.eventName, rowIndex)" data-toggle="tooltip"
+                            [title]="action.name"></i>
+                            <img *ngIf="action['iconType'] == 'regular' && action.className === 'fa fa-eye view'"  src="/assets/images/new/view-doc.png" width="32" data-toggle="tooltip" (click)="onSelectedActionEvent(rowData, action.eventName, rowIndex)" data-toggle="tooltip"
+                            [title]="action.name" />
+                            <img *ngIf="action['iconType'] == 'regular' && action.className === 'fa fa-pencil view'"  src="/assets/images/new/edit-data.png" width="32" data-toggle="tooltip" (click)="onSelectedActionEvent(rowData, action.eventName, rowIndex)" data-toggle="tooltip"
+                            [title]="action.name" />
+                            <img style="padding-left:6px;padding-right: 6px;"  *ngIf="action['iconType'] == 'image'"  width="32"  [src]="action.className" data-toggle="tooltip" (click)="onSelectedActionEvent(rowData, action.eventName, rowIndex)"
+                            [title]="action.name" />
+                            <!-- this is for row level conditional base icon -->
+                            <i *ngIf="rowData['showSpecialIcon'] && action['iconType'] == 'special'" [class]="action.className" style="cursor: pointer;"
+                            (click)="onSelectedActionEvent(rowData, action.eventName, rowIndex)" data-toggle="tooltip"
+                            [title]="action.name"></i>
+                        </span>
+                    </span>
+                </td>
+             </tr>
+         </ng-template>
+         <ng-template pTemplate="emptymessage" let-columns>
+             <tr>
+                 <td [attr.colspan]="5" style="text-align:center;">
+                     No Records Found.
+                 </td>
+             </tr>
+         </ng-template>
+   </p-table>
+</div>

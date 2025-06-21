@@ -1,0 +1,133 @@
+* {
+  -webkit-transition: margin-left 0.2s ease-in-out;
+  -moz-transition: margin-left 0.2s ease-in-out;
+  -ms-transition: margin-left 0.2s ease-in-out;
+  -o-transition: margin-left 0.2s ease-in-out;
+  transition: margin-left 0.2s ease-in-out;
+}
+.main-container {
+  margin-top: 50px;
+  margin-left: 274px;
+  padding: 20px;
+  -ms-overflow-x: hidden;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  position: relative;
+  overflow: hidden;
+  min-height: 86.3vh;
+  height: auto;
+
+}
+.main-container1{
+  padding-bottom: 53px;
+}
+.collapsed {
+  margin-left: 60px;
+}
+
+.footer-layout-cls{
+  background: #fff;
+  text-align: center;
+  color: #00427a;
+  padding: 8px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  box-shadow: 0px 1px 8px -5px #0C2146;
+  z-index: 1;
+}
+@media screen and (max-width: 992px) {
+  .main-container {
+      margin-left: 0px !important;
+  }
+}
+@media print {
+  .main-container {
+      margin-top: 0px !important;
+      margin-left: 0px !important;
+  }
+}
+.grow {
+  flex: 1;
+}
+
+.main {
+  overflow-y: auto;
+}
+
+.footer-sec{
+  position: fixed;
+  text-align: right;
+  width: 100%;
+  font-size: 10px;
+  bottom: 0;
+  color: #074193;
+  padding: 10px;
+  font-weight: 600;
+  background: #fff;
+  box-shadow: 2px 2px 2px 2px #d5d5de;
+}
+
+::ng-deep .terms-condt-cls mat-dialog-container {
+  border-radius: 0 !important;
+  width: 110% !important;
+  height: 110vh;
+}
+
+::ng-deep .terms-condt-cls .modal-body {
+  max-height: 100vh !important;
+}
+.doc-page{
+  width: 55%;
+  height: 1200px;
+  margin-left: 22.5%;
+  padding: 80px;
+  box-shadow: 0px 1px 3px 3px #0000002b;
+  font-size: 18px;
+  color: #000;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.doc-page p{
+  text-align: justify;
+}
+.disable-text-selection {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.row1, .row2, .row3, .row4, .row5 {
+  position: absolute;
+  opacity: 0.1;
+}
+
+.row1{
+  top: 15%;
+  left: 5%;
+}
+
+.row2{
+  top: 15%;
+  right: 5%;
+}
+
+.row3{
+  top: 50%;
+  left: 39%;
+}
+
+.row4{
+  bottom: 15%;
+  left: 5%;
+}
+.row5{
+  bottom: 15%;
+  right: 5%;
+}

@@ -1,0 +1,178 @@
+<div class="col-12 pad-nill">
+  <div class="table-title">
+    <div class="row">
+      <div class="col-sm-6">
+        <h2>Vendors</h2>
+        <p><span class="dot"></span>{{vendorReqData.length}} Total</p>
+      </div>
+      <div class="col-sm-6">
+        <button class="btn btn-primary btn-blue"  style="display: flex; align-items: center;" type="button" (click)="addOrEditVendor(null)"><i
+            class="fa fa-plus"> </i> <span>Vendor</span></button>
+            <button class="btn btn-primary btn-green" type="button" (click)="approveVendor(null)"  *ngIf="loggedUserDetails.role.roleName === 'VendorExecutive2'"><span>Approve</span></button>
+        <button class="btn btn-primary btn-orange" type="button" (click)="Download(null)"  *ngIf="loggedUserDetails.role.roleName === 'VendorExecutive'" id="downloadButton"><span>Download</span></button>
+      </div>
+    </div>
+  </div>
+  <p-table #venReq [columns]="vendorReqHeaders" [value]="vendorReqData" sortMode="multiple" [paginator]="true"
+    [rows]="pageRecordSize" id="quoteTable" [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}" [scrollHeight]="'calc(100vh - 290px)'"
+    exportFilename="venRequest" [(selection)]="selectedData" [scrollable]="true" >
+    <ng-template pTemplate="caption">
+      <div class="table-search">
+        <div class="row">
+          <div class="col-sm-6">
+            <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+              (input)="venReq.filterGlobal($event.target.value, 'contains')" />
+          </div>
+          <div class="col-sm-6">
+            <button type="button" class="btn btn-info btn-green" (click)="enableVendor()" [disabled]="selectedData[0]?.vendorStatus !== 'Disabled'"
+              *ngIf="loggedUserDetails.role.roleName === 'VendorManager'">Enable</button>
+            <button type="button" class="btn btn-transparent btn-red" (click)="inActivate()"  *ngIf="loggedUserDetails.role.roleName === 'VendorManager'">InActive</button>
+            <button type="button" class="btn btn-warning btn-blue" (click)="registerVendor()"  *ngIf="loggedUserDetails.role.roleName === 'VendorManager'">Register</button>
+            <button type="button" class="btn btn-primary btn-orange" [disabled]="selectedData.length != 1"
+             (click)="vendorEvolution(selectedData)"  *ngIf="loggedUserDetails.role.roleName === 'VendorManager'">Vendor Evaluation</button>
+             <button [disabled]="selectedData.length != 1" type="button" class="btn btn-secondary btn-blue" (click)="onAddUser(addUserModal)"  *ngIf="loggedUserDetails.role.roleName === 'VendorManager'">Add User</button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th style="width: 3em">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+          {{col.header}}
+          <p-sortIcon [field]="col.field"></p-sortIcon>
+        </th>
+        <th style="width: 15em">Actions</th>
+      </tr>
+      <tr>
+        <th style="width: 3em"></th>
+        <th *ngFor="let col of columns" [style.width]="col.width">
+          <input class="main-input" style="width: 100%; padding: 0px; background: white;" pInputText type="text"
+            (input)="venReq.filter($event.target.value, col.field, 'contains')">
+        </th>
+        <th style="width:15em"></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr [pSelectableRow]="rowData">
+        <td style="width: 3em">
+          <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+        </td>
+        <td *ngFor="let col of columns"  [style.width]="col.width"  [ngClass]="{'table-cell-overflow-ellipse' : col.field == 'companyName' }">
+          <span *ngIf="col.field == 'companyName'" style="color: #0069d9;font-weight: bold;font-size: 14px;"><app-vendor-info-icon-dialog [vendorData]="{'vendorId': rowData.id}"></app-vendor-info-icon-dialog>
+            <img *ngIf="rowData['status'] == 'Completed' && rowData['clientVendor'] != 'true'" width="18"
+              src="https://img.icons8.com/color/48/000000/instagram-verification-badge.png" />
+            <img *ngIf="rowData['clientVendor'] == true" width="18" alt="silver icon badge"
+              src="/assets/images/instagram-verification-badge-silver.png" />
+              <span [title]="rowData[col.field]">{{rowData[col.field]}}</span>
+          </span>
+          <span *ngIf="col.field == 'status'"> {{rowData[col.field]}}
+
+          </span>
+          <span *ngIf="col.field == 'createdTS'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
+            {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
+          </span>
+          <span *ngIf="col.field != 'companyName' && col.field != 'status' && col.field != 'createdTS'"
+            [ngStyle]="{'width': col.field == 'id'? '230px': 'auto'}">{{rowData[col.field]}}
+          </span>
+
+        </td>
+        <td style="width: 15em">
+          <span class="crud-icons actionIcons">
+            <span *ngIf="rowData['vendorStatus'] === 'VendorAdded'">
+              <input class="customCheck" [checked]="rowData.partialVendor" type="checkbox" name="{{rowData.id}}" [ngModel]="rowData.partialVendor" (ngModelChange)="onSelectRecordCheck($event, rowData)" title="Partial Vendor" id="{{rowData.id}}">
+            </span>
+
+            <img class="evaluation-pencil"  title="View Vendor Evaluation" *ngIf="rowData['status']=='Completed'"width="45" height="40" src="/assets/images/new/evaluate-icon.svg"
+            (click)="editVendorEvaluation(rowData)" />
+              <img src="/assets/images/new/edit-data.png" width="32" title="Edit Item Description" *ngIf="loggedUserDetails.role.roleName === 'VendorManager'" title="Edit Vendor"   style="cursor: pointer;" (click)="addOrEditVendor(rowData)" /> &nbsp;&nbsp;
+              <img src="/assets/images/new/view-doc.png" style="cursor: pointer;" width="32" (click)="viewPrevendorDetails(rowData)" data-toggle="tooltip"
+              title="View Vendor Details" />
+
+
+          </span>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage" let-columns>
+      <tr>
+        <td [attr.colspan]="5" style="text-align:center;">
+          No Records Found.
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft">
+      <div *ngIf="venReq._totalRecords > 0">
+        <b>Showing {{venReq.first+1}} to {{venReq.first+venReq.rows > venReq.totalRecords?venReq.totalRecords: venReq.first+venReq.rows}} of {{venReq.totalRecords}}</b>
+        <!-- <app-page-info [totalRecords]="vendorReqData?.length" [pageData]="paginatoryDetails"></app-page-info> -->
+      </div>
+    </ng-template>
+  </p-table>
+</div>
+
+<ng-template #addUserModal>
+  <div class="modal-header">
+    <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+    <div class="col-6">
+      <h5>Create User</h5>
+    </div>
+  </div>
+  <div class="modal-body">
+    <form name="AddUserForm" (ngSubmit)="AddUserForm.form.valid && onAddUserSubmit(AddUserForm)" #AddUserForm="ngForm"
+      novalidate>
+      <div class="col-md-12 row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" class="form-control" placeholder="First Name" name="firstName"
+              [(ngModel)]="userModel.firstName" #firstName="ngModel"
+              [ngClass]="{ 'is-invalid': AddUserForm.submitted && firstName.invalid }" required />
+            <div *ngIf="AddUserForm.submitted && firstName.invalid" class="invalid-feedback">
+              <div *ngIf="firstName.errors.required">First Name is required</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" class="form-control" placeholder="Last Name" name="lastName"
+              [(ngModel)]="userModel.lastName" #lastName="ngModel"
+              [ngClass]="{ 'is-invalid': AddUserForm.submitted && lastName.invalid }" required />
+            <div *ngIf="AddUserForm.submitted && lastName.invalid" class="invalid-feedback">
+              <div *ngIf="lastName.errors.required">Last Name is required</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" class="form-control" placeholder="Email" name="email" [(ngModel)]="userModel.email"
+              #email="ngModel" [ngClass]="{ 'is-invalid': AddUserForm.submitted && email.invalid }" required email />
+            <div *ngIf="AddUserForm.submitted && email.invalid" class="invalid-feedback">
+              <div *ngIf="email.errors.required">Email is required</div>
+              <div *ngIf="email.errors.email">Email must be a valid email address</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="text" class="form-control" placeholder="Phone Number" name="phone" maxlength="10"
+              minlength="10" [(ngModel)]="userModel.phone" #phone="ngModel"
+              [ngClass]="{ 'is-invalid': AddUserForm.submitted && phone.invalid }" required />
+            <div *ngIf="AddUserForm.submitted && phone.invalid" class="invalid-feedback">
+              <div *ngIf="phone.errors.required ">Phone Number is required</div>
+              <!-- <div *ngIf="userInputs.phone.length != 10">Please Enter Valid Phone Number</div> -->
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <button style="float: right;margin-top:12px" type="submit" class="btn btn-primary btn-blue">Submit</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>

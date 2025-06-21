@@ -1,0 +1,84 @@
+<div class="col-12 pad-nill">
+  <div class="table-title">
+    <div class="row">
+      <div class="col-sm-6">
+        <h2>Reports</h2>
+      </div>
+      <div class="col-sm-6">
+      </div>
+    </div>
+  </div>
+  <!-- <div class="col-12"> -->
+
+    <div class="row form-group">
+      <div class="col-3">
+        <label class="">Select PR</label>
+        <p-autoComplete  [(ngModel)]="selectedPr" styleClass="form-control" inputStyleClass="p-auto-cls" panelInputClass="p-auto-panel-cls" [suggestions]="filteredprList" (completeMethod)="filterPr($event)" field="prId" [dropdown]="true"
+          (onSelect)="prChange( )">
+            <ng-template let-pr pTemplate="item">
+                <div class="pr-item">
+                    <div>{{pr.prId}}</div>
+                </div>
+            </ng-template>
+        </p-autoComplete>
+      </div>
+      <div class="col-3" >
+        <div *ngIf="selectedPr">
+          <label class="">Select Auction</label>
+          <p-autoComplete  [(ngModel)]="selectedAuction" styleClass="form-control" inputStyleClass="p-auto-cls" panelInputClass="p-auto-panel-cls" [suggestions]="filteredauctionList" (completeMethod)="filterAuction($event)" field="auctionId" [dropdown]="true"
+          (onSelect)="auctionItemChange()">
+            <ng-template let-auction pTemplate="item">
+                <div class="pr-item">
+                    <div>{{auction.auctionId}}</div>
+                </div>
+            </ng-template>
+        </p-autoComplete>
+        </div>
+      </div>
+      <div class="col-5"></div>
+      <div class="col-1 export-cls">
+          <img *ngIf = "selectedAuction" class="export-excel-icon" src="assets/images/export-excel.png" width="40" height="40" data-toggle="tooltip" title=" Export As Excel"  (click)="exportToExcel()"/>
+      </div>
+    </div>
+  <!-- </div> -->
+
+  <div class="prqContainer row"style="margin-top:30px" >
+    <div class="col-md-12">
+      <!-- <div *ngIf="!itemData">No Data Available</div> -->
+      <div  style="overflow-x:auto;">
+      <table *ngIf="auctionDetails" class="table table-bordered table-stripped"  #exportTable>
+        <thead class="thead-dark">
+          <tr>
+            <th>s.no</th>
+            <th>Item/Vendor</th> 
+            <th>qty</th>
+            <th>uom</th>
+            <th *ngFor="let vendor of auctionDetails.headers" >
+              {{vendor.vname}} - {{vendor.qid}}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr *ngFor="let item of auctionDetails.items let idx = index">
+            <td>{{item.serialNo}}</td>
+            <td>{{ item.description }}</td>
+            <td>{{item.quantity}}</td>
+            <td>{{item.unitofMeasures}}</td>
+            <td *ngFor="let header of auctionDetails.headers ; let i=index;">
+              <ng-container *ngFor="let d of auctionDetails.items[idx].data let idxx = index">
+                  <div *ngIf="header.vid == d.vendorid">
+                    {{ d.totalamount }}
+                  </div>
+    
+              </ng-container>
+          </td>
+          </tr>
+          
+        </tbody>
+      </table>
+      </div>
+      
+    </div>
+  </div>
+</div>

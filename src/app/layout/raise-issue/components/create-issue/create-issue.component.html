@@ -1,0 +1,114 @@
+<div class="modal-header">
+    <button class="btn btn-warning modal-close-btn"  mat-dialog-close>✖</button>
+      <div class="col-6">
+            <h5>Raise Vendor Issue</h5>
+        </div>
+</div>
+<div class="modal-body">
+            <div class="prqContainer row">
+                <div class="col-12">
+                    <form #createIssue="ngForm" (ngSubmit)="onSubmit(createIssue)">
+                        <div class="form-group">
+                            <label for="priority" style="font-size: medium; font-weight: bolder;"
+                                class="form-label required">Client Name </label>
+
+                            <select
+                                name="clientId" id="i_clientId" required
+                                #clientIdRef="ngModel"
+                                [(ngModel)]="clientId" class="form-control"
+                                (change)="onSelectClient(clientId)">
+                                <option selected disabled [ngValue]="undefined">Select
+                                </option>
+                                <option *ngFor="let client of clients"
+                                    [value]="client.id">{{client?.companyName}}</option>
+                            </select>
+                            <small class="detailsCls" *ngIf="selectedClientCompanyId != null && clientId != undefined"> {{'Selected Client Id:' + selectedClientCompanyId}}</small>
+                            <!-- <small class="detailsCls" *ngIf="selectedClientCompanyId == null"> {{'Selected Client Id:' + 'Client Id not found'}}</small> -->
+                            <small *ngIf="createIssue.submitted && clientIdRef.errors?.required" class="text-danger">Client Id
+                                is required</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="priority" style="font-size: medium; font-weight: bolder;"
+                                class="form-label required">Vendor Name</label>
+
+                            <select class="col-sm-6"
+                                name="vendorId" id="i_vendorId" required
+                                #vendorIdRef="ngModel"
+                                [(ngModel)]="vendorId" class="form-control"
+                                (change)=" onSelectVendor(vendorId)">
+                                <option selected disabled [ngValue]="undefined">Select
+                                </option>
+                                <option *ngFor="let vendor of vendors"
+                                    [value]="vendor.id">{{vendor?.companyName}}</option>
+                            </select>
+
+                            <small class="detailsCls" *ngIf="selectedVendorCompanyId != null && vendorId != undefined"> {{'Selected Vendor Id:' + selectedVendorCompanyId}}</small>
+                            <!-- <small class="detailsCls" *ngIf="selectedVendorCompanyId == null"> {{'Selected Vendor Id:' + 'Vendor Id not found'}}</small> -->
+                            <small *ngIf=" createIssue.submitted && vendorIdRef.errors?.required" class="text-danger">Vendor Id
+                                is required</small>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="description" style="font-size: medium; font-weight: bolder;"
+                                class="form-label required">Description </label>
+
+                            <textarea placeholder="Enter Issue Description"
+                                name="questions" id="i_decription"
+                                #descriptionRef="ngModel" required
+                                [(ngModel)]="questions" class="form-control">
+                            </textarea>
+                            <small *ngIf="createIssue.submitted && descriptionRef.errors?.required" class="text-danger">Description
+                                is required</small>
+                        </div>
+                        <div class="form-group">
+                            <div style="width: auto !important;" class="branchesForm col-md-12 form-group row">
+                                <div class="col-md-6">
+                                    <div>
+                                        <label for="text" style="background: #ced1d4;color: #00427a;padding: 6px;"
+                                            class="col-form-label">Upload Documents:</label>
+
+                                        <div class="uploadfilecontainer" style="margin: 0px 0px;border-radius: 0px;"
+                                            (click)="certificatesInput.click()" fileDragDrop
+                                            (onFileDropped)="uploadFile($event)">
+                                            <input multiple hidden type="file" #certificatesInput
+                                                (change)="uploadCertificates($event.target.files)">
+                                            <div class="browseFiles">Browse Files</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div>
+                                        <label for="text" style="background: #ced1d4;color: #00427a;padding: 6px;"
+                                            class="col-form-label">Uploaded Documents:</label>
+                                        <div style="border: 1px solid lightgray;height: 200px;overflow: auto;">
+                                            <div class="files-list"
+                                                *ngFor="let file of certificatesArray;let i=index">
+                                                <p style="margin-bottom: 0px;">{{ file?.name }}</p>
+                                                <button class="delete-file"
+                                                    (click)="deleteAttachment(i,'certificatesArray')">
+                                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <mat-dialog-actions align="end">
+
+
+                            <button type="button" class="btn btn-secondary btn-red" (click)="resetPanel(createIssue)">Reset</button>
+                            <button class="btn btn-success btn-green" type="submit">Submit</button>
+                            <button class="btn btn-danger btn-orange" (click)="closeDialog()"
+                                mat-dialog-close>Cancel</button>
+                        </mat-dialog-actions>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+

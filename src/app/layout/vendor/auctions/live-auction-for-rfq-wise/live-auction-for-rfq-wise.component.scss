@@ -1,0 +1,46 @@
+.ui-table-scrollable-body {
+    overflow: auto;
+    position: relative;
+    height: auto;
+    max-height: auto !important;
+    overflow-y: auto;
+}
+td{
+    font-size: 15px !important;
+}
+.pos {
+    position: fixed;
+    right: 83px;
+}
+.scroll{
+    width: 80%;
+    margin-left:5px !important; 
+}
+// .mat-dialog-container {
+//     width: 1445px !important;
+// }
+.modal-body {
+    position: relative;
+    flex: 1 1 auto;
+    padding: 1rem;
+    max-height: 52vh;
+    overflow-y: auto;
+    border-top: 1px solid #ed581780;
+}
+
+.modal-header{
+    display: block;
+}
+
+.count-down-timer-panel {
+    margin-top: 24px;
+    position: relative;
+    padding-left: 0px;
+    background: #0C2146;
+    color: #fff;
+    padding-left: 5px;
+    text-align: center;
+    border-radius: 10px;
+    height: 40px;
+    line-height: 35px;
+}

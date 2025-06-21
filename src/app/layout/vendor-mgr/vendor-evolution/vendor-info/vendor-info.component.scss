@@ -1,0 +1,24 @@
+.plusminus-container {
+    display: flex;
+    align-items: end;
+    padding: 6px;
+  }
+  .plusMinus {
+    background: #f6f6f6;
+    padding: 10px;
+    border-radius: 20px;
+    box-shadow: 0 1px 3px 1px #bfbfbf;
+    height: 29px;
+    margin: 2px 5px;
+    font-size: 12px;
+  }
+  .plusColor {
+    color: #008000;
+  }
+  .minusColor {
+    color: orangered;
+  }
+  .mat-success {
+    background-color: green;
+    color: #fff;
+}

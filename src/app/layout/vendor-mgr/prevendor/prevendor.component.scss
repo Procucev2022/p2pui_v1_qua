@@ -1,0 +1,24 @@
+.customCheck {
+    width: 22px;
+    height: 22px;
+    margin: 10px;
+}
+
+span.crud-icons.actionIcons {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    margin-right: 1rem;
+}
+
+.table-cell-overflow-ellipse {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 260px;
+}
+
+.evaluation-pencil {
+    cursor: pointer;
+    color: #142a7a;
+}

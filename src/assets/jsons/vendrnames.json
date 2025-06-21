@@ -1,0 +1,128 @@
+[
+    {
+        "vendorname":"POT",
+        "rfqsent":"RFQSent",
+        "queriesAnswered":"Answered",
+        "quotationsrecieved":"Recieved "
+    },
+    {
+        "vendorname":"JOT",
+        "rfqsent":"RFQSent",
+        "queriesAnswered":"Yet to be Answer",
+        "quotationsrecieved":"Recieved "
+    },
+    {
+        "vendorname":"AOT",
+        "rfqsent":"RFQSending",
+        "queriesAnswered":"Not Yet",
+        "quotationsrecieved":"Not Recieved "
+    },
+    {
+        "vendorname":"IOT",
+        "rfqsent":"Not Sent",
+        "queriesAnswered":"After rfqsent",
+        "quotationsrecieved":"After querry be Answered"
+    },
+    {
+        "vendorname":"BOT",
+        "rfqsent":"RFQSending",
+        "queriesAnswered":"Pending",
+        "quotationsrecieved":"Upto 10 "
+    },
+    {
+        "vendorname":"JOT",
+        "rfqsent":"RFQSent",
+        "queriesAnswered":"Yet to be Answer",
+        "quotationsrecieved":"Recieved "
+    },
+    {
+        "vendorname":"AOT",
+        "rfqsent":"RFQSending",
+        "queriesAnswered":"Not Yet",
+        "quotationsrecieved":"Not Recieved "
+    },
+    {
+        "vendorname":"POT",
+        "rfqsent":"RFQSent",
+        "queriesAnswered":"Answered",
+        "quotationsrecieved":"Recieved "
+    },
+    {
+        "vendorname":"BOT",
+        "rfqsent":"RFQSending",
+        "queriesAnswered":"Pending",
+        "quotationsrecieved":"Upto 10 "
+    },
+    {
+        "vendorname":"IOT",
+        "rfqsent":"Not Sent",
+        "queriesAnswered":"After rfqsent",
+        "quotationsrecieved":"After querry be Answered"
+    },
+    {
+        "vendorname":"POT",
+        "rfqsent":"RFQSent",
+        "queriesAnswered":"Answered",
+        "quotationsrecieved":"Recieved "
+    },
+    {
+        "vendorname":"JOT",
+        "rfqsent":"RFQSent",
+        "queriesAnswered":"Yet to be Answer",
+        "quotationsrecieved":"Recieved "
+    },
+    {
+        "vendorname":"AOT",
+        "rfqsent":"RFQSending",
+        "queriesAnswered":"Not Yet",
+        "quotationsrecieved":"Not Recieved "
+    },
+    {
+        "vendorname":"IOT",
+        "rfqsent":"Not Sent",
+        "queriesAnswered":"After rfqsent",
+        "quotationsrecieved":"After querry be Answered"
+    },
+    {
+        "vendorname":"BOT",
+        "rfqsent":"RFQSending",
+        "queriesAnswered":"Pending",
+        "quotationsrecieved":"Upto 10 "
+    },
+    {
+        "vendorname":"IOT",
+        "rfqsent":"Not Sent",
+        "queriesAnswered":"After rfqsent",
+        "quotationsrecieved":"After querry be Answered"
+    },
+    {
+        "vendorname":"POT",
+        "rfqsent":"RFQSent",
+        "queriesAnswered":"Answered",
+        "quotationsrecieved":"Recieved "
+    },
+    {
+        "vendorname":"JOT",
+        "rfqsent":"RFQSent",
+        "queriesAnswered":"Yet to be Answer",
+        "quotationsrecieved":"Recieved "
+    },
+    {
+        "vendorname":"IOT",
+        "rfqsent":"Not Sent",
+        "queriesAnswered":"After rfqsent",
+        "quotationsrecieved":"After querry be Answered"
+    },
+    {
+        "vendorname":"POT",
+        "rfqsent":"RFQSent",
+        "queriesAnswered":"Answered",
+        "quotationsrecieved":"Recieved "
+    },
+    {
+        "vendorname":"JOT",
+        "rfqsent":"RFQSent",
+        "queriesAnswered":"Yet to be Answer",
+        "quotationsrecieved":"Recieved "
+    }
+]

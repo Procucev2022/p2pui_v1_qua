@@ -1,0 +1,128 @@
+<div class="col-12 pad-nill">
+    <div class="table-title">
+        <div class="row">
+            <div class="col-sm-6">
+                <h2>Catalogue Items</h2>
+                <p><span class="dot"></span>{{itemList?.length}} Total</p>
+            </div>
+            <div class="col-sm-6">
+                <div style="float: right;">
+                    <h6><b><span class="text-danger">Note:</span> Rank Based on Price/Time in order</b></h6>
+                    <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                        (input)="vDt.filterGlobal($event.target.value, 'contains')" style="float: right;" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <p-table #vDt [columns]="itemHeaders" [value]="itemList" sortMode="multiple" [paginator]="true"
+        [rows]="itemList.length" id="quoteTable" [style]="{'width': '100%'}" [paginator]="true" [rows]="pageRecordSize"
+        id="quoteTable" exportFilename="venRequest" [(selection)]="selectedData">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <!-- <th style="width: 8em">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th> -->
+                <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width"> {{col.header}}
+                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+                <th style="width: 25em">Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns" let-index="rowIndex">
+            <tr [pSelectableRow]="rowData">
+                <!-- <td style="width: 8em">
+                    <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td> -->
+                <ng-container *ngFor="let col of columns">
+                    <td *ngIf="col.field != 'pricePerUnit' && col.field != 'desc' && col.field != 'vendorItemCode'" [style.width]="col.width">
+                        <span *ngIf="col.field != 'rank'">{{rowData[col.field]}} </span>
+                        <span *ngIf="col.field == 'rank'" class="rank-span">
+                            <span class="rank" [ngStyle]="{'background-color': rowData[col.field] == '1' ? '#34c759' : (rowData[col.field] == '2' ? '#fdb125' : '#f02e14') }"></span>
+                            <span style="padding-left: 10px;">{{rowData[col.field]}}</span>
+                        </span>
+                    </td>
+                    <td *ngIf="col.field == 'desc'" [style.width]="col.width" [ngClass]="{'table-cell-overflow-ellipse' : col.field == 'desc'  }">
+                        <span     [title]="rowData[col.field]"> {{rowData[col.field]}}</span>
+                    </td>
+                    <td *ngIf="col.field == 'vendorItemCode'" [style.width]="col.width">
+                        <span *ngIf="rowData['vendorItemCode'].length != 0 "> {{rowData['vendorItemCode']}}</span>
+                        <span *ngIf="rowData['vendorItemCode'].length == 0 ">NA</span>
+                    </td>
+                    <td pEditableColumn *ngIf="col.field == 'pricePerUnit' && rowData['isEdit']  && col.field != 'desc'"
+                        [style.width]="col.width">
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input id="{{'item' + index}}" class="form-control" pInputText type="number"
+                                    [(ngModel)]="rowData.pricePerUnit">
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                <span class="form-control"> {{rowData.pricePerUnit}}</span>
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td *ngIf="col.field == 'pricePerUnit' && !rowData['isEdit'] && col.field != 'desc'" [style.width]="col.width">
+                        {{rowData.pricePerUnit}}
+                    </td>
+                </ng-container>
+
+                <td style="width: 25em">
+                    <span *ngIf="!rowData['isEdit'] && rowData['isSaved']"
+                        (click)="editVendorData(rowData, index, 'edit')" style="color:green; cursor: default;">
+                        Saved</span>
+                    <ng-container *ngIf="!rowData['isSaved']">
+                        <button [ngClass]="{'disabledCls':rowData['editCheck']}" class="btn-skelton"
+                            *ngIf="!rowData['isEdit'] && rowData['status'] != 'ApprovalPending'"
+                            (click)="editVendorData(rowData, index, 'edit')">
+                            <img src="/assets/images/new/edit-data.png" [ngClass]="{'disableClsBtn': rowData['editCheck']}" title="Edit" width="32" style="width:38px"> <app-comment-alert-bell-blink [rowData]="rowData"></app-comment-alert-bell-blink>
+                        </button>
+                        <button class="btn-skelton btn-green" *ngIf="rowData['isEdit']" style="color: green;"
+                            (click)="editVendorData(rowData, index, 'save')">
+                            <img src="/assets/images/status/Approved.svg">Save
+                        </button>
+                        <button class="btn-skelton btn-red" *ngIf="rowData['isEdit']" style="color: rgb(153, 53, 14);"
+                            (click)="editVendorData(rowData, index, 'reset')">
+                            <i class="fa fa-times" aria-hidden="true"></i>Reset
+                        </button>
+                    </ng-container>
+
+                    <!-- <span class="crud-icons actionIcons">
+                        <span class="linkedCls" *ngIf="!rowData['isEdit'] && rowData['isSaved']"
+                            (click)="editVendorData(rowData, index, 'edit')"
+                            style="color:green; cursor: default; padding-right: 6px;"> Saved</span>
+                        <span *ngIf="!rowData['isSaved']">
+                            <button [disabled]="editCheck" class="linkedCls"
+                                *ngIf="!rowData['isEdit'] && rowData['status'] != 'ApprovalPending'"
+                                style="color:rgb(219, 104, 9); cursor: default; padding: 6px; border: none; background: none; border-radius: 8px;"
+                                (click)="editVendorData(rowData, index, 'edit')">
+                                <i class="fa fa-pencil" aria-hidden="true"></i> Edit
+                            </button>
+                            <span class="linkedCls" *ngIf="rowData['isEdit']"
+                                (click)="editVendorData(rowData, index, 'save')"
+                                style="color:green; padding-right: 10px;cursor: default">
+                                <i class="fa fa-check" aria-hidden="true" style="color:green; "></i> Save
+                            </span>
+                            <span class="linkedCls" *ngIf="rowData['isEdit']"
+                                style="color:rgb(153, 53, 14); padding-right: 10px;"
+                                (click)="editVendorData(rowData, index, 'reset')">
+                                <i class="fa fa-times" aria-hidden="true"></i> Reset
+                            </span>
+                        </span>
+                    </span> -->
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+                <td [attr.colspan]="5" style="text-align:center;">
+                    No Records Found.
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorleft">
+            <div *ngIf="vDt._totalRecords > 0">
+                <b>Showing {{vDt.first+1}} to {{vDt.first+vDt.rows > vDt.totalRecords?vDt.totalRecords: vDt.first+vDt.rows}} of {{vDt.totalRecords}}</b>
+                <!-- <app-page-info [totalRecords]="itemList?.length" [pageData]="paginatoryDetails"></app-page-info> -->
+            </div>
+        </ng-template>
+    </p-table>
+</div>

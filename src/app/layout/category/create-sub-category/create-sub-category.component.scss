@@ -1,0 +1,50 @@
+.modal-body {
+    min-height: 404px;
+    max-height: 416px;
+}
+
+::ng-deep .p-auto-cls {
+    width: 100%;
+    margin: 0;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+}
+
+::ng-deep .p-auto-cls button.ui-button {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 17px;
+}
+
+::ng-deep button.ui-autocomplete-dropdown {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 16px;
+}
+
+body .ui-state-disabled {
+    opacity: 1 !important;
+    background: red !important;
+}
+
+.link-cls {
+    color: #5151ec;
+    cursor: pointer;
+    margin: 5px 10px;
+    font-size: 12px;
+    border-bottom: 1px solid #0e59ca;
+    font-weight: 600;
+}
+
+.modal-body {
+    position: relative;
+    flex: 1 1 auto;
+    padding: 1rem;
+    max-height: 68vh;
+    min-height: 68vh;
+    overflow-y: auto;
+    border-top: 1px solid #ed581780;
+}

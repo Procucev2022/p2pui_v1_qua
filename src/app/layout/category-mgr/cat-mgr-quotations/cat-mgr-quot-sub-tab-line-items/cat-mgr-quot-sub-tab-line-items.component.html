@@ -1,0 +1,56 @@
+<p-table dataKey="id" #prqTable [columns]="lineItemsTableHeaders" [value]="lineItemsList" sortMode="multiple"
+  [paginator]="true" [rows]="pageRecordSize" id="prLineItemsTable" [rowsPerPageOptions]="pageOptions"
+  [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedPrData" [scrollable]="true">
+  <ng-template pTemplate="caption">
+    <div class="table-search">
+      <div class="row">
+        <div class="col-sm-6">
+          <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+            (input)="prqTable.filterGlobal($event.target.value, 'contains')" />
+        </div>
+        <div class="col-sm-6">
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <!-- <th style="width: 3em">
+        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+      </th> -->
+      <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+        {{col.header}}
+        <p-sortIcon [field]="col.field"></p-sortIcon>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-rowData let-columns="columns">
+    <tr [pSelectableRow]="rowData">
+      <!-- <td style="width: 3em">
+        <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+      </td> -->
+      <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
+        <span *ngIf="!col.isLink"> 
+          <span>{{rowData[col.field]}}</span>
+          
+        </span>
+        <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);"
+            > {{rowData[col.field]}} </a></span>
+
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage" let-columns>
+    <tr>
+      <td [attr.colspan]="5" style="text-align:center;">
+        No Records Found.
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="paginatorleft">
+    <div *ngIf="prqTable._totalRecords > 0">
+      <b>Showing {{prqTable.first+1}} to {{prqTable.first+prqTable.rows > prqTable.totalRecords?prqTable.totalRecords: prqTable.first+prqTable.rows}} of {{prqTable.totalRecords}}</b>
+      <!-- <app-page-info [totalRecords]="lineItemsList?.length" [pageData]="paginatoryDetails"></app-page-info> -->
+    </div>
+  </ng-template>
+</p-table>

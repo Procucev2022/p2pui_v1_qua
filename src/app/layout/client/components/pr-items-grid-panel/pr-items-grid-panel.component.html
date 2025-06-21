@@ -1,0 +1,649 @@
+<!-- <div class="row">
+    <div class="col-4">
+        <label class="col-12">Estimated Total PR Value</label>
+        <div class="form-group row estimatePRValuePanel">
+            <input [disabled]="estimatedPrEnableDisable" [ngModel]="estimatedPRValue" (ngModelChange)="prChange($event)" class="col-6 form-control" />
+        </div>
+    </div>
+
+    <div class="col-4" [hidden]="!onlyLinkedItems">
+        <label class="col-12">Estimated PR Value (For Linked Items) </label>
+        <div class="form-group row estimatePRValuePanel" >
+            <input [(ngModel)]="estimatedPRValueForLinkedItems" class="col-12 form-control" />
+        </div>
+    </div>
+
+    <div class="col-4" [hidden]="nonLinkPrValue">
+        <label class="col-12">Estimated PR Value (For Non Linked Items) </label>
+        <div class="form-group row estimatePRValuePanel" >
+            <input [(ngModel)]="estimatedPRValueForNonLinkedItems" class="col-6 form-control" />
+        </div>
+    </div> -->
+
+<div class="col-md-12 row">
+    <div class="col-md-4">
+        <label class="col-12">Estimated Total PR Value</label>
+        <input class="col-12 form-control" [disabled]="estimatedPrEnableDisable" [ngModel]="estimatedPRValue"
+            (ngModelChange)="prChange($event)" />
+    </div>
+    <div class="col-md-4" [hidden]="!onlyLinkedItems">
+        <label class="col-12">Estimated PR Value (For Linked Items) </label>
+        <input class="col-12 form-control" [(ngModel)]="estimatedPRValueForLinkedItems" />
+    </div>
+    <div class="col-md-4" [hidden]="nonLinkPrValue">
+        <label class="col-12">Estimated PR Value (For Non Linked Items) </label>
+        <input class="col-12 form-control" [(ngModel)]="estimatedPRValueForNonLinkedItems" />
+    </div>
+</div>
+<div class="col-12" style="padding: 10px 0px;">
+    <mat-accordion>
+        <mat-expansion-panel class="panel">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Procurement Request Summary
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="col-12 nonItemForm-cls">
+                <div class="table-title">
+                    <div class="row">
+                        <div class="col-sm-6">
+                        <h2>Procurement Request Summary</h2>
+                        <p><span class="dot"></span>{{prItemList?.length}} Total</p>
+                        </div>
+                        <div class="col-sm-6">
+                        <input type="text" class="main-input" pInputText size="50" placeholder="Search.."
+                            (input)="prItemListGrid.filterGlobal($event.target.value, 'contains')" style="float: right;" />
+                        </div>
+                    </div>
+                    </div>
+                <p-table class="linkTable" #prItemListGrid [columns]="prItemHeaders" [value]="prItemList"
+                    sortMode="multiple" [paginator]="true" [rows]="prItemList?.length" id="prItemListGridTable"
+                    [style]="{'width': '100%'}" exportFilename="prItemList" [(selection)]="selectedPrItemData"
+                    >
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+                                {{col.header}}
+                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                            </th>
+                            <th style="width: 4em">Actions</th>
+                            <!-- <th style="width: 100px">Quantity</th> -->
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                        <tr [pSelectableRow]="rowData">
+                            <td *ngFor="let col of columns" [style.width]="col.width">
+                                <!-- <span>{{rowData |json}}</span> -->
+                               <span *ngIf = "col.header == 'Quantity'"><input type="number" value="{{rowData[col.field]}}" min="1" [(ngModel)]="rowData[col.field]" style="width: 75px;"></span>
+                               <span *ngIf="col.field == 'description'" [title]="rowData[col.field]" class="description-class">
+                                {{rowData[col.field]}}
+                              </span>
+                               <span *ngIf = "col.header != 'Quantity' && col.field != 'description'"> {{rowData[col.field]}}</span>
+                            </td>
+                            <td style="width: 4em">
+                                <span class="crud-icons actionIcons">
+                                    <i class="fa fa-trash" style="cursor: pointer;"
+                                        (click)="removePRItem(rowData)"></i>
+                                </span>
+                            </td>
+
+                            <!-- <td style="width: 100px">
+                               <span><input type="number" value="{{rowData['quantity']}}" min="1" [(ngModel)]="rowData['quantity']" style="width: 75px;"></span>
+                            </td> -->
+
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage" let-columns>
+                        <tr>
+                            <td [attr.colspan]="5" style="text-align:center;">
+                                No Records Found.
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
+
+<div class="col-12 nonItemForm-cls">
+    <mat-tab-group selectedIndex="0">
+        <mat-tab [label]="'Catalogue Items - ' + linkedItemList.length ">
+            <div class="col-12 addItem">
+                <form class="row" [formGroup]="nonItemForm" novalidate>
+                    <div class="col-3 in-pad">
+                        <div class="col-12">
+                            <input class="form-control" (input)="linkedItemListGrid.filterGlobal($event.target.value, 'contains')" formControlName="description" placeholder="Item Description" />
+                        </div>
+                    </div>
+                    <div class="col-5 row in-pad">
+                        <div class="col-3">
+                            <input class="form-control" formControlName="specification" placeholder="Specification" />
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" type="number" formControlName="quantity"
+                                placeholder="Quantity" />
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" formControlName="uom" placeholder="Unit Of Measures" />
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" formControlName="price" placeholder="ESTD Price" />
+                        </div>
+                    </div>
+                    <div class="col-md-4 in-pad">
+                        <button type="button" class="btn btn-danger btn-red" (click)="resetNonItemForm()" >Reset</button>
+                        <button type="button" class="btn btn-primary btn-blue" (click)="addNonItemToPR()">Add Item to PR</button>
+                        <button type="button" class="btn btn-light" (click)="openBulkUploadModal()"><img src="/assets/images/upload-cloud.svg">Upload Excel</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-12 sub-cat-filter-sec" >
+               <app-sub-category-dropdown (updateSelection)="onSubCategoryChange($event)" [isMultipleSelect]="false"></app-sub-category-dropdown>
+            </div>
+            <div class="col-12 scr-pad">
+                <p-table dataKey="itemId" #linkedItemListGrid [columns]="linkedItemHeaders"
+                    [value]="linkedItemList" sortMode="multiple" [paginator]="true" [rows]="linkedItemList.length"
+                    id="linkedItemListTable" [style]="{'width': '100%'}" exportFilename="linkedItemList"
+                    [(selection)]="selectedLinkedItemData" selectionMode="single"
+                    scrollHeight="300px" [expandedRowKeys]="expandedRows">
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <!-- <th style="width: 3em">
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th> -->
+                            <th style="width: 2em"></th>
+                            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                {{col.header}}
+                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                            </th>
+                            <th style="width: 11em" *ngIf="isActions">Actions</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
+                        <tr [pSelectableRow]="rowData">
+                            <!-- <td style="width: 3em">
+                                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                            </td> -->
+                            <td style="width: 2em">
+                                <button type="button" pButton pRipple [pRowToggler]="rowData"
+                                    class="grid-expand" (click)="expanded ? getCloseVendorByItemId(rowData) : getVendorByItemId(rowData)">
+                                    <span *ngIf="expanded"><i class="fa fa-chevron-down"></i></span>
+                                    <span *ngIf="!expanded"><i class="fa fa-chevron-right"></i></span>
+                                </button>
+                                </td>
+                            <td *ngFor="let col of columns" style="width:300px">
+                                <!-- <span class="cellLinkCls" title="click on item to see list of vendors"
+                                    *ngIf="col.isLink"> <a href="javascript:void(0);"
+                                        (click)="getVendorByItemId(rowData)"> {{rowData[col.field]}}</a></span> -->
+                                <span *ngIf ="col.field == 'description'" class="description-class" [title]="rowData[col.field]"> {{rowData[col.field]}}</span>
+                                <span *ngIf="!col.isLink && col.field != 'description'"> {{rowData[col.field]}}</span>
+                                <!-- <span *ngIf="col.fieldType =='img'">
+                                   100  <img src="/assets/images/new/trade-down.svg" width="30" height="25" title="View Client Detials" />
+                                   100  <img src="/assets/images/new/trade-up.svg" width="30" height="25" title="View Client Detials" />
+                                </span> -->
+                            </td>
+                            <td style="width: 11em" *ngIf="isActions">
+                                <span class="crud-icons actionIcons">
+                                    <span class="linkCls" (click)="addItemToPR(rowData, 'single')">
+                                        <img class="image-icon" src="/assets/images/new/add-item-pr.svg" width="128" height="40" title="Add Item To PR" />
+                                    </span>
+                                </span>
+                            </td>
+
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="rowexpansion" let-rowData>
+                        <tr class="child-grid">
+                            <td colspan="6">
+                                <div class="p-p-3">
+                                    <div class="table-title">
+                                        <div class="row">
+                                        <div class="col-sm-6">
+                                            <h2>{{rowData?.description}}</h2>
+                                            <p><span class="dot"></span>{{rowData?.childs?.length}} Total</p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <!-- <input type="text" class="main-input" pInputText size="50" placeholder="Search.."
+                                            (input)="linkedVendorListByItemGrid.filterGlobal($event.target.value, 'contains')" style="float: right;" /> -->
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <p-table dataKey="id" #linkedVendorListByItemGrid [columns]="linkedVendorHeadersByItem"
+                                    [value]="rowData.childs" sortMode="multiple"
+                                        id="linkedVendorListByItemGrid"
+                                    [style]="{'width': '100%'}" exportFilename="venRequest"
+                                    [(selection)]="selectedLinkedVendorDataByItem" [scrollable]="true">
+                                    <ng-template pTemplate="header" let-columns>
+                                        <tr>
+                                            <th *ngFor="let col of columns" [pSortableColumn]="col.field"
+                                                [style.width]="col.width">
+                                                {{col.header}}
+                                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                                            </th>
+                                            <th style="width: 11em">Actions</th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                        <tr [pSelectableRow]="rowData">
+
+                                            <td *ngFor="let col of columns" [style.width]="col.width">
+                                                <span *ngIf="col.field == 'vendorName'">
+                                                    <app-vendor-info-icon-dialog [vendorData]="rowData"></app-vendor-info-icon-dialog> {{rowData[col.field]}}
+                                                    <img *ngIf="rowData['status'] == 'Completed'" width="18"
+                                                        src="https://img.icons8.com/color/48/000000/instagram-verification-badge.png" />
+                                                </span>
+                                                <span *ngIf="col.field != 'vendorName'">{{rowData[col.field]}}</span>
+                                            </td>
+                                            <td style="width: 11em">
+                                                <span class="crud-icons actionIcons">
+                                                    <span class="linkCls"
+                                                        (click)="addItemWithVendorIdToPR(rowData, 'single')">
+                                                        <img class="image-icon" src="/assets/images/new/add-item-pr.svg" width="128" height="40" title="Add Item To PR" /></span>
+                                                </span>
+                                            </td>
+
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="emptymessage" let-columns>
+                                        <tr>
+                                            <td [attr.colspan]="5" style="text-align:center;">
+                                                No Records Found.
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage" let-columns>
+                        <tr>
+                            <td [attr.colspan]="5" style="text-align:center;">
+                                No Records Found.
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="paginatorleft">
+                        <div *ngIf="linkedItemListGrid._totalRecords > 0">
+                            <b>Showing {{linkedItemListGrid.first+1}} to {{linkedItemListGrid.first+linkedItemListGrid.rows > linkedItemListGrid.totalRecords?linkedItemListGrid.totalRecords: linkedItemListGrid.first+linkedItemListGrid.rows}} of {{linkedItemListGrid.totalRecords}}</b>
+                            <!-- <app-page-info [totalRecords]="linkedItemList?.length" [pageData]="paginatoryDetails">
+                            </app-page-info> -->
+                        </div>
+                    </ng-template>
+                </p-table>
+            </div>
+        </mat-tab>
+        <mat-tab [label]="'Catalogue Vendors - '+ linkedVendorList.length">
+            <div class="col-12 addItem">
+                <form class="row" [formGroup]="nonItemForm" novalidate>
+                    <div class="col-3 in-pad">
+                        <div class="col-12">
+                            <input class="form-control" (input)="vendorListGrid.filterGlobal($event.target.value, 'contains')" formControlName="description" placeholder="Vendor name" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-12 scr-pad">
+                <p-table dataKey="vendorId" class="linkTable" #linkedVendorListGrid [columns]="linkedVendorHeaders" #vendorListGrid
+                    [value]="linkedVendorList" sortMode="multiple" [rows]="linkedVendorList.length"
+                    id="linkedVendorListGridTable" [style]="{'width': '100%'}" exportFilename="venRequest"
+                    [(selection)]="selectedLinkedVendorData"  scrollHeight="300px" [expandedRowKeys]="expandedRows">
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th style="width: 2em"></th>
+                            <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+                                {{col.header}}
+                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
+                        <tr [pSelectableRow]="rowData">
+                            <td style="width: 2em">
+                                <button type="button" pButton pRipple [pRowToggler]="rowData"
+                                    class="grid-expand" (click)="expanded ? getCloseItemsByVendorId(rowData) : getItemsByVendorId(rowData)">
+                                    <span *ngIf="expanded"><i class="fa fa-chevron-down"></i></span>
+                                    <span *ngIf="!expanded"><i class="fa fa-chevron-right"></i></span>
+                                </button>
+                            </td>
+                            <td *ngFor="let col of columns" [style.width]="col.width">
+                                <!-- <span *ngIf="col.isLink" class="cellLinkCls">
+                                    <a href="javascript:void(0);" (click)="getItemsByVendorId(rowData,$event)">
+                                        {{rowData[col.field]}} </a></span> -->
+                                <span *ngIf="col.field == 'vendorName'">  <app-vendor-info-icon-dialog [vendorData]="rowData"></app-vendor-info-icon-dialog>  {{rowData[col.field]}}
+                                    <img  width="18"  *ngIf="rowData['status'].uiDisplay == 'Completed'"
+                                        src="https://img.icons8.com/color/48/000000/instagram-verification-badge.png" />
+                                </span>
+                                <span *ngIf="col.field != 'vendorName'">{{rowData[col.field]}}</span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="rowexpansion" let-rowData>
+                        <tr class="child-grid">
+                            <td colspan="5">
+                                <div class="p-p-3">
+                                    <div class="table-title">
+                                        <div class="row">
+                                        <div class="col-sm-6">
+                                            <h2>{{rowData?.vendorName}}</h2>
+                                            <p><span class="dot"></span><span class="number-value">{{rowData?.childs?.length}}</span> Total</p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="main-input" pInputText size="50" placeholder="Search.."
+                                            (input)="itemListByVendorIdGrid.filterGlobal($event.target.value, 'contains')" style="float: right;" />
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <p-table dataKey="id" #itemListByVendorIdGrid [columns]="itemHeadersByVendorId"
+                                    [value]="rowData.childs" sortMode="multiple" [paginator]="true"
+                                    [rows]="rowData?.childs?.length" id="linkedItemListTable"
+                                    [style]="{'width': '100%'}" exportFilename="linkedItemList"
+                                    [(selection)]="selectedItemDataByVendorId" selectionMode="single"
+                                    [scrollable]="true" scrollHeight="350px">
+                                    <ng-template pTemplate="header" let-columns>
+                                        <tr>
+                                            <th style="width: 3em">
+                                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                            </th>
+                                            <th *ngFor="let col of columns" [pSortableColumn]="col.field"
+                                                [style.width]="col.width">
+                                                {{col.header}}
+                                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                                            </th>
+                                            <th style="width: 11em">Actions</th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                        <tr [pSelectableRow]="rowData">
+                                            <td style="width: 3em">
+                                                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                                            </td>
+                                            <td *ngFor="let col of columns" [style.width]="col.width">
+                                                <span class="cellLinkCls" *ngIf="col.isLink"> <a
+                                                        href="javascript:void(0);" (click)="getVendorByItemId(rowData)">
+                                                        {{rowData[col.field]}}</a></span>
+                                                <span *ngIf="!col.isLink && col.field != 'description'"> {{rowData[col.field]}}</span>
+                                                <span *ngIf ="col.field == 'description' " class="description-class" [title]="rowData[col.field]"> {{rowData[col.field]}}</span>
+                                            </td>
+                                            <td style="width: 11em">
+                                                <span class="crud-icons actionIcons">
+                                                    <span class="linkCls"
+                                                        (click)="addItemByVendorToPR(rowData, 'single')">
+                                                        <img class="image-icon" src="/assets/images/new/add-item-pr.svg" width="128" height="40" title="Add Item To PR" />
+                                                     </span>
+                                                </span>
+                                            </td>
+
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="emptymessage" let-columns>
+                                        <tr>
+                                            <td [attr.colspan]="5" style="text-align:center;">
+                                                No Records Found.
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage" let-columns>
+                        <tr>
+                            <td [attr.colspan]="5" style="text-align:center;">
+                                No Records Found.
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="paginatorleft">
+                        <div *ngIf="linkedVendorListGrid._totalRecords > 0">
+                            <!-- <app-page-info [totalRecords]="linkedVendorList?.length" [pageData]="paginatoryDetails">
+                            </app-page-info> -->
+                            <b>Showing {{linkedVendorListGrid.first+1}} to {{linkedVendorListGrid.first+linkedVendorListGrid.rows > linkedVendorListGrid.totalRecords?linkedVendorListGrid.totalRecords: linkedVendorListGrid.first+linkedVendorListGrid.rows}} of {{linkedVendorListGrid.totalRecords}}</b>
+                        </div>
+                    </ng-template>
+                </p-table>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</div>
+
+
+<ng-template #addItemToPRModal>
+    <div class="modal-header">
+        <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+    </div>
+    <div class="moda-body">
+        <div class="row">
+            <div class="col-12">
+                <div class="table-title">
+                    <div class="row">
+                    <div class="col-sm-6">
+                        <h2>Add Items</h2>
+                        <p><span class="dot"></span>{{addItemList?.length}} Total</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <!-- <input type="text" class="main-input" pInputText size="50" placeholder="Search.."
+                        (input)="addItemListGrid.filterGlobal($event.target.value, 'contains')" style="float: right;" /> -->
+                    </div>
+                    </div>
+                </div>
+                <p-table class="linkTable" #addItemListGrid [columns]="addItemHeaders" [value]="addItemList"
+                    sortMode="multiple" [rows]="addItemList.length" id="addItemListTable" [style]="{'width': '100%'}"
+                    exportFilename="addItemList" [scrollable]="true">
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+                                {{col.header}}
+                                <!-- <p-sortIcon [field]="col.field"></p-sortIcon> -->
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns" let-index="rowIndex">
+                        <tr [pSelectableRow]="rowData">
+                            <ng-container *ngFor="let col of columns">
+                                <td *ngIf="col.field != 'quantity'" [style.width]="col.width">
+                                    {{rowData[col.field]}}
+                                </td>
+                                <td pEditableColumn *ngIf="col.field == 'quantity' " [style.width]="col.width">
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input id="{{'item' + index}}" class="form-control" pInputText type="number" min="1"
+                                                [(ngModel)]="rowData.quantity">
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            <span class="form-control"> {{rowData.quanity}}</span>
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                            </ng-container>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage" let-columns>
+                        <tr>
+                            <td [attr.colspan]="5" style="text-align:center;">
+                                No Records Found.
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="paginatorleft">
+                        <div *ngIf="addItemListGrid._totalRecords > 0">
+                            <b>Showing {{addItemListGrid.first+1}} to {{addItemListGrid.first+addItemListGrid.rows > addItemListGrid.totalRecords?addItemListGrid.totalRecords: addItemListGrid.first+addItemListGrid.rows}} of {{addItemListGrid.totalRecords}}</b>
+                            <!-- <app-page-info [totalRecords]="addItemList?.length" [pageData]="paginatoryDetails">
+                            </app-page-info> -->
+                        </div>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" type="button" mat-dialog-close>Cancel</button>
+        <button type="button" class="btn btn-success" (click)="addItemsToPrItems()">Add Items to PR</button>
+    </div>
+
+</ng-template>
+
+
+<ng-template #bulkUploadPRModal>
+    <div class="modal-header">
+        <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+        <div class="col-6">Bulk Upload</div>
+    </div>
+    <div class="moda-body">
+        <div class="col-md-12">
+            <label class="col-sm-12" for="uploadBOQ" >Upload Bill of Material / Bill of Quantity (BOM/BOQ):</label>
+            <div class="col-sm-12">
+                <input type="file" style="padding: 3px;" class="form-control" id="file_Upload"
+                    placeholder="Add File Here" name="uploadBOQ" ngModel #uploadBOQ="ngModel"
+                    (change)="uploadBOQFile($event)">
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" type="button" mat-dialog-close>Cancel</button>
+        <button type="button" class="btn btn-success" (click)="convertBoQtoPrItems()">Add Items to PR</button>
+    </div>
+</ng-template>
+
+
+
+<!-- <div class="col-12 scr-pad sub-vendor-grid">
+    <mat-tab-group>
+        <mat-tab label="Items List">
+            <div class="col-12 scr-pad">
+                <p-table class="linkTable" #itemListByVendorIdGrid [columns]="itemHeadersByVendorId"
+                    [value]="itemListByVendorId" sortMode="multiple" [paginator]="true"
+                    [rows]="itemListByVendorId.length" id="linkedItemListTable"
+                    [style]="{'width': '100%'}" exportFilename="linkedItemList"
+                    [(selection)]="selectedItemDataByVendorId" selectionMode="single"
+                    [scrollable]="true" scrollHeight="100px">
+                    <ng-template pTemplate="caption">
+                        <div class="searchPanel">
+                            <input type="text" pInputText size="50" placeholder="Search.."
+                                (input)="itemListByVendorIdGrid.filterGlobal($event.target.value, 'contains')"
+                                style="width:auto; float: right;" />
+                        </div>
+                        <div>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th style="width: 3em">
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th>
+                            <th *ngFor="let col of columns" [pSortableColumn]="col.field"
+                                [style.width]="col.width">
+                                {{col.header}}
+                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                            </th>
+                            <th style="width: 11em">Actions</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                        <tr [pSelectableRow]="rowData">
+                            <td style="width: 3em">
+                                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                            </td>
+                            <td *ngFor="let col of columns" [style.width]="col.width">
+                                <span class="cellLinkCls" *ngIf="col.isLink"> <a
+                                        href="javascript:void(0);" (click)="getVendorByItemId(rowData)">
+                                        {{rowData[col.field]}}</a></span>
+                                <span *ngIf="!col.isLink"> {{rowData[col.field]}}</span>
+                            </td>
+                            <td style="width: 11em">
+                                <span class="crud-icons actionIcons">
+                                    <span class="linkCls"
+                                        (click)="addItemByVendorToPR(rowData, 'single')"> Add Item to
+                                        PR3 </span>
+                                </span>
+                            </td>
+
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage" let-columns>
+                        <tr>
+                            <td [attr.colspan]="5" style="text-align:center;">
+                                No Records Found.
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="paginatorleft">
+                        <div *ngIf="itemListByVendorId?.length > 0">
+                            <app-page-info [totalRecords]="itemListByVendorId?.length"
+                                [pageData]="paginatoryDetails"></app-page-info>
+                        </div>
+                    </ng-template>
+                </p-table>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</div> -->
+
+<!-- <div class="col-12 scr-pad sub-vendor-grid">
+    <mat-tab-group selectedIndex="0" *ngIf="selectedLinkedItemData?.length>0">
+        <mat-tab label="Vendors">
+            <p-table class="linkTable" #linkedVendorListByItemGrid [columns]="linkedVendorHeadersByItem"
+                [value]="linkedVendorListByItem" sortMode="multiple"
+                [rows]="linkedVendorListByItem.length" id="linkedVendorListByItemGrid"
+                [style]="{'width': '100%'}" exportFilename="venRequest"
+                [(selection)]="selectedLinkedVendorDataByItem" [scrollable]="true">
+                <ng-template pTemplate="caption">
+                    <div class="col-12 row pad-nill">
+                        <div class="col-4 pad-nill">
+                            <h5 class="screen-head">{{selectedLinkedItemData[0].description}}</h5>
+                        </div>
+                        <div class="col-8 searchPanel pad-nill">
+                            <input type="text" pInputText size="50" placeholder="Search.."
+                                (input)="linkedVendorListByItemGrid.filterGlobal($event.target.value, 'contains')"
+                                style="width:auto; float: right;" />
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th *ngFor="let col of columns" [pSortableColumn]="col.field"
+                            [style.width]="col.width">
+                            {{col.header}}
+                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                        </th>
+                        <th style="width: 11em">Actions</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                    <tr [pSelectableRow]="rowData">
+                        <td *ngFor="let col of columns" [style.width]="col.width">
+                            <span *ngIf="col.field == 'vendorName'">{{rowData[col.field]}}
+                                <img *ngIf="rowData['status'] == 'Completed'" width="18"
+                                    src="https://img.icons8.com/color/48/000000/instagram-verification-badge.png" />
+                            </span>
+                            <span *ngIf="col.field != 'vendorName'">{{rowData[col.field]}}</span>
+                        </td>
+                        <td style="width: 11em">
+                            <span class="crud-icons actionIcons">
+                                <span class="linkCls"
+                                    (click)="addItemWithVendorIdToPR(rowData, 'single')"> Add Item to
+                                    PR2 </span>
+                            </span>
+                        </td>
+
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage" let-columns>
+                    <tr>
+                        <td [attr.colspan]="5" style="text-align:center;">
+                            No Records Found.
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="paginatorleft">
+                    <div *ngIf="linkedVendorListByItem?.length > 0">
+                        <app-page-info [totalRecords]="linkedVendorListByItem?.length"
+                            [pageData]="paginatoryDetails"></app-page-info>
+                    </div>
+                </ng-template>
+            </p-table>
+        </mat-tab>
+    </mat-tab-group>
+</div> -->

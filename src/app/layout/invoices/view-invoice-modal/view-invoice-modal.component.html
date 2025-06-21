@@ -1,0 +1,92 @@
+<div class="modal-header">
+    <!-- <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button> -->
+    <div class="col-6">Invoice Details</div>
+    <div class="col-6  text-right" >
+        <i class="fa fa-plus plusMinus plusColor" style="padding-right: 10px;cursor:pointer"  data-toggle="tooltip" title="zoom in" (click)="zoomin()"></i>
+        <i class="fa fa-minus plusMinus minusColor " style="padding-right: 30px; cursor:pointer"  data-toggle="tooltip" title="zoom out" (click)="zoomout()"></i>
+        <button class="btn btn-warning modal-close-btn" mat-dialog-close><i class="fa fa-window-close" aria-hidden="true"></i></button>
+    </div>
+</div>
+<div class="modal-body row ">
+    <div class="col-6">
+        <!-- <div class="row">
+            <div class="col-6"> -->
+                <label>Invoice Id :  </label>
+            <!-- </div>
+            <div class="col-6"> -->
+                <label> <span class="label-value">{{ invoiceData.invoiceId }}</span> </label>
+            <!-- </div>
+        </div> -->
+    </div>
+    <div class="col-6">
+        <!-- <div class="row">
+            <div class="col-6"> -->
+                <label>Invoice Generated Date : </label>
+            <!-- </div>
+            <div class="col-6"> -->
+                <label>
+          <span class="label-value">{{ invoiceData.createdTS | date: 'dd-MM-yyyy hh:mm:ss a' }}</span>
+        </label>
+            <!-- </div>
+        </div> -->
+    </div>
+    <div class="col-6">
+        <!-- <div class="row">
+            <div class="col-6"> -->
+                <label>Description : </label>
+            <!-- </div>
+            <div class="col-6"> -->
+                <label>
+          <span class="label-value">{{ invoiceData.invoiceDesc }}</span>
+        </label>
+            <!-- </div>
+        </div> -->
+    </div>
+    <div class="col-6">
+        <!-- <div class="row">
+            <div class="col-6"> -->
+                <label>Remarks : </label>
+            <!-- </div>
+            <div class="col-6"> -->
+                <label> <span class="label-value">{{ invoiceData.remarks }}</span> </label>
+            <!-- </div>
+        </div> -->
+    </div>
+    <div class="col-6">
+        <!-- <div class="row">
+            <div class="col-6"> -->
+                <label>Invoice Value : </label>
+            <!-- </div>
+            <div class="col-6"> -->
+                <label><span class="label-value">Rs. {{ invoiceData?.invoiceAmount }}</span> </label>
+            <!-- </div>
+        </div> -->
+    </div>
+    <div class="col-6">
+        <!-- <div class="row">
+            <div class="col-6"> -->
+                <label>Invoice Status : </label>
+            <!-- </div>
+            <div class="col-6"> -->
+                <label><span class="label-value"
+            style="color: rgb(228, 94, 41);">{{ invoiceData?.clientStatus?.uiDisplay}}</span> </label>
+            <!-- </div>
+        </div> -->
+    </div>
+    <div class="col-12">
+        <mat-tab-group>
+            <mat-tab label="Invoice Items" *ngIf="invoiceGridData">
+                 <app-common-grid [gridData]="invoiceGridData" [parentId]="invoiceData.invoiceId" (actionEvent)="onClickCommonGrid($event)"></app-common-grid>
+                 <mat-dialog-actions align="end">
+                    <button type="button" class="btn btn-success" [disabled]="invoiceStatus == 'Accepted'" (click)="accpetInvoice()" *ngIf="roleName == 'ClientInitiator'">Accept Invoice</button>
+                </mat-dialog-actions>            
+            </mat-tab>
+            <mat-tab label="Additional Items"  *ngIf="additionalItemsGridData">
+                <app-common-grid [gridData]="additionalItemsGridData" [parentId]="invoiceData.invoiceId" (actionEvent)="onClickCommonGrid($event)"></app-common-grid>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>
+<!-- <mat-dialog-actions align="end">
+    <button [disabled]="invoiceStatus == 'Accepted'" mat-raised-button color="primary" (click)="accpetInvoice()" *ngIf="roleName == 'ClientInitiator'">Accept Invoice</button>
+</mat-dialog-actions> -->

@@ -1,0 +1,362 @@
+$topnav-background-color: #fff;
+
+.sidebar {
+    border-radius: 0;
+    position: fixed;
+    z-index: 1000;
+    top: 50px;
+    left: 200px;
+    width: 274px;
+    margin-left: -200px;
+    border: none;
+    border-radius: 0;
+    overflow-y: auto;
+    background-color: #0C2146;
+    bottom: 0;
+    overflow-x: hidden;
+    padding-bottom: 25px;
+    white-space: nowrap;
+    -webkit-transition: all 0.2s ease-in-out;
+    -moz-transition: all 0.2s ease-in-out;
+    -ms-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+    font-size: 14px;
+    letter-spacing: 0.00938em;
+
+    // border-top: 1px solid rgba(255,255,255,0.3);
+    .list-group {
+        a.list-group-item {
+            background: #0C2146;
+            border: 0;
+            border-radius: 0;
+            color: $topnav-background-color;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 0.8rem 1.25rem;
+            opacity: 0.5;
+
+            .fa {
+                margin-right: 10px;
+            }
+
+            img {
+                padding-right: 8px;
+            }
+        }
+
+        a:hover {
+            opacity: 1;
+            text-decoration: none;
+            background: linear-gradient(89.98deg, #042B70 1.88%, #05193D 99.65%);
+        }
+
+
+        a.router-link-active {
+            opacity: 1;
+            background: linear-gradient(89.98deg, #042B70 1.88%, #05193D 99.65%);
+            border-left: 4px solid #45BBFF;
+        }
+
+        .header-fields {
+            padding-top: 10px;
+
+            >.list-group-item:first-child {
+                border-top: 1px solid rgba(255, 255, 255, 0.2);
+            }
+        }
+    }
+
+    .sidebar-dropdown {
+        *:focus {
+            border-radius: none;
+            border: none;
+        }
+
+        .panel-title {
+            font-size: 1rem;
+            height: 50px;
+            margin-bottom: 0;
+
+            a {
+                color: #fff;
+                text-decoration: none;
+                font-weight: 400;
+                background: $topnav-background-color;
+
+                span {
+                    position: relative;
+                    display: block;
+                    padding: 0.75rem 1.5rem;
+                    padding-top: 1rem;
+                }
+            }
+
+            a:hover,
+            a:focus {
+                color: #fff;
+                outline: none;
+                outline-offset: -2px;
+            }
+        }
+
+        .panel-title:hover {
+            background: #2874f0;
+        }
+
+        .panel-collapse {
+            border-radious: 0;
+            border: none;
+
+            .panel-body {
+                .list-group-item {
+                    border-radius: 0;
+                    background-color: $topnav-background-color;
+                    border: 0 solid transparent;
+
+                    a {
+                        color: #fff;
+                    }
+
+                    a:hover {
+                        color: #fff;
+                    }
+                }
+
+                .list-group-item:hover {
+                    background: #0C2146;
+                    ;
+                }
+            }
+        }
+    }
+}
+
+.nested-menu {
+    .list-group-item {
+        cursor: pointer;
+    }
+
+    .nested {
+        list-style-type: none;
+    }
+
+    ul.submenu {
+        display: none;
+        height: 0;
+    }
+
+    & .expand {
+        ul.submenu {
+            display: block;
+            list-style-type: none;
+            height: auto;
+
+            li {
+                a {
+                    color: #0C2146;
+                    ;
+                    padding: 5px;
+                    display: block;
+                }
+            }
+        }
+    }
+}
+
+.showMobileMenu {
+    display: none;
+}
+
+@media screen and (max-width: 992px) {
+    .sidebar {
+        top: 54px;
+        left: 0px;
+    }
+}
+
+@media print {
+    .sidebar {
+        display: none !important;
+    }
+}
+
+@media (min-width: 992px) {
+    .header-fields {
+        display: none;
+    }
+}
+
+// For Mobile View
+@media (max-width: 992px) and (min-width: 320px) {
+
+    .showMobileMenu {
+        display: block;
+        width: 274px;
+        background: #b2592e;
+        padding: 1rem;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        font-size: 1.2rem;
+    }
+
+    .sidebar {
+        border-radius: 0;
+        position: fixed;
+        z-index: 1000;
+        top: 106px !important;
+        left: 0;
+        width: 274px;
+        margin-left: 0 !important;
+        border: none;
+        border-radius: 0;
+        overflow-y: auto;
+        background-color: #0C2146;
+        bottom: 0;
+        overflow-x: hidden;
+        padding-bottom: 25px;
+        white-space: nowrap;
+        transition: all 0.2s ease-in-out;
+        font-size: 14px;
+        letter-spacing: 0.00938em;
+    }
+
+    .navbar .logoAdjust img {
+        padding: 0px 10px;
+    }
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 0px rgba(255, 255, 255, 1);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    -webkit-box-shadow: inset 0 0 3px rgba(255, 255, 255, 1);
+}
+
+.toggle-button {
+    position: fixed;
+    width: 230px;
+    cursor: pointer;
+    padding: 5px 10px;
+    bottom: 0;
+    background: #0C2146;
+    color: #fff;
+    box-shadow: 0px 1px 8px -5px #ffffff;
+
+    i {
+        font-size: 23px;
+    }
+
+    &:hover {
+        background: #0C2146;
+        color: #fff;
+    }
+
+    border-top: 0px solid #fff;
+    -webkit-transition: all 0.2s ease-in-out;
+    -moz-transition: all 0.2s ease-in-out;
+    -ms-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+}
+
+.collapsed {
+
+    // width: 47px;
+    span {
+        display: none;
+    }
+}
+
+.nested-menu ul li a {
+    font-weight: 500;
+}
+
+.sidebar .list-group a.list-group-item {
+    font-weight: 500;
+    font-family: "Poppins", sans-serif;
+    // border-bottom: 1px dotted #0C214647;
+}
+
+*:focus {
+    border-radius: none;
+    border: none;
+}
+
+::ng-deep .gmt-container {
+    ::ng-deep .sidebar {
+        background: linear-gradient(89.98deg, #ae5431 1.88%, #FFC107 99.65%) !important;
+    }
+
+    .sidebar .list-group a:hover {
+        opacity: 1;
+        text-decoration: none;
+        background: linear-gradient(89.98deg, #ae5431 1.88%, #FFC107 99.65%) !important;
+    }
+
+    .sidebar .list-group a.router-link-active {
+        opacity: 1;
+        background: linear-gradient(89.98deg, #ae5431 1.88%, #ff4800 99.65%) !important;
+        border-left: 4px solid #FFC107 !important;
+    }
+
+    .sidebar .list-group a:hover {
+        opacity: 1;
+        text-decoration: none;
+        background: linear-gradient(89.98deg, #ae5431 1.88%, #ff4800 99.65%) !important;
+    }
+}
+
+::ng-deep .bfs-container {
+    ::ng-deep .sidebar {
+        background: linear-gradient(112deg, #047ebd 1.88%, #423e49 99.65%) !important;
+    }
+
+    .sidebar .list-group a.list-group-item {
+        background: #0C2146 !important;
+        border: 0;
+        border-radius: 0;
+        color: #fff;
+        text-decoration: none;
+        font-size: 16px;
+        padding: 1rem 1.25rem;
+        opacity: 0.5;
+        border-bottom: 1px solid #f8f8f81f !important;
+    }
+
+    .sidebar .list-group a.router-link-active {
+        opacity: 1;
+        background: linear-gradient(176deg, #03A9F4 1.88%, #673AB7 99.65%) !important;
+        ;
+        //linear-gradient(89.98deg, #66899a57 1.88%, #2196F3 99.65%) !important;
+        border-left: 6px solid #FFC107 !important;
+    }
+
+    .sidebar .list-group a:hover {
+        opacity: 1;
+        text-decoration: none;
+        background: linear-gradient(176deg, #03A9F4 1.88%, #673AB7 99.65%) !important;
+    }
+
+}
+
+.expiry-text {
+
+    background: #263b5f;
+}
+
+.gmt-container {
+
+    .expiry-text {
+        background: #e7a114;
+    }
+}

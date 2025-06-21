@@ -1,0 +1,401 @@
+<div class="modal-header">
+    <button id="viewpr" name="viewpr" name="acceptpr" class="btn-skelton modal-close-btn" mat-dialog-close>✖</button>
+    <div class="col-6">
+        <h5>View PR</h5>
+    </div>
+    <div class="col-6  text-right" >
+        <i class="fa fa-plus plusMinus plusColor" style="padding-right: 10px;cursor:pointer"  data-toggle="tooltip" title="zoom in" (click)="zoomin()"></i>
+        <i class="fa fa-minus plusMinus minusColor " style="padding-right: 30px; cursor:pointer"  data-toggle="tooltip" title="zoom out" (click)="zoomout()"></i>
+        <button class="btn btn-warning modal-close-btn" mat-dialog-close><i class="fa fa-window-close" aria-hidden="true"></i></button>
+    </div>
+</div>
+<div class="modal-body" >
+    <div class="col-12">
+        <div class="view-details-panel-cls">
+            <div class="panel-content-box" id="PRdata">
+                <div class="col-12 row pad-nill cust-card">
+                    <div class="col-md-6 form-group row" style="margin-top: 5px">
+                        <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
+                            class="col-sm-6 col-form-label">PR ID</label>
+                        <div class="col-sm-6 col-form-label">
+                            {{viewPrByIdList.prId}}
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group row" style="margin-top: 5px">
+                        <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
+                            class="col-sm-6 col-form-label">PR Corresponds</label>
+                        <div class="col-sm-6 col-form-label">
+                            {{viewPrByIdList.prCorrespond}}
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group row">
+                        <label for="deptName" style="font-size: medium; font-weight: bolder;"
+                            class="col-sm-6 col-form-label">Department name</label>
+                        <div class="col-sm-6 col-form-label">
+                            {{viewPrByIdList.deptName}}
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group row">
+                        <label for="prDescription" style="font-size: medium; font-weight: bolder;"
+                            class="col-sm-6 col-form-label">Project Description</label>
+                        <div class="col-sm-6 col-form-label">
+                            {{viewPrByIdList.prDescription}}
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group row">
+                        <label for="singleVendor" style="font-size: medium; font-weight: bolder;"
+                            class="col-sm-6 col-form-label">Single vendor ?</label>
+                        <div class="col-sm-6">
+                            <div class="col-form-label" *ngIf="viewPrByIdList.singleVendor">
+                                Yes
+                            </div>
+                            <div class="col-form-label" *ngIf="!viewPrByIdList.singleVendor">
+                                No
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group row">
+                        <label for="singleVendor" style="font-size: medium; font-weight: bolder;"
+                            class="col-sm-6 col-form-label">suggested vendors ? <br>
+                            <!-- if Yes for Single Vendor -->
+                        </label>
+                        <div class="col-sm-6">
+                            <div class="col-form-label" *ngIf="viewPrByIdList.suggestNewVendor">Yes</div>
+                            <div class="col-form-label" *ngIf="!viewPrByIdList.suggestNewVendor">No</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" *ngIf="viewPrByIdList.prVendors.length>0">
+                    <div class="col-12 page-title">
+                        <h5>Vendor Details : </h5>
+                    </div>
+                    <mat-card *ngFor="let singleVendor of viewPrByIdList.prVendors; let i = index;">
+                        <div class="form-group row">
+                            <label for="companyName" style="font-size: medium; font-weight: bolder;"
+                                class="col-sm-2 col-form-label">Company Name</label>
+                            <div class="col-sm-4 col-form-label">
+                                {{singleVendor.companyName}}
+                            </div>
+                            <label for="contactPerson" style="font-size: medium; font-weight: bolder;"
+                                class="col-sm-3 col-form-label">Contact Person</label>
+                            <div class="col-sm-3 col-form-label">
+                                {{singleVendor.contactPerson}}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="email" style="font-size: medium; font-weight: bolder;"
+                                class="col-sm-2 col-form-label">Email</label>
+                            <div class="col-sm-4 col-form-label">
+                                {{singleVendor.email}}
+                            </div>
+                            <label for="phone" style="font-size: medium; font-weight: bolder;"
+                                class="col-sm-3 col-form-label">Contact Number</label>
+                            <div class="col-sm-3 col-form-label">
+                                {{singleVendor.phone}}
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+                <div class="col-12 row pad-nill cust-card">
+                    <div class="col-md-6 form-group row">
+                        <label for="rateCardAvailable" style="font-size: medium; font-weight: bolder;"
+                            class="col-sm-6 col-form-label">Quote/Rate Card Available ?</label>
+                        <div class="col-sm-6">
+                            <div class="" *ngIf="viewPrByIdList.rateCardAvailable">
+                                <label class="form-check-label col-form-label" for="Product">Yes</label>
+                            </div>
+                            <div class="" *ngIf="!viewPrByIdList.rateCardAvailable">
+                                <label class="form-check-label col-form-label" for="Service">No</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group row" *ngIf="viewPrByIdList.rateCardAvailable">
+                        <label for="rateCardDoc" style="font-size: medium; font-weight: bolder;"
+                            class="col-sm-6 col-form-label">Upload Rate Card</label>
+                        <div class="col-sm-6 col-form-label">
+                            {{viewPrByIdList?.ratecardName}}
+                            <a [href]="'data:application/octet-stream;base64,' + viewPrByIdList?.rateCardDocument | filePipe"
+                                download="{{viewPrByIdList?.ratecardName}}"><i class="fa fa-download" aria-hidden="true"
+                                    data-toggle="tooltip" [title]="'Download '+ viewPrByIdList?.ratecardName"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group row">
+                        <label for="futureRequirement" style="font-size: medium; font-weight: bolder;"
+                            class="col-sm-6 col-form-label">Future Requirement Plan</label>
+                        <div class="col-sm-6 col-form-label">
+                            {{viewPrByIdList.futureRequirement}}
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group row">
+                        <label for="priority" style="font-size: medium; font-weight: bolder;"
+                            class="col-sm-6 col-form-label">Priority </label>
+                        <div class="col-sm-6 col-form-label">{{viewPrByIdList.priority}}</div>
+                    </div>
+                    <div class="col-md-6 form-group row">
+                        <label for="dueDate" style="font-size: medium; font-weight: bolder;"
+                            class="col-sm-6 col-form-label">Expected Time</label>
+                        <div class="col-sm-6 col-form-label">
+                            {{viewPrByIdList.dueDate | date: 'dd-MM-yyyy'}}
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group row">
+                        <label for="inputPassword" style="font-size: medium; font-weight: bolder;"
+                            class="col-sm-6 col-form-label">Estimated PR Value (in INR)</label>
+                        <div class="col-sm-6 col-form-label">
+                            {{viewPrByIdList.estimatedPrvalue}}
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group row" *ngIf="isCapex">
+                        <label for="inputPassword" style="font-size: medium; font-weight: bolder;"
+                            class="col-sm-6 col-form-label">Square Feet</label>
+                        <div class="col-sm-6 col-form-label">
+                            {{viewPrByIdList.totalSqft}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 pad-nill" *ngIf="!isCapex">
+                <div class="table-title">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h2>Items</h2>
+                            <p><span class="dot"></span>{{viewPrByIdList?.pritems?.length}} Total</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <input class="main-input" style="float: right;" type="text" pInputText size="50"
+                                placeholder="Search.."
+                                (input)="prLineitemsViewTable.filterGlobal($event.target.value, 'contains')" />
+                        </div>
+                    </div>
+                </div>
+                <!-- <mat-card class="col-12" style="margin-bottom: 5px;"
+                        *ngFor="let createPR of viewPrByIdList.pritems; let i = index;">
+
+                        <div class="form-group row">
+                            <label for="staticEmail" style="font-size: medium; font-weight: bolder;"
+                                class="col-sm-5 col-form-label">Product/Service Description</label>
+                            <div class="col-sm-5 content-value">
+                              {{createPR.description}}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" style="font-size: medium; font-weight: bolder;"
+                                class="col-sm-5 col-form-label">Specifications</label>
+                            <div class="col-sm-5 content-value">
+                                {{createPR.brand}}
+                            </div>
+
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" style="font-size: medium; font-weight: bolder;"
+                                class="col-sm-5 col-form-label">Unit Of Measures</label>
+                            <div class="col-sm-5 content-value">
+                               {{createPR.unitofMeasures}}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" style="font-size: medium; font-weight: bolder;"
+                                class="col-sm-5 col-form-label">Quantity</label>
+                            <div class="col-sm-5 content-value" >
+                               {{createPR.quantity}}
+                            </div>
+                        </div>
+                    </mat-card> -->
+                <p-table #prLineitemsViewTable [columns]="prLineItemsDetails" [value]="viewPrByIdList.pritems"
+                    sortMode="multiple" [paginator]="true" [rows]="pageRecordSize" id="prLineitemsViewTable"
+                    [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}" exportFilename="services"
+                    [(selection)]="selectedData" [scrollable]="true">
+                    <!-- <ng-template pTemplate="caption">
+                        <div class="col-12 row pad-nill">
+                            <div class="col-4 pad-nill">
+                                <h5 class="screen-head">Items</h5>
+                            </div>
+                            <div class="col-8 searchPanel pad-nill">
+                            <input type="text" pInputText size="50" placeholder="Search.."
+                                (input)="prLineitemsViewTable.filterGlobal($event.target.value, 'contains')"
+                                style="width:auto; float: right;" />
+                            </div>
+                        </div>
+                    </ng-template> -->
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <!-- <th style="width: 3em">
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th> -->
+                            <th [style.width]="col.width" *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                {{col.header}}
+                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                            </th>
+                            <!-- <th>Actions</th> -->
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                        <tr [pSelectableRow]="rowData">
+                            <!-- <td style="width: 3em">
+                                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                            </td> -->
+                            <td [style.width]="col.width" *ngFor="let col of columns">
+                                <span *ngIf="!col.isLink"> {{rowData[col.field]}}</span>
+                                <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);"
+                                        (click)="getRFQs(rowData)">
+                                        {{rowData[col.field]}} </a></span>
+
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage" let-columns>
+                        <tr>
+                            <td [attr.colspan]="5" style="text-align:center;">
+                                No Records Found.
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template #acceptModal>
+                        <form (submit)="acceptPrData(aceeptPRForm)" name="aceeptPRForm" #aceeptPRForm="ngForm"
+                            novalidate>
+                            <mat-dialog-content>
+                                <h5>Please enter closure date and accept PR</h5>
+
+
+                                <div class="col-12 form-group">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>Choose Closure Date</mat-label>
+                                        <input matInput [matDatepicker]="picker" name="prClosureData" required
+                                            [(ngModel)]="prClosureDate" [min]="minDate" id="prClosureData">
+                                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                            </mat-dialog-content>
+
+                            <mat-dialog-actions align="end">
+                                <button mat-raised-button color="primary" type="submit" cdkFocusInitial>Accept</button>
+                                <button mat-raised-button type="button" color="warn" mat-dialog-close>Cancel</button>
+                            </mat-dialog-actions>
+                        </form>
+                    </ng-template>
+                    <ng-template pTemplate="paginatorleft">
+                        <div *ngIf="prLineitemsViewTable._totalRecords > 0">
+                            <b>Showing {{prLineitemsViewTable.first+1}} to {{prLineitemsViewTable.first+prLineitemsViewTable.rows > prLineitemsViewTable.totalRecords?prLineitemsViewTable.totalRecords: prLineitemsViewTable.first+prLineitemsViewTable.rows}} of {{prLineitemsViewTable.totalRecords}}</b>
+                            <!-- <app-page-info [totalRecords]="viewPrByIdList.pritems.length"
+                                [pageData]="paginatoryDetails">
+                            </app-page-info> -->
+                        </div>
+                    </ng-template>
+                </p-table>
+            </div>
+            <div class="col-12" *ngIf="isCapex">
+                <div class="row section-container" style="min-height: 420px;    display: block;    overflow: hidden;
+                    width: 100%;">
+                        <app-quot-compare-view *ngIf="showQuoteComp" [prId]="viewPrByIdList?.id" [quoteItemList]="this.viewPrByIdList.pritems" [quoteComparisionData]="quoteComGeneratedData"  ></app-quot-compare-view>
+                    </div>
+            </div>
+
+
+            <div class="card" style="margin-top: 15px;">
+                <div class="col-12 page-title">
+                    <h5>Delivery Address Location : </h5>
+                </div>
+                <mat-card class="col-12" *ngFor="let location of viewPrByIdList.clientdeliverylocation; let i = index;">
+
+                    <div class="form-group row">
+                        <label for="address" style="font-size: medium; font-weight: bolder;"
+                            class="col-sm-5 col-form-label">Address</label>
+                        <div class="col-sm-5 col-form-label">
+                            {{location.address}}
+
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="city" style="font-size: medium; font-weight: bolder;"
+                            class="col-sm-5 col-form-label">City</label>
+                        <div class="col-sm-5 col-form-label">
+                            {{location.city}}
+                        </div>
+
+                    </div>
+                    <div class="form-group row">
+                        <label for="state" style="font-size: medium; font-weight: bolder;"
+                            class="col-sm-5 col-form-label">State:</label>
+                        <div class="col-sm-5 col-form-label">
+                            {{location.state}}
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+            <div class="col-12 row cust-card pad-nill">
+                <label class="col-md-12" for="text">Uploaded Documents</label>
+                <div class="col-md-12">
+                    <ng-container *ngFor="let file of viewPrByIdList.prDocuments;let i=index">
+                        <div class="col-12 uploadedFiles">
+                            <div class="col-8">
+                                <img src="/assets/images/file.svg">
+                                <span>{{ file?.fileName }}</span> <br>
+                                <!-- <span>{{ file?.name }}</span> -->
+                            </div>
+                            <div class="col-4">
+                                <a *ngIf="file['fileName'].split('.').splice(-1) == 'xlsx' || file['fileName'].split('.').splice(-1) == 'xls' || file['fileName'].split('.').splice(-1) == 'csv'"
+                                    [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe"
+                                    download="{{file['fileName']}}" data-toggle="tooltip"
+                                    [title]="'Download '+ file['fileName']"><i class="fa fa-download"
+                                        aria-hidden="true"></i></a>
+                                <!-- For PDF doucment download -->
+                                <a *ngIf="file['fileName'].split('.').splice(-1) == 'pdf'||file['fileName'].split('.').splice(-1) == 'pdf'"
+                                    [href]="'data:application/pdf;base64,' + file['file'] | filePipe"
+                                    download="{{file['fileName']}}" data-toggle="tooltip"
+                                    [title]="'Download '+ file['fileName']" data-toggle="tooltip"
+                                    [title]="'Download '+ file['fileName']"><i class="fa fa-download"
+                                        aria-hidden="true"></i></a>
+                                <!-- For jpeg/jpg & png download -->
+                                <a *ngIf="file['fileName'].split('.').splice(-1) == 'png'|| file['fileName'].split('.').splice(-1) == 'jpeg' || file['fileName'].split('.').splice(-1) == 'jpg'"
+                                    [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe"
+                                    download="{{file['fileName']}}"><i class="fa fa-download" aria-hidden="true"
+                                        data-toggle="tooltip" [title]="'Download '+ file['fileName']"></i></a>
+                                <!-- For PPT & document download -->
+                                <a *ngIf="file['fileName'].split('.').splice(-1) == 'txt'  ||file['fileName'].split('.').splice(-1) == 'pptx'|| file['fileName'].split('.').splice(-1) == 'docx'|| file['fileName'].split('.').splice(-1) == 'doc' || file['fileName'].split('.').splice(-1) == 'ppt'"
+                                    [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe"
+                                    download="{{file['fileName']}}" data-toggle="tooltip"
+                                    [title]="'Download '+ file['fileName']"><i class="fa fa-download"
+                                        aria-hidden="true"></i></a>
+                            </div>
+                        </div>
+                        <!-- <p style="margin-bottom: 0px;">{{ file?.fileName }}
+                                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'xlsx' || file['fileName'].split('.').splice(-1) == 'xls' || file['fileName'].split('.').splice(-1) == 'csv'"  [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe" download="{{file['fileName']}}" data-toggle="tooltip" [title]="'Download '+ file['fileName']"><i class="fa fa-download" aria-hidden="true" ></i></a>
+
+                                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'pdf'||file['fileName'].split('.').splice(-1) == 'pdf'"  [href]="'data:application/pdf;base64,' + file['file'] | filePipe" download="{{file['fileName']}}" data-toggle="tooltip" [title]="'Download '+ file['fileName']" data-toggle="tooltip" [title]="'Download '+ file['fileName']"><i class="fa fa-download" aria-hidden="true" ></i></a>
+
+                                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'png'|| file['fileName'].split('.').splice(-1) == 'jpeg' || file['fileName'].split('.').splice(-1) == 'jpg'"  [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe" download="{{file['fileName']}}"><i class="fa fa-download" aria-hidden="true" data-toggle="tooltip" [title]="'Download '+ file['fileName']"></i></a>
+
+                                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'txt'  ||file['fileName'].split('.').splice(-1) == 'pptx'|| file['fileName'].split('.').splice(-1) == 'docx'|| file['fileName'].split('.').splice(-1) == 'doc' || file['fileName'].split('.').splice(-1) == 'ppt'"  [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe" download="{{file['fileName']}}" data-toggle="tooltip" [title]="'Download '+ file['fileName']"><i class="fa fa-download" aria-hidden="true"   ></i></a>
+                            </p> -->
+                    </ng-container>
+                    <div class="content-value" *ngIf="viewPrByIdList.prDocuments.length == 0">
+                        No Documents uploaded.
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<mat-dialog-actions align="end">
+    <button type="button" class="btn btn-primary btn-blue" (click) = "downloadPR()">
+        <img     src="assets/images/new/download.svg" width="30" height="25"      /> Download PR</button>
+    <button type="button" class="btn btn-warning btn-red" [disabled]="approveReject == 'false'"
+        *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_C_PR_PAGE.REJECT) != -1" (click)="rejectPR()">
+        Reject
+    </button>
+    <button type="button" class="btn btn-success btn-green" [disabled]="approveReject == 'false'"
+        *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_C_PR_PAGE.APPROVE) != -1" (click)="approvePR()"
+        >Approve</button>
+    <button class="btn btn-success btn-green" type="button" [disabled]="viewPrByIdList?.procucevStatus?.uiDisplay != 'New'"
+        *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_C_PR_PAGE.ACCEPT_PR) != -1"
+        id="b_createPR" (click)="acceptPR(acceptModal)"
+        >Accept PR</button>
+    <button [disabled]="viewPrByIdList?.procucevStatus?.uiDisplay == 'Closed'"
+        *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_C_PR_PAGE.CLOSE_PR) != -1"
+        id="b_createPR" (click)="closePr()" type="button" class="btn btn-warning btn-orange">Close PR</button>
+
+
+</mat-dialog-actions>

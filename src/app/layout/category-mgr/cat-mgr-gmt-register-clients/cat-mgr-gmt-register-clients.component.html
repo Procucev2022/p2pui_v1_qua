@@ -1,0 +1,222 @@
+<div class="table-title">
+    <div class="row">
+      <div class="col-sm-6">
+        <h2>Registered Clients</h2>
+        <p><span class="dot"></span>{{clientsList.length}} Total</p>
+      </div>
+      <div class="col-sm-6">
+      </div>
+    </div>
+  </div>
+<div class="row col-12">
+
+        <div class="row">
+
+
+            <div class="col-12" *ngIf="isLoaded">
+
+
+                <p-table [ngClass]="{  'gmt-container': isGMTView}" #clientTableRef [columns]="clientTableHeaders" [value]="clientsList"  dataKey="id"
+       sortMode="multiple"  [paginator]="true" [rows]="pageRecordSize" id="rfqTable" [rowsPerPageOptions]="pageOptions"
+        [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData"
+         [scrollable]="true" [scrollHeight]="'calc(100vh - 214px)'" [expandedRowKeys]="expandedRows">
+         <ng-template pTemplate="caption">
+            <div class="table-search">
+              <div class="row">
+                <div class="col-sm-6">
+                  <input class="main-input" type="text" pInputText size="50" placeholder="Search..."
+                    (input)="clientTableRef.filterGlobal($event.target.value, 'contains')" />
+                </div>
+                <div class="col-sm-6">
+                </div>
+              </div>
+            </div>
+          </ng-template>
+         <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th style="width: 3em"></th>
+                            <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+                                {{col.header}}
+                            </th>
+                            <th style="width: 4rem;">Actions</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
+                        <tr [pSelectableRow]="rowData">
+                            <td style="width: 3em;">
+                                <button type="button" pButton pRipple [pRowToggler]="rowData"
+                                (click)="expanded ? getCloseClients(rowData,$event) : getClients(rowData,$event)"
+                                class="grid-expand">
+                                <span *ngIf="expanded"><i class="fa fa-chevron-down"></i></span>
+                                    <span *ngIf="!expanded"><i class="fa fa-chevron-right"></i></span>
+                                </button>
+                            </td>
+                            <td [style.width]="col.width" *ngFor="let col of columns"
+                                [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }"
+                                [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"
+                                [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
+                                {{rowData[col.field]}}
+                                <span class="blink" *ngIf="col.field=='companyId' && (rowData.newClientStatus && rowData.newClientStatus == true)">
+                                    <i class="fa fa-bell" aria-hidden="true"></i>
+                                </span>
+                            </td>
+                        <td style="width: 4rem;">
+                            <img class="cursor-pointer" src="/assets/images/new/edit-data.png"  width="28" style="width:28px;margin-right: 10px;" title="Edit Client"  (click)="onEditClient(rowData, true)">
+                        </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="rowexpansion" let-rowData>
+                        <tr class="child-grid" *ngIf="selectedData.length ==1">
+                            <td colspan="9">
+                                <div #childGridEle *ngIf="isShowChildGrid">
+
+                                    <mat-tab-group class="" >
+                                        <mat-tab label="Users">
+                                            <ng-container *ngTemplateOutlet="clientUsersRef"></ng-container>
+                                        </mat-tab>
+                                    </mat-tab-group>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage" let-columns>
+                        <tr>
+                            <td [attr.colspan]="itemCartTableHeaders.length" style="text-align:center;">
+                               {{gridData.gridEmptyMsg}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+
+            </div>
+        </div>
+
+</div>
+
+<ng-template #clientUsersRef>
+    <p-table [ngClass]="{  'gmt-container': isGMTView}" #userTableRef [columns]="userTableHeaders" [value]="usersList" [selection]="single"  [scrollable]="true" [scrollHeight]="'170px'">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+
+                <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width"> {{col.header}}
+
+                </th>
+                <th style="width: 18rem;" *ngIf="roleName == 'CategoryManager2'" >Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr [pSelectableRow]="rowData">
+
+                <td [style.width]="col.width" *ngFor="let col of columns"
+                    [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }"
+                    [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"
+                    [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
+                    <span *ngIf="col.fieldType != 'date'">
+                        {{rowData[col.field]}}
+                    </span>
+                    <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
+                      {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
+                    </span>
+                </td>
+                <td style="width: 18rem;" *ngIf="roleName == 'CategoryManager2'">
+                    <img class="cursor-pointer" src="/assets/images/new/edit-data.png"  width="28" style="width:28px;margin-right: 10px; margin-left: 10px;" title="Edit User"  (click)="onEditClient(rowData, false)">
+                    <img class="cursor-pointer" src="/assets/images/delete.png"  width="28" style="width:28px;margin-right: 10px;" title="Delete User"  (click)="deleteUser(rowData)">
+
+                    <button class=" btn btn-blue"  (click)="onAcceptUserByClient(rowData, true)" [disabled]="rowData.status == 'Accepted' || rowData.status == 'Ignored'" [ngStyle]="{'opacity': rowData.status == 'Accepted' || rowData.status == 'Ignored'? '0.4': '1'}">Accept</button>
+                    <button class=" btn btn-orange"  (click)="onAcceptUserByClient(rowData, false)" [disabled]="rowData.status == 'Accepted' || rowData.status == 'Ignored'" [ngStyle]="{'opacity': rowData.status == 'Accepted' || rowData.status == 'Ignored' ? '0.4': '1'}">Reject</button>
+                    <span class="crud-icons">
+                      </span>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+                <td [attr.colspan]=" userTableHeaders.length" style="text-align:center;">
+                  No Data available
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+</ng-template>
+
+<ng-template #editClientTemplateRef>
+    <div class="modal-header">
+        <h5>Edit Client Details</h5>
+        <button class="btn-skelton modal-close-btn" mat-dialog-close>✖</button>
+    </div>
+    <div class="modal-body">
+    <div class="form">
+        <form [formGroup]="clientForm" (ngSubmit)="updateClientDetails()"   autocomplete="off" novalidate>
+
+            <div class="form-group">
+                <label>Client Name</label>
+                <input type="text" class="form-control"  formControlName="companyName" placeholder="Client name" />
+            </div>
+            <div class="form-group">
+                <label>Client PAN</label>
+                <input type="text" class="form-control"  formControlName="pan" placeholder="Client PAN" />
+            </div>
+            <div class="form-group">
+                <label>Phone Number  </label>
+                <input type="email" formControlName="organizationPhonenumber"  placeholder="Enter  Phone Number"
+                    class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Sector</label>
+                <select class="form-control required" name="clientSector"   id="clientSector"
+                placeholder="Select Sector" formControlName="clientSector">
+                <option  value="" selected hidden disabled>Select</option>
+                <option *ngFor="let sc of sectors; let j = index" [ngValue]="sc">{{sc}}
+                </option>
+
+            </select>
+            </div>
+            <div class="form-group">
+                <label>City </label>
+                <input type="text" formControlName="address1"  placeholder="Enter City "
+                    class="form-control" />
+            </div>
+            <div class="input-group mt-4 " style="justify-content: right;">
+                <button class="btn btn-blue" [disabled]="!clientForm.valid">Update</button>
+                <button class="btn btn-red" (click)="resetForm()">Reset</button>
+            </div>
+        </form>
+    </div>
+    </div>
+</ng-template>
+
+
+<ng-template #editUserTemplateRef>
+    <div class="modal-header">
+        <h3>Edit User Details</h3>
+        <button class="btn-skelton modal-close-btn" mat-dialog-close>✖</button>
+    </div>
+    <div class="modal-body">
+    <div class="form">
+        <form [formGroup]="userForm" (ngSubmit)="updateUserDetails()"   autocomplete="off" novalidate>
+            <div class="form-group">
+                <label>Full Name </label>
+                <input type="text" formControlName="fullName"  placeholder="Enter Full Name "
+                    class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Username/Email</label>
+                <input type="email" class="form-control"  formControlName="username" placeholder="Enter Email" />
+            </div>
+
+            <div class="form-group">
+                <label>Phone Number  </label>
+                <input type="email" formControlName="phone"  placeholder="Enter  Phone Number"
+                    class="form-control" />
+            </div>
+
+
+            <div class="input-group mt-4 " style="justify-content: right;">
+                <button class="btn btn-blue" [disabled]="!userForm.valid">Update</button>
+                <button class="btn btn-red" (click)="resetForm()">Reset</button>
+            </div>
+        </form>
+    </div>
+    </div>
+</ng-template>

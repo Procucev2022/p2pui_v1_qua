@@ -1,0 +1,188 @@
+<div *ngIf="selectedRow">
+<div class="modal-header">
+    <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+    <div class="col-md-12 col-pad">
+        <div class="col-md-12 col-pad">
+            <h5>Live Auction For Item Wise</h5>
+            <h6 style="color:red" *ngIf="auctionExpired">Thanks for the participation! Auction has been closed.</h6>
+        </div>
+        <div class="col-md-12 col-pad" *ngIf="scrollingText">
+                    <div class="col-12">
+                        <div  style="margin-left:-15px !important; margin-right: -15px !important;">
+                                <ng-marquee  speed="drowsy" [stopOnHover]="true">
+                                    <mark>{{scrollingText}}</mark>
+                                </ng-marquee>
+                        </div>
+                    </div>
+        </div>
+        <div class="col-md-12 row bid-panel">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-3">
+                        <h6 class="label-text">Lot Name</h6>
+                        <label for="" class="label-value">{{lotName}}</label>
+                    </div>
+                    <div class="col-3">
+                        <h6 class="label-text">Starting Time</h6>
+                        <label for="" class="label-value">{{auctionStartTime | date: 'dd-MM-yyyy hh:mm:ss a'}}</label>
+                    </div>
+                    <div class="col-3">
+                        <h6 class="label-text">End Time</h6>
+                        <label for="" class="label-value">{{auctionEndTime | date: 'dd-MM-yyyy hh:mm:ss a'}}</label>
+                    </div>
+
+                    <div class="col-3">
+                        <div *ngIf="!auctionExpired ">
+                            <button *ngIf="auctionType == 'sealed bid'" class="btn btn-primary marginTop10" style="padding: 3px 10px !important;font-size: 0.8em;background: #ed5817;border: white;cursor: pointer;" type="button" (click)="onSubmitBid()"><i class="fa fa-gavel"
+                                    aria-hidden="true"></i> Submit Bid</button>
+                            <button  *ngIf="auctionType != 'sealed bid' && (!isBidLimitsForVendor || (isBidLimitsForVendor && remainingBids >0 ))"
+                                class="btn btn-primary marginTop10" style="padding: 3px 10px !important;font-size: 0.8em;background: #ed5817;border: white;cursor: pointer;" type="button" (click)="onSubmitBid()"><i class="fa fa-gavel"
+                                    aria-hidden="true"></i> Submit Bid</button>
+                            <div class="count-down-timer-panel"
+                                *ngIf="auctionType != 'sealed bid' && (!isBidLimitsForVendor || (isBidLimitsForVendor && remainingBids >0 ))">
+                                <i class="fa fa-clock-o" aria-hidden="true"></i>
+                                <countdown [config]="{leftTime: auctionEndsInSeconds}" (finished)="finishTest()">$!h!<span
+                                        class="timeText">Hr.</span>:$!m!<span class="timeText">Min.</span>:$!s!<span
+                                        class="timeText">Secs.</span></countdown>
+                            </div>
+                        </div>
+                        <div *ngIf="auctionExpired" style="color: red;">
+                            <h6 class="label-text">&nbsp;</h6>
+                            <label class="label-value">Time Up!</label>
+                        </div>
+
+
+                    </div>
+                    <div class="col-3">
+                        <h6 class="label-text">Bid For</h6>
+                        <label for="" class="label-value" *ngIf="conductAuctionForSingleOrWhole">Whole
+                            Unit</label>
+                        <label for="" class="label-value" *ngIf="!conductAuctionForSingleOrWhole">Per
+                            Unit</label>
+                    </div>
+                    <!-- <div class="col-3">
+                        <h6 class="label-text">Min Bid Difference</h6>
+                        <label for="" class="label-value" *ngIf="!isMinimumBidReduction">N/A</label>
+                        <label for="" class="label-value"
+                            *ngIf="isMinimumBidReduction">{{minimumBidReductionPrice}}</label>
+                    </div> -->
+                    <div class="col-3">
+                        <h6 class="label-text">Remaining Bids</h6>
+                        <label for="" class="label-value" *ngIf="!isBidLimitsForVendor">N/A</label>
+                        <label for="" class="label-value" *ngIf="isBidLimitsForVendor">
+                            <span>{{remainingBids}}</span>
+                        </label>
+                    </div>
+                    <div class="col-3">
+                        <h6 class="label-text">Bid Amount</h6>
+                        <label for="" class="label-value">{{bidTotalAmount}}</label>
+                    </div>
+                </div>
+            </div>
+            <div class="refresh-bid" data-toggle="tooltip" title="Refresh Bid"><i class="fa fa-refresh" aria-hidden="true" (click)="refresh()"></i></div>
+        </div>
+    </div>
+</div>
+<div class="modal-body">
+
+    <div class="row">
+        <div class="col-12 intervalRefreshCls">
+
+            <div class="row">
+                <div class="col-12 marginTop20">
+                    <p-table #pposGrid [columns]="auctionItemsHeaders" [value]="auctionItemsList" sortMode="multiple"
+                        [paginator]="true" [rows]="pageRecordSize" id="quoteTable" [rowsPerPageOptions]="pageOptions"
+                        [style]="{'width': '100%'}" exportFilename="venRequest" [scrollable]="true">
+                        <ng-template pTemplate="caption">
+                            <div class="searchPanel">
+                                <span>
+                                    <span class="" style="font-size: 12px;">Auction Category - Bid Type:  </span>
+                                    <span style="margin-left: 5px;font-size: 14px;color: #ed5817;font-variant: all-petite-caps;">{{auctionCategory  }}  - {{ auctionType }}</span>
+                                </span>
+                                <input type="text" pInputText size="50" placeholder="Search.."
+                                    (input)="pposGrid.filterGlobal($event.target.value, 'contains')"
+                                    style="width:auto; float: right;" />
+                            </div>
+                        </ng-template>
+
+                        <ng-template pTemplate="header" let-columns>
+                            <tr>
+                                <!-- <th style="width: 3em">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th> -->
+                                <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+                                    {{col.header}}
+                                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-columns="columns">
+                            <tr [pSelectableRow]="rowData">
+                                <ng-container *ngFor="let col of columns">
+                                    <td pEditableColumn *ngIf="col.fieldType == 'text'" [style.width]="col.width"
+                                        style="position: relative;">
+                                        <p-cellEditor>
+                                            <ng-template pTemplate="input">
+                                                <input pInputText type="number" (keyup)="ongetTotalBid(rowData)"
+                                                    (blur)="ongetTotalBid(rowData)" placeholder="Enter Amount"
+                                                    name="minBidPrice" [(ngModel)]="rowData.bidAmount">
+                                            </ng-template>
+                                            <ng-template pTemplate="output">
+                                                <span *ngIf="rowData.bidAmount">{{rowData.bidAmount}} <i
+                                                        class="fa fa-pencil pull-right"
+                                                        style="cursor: pointer;"></i></span>
+                                                <span *ngIf="!rowData.bidAmount" style="color:rgb(143, 143, 143)">Enter
+                                                    Amount</span>
+
+                                            </ng-template>
+                                        </p-cellEditor>
+                                    </td>
+                                    <td *ngIf="col.fieldType != 'text'" [style.width]="col.width"
+                                        [ngClass]="{'rankTdCls': col.field == 'rank'}">
+                                        {{rowData[col.field]}}
+                                    </td>
+                                </ng-container>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage" let-columns>
+                            <tr>
+                                <td [attr.colspan]="5" style="text-align:center;">
+                                    No Records Found.
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="paginatorleft">
+                            <div *ngIf="pposGrid._totalRecords > 0">
+                                <b>Showing {{pposGrid.first+1}} to {{pposGrid.first+pposGrid.rows > pposGrid.totalRecords?pposGrid.totalRecords: pposGrid.first+pposGrid.rows}} of {{pposGrid.totalRecords}}</b>
+                                <!-- <app-page-info [totalRecords]="auctionItemsList?.length" [pageData]="paginatoryDetails">
+                                </app-page-info> -->
+                            </div>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <p *ngIf="!isEditBidAmount"><span style="color: red;">Note: </span> This page will auto refreshed for every {{refreshPageInSeconds}} seconds.</p>
+</div>
+</div>
+<div *ngIf="!selectedRow">
+    <div class="modal-header">
+      <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+      <h5>Terms and conditions</h5>
+    </div>
+    <div class="modal-body">
+      <form name="f" (ngSubmit)="onSubmit(f)" #f="ngForm" novalidate>
+      <h6 >{{data.selectData.termsAndConditions}}</h6>
+      <div class="col-md-12">
+          <div class="form-group form-check">
+              <input type="checkbox" name="acceptTerms" id="acceptTerms" class="form-check-input" [(ngModel)]="acceptTermsand" #acceptTerms="ngModel">
+              <label for="acceptTerms" class="form-check-label acceptTerms-check">Accept terms and conditions</label>
+          </div>
+      </div>
+      <button [disabled]="!acceptTermsand" type="submit" class="btn btn-primary">Accept</button>
+      </form>
+    </div>
+  </div>

@@ -1,0 +1,81 @@
+ .pdf-container {
+     width: 100%;
+     background: #e2e0e0;
+     height: 117.5VH;
+     overflow-y: hidden;
+     max-width: 100%;
+ }
+
+ .input-sec {
+    padding: 5px;
+    background: #e9e9ff;
+    box-shadow: 0px -2px 4px 2px #007ad929;
+    border-radius: 6px;
+    background: #fff;
+ }
+
+ .fileUploadCls {
+     height: 121px;
+     background: #edf4f8;
+     width: 98%;
+     border: dashed 2px #2894f0;
+     cursor: pointer;
+ }
+
+ .fileUploadCls:before {
+     text-align: center;
+     content: 'Click or Drag and Drop Here.........';
+     opacity: 0.3;
+     position: absolute;
+     margin: auto;
+     top: 35%;
+     width: 98%;
+ }
+
+
+
+
+
+ .bold-text {
+     font-weight: bold;
+ }
+
+ .btn-sec {
+     float: right;
+     border: 2px solid blue;
+     padding: 2px;
+     border-radius: 6px;
+     width: 100px;
+     text-align: center;
+     align-self: center;
+     vertical-align: middle;
+     font-size: 16px;
+     font-weight: 600;
+ }
+
+
+ .cursor {
+     cursor: pointer;
+ }
+
+ .file-upload-screen {
+     background: #e9e9ff80;
+ }
+
+ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+ ul.left-menu-nav li {
+    padding: 10px;
+    width: 100%;
+    background: #007ad9;
+    margin: 0 !important;
+    color: #fff;
+    font-size: 17px;
+    margin-bottom: 2px !important;
+    font-variant: titling-caps;
+    border-left: 4px solid #FF9800;
+}
+

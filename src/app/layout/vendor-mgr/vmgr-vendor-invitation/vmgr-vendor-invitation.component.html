@@ -1,0 +1,84 @@
+<div class="col-12 card-layout">
+  <div class="row">
+
+ <div class="col-12 page-title">
+   <h5>Vendor Invitation</h5>
+ </div>
+ <div class="col-12" style="padding: 30px;">
+   <div class="prqContainer row">
+     <div class="col-12">
+      <form class="row" [formGroup]="invitationForm" (ngSubmit)="onSubmit()">
+        <div class="col-md-6 form-group">
+            <label>Vendor Organization</label>
+            <input type="text" formControlName="orgName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.orgName.errors }" />
+            <div *ngIf="submitted && f.orgName.errors" class="invalid-feedback">
+                <div *ngIf="f.orgName.errors.required && submitted">Vendor Organization is required</div>
+            </div>
+        </div>
+        <div class="col-md-6 form-group">
+            <label>Vendor MobileNumber</label>
+            <input type="text" formControlName="phone" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.phone.errors }" />
+            <div *ngIf="submitted && f.phone.errors" class="invalid-feedback">
+                <div *ngIf="f.phone.errors.required && submitted">Vendor Phone is required</div>
+                <div *ngIf="f.phone.errors.minlength">Phone number must be 10 digits</div>
+            </div>
+        </div>
+        <div class="col-md-6 form-group">
+            <label>Vendor Email</label>
+            <input type="text" formControlName="email" class="form-control"
+             [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+            <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                <div *ngIf="f.email.errors.required && submitted">Vendor Email is required</div>
+                <div *ngIf="f.email.errors.email && submitted">Vendor Email must be a valid email address</div>
+            </div>
+        </div>
+
+        <div class="col-md-6 form-group">
+            <label >Vendor Category</label>
+            <input type="text" formControlName="vendorcategory" class="form-control"  />
+        </div>
+        <div class="col-md-6 form-group">
+            <label>HSNCode</label>
+            <input type="text"  formControlName="hsncode" class="form-control"  />
+        </div>
+        <div class="col-md-6 form-group">
+            <label for="validdate" style="font-size: medium; font-weight: bolder;"
+                class="col-md-6 form-group" >Valid Date :</label>
+            <!-- <div class="col-sm-5">
+                    <input type="date" required #phone="ngModel" name="dueDate" ngModel id="i_phone"
+                        class="form-control" placeholder="Contact Number" minlength="3">
+                </div> -->
+            <div class="col-md-6">
+                <mat-form-field class="example-full-width">
+                    <mat-label>Choose a date</mat-label>
+                    <input  formControlName="validdate"  matInput [min]="minDate" [matDatepicker]="picker" name="validdate" ngModel
+                                    id="i_phone">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="col-md-3 form-group">
+            <div class="form-group form-check">
+                <input style="margin: 9px 0px 0px -15px;" type="checkbox" formControlName="tempapproval" id="tempapproval"
+                (change)="tempvendor($event)" class="form-check-input" />
+                <label for="tempapproval" class="form-check-label">UnRegistered Vendor</label>
+                <!-- <div *ngIf="submitted && f.tempapproval.errors" class="invalid-feedback">Accept Ts & Cs is required</div> -->
+            </div>
+        </div>
+        <div class="col-md-3 form-group">
+            <div class="form-group form-check">
+                <input style="margin: 9px 0px 0px -15px;" type="checkbox" formControlName="clientRefference" id="clientRefference" class="form-check-input" />
+                <label for="clientRefference" class="form-check-label">Client References</label>
+            </div>
+        </div>
+        <div class="form-group col-md-6" style="margin-top: 32px;">
+            <button *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_VENDOR_INVITE_PAGE.SEND_INVITE) != -1"
+             class="btn btn-primary">Send Invitation Link</button>
+        </div>
+    </form>
+     </div>
+  </div>
+ </div>
+</div>
+</div>

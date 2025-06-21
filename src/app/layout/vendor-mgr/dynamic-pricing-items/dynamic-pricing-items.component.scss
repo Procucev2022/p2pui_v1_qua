@@ -1,0 +1,61 @@
+::ng-deep body .ui-paginator {
+    background-color: #ffffff;
+    border-top: 1px solid #eaecf1 !important;
+    margin: 0;
+    text-align: right;
+    padding: 8px 5px;
+    border: none;
+}
+
+.description-class {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 50ch;
+    white-space: nowrap;
+    display: block;
+}
+.alignItems{
+    display: inline-flex;
+    align-items: center;
+}
+.alignItems .fa {
+    margin-right: 5px;
+    align-items: center;
+    align-self: center;
+    vertical-align: middle;
+}
+span.status-cls {
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    /* align-self: center; */
+    vertical-align: middle;
+    justify-content: center;
+}
+.greenCls {
+    font-size: 1.5rem !important;
+    color: #2cc87c;
+}
+.redCls {
+    font-size: 1.5rem !important;
+    color:#e75860;
+}
+
+.table-title {
+    color: #0C2146;
+    border-radius: 3px 3px 0 0;
+    padding: 12px 0px;
+}
+.table-cell-overflow-ellipse-brand {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 160px;
+}
+
+.table-cell-overflow-ellipse-desc {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 320px;
+}

@@ -1,0 +1,143 @@
+<div class="col-12 pad-nill">
+  <div class="table-title">
+    <div class="row">
+      <div class="col-sm-6">
+        <h2>Customer Item Catalogue Requests</h2>
+        <p><span class="dot"></span>{{itemList.length}} Total</p>
+      </div>
+      <div class="col-sm-6">
+      </div>
+    </div>
+  </div>
+  <p-table #itemCatalogueTable [columns]="itemHeaders" [value]="itemList" sortMode="multiple" [paginator]="true"
+    [rows]="pageRecordSize" id="prqTable" [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}"
+    exportFilename="roles details" [(selection)]="selectedData" [scrollable]="true" [scrollHeight]="'calc(100vh - 214px)'">
+    <ng-template pTemplate="caption">
+      <div class="table-search">
+        <div class="row">
+          <div class="col-sm-6">
+            <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+              (input)="itemCatalogueTable.filterGlobal($event.target.value, 'contains')" />
+          </div>
+          <div class="col-sm-6">
+           <img  (click)="exportAsXLSX()" class="export-excel-icon" src="assets/images/export-excel.png" width="40" height="40" data-toggle="tooltip" title=" Export As Excel"  />
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <!-- <th style="width: 3em">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th> -->
+        <ng-container *ngFor="let col of columns">
+          <th [style.width]="col.width" [pSortableColumn]="col.field">
+            {{col.header}}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+          </th>
+        </ng-container>
+        <th style="width:9rem">Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr [pSelectableRow]="rowData">
+        <!-- <td style="width: 3em">
+          <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+        </td> -->
+
+ <td [style.width]="col.width" *ngFor="let col of columns" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" >
+          <span *ngIf="col.field != 'procucevItemCode'">
+            {{rowData[col.field]}}
+          </span>
+          <span *ngIf="col.field == 'procucevItemCode'">
+            <input type="number"  autocomplete="off" name="itemCode" #itemCode="ngModel" [(ngModel)]="rowData[col.field]"
+              class="itemCode form-control"  style="width: 100p%" >
+          </span>
+        </td>
+        <td style="width:9rem">
+          <button [disabled]="!rowData['procucevItemCode']" type="button" class="btn btn-primary btn-orange"
+            (click)="closeRequest(rowData)">Close Request</button>
+            <img class="mr-3 ml-3 cursor-pointer"  (click)="viewItemData(rowData, editItemModal)"   src="/assets/images/new/view-doc.png" width="30" height="30" title="View Item Details">
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage" let-columns>
+      <tr>
+        <td [attr.colspan]="5" style="text-align:center;">
+          No Records Found.
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft">
+      <div *ngIf="itemCatalogueTable._totalRecords > 0">
+        <b>Showing {{itemCatalogueTable.first+1}} to {{itemCatalogueTable.first+itemCatalogueTable.rows > itemCatalogueTable.totalRecords?itemCatalogueTable.totalRecords: itemCatalogueTable.first+itemCatalogueTable.rows}} of {{itemCatalogueTable.totalRecords}}</b>
+        <!-- <app-page-info [totalRecords]="itemList.length" [pageData]="paginatoryDetails"></app-page-info> -->
+      </div>
+    </ng-template>
+  </p-table>
+</div>
+<ng-template #editItemModal>
+    <div class="modal-header">
+        <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+        <div class="col-6 pad-nill">
+          <h5>Item Details</h5>
+        </div>
+      </div>
+      <div class="modal-body " style="min-height: 59vh;">
+        <div class="row readonly-cls">
+            <div class="col-6">
+                <label>Description</label>
+                <p>{{editItemModel.description}}</p>
+            </div>
+            <div class="col-6">
+                <label>Curstomer Item Code</label>
+                <p>{{editItemModel.clientItemCode}}</p>
+            </div>
+            <div class="col-6">
+                <label>Category</label>
+                <p>{{editItemModel.category}}</p>
+            </div>
+            <div class="col-6">
+                <label>Category</label>
+                <p>{{editItemModel.category}}</p>
+            </div>
+            <div class="col-6">
+                <label>Quantity</label>
+                <p>{{editItemModel.quantity}}</p>
+            </div>
+            <div class="col-md-12">
+                <label>
+                    Attached Documents
+                </label>
+                <div class="file-content" *ngIf="editItemModel?.documents?.length>0 " >
+                    <div class="value" *ngFor="let comment of editItemModel?.documents">
+                      <p *ngIf="comment['fileName']">{{comment['fileName']}}
+                       <ng-container  >
+                        <a *ngIf="comment['fileName'].split('.').splice(-1) == 'xlsx' || comment['fileName'].split('.').splice(-1) == 'xls' || comment['fileName'].split('.').splice(-1) == 'csv'"  [href]="'data:application/octet-stream;base64,' + comment['file'] | filePipe" download="{{comment['fileName']}}" data-toggle="tooltip" [title]="'Download '+ comment['fileName']"> <img class="cursor-pointer ml-3" src="/assets/images/new/download.svg" width="25" height="25"   aria-hidden="true"  data-toggle="tooltip" [title]="'Download '+ comment['fileName']"/> </a>
+
+                        <a *ngIf="comment['fileName'].split('.').splice(-1) == 'pdf'"  [href]="'data:application/pdf;base64,' + comment['file'] | filePipe" download="{{comment['fileName']}}" data-toggle="tooltip" [title]="'Download '+ comment['fileName']" data-toggle="tooltip" [title]="'Download '+ comment['fileName']"> <img class="cursor-pointer ml-3" src="/assets/images/new/download.svg" width="25" height="25"   aria-hidden="true"  data-toggle="tooltip" [title]="'Download '+ comment['fileName']"/> ></a>
+
+
+
+                        <a *ngIf="comment['fileName'].split('.').splice(-1) == 'PNG'|| comment['fileName'].split('.').splice(-1) == 'png'|| comment['fileName'].split('.').splice(-1) == 'jpeg' || comment['fileName'].split('.').splice(-1) == 'JPEG' || comment['fileName'].split('.').splice(-1) == 'JPG' || comment['fileName'].split('.').splice(-1) == 'jpg'"  [href]="'data:application/octet-stream;base64,' + comment['file'] | filePipe" download="{{comment['fileName']}}">
+                            <img class="cursor-pointer ml-3" src="/assets/images/new/download.svg" width="25" height="25"   aria-hidden="true"  data-toggle="tooltip" [title]="'Download '+ comment['fileName']"/>  </a>
+
+
+                        <a *ngIf="comment['fileName'].split('.').splice(-1) == 'txt'  ||comment['fileName'].split('.').splice(-1) == 'pptx'|| comment['fileName'].split('.').splice(-1) == 'docx'|| comment['fileName'].split('.').splice(-1) == 'doc' || comment['fileName'].split('.').splice(-1) == 'ppt'"  [href]="'data:application/octet-stream;base64,' + comment['file'] | filePipe" download="{{comment['fileName']}}" data-toggle="tooltip" [title]="'Download '+ comment['fileName']"> <img class="cursor-pointer ml-3" src="/assets/images/new/download.svg" width="25" height="25"   aria-hidden="true"  data-toggle="tooltip" [title]="'Download '+ comment['fileName']"/> </a>
+                       </ng-container>
+
+
+                        </p>
+
+                    </div>
+
+                </div>
+                <div class="noDataFoundCls pl-3" *ngIf="editItemModel?.documents?.length<=0 ">No Attachements available</div>
+            </div>
+
+        <div class="col-md-12"  >
+            <button class="btn btn-primary btn-orange" style="float: right" type="button" (click)="closeModal()">Close</button>
+           </div>
+        </div>
+    </div>
+</ng-template>

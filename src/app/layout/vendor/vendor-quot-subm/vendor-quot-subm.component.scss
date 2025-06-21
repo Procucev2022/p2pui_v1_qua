@@ -1,0 +1,29 @@
+.grid-button-row{
+    float:left;
+    margin-right: 8px;;
+}
+.prqContainer {
+    padding: 2px 2px 8px 2px;
+}
+.rfqContainer {
+    margin: 10px 0;
+    padding :0px;
+    border: 1px solid #dfe8f3;
+}
+
+.rfqContainer  h5{
+    background: #f2f2f2;
+    padding: 6px;
+    margin: 0px;
+    // border-bottom: 2px solid #c6d8ef;
+    margin-bottom: 0px;
+    padding: 10px;
+    font-size: 13px;
+}
+
+.table-cell-overflow-ellipse {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 280px;
+}

@@ -1,0 +1,16 @@
+<div class="form-group">
+    <label for="vDoc" style="font-size: medium; color: #0C2146;" class="form-label">Documents</label>
+    <div class="row col-md-12">
+        <div class="col-md-4" *ngIf="ppoDocuments.length>0">
+            <ng-container *ngFor="let doc of ppoDocuments" style="margin: 6px 0px;">
+                <div class="crud-icons actionIcons multiDoc" style="display: inline;">
+                    <a [href]="'data:application/octet-stream;base64,' + doc['file'] | filePipe" download="{{doc['fileName']}}"><i class="fa fa-download"
+          aria-hidden="true" data-toggle="tooltip" [title]="'Download '+ doc['fileName']"><span class="singleDoc">{{doc.fileName}}</span></i></a>
+                </div>
+            </ng-container>
+        </div>
+        <div class="col-md-4 text-center" *ngIf="ppoDocuments.length == 0">
+            <label> No Documents Available. </label>
+        </div>
+    </div>
+</div>

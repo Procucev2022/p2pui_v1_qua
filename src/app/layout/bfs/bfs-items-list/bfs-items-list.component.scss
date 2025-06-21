@@ -1,0 +1,50 @@
+.form-group.input-group label {
+    min-width: 184px;
+    align-items: center;
+    display: inline-flex;
+}
+
+.input-group {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    width: 100%;
+    align-items: center;
+}
+
+::ng-deep .modal-body {
+    position: relative;
+    flex: 1 1 auto;
+    padding: 1rem;
+    max-height: 88vh !important;
+}
+
+.bid-sec {
+
+    border: 3px solid #8080801a;
+}
+.comment-list {
+    border-left: 4px solid #009688;
+    background: #abdff6;
+    padding: 4px;
+    border-radius: 2px;
+    margin-top: 8px;
+}
+.audit-panel {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    color: black;
+    font-weight: 600;
+    border-bottom: 2px solid #84bbd3;
+    padding: 0 !important;
+    margin-bottom: 10px;
+}
+
+span.link-cls {
+    border-bottom: 2px solid #03a9f4;
+    color: #03a9f4;
+    cursor: pointer;
+}

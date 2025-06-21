@@ -1,0 +1,126 @@
+<div class="col-12 pad-nill">
+    <div class="table-title">
+        <div class="row">
+            <div class="col-sm-6">
+                <h2>Quotations</h2>
+                <p><span class="dot"></span>{{quotDataList?.length}} Total</p>
+            </div>
+            <div class="col-sm-6">
+
+            </div>
+        </div>
+    </div>
+    <p-table dataKey="id" #quotationTable [columns]="quotTableHeaders" [value]="quotDataList" sortMode="multiple"
+        [paginator]="true" [rows]="pageRecordSize" id="quoteTable" [rowsPerPageOptions]="pageOptions"
+        [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData" [scrollable]="true"
+        [expandedRowKeys]="expandedRows">
+        <ng-template pTemplate="caption">
+            <div class="table-search">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                            (input)="quotationTable.filterGlobal($event.target.value, 'contains')" />
+                    </div>
+                    <div class="col-sm-6">
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="col-12 row pad-nill">
+                <div class="col-6 pad-nill">
+                    <h5 class="screen-head">Quotations</h5>
+                </div>
+                <div class="col-6 searchPanel pad-nill">
+                    <input type="text" pInputText size="50" placeholder="Search.."
+                        (input)="quotationTable.filterGlobal($event.target.value, 'contains')"
+                        style="width:auto; float: right;" />
+                </div>
+            </div> -->
+        </ng-template>
+
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                
+                <th style="width: 3em"></th>
+                <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width"
+                   >
+                    {{col.header}}
+                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+                <th>Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
+            <tr [pSelectableRow]="rowData">
+               
+                <td style="width: 3em">
+                    <button type="button" pButton pRipple [pRowToggler]="rowData" [value]="rowData['quotationId']"
+                        (click)="expanded ? getCloseQuotLine(rowData,$event) : getQuotLine(rowData,$event)"
+                        class="grid-expand">
+                        <span *ngIf="expanded"><i class="fa fa-chevron-down"></i></span>
+                        <span *ngIf="!expanded"><i class="fa fa-chevron-right"></i></span>
+                    </button>
+                </td>
+                <td *ngFor="let col of columns" [style.width]="col.width" [ngClass]="{'table-cell-overflow-ellipse' : col.field == 'description' }">
+                    <span *ngIf="!col.isLink">
+                        <span *ngIf="col.field == 'vendorStatus'">{{rowData[col.field].uiDisplay}}</span>
+                        <span *ngIf="col.field != 'vendorStatus'">
+                            <span *ngIf="col.fieldType != 'date'"  >
+                                <span *ngIf="col.field == 'description'" [title]="rowData[col.field]">
+                                    {{rowData[col.field]}}
+                                </span>
+                                <span *ngIf="col.field != 'description'"  >
+                                    {{rowData[col.field]}}
+                                </span>
+                            </span>
+                            <span *ngIf="col.fieldType == 'date'"
+                                [title]="rowData[col.field] | date: 'dd-MMM-yyyy hh:mm a'">
+                                {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
+                            </span>
+                        </span>
+
+                    </span>
+                    <!-- <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);"
+                            (click)="getQuotLine(rowData, $event)"> {{rowData[col.field]}} </a></span> -->
+
+                </td>
+                <td>
+                    <button class="btn-skelton" (click)="viewQuotDetails(rowData)">
+                        <img src="/assets/images/new/view-doc.png" title="View Quotation Details">
+                    </button>
+                    <button class="btn-skelton" (click)="viewCorresspondance(rowData)">
+                        <img src="/assets/images/new/comments-write.png" title="Comments">
+                    </button>
+                    <app-comment-alert-bell-blink [rowData]="rowData"></app-comment-alert-bell-blink>
+                </td>
+
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="rowexpansion" let-rowData>
+            <tr class="child-grid" *ngIf="selectedQuotData">
+                <td colspan="6">
+                    <div class="p-p-3" *ngIf="selectedData.length ==1">
+                        <app-quot-by-id [quotData]="selectedQuotData" [quotId]="quotId"></app-quot-by-id>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+                <td [attr.colspan]="5" style="text-align:center;">
+                    No Records Found.
+                </td>
+            </tr>
+        </ng-template>
+        <!-- <ng-template pTemplate="paginatorleft">
+            <div *ngIf="quotDataList?.length > 0">
+                <app-page-info [totalRecords]="quotDataList?.length" [pageData]="paginatoryDetails"></app-page-info>
+            </div>
+        </ng-template> -->
+    </p-table>
+
+</div>
+<!-- <div class="col-12 pad-nill" *ngIf="selectedQuotData">
+    <div *ngIf="selectedData.length==1">
+        <app-quot-by-id [quotData]="selectedQuotData" [quotId]="quotId"></app-quot-by-id>
+    </div>
+</div> -->

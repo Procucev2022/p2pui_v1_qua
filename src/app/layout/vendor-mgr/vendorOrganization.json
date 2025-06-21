@@ -1,0 +1,75 @@
+
+{
+    "companyName":"Venu",
+    "pan":"Gse34",
+    "gstin":"7879dsfj",
+    "address1":"vijayaeafa",
+    "address2":"krishna",
+    "country":"india",
+    "state":"ap",
+    "city":"vij",
+    "zipCode":"539900",
+
+    "orgBranches":[
+    {
+    "branchName":"guru",
+    "address1":"vijayaeafa",
+    "address2":"krishna",
+    "country":"india",
+    "state":"ap",
+    "city":"vij",
+    "zipCode":"539900",
+    "others":"sdf"
+    }
+    ],
+
+    "vendorProduct":[
+    {
+    "hsnCode":555,
+    "productName":"procucev",
+    "others":"no mention",
+    "description":"description"
+    }
+    ],
+
+    "vendorService":[
+    {
+    "sacCode":556,
+    "serviceName":"procucev",
+    "others":"no mention",
+    "description":"description"
+    }
+    ],
+
+    "vendorContact":[
+    {
+    "firstName":"stephen",
+    "lastName":"curry",
+    "email":"reply@email.com",
+    "phone":"999999999"
+    }
+    ],
+
+    "clientReference":[
+    {
+    "name":"stephen",
+    "email":"curry@gmail.com",
+    "pocFirstName":"seth",
+    "pocLastName":"curry",
+    "phone":"999999999",
+    "comments":"no comments",
+    "file":"aslkhdfnasudfpoaskpdfpoiaspofdklkpkkpjjoiajsoifdjposfopk"
+    }
+    ],
+
+    "orgBankDetails":[
+    {
+    "bankName":"venu",
+    "accountNumber":"1237834927947",
+    "branchName":"gade",
+    "ifscCode":"VEN798sdf",
+    "pinCode":"677989"
+    }
+    ]
+
+    }

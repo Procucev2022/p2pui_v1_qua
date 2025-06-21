@@ -1,0 +1,79 @@
+<div class="col-12 pad-nill">
+  <div class="table-title">
+    <div class="row">
+      <div class="col-sm-6">
+        <h2>RFQ ID :{{rfqData?.rfqId}}</h2>
+        <p><span class="dot"></span>{{rfqdetailsList?.length}} Total</p>
+      </div>
+      <div class="col-sm-6">
+        <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+          (input)="rfqDetail.filterGlobal($event.target.value, 'contains')" style="float: right;" />
+      </div>
+    </div>
+  </div>
+  <p-table dataKey="id" #rfqDetail [columns]="rfqDetailHeaders" [value]="rfqdetailsList" [scrollable]="true" sortMode="multiple" [paginator]="true" [rows]="pageRecordSize"  id="rfqDetail"
+  [rowsPerPageOptions]="pageOptions" [style]="{width:'100%'}" exportFilename="rfq details" [(selection)]="selectedData">
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th style="width: 3em">
+        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+      </th>
+      <th *ngFor="let col of columns" [pSortableColumn]="col.field" 
+      [style.width]="col.width"  pResizableColumn>
+        {{col.header}}
+        <p-sortIcon [field]="col.field"></p-sortIcon>
+      </th>
+      <th style="width: 9em">Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-columns="columns" let-rowData>
+    <tr [pSelectableRow]="rowData" >
+      <td style="width: 3em">
+        <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+      </td>
+      <td *ngFor="let col of columns" [style.width]="col.width" class="ui-resizable-column">
+        <span> 
+          <span  *ngIf="col.fieldType == 'text'">
+            {{rowData[col.field]}}
+        </span>
+        <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
+            {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
+        </span>
+        </span>
+
+      </td>
+      <td style="width: 9em">
+      <span class="crud-icons actionIcons" *ngIf="rowData['fileName'] && rowData['file']" style="padding-top:5px">
+        <a *ngIf="rowData['fileName'].split('.').splice(-1) == 'xlsx' || rowData['fileName'].split('.').splice(-1) == 'xls' || rowData['fileName'].split('.').splice(-1) == 'csv'"  [href]="'data:application/octet-stream;base64,' + rowData['file'] | filePipe" download="{{rowData['fileName']}}" data-toggle="tooltip" [title]="'Download '+ rowData['fileName']"><i class="fa fa-download" aria-hidden="true" ></i></a>
+
+         <!-- For PDF doucment download -->
+        <a *ngIf="rowData['fileName'].split('.').splice(-1) == 'pdf'"  [href]="'data:application/pdf;base64,' + rowData['file'] | filePipe" download="{{rowData['fileName']}}" data-toggle="tooltip" [title]="'Download '+ rowData['fileName']" data-toggle="tooltip" [title]="'Download '+ rowData['fileName']"><i class="fa fa-download" aria-hidden="true" ></i></a>
+
+        
+
+        <!-- For jpeg/jpg & png download -->
+        <a *ngIf="rowData['fileName'].split('.').splice(-1) == 'png'|| rowData['fileName'].split('.').splice(-1) == 'jpeg' || rowData['fileName'].split('.').splice(-1) == 'jpg'"  [href]="'data:application/octet-stream;base64,' + rowData['file'] | filePipe" download="{{rowData['fileName']}}"><i class="fa fa-download" aria-hidden="true" data-toggle="tooltip" [title]="'Download '+ rowData['fileName']"></i></a>
+
+
+        <!-- For PPT & document download -->
+        <a *ngIf="rowData['fileName'].split('.').splice(-1) == 'txt'  ||rowData['fileName'].split('.').splice(-1) == 'pptx'|| rowData['fileName'].split('.').splice(-1) == 'docx'|| rowData['fileName'].split('.').splice(-1) == 'doc' || rowData['fileName'].split('.').splice(-1) == 'ppt'"  [href]="'data:application/octet-stream;base64,' + rowData['file'] | filePipe" download="{{rowData['fileName']}}" data-toggle="tooltip" [title]="'Download '+ rowData['fileName']"><i class="fa fa-download" aria-hidden="true"   ></i></a>
+
+      </span>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage" let-columns>
+    <tr>
+      <td [attr.colspan]="5" style="text-align:center;">
+        No Records Found.
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="paginatorleft">
+    <div *ngIf="rfqDetail._totalRecords > 0">
+      <b>Showing {{rfqDetail.first+1}} to {{rfqDetail.first+rfqDetail.rows > rfqDetail.totalRecords?rfqDetail.totalRecords: rfqDetail.first+rfqDetail.rows}} of {{rfqDetail.totalRecords}}</b>
+      <!-- <app-page-info [totalRecords]="rfqdetailsList.length" [pageData]="paginatoryDetails"></app-page-info> -->
+    </div>
+  </ng-template>
+</p-table>
+</div>

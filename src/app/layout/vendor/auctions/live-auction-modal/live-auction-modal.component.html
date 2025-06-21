@@ -1,0 +1,133 @@
+<div class="modal-header">
+    <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+    <h5>Live Auction</h5>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-12 intervalRefreshCls">
+            <div class="row bid-panel">
+                <div class="col-2 rankImageCls">
+                    <h6 class="label-text">Your Rank is</h6>
+                    <label class="rank-value">11</label>
+                </div>
+                <div class="col-10">
+                    <div class="row">
+                        <div class="col-3">
+                            <h6 class="label-text">Lot Name</h6>
+                            <label for="" class="label-value">ABC Auction</label>
+                        </div>
+                        <div class="col-3">
+                            <h6 class="label-text">Starting Time</h6>
+                            <label for="" class="label-value">08-08-2020 05:00 PM</label>
+                        </div>                        
+                        <div class="col-3">
+                            <h6 class="label-text">Bid For</h6>
+                            <label for="" class="label-value">Per Unit</label>
+                        </div>
+                        <div class="col-3">
+                           <button class="btn btn-primary marginTop10" style="padding: 3px 10px !important;
+                           font-size: 0.8em;
+                           background: #ed5817;
+                           border: white;
+                           cursor: pointer;"><i class="fa fa-gavel" aria-hidden="true"></i> Bid Now</button>
+                           <div class="count-down-timer-panel">
+                            <i class="fa fa-clock-o" aria-hidden="true"></i>  
+                            <countdown [config]="{leftTime: 600}">$!h!<span class="timeText">Hr.</span>:$!m!<span class="timeText">Min.</span>:$!s!<span class="timeText">Secs.</span></countdown>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <h6 class="label-text">Min Bid Difference</h6>
+                            <label for="" class="label-value">1000</label>
+                        </div>
+                        <div class="col-3">
+                            <h6 class="label-text">Starting Price</h6>
+                            <label for="" class="label-value">1500000</label>
+                        </div>
+                        <div class="col-3">
+                            <h6 class="label-text">My Bid Price</h6>
+                            <label for="" class="label-value">{{bidTotalAmount}}</label>
+                        </div>
+                        <div class="col-3">
+                            <h6 class="label-text">Remaining Bids</h6>
+                            <label for="" class="label-value">6</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 marginTop20">
+                    <p-table #pposGrid [columns]="auctionItemsHeaders" [value]="auctionItemsList" sortMode="multiple"
+                    [paginator]="true" [rows]="pageRecordSize" id="quoteTable" [rowsPerPageOptions]="pageOptions"
+                        [style]="{'width': '100%'}" exportFilename="venRequest"  [scrollable]="true">
+                        <ng-template pTemplate="caption">
+                        <div class="searchPanel">
+                            <input type="text" pInputText size="50" placeholder="Search.."
+                            (input)="pposGrid.filterGlobal($event.target.value, 'contains')" style="width:auto; float: right;" />
+                        </div>
+                        </ng-template>
+
+                        <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <!-- <th style="width: 3em">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th> -->
+                            <th *ngFor="let col of columns" [pSortableColumn]="col.field" 
+                            [style.width]="col.width">
+                            {{col.header}}
+                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                            </th>
+                            <th style="width: 11em">Actions</th>
+                        </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-columns="columns">
+                        <tr [pSelectableRow]="rowData">
+                            <!-- <td style="width: 3em">
+                            <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                            </td> -->
+                            <ng-container  *ngFor="let col of columns">
+                                <td  pEditableColumn *ngIf="col.fieldType == 'text'" [style.width]="col.width" style="position: relative;">
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText type="number" (keyup)="ongetTotalBid(rowData)" (blur)="ongetTotalBid(rowData)" placeholder="Enter Amount" name="minBidPrice" [(ngModel)]="rowData.bidAmount"> 
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            <span *ngIf="rowData.bidAmount">{{rowData.bidAmount}} <i class="fa fa-pencil pull-right" style="cursor: pointer;"></i></span>
+                                            <span *ngIf="!rowData.bidAmount" style="color:rgb(143, 143, 143)">Enter Amount</span>
+                                            
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td *ngIf="col.fieldType != 'text'" [style.width]="col.width">
+                                    {{rowData[col.field]}}
+                                </td>
+                            </ng-container>
+                            <td style="width: 11em">
+                                <span class="" style="padding: 3px 10px !important;
+                                font-size: 12px;
+                                border: white;
+                                cursor: pointer;
+                                color: #ed5817;"><i class="fa fa-gavel" aria-hidden="true"></i> Bid Now</span>
+                            </td>
+                        </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage" let-columns>
+                        <tr>
+                            <td [attr.colspan]="5" style="text-align:center;">
+                            No Records Found.
+                            </td>
+                        </tr>
+                        </ng-template>
+                        <ng-template pTemplate="paginatorleft">
+                        <div *ngIf="pposGrid._totalRecords > 0">
+                            <b>Showing {{pposGrid.first+1}} to {{pposGrid.first+pposGrid.rows > pposGrid.totalRecords?pposGrid.totalRecords: pposGrid.first+pposGrid.rows}} of {{pposGrid.totalRecords}}</b>
+                            <!-- <app-page-info [totalRecords]="auctionItemsList?.length" [pageData]="paginatoryDetails"></app-page-info> -->
+                        </div>
+                        </ng-template>
+                </p-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+</div>

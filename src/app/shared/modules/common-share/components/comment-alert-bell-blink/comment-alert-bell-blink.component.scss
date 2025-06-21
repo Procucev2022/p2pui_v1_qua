@@ -1,0 +1,38 @@
+
+@keyframes blink {
+    50% {
+      opacity: 0.0;
+    }
+  }
+  @-webkit-keyframes blink {
+    50% {
+      opacity: 0.0;
+    }
+  }
+  .blink {
+    animation: blink 1s step-start 0s infinite;
+    -webkit-animation: blink 1s step-start 0s infinite;
+    color: #ff932c;
+    position: relative;
+  }
+
+
+  .blink i{
+    position: absolute;
+    font-size: 10px;
+    left: -20px;
+  }
+
+  .crud-icons span .fa-bell {
+    margin-left: -2px !important;
+}
+
+.crud-icons .fa {
+  padding: 0px;
+  margin: 0 10px !important;
+}
+
+.fa-commenting-o:before {
+  content: "\f27b";
+  margin-left: 9px !important;
+}

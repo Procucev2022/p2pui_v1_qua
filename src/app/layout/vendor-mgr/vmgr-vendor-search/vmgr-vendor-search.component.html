@@ -1,0 +1,380 @@
+<div class="col-12">
+  <div class="table-title">
+    <div class="row">
+      <div class="col-sm-6">
+        <h2>Vendor Search</h2>
+      </div>
+      <div class="col-sm-6">
+      </div>
+    </div>
+  </div>
+  <form (ngSubmit)="onSubmit(searchForm,selectedTypeData)" #searchForm="ngForm">
+    <div class="col-md-12 pb-2">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="Vname">Organization Name</label>
+            <input type="text" class="form-control" id="i_company" placeholder="Organization Name"
+              [(ngModel)]="companyName" #company="ngModel" name="company">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="cityName">City</label>
+            <input type="text" class="form-control" id="cityName" placeholder="City" [(ngModel)]="city"
+              #cityName="ngModel" name="cityName">
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="form-group col-sm-6">
+      <label for="Vname" class="control-label col-sm-4">Organization Name:</label>
+      <input type="text" class="form-control" id="i_company" placeholder="Organization Name" [(ngModel)]="companyName"
+        #company="ngModel" name="company">
+    </div>
+    <div class="form-group col-sm-6">
+      <label for="cityName" class="control-label col-sm-4">City:</label>
+      <input type="text" class="form-control" id="cityName" placeholder="City" [(ngModel)]="city" #cityName="ngModel"
+        name="cityName">
+    </div> -->
+
+    <div class="col-md-12">
+      <div class="search-card" *ngFor="let approval of approvalList; let i = index;">
+        <hr *ngIf="i>0">
+        <div class="col-md-12 row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="priority">Select your Product/Service</label>
+              <select (change)="selectChangeHandler($event, i, classificationList[i].typeName)"
+                name="ProductorService_{{i}}" id="ProductorService_{{i}}" required #ProductorService_{{i}}="ngModel"
+                [(ngModel)]="classificationList[i].typeName" class="form-control">
+                <option selected disabled [ngValue]="null">Select your Product/Service</option>
+                <option *ngFor="let selectedvalue of selectedType" [value]="selectedvalue">{{selectedvalue}}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6 dc">
+            <div class="col-md-12" *ngIf="i == approvalList.length-1">
+              <button type="button" class="btn btn-success btn-green" (click)="add(i)"> <i class="fa fa-plus"></i> Add</button>
+            </div>
+            <div class="col-md-12" *ngIf="i < approvalList.length -1">
+              <button type="button" class="btn btn-danger btn-red" (click)="remove(i)">X Remove</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12 row" *ngIf="classificationList[i].typeName == 'Product-Class'">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="control-label">Segment</label>
+              <ngx-select-dropdown name="segmentName_{{i}}" id="category_segment_{{i}}"
+                (change)="onSegmentChange($event.value,i)" [multiple]="false"
+                [(ngModel)]="classificationList[i].segmentName" [config]="dropDownConfig"
+                [options]="approval.segmentNames"></ngx-select-dropdown>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="control-label">Family</label>
+              <ngx-select-dropdown name="familyName_{{i}}" id="familyName_{{i}}"
+                (change)="onFamilyChange($event.value, classificationList[i].segmentName,i)" [multiple]="false"
+                [(ngModel)]="classificationList[i].familyName" [config]="dropDownConfig"
+                [options]="approval.familyNames" [disabled]="approval.familyNames.length == 0">
+              </ngx-select-dropdown>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="control-label">Class</label>
+              <ngx-select-dropdown name="className_{{i}}" id="className_{{i}}"
+                (change)="onClassChange($event.value, classificationList[i].segmentName, classificationList[i].familyName,i)"
+                [multiple]="false" [(ngModel)]="classificationList[i].className" [config]="dropDownConfig"
+                [options]="approval.classNames" [disabled]="approval.classNames.length == 0">
+              </ngx-select-dropdown>
+
+
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="control-label">Commodity</label>
+              <ngx-select-dropdown name="commodityName_{{i}}" id="commodityName_{{i}}" [multiple]="false"
+                (change)="onCommodityChange($event.value, classificationList[i].segmentName, classificationList[i].familyName, classificationList[i].className ,i)"
+                [(ngModel)]="classificationList[i].commodityName" [config]="dropDownConfig"
+                [options]="approval.commodityNames" [disabled]="approval.commodityNames.length == 0">
+              </ngx-select-dropdown>
+            </div>
+          </div>
+
+        </div>
+        <div class="col-md-12 row" *ngIf="classificationList[i].typeName == 'Product-HSN'">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="control-label">HSN Code</label>
+              <input Placeholder="HSN Code" class="form-control" name="hsnCode_{{i}}" id="hsnCode_{{i}}"
+                [(ngModel)]="classificationList[i].hsncode">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 row" *ngIf="classificationList[i].typeName == 'Service-Class'">
+          <div class="col-6">
+            <div class="form-group">
+              <label class="control-label">Section</label>
+
+              <ngx-select-dropdown name="categoryService_section_{{i}}" id="categoryService_section_{{i}}"
+                (change)="onSectionChange($event.value,i)" [multiple]="false"
+                [(ngModel)]="classificationList[i].section" [config]="dropDownConfig" [options]="approval.sections">
+              </ngx-select-dropdown>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label class="control-label">Heading</label>
+              <ngx-select-dropdown name="heading_{{i}}" id="headings_{{i}}"
+                (change)="onHeadingChange($event.value, classificationList[i].section,i)" [multiple]="false"
+                [(ngModel)]="classificationList[i].heading" [config]="dropDownConfig" [options]="approval.headings"
+                [disabled]="approval.headings.length == 0">
+              </ngx-select-dropdown>
+
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label class="control-label">Group
+                Description</label>
+
+              <ngx-select-dropdown name="groupdescription_{{i}}" id="groupdescription_{{i}}"
+                (change)="onGroupChange($event.value, classificationList[i].section, classificationList[i].heading,i)"
+                [multiple]="false" [(ngModel)]="classificationList[i].groupdescription" [config]="dropDownConfig"
+                [options]="approval.groupdescriptions" [disabled]="approval.groupdescriptions.length == 0">
+              </ngx-select-dropdown>
+
+
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label class="control-label">Sac</label>
+
+              <ngx-select-dropdown name="sac_{{i}}" id="sacs_{{i}}" [multiple]="false"
+                (change)="onSacChange($event.value, classificationList[i].section, classificationList[i].heading,classificationList[i].groupdescription,i)"
+                [(ngModel)]="classificationList[i].sac" [config]="dropDownConfig" [options]="approval.sacs"
+                [disabled]="approval.sacs.length == 0"></ngx-select-dropdown>
+
+
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 row" *ngIf="classificationList[i].typeName == 'Service-SAC'">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="control-label">SAC Code</label>
+              <input Placeholder="SAC Code" class="form-control" name="sacCode_{{i}}" id="sacCode_{{i}}"
+                [(ngModel)]="classificationList[i].sacCode">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 p-4">
+      <button type="submit" style="float:right;" class="btn btn-primary btn-blue">Search</button>
+      <button type="button" style="float:right;" class="btn btn-secondary btn-red"
+        (click)="resetForm(searchForm)">Reset</button>
+    </div>
+  </form>
+</div>
+<div class="col-md-12" style="padding: 30px;" *ngIf="searchsList.length > 0">
+  <p-table #searchTable [columns]="searchHeaders" [value]="searchsList" sortMode="multiple" [paginator]="true"
+    [rows]="pageRecordSize" id="prqTable" [rowsPerPageOptions]="pageOptions" exportFilename="roles details"
+    [(selection)]="selectedData" [scrollable]="true">
+    <ng-template pTemplate="caption">
+      <div class="table-title">
+        <div class="row p-2">
+          <div class="col-sm-6">
+            <h2>Vendors</h2>
+            <p><span class="dot"></span>{{searchsList.length}} Total</p>
+          </div>
+          <div class="col-sm-6">
+            <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+              (input)="searchTable.filterGlobal($event.target.value, 'contains')" style="float:right;" />
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <!-- <th style="width: 3rem">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th> -->
+        <th [style.width]="col.width" *ngFor="let col of columns" [pSortableColumn]="col.field">
+          {{col.header}}
+          <p-sortIcon [field]="col.field"></p-sortIcon>
+        </th>
+        <th style="width: 11rem;">Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr [pSelectableRow]="rowData">
+        <!-- <td style="width: 3rem">
+          <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+        </td> -->
+        <td [style.width]="col.width" *ngFor="let col of columns"  [ngClass]="{'table-cell-overflow-ellipse' : col.field == 'companyName' }">
+          <span *ngIf="col.field == 'companyName'">
+            <app-vendor-info-icon-dialog [vendorData]="{'vendorId': rowData.id}"></app-vendor-info-icon-dialog>
+           <img *ngIf="rowData['status'] == 'Completed'" width="18"
+              src="https://img.icons8.com/color/48/000000/instagram-verification-badge.png" />
+              <span [title]="rowData[col.field]"> {{rowData[col.field]}}</span>
+          </span>
+          <span *ngIf="col.field != 'companyName'">
+            {{rowData[col.field]}}
+          </span>
+        </td>
+        <td style="width: 11rem;">
+            <img src="/assets/images/new/view-doc.png" width="32" title="View Vendor Details" (click)="viewVendor(rowData)">
+
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage" let-columns>
+      <tr>
+        <td [attr.colspan]="5" style="text-align:center;">
+          No Records Found.
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft">
+      <div  *ngIf="searchTable._totalRecords > 0">
+        <b>Showing {{searchTable.first+1}} to {{searchTable.first+searchTable.rows > searchTable.totalRecords?searchTable.totalRecords: searchTable.first+searchTable.rows}} of {{searchTable.totalRecords}}</b>
+        <!-- <app-page-info [totalRecords]="searchsList.length" [pageData]="paginatoryDetails"></app-page-info> -->
+      </div>
+    </ng-template>
+  </p-table>
+  <!-- <div *ngIf="searchsList.length ==0">No Search Result Yet</div> -->
+</div>
+
+<!-- <label class="control-label col-6" for="companyName">Vendor Name:</label>
+  <input type="text" class="form-control col-6" placeholder="Vendor Name"> -->
+
+<!-- <form  (ngSubmit)="onSubmit(searchForm)" #searchForm="ngForm">
+                <div class="row">
+                        <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label" >Vendor Name</label>
+                            <input type="text" #companyName="ngModel" ngModel name="vname" id="i_companyName"
+                            id="category_segment" class="form-control" placeholder="Vendor Name">
+                        </div>
+                        </div>
+                        <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label" >City</label>
+                            <input type="text" ngModel #city="ngModel" name="city" id="i_city"
+                            id="familyName" class="form-control" placeholder="City">
+                        </div>
+                        </div>
+                        <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label" >HSN Code</label>
+                            <input type="text" ngModel #hsnCode="ngModel" name="hsncode"
+                            id="className" class="form-control" placeholder="HSN CODE">
+                        </div>
+                        </div>
+
+                </div>
+                <button type="submit" class="btn btn-primary pull-right">Search</button>
+          </form> -->
+
+<!-- <section *ngFor="let approval of approvalList; let i = index;">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="" style="float: right;">
+                  <button type="button" *ngIf="i == approvalList.length-1"
+                  class="btn btn-success" (click)="add(i)">+</button>
+                </div>
+              </div>
+              <div class="col-md-12" *ngIf="i < approvalList.length -1">
+                <div class="" style="float: right;">
+                  <button type="button" class="btn btn-danger" (click)="remove(i)">✖</button>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label class="control-label" >Segment</label>
+                  <ngx-select-dropdown name="segmentName_{{i}}" id="category_segment_{{i}}" (change)="onSegmentChange($event.value,i)" [multiple]="false"
+                   [(ngModel)]="classificationList[i].segmentName" [config]="dropDownConfig" [options]="approval.segmentNames"></ngx-select-dropdown>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label class="control-label" >Family</label>
+                  <ngx-select-dropdown name="familyName_{{i}}" id="familyName_{{i}}" (change)="onFamilyChange($event.value, classificationList[i].segmentName,i)" [multiple]="false"
+                   [(ngModel)]="classificationList[i].familyName" [config]="dropDownConfig" [options]="approval.familyNames"
+                   [disabled]="approval.familyNames.length == 0"></ngx-select-dropdown>
+
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label class="control-label" >Class</label>
+                  <ngx-select-dropdown name="className_{{i}}" id="className_{{i}}" (change)="onClassChange($event.value, classificationList[i].segmentName, classificationList[i].familyName,i)" [multiple]="false"
+                   [(ngModel)]="classificationList[i].className" [config]="dropDownConfig" [options]="approval.classNames"
+                   [disabled]="approval.classNames.length == 0"></ngx-select-dropdown>
+
+
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label class="control-label" >Commodity</label>
+                  <ngx-select-dropdown name="commodityName_{{i}}" id="commodityName_{{i}}"  [multiple]="false"
+                   [(ngModel)]="classificationList[i].commodityName" [config]="dropDownConfig" [options]="approval.commodityNames"
+                   [disabled]="approval.commodityNames.length == 0"></ngx-select-dropdown>
+                </div>
+              </div>
+            </div>
+          </section> -->
+
+<!-- <div class="col-md-6 offset-md-3" style="margin-top: 15px;">
+        <form (ngSubmit)="onSubmit(searchForm)" #searchForm="ngForm">
+            <div class="form-group row">
+              <label for="vendorName" class="col-sm-5 col-form-label">Vendor Name:</label>
+              <div class="col-sm-7">
+                <input type="text" class="form-control" id="i_vendorName" placeholder="Enter Vendor Name"
+                ngModel #vendorName="ngModel" name="companyName">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="city" class="col-sm-5 col-form-label">City:</label>
+              <div class="col-sm-7">
+                <input type="text" class="form-control" id="i_city" placeholder="Enter City"
+                ngModel #city="ngModel" name="city">
+              </div>
+            </div>
+            <div class="form-group row">
+                <label for="hsnCode" class="col-sm-5 col-form-label">HSN Code:</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" id="i_hsnCode" placeholder="Enter HSN Code"
+                  ngModel #hsnCode="ngModel" name="hsnCode">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="state" class="col-sm-5 col-form-label">State:</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" id="i_state" placeholder="Enter State"
+                  ngModel #state="ngModel" name="state">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="segment" class="col-sm-5 col-form-label">Segment:</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" id="i_segment" placeholder="Enter Segment"
+                  ngModel #segment="ngModel" name="segment">
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6 offset-md-5 ">
+                  <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+        </form> </div>-->

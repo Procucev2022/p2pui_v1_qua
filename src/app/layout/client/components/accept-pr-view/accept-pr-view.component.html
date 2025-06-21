@@ -1,0 +1,21 @@
+  <div class="modal-header">
+      <button id="acceptpr" name="acceptpr" class="btn btn-warning modal-close-btn"  mat-dialog-close>✖</button>
+        <div class="col-6">
+          <h5>Please enter closure date and accept PR</h5>
+      </div>
+  </div>
+      <div class="modal-body">
+  <form (submit)="acceptPrData(aceeptPRForm)" name="aceeptPRForm" #aceeptPRForm="ngForm" novalidate>
+      <div class="col-12 form-group">
+          <mat-form-field class="example-full-width">
+            <mat-label>Choose Closure Date</mat-label>
+            <input matInput [matDatepicker]="picker" name="prClosureData" required  [(ngModel)]="prClosureDate"
+            [min]="minDate"  id="prClosureData">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        </div>
+        <button mat-raised-button  color="primary" type="submit" cdkFocusInitial>Accept</button>
+        <button type="button" class="btn btn-outline-dark" mat-dialog-close>Close</button>
+      </form>
+      </div>

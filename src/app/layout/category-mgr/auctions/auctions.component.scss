@@ -1,0 +1,90 @@
+.ui-table-scrollable-body {
+    overflow: auto;
+    position: relative;
+    height: auto;
+    max-height: 419px !important;
+    overflow-y: auto;
+}
+.actionIcons .disabledCls::before {
+    content: 'N/A';
+    opacity: 0.8;
+    /* position: absolute; */
+    font-size: x-small;
+}
+.liveCls{
+    position: relative;
+}
+.auctionCancelBtn{
+  float: right;
+  margin-right: 30px;
+}
+.bid-viewDetails label, .bid-viewDetails h6 {
+  padding: 0;
+  margin-bottom: 0px;
+}
+.ref-bac{
+  background: #f2f2f27d;
+  padding: 12px;
+  border-radius: 24px;
+}
+
+.liveCls::after {
+    position: absolute;
+    content: 'Live';
+    width: 29px;
+    /* border: 1px solid; */
+    padding: 3px;
+    top: -11px;
+    font-size: 10px;
+    color: red;
+    letter-spacing: 1px;
+
+animation: blink-animation 1s steps(5, start) infinite;
+  -webkit-animation: blink-animation 1s steps(5, start) infinite;
+}
+
+.cellLinkCls:hover .tooltipText{
+  visibility: visible;
+}
+.tooltipText{
+  visibility: hidden;
+  width: 200px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  /* Position the tooltip */
+  position: absolute;
+}
+
+img.bids-icon {
+  border-radius: 4px;
+  border: 2px solid #0070c02b;
+  padding: 0 2px !important;
+  cursor: pointer;
+}
+img.bids-icon:hover {
+  border: 2px solid #e6dddd;
+  image-rendering: pixelated;
+  padding: 0 3px !important;
+  border-radius: 4px;
+
+}
+span.actionIcons i {
+    margin: 1px !important;
+    font-size: 22px !important;
+    box-shadow: none !important;
+    color: rgb(0, 26, 192) !important;
+}
+
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+@-webkit-keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}

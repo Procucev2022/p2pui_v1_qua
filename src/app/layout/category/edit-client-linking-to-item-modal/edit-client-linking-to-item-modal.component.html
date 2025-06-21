@@ -1,0 +1,37 @@
+<div class="modal-header">
+    <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+    <div class="col-6">Edit Details</div>
+</div>
+<div class="modal-body">
+    <form [formGroup]="createForm" action="" class="row">
+        <div class="col-3">
+            <label class=" form-label required">Annual Consumption </label>
+            <input type="number" formControlName="clientAnualConsum" class="form-control" placeholder="Enter Annual Consumption " />
+        </div>
+        <div class="col-3">
+            <label class=" form-label required">Monthly Consumption</label>
+            <input type="number" formControlName="monthlyConsumpution" class="form-control" placeholder="Enter Monthly Consumption" />
+        </div>
+        <div class="col-3">
+            <label class="form-label required">Client Item Code</label>
+            <input formControlName="clientItemCode" class="form-control" placeholder="Enter Client Item Code" />
+        </div>
+        <div class="col-3">
+            <label class="label-cls">Project Item Number</label>
+            <input formControlName="projectItemNumber"   class="form-control" placeholder="Project Item Number" />
+        </div>
+        <div class="col-3">
+            <label class="label-cls">Project Category</label>
+            <input formControlName="projectCategory"   class="form-control" placeholder="Project Category" />
+        </div>
+        <div class="col-3">
+            <label class="label-cls">Project Sub Category</label>
+            <input formControlName="projectSubCategory" class="form-control" placeholder="Project SubCategory" />
+        </div>
+
+    </form>
+</div>
+<mat-dialog-actions align="end">
+    <button type="button" mat-raised-button color="warn" type="button" (click)="reset()">Reset</button>
+    <button mat-raised-button color="primary" cdkFocusInitial type="submit" (click)="submitForm()">Save</button>
+</mat-dialog-actions>

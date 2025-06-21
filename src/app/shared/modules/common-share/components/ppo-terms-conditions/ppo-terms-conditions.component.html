@@ -1,0 +1,24 @@
+<div class="p-5">
+<h5 class="term-color">Delivery Terms</h5>
+<ul>
+    <li class="term-size">
+        <h6 *ngIf="ppoData.deliveryTerms?.length">{{ppoData.deliveryTerms}}</h6>
+        <h6 *ngIf="!ppoData.deliveryTerms?.length">N/A</h6>
+    </li>
+</ul>
+<h5 class="term-color">Payment Terms</h5>
+<ul>
+    <li class="term-size">
+        <h6 *ngIf="ppoData.paymentTerms?.length">{{ppoData.paymentTerms}}</h6>
+        <h6 *ngIf="!ppoData.paymentTerms?.length">N/A</h6>
+    </li>
+</ul>
+<h5 class="term-color">Other Terms</h5>
+<ul>
+    <li class="term-size">
+        <h6 *ngIf="ppoData.otherTerms?.length">{{ppoData.otherTerms}}</h6>
+        <h6 *ngIf="!ppoData.otherTerms?.length">N/A</h6>
+    </li>
+</ul>
+</div>
+

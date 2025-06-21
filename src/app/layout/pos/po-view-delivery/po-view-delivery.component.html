@@ -1,0 +1,66 @@
+<div class="modal-header">
+    <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+    <div class="col-6">Delivery Details</div>
+</div>
+<div class="modal-body row">
+    <div class="col-4 text-center">
+        <!-- <div class="row"> -->
+            <!-- <div class="col-6"> -->
+                <label>Delivery Id : <span class="label-value"></span> </label>
+            <!-- </div>
+            <div class="col-6"> -->
+                <label> <span class="label-value">{{ deliveryData.deliveryId }}</span> </label>
+            <!-- </div>
+        </div> -->
+    </div>
+    <div class="col-4 text-center">
+        <!-- <div class="row">
+            <div class="col-6"> -->
+                <label>Delivery Date : </label>
+            <!-- </div>
+            <div class="col-6" *ngIf="!isEditDeliveryDate"> -->
+            <label *ngIf="!isEditDeliveryDate"> 
+          <span class="label-value" [ngClass]="{'underLineCls': allowEditForVendor}">{{ deliveryDate | date: 'dd-MM-yyyy' }}</span>
+          <i class="fa fa-pencil editIcon blueIcon" *ngIf="allowEditForVendor" title="Edit" (click)="changeDeliveryDate(true, false)"></i>
+         </label>
+
+            <!-- </div> -->
+            <div *ngIf="isEditDeliveryDate && allowEditForVendor" style="display: inherit"> 
+                <input class="form-control" style="width: 50%;" name="deliveryDate" matInput [matDatepicker]="picker" [(ngModel)]="deliveryDate" [min]="minDate">
+                <mat-datepicker-toggle matSuffix [for]="picker" style="position: absolute;left: 40%;top: -5px;"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <span class="">         
+          <i class="fa fa-check editIcon greenIcon" title="Submit" (click)="changeDeliveryDate(false , true)"></i>
+          <i class="fa fa-times editIcon redIcon" title="Cancel" (click)="changeDeliveryDate(false, false)"></i>
+        </span>
+                <owl-date-time #dt2></owl-date-time>
+            </div>
+        </div>
+    <!-- </div> -->
+    <div class="col-4 text-center">
+        <!-- <div class="row">
+            <div class="col-6"> -->
+                <label>Remarks : </label>
+            <!-- </div>
+            <div class="col-6"> -->
+                <label> <span class="label-value">{{ deliveryData.remarks }}</span> </label>
+            <!-- </div> -->
+        <!-- </div> -->
+    </div>
+    <!-- <div class="col-6">
+    <div class="row">
+      <div class="col-6">
+        <label>Delivery Status : </label>
+      </div>
+      <div class="col-6">
+        <label><span class="label-value" style="color: rgb(228, 94, 41);">{{ deliveryData?.clientStatus?.uiDisplay }}</span> </label>
+      </div>
+    </div>
+  </div> -->
+    <div class="col-12">
+        <app-common-grid [gridData]="deliveryItemsData" [parentId]="deliveryId" (actionEvent)="onClickCommonGrid($event)"></app-common-grid>
+    </div>
+</div>
+<mat-dialog-actions align="end">
+    <button type="button" class="btn btn-success" [disabled]="deliveryData.clientStatus.uiDisplay === 'Client Accepted' || deliveryData.clientStatus.uiDisplay === 'Revise date requested'" (click)="accpetDelivery()" *ngIf="roleName == 'ClientInitiator'">Accept Delivery</button>
+</mat-dialog-actions>

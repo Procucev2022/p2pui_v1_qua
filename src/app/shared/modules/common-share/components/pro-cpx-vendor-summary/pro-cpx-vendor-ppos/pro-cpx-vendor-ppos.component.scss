@@ -1,0 +1,96 @@
+.table-search i {
+    margin-top: 5px !important;
+}
+
+.btn-danger.disabled,
+.btn-danger:disabled {
+    color: #fff;
+    background-color: #dc3545a3;
+    border-color: #dc3545;
+}
+
+rating {
+    display: flex;
+    align-items: center;
+}
+
+span.rating-cls-sec {
+    display: inline-flex;
+    align-items: center;
+    line-height: 10px;
+}
+
+span.rating-cls-sec label {
+    font-size: 12px !important;
+    min-width: 106px;
+}
+
+rating:after {
+    content: ':';
+    padding-left: 10px;
+}
+
+::ng-deep span.bs-rating-star {
+    font-size: 24px;
+}
+
+.editIcon {
+    font-size: 1rem;
+    cursor: pointer;
+    margin-left: 10px;
+    padding: 4px;
+}
+
+.underLineCls {
+    border-bottom: 3px solid rgb(165, 71, 16);
+}
+
+.greenIcon {
+    color: white;
+    border: 1px solid;
+    border-radius: 50%;
+    background: green;
+}
+
+.redIcon {
+    color: white;
+    border: 1px solid;
+    border-radius: 50%;
+    background: rgb(241, 19, 19);
+}
+
+.blueIcon {
+    color: rgb(25, 92, 155);
+}
+
+.rating-editor .fa-edit:before,
+.fa-pencil-square-o:before {
+    content: "\f044";
+    font-size: 24px;
+    color: blue;
+}
+
+rating.readOnlyRating {
+    opacity: 0.5;
+}
+
+
+.emptyRemarks {
+    color: rgb(154, 153, 153);
+    font-size: 10px;
+
+}
+
+rating.rating_cls_4,
+rating.rating_cls_3 {
+    color: orange;
+}
+
+rating.rating_cls_5 {
+    color: green;
+}
+
+rating.rating_cls_1,
+rating.rating_cls_2 {
+    color: rgb(213, 18, 18);
+}

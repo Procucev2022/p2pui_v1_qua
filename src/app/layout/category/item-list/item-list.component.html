@@ -1,0 +1,178 @@
+<!-- <div class="col-12 card-layout"> -->
+<div class="col-md-12 pad-nill" *ngIf="loggedUserOwnPermissions?.indexOf(DEfAULT_OWN_PERMISSIONS_LIST.ITEMS_LIST_PAGE.ITEMS_LIST_VIEW) != -1 ||roleName == 'VendorManager' || roleName == 'VendorManager2'||  roleName == 'PartialVendor'" #pposRef>
+  <div class="table-title">
+    <div class="row">
+      <div class="col-sm-6">
+        <h2>Items</h2>
+        <p><span class="dot"></span>{{itemList.length}} Total</p>
+      </div>
+      <div class="col-sm-6">
+        <button *ngIf="roleName == 'VendorManager'" style="display: flex;align-items: center;" class="btn btn-primary btn-blue" type="button" (click)="createItem()"><i
+            class="fa fa-plus"></i> <span>New Item</span></button>
+      </div>
+    </div>
+  </div>
+
+  <p-table dataKey="id" #itemCatalogueTable [columns]="itemHeaders" [value]="itemList" sortMode="multiple" [paginator]="true"
+    [rows]="pageRecordSize" id="prqTable" [rowsPerPageOptions]="pageOptions"  [tableStyle]="{ minWidth: '100%'}"
+    exportFilename="items details" [(selection)]="selectedData" [scrollable]="true" [scrollHeight]="'calc(100vh - 218px)'"  [expandedRowKeys]="expandedRows">
+    <ng-template pTemplate="caption">
+      <div class="table-search">
+        <div class="row">
+          <div class="col-sm-6">
+            <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+              (input)="itemCatalogueTable.filterGlobal($event.target.value, 'contains')" />
+          </div>
+          <div class="col-sm-6">
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th style="width: 4rem">
+        </th>
+        <ng-container *ngFor="let col of columns">
+          <th [style.width]="col.width" [pSortableColumn]="col.field" [title]="col.fieldTitle">
+            {{col.header}}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+          </th>
+        </ng-container>
+        <th *ngIf="roleName == 'VendorManager2'" style="width:14rem">Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
+      <tr [pSelectableRow]="rowData">
+        <td style="width: 4rem">
+          <button *ngIf="roleName == 'VendorManager' || loggedUserOwnPermissions?.indexOf(DEfAULT_OWN_PERMISSIONS_LIST.ITEMS_LIST_PAGE.ITEMS_LIST_VIEW) != -1" type="button" pButton pRipple [pRowToggler]="rowData"
+              (click)="expanded ? getCloseVendorAndClientListByItemId(rowData,$event) : getVendorAndClientListByItemId(rowData,$event, false)"
+              class="grid-expand">
+              <span *ngIf="expanded"><i class="fa fa-chevron-down"></i></span>
+              <span *ngIf="!expanded"><i class="fa fa-chevron-right"></i></span>
+          </button>
+      </td>
+        <td *ngFor="let col of columns" [style.width]="col.width" [ngClass]="{'table-cell-overflow-ellipse' : col.field == 'description' || col.field == 'specification' }">
+            <span>
+          <span *ngIf="!col.isLink && col.fieldType != 'date' && col.field != 'description' && col.field != 'specification'"  class="align-items-center price-icon-alignment"   [ngClass]="{'price-icon-alignment': col.field == 'price'}">
+          <span [ngClass]="{'price-content': col.field == 'price'}">
+            <span *ngIf="col.field == 'itemNumber'">
+                <span *ngIf="rowData?.itemNumber != null && rowData?.itemNumber != ''">{{rowData[col.field]}}</span>
+                <span *ngIf="rowData?.itemNumber == null || rowData?.itemNumber  == ''" class="cellLinkCls" (click)=" getVendorAndClientListByItemId(rowData,$event, true)">Assign Category</span>
+            </span>
+            <span *ngIf="col.field != 'itemNumber'"> {{rowData[col.field]}} </span>
+        </span>
+
+            <i class="pi pi-sort-amount-up" #targetEl (click)=" showAnalyticsForSelectedItem(rowData, false )" style="font-size: 2rem" *ngIf="isAnalyticsScreenShow && col.field == 'price' && rowData?.priceFlag == 'GT' "></i>
+            <i class="pi pi-sort-amount-down" #targetEl2 (click)=" showAnalyticsForSelectedItem(rowData, false )" style="font-size: 2rem" *ngIf="isAnalyticsScreenShow && col.field == 'price' && rowData?.priceFlag == 'LT' "></i>
+            <i class="pi pi-sort-alt" #targetEl style="font-size: 2rem" (click)=" showAnalyticsForSelectedItem(rowData, false )" *ngIf="isAnalyticsScreenShow && col.field == 'price' && rowData?.priceFlag == 'EQ' "></i>
+
+
+          </span>
+        </span>
+          <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
+            {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
+          </span>
+          <span *ngIf="col.field == 'description' || col.field == 'specification'" [title]="rowData[col.field]" >
+            {{rowData[col.field]}}
+          </span>
+          <span *ngIf="col.isLink && col.fieldType != 'date' && col.field != 'description' && roleName == 'VendorManager'" class="cellLinkCls"> <a
+              href="javascript:void(0);" (click)="getVendorAndClientListByItemId(rowData)"> {{rowData[col.field]}} </a>
+          </span>
+          <span *ngIf="col.isLink && col.fieldType != 'date'  && col.field != 'description'  && roleName == 'VendorManager2'">
+            {{rowData[col.field]}}</span>
+        </td>
+        <td *ngIf="roleName == 'VendorManager2'" style="width:14rem">
+          <button type="button" class="btn-skelton" (click)="editDescription(rowData, editItem)">
+          <img src="/assets/images/new/edit-data.png" title="Edit Item Description">
+        </button>
+          <button *ngIf="rowData.status == 'New'" type="button" mat-raised-button color="secondary" cdkFocusInitial
+            color="primary" (click)="approve(rowData)">Approve</button>
+          <button *ngIf="rowData.status == 'New'" type="button" mat-raised-button color="primary" cdkFocusInitial
+            color="primary" (click)="reject(rowData)">Reject</button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="rowexpansion" let-rowData>
+      <tr class="child-grid" *ngIf="selectedRowData">
+          <td colspan="7">
+              <div class="p-p-3">
+                <mat-tab-group>
+                  <mat-tab label="Linked Vendors " *ngIf="selectedRowData ">
+                    <div class="rfqContainer ">
+                      <app-linked-vendor-list [itemData]="selectedRowData "></app-linked-vendor-list>
+                    </div>
+                  </mat-tab>
+                  <mat-tab label="Linked Clients ">
+                    <div class="rfqContainer " *ngIf="selectedRowData ">
+                      <app-linked-client-list [itemData]="selectedRowData "></app-linked-client-list>
+                    </div>
+                  </mat-tab>
+                </mat-tab-group>
+              </div>
+          </td>
+      </tr>
+  </ng-template>
+    <ng-template pTemplate="emptymessage" let-columns>
+      <tr>
+        <td [attr.colspan]="5" style="text-align:center;">
+          No Records Found.
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft">
+      <div  *ngIf="itemCatalogueTable._totalRecords > 0">
+        <b>Showing {{itemCatalogueTable.first+1}} to {{itemCatalogueTable.first+itemCatalogueTable.rows > itemCatalogueTable.totalRecords?itemCatalogueTable.totalRecords: itemCatalogueTable.first+itemCatalogueTable.rows}} of {{itemCatalogueTable.totalRecords}}</b>
+        <!-- <app-page-info [totalRecords]="itemList.length" [pageData]="paginatoryDetails"></app-page-info> -->
+      </div>
+    </ng-template>
+  </p-table>
+</div>
+<!-- </div> -->
+<div class="row" *ngIf="roleName == 'Vendor' ">
+  <div class="col-12 " #pposRef>
+    <div class="prqContainer row ">
+      <div class="col-12">
+        <app-item-list-by-vendor></app-item-list-by-vendor>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #editItem>
+  <form (submit)="saveItemDescription(editItemForm)" name="editItemForm" #editItemForm="ngForm" novalidate>
+    <mat-dialog-content>
+      <label><b>Please enter new Description</b></label>
+      <div class="col-12">
+        <div class="form-group row">
+          <div class="col-12">
+            <textarea class="form-control"  #itemDescription=ngModel [(ngModel)]="updatedDescripiton" name="description"
+               placeholder="Enter Description" cols="30" rows="2" style="  border: 1px solid black;border-radius: 3px;"></textarea>
+            <div>
+              <small style="color: red" *ngIf="itemDescription.touched && updatedDescripiton == null">New Description is required</small>
+              <!-- <small style="color: red" *ngIf="itemDescription.touched && updatedDescripiton.length == 0">New Description should not empty</small> -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <label><b>Please enter new Specification</b></label>
+      <div class="col-12">
+        <div class="form-group row">
+          <div class="col-12">
+            <textarea class="form-control"   #itemSpecification=ngModel [(ngModel)]="updatedSpecification" name="specification"
+               placeholder="Enter Description" cols="30" rows="1" style="  border: 1px solid black;border-radius: 3px;"></textarea>
+            <div>
+              <small style="color: red" *ngIf="itemSpecification.touched && updatedSpecification == null">New Specification is required</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button type="submit" class="btn btn-success btn-green">Update</button>
+      <button type="button" class="btn btn-danger btn-red" mat-dialog-close>Cancel</button>
+    </mat-dialog-actions>
+  </form>
+</ng-template>

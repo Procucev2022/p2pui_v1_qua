@@ -1,0 +1,118 @@
+<div class="modal-header">
+  <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+  <div class="col-6">Vendor Details </div>
+</div>
+<div class="modal-body row">
+  <div class="col-6">
+      <div class="row">
+          <div class="col-6">
+              <label>Vendor Name :  </label>
+          </div>
+          <div class="col-6">
+              <label> <span class="label-value">{{ vendorData?.companyName }}</span> </label>
+          </div>
+      </div>
+  </div>
+  <div class="col-6">
+      <div class="row">
+          <div class="col-6">
+              <label>Status : </label>
+          </div>
+          <div class="col-6">
+              <label>
+        <span class="label-value" [ngClass]="getVendorStatus(vendorData?.status)">{{ vendorData?.status   }}</span>
+      </label>
+          </div>
+      </div>
+  </div>
+  <div class="col-6">
+      <div class="row">
+          <div class="col-6">
+              <label>Category > Sub Category: </label>
+          </div>
+          <div class="col-6">
+              <label>
+        <span class="label-value">
+          <span>{{ vendorData?.vendorcategory  }}</span>
+          <span *ngIf="vendorData?.subCategory">{{' > '+ vendorData?.subCategory}}</span>
+        </span>
+      </label>
+          </div>
+      </div>
+  </div>
+  <div class="col-6">
+      <div class="row">
+          <div class="col-6">
+              <label>HSN Code : </label>
+          </div>
+          <div class="col-6">
+              <label> <span class="label-value">{{ vendorData?.hsncode }}</span> </label>
+          </div>
+      </div>
+  </div>
+  <div class="col-6">
+      <div class="row">
+          <div class="col-6">
+              <label>Contact Person : </label>
+          </div>
+          <div class="col-6">
+              <label><span class="label-value"> {{ vendorData?.contactPerson }}</span> </label>
+          </div>
+      </div>
+  </div>
+  <div class="col-6">
+      <div class="row">
+          <div class="col-6">
+              <label>Contact Number : </label>
+          </div>
+          <div class="col-6">
+              <label><span class="label-value"
+          >{{ vendorData?.organizationPhonenumber}}</span> </label>
+          </div>
+      </div>
+  </div>
+  <div class="col-6">
+    <div class="row">
+        <div class="col-6">
+            <label>Contact Number : </label>
+        </div>
+        <div class="col-6">
+            <label><span class="label-value"
+        >{{ vendorData?.organizationPhonenumber}}</span> </label>
+        </div>
+    </div>
+</div>
+<div class="col-6">
+  <div class="row">
+      <div class="col-6">
+          <label>Location : </label>
+      </div>
+      <div class="col-6">
+          <label><span class="label-value"
+      >{{ vendorData?.city}}</span> </label>
+      </div>
+  </div>
+</div>
+<div class="col-6">
+  <div class="row">
+      <div class="col-6">
+          <label>Email Id: </label>
+      </div>
+      <div class="col-6">
+          <label><span class="label-value"
+      >{{ vendorData?.email}}</span> </label>
+      </div>
+  </div>
+</div>
+<div class="col-6">
+  <div class="row">
+      <div class="col-6">
+          <label>Websie : </label>
+      </div>
+      <div class="col-6">
+          <label><span class="label-value"
+      >{{ vendorData?.website}}</span> </label>
+      </div>
+  </div>
+</div>
+</div>

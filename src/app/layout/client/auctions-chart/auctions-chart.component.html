@@ -1,0 +1,51 @@
+<div class="col-12 row pad-nill spec-header mrg-nill">
+  <h4 class="card-name chart-head">{{"Auctions"}}</h4>
+</div>
+<div class="col-md-12 row">
+  <div class="col-md-4 chart">
+    <div class="chart-specs">
+      <div class="color-wrapper">
+          <div *ngFor="let item of chartBackgroundList">
+              <div class="color-ref" [ngStyle]="{background: item}"></div>
+          </div>
+      </div>
+      <div class="label-ref">
+          <div *ngFor="let item of auctionHeaders">
+              {{ item }}
+          </div>
+      </div>
+      <div class="percent">
+          <div *ngFor="let item of auctionList">
+              {{item}}
+          </div>
+      </div>
+  </div>
+  </div>
+  <div class="col-md-7">
+    <div class="card-section sec-space">
+      <div class="card-body">
+        <!-- <h4 class="card-name">{{"Auctions"}}</h4> -->
+        <div class="col-md-12">
+          <div class="card-body" style="padding: 0px;">
+            <!-- <h4 class="card-name">{{"Total Auctions"}}</h4> -->
+            <div class="row" style="align-items: end;">
+              <div class="col-md-4">
+                <label for="auctionFromdate">From Date</label>
+                <p-calendar [(ngModel)]="auctionFromDate" placeholder="DD-MM-YYYY" dateFormat="dd-mm-yy" showIcon="true"></p-calendar>
+              </div>
+              <div class="col-md-4">
+                <label for="auctionTodate">To Date</label>
+                <p-calendar [(ngModel)]="auctionToDate" placeholder="DD-MM-YYYY" dateFormat="dd-mm-yy" showIcon="true"></p-calendar>
+              </div>
+              <button type="button" class="btn btn-primary btn-blue" (click)="onSubmit('Auctions')">Submit</button>
+            </div>
+          </div>
+        </div>
+        <div class="chart-panel col-md-12 m-3 p-5">
+          <canvas id="auctioncanvas"  height="150"> </canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3"></div>
+</div>

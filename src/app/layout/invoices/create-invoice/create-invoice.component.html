@@ -1,0 +1,115 @@
+<div class="modal-header">
+    <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+    <div class="col-6">Create Invoice </div>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-12">
+            <form [formGroup]="invoiceForm" name="poForm">
+                <div class="row">
+                    <div class="col-6">
+                        <label>Description <b style="color: red;">*</b> </label>
+                        <input type="text" formControlName="invoiceDesc" class="form-control required" [ngClass]="{ 'is-invalid': submitted && f.invoiceDesc.errors }" />
+                        <div *ngIf="submitted && f.invoiceDesc.errors" class="invalid-feedback">
+                            <div *ngIf="f.invoiceDesc.errors.required && submitted">Description is required</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <label>Total Amount <b style="color: red;">*</b> </label>
+                        <label class="form-control" style="background: #f3eded;">{{totalAmount}}</label>
+                    </div>
+                    <div class="col-12" *ngIf="deliveryItemsData">
+                        <app-common-grid [gridData]="deliveryItemsData" (actionEvent)="onClickCommonGrid($event)"></app-common-grid>
+                     </div>
+                    <div class="col-12">
+                        <div class="col-12 marginTop20" style="    border: solid #f3eded;">
+                            <label>Additional Items</label>
+                            <label>
+                              You have added  <em style="font-size:large; font-style: inherit;"><b>{{additionalItemsList.length}}</b></em> item (s). 
+                              Click here to<span (click)="openAdditonalItemsModal(addAddtionalItemsModal)" class="linkCls"><u>Add/Modify Items</u> </span>
+                            </label>                         
+                        </div>
+                    </div>
+                    <div class="col-md-12 form-group">
+                        <label>Remarks <b style="color: red;">*</b> </label>
+                        <textarea formControlName="remarks" class="form-control required" [ngClass]="{ 'is-invalid': submitted && f.remarks.errors }"></textarea>
+                        <div *ngIf="submitted && f.remarks.errors" class="invalid-feedback">
+                            <div *ngIf="f.remarks.errors.required && submitted">Remarks is required</div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-12">
+            <app-common-attachments [isViewOnly]="false" [attachments]="[]" (actionEvent)="getAttachedDocsList($event)"></app-common-attachments>
+        </div>
+       
+    </div>
+</div>
+<mat-dialog-actions align="end">
+    
+    <button mat-raised-button   color="warn"  type="reset" (click)="resetForm()">Reset </button>
+    <button mat-raised-button color="primary" type="button" (click)="onSubmit()">Submit</button>
+</mat-dialog-actions>
+<ng-template #addAddtionalItemsModal>
+    <div class="modal-header">
+        <button class="btn btn-warning modal-close-btn" (click)="closeItemModal()">✖</button>
+        <div class="col-6">Add Additional Items </div>
+    </div>
+    <div class="modal-body">
+        <p-table #additionalTable [value]="additionalItemsFieldsRowData"  dataKey="vin" editMode="row">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Description</th>
+                    <th>Specification</th>
+                    <th>Category</th>
+                    <th>Itemcode</th>
+                    <th>UnitofMeasures</th>
+                    <th>VendorPrice</th>
+                    <th>Quantity</th>
+                    <th>Action</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+                <tr>
+                    <td>
+                        <input  style="border: 1px solid;"  class="form-control" pInputText type="text" [(ngModel)]="additonItemsRowData.description" required>
+                    </td>
+                    <td>
+                        <input  style="border: 1px solid;"  class="form-control" pInputText type="text" [(ngModel)]="additonItemsRowData.brand" required>
+                    </td>
+                    <td>
+                        <input  style="border: 1px solid;"  class="form-control" pInputText type="text" [(ngModel)]="additonItemsRowData.category" required>
+                    </td>
+                    <td>
+                        <input  style="border: 1px solid;"  class="form-control" pInputText type="text" [(ngModel)]="additonItemsRowData.itemcode" required>
+                    </td>
+                    <td>
+                        <input  style="border: 1px solid;"  class="form-control" pInputText type="text" [(ngModel)]="additonItemsRowData.unitofMeasures" required>
+                    </td>
+                    <td>
+                        <input  style="border: 1px solid;"  class="form-control" pInputText type="text" [(ngModel)]="additonItemsRowData.vendorPrice" required>
+                    </td>
+                    <td>
+                        <input  style="border: 1px solid;"  class="form-control" pInputText type="text" [(ngModel)]="additonItemsRowData.quantity" required>
+                    </td>                      
+                    <td>
+                        <span class="crud-icons actionIcons">
+                            <button class="btn btn-primar"*ngIf="!this.isAdd" (click)="additem(rowData, false)"> Update  </button>
+                            <button class="btn btn-primar"*ngIf="this.isAdd" (click)="additem(rowData, true)"> Add </button>
+                        </span>
+                      </td>
+                  </tr>
+            </ng-template>
+        </p-table>
+        <div class="col-12" *ngIf="additonalItemsHeadersData?.gridColumnData?.length>0">
+            <app-common-grid [gridData]="additonalItemsHeadersData" [parentId]="''" (actionEvent)="onClickCommonGrid($event)"></app-common-grid>
+        </div>
+        <div class="col-12 alert" *ngIf="additonalItemsHeadersData?.gridColumnData?.length<=0">
+                <p>No Items available</p>
+        </div>
+    </div>
+    <mat-dialog-actions align="end">
+        <button mat-raised-button   color="primary"  type="button" (click)="closeItemModal()">Save </button>
+    </mat-dialog-actions>
+</ng-template>

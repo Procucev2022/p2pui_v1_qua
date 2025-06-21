@@ -1,0 +1,17 @@
+ .section-div {
+     margin-left: 0;
+     border: 2px solid #80808029;
+     border-radius: 8px;
+     margin-bottom: 8px;
+
+     col-6 {
+         margin-left: 0 !important;
+         padding-left: 0;
+     }
+ }
+ ::ng-deep .modal-body {
+    position: relative;
+    flex: 1 1 auto;
+    padding: 1rem;
+    max-height: 88vh !important;
+}

@@ -1,0 +1,294 @@
+<form  name="vendorClient" (ngSubmit)="onVendorClientSubmit()" #vendorClient="ngForm" novalidate>
+  <div class="col-md-12 row pad-nill">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="existingClients">No of Existing Clients <span style="color:red">*</span></label>
+        <div class="row check-css">
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.existingClients"  #existingClients="ngModel" name="existingClients"
+              id="<5" value="<5" required>
+            <label class="form-check-label" for="<5">
+              {{'<'}} 05
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.existingClients"  #existingClients="ngModel" name="existingClients"
+              id="5-20" value="5-20" required>
+            <label class="form-check-label" for="5-20">
+              05-20
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.existingClients"  #existingClients="ngModel" name="existingClients"
+              id="20-50" value="20-50" required>
+            <label class="form-check-label" for="20-50">
+              20-50
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.existingClients"  #existingClients="ngModel" name="existingClients"
+              id=">50" value=">50" required>
+            <label class="form-check-label" for=">50">
+              {{'>'}} 50
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="reffernceFeedback">FeedBack taken from <span style="color:red">*</span></label>
+        <div class="row check-css">
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.reffernceFeedback"  #reffernceFeedback="ngModel" name="reffernceFeedback"
+              id="02-05" value="02-05" required>
+            <label class="form-check-label" for="02-05">
+              02-05
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.reffernceFeedback"  #reffernceFeedback="ngModel" name="reffernceFeedback"
+              id="05-10" value="05-10" required>
+            <label class="form-check-label" for="05-10">
+              05-10
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <label>FeedBack</label>
+      <ng-container *ngFor="let pricing of pricingList; let index=index">
+          <div class="col-md-12 row">
+            <div class="col-md-10 row">
+              <div class="col-md-6">
+                  <div class="form-group">
+                      <label for="pricingClient">Client {{index+1}}</label>
+                      <input class="form-control" placeholder="Client{{index+1}}" name="name_{{index}}" [(ngModel)]="pricing.clientName" #name_{{index}}="ngModel" required>
+                  </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="pricingFeedBack">Pricing FeedBack</label>
+                  <div class="row check-css">
+                    <div class="form-check check-align">
+                      <input class="form-check-input " type="radio" [(ngModel)]="pricing.pricingFeedback" #pricing_feedBack_{{index}}="ngModel" name="pricing_feedBack_{{index}}"
+                        id="p_one" value="1">
+                      <label class="form-check-label" for="p_one_{{index}}">
+                        1
+                      </label>
+                    </div>
+                    <div class="form-check check-align">
+                      <input class="form-check-input " type="radio" [(ngModel)]="pricing.pricingFeedback" #pricing_feedBack_{{index}}="ngModel" name="pricing_feedBack_{{index}}"
+                        id="p_two" value="2">
+                      <label class="form-check-label" for="p_two_{{index}}">
+                        2
+                      </label>
+                    </div>
+                    <div class="form-check check-align">
+                      <input class="form-check-input " type="radio" [(ngModel)]="pricing.pricingFeedback" #pricing_feedBack_{{index}}="ngModel" name="pricing_feedBack_{{index}}"
+                        id="p_three" value="3">
+                      <label class="form-check-label" for="p_three_{{index}}">
+                        3
+                      </label>
+                    </div>
+                    <div class="form-check check-align">
+                      <input class="form-check-input " type="radio" [(ngModel)]="pricing.pricingFeedback" #pricing_feedBack_{{index}}="ngModel" name="pricing_feedBack_{{index}}"
+                        id="p_four" value="4">
+                      <label class="form-check-label" for="p_four_{{index}}">
+                        4
+                      </label>
+                    </div>
+                    <div class="form-check check-align">
+                      <input class="form-check-input " type="radio" [(ngModel)]="pricing.pricingFeedback" #pricing_feedBack_{{index}}="ngModel" name="pricing_feedBack_{{index}}"
+                        id="p_five" value="5">
+                      <label class="form-check-label" for="p_five_{{index}}">
+                        5
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="qualityFeedBack">Quality FeedBack</label>
+                  <div class="row check-css">
+                    <div class="form-check check-align">
+                      <input class="form-check-input " type="radio" [(ngModel)]="pricing.qualityFeedback" #quality_feedBack_{{index}}="ngModel" name="quality_feedBack_{{index}}"
+                        id="q_one" value="1">
+                      <label class="form-check-label" for="q_one_{{index}}">
+                        1
+                      </label>
+                    </div>
+                    <div class="form-check check-align">
+                      <input class="form-check-input " type="radio" [(ngModel)]="pricing.qualityFeedback" #quality_feedBack_{{index}}="ngModel" name="quality_feedBack_{{index}}"
+                        id="q_two" value="2">
+                      <label class="form-check-label" for="q_two_{{index}}">
+                        2
+                      </label>
+                    </div>
+                    <div class="form-check check-align">
+                      <input class="form-check-input " type="radio" [(ngModel)]="pricing.qualityFeedback" #quality_feedBack_{{index}}="ngModel" name="quality_feedBack_{{index}}"
+                        id="q_three" value="3">
+                      <label class="form-check-label" for="q_three_{{index}}">
+                        3
+                      </label>
+                    </div>
+                    <div class="form-check check-align">
+                      <input class="form-check-input " type="radio" [(ngModel)]="pricing.qualityFeedback" #quality_feedBack_{{index}}="ngModel" name="quality_feedBack_{{index}}"
+                        id="q_four" value="4">
+                      <label class="form-check-label" for="q_four_{{index}}">
+                        4
+                      </label>
+                    </div>
+                    <div class="form-check check-align">
+                      <input class="form-check-input " type="radio" [(ngModel)]="pricing.qualityFeedback" #quality_feedBack_{{index}}="ngModel" name="quality_feedBack_{{index}}"
+                        id="q_five" value="5">
+                      <label class="form-check-label" for="q_five_{{index}}">
+                        5
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="deliveryFeedBack">Delivery FeedBack</label>
+                  <div class="row check-css">
+                    <div class="form-check check-align">
+                      <input class="form-check-input " type="radio" [(ngModel)]="pricing.deliveryFeedback" #delivery_feedBack_{{index}}="ngModel" name="delivery_feedBack_{{index}}"
+                        id="d_one" value="1">
+                      <label class="form-check-label" for="d_one_{{index}}">
+                        1
+                      </label>
+                    </div>
+                    <div class="form-check check-align">
+                      <input class="form-check-input " type="radio" [(ngModel)]="pricing.deliveryFeedback" #delivery_feedBack_{{index}}="ngModel" name="delivery_feedBack_{{index}}"
+                        id="d_two" value="2">
+                      <label class="form-check-label" for="d_two_{{index}}">
+                        2
+                      </label>
+                    </div>
+                    <div class="form-check check-align">
+                      <input class="form-check-input " type="radio" [(ngModel)]="pricing.deliveryFeedback" #delivery_feedBack_{{index}}="ngModel" name="delivery_feedBack_{{index}}"
+                        id="d_three" value="3">
+                      <label class="form-check-label" for="d_three_{{index}}">
+                        3
+                      </label>
+                    </div>
+                    <div class="form-check check-align">
+                      <input class="form-check-input " type="radio" [(ngModel)]="pricing.deliveryFeedback" #delivery_feedBack_{{index}}="ngModel" name="delivery_feedBack_{{index}}"
+                        id="d_four" value="4">
+                      <label class="form-check-label" for="d_four_{{index}}">
+                        4
+                      </label>
+                    </div>
+                    <div class="form-check check-align">
+                      <input class="form-check-input " type="radio" [(ngModel)]="pricing.deliveryFeedback" #delivery_feedBack_{{index}}="ngModel" name="delivery_feedBack_{{index}}"
+                        id="d_five" value="5">
+                      <label class="form-check-label" for="d_five_{{index}}">
+                        5
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="proffessionalFeedBack">Professionalism FeedBack</label>
+                  <div class="row check-css">
+                    <div class="form-check check-align">
+                      <input class="form-check-input " type="radio" [(ngModel)]="pricing.professionalismFeedback" #proffessional_feedBack_{{index}}="ngModel" name="proffessional_feedBack_{{index}}"
+                        id="prof_one" value="1">
+                      <label class="form-check-label" for="prof_one_{{index}}">
+                        1
+                      </label>
+                    </div>
+                    <div class="form-check check-align">
+                      <input class="form-check-input " type="radio" [(ngModel)]="pricing.professionalismFeedback" #proffessional_feedBack_{{index}}="ngModel" name="proffessional_feedBack_{{index}}"
+                        id="prof_two" value="2">
+                      <label class="form-check-label" for="prof_two_{{index}}">
+                        2
+                      </label>
+                    </div>
+                    <div class="form-check check-align">
+                      <input class="form-check-input " type="radio" [(ngModel)]="pricing.professionalismFeedback" #proffessional_feedBack_{{index}}="ngModel" name="proffessional_feedBack_{{index}}"
+                        id="prof_three" value="3">
+                      <label class="form-check-label" for="prof_three_{{index}}">
+                        3
+                      </label>
+                    </div>
+                    <div class="form-check check-align">
+                      <input class="form-check-input " type="radio" [(ngModel)]="pricing.professionalismFeedback" #proffessional_feedBack_{{index}}="ngModel" name="proffessional_feedBack_{{index}}"
+                        id="prof_four" value="4">
+                      <label class="form-check-label" for="prof_four_{{index}}">
+                        4
+                      </label>
+                    </div>
+                    <div class="form-check check-align">
+                      <input class="form-check-input " type="radio" [(ngModel)]="pricing.professionalismFeedback" #proffessional_feedBack_{{index}}="ngModel" name="proffessional_feedBack_{{index}}"
+                        id="prof_five" value="5">
+                      <label class="form-check-label" for="prof_five_{{index}}">
+                        5
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="issueFeedBack">Service FeedBack</label>
+                  <div class="row check-css">
+                    <div class="form-check check-align">
+                      <input class="form-check-input " type="radio" [(ngModel)]="pricing.serviceFeedback" #issue_feedBack_{{index}}="ngModel" name="issue_feedBack_{{index}}"
+                        id="ione" value="1">
+                      <label class="form-check-label" for="ione_{{index}}">
+                        1
+                      </label>
+                    </div>
+                    <div class="form-check check-align">
+                      <input class="form-check-input " type="radio" [(ngModel)]="pricing.serviceFeedback" #issue_feedBack_{{index}}="ngModel" name="issue_feedBack_{{index}}"
+                        id="itwo" value="2">
+                      <label class="form-check-label" for="itwo_{{index}}">
+                        2
+                      </label>
+                    </div>
+                    <div class="form-check check-align">
+                      <input class="form-check-input " type="radio" [(ngModel)]="pricing.serviceFeedback" #issue_feedBack_{{index}}="ngModel" name="issue_feedBack_{{index}}"
+                        id="ithree" value="3">
+                      <label class="form-check-label" for="ithree_{{index}}">
+                        3
+                      </label>
+                    </div>
+                    <div class="form-check check-align">
+                      <input class="form-check-input " type="radio" [(ngModel)]="pricing.serviceFeedback" #issue_feedBack_{{index}}="ngModel" name="issue_feedBack_{{index}}"
+                        id="ifour" value="4">
+                      <label class="form-check-label" for="ifour_{{index}}">
+                        4
+                      </label>
+                    </div>
+                    <div class="form-check check-align">
+                      <input class="form-check-input " type="radio" [(ngModel)]="pricing.serviceFeedback" #issue_feedBack_{{index}}="ngModel" name="issue_feedBack_{{index}}"
+                        id="ifive" value="5">
+                      <label class="form-check-label" for="ifive_{{index}}">
+                        5
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2 plusminus-container">
+                <i #addPricingElement *ngIf="index == pricingList.length-1" class="fa fa-plus plusMinus plusColor" data-toggle="tooltip" title="Add Client" (click)="addPricing()"></i>
+                <i *ngIf="index >= 0 && pricingList.length-1" class="fa fa-minus plusMinus minusColor" data-toggle="tooltip" title="Remove Client" (click)="removePricing(index)"></i>
+            </div>
+          </div>
+      </ng-container>
+    </div>
+    <div class="col-12">
+      <button style="float: right;" class="btn btn-success btn-green" type="submit">Submit</button>
+      <!-- <button style="float: right;" mat-raised-button  color="accent" type="button" cdkFocusInitial (click)="onBack()">Back</button> -->
+      <button style="float: right;" class="btn btn-secondary btn-red" type="button" (click)="onReset()">Reset</button>
+    </div>
+  </div>
+</form>

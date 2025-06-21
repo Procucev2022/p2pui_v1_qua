@@ -1,0 +1,68 @@
+<div class="">
+    <div class=" page-body-content">
+      <div class="">
+
+        <p-table #vendorRejectedTable [columns]="vendorRejectedHeaders" [value]="vendorRejectedList" sortMode="multiple" [paginator]="true" [rows]="pageRecordSize"  id="vendorRejectedTable"
+            [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}" exportFilename="vendorRegistrationPending"  [(selection)]="selectedData" [scrollable]="true" [scrollHeight]="'calc(100vh - 242px)'">
+            <ng-template pTemplate="caption">
+              <div class="table-search">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                      (input)="vendorRejectedTable.filterGlobal($event.target.value, 'contains')" />
+                  </div>
+                  <div class="col-sm-6">
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th style="width: 3em">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width" >
+                  {{col.header}}
+                  <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData" >
+                <td style="width: 3em">
+                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns" [style.width]="col.width"  [ngClass]="{'table-cell-overflow-ellipse' : col.field == 'vendorName' }" >
+                    <span *ngIf="col.fieldType != 'date' && col.field != 'companyName'">
+                        {{rowData[col.field]}}
+                    </span>
+                    <span *ngIf="col.field == 'companyName'">
+                      <img *ngIf="rowData['status']== 'Completed'" width="20" src="assets/images/insta-verified.png"/>
+                        <span [title]="rowData[col.field]">{{rowData[col.field]}}</span>
+                    
+      
+                    </span>
+                    <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
+                      {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
+                    </span>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage" let-columns>
+              <tr>
+                <td [attr.colspan]="5" style="text-align:center;">
+                  No Records Found.
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="paginatorleft">
+              <div  *ngIf="vendorRejectedTable._totalRecords > 0">
+                <b>Showing {{vendorRejectedTable.first+1}} to {{vendorRejectedTable.first+vendorRejectedTable.rows > vendorRejectedTable.totalRecords?vendorRejectedTable.totalRecords: vendorRejectedTable.first+vendorRejectedTable.rows}} of {{vendorRejectedTable.totalRecords}}</b>
+                <!-- <app-page-info [totalRecords]="vendorRejectedList.length" [pageData]="paginatoryDetails"></app-page-info> -->
+              </div>
+            </ng-template>
+          </p-table>
+          </div>
+
+    </div>
+  </div>

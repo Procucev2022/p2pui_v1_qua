@@ -1,0 +1,64 @@
+<p-table #poItemsGrid [columns]="tableHeaders" [value]="tableData"
+sortMode="multiple" id="quoteTable" [style]="{'width': '100%'}" exportFilename="venRequest"
+[(selection)]="selectedData" [scrollable]="true" [id]="tableIndex">
+<ng-template pTemplate="caption">
+  <div class="searchPanel">
+
+    <input type="text" pInputText size="50" placeholder="Search.."
+      (input)="poItemsGrid.filterGlobal($event.target.value, 'contains')" style="width:auto; float: right;" />
+
+  </div>
+</ng-template>
+
+<ng-template pTemplate="header" let-columns>
+  <tr> 
+    <th style="width: 3em">
+    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+  </th>
+    <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+      {{col.header}}
+      <p-sortIcon [field]="col.field"></p-sortIcon>
+    </th>
+  </tr>
+</ng-template>
+<ng-template pTemplate="body" let-rowData let-columns="columns">
+  <tr [pSelectableRow]="rowData">
+    <td style="width: 3em">
+      <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+    </td>
+    <ng-container *ngFor="let col of columns">
+      <td [style.width]="col.width" *ngIf="col.field != 'deliveryQuantity'">
+        <span>{{rowData[col.field]}}</span>
+      </td>
+      <td pEditableColumn [style.width]="col.width" *ngIf="col.field=='deliveryQuantity'" style="position: relative;">
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <input pInputText type="number" class="form-control" [min]="0" [max]="rowData.quantity" [(ngModel)]="rowData.deliveryQuantity"  [ngModelOptions]="{standalone: true}"
+              (blur)="onGetPoTotal(rowData)" (keydown)="onGetPoTotal(rowData)"
+              (keyup)="onGetPoTotal(rowData)">
+          </ng-template>
+          <ng-template pTemplate="output">
+            <span *ngIf="rowData.deliveryQuantity>=0">{{rowData.deliveryQuantity}} <i class="fa fa-pencil pull-right"
+                style="cursor: pointer;"></i></span>
+            <span *ngIf="!rowData.deliveryQuantity" style="color:rgb(143, 143, 143)">Delivery
+              Quantity</span>
+          </ng-template>
+        </p-cellEditor>
+      </td>
+    </ng-container>
+  </tr>
+</ng-template>
+<ng-template pTemplate="emptymessage" let-columns>
+  <tr>
+    <td [attr.colspan]="5" style="text-align:center;">
+      No Records Found.
+    </td>
+  </tr>
+</ng-template>
+<ng-template pTemplate="paginatorleft">
+  <div *ngIf="poItemsGrid._totalRecords > 0">
+    <b>Showing {{poItemsGrid.first+1}} to {{poItemsGrid.first+poItemsGrid.rows > poItemsGrid.totalRecords?poItemsGrid.totalRecords: poItemsGrid.first+poItemsGrid.rows}} of {{poItemsGrid.totalRecords}}</b>
+    <!-- <app-page-info [totalRecords]="tableData?.length" [pageData]="paginatoryDetails"></app-page-info> -->
+  </div>
+</ng-template>
+</p-table>

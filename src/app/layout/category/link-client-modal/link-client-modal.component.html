@@ -1,0 +1,107 @@
+<div class="modal-header">
+    <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+    <div class="col-6">Link Items - client</div>
+</div>
+<div class="modal-body">
+    <form class="row " [formGroup]="searchForm">
+        <div class="col-12 pb-2">
+            <div class=" row">
+                <div class="col-4">
+                    <label>Orgnization Name</label>
+                    <input formControlName="companyName" class="form-control" placeholder="Enter Organization Name" />
+                </div>
+                <div class="col-4">
+                    <label>City</label>
+                    <input formControlName="city" class="form-control" placeholder="Enter City/Location" />
+                </div>
+
+                <div class="col-4 dc">
+                    <button class="btn btn-secondary btn-red" (click)="searchclient()" type="button" (click)="resetForm()"> Reset</button>
+                    <button class="btn btn-primary btn-blue" [disabled]="(!city.value && !companyName.value)" (click)="searchclient()" type="submit"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="col-12">
+            <p-table #vDt [columns]="clientHeaders" [value]="clientList" sortMode="multiple" [paginator]="true" [rows]="clientList.length" id="quoteTable" [style]="{'width': '100%'}" exportFilename="venRequest" [(selection)]="selectedData" [scrollable]="true">
+                <div class="table-search">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                          (input)="vDt.filterGlobal($event.target.value, 'contains')" />
+                      </div>
+                      <div class="col-sm-6">
+                      </div>
+                    </div>
+                  </div>
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <!-- <th style="width: 3em">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th> -->
+                        <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width"> {{col.header}}
+                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                        </th>
+                        <th style="width: 12em;">
+                            Actions
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-columns="columns" let-index="rowIndex">
+                    <tr [pSelectableRow]="rowData">
+                        <!-- <td style="width: 3em">
+                            <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                        </td> -->
+                        <td *ngFor="let col of columns" [style.width]="col.width">
+                            <span *ngIf="!col.isLink">{{rowData[col.field]}}</span>
+                        </td>
+                        <td  style="width: 12em;">
+                            <button class="btn btn-success btn-green"   type="button" *ngIf="clientList.length>0"
+                                 (click)="showRegionModal(rowData)">Link Now</button>
+
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage" let-columns>
+                    <tr>
+                        <td [attr.colspan]="5" style="text-align:center;">
+                            No Records Found.
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <mat-dialog-actions align="end">
+        <button type="button" class="btn btn-danger btn-red" type="button" mat-dialog-close>close</button>
+        <!-- <button class="btn btn-success btn-green" [disabled]="selectedData.length == 0" type="submit" *ngIf="clientList.length>0" (click)="submitForm()">Link Now</button> -->
+    </mat-dialog-actions>
+</div>
+
+<ng-template #editRegionModal>
+    <div class="modal-header">
+        <label>Select Region</label>
+    </div>
+    <div class="modal-body" style="min-height: 180px;">
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <label>Region</label>
+                    <div class="">
+                    <p-multiSelect [options]="regionsList" [(ngModel)]="selectedRegion" appendTo="body"
+                    defaultLabel="Select Region" name="region" optionLabel="region"
+                       display="chip"></p-multiSelect></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <mat-dialog-actions align="end">
+            <button type="button" class="btn btn-danger btn-red" type="button" (click)="closeRegionModal()">closed</button>
+            <button class="btn btn-success btn-green"   type="button" *ngIf="clientList.length>0" (click)="submitForm()">Link Now</button>
+        </mat-dialog-actions>
+    </div>
+</ng-template>

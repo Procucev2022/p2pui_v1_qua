@@ -1,0 +1,540 @@
+<div class="col-12 pad-nill">
+    <div class="table-title">
+        <div class="row">
+            <div class="col-sm-6">
+                <h2>RFQ's</h2>
+                <p><span class="dot"></span>{{rfqDataList.length}} Total</p>
+            </div>
+            <div class="col-sm-6">
+                <button class="btn btn-primary " type="button"
+                    style="align-items: center;
+                    width: 180px;
+                    vertical-align: middle;
+                    text-align: center;
+                    display: inline-flex;" [ngClass]="{  'btn-blue': !isGMTView, 'btn-createRFQ': isGMTView}"
+                    (click)="onCreateRfq()"><i
+                        class="fa fa-plus"></i> <span>Create RFQ</span></button>
+            </div>
+        </div>
+    </div>
+    <p-table  [ngClass]="{  'gmt-container': isGMTView}"  #rfqTableRef [columns]="rfqsTableHeaders" [value]="rfqDataList"  dataKey="id"
+       sortMode="multiple"  [paginator]="true" [rows]="pageRecordSize" id="rfqTable" [rowsPerPageOptions]="pageOptions"
+        [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData"
+         [scrollable]="true" [scrollHeight]="'calc(100vh - 214px)'" [expandedRowKeys]="expandedRows">
+        <ng-template pTemplate="caption">
+            <div class="table-search">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <input class="main-input" type="text" pInputText
+                            size="50" placeholder="Search.."
+                            (input)="rfqTableRef.filterGlobal($event.target.value, 'contains')" />
+                    </div>
+                    <div class="col-sm-8" style="text-align: left; font-size: 16px;     padding-top: 11px;">
+                        <p>Want to purchase immediately ? <span class="linkCls" (click)="onSelectSystem('bfsName')" style="font-size: 18px; border-bottom: 2px solid;"> Click here</span>  to purchase directly at your preferred price from "Buy From Stock(BFS)"</p>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th style="width: 3em" *ngIf="roleName != 'ClientInitiator'">
+                <!-- <p-tableHeaderCheckbox></p-tableHeaderCheckbox> -->
+                </th>
+                <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width"> {{col.header}}
+                    <p-sortIcon [field]="col.field"  *ngIf="roleName != 'ClientInitiator'"></p-sortIcon>
+                </th>
+                <th style="width: 16em;">Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
+            <tr [pSelectableRow]="rowData">
+                <td style="width: 3em;" *ngIf="roleName != 'ClientInitiator'">
+                    <button type="button" pButton pRipple [pRowToggler]="rowData"
+                    (click)="expanded ? getCloseRFQs(rowData,$event) : getRFQs(rowData,$event)"
+                    class="grid-expand">
+                    <span *ngIf="expanded"><i class="fa fa-chevron-down"></i></span>
+                        <span *ngIf="!expanded"><i class="fa fa-chevron-right"></i></span>
+                    </button>
+                </td>
+                    <!-- <td style="width: 3em">
+                    <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                    </td> -->
+                <td [style.width]="col.width" *ngFor="let col of columns"
+                    [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }"
+                    [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"
+                    [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
+                    <span *ngIf="!col.isLink">
+                        <span
+                            *ngIf="col.field == 'status'">{{rowData[col.field]?.uiDisplay}}</span>
+                        <span *ngIf="col.field != 'status'">
+                            <span *ngIf="col.fieldType != 'date'">
+                                {{rowData[col.field]}}
+                            </span>
+                            <span *ngIf="col.fieldType == 'date'"
+                                [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
+                                {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
+                            </span>
+                        </span>
+
+                    </span>
+                    <span *ngIf="col.isLink" class="cellLinkCls"> <a
+                            href="javascript:void(0);"
+                            >
+                            {{rowData[col.field]}} </a></span>
+
+                </td>
+                <td style="width: 16em; " >
+                    <span *ngIf="roleName != 'ClientInitiator'">
+                        <button type="button" class="btn-skelton"
+                        >
+                        <img src="/assets/images/new/view-doc.png" (click)="onViewRFQDetails(rowData, false)"
+                            title="View RFQ Details">
+                    </button>
+                    <button type="button" class="btn-skelton"
+                    >
+                    <img src="/assets/images/new/forward.png" class="forward"  (click)="onSendRFQ(rowData)"width="44" height="34"
+                        title="Forward RFQ Details">
+                </button>
+                    </span>
+                    <span *ngIf="roleName == 'ClientInitiator' || roleName == 'CategoryManager' ">
+                        <img class="cursor-pointer" src="/assets/images/new/edit-data.png"  width="28" style="width:28px;margin-right: 10px;" title="Edit RFQ"  (click)="onViewRFQDetails(rowData, true)">
+                        </span>
+
+
+                    <!-- <button type="button" class="btn-skelton" style="border: 2px solid #0c2146;
+                    color: #0c2146;
+                    border-radius: 8px;"
+                        >
+                        <i class="fa fa-quora" aria-hidden="true" title="Quotation Count" (click)="OnGetQuotationCounter(rowData)"></i>
+
+                    </button> -->
+                    <!-- <img src="/assets/images/new/comments-write.png"
+                            title="Comments" (click)="OnGetQuotationCounter(rowData)"> -->
+
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="rowexpansion" let-rowData>
+            <tr class="child-grid" *ngIf="selectedData.length ==1">
+                <td colspan="9">
+                    <div #childGridEle>
+
+                        <mat-tab-group class="" (selectedTabChange)="getThirdTab($event)">
+                            <mat-tab label="Vendors">
+                                <app-cat-mgr-vendors-sub-tab *ngIf="selectedRFQData" [rfqData]="selectedRFQData" [rfqId]="rfqId" [isNoActionsRequired]="'true'" >
+                                </app-cat-mgr-vendors-sub-tab >
+                            </mat-tab>
+                        </mat-tab-group>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+                <td [attr.colspan]="8" style="text-align:center;">
+                    No Records Found.
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorleft">
+            <div *ngIf="rfqTableRef._totalRecords > 0">
+                <b>Showing {{rfqTableRef.first+1}} to
+                    {{rfqTableRef.first+rfqTableRef.rows >
+                    rfqTableRef.totalRecords?rfqTableRef.totalRecords:
+                    rfqTableRef.first+rfqTableRef.rows}} of
+                    {{rfqTableRef.totalRecords}}</b>
+            </div>
+        </ng-template>
+    </p-table>
+
+</div>
+<p-sidebar [(visible)]="isCreateRFQView" position="right"
+    styleClass="ui-sidebar-lg" [style]="{width:'100vw'}">
+    <div class="row">
+        <div class="col-12 table-title pb-0"><h2>{{ isSendRFQToVendorScreen ? 'Send': 'Create' }} RFQ</h2></div>
+        <div class="col-12" *ngIf="!isSendRFQToVendorScreen">
+            <p-steps [model]="stepsList" styleClass="steps-custom" [activeIndex]="currentStep-1"></p-steps>
+        </div>
+
+        <div class="col-12 create-rfq-body row">
+            <div class="col-12 row" *ngIf="currentStep== 1 && !isSendRFQToVendorScreen">
+                <div class="col-12">
+                    <div class="row">
+                     <div class="col-6">
+                        <form class="row"  [formGroup]="projectForm" novalidate>
+                        <div class="col-6">
+                             <label  class="form-label required">Project Description/Reference </label>
+                            <input class="form-control" formControlName="projectDesc" placeholder="Project Description" />
+                        </div>
+                           <div class="col-6"  *ngIf="roleName != 'ClientInitiator'">
+                            <label class="form-label required">Category</label>
+                            <p-autoComplete  formControlName="category" showEmptyMessage="true"
+                            [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
+                             [suggestions]="filtered_categoryList" panelInputClass="p-auto-panel-cls" [minLength]="1"
+                               [dropdown]="true"
+                              (completeMethod)="filterAutoCompleteData($event, 'categoryList','filtered_categoryList',   true)"
+                               >
+                                        <ng-template let-segment pTemplate="item">
+                                            <div class="segment-item">
+                                                <div>{{segment}}</div>
+                                            </div>
+                                        </ng-template>
+                            </p-autoComplete>
+                        </div>
+                        <div class="col-6"  *ngIf="roleName == 'ClientInitiator'">
+                            <label class="form-label required">Division</label>
+                            <p-autoComplete  formControlName="division" showEmptyMessage="true"
+                            [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
+                             [suggestions]="filtered_divisionsList" panelInputClass="p-auto-panel-cls" [minLength]="1"
+                               [dropdown]="true"
+                              (completeMethod)="filterAutoCompleteData($event, 'divisionsList','filtered_divisionsList',   true)"
+                               >
+                                        <ng-template let-segment pTemplate="item">
+                                            <div class="segment-item">
+                                                <div>{{segment}}</div>
+                                            </div>
+                                        </ng-template>
+                            </p-autoComplete>
+                        </div>
+                        </form>
+                     </div>
+                     <div class="col-12">
+                         <fieldset class="col-12 row  mt-3 fieldSec">
+                             <legend class="displayFlexCenter">Item Details <small style="font-size: 11px;
+                                margin: 0 5px;
+                                font-weight: 600;">(Upto 10 Items)</small></legend>
+                             <div class="col-6">
+                                     <form class="row" [formGroup]="itemForm" novalidate (ngSubmit)="onAddItemsToCart()">
+
+                                             <div class="col-12 mb-1">
+                                                 <label class="form-label required">Item Description</label>
+                                                 <p-autoComplete  formControlName="description" showEmptyMessage="true"
+                                                    [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
+                                                    [suggestions]="filtered_descriptionList" panelInputClass="p-auto-panel-cls" [minLength]="1"
+                                                    [dropdown]="true"
+                                                    (completeMethod)="filterAutoCompleteData($event, 'descriptionList','filtered_descriptionList',   true)"
+                                                    >
+                                                            <ng-template let-segment pTemplate="item">
+                                                                <div class="segment-item">
+                                                                    <div>{{segment}}</div>
+                                                                </div>
+                                                            </ng-template>
+                                                </p-autoComplete>
+                                             </div>
+                                             <div class="col-12 mb-1">
+                                                 <label class="form-label required">Item Specification</label>
+                                                 <input class="form-control" formControlName="specification" placeholder="Item Specification" />
+                                             </div>
+                                             <div class="col-6 mb-1">
+                                                 <label class="form-label required">UOM</label>
+                                                 <input class="form-control" formControlName="unitofMeasures" placeholder="Item UOM" />
+                                                 <div class="error" *ngIf="itemForm.controls.unitofMeasures.errors && (itemForm.controls.unitofMeasures.errors.invalid || itemForm.controls.unitofMeasures.errors.pattern)">
+                                                    Only Alphabets allowed and  No Special Characters not allowed.
+                                                 </div>
+                                             </div>
+                                             <div class="col-6 mb-1">
+                                                     <label class="form-label required">Quantity</label>
+                                                     <input class="form-control" formControlName="quantity" type="number" placeholder="Item Quantity" />
+                                                     <p class="error"  *ngIf="(itemForm.controls?.quantity?.touched && itemForm.controls.quantity.errors) && (itemForm.controls.quantity.errors.invalid || itemForm.controls.quantity.errors.required)">Quantity is a mandatory field & should be number</p>
+                                             </div>
+                                             <div class="col-7 mb-1">
+                                                <label class="form-label">Remarks</label>
+                                                <textarea class="form-control" rows="2" cols="95"  formControlName="remarks" placeholder="Remarks here..."></textarea>
+
+                                            </div>
+                                             <div class="col-5 mt-3 btn-block  " style="display: flex;align-items: center;justify-content: space-evenly; ">
+
+                                                 <button class="btn btn-blue ml-3" type="submit" [disabled]="!itemForm.valid" >   {{ isEditForm ? 'Update': 'Add'}} Item</button>
+                                                 <button class="btn btn-red" type="reset">Reset</button>
+                                             </div>
+
+                                 </form>
+                             </div>
+                             <div class="col-1 orText">
+                                 <div class="">| | OR | |</div>
+                             </div>
+                             <div class="col-5 mr-o pr-0 ">
+                                 <div class="row">
+                                     <h5 style="display: flex; align-items: center;">Bulk Upload <small style="font-size: 11px;
+                                        margin: 0 5px;
+                                        font-weight: 600;">(Upto 50 Items)</small> <span class="boq-sample-cls">
+                                        <a  (click)="downloadSampleBOQ()" style="font-size:12px;cursor:  pointer;color:blue;" [title]="'Download Sample BOQ'">  <img class="cursor-pointer" src="/assets/images/new/download.svg" width="30" height="30"  aria-hidden="true" title="Download Sample BOQ File" /> Download Format </a>
+                                     </span></h5>
+                                     <div class="col-12">
+                                         <div class="form-group row">
+                                             <div class="fileUploadCls" fileDragDrop (files)="uploadBOQFile($event)" (click)="fileInput.click()"
+                                             id="d_commentFile">
+                                             <input type="file" (click)="fileInput.value = null" #fileInput [(ngModel)]="fileData"
+                                                 (change)="uploadBOQFile($event)" hidden class="form-control" id="i_commentFile" />
+                                             </div>
+                                             <div class="fileInfoCls">
+                                             <i class="fa fa-info-circle"></i> File Validation : <span style="color: #000;">
+                                                 File should be either (.xls/.xlsx) document
+                                             </span>
+                                             </div>
+
+                                         </div>
+                                     </div>
+                                     <div class="col-8  mt-2" *ngIf="boqFile" style="margin-top: 5px;   font-size: 11px;">
+                                                 <span class="choosenFileCls">File Chosen : <span>
+                                                     <img   class="export-excel-icon" src="assets/images/export-excel.png" width="30" height="30"   />
+                                                     {{boqFile?.fileName}}</span>
+                                                     <span class="removeIcon" (click)="removeFile()" title="Remove File"><i class="fa fa-times-circle"
+                                                         aria-hidden="true"></i> Remove</span>
+                                                 </span>
+                                         </div>
+                                     <div class="col-4 mt-2" [ngClass]="{'col-12': !boqFile, 'col-4':boqFile}" style="display: flex;align-items: center;flex-direction: row-reverse;">
+                                         <button class="btn btn-blue " type="button" [disabled]="!boqFile" (click)="onUploadFile()">Upload</button>
+                                     </div>
+                                 </div>
+
+                             </div>
+                         </fieldset>
+                     </div>
+
+                    </div>
+                 </div>
+                 <div class="col-12 mt-3 row">
+                     <fieldset class=" col-12 fieldSec ">
+                         <legend class="displayFlexCenter">Items In Cart <span class="cart"> <i class="fa fa-shopping-cart" aria-hidden="true"></i> <span class="cart-count">{{itemGridData.gridValue.length}}</span></span></legend>
+                       <div class="col-12">
+                        <app-cat-mgr-common-grid *ngIf="isShowGrid" [gridData]="itemGridData" (onGridAction)="onGridAction($event)"></app-cat-mgr-common-grid>
+                       </div>
+                    </fieldset>
+                 </div>
+                 <div class="col-12">
+                    <fieldset class="col-12 row mt-3 fieldSec">
+                        <legend>Delivery Details</legend>
+                        <div class="col-8">
+                                <form class="row" [formGroup]="deliveryForm" novalidate (ngSubmit)="onAddDeliveryToCart()">
+                                        <div class="col-6 mb-1">
+                                            <label class="form-label required">Delivery Date</label>
+                                            <p-calendar formControlName="date" placeholder="DD-MM-YYYY" dateFormat="dd-mm-yy" showIcon="true" [minDate]="minDate"></p-calendar>
+                                        </div>
+                                        <!-- <div class="col-6 mb-1">
+                                                <label class="form-label required">Address</label>
+                                                <input class="form-control" formControlName="address" placeholder="Address" />
+                                        </div> -->
+
+                                        <div class="col-6 mb-1">
+                                            <label class="form-label required">Delivery Location</label>
+                                            <input class="form-control" formControlName="city" placeholder="Delivery Location" />
+
+                                        </div>
+                                        <div class="col-6 mb-1">
+                                            <label class="form-label required">Pin Code / Zip Code</label>
+                                            <input class="form-control" *ngIf="isIndian" formControlName="pincode" placeholder="Pin Code/ Zip Code" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"  maxlength = "6" minlength="6" />
+                                            <input class="form-control"  *ngIf="!isIndian" formControlName="pincode" placeholder="Pin Code/ Zip Code"   />
+                                            <span style="color:red" *ngIf="deilveryCtrls.pincode.invalid && deilveryCtrls.pincode.touched">Enter Valid Pin Code</span>
+
+                                        </div>
+
+                                        <div class="col-6 mb-1">
+                                            <label class="form-label" [ngClass]="{required: isIndian}">State</label>
+                                            <select class="form-control"      placeholder="State"  formControlName="state">
+                                                 <option [value]="null" selected="selected" disabled >Select</option>
+                                                <option *ngFor="let state of statesList; let j = index" [value]="state">
+                                                    {{state}}</option>
+                                            </select>
+
+                                        </div>
+
+                            </form>
+                        </div>
+
+                    </fieldset>
+                 </div>
+                 <div class="col-12">
+                    <fieldset class="col-12 row mt-3 fieldSec">
+                        <legend>Attachments</legend>
+
+                        <div class="col-8 mb-1">
+                            <app-common-attachments [isViewOnly]="false" [attachments]="attachements" (actionEvent)="getAttachedDocsList($event)"></app-common-attachments>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="col-12 row mr-0 pr-0"  *ngIf="currentStep== 2">
+                <div class="col-12 row">
+                    <div class="col-12">
+                        <label>Logged User: <b>{{loggedUserName}}</b> <span class="ml-5">Authentication Status:
+                            <span class="auth-icon">
+                            <img [src]="authenticateData?.imgURL" width="40" height="40" />
+                            <i   class=" {{ authenticateData.isAuthenticated == true ? 'fa fa-check' :'fa fa-times' }}" aria-hidden="true"
+                            ></i>
+
+                        </span> <span class="font-weight-bold">{{authenticateData?.status}}</span> </span></label>
+                        <button class="btn btn-blue ml-6" (click)="onReAuthenticateLoggedUser()">Re-Authenticate</button>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <fieldset class="col-12 row  mt-3 fieldSec">
+                        <legend>Vendor Details</legend>
+                        <div class="col-12">
+                            <p-accordion [activeIndex]="0">
+                                <ng-container  >
+                                  <p-accordionTab>
+                                    <p-header>
+                                        Vendors Bases on Category <span class="acc-title">{{projectForm?.value?.category}}</span>
+                                    </p-header>
+                                    <app-cat-mgr-common-grid   *ngIf="isShowGrid" [gridData]="preVendorsGridData" (onGridAction)="onGridAction($event)"></app-cat-mgr-common-grid>
+                                  </p-accordionTab>
+                                </ng-container>
+
+                              </p-accordion>
+                        </div>
+                        <div class="col-12">
+                            <fieldset class="row col-12  mt-3 fieldSec">
+                                <legend>For New Vendor Entry</legend>
+                                <form class="row" [formGroup]="vendorForm" novalidate (ngSubmit)="onAddVendorsToCart()">
+                                        <!-- <div class="col-3 mb-1">
+                                                <label class="form-label required">Category</label>
+                                                <input class="form-control" formControlName="category" placeholder="Item Category" />
+                                        </div> -->
+                                        <div class="col-4 mb-1">
+                                            <label class="form-label required">Vendor Name</label>
+                                            <p-autoComplete  formControlName="companyName" showEmptyMessage="true"
+                                                    [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
+                                                    [suggestions]="filtered_vendorList" panelInputClass="p-auto-panel-cls" [minLength]="1"
+                                                    [dropdown]="true"
+                                                    (completeMethod)="filterAutoCompleteData($event, 'vendorList','filtered_vendorList',   true)" (onSelect)="onSelectedVendor($event)"
+                                                    >
+                                                            <ng-template let-segment pTemplate="item">
+                                                                <div class="segment-item">
+                                                                    <div>{{segment}}</div>
+                                                                </div>
+                                                            </ng-template>
+                                                </p-autoComplete>
+                                        </div>
+
+                                        <div class="col-4 mb-1">
+                                            <label class="form-label required">Mobile Number </label>
+                                            <input class="form-control" formControlName="mobileNo" placeholder="Mobile Number" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                             maxlength = "10" minlength="10" [disabled]="isAutoPopulated" />
+                                            <span style="color:red" *ngIf="vendorCtrls.mobileNo.invalid && vendorCtrls.mobileNo.touched">Enter Valid 10 Digit Mobile Number</span>
+                                        </div>
+                                        <div class="col-4 mb-1 col-offset-3">
+                                            <label class="form-label required">City</label>
+                                            <input class="form-control" formControlName="city" placeholder="City" [disabled]="isAutoPopulated"
+                                           />
+                                        </div>
+                                        <div class="col-4 mb-1">
+                                            <label class="form-label required">Email Id</label>
+                                            <input class="form-control" formControlName="email" placeholder="Email Id" [disabled]="isAutoPopulated"  />
+                                            <span style="color:red" *ngIf="vendorCtrls.email.invalid && vendorCtrls.email.touched">Enter Valid Email Id</span>
+                                        </div>
+                                        <div class="col-4 mb-1">
+                                            <label class="form-label">Other Email</label>
+                                            <input class="form-control" formControlName="otherEmails" placeholder="Other Email Id"  />
+                                            <span style="color:red" *ngIf="vendorCtrls.otherEmails.invalid && vendorCtrls.otherEmails.touched">Enter Valid Email Id</span>
+                                        </div>
+                                        <div class="col-4 mt-3 btn-block btn-group" style="display: flex;align-items: end; ">
+                                            <button class="btn btn-red" type="reset">Reset</button>
+                                            <button class="btn btn-blue ml-3" type="submit" [disabled]="!vendorForm.valid" >   {{ isEditForm ? 'Update':'Add'}} Vendor</button>
+
+                                        </div>
+
+                            </form>
+                            </fieldset>
+                        </div>
+
+                    </fieldset>
+                </div>
+                <div class="col-12 mt-3">
+                    <fieldset  class="row col-12 fieldSec">
+                        <legend class="displayFlexCenter">Vendors In Cart <span class="cart"> <i class="fa fa-shopping-cart" aria-hidden="true"></i> <span class="cart-count">{{vendorGridData.gridValue.length}}</span></span>
+                        </legend>
+                       <app-cat-mgr-common-grid   *ngIf="isShowGrid" [gridData]="vendorGridData" (onGridAction)="onGridAction($event)"></app-cat-mgr-common-grid>
+                    </fieldset>
+                </div>
+            </div>
+            <!-- <div class="col-12 row mr-0 pr-0"  *ngIf="currentStep== 3">
+                <div class="col-12">
+                    <fieldset class="col-12 row  mt-3">
+                        <legend>Delivery Details</legend>
+                        <div class="col-8">
+                                <form class="row" [formGroup]="deliveryForm" novalidate (ngSubmit)="onAddDeliveryToCart()">
+                                        <div class="col-6 mb-1">
+                                            <label class="form-label required">Delivery Date</label>
+                                            <input class="form-control" formControlName="date" placeholder="Vendor Name" />
+                                        </div>
+                                        <div class="col-6 mb-1">
+                                                <label class="form-label required">Addreess</label>
+                                                <input class="form-control" formControlName="address" placeholder="Address" />
+                                        </div>
+
+                                        <div class="col-6 mb-1">
+                                            <label class="form-label required">City</label>
+                                            <input class="form-control" formControlName="city" placeholder="City" />
+
+                                        </div>
+                                        <div class="col-6 mb-1">
+                                            <label class="form-label required">State</label>
+                                            <input class="form-control" formControlName="state" placeholder="State" />
+
+                                        </div>
+                                        <div class="col-12 mt-3" style="display: flex;align-items: center;flex-direction: row-reverse;">
+
+                                            <button class="btn btn-blue ml-3" type="submit" [disabled]="!deliveryForm.valid" > {{ isEditForm ? 'Update':'Add'}} Delivery Details</button>
+                                            <button class="btn btn-red" type="reset">Reset</button>
+                                        </div>
+
+                            </form>
+                        </div>
+
+                    </fieldset>
+                </div>
+                <div class="col-12 mt-3">
+                    <fieldset>
+                        <legend>Delivery Details in Cart <span class="cart"> <i class="fa fa-shopping-cart" aria-hidden="true"></i> <span class="cart-count">{{deliveryGridData.gridValue.length}}</span></span>
+                        </legend>
+                       <app-cat-mgr-common-grid   *ngIf="isShowGrid" [gridData]="deliveryGridData" (onGridAction)="onGridAction($event)"></app-cat-mgr-common-grid>
+                    </fieldset>
+                </div>
+            </div> -->
+        </div>
+        <div class="col-12 mt-3 mr-3" style="display: flex;align-items: center;flex-direction: row-reverse;    position: fixed;
+        bottom: 16px;right: 16px;" *ngIf="!isSendRFQToVendorScreen">
+
+
+        <ng-container *ngIf=" currentStep == 1 ">
+            <button class="btn btn-orange ml-3" type="button"   (click)="onSaveAndExit()" [disabled]="(itemGridData.gridValue.length<=0 || projectForm.invalid || deliveryForm.invalid )">{{ isClientInitiatory() ? 'Submit': 'Save & Exit'}}  </button>
+            <button class="btn btn-blue ml-3" type="button" *ngIf="!isClientInitiatory()"   (click)="navigateTo(false)" [disabled]="(itemGridData.gridValue.length<=0 || projectForm.invalid || deliveryForm.invalid )">{{ 'Next'}} </button>
+        </ng-container>
+
+        <ng-container *ngIf=" currentStep >1 ">
+
+            <button class="btn btn-green" type="button"  (click)="createRFQ()" [disabled]="currentStep!=2 || vendorGridData.gridValue.length<=0">Submit</button>
+            <button class="btn btn-orange ml-3" type="button"   (click)="onSaveAndExit()" [disabled]="(itemGridData.gridValue.length<=0 || projectForm.invalid || deliveryForm.invalid )">{{ 'Save & Exit'}} </button>
+            <button class="btn btn-orange ml-3" type="button"  (click)=" navigateTo(true)">{{  'Back' }} </button>
+        </ng-container>
+       </div>
+        <div class="col-12 mt-3 mr-3" style="display: flex;align-items: center;flex-direction: row-reverse;    position: fixed;
+        bottom: 16px;right: 16px;" *ngIf="isSendRFQToVendorScreen">
+
+            <button class="btn btn-green" type="button"  (click)="sendRFQToVendors()">Send RFQ</button>
+        </div>
+
+    </div>
+
+
+</p-sidebar>
+<ng-template #vendorSearchModal>
+    <div class="modal-header">
+      <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+      <div class="col-6">
+        <h5>Client Registration</h5>
+      </div>
+    </div>
+</ng-template>
+
+
+
+<p-dialog header="Quotations Count" [(visible)]="isShowCounterDialog" [modal]="true" [responsive]="true" [contentStyle]="{'minHeight': '150px', minWidth: '500px'}"
+[minY]="90"    [baseZIndex]="10000" [minX]="90">
+        <h4>RFQ ID : {{selectedRFQData?.rfqId}}</h4>
+        <div class="quot-body">
+            <h5> Quotations Count: {{quotationCounter ? quotationCounter: '0'}}</h5>
+          </div>
+</p-dialog>
+

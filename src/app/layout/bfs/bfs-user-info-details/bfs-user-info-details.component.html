@@ -1,0 +1,57 @@
+<i class="fa fa-info-circle linkCls" (click)="getDetails()"></i>
+<ng-template #viewItemDetailsTemplate>
+    <div class="modal-header">
+        <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+        <div class="col-6">
+            <h5>{{ labelName }} Details</h5>
+        </div>
+
+    </div>
+    <div class="modal-body">
+        <div class="row itemDetailsView">
+          <div class="col-6">
+            <label>Name</label>
+            <label>{{selectedRowData.fullName ? selectedRowData.fullName: '-'}}</label>
+          </div>
+          <div class="col-6">
+            <label>Company Name</label>
+            <label>{{selectedRowData.companyName ? selectedRowData.companyName: '-'}}</label>
+          </div>
+          <div class="col-6">
+            <label>Category</label>
+            <label>{{selectedRowData.category ? selectedRowData.category: '-'}}</label>
+          </div>
+          <div class="col-6">
+            <label>Sub Category</label>
+            <label>{{selectedRowData.subCategory ? selectedRowData.subCategory: '-'}}</label>
+          </div>
+          <div class="col-6">
+            <label>Phone Number</label>
+            <label>{{selectedRowData?.organizationPhonenumber ? selectedRowData.organizationPhonenumber: '-'}}</label>
+          </div>
+
+          <div class="col-6">
+            <label>Client Category</label>
+            <label>{{selectedRowData.clientCategory ? selectedRowData.clientCategory: '-'}}</label>
+          </div>
+          <div class="col-6">
+            <label>PAN</label>
+            <label>{{selectedRowData.pan ? selectedRowData.pan: '-'}}</label>
+          </div>
+          <div class="col-6">
+            <label>Vendor Class</label>
+            <label>{{selectedRowData.vendorClass ? selectedRowData.vendorClass: '-'}}</label>
+          </div>
+          <div class="col-6">
+            <label>City</label>
+            <label>{{selectedRowData.city ? selectedRowData.city: '-'}}</label>
+          </div>
+          <div class="col-6">
+            <label>Address</label>
+            <label>{{selectedRowData.address ? selectedRowData.address: '-'}}</label>
+          </div>
+
+
+        </div>
+    </div>
+</ng-template>

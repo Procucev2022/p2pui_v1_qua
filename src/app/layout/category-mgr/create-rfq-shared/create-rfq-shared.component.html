@@ -1,0 +1,150 @@
+<div class="row">
+    <div class="col-12 table-title pb-0"><h2>Forward RFQ</h2></div>
+
+
+    <div class="col-12 create-rfq-body row">
+
+        <div class="col-12 row mr-0 pr-0"  >
+            <div class="col-12 row">
+                <div class="col-12">
+                    <label>Logged User: <b>{{loggedUserName}}</b> <span class="ml-5">Authentication Status:
+                        <span class="auth-icon">
+                        <img [src]="authenticateData?.imgURL" width="40" height="40" />
+                        <i   class=" {{ authenticateData.isAuthenticated == true ? 'fa fa-check' :'fa fa-times' }}" aria-hidden="true"
+                        ></i>
+
+                    </span> <span class="font-weight-bold">{{authenticateData?.status}}</span> </span></label>
+                    <button class="btn btn-blue ml-6" (click)="onReAuthenticateLoggedUser()">Re-Authenticate</button>
+                </div>
+            </div>
+            <div class="col-12">
+                <fieldset class="col-12 row  mt-3 fieldSec">
+                    <!-- <legend>Vendor Details</legend>
+                    <div class="col-12">
+                        <p-accordion [activeIndex]="0">
+                            <ng-container  >
+                              <p-accordionTab>
+                                <p-header>
+                                    Vendors Bases on Category <span class="acc-title">{{viewRFQByIdData.category}}</span>
+                                </p-header>
+                                <app-cat-mgr-common-grid   *ngIf="isShowGrid" [gridData]="preVendorsGridData" (onGridAction)="onGridAction($event)"></app-cat-mgr-common-grid>
+                              </p-accordionTab>
+                            </ng-container>
+
+                          </p-accordion>
+                    </div> -->
+                    <div class="col-12">
+                        <fieldset class="row col-12  mt-3 fieldSec">
+                            <legend>For New Vendor Entry</legend>
+                            <form class="row" [formGroup]="vendorForm" novalidate (ngSubmit)="onAddVendorsToCart()">
+                                    <!-- <div class="col-3 mb-1">
+                                            <label class="form-label required">Category</label>
+                                            <input class="form-control" formControlName="category" placeholder="Item Category" />
+                                    </div> -->
+                                    <div class="col-4 mb-1">
+                                        <label class="form-label required">Vendor Name</label>
+                                        <p-autoComplete  formControlName="companyName" showEmptyMessage="true"
+                                                [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
+                                                [suggestions]="filtered_vendorList" panelInputClass="p-auto-panel-cls" [minLength]="1"
+                                                [dropdown]="true"
+                                                (completeMethod)="filterAutoCompleteData($event, 'vendorList','filtered_vendorList',   true)" (onSelect)="onSelectedVendor($event)"
+                                                >
+                                                        <ng-template let-segment pTemplate="item">
+                                                            <div class="segment-item">
+                                                                <div>{{segment}}</div>
+                                                            </div>
+                                                        </ng-template>
+                                            </p-autoComplete>
+                                    </div>
+
+                                    <div class="col-4 mb-1">
+                                        <label class="form-label required">Mobile Number </label>
+                                        <input class="form-control" formControlName="mobileNo" placeholder="Mobile Number" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                         maxlength = "10" minlength="10" [disabled]="isAutoPopulated" />
+                                        <span style="color:red" *ngIf="vendorCtrls.mobileNo.invalid && vendorCtrls.mobileNo.touched">Enter Valid 10 Digit Mobile Number</span>
+                                    </div>
+                                    <div class="col-4 mb-1 col-offset-3">
+                                        <label class="form-label required">City</label>
+                                        <input class="form-control" formControlName="city" placeholder="City" [disabled]="isAutoPopulated"
+                                       />
+                                    </div>
+                                    <div class="col-4 mb-1">
+                                        <label class="form-label required">Email Id</label>
+                                        <input class="form-control" formControlName="email" placeholder="Email Id" [disabled]="isAutoPopulated"  />
+                                        <span style="color:red" *ngIf="vendorCtrls.email.invalid && vendorCtrls.email.touched">Enter Valid Email Id</span>
+                                    </div>
+                                    <div class="col-4 mb-1">
+                                        <label class="form-label">Other Email</label>
+                                        <input class="form-control" formControlName="otherEmails" placeholder="Other Email Id"  />
+                                        <span style="color:red" *ngIf="vendorCtrls.otherEmails.invalid && vendorCtrls.otherEmails.touched">Enter Valid Email Id</span>
+                                    </div>
+                                    <div class="col-4 mt-3 btn-block btn-group" style="display: flex;align-items: end; ">
+                                        <button class="btn btn-red" type="reset">Reset</button>
+                                        <button class="btn btn-blue ml-3" type="submit" [disabled]="!vendorForm.valid" >   {{ isEditForm ? 'Update':'Add'}} Vendor</button>
+
+                                    </div>
+
+                        </form>
+                        </fieldset>
+                    </div>
+
+                </fieldset>
+            </div>
+            <div class="col-12 mt-3">
+                <fieldset  class="row col-12 fieldSec">
+                    <legend class="displayFlexCenter">Vendors In Cart <span class="cart"> <i class="fa fa-shopping-cart" aria-hidden="true"></i> <span class="cart-count">{{vendorGridData.gridValue.length}}</span></span>
+                    </legend>
+                   <app-cat-mgr-common-grid   *ngIf="isShowGrid" [gridData]="vendorGridData" (onGridAction)="onGridAction($event)"></app-cat-mgr-common-grid>
+                </fieldset>
+            </div>
+        </div>
+        <!-- <div class="col-12 row mr-0 pr-0"  *ngIf="currentStep== 3">
+            <div class="col-12">
+                <fieldset class="col-12 row  mt-3">
+                    <legend>Delivery Details</legend>
+                    <div class="col-8">
+                            <form class="row" [formGroup]="deliveryForm" novalidate (ngSubmit)="onAddDeliveryToCart()">
+                                    <div class="col-6 mb-1">
+                                        <label class="form-label required">Delivery Date</label>
+                                        <input class="form-control" formControlName="date" placeholder="Vendor Name" />
+                                    </div>
+                                    <div class="col-6 mb-1">
+                                            <label class="form-label required">Addreess</label>
+                                            <input class="form-control" formControlName="address" placeholder="Address" />
+                                    </div>
+
+                                    <div class="col-6 mb-1">
+                                        <label class="form-label required">City</label>
+                                        <input class="form-control" formControlName="city" placeholder="City" />
+
+                                    </div>
+                                    <div class="col-6 mb-1">
+                                        <label class="form-label required">State</label>
+                                        <input class="form-control" formControlName="state" placeholder="State" />
+
+                                    </div>
+                                    <div class="col-12 mt-3" style="display: flex;align-items: center;flex-direction: row-reverse;">
+
+                                        <button class="btn btn-blue ml-3" type="submit" [disabled]="!deliveryForm.valid" > {{ isEditForm ? 'Update':'Add'}} Delivery Details</button>
+                                        <button class="btn btn-red" type="reset">Reset</button>
+                                    </div>
+
+                        </form>
+                    </div>
+
+                </fieldset>
+            </div>
+            <div class="col-12 mt-3">
+                <fieldset>
+                    <legend>Delivery Details in Cart <span class="cart"> <i class="fa fa-shopping-cart" aria-hidden="true"></i> <span class="cart-count">{{deliveryGridData.gridValue.length}}</span></span>
+                    </legend>
+                   <app-cat-mgr-common-grid   *ngIf="isShowGrid" [gridData]="deliveryGridData" (onGridAction)="onGridAction($event)"></app-cat-mgr-common-grid>
+                </fieldset>
+            </div>
+        </div> -->
+    </div>
+    <div class="col-12 mt-3 mr-3" style="display: flex;align-items: center;flex-direction: row-reverse;    position: fixed;
+    bottom: 16px;right: 16px;"  >
+    <button class="btn btn-orange ml-3" type="button"   (click)="onForwardRFQ()" [disabled]="(vendorGridData.gridValue.length<=0 )">{{ 'Send RFQ'}} </button>
+   </div>
+</div>

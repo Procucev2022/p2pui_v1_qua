@@ -1,0 +1,409 @@
+<p-table dataKey="id" #rfqTable [columns]="rfqsTableHeaders" [value]="rfqsList" [scrollable]="true" sortMode="multiple"
+    [paginator]="true" [rows]="pageRecordSize" id="rfqTable" [rowsPerPageOptions]="pageOptions" [style]="{width:'100%'}"
+    exportFilename="rfq details" [(selection)]="selectedRFQList">
+    <ng-template pTemplate="caption">
+        <div class="table-search">
+            <div class="row">
+                <div class="col-sm-6">
+                    <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                        (input)="rfqTable.filterGlobal($event.target.value, 'contains')" />
+                </div>
+
+
+                <div class="col-sm-6">
+                    <button [disabled]="prData.procucevStatus.uiDisplay == 'New'" class="btn btn-primary btn-blue"
+                        *ngIf="this.prData.procucevStatus.uiDisplay != 'Closed' && loggedUserPermissions?.indexOf(defaultPermissions.PC_PR_PAGE.RFQ_CREATE) != -1"
+                        type="button" (click)="onCreateRfqs(createRfqModal)">
+                        Create RFQ
+                    </button>
+                    <button class="btn btn-primary btn-orange"
+                        *ngIf="this.prData.procucevStatus.uiDisplay != 'Closed' && loggedUserPermissions?.indexOf(defaultPermissions.PC_PR_PAGE.VENDOR_SEARCH) != -1"
+                        (click)="vendorSearch()" [disabled]="selectedRFQList.length>1 || selectedRFQList.length == 0"
+                        [ngStyle]="{'cursor': selectedRFQList.length>1 || selectedRFQList.length == 0?'not-allowed': 'default' }">
+                        Vendor Search
+                    </button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    <!-- <ng-template pTemplate="caption">
+        <div class="searchPanel">
+            <span style="float: left;">
+                <button class="btn btn-primary " style="padding: 6px !important;"
+                    *ngIf="this.prData.procucevStatus.uiDisplay != 'Closed' && loggedUserPermissions?.indexOf(defaultPermissions.PC_PR_PAGE.RFQ_CREATE) != -1"
+                    (click)="onCreateRfqs(createRfqModal)"
+                    [disabled]="prData.procucevStatus.uiDisplay == 'New'">Create RFQ</button>
+                &nbsp; &nbsp;&nbsp; &nbsp;
+                <button class="btn btn-primary " style="padding: 6px !important;"
+                    *ngIf="this.prData.procucevStatus.uiDisplay != 'Closed' && loggedUserPermissions?.indexOf(defaultPermissions.PC_PR_PAGE.VENDOR_SEARCH) != -1"
+                    (click)="vendorSearch()"
+                    [ngStyle]="{'cursor': selectedRFQList.length>1 || selectedRFQList.length == 0?'not-allowed': 'default' }"
+                    [disabled]="selectedRFQList.length>1 || selectedRFQList.length == 0">Vendor Search</button>
+            </span>
+            <input type="text" pInputText size="50" placeholder="Search.."
+                (input)="rfqTable.filterGlobal($event.target.value, 'contains')"
+                style="width:auto; float: right;" />
+        </div>
+    </ng-template> -->
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th style="width: 3em">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="auto" pResizableColumn>
+                {{col.header}}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+            </th>
+            <th>Actions</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-columns="columns" let-rowData>
+        <tr [pSelectableRow]="rowData">
+            <td style="width: 3em">
+                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+            </td>
+            <td *ngFor="let col of columns" [style.width]="auto" class="ui-resizable-column">
+                <span *ngIf="!col.isLink">
+                    <span *ngIf="col.field == 'status'">{{rowData[col.field].uiDisplay}}</span>
+                    <span *ngIf="col.field != 'status'">
+                        <span *ngIf="col.fieldType == 'text'">
+                            {{rowData[col.field]}}
+                        </span>
+                        <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
+                            {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
+                        </span>
+                    </span>
+                </span>
+                <span *ngIf="col.isLink" class="cellLinkCls">
+
+                    <a href="javascript:void(0);" (click)="getRFQs(rowData, $event)"> {{rowData[col.field]}} </a>
+                </span>
+
+            </td>
+            <td>
+                <span class="crud-icons actionIcons">
+                    <button type="button" class="btn-skelton">
+                        <i class="fa fa-info-circle" aria-hidden="true" [pTooltip]="rowData['specialInstruction']"></i>
+                    </button>
+                    <button type="button" class="btn-skelton" (click)="viewCorresspondance(rowData)">
+                        <img src="/assets/images/new/comments-write.png" />
+                    </button>
+                    <app-comment-alert-bell-blink [rowData]="rowData"></app-comment-alert-bell-blink>
+                </span>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+            <td [attr.colspan]="5" style="text-align:center;">
+                No Records Found.
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft">
+        <div *ngIf="rfqTable._totalRecords > 0">
+            <b>Showing {{rfqTable.first+1}} to {{rfqTable.first+rfqTable.rows > rfqTable.totalRecords?rfqTable.totalRecords: rfqTable.first+rfqTable.rows}} of {{rfqTable.totalRecords}}</b>
+            <!-- <app-page-info [totalRecords]="rfqsList.length" [pageData]="paginatoryDetails"></app-page-info> -->
+        </div>
+    </ng-template>
+</p-table>
+
+<ng-container *ngIf="selectedRFQData && this.selectedRFQList.length==1">
+        <!-- <div class="title-header">
+            <h5>RFQ ID: {{selectedRFQData?.rfqId}}</h5>
+        </div> -->
+        <mat-tab-group class="" (selectedTabChange)="getThirdTab($event)">
+            <mat-tab label="Quotations">
+                <app-cat-mgr-quotations-sub-tab
+                    *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_PR_PAGE.QUOTE_TAB_VIEW) != -1"
+                    [rfqData]="selectedRFQData" [rfqId]="rfqId">
+                </app-cat-mgr-quotations-sub-tab>
+            </mat-tab>
+            <mat-tab label="RFQ - Line Items">
+                <app-cat-mgr-rfqs-line-items-sub-tab
+                    [rfqData]="selectedRFQData" [rfqId]="rfqId">
+                </app-cat-mgr-rfqs-line-items-sub-tab>
+            </mat-tab>
+            <mat-tab label="Vendors">
+                <app-cat-mgr-vendors-sub-tab
+                    *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_PR_PAGE.VENDOR_TAB_VIEW) != -1"
+                    [rfqData]="selectedRFQData" [rfqId]="rfqId" [isNoActionsRequired]="'false'">
+                </app-cat-mgr-vendors-sub-tab>
+            </mat-tab>
+            <mat-tab label="RFQ Documents">
+                <app-rfq-documents
+                    [rfqData]="selectedRFQData" [rfqId]="rfqId">
+                </app-rfq-documents>
+            </mat-tab>
+        </mat-tab-group>
+</ng-container>
+
+
+<ng-template let-data #createRfqModal>
+    <div class="modal-header">
+        <button id="viewpr" name="viewpr" name="acceptpr" class="btn-skelton modal-close-btn" mat-dialog-close>✖</button>
+        <div class="col-6">
+            <h5>New RFQ</h5>
+        </div>
+        <div class="col-6  text-right" >
+            <i class="fa fa-plus plusMinus plusColor" style="padding-right: 10px;cursor:pointer"  data-toggle="tooltip" title="zoom in" (click)="zoomin()"></i>
+            <i class="fa fa-minus plusMinus minusColor " style="padding-right: 30px; cursor:pointer"  data-toggle="tooltip" title="zoom out" (click)="zoomout()"></i>
+            <button class="btn btn-warning modal-close-btn" mat-dialog-close><i class="fa fa-window-close" aria-hidden="true"></i></button>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div class="col-12 pad-nill pb-4" [hidden]="!isNext">
+            <div class="form-group row">
+                <label class="col-sm-12" for="state">Special Instruction For Vendor :</label>
+                <div class="col-sm-12">
+                    <input type="text" required #specialInstructionRef="ngModel" name="specialInstruction"
+                        [(ngModel)]="specialInstruction" id="specialInstruction" class="form-control"
+                        placeholder="Special Instruction For Vendor">
+                    <div *ngIf="specialInstructionRef.invalid && specialInstructionRef.touched">
+                        <small *ngIf="specialInstructionRef.errors?.required" class="text-danger">Special Instruction
+                            is required</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12"  [hidden]="!isNext">
+                <label class="col-sm-12" for="state">Delivery Address Location :</label>
+                <p-table #prAdressTable [columns]="prAddressesHeaders" [value]="prAdresses" [scrollable]="true"
+                [paginator]="false"
+                [style]="{width:'100%'}" [(selection)]="selectedPrAddresses">
+                <ng-template pTemplate="header" let-columns>
+
+                    <tr>
+                        <th style="width: 3em">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+                            {{col.header}}
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-columns="columns" let-rowData>
+                    <tr [pSelectableRow]="rowData">
+                        <td style="width: 3em">
+                            <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                        </td>
+                        <td *ngFor="let col of columns" [style.width]="col.width">
+                            <span >
+                                {{rowData[col.field]}}
+                            </span>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage" let-columns>
+                    <tr>
+                        <td [attr.colspan]="5" style="text-align:center;">
+                            No Records Found.
+                        </td>
+                    </tr>
+                </ng-template>
+                </p-table>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-12" [hidden]="isNext">
+                <p-table #crfqLineItemTable [columns]="prLineItemHeaders" [value]="prLineItemsList" [scrollable]="true"
+                    sortMode="multiple" [paginator]="true" [rows]="pageRecordSize"
+                    [rowsPerPageOptions]="modalGridpageOptions" [resizableColumns]="true" columnResizeMode="expand"
+                    [style]="{width:'100%'}" exportFilename="rfq table" [(selection)]="selectedCreateRfqItems">
+                    <ng-template pTemplate="caption">
+                        <div class="table-search">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                                        (input)="crfqLineItemTable.filterGlobal($event.target.value,'contains')" />
+                                </div>
+                                <div class="col-sm-6"></div>
+                            </div>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th style="width: 3em">
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th>
+                            <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+                                {{col.header}}
+                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                            </th>
+
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-columns="columns" let-rowData>
+                        <tr [pSelectableRow]="rowData">
+                            <td style="width: 3em">
+                                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                            </td>
+                            <td *ngFor="let col of columns" [style.width]="col.width">
+                                <span *ngIf="!col.isLink">
+                                    <span *ngIf="col.fieldType == 'text'">
+                                        {{rowData[col.field]}}
+                                    </span>
+                                    <span *ngIf="col.fieldType == 'date'"
+                                        [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
+                                        {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
+                                    </span>
+                                </span>
+                                <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);"
+                                        (click)="getRFQs(rowData)"> {{rowData[col.field]}} </a></span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage" let-columns>
+                        <tr>
+                            <td [attr.colspan]="5" style="text-align:center;">
+                                No Records Found.
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="paginatorleft">
+                        <div *ngIf="crfqLineItemTable._totalRecords > 0">
+                            <b>Showing {{crfqLineItemTable.first+1}} to {{crfqLineItemTable.first+crfqLineItemTable.rows > crfqLineItemTable.totalRecords?crfqLineItemTable.totalRecords: crfqLineItemTable.first+crfqLineItemTable.rows}} of {{crfqLineItemTable.totalRecords}}</b>
+                            <!-- <app-page-info [totalRecords]="rfqsList.length" [pageData]="paginatoryDetails"> -->
+                            <!-- </app-page-info> -->
+                        </div>
+                    </ng-template>
+                </p-table>
+            </div>
+            <div class="col-12" [hidden]="!isNext">
+                <div class="row">
+                    <div class="col-12">
+                        <p-table #attachedDocsTable [columns]="attachedPrDocsHeaders" [value]="attachedPrDocsList"
+                            [scrollable]="true" sortMode="multiple" [rows]="modalGridpageRecordSize"
+                            [resizableColumns]="true" columnResizeMode="expand" [style]="{width:'100%'}"
+                            exportFilename="attached docs" [(selection)]="selectedAttachedPrDocs">
+                            <ng-template pTemplate="caption">
+                                <div class="table-search">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <input class="main-input" type="text" pInputText size="50"
+                                                placeholder="Search.."
+                                                (input)="attachedDocsTable.crfqLineItemTable($event.target.value, 'contains')" />
+                                        </div>
+                                        <div class="col-sm-6"></div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th style="width: 3em">
+                                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                    </th>
+                                    <th *ngFor="let col of columns">
+                                        {{col.field}}
+                                        <p-sortIcon field="rfqId"> </p-sortIcon>
+                                    </th>
+                                    <th>
+                                        Actions
+                                    </th>
+
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-columns="columns" let-rowData>
+                                <tr [pSelectableRow]="rowData">
+                                    <td style="width: 3em">
+                                        <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                                    </td>
+                                    <td *ngFor="let col of columns">
+                                        <span *ngIf="col.fieldType == 'text'">
+                                            {{rowData[col.field]}}
+                                        </span>
+                                        <span *ngIf="col.fieldType == 'date'"
+                                            [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
+                                            {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="crud-icons actionIcons"
+                                            *ngIf="rowData['fileName'] && rowData['file']">
+                                            <a *ngIf="rowData['fileName'].split('.')[1] == 'xlsx' || rowData['fileName'].split('.')[1] == 'xls' || rowData['fileName'].split('.')[1] == 'csv'"
+                                                [href]="'data:application/octet-stream;base64,' + rowData['file'] | filePipe"
+                                                download="{{rowData['fileName']}}" data-toggle="tooltip"
+                                                [title]="'Download '+ rowData['fileName']"><i class="fa fa-download"
+                                                    aria-hidden="true"></i></a>
+
+                                            <!-- For PDF doucment download -->
+                                            <a *ngIf="rowData['fileName'].split('.')[1] == 'pdf'"
+                                                [href]="'data:application/pdf;base64,' + rowData['file'] | filePipe"
+                                                download="{{rowData['fileName']}}" data-toggle="tooltip"
+                                                [title]="'Download '+ rowData['fileName']" data-toggle="tooltip"
+                                                [title]="'Download '+ rowData['fileName']"><i class="fa fa-download"
+                                                    aria-hidden="true"></i></a>
+
+
+
+                                            <!-- For jpeg/jpg & png download -->
+                                            <a *ngIf="rowData['fileName'].split('.')[1] == 'png'|| rowData['fileName'].split('.')[1] == 'jpeg' || rowData['fileName'].split('.')[1] == 'jpg'"
+                                                [href]="'data:application/octet-stream;base64,' + rowData['file'] | filePipe"
+                                                download="{{rowData['fileName']}}"><i class="fa fa-download"
+                                                    aria-hidden="true" data-toggle="tooltip"
+                                                    [title]="'Download '+ rowData['fileName']"></i></a>
+
+
+                                            <!-- For PPT & document download -->
+                                            <a *ngIf="rowData['fileName'].split('.')[1] == 'txt'  ||rowData['fileName'].split('.')[1] == 'pptx'|| rowData['fileName'].split('.')[1] == 'docx'|| rowData['fileName'].split('.')[1] == 'doc' || rowData['fileName'].split('.')[1] == 'ppt'"
+                                                [href]="'data:application/octet-stream;base64,' + rowData['file'] | filePipe"
+                                                download="{{rowData['fileName']}}" data-toggle="tooltip"
+                                                [title]="'Download '+ rowData['fileName']"><i class="fa fa-download"
+                                                    aria-hidden="true"></i></a>
+
+                                        </span>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage" let-columns>
+                                <tr>
+                                    <td [attr.colspan]="5" style="text-align:center;">
+                                        No Records Found.
+                                    </td>
+                                </tr>
+                            </ng-template>
+
+                        </p-table>
+                    </div>
+                    <div class="col-md-12 pt-4">
+                        <div class="col-md-6 addAddress" (click)="documentsInput.click()" fileDragDrop
+                            (onFileDropped)="dragAndDropDocs($event)">
+                            <input multiple hidden type="file" #documentsInput
+                                (change)="uploadDocuments($event.target.files)">
+                            <div>
+                                <img src="/assets/images/upload-cloud.svg"><br>
+                                <div class="uploadInfo">Click to Upload <br><span> PDF, XLS, MSW (max.
+                                        10MB/File)</span></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <ng-container *ngFor="let file of documentsArray;let i=index">
+                                <div class="col-12 uploadedFiles">
+                                    <div class="col-8">
+                                        <img src="/assets/images/file.svg">
+                                        <span>{{ file?.name }}</span> <br>
+                                        <!-- <span>{{ file?.name }}</span> -->
+                                    </div>
+                                    <div class="col-4">
+                                        <i class="fa fa-trash" aria-hidden="true"
+                                            (click)="deleteAttachment(i,'documentsArray')"></i>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <mat-dialog-actions align="end">
+        <button type="button" class="btn btn-danger btn-red" mat-dialog-close>Cancel</button>
+        <button type="button" class="btn btn-primary btn-blue" [hidden]="isNext" (click)="isNext = true;">Next</button>
+        <button type="button" class="btn btn-secondary btn-orange" [hidden]="!isNext" (click)="isNext = false;">Previous</button>
+        <button type="button" class="btn btn-success btn-green" [hidden]="!isNext" (click)="createRfq()">Save</button>
+    </mat-dialog-actions>
+</ng-template>
+<!-- accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" -->

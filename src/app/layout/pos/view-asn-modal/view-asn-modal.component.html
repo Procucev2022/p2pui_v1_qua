@@ -1,0 +1,127 @@
+<div class="modal-header">
+    <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+    <div class="col-6">ASN Details</div>
+</div>
+<div class="modal-body row">
+    <div class="col-6">
+        <div class="row">
+            <div class="col-6">
+                <label>Delivery Id : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ asnData.deliveryIdFromParent }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <div class="col-6">
+                <label>ASN Id : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ asnData.asnId }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <div class="col-6">
+                <label>ASN Generated Date : </label>
+            </div>
+            <div class="col-6">
+                <label>
+          <span class="label-value">{{ asnData.createdTS | date: 'dd-MM-yyyy hh:mm:ss a' }}</span>
+        </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <div class="col-6">
+                <label>Description : </label>
+            </div>
+            <div class="col-6">
+                <label>
+          <span class="label-value">{{ asnData.asndesc }}</span>
+        </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <div class="col-6">
+                <label>Transport Mode : </label>
+            </div>
+            <div class="col-6">
+                <label>
+          <span class="label-value">{{ asnData.transportMode }}</span>
+        </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <div class="col-6">
+                <label>Transport Details : </label>
+            </div>
+            <div class="col-6">
+                <label>
+          <span class="label-value">{{ asnData.cargoDetails }}</span>
+        </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <div class="col-6">
+                <label>Trasport Phone : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ asnData.trasportPhone }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <div class="col-6">
+                <label>Dispatch Date : </label>
+            </div>
+            <div class="col-6">
+                <label>
+          <span class="label-value">{{ asnData.dispatchDate | date: 'dd-MM-yyyy hh:mm:ss a'}}</span>
+        </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <div class="col-6">
+                <label>Expected Date : </label>
+            </div>
+            <div class="col-6">
+                <label>
+          <span class="label-value">{{ asnData.expectedDate | date: 'dd-MM-yyyy hh:mm:ss a'}}</span>
+        </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="row">
+            <div class="col-6">
+                <label>Remarks : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ asnData.remarks }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <app-common-grid [gridData]="asnGridData" [parentId]="asnData.asnId" (actionEvent)="onClickCommonGrid($event)">
+        </app-common-grid>
+    </div>
+</div>
+<mat-dialog-actions align="end">
+    <button type="button" class="btn btn-success" [disabled]="asnStatus === 'Accepted'" (click)="accpetASN()" *ngIf="roleName == 'ClientInitiator'">Accept
+    ASN</button>
+</mat-dialog-actions>

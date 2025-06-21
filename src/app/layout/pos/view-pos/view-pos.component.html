@@ -1,0 +1,216 @@
+<div class="modal-header">
+    <!-- <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button> -->
+    <div class="col-6">PO View </div>
+    <div class="col-6  text-right" >
+        <i class="fa fa-plus plusMinus plusColor" style="padding-right: 10px;cursor:pointer"  data-toggle="tooltip" title="zoom in" (click)="zoomin()"></i>
+        <i class="fa fa-minus plusMinus minusColor " style="padding-right: 30px; cursor:pointer"  data-toggle="tooltip" title="zoom out" (click)="zoomout()"></i>
+        <button class="btn btn-warning modal-close-btn" mat-dialog-close><i class="fa fa-window-close" aria-hidden="true"></i></button>
+    </div>
+
+</div>
+<div class="modal-body">
+    <div class="col-12">
+        <div class="view-details-panel-cls">
+            <div class="panel-content-box">
+                <div class="col-12 cust-card">
+                <div class="form-group row" style="margin-top: 15px">
+                    <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;" class="col-sm-4 col-form-label">PO ID</label>
+                    <div class="col-sm-8 content-value">
+                        {{poData?.poId}}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;" class="col-sm-4 col-form-label">PO Value</label>
+                    <div class="col-sm-8 content-value">
+                        {{poData?.poValue}}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="deptName" style="font-size: medium; font-weight: bolder;" class="col-sm-4 col-form-label">PO Description</label>
+                    <div class="col-sm-8 content-value">
+                        {{poData?.podesc}}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="prDescription" style="font-size: medium; font-weight: bolder;" class="col-sm-4 col-form-label">Vendor Name</label>
+                    <div class="col-sm-8 content-value">
+                        {{poData?.vendor?.companyName}}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="prDescription" style="font-size: medium; font-weight: bolder;" class="col-sm-4 col-form-label">Vendor Address</label>
+                    <div class="col-sm-8 content-value">
+                        {{poData?.vendorAddress}}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="prDescription" style="font-size: medium; font-weight: bolder;" class="col-sm-4 col-form-label">Delivery Terms</label>
+                    <div class="col-sm-8 content-value">
+                        {{poData?.deliveryTerms}}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="prDescription" style="font-size: medium; font-weight: bolder;" class="col-sm-4 col-form-label">Payment Terms</label>
+                    <div class="col-sm-8 content-value">
+                        {{poData?.paymentTerms}}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="prDescription" style="font-size: medium; font-weight: bolder;" class="col-sm-4 col-form-label">Other Terms</label>
+                    <div class="col-sm-8 content-value">
+                        {{poData?.otherTerms}}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="singleVendor" style="font-size: medium; font-weight: bolder;" class="col-sm-4 col-form-label">Is Any Advance ?</label>
+                    <div class="col-sm-6">
+                        <div class="content-value" *ngIf="poData?.advance">
+                            {{poData?.advanceAmount}}
+                        </div>
+                        <div class="content-value" *ngIf="!poData?.advance">
+                            No
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="col-md-12 pad-nill" *ngIf="isLoaded">
+                <div class="table-title">
+                    <div class="row">
+                      <div class="col-sm-6">
+                          <h2>PO Items Details</h2>
+                          <p><span class="dot"></span>{{poLineItemsData?.length}} Total</p>
+                      </div>
+                      <div class="col-sm-6">
+                        <input class="main-input" style="float: right;" type="text" pInputText size="50" placeholder="Search.."
+                          (input)="poLineItemsViewTable.filterGlobal($event.target.value, 'contains')" />
+                      </div>
+                    </div>
+                  </div>
+                <p-table #poLineItemsViewTable [columns]="poItemsHeaders" [value]="poLineItemsData" [style]="{'width': '100%'}" exportFilename="venRequest" [(selection)]="selectedData" [scrollable]="true">
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th [style.width]="col.width" *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                {{col.header}}
+                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                        <tr [pSelectableRow]="rowData">
+                            <td *ngFor="let col of columns" [style.width]="col.width">
+                                <span>{{rowData[col.field]}}</span></td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage" let-columns>
+                        <tr>
+                            <td [attr.colspan]="5" style="text-align:center;">
+                                No Records Found.
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+            <div class="col-12 row cust-card pad-nill">
+                <label class="col-md-12">Delivery Location</label>
+                <div class="col-md-12">
+                    <div class="row" *ngIf="poData.dynamicfields.length>0">
+                        <div class="col-6" *ngFor="let field of poData.dynamicfields">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label>{{ field.fieldName }} </label>
+                                </div>
+                                <div class="col-6">
+                                    <div class="col-sm-8 content-value" style="color: #000">
+                                        {{ field.fieldValue }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="poData.dynamicfields.length == 0">
+                        <label>No Details Available</label>
+                    </div>
+                </div>
+                <div class="col-12 row cust-card pad-nill" *ngFor="let location of poData?.clientdeliverylocation; let i = index;">
+                    <div class="form-group row">
+                        <label for="address" style="font-size: medium; font-weight: bolder;" class="col-sm-5 col-form-label">Address</label>
+                        <div class="col-sm-5 content-value">
+                            {{location.address}}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="city" style="font-size: medium; font-weight: bolder;" class="col-sm-5 col-form-label">City</label>
+                        <div class="col-sm-5 content-value">
+                            {{location.city}}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="state" style="font-size: medium; font-weight: bolder;" class="col-sm-5 col-form-label">State:</label>
+                        <div class="col-sm-5 content-value">
+                            {{location.state}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 row cust-card pad-nill">
+                <label class="col-md-12" for="text">Uploaded Documents</label>
+                <div class="col-md-12" >
+                    <ng-container *ngFor="let file of poData?.documents;let i=index">
+                        <div class="col-12 uploadedFiles">
+                            <div class="col-8">
+                                <img src="/assets/images/file.svg">
+                                <span>{{ file?.fileName }}</span> <br>
+                            </div>
+                            <div class="col-4">
+                                <a *ngIf="file['fileName'].split('.').splice(-1) == 'xlsx' || file['fileName'].split('.').splice(-1) == 'xls' || file['fileName'].split('.').splice(-1) == 'csv'" [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe" download="{{file['fileName']}}" data-toggle="tooltip" [title]="'Download '+ file['fileName']"><i class="fa fa-download" aria-hidden="true" ></i></a>
+                                <!-- For PDF doucment download -->
+                                <a *ngIf="file['fileName'].split('.').splice(-1) == 'pdf'" [href]="'data:application/pdf;base64,' + file['file'] | filePipe" download="{{file['fileName']}}" data-toggle="tooltip" [title]="'Download '+ file['fileName']" data-toggle="tooltip" [title]="'Download '+ file['fileName']"><i class="fa fa-download" aria-hidden="true"></i></a>
+                                <!-- For jpeg/jpg & png download -->
+                                <a *ngIf="file['fileName'].split('.').splice(-1) == 'png'|| file['fileName'].split('.').splice(-1) == 'jpeg' || file['fileName'].split('.').splice(-1) == 'jpg'" [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe" download="{{file['fileName']}}"><i class="fa fa-download" aria-hidden="true" data-toggle="tooltip" [title]="'Download '+ file['fileName']"></i></a>
+                                <!-- For PPT & document download -->
+                                <a *ngIf="file['fileName'].split('.').splice(-1) == 'txt'  ||file['fileName'].split('.').splice(-1) == 'pptx'|| file['fileName'].split('.').splice(-1) == 'docx'|| file['fileName'].split('.').splice(-1) == 'doc' || file['fileName'].split('.').splice(-1) == 'ppt'"
+                                    [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe" download="{{file['fileName']}}" data-toggle="tooltip" [title]="'Download '+ file['fileName']"><i class="fa fa-download" aria-hidden="true"   ></i></a>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <div class="content-value" *ngIf="poData?.documents?.length == 0">
+                        No Documents uploaded.
+                    </div>
+
+                </div>
+            </div>
+            <!-- <div>
+                <div class="col-12">
+                    <div style="width: auto !important;" class="form-group">
+                        <div class="row">
+                            <label class="col-md-5 col-form-label" for="text">Uploaded Documents</label>
+                            <div class="col-md-6">
+                                <div class="files-list content-value" *ngFor="let file of poData?.documents;let i=index">
+                                    <p style="margin-bottom:0px">{{ file?.fileName }}
+                                        <a *ngIf="file['fileName'].split('.').splice(-1) == 'xlsx' || file['fileName'].split('.').splice(-1) == 'xls' || file['fileName'].split('.').splice(-1) == 'csv'" [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe" download="{{file['fileName']}}"
+                                            data-toggle="tooltip" [title]="'Download '+ file['fileName']"><i class="fa fa-download" aria-hidden="true" ></i></a>
+                                        <a *ngIf="file['fileName'].split('.').splice(-1) == 'pdf'" [href]="'data:application/pdf;base64,' + file['file'] | filePipe" download="{{file['fileName']}}" data-toggle="tooltip" [title]="'Download '+ file['fileName']" data-toggle="tooltip" [title]="'Download '+ file['fileName']"><i class="fa fa-download" aria-hidden="true"></i></a>
+                                        <a *ngIf="file['fileName'].split('.').splice(-1) == 'png'|| file['fileName'].split('.').splice(-1) == 'jpeg' || file['fileName'].split('.').splice(-1) == 'jpg'" [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe" download="{{file['fileName']}}"><i class="fa fa-download" aria-hidden="true" data-toggle="tooltip" [title]="'Download '+ file['fileName']"></i></a>
+                                        <a *ngIf="file['fileName'].split('.').splice(-1) == 'txt'  ||file['fileName'].split('.').splice(-1) == 'pptx'|| file['fileName'].split('.').splice(-1) == 'docx'|| file['fileName'].split('.').splice(-1) == 'doc' || file['fileName'].split('.').splice(-1) == 'ppt'"
+                                            [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe" download="{{file['fileName']}}" data-toggle="tooltip" [title]="'Download '+ file['fileName']"><i class="fa fa-download" aria-hidden="true"   ></i></a>
+                                    </p>
+                                </div>
+                                <div class="content-value" *ngIf="poData?.documents?.length == 0">
+                                    No Documents uploaded.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+</div>
+<mat-dialog-actions align="end">
+    <button type="button" class="btn   btn-red" (click)="cancelPo()" *ngIf="roleName == 'PRApprover' || roleName == 'ClientInitiator'">Cancel PO</button>
+    <button type="button" class="btn btn-primary btn-green" [disabled]="data.clientStatus.uiDisplay == 'ClientApproved' || data.clientStatus.uiDisplay == 'Accepted' || data.clientStatus.uiDisplay == 'ClientCancelled'" (click)="approvePo()" *ngIf="roleName == 'PRApprover'">Accept PO</button>
+    <button [disabled]="data.vendorStatus.uiDisplay != 'New'" type="button" class="btn btn-primary btn-green" (click)="acceptPo()" *ngIf="roleName == 'Vendor'">Accept PO</button>
+    <button type="button" class="btn btn-success btn-red" (click)="rejectPo()" *ngIf="roleName == 'Vendor'">Reject PO</button>
+</mat-dialog-actions>
+<!-- [disabled]="data?.userStatus = 'ApproverApproved'" -->

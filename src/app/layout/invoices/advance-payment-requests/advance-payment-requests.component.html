@@ -1,0 +1,95 @@
+<div class="col-12 pad-nill" *ngIf="poGridData">
+
+    <div class="table-title">
+        <div class="row">
+          <div class="col-sm-6">
+            <h2>Advance Payments</h2>
+            <p><span class="dot"></span>{{advancePaymentsList?.length}} Total</p>
+          </div>
+          <div class="col-sm-6">
+          </div>
+        </div>
+      </div>
+      <p-table dataKey="id" #advPayTable [columns]="gridHeaders" [value]="advancePaymentsList" sortMode="multiple"
+      [paginator]="true" [rows]="pageRecordSize" id="prqTable" [rowsPerPageOptions]="pageOptions" [expandedRowKeys]="expandedRows"
+      [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData" [scrollable]="true"
+      [scrollable]="true" [scrollHeight]="'calc(100vh - 214px)'">
+      <ng-template pTemplate="caption">
+        <div class="table-search">
+          <div class="row">
+            <div class="col-sm-6">
+              <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                (input)="advPayTable.filterGlobal($event.target.value, 'contains')" />
+            </div>
+            <div class="col-sm-6">
+            </div>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <!-- <th style="width: 2em">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th> -->
+          <th style="width: 2rem"></th>
+          <ng-container *ngFor="let col of columns">
+            <th [style.width]="col.width" [pSortableColumn]="col.field">
+              {{col.header}}
+              <p-sortIcon [field]="col.field"></p-sortIcon>
+            </th>
+          </ng-container>
+          <!-- <th style="width: 14em;">Actions</th> -->
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
+        <tr [pSelectableRow]="rowData">
+          <!-- <td style="width: 2em">
+            <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+          </td> -->
+          <td style="width: 2rem">
+            <button type="button" pButton pRipple [pRowToggler]="rowData"
+              class="grid-expand" (click)="expanded ? getCloseAdvancePaymentList(rowData,$event) : getAdvancePaymentList(rowData)">
+              <span *ngIf="expanded"><i class="fa fa-chevron-down"></i></span>
+              <span *ngIf="!expanded"><i class="fa fa-chevron-right"></i></span>
+            </button>
+          </td>
+          <td [style.width]="col.width" *ngFor="let col of columns" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" >
+              <span *ngIf="!col.isLink">
+                <span *ngIf="col.field === 'companyName'"><app-vendor-info-icon-dialog [vendorData]="rowData"></app-vendor-info-icon-dialog> </span>
+                <img *ngIf="rowData['verifiedStatus']['uiDisplay'] == 'Completed' && col.field === 'companyName'" width="20" src="assets/images/insta-verified.png"/>  {{rowData[col.field]}}
+
+              </span>
+              <span *ngIf="col.isLink">
+                <button *ngIf="roleName === 'Vendor'" class="btn btn-primary btn-blue" type="button" (click)="onCreateAdvancePayment(rowData)">Request Advance</button>
+              </span>
+          </td>
+          <!-- <td style="width: 14em;">
+            <button *ngIf="roleName === 'Vendor'" class="btn btn-primary" type="button" (click)="onCreateAdvancePayment(rowData)">Request Advance</button>
+          </td> -->
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="rowexpansion" let-rowData>
+        <tr class="child-grid" *ngIf="advancePaymentGridData">
+          <td [attr.colspan]="subGridColSpan">
+            <div class="p-p-3">
+                <app-common-grid [gridData]="advancePaymentGridData" [parentId]="poId" (actionEvent)="onClickCommonGrid($event)"></app-common-grid>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+          <td [attr.colspan]="subGridColSpan" style="text-align:center;">
+            No Records Found.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+</div>
+<!-- <div class="col-12 pad-nill" *ngIf="advancePaymentGridData" #h1>
+    <mat-tab-group>
+        <mat-tab label="Advance Payments" >
+
+        </mat-tab>
+    </mat-tab-group>
+</div> -->

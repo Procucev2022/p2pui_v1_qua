@@ -1,0 +1,78 @@
+<div class="modal-header">
+    <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+    <div class="col-6">Create ASN</div>
+</div>
+<div class="modal-body">
+    <div class="col-12" *ngIf="deliveryItemsData">
+      <app-common-grid [gridData]="deliveryItemsData" (actionEvent)="onClickCommonGrid($event)"></app-common-grid>
+    </div>
+    <div class="col-12">
+      <form [formGroup]="asnForm" name="poForm" >
+         <div class="row"> 
+          <div class="col-md-6 form-group">
+            <label>ASN Description <b style="color: red;">*</b> </label>
+            <input type="text" formControlName="asndesc" class="form-control" [ngClass]="{ 'is-invalid': f.submitted && f.asndesc.errors }" />
+            <div *ngIf="f.submitted && f.asndesc.errors" class="invalid-feedback">
+                <div *ngIf="f.asndesc.errors.required && f.submitted">Description is required</div>
+              </div>
+          </div>         
+            <div class="col-6 form-group">
+              <label>Transport Mode  <b style="color: red;">*</b> </label>
+              <div class="row">
+                <div class="col-12">
+                  <mat-radio-group aria-label="Select an option" formControlName="transportMode" >
+                    <mat-radio-button   value="Road">ROAD</mat-radio-button>
+                    <mat-radio-button   value="Rail">RAIL</mat-radio-button>
+                    <mat-radio-button   value="Sea">SEA</mat-radio-button>
+                    <mat-radio-button   value="Air">AIR</mat-radio-button>
+                  </mat-radio-group>                              
+                </div>               
+              </div>
+              <div *ngIf="f.submitted && f.asndesc.errors" class="invalid-feedback">
+                  <div *ngIf="f.asndesc.errors.required && f.submitted">Vendor Organization is required</div>
+              </div>
+          </div>
+          
+          <div class="col-6">
+            <label>Transport Details  <b style="color: red;">*</b> </label>
+            <textarea  formControlName="cargoDetails" name="cargoDetails" class="form-control" [ngClass]="{ 'is-invalid': f.submitted && f.cargoDetails.errors }" ></textarea>
+            <div *ngIf="f.submitted && f.cargoDetails.errors" class="invalid-feedback">
+                <div *ngIf="f.cargoDetails.errors.required && f.submitted">Description is required</div>
+            </div>
+          </div>
+            <div class="col-md-6" style="position: relative;">
+              <label>Date of Dispatch  <b style="color: red;">*</b> </label>
+                <input class="form-control"   style="border: 1px solid #ced4da;"   #picker name="dispatchDate" matInput [matDatepicker]="picker" formControlName="dispatchDate" [min]="minDate">
+                <mat-datepicker-toggle matSuffix [for]="picker" style="position: absolute;right: 12px;top: 33px;"></mat-datepicker-toggle>
+               <mat-datepicker #picker></mat-datepicker>
+                <div *ngIf="f.submitted && f.dispatchDate.errors" class="invalid-feedback">
+                  <div *ngIf="f.dispatchDate.errors.required && f.submitted">Dispatch Date is required</div>
+                </div>
+            </div>
+            <div class="col-md-6"  style="position: relative;">
+              <label>Expected Date of Delivery  <b style="color: red;">*</b> </label>
+              <input class="form-control" style="border: 1px solid #ced4da;"  #picker1 name="expectedDate" matInput [matDatepicker]="picker1" formControlName="expectedDate" [min]="f.dispatchDate.value" >
+               <mat-datepicker-toggle matSuffix [for]="picker1"  style="position: absolute;right: 12px;top: 33px;" ></mat-datepicker-toggle>
+               <mat-datepicker #picker1></mat-datepicker>
+              <div *ngIf="f.submitted && f.expectedDate.errors" class="invalid-feedback">
+                <div *ngIf="f.expectedDate.errors.required && f.submitted">Expected Delivery date is required</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label>Transport Contact Number  <b style="color: red;">*</b> </label>
+                <input type="text" formControlName="trasportPhone" class="form-control" [ngClass]="{ 'is-invalid': f.submitted && f.trasportPhone.errors }" />
+                <div *ngIf="f.submitted && f.trasportPhone.errors" class="invalid-feedback">
+                  <div *ngIf="f.trasportPhone.errors.required && f.submitted">Transport Contact Number is required</div>
+                </div>
+            </div>            
+          </div>
+        </form>
+    </div>
+    <div class="col-12">
+      <app-common-attachments  [isViewOnly]="'false'" [attachments]="[]" (actionEvent)="getAttachedDocsList($event)"></app-common-attachments>
+    </div>
+</div>
+<mat-dialog-actions align="end">  
+  <button mat-raised-button   color="warn"  type="reset" (click)="resetForm()">Reset </button>
+  <button mat-raised-button   color="primary"  type="button" (click)="onSubmit()">Create ASN</button>
+</mat-dialog-actions>

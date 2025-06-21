@@ -1,0 +1,106 @@
+<p-table #prTable [columns]="vendorTableHeaders" [value]="vendorList" [scrollable]="true" sortMode="multiple"
+  [paginator]="true" [rows]="pageRecordSize" id="prTable" [rowsPerPageOptions]="pageOptions" [style]="{width:'100%'}"
+  exportFilename="roles details" [(selection)]="selectedData">
+  <ng-template pTemplate="caption">
+    <div class="table-search">
+      <div class="row">
+        <div class="col-sm-6">
+          <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+            (input)="prTable.filterGlobal($event.target.value, 'contains')" />
+        </div>
+        <div class="col-sm-6">
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th style="width: 3em" *ngIf="isNoActionsRequired != 'true'">
+        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+      </th>
+      <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+        {{col.header}}
+        <p-sortIcon [field]="col.field"></p-sortIcon>
+      </th>
+      <th style="width: 11em" *ngIf="isNoActionsRequired != 'true'">Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-columns="columns" let-rowData>
+    <tr [pSelectableRow]="rowData">
+      <td style="width: 3em" *ngIf="isNoActionsRequired != 'true'">
+        <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+      </td>
+      <td *ngFor="let col of columns" [style.width]="col.width">
+        <span *ngIf="!col.isLink"> <span *ngIf="col.field === 'companyName'">
+      <app-vendor-info-icon-dialog [vendorData]="{'vendorId': rowData.vendorId}"></app-vendor-info-icon-dialog>
+        </span>
+          <span *ngIf="col.field == 'vendorStatus'">{{rowData[col.field]?.uiDisplay}}</span>
+          <span *ngIf="col.field != 'vendorStatus'">
+            <span *ngIf="col.fieldType == 'text'">
+              {{rowData[col.field]}}
+            </span>
+            <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
+              {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
+            </span>
+          </span>
+        </span>
+        <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);" (click)="getVendors(rowData)">
+            {{rowData[col.field]}} </a></span>
+
+      </td>
+      <td style="width: 11em" *ngIf="isNoActionsRequired != 'true'">
+        <!-- <span class="crud-icons" >
+         <span (click)="viewCorresspondance(rowData)"> <img src="assets/images/eye.png" > Comments</span>
+        </span> -->
+        <!-- <span class="crud-icons actionIcons">
+          <i class="fa fa-pencil-square-o" aria-hidden="true" (click)="viewCorresspondance(editVendorDate,rowData)"
+            data-toggle="tooltip" title="Edit"></i>
+        </span> -->
+        <button type="button" class="btn-skelton" (click)="viewCorresspondance(editVendorDate,rowData)">
+          <img src="/assets/images/new/edit-data.png" title="Edit">
+        </button>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage" let-columns>
+    <tr>
+      <td [attr.colspan]="5" style="text-align:center;">
+        No Records Found.
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="paginatorleft">
+    <div *ngIf="prTable._totalRecords > 0">
+      <b>Showing {{prTable.first+1}} to {{prTable.first+prTable.rows > prTable.totalRecords?prTable.totalRecords: prTable.first+prTable.rows}} of {{prTable.totalRecords}}</b>
+      <!-- <app-page-info [totalRecords]="vendorList.length" [pageData]="paginatoryDetails"></app-page-info> -->
+    </div>
+  </ng-template>
+</p-table>
+
+
+<ng-template #editVendorDate>
+  <form (submit)="SubmitVendorData(vendorDateForm)" name="vendorDateForm" #vendorDateForm="ngForm" novalidate>
+    <mat-dialog-content>
+      <h5>Quotation Closing Date</h5>
+      <!-- <div class="col-12 form-group">
+        <label for="state" class="col-md-12">Quotation Closing Date:</label>
+        <input #vendorResponseDateEdit=ngModel name="vendorResponseDateEdit" [min]="min"
+          [(ngModel)]="vendorResponseDate" [owlDateTime]="dt1" [min]="minDate" [owlDateTimeTrigger]="dt1"
+          placeholder="Date Time">
+        <span class="trigger" [owlDateTimeTrigger]="dt1">
+          <i class="fa fa-calendar"></i>
+        </span>
+        <owl-date-time #dt1></owl-date-time>
+        <div>
+          <small style="color: red" *ngIf="vendorResponseDateEdit.touched && vendorResponseDate == null">Quotation
+            Closing Date is required</small>
+        </div>
+      </div> -->
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button type="submit" class="btn btn-success">Accept</button>
+      <button type="submit" class="btn btn-danger" mat-dialog-close>Cancel</button>
+    </mat-dialog-actions>
+  </form>
+</ng-template>

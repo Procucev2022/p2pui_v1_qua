@@ -1,0 +1,465 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12 page-title-pane">Vendor Registration Details</div>
+        <div class="col-12 page-body-pane">
+            <fieldset class="col-md-12">
+                <legend>GENERAL {{vendorRegData.lastModifiedTS}}</legend>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p>COMPANY NAME:<span
+                                        style="font-weight: bold;margin-left: 20px;color: #014178;">{{ vendorRegData?.companyName}}</span>
+                                </p><br>
+                                <p>ADDRESS1:<span
+                                        style="font-weight: bold;margin-left: 20px;color: #014178;">{{ vendorRegData?.address1}}</span>
+                                </p><br>
+                                <p>STATE:<span
+                                        style="font-weight: bold;margin-left: 20px;color: #014178;">{{ vendorRegData?.state}}</span>
+                                </p><br>
+
+                            </div>
+                            <div class="col-md-4">
+                                <p>PAN:<span
+                                        style="font-weight: bold;margin-left: 20px;color: #014178;">{{ vendorRegData?.pan}}</span>
+                                </p><br>
+                                <p>ADDRESS2:<span
+                                        style="font-weight: bold;margin-left: 20px;color: #014178;">{{ vendorRegData?.address2}}</span>
+                                </p><br>
+                                <p>CITY:<span
+                                        style="font-weight: bold;margin-left: 20px;color: #014178;">{{ vendorRegData?.city}}</span>
+                                </p><br>
+                            </div>
+                            <div class="col-md-4">
+                                <p>GST-IN:<span
+                                        style="font-weight: bold;margin-left: 20px;color: #014178;">{{ vendorRegData?.gstin}}</span>
+                                </p><br>
+                                <p>COUNTRY:<span
+                                        style="font-weight: bold;margin-left: 20px;color: #014178;">{{ vendorRegData?.country}}</span>
+                                </p><br>
+                                <p>PINCODE:<span
+                                        style="font-weight: bold;margin-left: 20px;color: #014178;">{{ vendorRegData?.zipCode}}</span>
+                                </p><br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset class="col-md-12">
+                <legend>BRANCHES</legend>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row" *ngFor="let orgBranch of vendorRegData?.orgBranches; let index=i">
+                            <div class="col-md-4">
+                                <p>BRANCHE NAME:<span
+                                        style="font-weight: bold;margin-left: 20px;color: #014178;">{{ orgBranch.branchName}}</span>
+                                </p><br>
+                                <p>COUNTRY:<span
+                                        style="font-weight: bold;margin-left: 20px;color: #014178;">{{ orgBranch.country}}</span>
+                                </p><br>
+                                <p>CITY:<span
+                                        style="font-weight: bold;margin-left: 20px;color: #014178;">{{ orgBranch.city}}</span>
+                                </p><br>
+                            </div>
+                            <div class="col-md-4">
+                                <p>ADDRESS LINE 1:<span
+                                        style="font-weight: bold;margin-left: 20px;color: #014178;">{{ orgBranch.address1}}</span>
+                                </p><br>
+                                <p>STATE:<span
+                                        style="font-weight: bold;margin-left: 20px;color: #014178;">{{ orgBranch.state}}</span>
+                                </p><br>
+                                <p>OTHERS:<span
+                                        style="font-weight: bold;margin-left: 20px;color: #014178;">{{ orgBranch.others}}</span>
+                                </p><br>
+                            </div>
+                            <div class="col-md-4">
+                                <p>ADDRESS LINE 2:<span
+                                        style="font-weight: bold;margin-left: 20px;color: #014178;">{{ orgBranch.address2}}</span>
+                                </p><br>
+                                <p>ZIPCODE:<span
+                                        style="font-weight: bold;margin-left: 20px;color: #014178;">{{ orgBranch.zipCode}}</span>
+                                </p>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        PRODUCTS
+                    </mat-panel-title>
+
+                </mat-expansion-panel-header>
+
+                <p-table #productsTable [columns]="productsHeaders" [value]="vendorRegData?.vendorProduct"
+                    sortMode="multiple" [paginator]="true" [rows]="pageRecordSize" id="productsTable"
+                    [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}" exportFilename="products"
+                    [(selection)]="selectedData" [scrollable]="true">
+
+                    <ng-template pTemplate="caption">
+                        <div class="searchPanel">
+                            <input type="text" pInputText size="50" placeholder="Search.."
+                                (input)="productsTable.filterGlobal($event.target.value, 'contains')"
+                                style="width:auto; float: right;" />
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th style="width: 3em">
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th>
+                            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                {{col.header}}
+                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                            </th>
+
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                        <tr [pSelectableRow]="rowData">
+                            <td style="width: 3em">
+                                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                            </td>
+                            <td *ngFor="let col of columns">
+                                <span *ngIf="!col.isLink"> {{rowData[col.field]}}</span>
+                                <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);"
+                                        (click)="getRFQs(rowData)">
+                                        {{rowData[col.field]}} </a></span>
+                                        <span class="crud-icons actionIcons" *ngIf="rowData['fileName'] && rowData['file'] && col.fieldType">
+                                            <a
+                                                [href]="'data:application/octet-stream;base64,' + rowData['file'] | filePipe"
+                                                download="{{rowData['fileName']}}"><i class="fa fa-download"
+                                                    aria-hidden="true" data-toggle="tooltip"
+                                                    [title]="'Download '+ rowData['fileName']"></i></a>
+                                                </span>
+
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage" let-columns>
+                        <tr>
+                            <td [attr.colspan]="5" style="text-align:center;">
+                                No Records Found.
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="paginatorleft">
+                        <div  *ngIf="productsTable._totalRecords > 0">
+                            <b>Showing {{productsTable.first+1}} to {{productsTable.first+productsTable.rows > productsTable.totalRecords?productsTable.totalRecords: productsTable.first+productsTable.rows}} of {{productsTable.totalRecords}}</b>
+                            <!-- <app-page-info [totalRecords]="vendorRegData?.vendorProduct.length"
+                                [pageData]="paginatoryDetails">
+                            </app-page-info> -->
+                        </div>
+                    </ng-template>
+                </p-table>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        SERVICES
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <p-table #servicesTable [columns]="servicesHeaders" [value]="vendorRegData?.vendorService"
+                    sortMode="multiple" [paginator]="true" [rows]="pageRecordSize" id="servicesTable"
+                    [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}" exportFilename="services"
+                    [(selection)]="selectedData" [scrollable]="true">
+                    <ng-template pTemplate="caption">
+                        <div class="searchPanel">
+                            <input type="text" pInputText size="50" placeholder="Search.."
+                                (input)="servicesTable.filterGlobal($event.target.value, 'contains')"
+                                style="width:auto; float: right;" />
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th style="width: 3em">
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th>
+                            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                {{col.header}}
+                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                            </th>
+
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                        <tr [pSelectableRow]="rowData">
+                            <td style="width: 3em">
+                                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                            </td>
+                            <td *ngFor="let col of columns">
+                                <span *ngIf="!col.isLink"> {{rowData[col.field]}}</span>
+                                <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);"
+                                        (click)="getRFQs(rowData)">
+                                        {{rowData[col.field]}} </a></span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage" let-columns>
+                        <tr>
+                            <td [attr.colspan]="5" style="text-align:center;">
+                                No Records Found.
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="paginatorleft">
+                        <div  *ngIf="servicesTable._totalRecords > 0">
+                            <!-- <app-page-info [totalRecords]="vendorRegData?.vendorService.length"
+                                [pageData]="paginatoryDetails">
+                            </app-page-info> -->
+                            <b>Showing {{servicesTable.first+1}} to {{servicesTable.first+servicesTable.rows > servicesTable.totalRecords?servicesTable.totalRecords: servicesTable.first+servicesTable.rows}} of {{servicesTable.totalRecords}}</b>
+                        </div>
+                    </ng-template>
+                </p-table>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        CONTACTS
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <p-table #contactsTable [columns]="contactsHeaders" [value]="vendorRegData?.vendorContact"
+                    sortMode="multiple" [paginator]="true" [rows]="pageRecordSize" id="vendorContacts"
+                    [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}" exportFilename="vendorContacts"
+                    [(selection)]="selectedData" [scrollable]="true">
+                    <ng-template pTemplate="caption">
+                        <div class="searchPanel">
+                            <input type="text" pInputText size="50" placeholder="Search.."
+                                (input)="contactsTable.filterGlobal($event.target.value, 'contains')"
+                                style="width:auto; float: right;" />
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th style="width: 3em">
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th>
+                            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                {{col.header}}
+                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                            </th>
+
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                        <tr [pSelectableRow]="rowData">
+                            <td style="width: 3em">
+                                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                            </td>
+                            <td *ngFor="let col of columns">
+                                <span *ngIf="!col.isLink"> {{rowData[col.field]}}</span>
+                                <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);"
+                                        (click)="getRFQs(rowData)">
+                                        {{rowData[col.field]}} </a></span>
+
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage" let-columns>
+                        <tr>
+                            <td [attr.colspan]="5" style="text-align:center;">
+                                No Records Found.
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="paginatorleft">
+                        <div  *ngIf="contactsTable._totalRecords > 0">
+                            <!-- <app-page-info [totalRecords]="vendorRegData?.vendorContact.length"
+                                [pageData]="paginatoryDetails">
+                            </app-page-info> -->
+                            <b>Showing {{contactsTable.first+1}} to {{contactsTable.first+contactsTable.rows > contactsTable.totalRecords?contactsTable.totalRecords: contactsTable.first+contactsTable.rows}} of {{contactsTable.totalRecords}}</b>
+                        </div>
+                    </ng-template>
+                </p-table>
+
+            </mat-expansion-panel>
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        CLIENT REFERENCES
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <p-table #clientReferencesTable [columns]="clientRefHeaders" [value]="vendorRegData?.clientReference"
+                    sortMode="multiple" [paginator]="true" [rows]="pageRecordSize" id="clientReferences"
+                    [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}" exportFilename="clientReferences"
+                    [(selection)]="selectedData" [scrollable]="true">
+                    <ng-template pTemplate="caption">
+                        <div class="searchPanel">
+                            <input type="text" pInputText size="50" placeholder="Search.."
+                                (input)="clientReferencesTable.filterGlobal($event.target.value, 'contains')"
+                                style="width:auto; float: right;" />
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th style="width: 3em">
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th>
+                            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                {{col.header}}
+                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                            </th>
+
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                        <tr [pSelectableRow]="rowData">
+                            <td style="width: 3em">
+                                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                            </td>
+                            <td *ngFor="let col of columns">
+                                <span *ngIf="!col.isLink"> {{rowData[col.field]}}</span>
+                                <span *ngIf="col.isLink && col.field == 'file'" class="cellLinkCls">
+                                    <a *ngFor="let file of rowData[col.field]" href="javascript:void(0);"
+                                        (click)="downloadFile(file)">
+                                        {{file.fileName}}
+                                    </a>
+                                    <br />
+
+                                </span>
+
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage" let-columns>
+                        <tr>
+                            <td [attr.colspan]="5" style="text-align:center;">
+                                No Records Found.
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="paginatorleft">
+                        <div  *ngIf="clientReferencesTable._totalRecords > 0">
+                            <!-- <app-page-info [totalRecords]="vendorRegData?.clientReference.length"
+                                [pageData]="paginatoryDetails">
+                            </app-page-info> -->
+                            <b>Showing {{clientReferencesTable.first+1}} to {{clientReferencesTable.first+clientReferencesTable.rows > clientReferencesTable.totalRecords?clientReferencesTable.totalRecords: clientReferencesTable.first+clientReferencesTable.rows}} of {{clientReferencesTable.totalRecords}}</b>
+                        </div>
+                    </ng-template>
+                </p-table>
+
+
+            </mat-expansion-panel>
+
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Financial Details
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row" *ngFor="let orgBankDetails of vendorRegData?.orgBankDetails">
+                            <div class="col-md-4">
+                                <p>BANK NAME:<span
+                                        style="font-weight: bold;margin-left: 20px;color: #014178;">{{ orgBankDetails?.bankName}}</span>
+                                </p><br>
+                                <p>IFSC CODE:<span
+                                        style="font-weight: bold;margin-left: 20px;color: #014178;">{{ orgBankDetails?.ifscCode}}</span>
+                                </p><br>
+
+
+                            </div>
+                            <div class="col-md-4">
+                                <p>ACCOUNT_NUMBER:<span
+                                        style="font-weight: bold;margin-left: 20px;color: #014178;">{{ orgBankDetails?.accountNumber}}</span>
+                                </p><br>
+                                <p>PIN CODE:<span
+                                        style="font-weight: bold;margin-left: 20px;color: #014178;">{{ orgBankDetails?.pinCode}}</span>
+                                </p><br>
+                            </div>
+                            <div class="col-md-4">
+                                <p>BRANCH NAME:<span
+                                        style="font-weight: bold;margin-left: 20px;color: #014178;">{{ orgBankDetails?.branchName}}</span>
+                                </p><br>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </mat-expansion-panel>
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Certificates
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+
+                            <div class="col-md-12">
+                                <!-- <label for="text" style="background: #ced1d4;color: #00427a;padding: 6px;"
+                                    class="col-form-label">Uploaded Certificates:</label> -->
+                                <div >
+                                    <div class="files-list"
+                                        *ngFor="let file of vendorRegData?.certificates;let i=index">
+                                        <p style="margin-bottom: 0px;">{{ file?.fileName }}</p>
+
+                                            <img class="cursor-pointer"(click)="downloadAttachment(file)" src="/assets/images/new/download.svg" width="20" height="20" />
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </mat-expansion-panel>
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Documents
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+
+                            <div class="col-md-12">
+                                <!-- <label for="text" style="background: #ced1d4;color: #00427a;padding: 6px;"
+                                    class="col-form-label">Uploaded Documents:</label> -->
+                                <div>
+                                    <div class="files-list" *ngFor="let file of vendorRegData?.documents;let i=index">
+                                        <p style="margin-bottom: 0px;">{{ file?.fileName }}</p>
+
+                                            <img class="cursor-pointer"(click)="downloadAttachment(file)" src="/assets/images/new/download.svg" width="20" height="20" />
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </mat-expansion-panel>
+
+
+        </div>
+    </div>
+</div>
+<mat-dialog-actions align="end">
+    <button mat-raised-button color="warn"  mat-dialog-close>Cancel</button>
+</mat-dialog-actions>

@@ -1,0 +1,132 @@
+<div class="col-12 pad-nill">
+    <div class="table-title">
+        <div class="row">
+            <div class="col-sm-6">
+                <h2>Vendor Request</h2>
+                <p><span class="dot"></span>{{vendorReqData.length}} Total</p>
+            </div>
+            <div class="col-sm-6">
+            </div>
+        </div>
+    </div>
+    <p-table #venReq [columns]="vendorReqHeaders" [value]="vendorReqData" sortMode="multiple" [paginator]="true"
+        [rows]="pageRecordSize" id="quoteTable" [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}"
+        exportFilename="venRequest" [(selection)]="selectedData" [scrollable]="true"  [scrollHeight]="'calc(100vh - 214px)'">
+        <ng-template pTemplate="caption">
+            <div class="table-search">
+              <div class="row">
+                <div class="col-sm-6">
+                  <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                    (input)="venReq.filterGlobal($event.target.value, 'contains')" />
+                </div>
+                <div class="col-sm-6">
+
+                  <button *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_VR_PAGE.CREATE_REQ) != -1"
+                   (click)="createVendorReq()" type="button" class="btn btn-success btn-blue">Create</button>
+
+              <button *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_VR_PAGE.REQ_IN_PROGRESS) != -1"
+                 id="b_approvePR" (click)="inProgress()" class="btn btn-transparent btn-orange" type="button">In Progress</button>
+
+              <button *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_VR_PAGE.CLOSE_REQ) != -1"
+                  id="b_approvePR" (click)="closeReq()" class="btn btn-danger btn-red" type="button">Close Request</button>
+
+              <button *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_VR_PAGE.REQ_COMPLETED) != -1"
+                  id="b_approvePR" (click)="reqCompleted()"
+                  [disabled]="selectedData.length ? selectedData[0]?.procucevStatus?.uiDisplay != 'Inprogress' : false"
+                   type="button" class="btn btn-primary btn-green">Request Completed</button>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        <!-- <ng-template pTemplate="caption">
+            <div class="col-12 row pad-nill">
+                <div class="col-7 pad-nill">
+                    <h5 class="screen-head">Vendor Request</h5>
+                </div>
+                <div class="col-5 searchPanel pad-nill">
+                    <button style="float: left;margin-right:6px"
+                        *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_VR_PAGE.CREATE_REQ) != -1"
+                        mat-raised-button id="b_approvePR" (click)="createVendorReq()" color="primary" cdkFocusInitial
+                        type="button">Create</button>
+
+                    <button style="float: left;margin-right: 6px;"
+                        *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_VR_PAGE.REQ_IN_PROGRESS) != -1"
+                        mat-raised-button id="b_approvePR" (click)="inProgress()" color="accent" cdkFocusInitial
+                        type="button">In Progress</button>
+
+                    <button style="float: left;margin-right: 6px"
+                        *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_VR_PAGE.CLOSE_REQ) != -1"
+                        mat-raised-button id="b_approvePR" (click)="closeReq()" color="warn" cdkFocusInitial
+                        type="button">Close Request</button>
+
+                    <button style="float: left;margin-right: 6px;"
+                        *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_VR_PAGE.REQ_COMPLETED) != -1"
+                        mat-raised-button id="b_approvePR" (click)="reqCompleted()"
+                        [disabled]="selectedData.length ? selectedData[0]?.procucevStatus?.uiDisplay != 'Inprogress' : false"
+                        color="success" cdkFocusInitial type="button">Request Completed</button>
+
+                    <input type="text" pInputText size="50" placeholder="Search.."
+                        (input)="venReq.filterGlobal($event.target.value, 'contains')"
+                        style="width:auto; float: right;" />
+                </div>
+            </div>
+        </ng-template> -->
+
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th style="width: 3em">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns" [pSortableColumn]="col.field"
+                    [style.width]="col.field == 'id'? '270px': 'auto'">
+                    {{col.header}}
+                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+                <th>Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr [pSelectableRow]="rowData">
+                <td style="width: 3em">
+                    <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns" [style.width]="col.field == 'id'? '270px': 'auto'"   [ngClass]="{'table-cell-overflow-ellipse' : col.field == 'description' }">
+                    <span *ngIf="!col.isLink">
+                        <span *ngIf="col.field == 'procucevStatus'">{{rowData[col.field].uiDisplay}}</span>
+                        <span *ngIf="col.field != 'procucevStatus'">
+                            <span *ngIf="col.field != 'description'">{{rowData[col.field]}}</span>
+                            <span *ngIf="col.field == 'description'" [title]="rowData[col.field]">{{rowData[col.field]}}</span>
+                        </span>
+
+                    </span>
+                    <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);"> {{rowData[col.field]}}
+                        </a></span>
+
+                </td>
+                <td>
+                    <span class="crud-icons actionIcons">
+
+                        <button class="btn-skelton" (click)="view(rowData)">
+                            <img src="/assets/images/new/view-doc.png" title="View Details">
+                        </button>
+                    </span>
+                </td>
+
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+                <td [attr.colspan]="5" style="text-align:center;">
+                    No Records Found.
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorleft">
+
+            <div  *ngIf="venReq._totalRecords > 0">
+                <b>Showing {{venReq.first+1}} to {{venReq.first+venReq.rows > venReq.totalRecords?venReq.totalRecords: venReq.first+venReq.rows}} of {{venReq.totalRecords}}</b>
+                <!-- <app-page-info [totalRecords]="vendorReqData?.length" [pageData]="paginatoryDetails"></app-page-info> -->
+            </div>
+        </ng-template>
+    </p-table>
+</div>

@@ -1,0 +1,135 @@
+<div class="modal-header">
+  <button class="btn btn-warning modal-close-btn"  mat-dialog-close>✖</button>
+    <div class="col-6">
+      <h5>PPO Preview & Confirmation</h5>
+    </div>
+</div>
+<div class="modal-body" *ngIf="ppoData">
+    <div class="col-12 row marginTop20">
+      <div class="col-4 custom-heading-count">
+       <label for=""> PR Id :</label>
+       <span>
+        {{data  && data.isCapex  ?  data?.prData?.prId :  ppoData?.prData?.prId}}
+        </span>
+      </div>
+      <div class="col-4  custom-heading-count">
+        <label for=""> Total PPO Value :</label>
+         <span>{{sumOfExcludetaxamount}}</span>
+      </div>
+      <!-- <div class="col-2 custom-heading-count">
+        Total GST Value : <span>{{sumOfGstValue}}</span>
+      </div>
+      <div class="col-2 custom-heading-count">
+        Total PPO Value :  <span>{{ppoData.ppoValue}}</span>
+      </div> -->
+      <div class="col-4 custom-heading-count">
+       <label>Vendor Name :</label>
+       <span  >{{data && data.isCapex ?  ppoData?.ppoitems[0].vendorname : ppoData?.ppoitems[0].vendorName}}</span>
+      </div>
+    </div>
+<!-- <p>For Documetns Uploaded, UI is done, just integrate with services, below in commmits</p> -->
+<div class="col-12" style="margin-bottom: 10px;">
+
+  <p-table #prTable [columns]="ppoItemsTableHeaders" [value]="ppoItemsArray" [scrollable]="true" sortMode="multiple" [paginator]="true" [rows]="pageRecordSize"  id="prTable"
+  [rowsPerPageOptions]="pageOptions"  [style]="{width:'100%'}" exportFilename="roles details">
+  <ng-template pTemplate="caption">
+    <div class="table-search">
+      <div class="row">
+        <div class="col-sm-6">
+          <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+            (input)="prTable.crfqLineItemTable($event.target.value, 'contains')" />
+        </div>
+        <div class="col-sm-6"></div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+
+      <th *ngFor="let col of columns" [pSortableColumn]="col.field"   [ngStyle]="{'width': col.field == 'rfqId'? '100px': 'auto'}">
+        {{col.header}}
+        <p-sortIcon [field]="col.field"></p-sortIcon>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-columns="columns" let-rowData>
+    <tr [pSelectableRow]="rowData" >
+
+      <td *ngFor="let col of columns" [ngStyle]="{'width': col.field == 'rfqId'? '100px': 'auto'}">
+        <span *ngIf="!col.isLink"> {{rowData[col.field]}}</span>
+        <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);" > {{rowData[col.field]}} </a></span>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage" let-columns>
+    <tr>
+      <td [attr.colspan]="5" style="text-align:center;">
+        No Records Found.
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="paginatorleft">
+    <div  *ngIf="prTable._totalRecords > 0">
+      <b>Showing {{prTable.first+1}} to {{prTable.first+prTable.rows > prTable.totalRecords?prTable.totalRecords: prTable.first+prTable.rows}} of {{prTable.totalRecords}}</b>
+      <!-- <app-page-info [totalRecords]="ppoItemsArray.length" [pageData]="paginatoryDetails"></app-page-info> -->
+    </div>
+  </ng-template>
+</p-table>
+</div>
+<div class="col-sm-12">
+    <form name="f1">
+        <div class="col-md-12 row">
+          <div class="col-md-12 row">
+            <div class="col-md-6 addAddress" (click)="certificatesInput.click()" fileDragDrop (onFileDropped)="uploadFile($event)">
+                <input multiple hidden type="file" #certificatesInput (change)="uploadDocuments($event.target.files)">
+                <div>
+                    <img src="/assets/images/upload-cloud.svg"><br>
+                    <div class="uploadInfo">Click to Upload <br><span> PDF, XLS, MSW (max. 10MB/File)</span></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                    <ng-container *ngFor="let file of documentsArray;let i=index">
+                        <div class="col-12 uploadedFiles">
+                            <div class="col-8">
+                                <img src="/assets/images/file.svg">
+                                <span>{{ file?.fileName }}</span> <br>
+                                <!-- <span>{{ file?.name }}</span> -->
+                            </div>
+                            <div class="col-4">
+                                <i class="fa fa-trash" aria-hidden="true" (click)="deleteDocuments(i,'documentsArray')"></i>
+                            </div>
+                        </div>
+                    </ng-container>
+            </div>
+          </div>
+            <div class="col-6 form-group ">
+              <label>Payment Terms & Conditions</label>
+              <textarea class="form-control" name="payTerms" [(ngModel)]="paymentTerms">
+
+              </textarea>
+            </div>
+            <div class="col-6 form-group ">
+              <label>Delivery Terms & Conditions</label>
+              <textarea class="form-control" name="payTerms" [(ngModel)]="deliveryTerms">
+
+              </textarea>
+            </div>
+            <div class="col-12 form-group ">
+              <label>Other Terms & Conditions</label>
+              <textarea  class="form-control" name="otTerms"  [(ngModel)]="otherTerms">
+
+              </textarea>
+            </div>
+            <div class="col-12 form-group " *ngIf = "ppoData.displayMessageTextBox">
+              <label>Message:</label>
+              <textarea  class="form-control" name="otTerms" rows="1"  [(ngModel)]="message">
+              </textarea>
+            </div>
+            <div class="col-12" style="text-align: right; margin-top:30px">
+              <button type="button" class="btn btn-danger" mat-dialog-close (click)="closeDialog()">Cancel</button>
+              <button type="button" class="btn btn-success" (click)="createConfirmPPO()" >Confirm & Create PPO</button> &nbsp;&nbsp;&nbsp;
+            </div>
+        </div>
+    </form>
+</div>
+</div>

@@ -1,0 +1,18 @@
+<div class="row col-12">
+    <div class="table-title">
+        <div class="row">
+            <div class="col-sm-6">
+                <h2>GMT Summary</h2>
+                <p><span class="dot"></span>{{itemGridData?.gridValue.length}} Total</p>
+            </div>
+            <div class="col-sm-6">
+
+            </div>
+            <div class="col-12" *ngIf="isLoaded">
+                <app-cat-mgr-common-grid [gridData]="itemGridData"
+                    (onGridAction)="onGridAction($event)"></app-cat-mgr-common-grid>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+.description-class{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    // width: 180px;
+    max-width: 18ch;
+    white-space: nowrap;
+    display: block;
+}
+
+:host ::ng-deep .ui-table table {
+    width: auto;
+    min-width: 100%;
+    table-layout: fixed;
+} 
+ .table-cell-overflow-ellipse {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 220px;
+}

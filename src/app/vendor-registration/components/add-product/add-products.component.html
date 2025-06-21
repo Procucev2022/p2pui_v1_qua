@@ -1,0 +1,92 @@
+
+<div class="col-12">
+    <div class="row">
+      
+   <div class="col-12 page-title-pane">
+     <h5>Add Product</h5>
+   </div>
+   <div class="col-12 page-body-pane">
+     <div class="prqContainer row">
+       <div class="col-12">
+           
+        <form class="form-horizontal" name="form" (ngSubmit)="onAddProduct(addForm)" #addForm="ngForm" novalidate>
+            <div class="form-group">
+                <!-- <div class="form-group row">
+                    
+                  </div> -->
+
+                <div class="row">
+                    <label class="control-label col-sm-4" for="text">HSN Code:</label>
+                    <div class="col-sm-8">
+                        <!-- <input type="number" class="form-control" id="hsnCode" placeholder="Add HSN Code"
+                        name="hsnCode" [(ngModel)]="model.hsnCode" #hsnCode="ngModel"> -->
+                        <select class="form-control" id="hsnCode" placeholder="Add HSN Code"
+                        name="hsnCode" [(ngModel)]="model.hsnCode" #hsnCode="ngModel">
+                            <option [value]="undefined" selected>Select</option>
+                            <option *ngFor = "let opt of HSNCodes" [value]="opt">{{opt}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-sm-4" for="text">Product Name:</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="productName" placeholder="Add Product Name"
+                        name="productName" [(ngModel)]="model.productName" #productName="ngModel">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-sm-4" for="text">Description:</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="description" placeholder="Add Description"
+                        name="description" [(ngModel)]="model.description" #description="ngModel">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-sm-4" for="text">Others:</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="others" placeholder="Add others"
+                        name="others" [(ngModel)]="model.others" #others="ngModel">
+                    </div>
+                </div>
+            </div><br>
+            <!-- <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <div class="checkbox">
+                  <label><input type="checkbox"> Remember me</label>
+                </div>
+              </div>
+            </div> -->
+            <!-- <div class="form-group">
+                <div class="row">
+                    <div class=" col-sm-10" style="text-align: center;">
+                        <button type="submit" style="margin-right:5px ;" class="btn btn-primary">Submit</button>
+                        <button type="button" (click)="closeDialog()" class="btn btn-danger">Cancel</button>
+                    </div>
+                </div>
+            </div> -->
+
+            <mat-dialog-actions align="end">
+                <button type="button" mat-raised-button color="warn" (click)="addForm.reset()">Reset</button>
+                <button mat-raised-button color="primary"  cdkFocusInitial type="submit">Save</button>
+                <button mat-raised-button color="warn" (click)="closeDialog()" mat-dialog-close>Cancel</button>
+              </mat-dialog-actions>
+        </form>
+          
+        
+
+
+       </div>
+    </div>
+   </div>
+  </div>
+  </div>
+  

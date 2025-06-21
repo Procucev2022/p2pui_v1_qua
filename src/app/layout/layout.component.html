@@ -1,0 +1,1085 @@
+<app-header [sidebar]="collapedSideBar"></app-header>
+
+<app-sidebar *ngIf="userExists" (collapsedEvent)="receiveCollapsed($event)"></app-sidebar>
+
+<section class="main-container"
+    [ngClass]="{collapsed: collapedSideBar, 'main-container1': (roleName == 'ClientInitiator' || roleName=='Vendor' || roleName == 'PartialVendor' || roleName =='Registration')}">
+
+    <router-outlet></router-outlet>
+
+</section>
+<div class="footer-sec" *ngIf="currentView == 'GMT Basic' && (roleName == 'ClientInitiator' || roleName=='Vendor' || roleName == 'PartialVendor' || roleName =='Registration')">
+    <a (click)="onOpenTermsAndConditions()" style="cursor: pointer;" title="Click to View Privacy Policty & Terms of Services"> Powered by Procucev - Privacy
+        Policy & Terms of Service</a>
+</div>
+
+<!-- <div class="footer-layout-cls">
+    <app-footer></app-footer>
+</div> -->
+
+<!-- <div class="row grow w-100">
+    <div class="col-12 py-3">
+        <app-header  [sidebar]="collapedSideBar"></app-header>
+    </div>
+    <div class="col-2 py-3">
+        <app-sidebar *ngIf="userExists" (collapsedEvent)="receiveCollapsed($event)"></app-sidebar>
+    </div>
+    <div class="main col-10 h-100 py-3" [ngClass]="{collapsed: collapedSideBar}">
+        <router-outlet></router-outlet>
+    </div>
+</div> -->
+<div class="terms-conditios-cls">
+    <ng-template #otpTemplate>
+        <div class="modal-header">
+            <h5 >Privacy   Policy & Terms of Service</h5>
+            <button class="btn-skelton modal-close-btn" mat-dialog-close>✖</button>
+        </div>
+        <div class="modal-body" contentCopyBlockedByProcucev>
+            <div class="doc-page disable-text-selection"> <ng-container
+                    *ngTemplateOutlet="waterMarkTemplate"></ng-container>
+                <h3 style="text-align: center;margin-bottom: 20px;position: relative;"><b>Privacy Policy & Terms of Service</b>
+                    </h3>
+                <p>This Service Disclaimer Agreement ("Agreement") is made and
+                    entered by you (User) and Procucev. If
+                    you access, browse and/or choose to use any features of this
+                    platform, you are agreeing that you
+                    have read, understood, accepted, and are bound by all the
+                    terms and conditions (“Terms”) of these
+                    Terms of Service between you and Procucev. These Terms of
+                    Service reflect the way Procucev works,
+                    the laws that apply to our company, and certain things we’ve
+                    always believed to be true. As a
+                    result, these Terms of Service help define Procucev’s
+                    relationship with you as you interact with our
+                    service.
+                </p>
+                <p>
+                    WHEREAS, User desires to use the Services.
+                </p>
+                <p>
+                    NOW, THEREFORE, in consideration of the foregoing premises
+                    and the mutual covenants contained
+                    herein, the parties agree as follows:
+                </p>
+                <p>
+                    <b> Services</b>
+                    Company provides the Services on an "as is" and
+                    "as available" basis. Company does not warrant that
+                    the Services will be uninterrupted, error-free, or meet any
+                    particular requirements. Company
+                    reserves the right to modify or discontinue the Services, in
+                    whole or in part, at any time, with or
+                    without notice.
+
+                </p>
+                <p>
+                    <b>Definitions</b>
+                    Account: means an account created by a User to access and
+                    use the Platform.
+                </p>
+                <p>Buyer: means a User who submits Requests for Quote (RFQs)
+                    through the Platform.
+                </p>
+                <p> Content: means any information, data, text, software,
+                    graphics, sounds, photos, videos, or other
+                    materials uploaded, posted, or transmitted through the
+                    Platform.
+                    Intellectual Property Rights: means all patents, copyrights,
+                    trademarks, trade secrets, and other
+                    intellectual property rights.
+                </p>
+                <p> RFQ: means a Request for Quote submitted by a Buyer through
+                    the Platform, detailing their needs and
+                    specifications.
+                </p>
+                <p> Seller: means a User who responds to RFQs by submitting
+                    quotes through the Platform.
+                </p>
+                <p> Services: means the services provided through the Platform,
+                    including facilitating connections
+                    between Buyers and Sellers, and managing the quoting
+                    process.
+                </p>
+                <p> <b>User Accounts</b>
+                </p>
+                <p> To access certain features of the Platform, you may be
+                    required to create an Account. You are
+                    responsible for maintaining the confidentiality of your
+                    Account credentials and are fully
+                    responsible for all activities that occur under your
+                    Account. You agree to </p>
+            </div>
+            <div class="doc-page disable-text-selection"> <ng-container
+                    *ngTemplateOutlet="waterMarkTemplate"></ng-container>
+                <p>
+                    provide and maintain accurate, complete, and current information about yourself as prompted by the
+                    registration process. You may not use another User's Account without their express permission. We
+                    reserve the right to suspend or terminate your Account for any reason, including, but not limited
+                    to, your violation of these Terms.
+                </p>
+                <p>
+                    You must create an account in order to use some of the features offered on the Platform. Use of any
+                    personal information you provide to us during the account creation process is governed by our
+                    Privacy Policy. You must keep your password confidential and you are solely responsible for
+                    maintaining the confidentiality and security of your account, all changes and updates submitted
+                    through your account, and all activities that occur in connection with your account.
+                </p>
+                <p>
+                    A set of User ID and OTP (One Time Password) / password is unique to a single account created on the
+                    Platform. You shall be solely responsible for maintaining the confidentiality and security of your
+                    user ID and password and for all activities that occur under User's account. You agree that all
+                    activities that occur under your account (including without limitation, posting any company or
+                    product information, clicking to accept any Terms & Conditions or rules, subscribing to or making
+                    any payment for any services, sending emails using the Platform or other communications) will be
+                    deemed to have been authorized by you
+                </p>
+                <p>
+                    You may also be able to register to use the Platform by logging into your account with your
+                    credentials from certain third-party sites (e.g., Google). You confirm that you are the owner of any
+                    such account and that you are entitled to disclose your login information to us. You authorize us to
+                    collect your authentication information, and other information that may be available on or through
+                    your account consistent with your applicable settings and instructions.
+                </p>
+                <p>
+                    In creating an account, you represent to us that all information provided to us in such process is
+                    true, accurate and correct, and that you will update your information as and when necessary, in
+                    order to keep it accurate. If you are creating an account, then you represent to us that you are the
+                    owner or authorized agent of such business. You may not impersonate someone else, create or use an
+                    account for anyone other than yourself, provide an email address other than your own, create
+                    multiple accounts except as otherwise authorized by us, or provide or use false information that you
+                    are not legally entitled to claim. You acknowledge that any false claiming of a business may cause
+                    Procucev or third parties to incur substantial economic damages and losses for which you may be held
+                    liable and accountable.
+                </p>
+            </div>
+            <div class="doc-page disable-text-selection"> <ng-container
+                    *ngTemplateOutlet="waterMarkTemplate"></ng-container>
+                <p>You are also responsible for all activities that occur in your account. You agree to notify us
+                    immediately of any unauthorized use of your account in order to enable us to take necessary
+                    corrective action. You also agree that you will not allow any third party to use your GMT account
+                    for any purpose and that you will be liable for such unauthorized access. </p>
+                <p>By creating an account, you agree to receive certain communications in connection with Procucev
+                    Platform. For example, you might receive comments from other Users or other users may follow the
+                    activity to do on your account. You can opt-out or manage your preferences regarding non-essential
+                    communications through account settings.
+
+                </p>
+                <p>
+                    You agree to use the Services only for purposes that are permitted by (a) the Terms & Conditions and
+                    (b) any applicable law, regulation or generally accepted practices or guidelines in the relevant
+                    jurisdictions.</p>
+                <p>
+                    You agree to not to use the data owned by Procucev (as available on the Platform or through any
+                    other means like website, API etc.) for any commercial use unless agreed to by/with Procucev in
+                    writing.
+                    You agree not to access (or attempt to access) any of the services of the Platform by any means
+                    other than the interface that is provided by Procucev, unless you have been specifically allowed to
+                    do so, by way of a separate agreement with Procucev. You specifically agree not to access (or
+                    attempt to access) any part of the Platform through any automated means (including use of scripts or
+                    web crawlers).</p>
+                <p>
+                    You agree that you will not engage in any activity that interferes with or disrupts the Platform (or
+                    the servers and networks which are connected to the Platform). You shall not delete or revise any
+                    material or information posted by any other User(s), shall not engage in spamming, including but not
+                    limited to any form of emailing, posting or messaging that is unsolicited.</p>
+                <p>
+                    <b>Develop, improve, and update services:</b>
+                </p>
+                <p>
+                    We’re constantly developing new technologies and features to improve our services. For example, we
+                    use artificial intelligence and machine learning to provide you with simultaneous translations. As
+                    part of this continual improvement, we sometimes add or remove features and functionalities,
+                    increase or decrease limits to our services, and start offering new services or stop offering old
+                    ones. If we make material changes that negatively impact your use of our services or if we stop
+                    offering a service, we’ll provide you with reasonable advance notice, except in urgent situations
+                    such as preventing abuse, responding to legal requirements, or addressing security and operability
+                    issues.
+                </p>
+            </div>
+            <div class="doc-page disable-text-selection"> <ng-container
+                    *ngTemplateOutlet="waterMarkTemplate"></ng-container>
+                <p><b>Disclaimer of Warranties:</b></p>
+                <p>We make no warranties, express or implied, about the services, including the accuracy, completeness,
+                    reliability, or suitability of quotes provided by Suppliers. You are solely responsible for
+                    evaluating the qualifications, capabilities, and suitability of any Supplier you choose to work
+                    with. We offer no guarantees regarding pricing, payment terms, delivery timelines, or the quality of
+                    work performed by Suppliers.</p>
+                <p><b> Respect others:</b>
+                </p>
+                <p>
+                    We want to maintain a respectful environment for everyone, which means you must follow these basic
+                    rules of conduct: comply with applicable laws, including export control, sanctions, money
+                    laundering, and human trafficking laws respect the rights of others, including privacy and
+                    intellectual property rights don’t abuse or harm others or yourself (or threaten or encourage such
+                    abuse or harm) including against children — for example, by misleading, defrauding, illegally
+                    impersonating, defaming, bullying, harassing, or stalking others; hosting or publishing any obscene
+                    content; or inciting the violation of applicable laws don’t abuse, harm, interfere with, or disrupt
+                    the services — for example, by accessing or using them in fraudulent or deceptive ways, introducing
+                    malware, or spamming, hacking, or bypassing our systems or protective measures. When we index the
+                    web to bring you search results, we respect standard usage restrictions that website owners specify
+                    in their websites’ code, so we require the same when others use our services. Our service-specific
+                    additional terms and policies provide additional details about appropriate conduct that everyone
+                    using those services must follow. If you find that others aren’t following these rules, We will
+                    Taking action in case of problems section.
+                </p>
+                <p><b>
+                        Information GMT Collects Automatically from Your Use:</b></p>
+                <p>
+                    We collect information about the Services that you use and how you use them. GMT does this with your
+                    consent where required by applicable law. Certain information is collected automatically through
+                    your device, such as your: IP address; device identifier, Ad ID, browser type; operating system
+                    characteristics; information about your use of Services; and data regarding network connected
+                    hardware (e.g., computer or mobile device) (“Usage Information”). To the extent that Usage
+                    Information is Personal Information under applicable law or is combined with Personal Information,
+                    We will treat that information as Personal Information under this Privacy Policy.
+                <p><b>Electronic Communication</b>
+                    When you visit the Platform or send e-mails to us, you are communicating with us electronically. By
+                    communicating with us, you consent to receive communication from us electronically. We will
+                    communicate with you by e-mail or by posting notices on our Platform.
+                </p>
+            </div>
+            <div class="doc-page disable-text-selection"> <ng-container
+                    *ngTemplateOutlet="waterMarkTemplate"></ng-container>
+                <p> You agree that all agreements, notices, disclosures, and other communications that we provide to you
+                    electronically satisfy any legal requirement that such communication be in writing.
+                </p>
+                <p>
+                    <b> Data Sharing and Privacy:</b>
+                    To connect Buyers with suitable Suppliers, we may share anonymized Request for Quotations (RFQs)
+                    with relevant Sellers on the platform. We strive to maintain data security. However, you acknowledge
+                    that data transmission over the internet is inherently insecure, and we cannot guarantee the
+                    absolute security of any information transmitted through our services.
+                </p>
+                <p>
+                    <b> Personal Information Collected from Other Sources:</b>
+                    GMT may (with your consent, where required by applicable law) receive your Personal Information from
+                    other sources, such as public databases, joint marketing partners, and social media platforms, and
+                    combine that with information GMT collects about you. To the extent we combine such third-party
+                    sourced information with Personal Information collects directly from you, we will treat the combined
+                    information as Personal Information. Subject to applicable law, Procucev is not responsible for the
+                    accuracy of the information obtained from third parties or third-party practices.
+                </p>
+                <p>
+                    <b> How GMT uses information collected</b>
+                </p>
+                <p> To provide, maintain, protect and improve Procucev’s Services, develop new services, and protect
+                    Procucev and GMT’s users;
+                </p>
+                <p> To facilitate, manage, personalize, and improve your online experience;
+                </p>
+                <p> To respond to your inquiries and fulfill your requests, such as to send you newsletters and e-mails;
+                </p>
+                <p>
+                    For Procucev’s business purposes, such as data analysis, audits, fraud monitoring and prevention,
+                    enhancing, improving, or modifying Procucev’s Services, identifying usage trends, and operating and
+                    expanding Procucev’s business activities; and To send you advertisements and communicate with you
+                    about products, services, offers, promotions, rewards, and events Procucev believes may be of
+                    interest to you.
+                </p>
+                <p>
+                    With your consent (where required by applicable law), Procucev’s agents, Sellers, consultants,
+                    marketing service providers, and other service providers (collectively “Service Providers”) may
+                    receive, or be given access to your information, including Personal Information and Usage
+                    Information, in connection with their work on Procucev’s behalf. These Service Providers may be
+                    located in countries other than your country of residence.
+                </p>
+            </div>
+            <div class="doc-page disable-text-selection"> <ng-container
+                    *ngTemplateOutlet="waterMarkTemplate"></ng-container>
+                <p> These Service Providers are prohibited
+                    from using your Personal Information for any purpose other than to provide this assistance on
+                    Procucev’s behalf. Procucev may also (where required by applicable law) share information about you
+                    as follows:</p>
+                <p>
+                    A. As necessary, for the following purposes: (a) to comply with legal process; (b) to respond to
+                    requests from public and government authorities, including public and government authorities outside
+                    your country of residence to meet national security or law enforcement requirements; (c) to enforce
+                    Procucev’s terms and conditions; (d) to protect Procucev’s operations and protect Procucev’s rights,
+                    privacy, safety or property, and/or that of you or others; and (e) to allow Procucev to pursue
+                    available remedies or limit the damages that Procucev may sustain;</p>
+                <p>
+                    B. With Procucev’s affiliates for internal business purposes. For example, processing your orders,
+                    fulfilling your requests, providing Buyer service, and improving Procucev’s products and services to
+                    better serve you;</p>
+                <p>
+                    C. With Procucev’s subsidiaries, affiliates, business partners, and other third parties for their
+                    own business purposes. For example, improving their products and services; and</p>
+                <p>
+                    D. To a third party in connection with or during negotiations of any reorganization, merger, sale,
+                    joint venture, assignment, transfer or other disposition of all or any portion of Procucev’s
+                    business, assets or stock (including in connection with any bankruptcy or similar proceedings).</p>
+                <p>
+                    When Procucev engages Service Providers and when disclosure of Personal Information to such
+                    providers is necessary for the provision of such service, Procucev ensures that such providers will
+                    protect Personal Information in a manner consistent with this Privacy Policy and all applicable data
+                    privacy laws.
+                </p>
+                <p>
+
+                    Aggregated Information
+                    Without limiting the forgoing, in Procucev’s sole discretion, Procucev may share aggregated
+                    information which does not identify you or de-identified information about you with third parties or
+                    affiliates for any purpose.
+
+                </p>
+                <p>
+                    <b> User Content and Liability:</b>
+                    You are responsible for the accuracy and completeness of the information you submit through our
+                    services, including RFQs. You agree to hold us harmless from any and all claims, liabilities,
+                    damages, losses, and expenses arising from your use of the services, including but not limited to,
+                    reliance on quotes, transactions with Suppliers, or any disputes arising from such transactions. You
+                    retain all ownership rights to the Content you upload, submit, or display on the Platform. By
+                    submitting Content, you grant Procucev a non-exclusive, royalty-free, worldwide license to use,
+                    reproduce, modify,
+
+                </p>
+            </div>
+            <div class="doc-page disable-text-selection"> <ng-container
+                    *ngTemplateOutlet="waterMarkTemplate"></ng-container>
+                <p>publish, and distribute such Content solely for the purpose of providing and operating the Platform.
+                    You are solely responsible for the accuracy, completeness, legality, and reliability of all Content
+                    you submit. You agree not to submit Content that is unlawful, harmful, threatening, abusive,
+                    harassing, defamatory, obscene, or racially or ethnically offensive.</p>
+                <p>
+                    <b> DATA SECURITY</b>
+                </p>
+                <p>
+                    Procucev seeks to use reasonable technical and organizational security measures to help protect your
+                    Personal Information from loss, theft, misuse and unauthorized access, disclosure, alteration, or
+                    destruction. In addition, Procucev will not keep your Personal Information for longer than necessary
+                    for the purposes set out in this Privacy Policy. Unfortunately, no data transmission or storage
+                    system is completely secure, and Procucev cannot guarantee the security of your information
+                    collected through Procucev’s Services. </p>
+                <p><b>
+                        Service-related communications:</b></p>
+                <p>
+                    To provide you with our services, we sometimes send you service announcements and other information.
+                    If you choose to give us feedback, such as suggestions to improve our services, we may act on your
+                    feedback without obligation to you.</p>
+                <p><b>
+                        Permission to use your content:</b></p>
+                <p>
+                    Some of our services are designed to let you upload, submit, store, send, receive, or share your
+                    content. You have no obligation to provide any content to our services and you’re free to choose the
+                    content that you want to provide. If you choose to upload or share content, please make sure you
+                    have the necessary rights to do so and that the content is lawful. Our services include software
+                    that’s offered under open-source license terms that we make available to you. Sometimes there are
+                    provisions in the open-source license that explicitly override parts of these terms,so please be
+                    sure to read those licenses. You may not copy, modify, distribute, sell, or lease any part of our
+                    services or software. </p>
+                <p><b>
+                        Limitation of Liability</b></p>
+                <p>
+                    We will not be held liable for any damages arising out of or related to the use of our services,
+                    including, but not limited to, inaccurate quotes, failed negotiations, payment issues, delayed
+                    deliveries, or unsatisfactory work quality.</p>
+                <p><b>
+                        User Conduct</b></p>
+                <p>
+                    User agrees to use the Services in accordance with all applicable laws and regulations. User shall
+                    not use the Services for any illegal or unauthorized purpose.
+                </p>
+
+            </div>
+            <div class="doc-page disable-text-selection"> <ng-container
+                    *ngTemplateOutlet="waterMarkTemplate"></ng-container>
+                <p><b>Payment Responsibilities:</b>
+                    We are not responsible for facilitating or guaranteeing payment between you and the enterprise.
+                    Payment terms are solely between you and the enterprise.
+
+                </p>
+                <p>
+                    <b> Client Relationship:</b>
+                    We are not a party to any contract or agreement formed between you and the enterprise. Procucev is
+                    neither involved in nor is it a party to any transaction between any parties who use the Service.
+                    Procucev’s principal role is merely to connect Buyers with suppliers in the Network using
+                    information provided by Buyers, You and other suppliers. Procucev does not control and has no
+                    responsibility for the behavior of or the information provided by Buyers, You and other suppliers.
+                    You agree and acknowledge that Procucev has no control over its Buyer’s decision to conduct or
+                    complete a transaction with You or share Your information with a third party through the Service.
+                    Accordingly, You shall defend, indemnify and hold Procucev harmless against any expense, liability,
+                    loss, damage or costs (including reasonable attorneys’ fees) incurred in connection with claims,
+                    demands, suits, or proceedings ("Claims") made or brought against Procucev by a third party arising
+                    from or relating to (i) a dispute between You and Your Buyers arising from Your use of the Service
+                    to exchange information or conduct business with such Buyer; (ii) Your Information; (iii) Your
+                    violation or breach of these Terms of Use; and/or (iv) Your use of any products available on the
+                    Early Payment Platform. Your indemnity obligations are subject to the following: (x) Procucev shall
+                    promptly notify You of any Claims; (y) You shall have sole control of the defense and all related
+                    settlement negotiations with respect to any Claims (provided that You may not settle any Claim that
+                    requires Procucev to admit any civil or criminal liability or incur any financial obligation without
+                    Procucev’s prior written consent, which consent shall not be unreasonably withheld); and (z)
+                    Procucev shall reasonably cooperate to the extent necessary at Your cost in such defense and
+                    settlement.
+
+                </p>
+                <p>
+                    <b> Use of Platform and Services</b>
+                    All commercial/contractual terms with respect to the products and services are offered by and agreed
+                    to between the Buyers and Sellers alone. The commercial/contractual terms include without limitation
+                    price, taxes, shipping costs, payment methods, payment terms, date, period and mode of delivery,
+                    warranties related to products and services and after sales services related to products and
+                    services. Procucev is just a facilitator or a marketplace and does not have any control or does not
+                    determine or in any way involve itself in the offering or acceptance of such commercial/contractual
+                    terms between the Buyers and the Sellers.
+                </p>
+                <p>
+                    Procucev may, however, offer support services to the Sellers with respect to technology for the
+                    Platform, payment gateway integration, online promotions, and other services, pursuant to the
+                    contracts executed by it with the Sellers.</p>
+                <p>
+                <p>
+                    Procucev shall not be responsible for managing the Buyer service, however, it shall only provide for
+                    the direct contact details and/or Buyer service details of the Sellers on the Platform. </p>
+
+            </div>
+            <div class="doc-page disable-text-selection ">
+                <p>However, in
+                    case of contingency where the Buyer is unable to reach out to the Seller that Procucev shall provide
+                    for such emergency Buyer service through its our medium like email or phone call to bridge the gap
+                    between the Buyer and the Seller during its official working hours.</p>
+                <p>
+                    You are advised to independently verify the bona fides of any Seller that you choose to deal with on
+                    the Platform and use your best judgment in that behalf. All Seller offers and third-party offers are
+                    subject to respective party terms and conditions. Procucev takes no responsibility for such offers.
+                </p>
+                <p>
+                    Procucev neither makes any representation or warranty as to specifics (such as quality, value etc.)
+                    of the products or services proposed to be sold or offered to be sold or purchased on the Platform
+                    nor does implicitly or explicitly support or endorse the sale or purchase of any products or
+                    services on the Platform. Procucev accepts no liability for any errors or omissions, whether on
+                    behalf of itself or third parties.
+
+                </p>
+                <p>
+                    Procucev is not responsible for any non-performance or breach of any contract entered into between
+                    Buyers and Sellers on the Platform. Procucev cannot and does not guarantee that the concerned Buyers
+                    and/or Sellers will perform any transaction concluded on the Platform. Procucev is not responsible
+                    for unsatisfactory or non-performance of services or damages or delays as a result of products which
+                    are out of stock, unavailable or back ordered.
+                </p>
+                <p>
+                    Procucev is operating an online marketplace and assumes the role of facilitator and does not at any
+                    point of time during any transaction between the Buyer and the Seller on the Platform come into or
+                    take possession of any of the products or services offered by the Seller. At no time shall Procucev
+                    hold any right, title or interest over the products nor shall Procucev have any obligations or
+                    liabilities in respect of such contract entered into between the Buyer and the Seller. </p>
+                <p>
+                    Procucev is only providing a platform for communication and it is agreed that the contract for sale
+                    of any of the products or services shall be a strictly bipartite contract between the Buyer and the
+                    Seller. The Seller shall be solely liable for redressing the Buyer complaints. In the event you
+                    raise any complaint on any Seller accessed using our Platform, we shall assist you to the best of
+                    our abilities by providing relevant information to you, such as details of the Seller and the
+                    specific order to which the complaint relates, to enable satisfactory resolution of the complaint.
+                    Please note that there could be risks in dealing with underage persons or people acting under false
+                    pretense. </p>
+                <p>You agree not to use any device, software or routine to interfere or attempt to interfere with </p>
+            </div>
+            <div class="doc-page disable-text-selection ">
+
+                <p>the proper working of the Platform or any transaction being conducted on the Platform, or with any
+                    other person's use of the Platform. </p>
+                <p>
+                    You may not forge headers or otherwise manipulate identifiers in order to disguise the origin of any
+                    message or transmittal you send to us on or through the Platform or any service offered on or
+                    through the Platform. You may not pretend that you are, or that you represent, someone else, or
+                    impersonate any other individual or entity.
+                    You may not use the Platform or any content on the Platform for any purpose that is unlawful or
+                    prohibited by these Terms & Conditions, or to solicit the performance of any illegal activity or
+                    other activity that infringes the rights of Procucev and/or others.</p>
+                <p>
+                    You shall at all times ensure full compliance with the applicable provisions, as amended from time
+                    to time, of (a) the Information Technology Act, 2000 and the rules thereunder; (b) all applicable
+                    domestic laws, rules and regulations (including the provisions of any applicable exchange control
+                    laws or regulations in force); and (c)
+                </p>
+                <p>
+                    international laws, foreign exchange laws, statutes, ordinances and regulations (including, but not
+                    limited to sales tax/VAT, income tax, octroi, service tax, central excise, custom duty, local
+                    levies) regarding your use of our service and your listing, purchase, solicitation of offers to
+                    purchase, and sale of products or services. You shall not engage in any transaction in an item or
+                    service, which is prohibited by the provisions of any applicable law including exchange control laws
+                    or regulations for the time being in force. </p>
+                <p>
+
+                    In order to allow us to use the information supplied by you, without violating your rights or any
+                    laws, you agree to grant us a non-exclusive, worldwide, perpetual, irrevocable, royalty-free,
+                    sub-licensable (through multiple tiers) right to exercise the copyright, publicity, database rights
+                    or any other rights you have in your information, in any media now known or not currently known,
+                    with respect to your information. We will only use your information in accordance with these Terms &
+                    Conditions and Privacy Policy applicable to use of the Platform. </p>
+                <p>
+
+                    From time to time, you shall be responsible for providing information relating to the products or
+                    services proposed to be sold by you. In this connection, you undertake that all such information
+                    shall be accurate in all respects. You shall not exaggerate or overemphasize the attributes of such
+                    products or services so as to mislead other users in any manner.
+
+                </p>
+                <p> We reserve the right, but has no obligation, to monitor the materials posted on the Platform.
+                    Procucev shall have the right to remove or edit any content that in its sole discretion violates, or
+                    is alleged to violate, any applicable law or either the spirit or letter of these Terms &
+                    Conditions.</p>
+            </div>
+            <div class="doc-page disable-text-selection ">
+
+                <p>
+                    Notwithstanding this right, YOU REMAIN SOLELY RESPONSIBLE FOR THE CONTENT OF THE
+                    MATERIALS YOU POST ON THE PLATFORM AND IN YOUR PRIVATE MESSAGES. Please be advised that such content
+                    posted does not necessarily reflect Procucev views. In no event shall Procucev assume or have any
+                    responsibility or liability for any content posted or for any claims, damages or losses resulting
+                    from use of content and/or appearance of content on the Platform. You hereby represent and warrant
+                    that you have all necessary rights in and to all content which you provide and all information it
+                    contains and that such content shall not infringe any proprietary or other rights of third parties
+                    or contain any libellous, tortious, or otherwise unlawful information.
+                </p>
+                <p>
+                    Your correspondence or business dealings with, or participation in promotions of, advertisers found
+                    on or through the Platform, including payment and delivery of related products or services, and any
+                    other terms, conditions, warranties or representations associated with such dealings, are solely
+                    between you and such advertiser. We shall not be responsible or liable for any loss or damage of any
+                    sort incurred as the result of any such dealings or as the result of the presence of such
+                    advertisers on the Platform. </p>
+                <p>
+                    It is possible that other users (including unauthorized users or '˜hackers') may post or transmit
+                    offensive or obscene materials on the Platform and that you may be involuntarily exposed to such
+                    offensive and obscene materials. It also is possible for others to obtain personal information about
+                    you due to your use of the Platform, and that the recipient may use such information to harass or
+                    injure you. We do not approve of such unauthorized uses, but by using the Platform, you acknowledge
+                    and agree that we are not responsible for the use of any personal information that you publicly
+                    disclose or share with others on the Platform. Please carefully select the type of information that
+                    you publicly disclose or share with others on the Platform. </p>
+                <p>
+                    Procucev shall have all the rights to take necessary action and claim damages that may occur due to
+                    your involvement/participation in any way on your own or through group/s of people, intentionally or
+                    unintentionally in DoS/DDoS (Distributed Denial of Services), hacking, pen testing attempts without
+                    our prior consent or a mutual legal agreement.
+
+                </p>
+                <p>Procucev's failure to enforce any right or failure to act with respect to any breach by User under
+                    the Terms & Conditions will not constitute a waiver of that right nor a waiver of Procucev's right
+                    to act with respect to subsequent or similar breaches.</p>
+                <p>Procucev shall have the right to assign the Terms & Conditions (including all of our rights, titles,
+                    benefits, interests, and obligations and duties in the Terms & Conditions to any person or entity
+                    (including any affiliates of Procucev). User may not assign, in whole or part, the Terms &
+                    Conditions to any person or entity.</p>
+            </div>
+            <div class="doc-page disable-text-selection ">
+
+                <p>The Terms & Conditions shall be governed by the laws of India and the parties to the Terms &
+                    Conditions agree to submit to the exclusive jurisdiction of the courts of New Delhi, India.
+                </p>
+                <p>
+                    <b> Licenses: </b>
+                </p>
+                <p>
+                    Procucev grants to you limited, revocable, non-transferable, non-sub-licensable and non-exclusive
+                    license to use the Platform on payment of fees (as per the agreement signed between you and
+                    Procucev), pursuant to which you are allowed to access the Platform for the sale and purchase of
+                    goods.</p>
+                <p>
+                    You shall at all times during the period of use of the platform avail the services only from
+                    Procucev and such use of the services shall be as per the terms and conditions set out in the
+                    License Agreement signed by you.</p>
+                <p>
+                    The software extensions made available through the Procucev are licensed, not sold, to you. The
+                    extensions have been developed, and are licensed to you, by Procucev.</p>
+                <p>
+                    Your license to each Procucev's extension is subject to the License Agreement entered into between
+                    you and Procucev. Procucev reserves all rights in and to the extension not expressly granted to you.
+                    You acknowledge that you are acquiring the license to each third-party extension from Procucev.</p>
+                <p>
+                    License Restrictions. You may not make copies, translations, or modifications of or to the Platform.
+                    You may not alter, obscure, or remove the copyright notice on any copy of the Platform. You may not
+                    assign, sell, distribute, lease, rent, sublicense, or transfer the Platform, nor may you use the
+                    Platform in a manner that disrupts the operation of any associated services or otherwise in a manner
+                    that was intended (for example, by engaging in any unlawful activity through the Platform).</p>
+                <p>
+                    You are responsible for properly configuring and using the Platform and taking your own steps to
+                    maintain appropriate security, protection and backup of your content, which may include the use of
+                    encryption technology to protect your content from unauthorized access and routine archiving of your
+                    content.</p>
+                <p>
+                    We may use your content in a number of different ways, including publicly displaying it,
+                    reformatting it, incorporating it into advertisements and other works, creating derivative works
+                    from it, promoting it, and distributing it. As such, you hereby grant us the following licenses:</p>
+                <p>
+                    a non-exclusive, worldwide, perpetual, irrevocable, fully paid-up, royalty-free license, with the
+                    right to sublicense through multiple levels of sublicenses, under your intellectual
+
+                </p>
+            </div>
+            <div class="doc-page disable-text-selection ">
+                <p>
+                    property rights, to make, use, have made, sell, offer to sell, copy, reproduce, distribute, publicly
+                    perform, publicly display, digitally transmit, modify, create derivative works of, import, and
+                    otherwise exploit, any suggestions or feedback you provide to us that result in modifications,
+                    improvements or enhancements to the Platform.</p>
+                <p>
+                    a royalty-free, worldwide, transferable, sublicensable, irrevocable, perpetual license to use or
+                    incorporate into the Platform any suggestions, enhancement requests, recommendations or other
+                    feedback provided by you relating to the operation of the Platform.
+                </p>
+                <p>
+                    <b> Commission Disqualification:</b>
+                    Offering commissions or incentives to us or our representatives in exchange for increased visibility
+                    or preferential treatment on the platform will result in your disqualification
+                </p>
+                <p> <b>
+                        Cookies:</b>
+                    If you use our Service or leave a comment on our site you may opt-in to saving your name, email
+                    address and website in cookies. These are for your convenience so that you do not have to fill in
+                    your details again when you leave another comment. These cookies will last for one year. If you
+                    visit our login page, we will set a temporary cookie to determine if your browser accepts cookies.
+                    This cookie contains no personal data and is discarded when you close your browser. When you log in,
+                    we will also set up several cookies to save your login information and your screen display choices.
+                    Login cookies last for two days, and screen options cookies last for a year. If you select “Remember
+                    Me”, your login will persist for two weeks. If you log out of your account, the login cookies will
+                    be removed. </p>
+                <p> <b>
+                        Integration Service Use:</b>
+                    We leverage third-parties as part of our Services. You have already established a connection with
+                    these third-parties and as such, their Privacy Policy applies. These include Google Analytics,
+                    Google Search Console. We will use this information to gather statistics and other information to
+                    utilize the features of our Service. We obtain this information through the use of API’s, data
+                    connections between our Service and third-party providers. We do not control, and are not
+                    responsible for, other uses of your personal information by third-party data providers.
+                </p>
+                <p>
+                </p>
+                <p><b>
+                        General Terms of use of the platform: </b> </p>
+                <p>
+                    You agree, undertake and confirm that your use of Platform shall be strictly governed by the
+                    following binding principles: </p>
+                <p>
+                    You shall not host, display, upload, download, modify, publish, transmit, update or share any
+                    information which:
+                    belongs to another person and which you do not have any right to; </p>
+                <p>
+                    is grossly harmful, harassing, blasphemous, defamatory, obscene, pornographic, pedophilic, libelous,
+                    slanderous, criminally inciting or invasive of another's privacy, hateful, or racially, ethnically
+                    objectionable, disparaging, relating or encouraging
+                </p>
+            </div>
+            <div class="doc-page disable-text-selection ">
+                <p>money laundering or gambling, or otherwise unlawful in any manner whatsoever; or unlawfully
+                    threatening or unlawfully harassing including but not limited to 'indecent representation of women'
+                    within the meaning of the Indecent Representation of Women (Prohibition) Act, 1986;
+                </p>
+                <p>
+                    is misleading or misrepresentative in any way;</p>
+                <p>
+                    is patently offensive to the online community, such as sexually explicit content, or content that
+                    promotes obscenity, pedophilia, racism, bigotry, hatred or physical harm of any kind against any
+                    group or individual;</p>
+                <p>
+                    harasses or advocates harassment of another person;</p>
+                <p>
+                    involves the transmission of 'junk mail', 'chain letters', or unsolicited mass mailing or
+                    'spamming';</p>
+                <p>
+                    promotes illegal activities or conduct that is abusive, threatening, obscene, defamatory or
+                    libelous;</p>
+                <p>
+                    infringes upon or violates any third party's rights, including, but not limited to, intellectual
+                    property rights, rights of privacy (including without limitation unauthorized disclosure of a
+                    person's name, email address, physical address or phone number) or rights of publicity;</p>
+                <p>
+                    infringes upon or violates any third party's rights, including, but not limited to, intellectual
+                    property rights, rights of privacy (including without limitation unauthorized disclosure of a
+                    person's name, email address, physical address or phone number) or rights of publicity;</p>
+                <p>
+                    promotes an illegal or unauthorized copy of another person's copyrighted work, such as providing
+                    pirated computer programs or links to them, providing information to circumvent
+                    manufacture-installed copy-protect devices, or providing pirated music or links to pirated music
+                    files;</p>
+                <p>
+                    contains restricted or password-only access pages, or hidden pages or images (those not linked to or
+                    from another accessible page);</p>
+                <p>
+                    provides material that exploits people in a sexual, violent or otherwise inappropriate manner or
+                    solicits personal information from anyone;</p>
+                <p>
+                    provides instructional information about illegal activities such as making or buying illegal
+                    weapons, violating someone's privacy, or providing or creating computer viruses;
+                    contains video, photographs, or images of another person (with a minor or an adult);
+                    tries to gain
+                </p>
+            </div>
+            <div class="doc-page disable-text-selection ">
+                <p>unauthorized access or exceeds the scope of authorized access to the Platform or to
+                    profiles, blogs, communities, account information, bulletins, friend request, or other areas of the
+                    Platform or solicits passwords or personal identifying information for commercial or unlawful
+                    purposes from other users;</p>
+                <p>
+                    engages in commercial activities and/or sales without our prior written consent such as contests,
+                    sweepstakes, barter, advertising and pyramid schemes, or the buying or selling of products related
+                    to the Platform. Throughout these Terms & Conditions, Procucev's prior written consent means a
+                    communication coming from Procucev's Legal Department, specifically in response to your request, and
+                    expressly addressing and allowing the activity or conduct for which you seek authorization;</p>
+                <p>
+                    solicits gambling or engages in any gambling activity which is or could be construed as being
+                    illegal;</p>
+                <p>
+                    interferes with another user's use and enjoyment of the Platform or any third party's user and
+                    enjoyment of similar services;</p>
+                <p>
+                    refers to any website or URL that, in our sole discretion, contains material that is inappropriate
+                    for the Platform or any other website, contains content that would be prohibited or violates the
+                    letter or spirit of these Terms & Conditions;
+                    harm minors in any way;</p>
+                <p>
+                    infringes any patent, trademark, copyright or other intellectual property rights or third party's
+                    trade secrets or rights of publicity or privacy or shall not be fraudulent or involve the sale of
+                    counterfeit or stolen products;</p>
+                <p>
+                    violates any law for the time being in force;</p>
+                <p>
+                    deceives or misleads the addressee/users about the origin of such messages or communicates any
+                    information which is grossly offensive or menacing in nature;</p>
+                <p>
+                    impersonate another person;</p>
+                <p>
+                    contains software viruses or any other computer code, files or programs designed to interrupt,
+                    destroy or limit the functionality of any computer resource; or contains any trojan horses, worms,
+                    time bombs, cancelbots, easter eggs or other computer programming routines that may damage,
+                    detrimentally interfere with, diminish value of, surreptitiously intercept or expropriate any
+                    system, data or personal information;</p>
+                <p>
+                    threatens the unity, integrity, defense, security or sovereignty of India, friendly relations with
+                    foreign states, or public order or causes incitement to the commission of any criminal
+
+                </p>
+            </div>
+            <div class="doc-page disable-text-selection"> <ng-container
+                    *ngTemplateOutlet="waterMarkTemplate"></ng-container>
+                <p>
+                    offence or prevents investigation of any offence or is insulting any other nation;
+                    is false, inaccurate or misleading;</p>
+                <p>
+                    directly or indirectly, offers, attempts to offer, trades or attempts to trade in any item, the
+                    dealing of which is prohibited or restricted in any manner under the provisions of any applicable
+                    law, rule, regulation or guideline for the time being in force; or
+                    creates liability for us or causes us to lose (in whole or in part) the services of our internet
+                    service provider or other suppliers.
+                </p>
+                <p><b>
+                        Third-Party Services </b> </p>
+                <p>
+                    The Platform may integrate with or contain links to third-party websites or services. Procucev is
+                    not responsible for the content or privacy practices of any third-party websites or services. We
+                    recommend that you review the terms and conditions and privacy policies of any third-party websites
+                    or services you access through the Platform. </p>
+                <p><b>
+                        Intellectual Property</b> </p>
+                <p>
+                    The GMT platform and all its content, including but not limited to text, graphics, logos, icons,
+                    images, and software, are the property of us or our licensors and are protected by copyright,
+                    trademark, and other intellectual property laws. You agree not to remove, alter, or obscure any
+                    copyright notices or other proprietary notices placed on the GMT platform. </p>
+                <p> <b>
+                        Liabilities </b> </p>
+                <p>
+                    For all users Both the law and these terms try to strike a balance as to what you or GMT can claim
+                    from the other in case of problems. That’s why the law allows us to limit certain liabilities — but
+                    not others — under these terms. </p>
+                <p>
+                    These terms only limit our responsibilities as allowed by applicable law. These terms don’t limit
+                    liability for fraud, fraudulent misrepresentation, or death or personal injury caused by negligence
+                    or willful misconduct.
+                    If you’re a business user or organization, To the extent allowed by applicable law, you’ll indemnify
+                    directors, officers, employees, and contractors for any third-party legal proceedings (including
+                    actions by government authorities) arising out of or relating to your unlawful use of the services
+                    or violation of these terms or service specific additional terms. This indemnity covers any
+                    liability or expense arising from claims, losses, damages, judgments, fines, litigation costs, and
+                    legal fees. </p>
+                <p>
+                    If you’re legally exempt from certain responsibilities, including indemnification, then those
+                    responsibilities don’t apply to you under these terms. For example, the United Nations enjoys
+                    certain
+                    immunities from legal obligations and these terms don’t override those immunities.
+                    We won’t be responsible for the following liabilities:
+
+                </p>
+            </div>
+            <div class="doc-page disable-text-selection"> <ng-container
+                    *ngTemplateOutlet="waterMarkTemplate"></ng-container>
+                <p>loss of profits, revenues, business opportunities, goodwill, or anticipated savings, indirect or
+                    consequential loss.
+                </p>
+                <p>
+                    You shall not use any 'deep-link', 'page-scrape', 'robot', 'spider' or other automatic device,
+                    program, algorithm or methodology, or any similar or equivalent manual process, to access, acquire,
+                    copy or monitor any portion of the Platform or any content, or in any way reproduce or circumvent
+                    the navigational structure or presentation of the Platform or any content, to obtain or attempt to
+                    obtain any materials, documents or information through any means not purposely made available
+                    through the Platform. We reserve our right to prohibit any such activity. </p>
+                <p>
+                    You shall not attempt to gain unauthorized access to any portion or feature of the Platform, or any
+                    other systems or networks connected to the Platform or to any server, computer, network, or to any
+                    of the services offered on or through the Platform, by hacking, 'password mining' or any other
+                    illegitimate means. </p>
+                <p>
+                    You shall not probe, scan or test the vulnerability of the Platform or any network connected to the
+                    Platform nor breach the security or authentication measures on the Platform or any network connected
+                    to the Platform. You may not reverse look-up, trace or seek to trace any information on any other
+                    user of or visitor to Platform, or any other Buyer, including any account on the Platform not owned
+                    by you, to its source, or exploit the Platform or any service or information made available or
+                    offered by or through the Platform, in any way where the purpose is to reveal any information,
+                    including but not limited to personal identification or information, other than your own
+                    information, as provided for by the Platform. </p>
+                <p>
+                    You shall not make any negative, denigrating or defamatory statement(s) or comment(s) about us or
+                    the brand name or domain name used by us including the name ' Procucev' and 'GMT, or otherwise
+                    engage in any conduct or action that might tarnish the image or reputation, of Procucev or the
+                    Seller on platform or otherwise tarnish or dilute any Procucev's trade or service marks, trade name
+                    and/or goodwill associated with such trade or service marks, as may be owned or used by us. You
+                    agree that you will not take any action that imposes an unreasonable or disproportionately large
+                    load on the infrastructure of the Platform or Procucev's systems or networks, or any systems or
+                    networks connected to Procucev. </p>
+                <p>
+                    <b> Financial Terms: </b>
+                </p>
+                <p>
+                    All payments for use and license of the Platform must be received by us prior to using the Platform
+                    for sale or purchase of goods. We accept payment by net-banking, credit card, debit card, cash card
+                    and mobile payments.
+
+                </p>
+            </div>
+            <div class="doc-page disable-text-selection"> <ng-container
+                    *ngTemplateOutlet="waterMarkTemplate"></ng-container>
+                <p>
+                    The Platform allows you to place and receive orders for sale or purchase of goods, subject to the
+                    Terms & Conditions set out herein. Procucev neither represents the Buyer nor the Seller in the
+                    specific transactions between them.</p>
+                <p>
+                    Procucev does not own, sell, resell on its own and/or does not control the Seller or the related
+                    services provided in connection thereof. You understand that any order that you place shall be
+                    subject to the Terms & Conditions including, but not limited to, product availability.</p>
+                <p>
+                    Procucev is not liable responsible for quality, safety, lawfulness or availability of the products
+                    or services offered for on the Platform or the ability of the Sellers to complete a sale or the
+                    ability of Buyers to complete a purchase.</p>
+                <p>
+                    The final tax bill and/or Invoice will be issued by the Seller to the Buyer along with the order and
+                    Procucev shall have no role to play in this transaction, other than the role of the facilitator or a
+                    marketplace. All applicable taxes and levies, the rates thereof and the manner of applicability of
+                    such taxes on the bill are being charged and determined by the Seller. Procucev holds no
+                    responsibility for the legal correctness/validity of the levy of such taxes. The sole responsibility
+                    for any legal issue arising on the taxes shall reside with the Seller.</p>
+                <p>
+                    The prices reflected on the Platform are determined solely by the Seller and are listed based on
+                    Seller's information. Very rarely, prices may change at the time of placing order due to Seller
+                    changing the listed price without due intimation and such change of price are at the sole discretion
+                    of the Seller attributing to various factors beyond control.</p>
+                <p>
+                    The Seller shall be solely responsible for any warrantee/guarantee of the products sold to the
+                    Buyers and in no event shall be the responsibility of Procucev.</p>
+                <p>
+                    The transaction is bilateral between the Seller and Buyer and therefore, Procucev is not liable to
+                    charge or deposit any taxes applicable on such transaction.</p>
+                <p>
+                    Disclaimer: Prices on any product(s) as is reflected on the Platform may due to some technical
+                    issue, typographical error or product information supplied by Seller be incorrectly reflected and in
+                    such an event Seller may cancel such your order(s).</p>
+                <p>
+                    <b>Disclaimer</b>
+                </p>
+                <p>
+                    The content on the Platform is for informational purposes only. Procucev disclaims any liability for
+                    any information that may have become outdated since the last time the particular piece of
+                    information was updated. Procucev reserves the right to make changes and corrections to any part of
+                    the content on the Platform at any time without prior notice.
+
+                </p>
+            </div>
+            <div class="doc-page disable-text-selection"> <ng-container
+                    *ngTemplateOutlet="waterMarkTemplate"></ng-container>
+                <p>Procucev does not guarantee quality of
+                    the Goods, the prices listed in Platform or the availability of products posted on the Platform.
+                    Unless stated otherwise, all pictures and information contained on the Platform are believed to be
+                    owned by or licensed to Procucev. Please email a takedown request to the webmaster if you are the
+                    copyright owner of any content on the Platform and you think the use of the above material violates
+                    your copyright in any way. Please indicate the exact URL of the webpage in your request. All images
+                    shown here have been digitized by Procucev. No other party is authorized to reproduce or republish
+                    these digital versions in any format whatsoever without the prior written permission of Procucev.
+                </p>
+                <p>
+                    Any certification, licenses or permits ('Certification') or information in regard to such
+                    Certification that may be displayed on the Seller's listing page on the Platform is for
+                    informational purposes only. Such Certification is displayed by Procucev on an 'as available' basis
+                    that is provided to Procucev by the Seller. Procucev does not make any warranties about the
+                    validity, authenticity, reliability and accuracy of such Certification or any information displayed
+                    in this regard. Any reliance by a user upon the Certification or information thereto shall be
+                    strictly at such user's own risk and Procucev in no manner shall assume any liability whatsoever for
+                    any losses or damages in connection with the use of this information or for any inaccuracy,
+                    invalidity or discrepancy in the Certification or non-compliance of any applicable local laws or
+                    regulations by the Seller.</p>
+                <p>
+                    Procucev reserves the right to charge subscription and/or membership fees from a user, by giving
+                    reasonable prior notice, in respect of any product, service or any other aspect of GMT Platform
+                    anytime in future.</p>
+                <p>
+                    Procucev reserves the right to terminate / suspend the User's account and/or credits / points earned
+                    and/or participation of the User in any program if Procucev determines in its sole discretion that
+                    the User has violated the rules of the Platform and/or has been involved in activities that are in
+                    contravention of the Platform terms and/or has engaged in activities which are fraudulent / unlawful
+                    in nature. Furthermore, Procucev reserves the right to modify, cancel and discontinue its any
+                    program or facilities without notice to the User.</p>
+                <p>
+                    <b>No Endorsement</b>
+                </p>
+                <p>
+                    We do not endorse any Vendor. In addition, although these Terms & Conditions require you to provide
+                    accurate information, we do not attempt to confirm, and do not confirm if it is purported identity.
+                    We will not be responsible for any damage or harm resulting from your interactions with other Users.
+
+                </p>
+                <p>By using the Platform, you agree that any legal remedy or liability that you seek to obtain for
+                    actions or omissions of other Users or other third parties will be limited to a claim against the
+                </p>
+            </div>
+            <div class="doc-page disable-text-selection"> <ng-container
+                    *ngTemplateOutlet="waterMarkTemplate"></ng-container>
+                <p>
+
+                    particular User or other third parties who caused you harm and you agree not to attempt to impose
+                    liability on, or seek any legal remedy from us with respect to such actions or omissions.</p>
+                <p>
+                    <b>Privacy Policy Changes</b>
+                </p>
+                <p>
+                    We may update our Privacy Policy at times. We will notify you of any changes by updating the new
+                    Privacy Policy on this page. Will will also communicate with you via email as well as post a
+                    prominent notification on our website. We advise you to review this Privacy Policy periodically for
+                    any changes.</p>
+                <p>
+                    <b>Force Majeure</b>
+                </p>
+                <p>
+                    Procucev is not liable or responsible for failure or delay in the performance of any of these Terms
+                    & Conditions and/or the individual contracts, if such failure or delay is due to any reason beyond
+                    the reasonable control, including, but not limited to, an act of God, acts of public enemy, war
+                    (whether declared or not), rebellion, internet hacking, internet outage, Telecom service provider
+                    issues, power outage, server issues and riots (collectively 'Force Majeure').</p>
+                <p>
+                </p>
+                <p>
+                    <b>Term and Termination</b>
+                </p>
+                <p>
+                    This Agreement shall commence on the Effective Date and shall continue until terminated by either
+                    party. Company may terminate this Agreement at any time, with or without notice. User may terminate
+                    this Agreement by ceasing to use the Services.</p>
+                <p>
+                    <b>Indemnity</b>
+                </p>
+                <p>
+                    You release and fully indemnify Procucev and/or any of its officers and representatives from any
+                    cost, damage, liability or other consequence of any of the actions of the Users of the Platform and
+                    specifically waive any claims that you may have in this behalf under any applicable laws of India.
+                    Notwithstanding its reasonable efforts in that behalf, Procucev cannot take responsibility or
+                    control the information provided by other Users which is made available on the Platform. You may
+                    find other User's information to be offensive, harmful, inconsistent, inaccurate, or deceptive.
+                    Please use caution and practice safe trading when using the Platform.</p>
+                <p>
+                    <b>Entire Agreement</b>
+                </p>
+                <p>
+                    This Agreement constitutes the entire agreement between the parties with respect to the
+                    subject
+                    matter hereof and supersedes all prior or contemporaneous communications, representations, or
+                    agreements, whether oral or written.
+                </p>
+            </div>
+            <div class="doc-page disable-text-selection"> <ng-container
+                    *ngTemplateOutlet="waterMarkTemplate"></ng-container>
+
+                <p>
+                    <b> Governing Law</b>
+                </p>
+                <p>
+                    This Agreement shall be governed by and construed in accordance with the laws of the State of
+                    Karnataka without regard to its conflict of laws principles. </p>
+                <p>
+                    <b> Severability</b>
+                </p>
+                <p>
+                    If any provision of this Agreement is held to be invalid or unenforceable, such provision shall be
+                    struck and the remaining provisions shall remain in full force and effect. </p>
+                <p><b>
+                        Waiver</b> </p>
+                <p>
+                    No waiver of any breach of any provision of this Agreement shall be deemed a waiver of any
+                    subsequent breach.
+                    Modifications </p>
+                <p>
+                    We reserve the right to modify these terms and conditions at any time. We will notify you of any
+                    changes by posting the revised agreement on our website. Your continued use of our services after
+                    the posting of revised terms constitutes your acceptance of the changes.
+                </p>
+                <p><b>
+                        Notice </b></p>
+                <p>
+                    All legal notices or demands to or upon Procucev shall be made in writing and sent to Procucev
+                    personally, by courier, certified mail, or facsimile to the following entity and address:
+                    Procucev Enterprise Solutions Pvt Ltd
+                    302, First Floor, Sharada, Above Axis Bank, AECS Layout, Kundalahalli, Bengaluru, Karnataka 560037
+                    The notices shall be effective when they are received by Procucev in any of the above-mentioned
+                    manner. </p>
+                <p><b>
+                        CONTACT US </b></p>
+                <p>
+                    Please contact us for any questions or comments (including all inquiries unrelated to copyright
+                    infringement) regarding this Platform. </p>
+                <p>
+                    <b> Grievance officer</b>
+                </p>
+                <p>
+                    In accordance with Information Technology Act, 2000 and rules made there under, the name and contact
+                    details of the Grievance Officer are provided below: </p>
+                <p>
+                    Procucev Enterprise Solutions Pvt Ltd </p>
+                <p>
+                    302, First Floor, Sharada, Above Axis Bank, AECS Layout, Kundalahalli, Bengaluru, Karnataka 560037
+                </p>
+                <p>
+                    BY USING THE SERVICES, USER AGREES TO BE BOUND BY THE TERMS OF THIS AGREEMENT. YOU ACKNOWLEDGE THAT
+                    YOU HAVE READ, UNDERSTOOD, AND AGREE TO THE TERMS AND CONDITIONS OUTLINED IN THIS AGREEMENT.
+
+                </p>
+            </div>
+        </div>
+    </ng-template>
+</div>
+
+
+<ng-template #sessionTemplate>
+    <div class="modal-header">
+        <h5>Session Expires!</h5>
+    </div>
+    <div class="modal-body">
+        <h4>Your session will be expired in {{sessionTime}} seconds</h4>
+    </div>
+</ng-template>
+<ng-template #waterMarkTemplate>
+    <div class="row1">
+        <img src=" assets/images/Procucev_Logo.svg" width="230" height="90" />
+    </div>
+    <div class="row2">
+        <img src=" assets/images/Procucev_Logo.svg" width="230" height="90" />
+    </div>
+    <div class="row3">
+        <img src=" assets/images/Procucev_Logo.svg" width="230" height="90" />
+    </div>
+    <div class="row4">
+        <img src=" assets/images/Procucev_Logo.svg" width="230" height="90" />
+    </div>
+    <div class="row5">
+        <img src=" assets/images/Procucev_Logo.svg" width="230" height="90" />
+    </div>
+</ng-template>
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle">
+
+</p-confirmDialog>

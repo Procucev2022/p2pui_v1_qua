@@ -1,0 +1,27 @@
+.modal-body {
+    border-top: 1px solid #ed581780;
+    position: relative;
+    flex: 1 1 auto;
+    padding: 1rem;
+    max-height: 68vh;
+    overflow: auto;
+}
+
+.ques-content label {
+    font-size: 1rem !important;
+    color: #111213;
+}
+
+.auctionSelectPanelCls {
+    border: 2px solid #e4edf5;
+    padding: 10px 10px 0px 10px;
+    margin-bottom: 16px;
+    box-shadow: -1px 0px 6px 0px #eff2f5;
+    border-radius: 4px;
+}
+
+.auctionContentPanelCls{
+    // border: 2px solid #e6eff7;
+    padding: 10px;
+    box-shadow: -1px 0px 6px 0px #eff2f5;
+}

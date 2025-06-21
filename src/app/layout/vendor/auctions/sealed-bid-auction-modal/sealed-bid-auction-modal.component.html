@@ -1,0 +1,22 @@
+<div class="modal-header">
+  <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+  <h5>Sealed Bid Auction</h5>
+</div>
+<div class="modal-body">
+  <form name="sealedBidForm" novalidate>
+  <div class="row">
+    <div class="col-12 row">
+      <label class="col-6" style="text-align: right;">Enter your Bid amount </label>
+      <input type="number" class="col-4 form-control" name="sealedBid" [(ngModel)]="sealedBidAmount">
+    </div>
+    <div class="col-12 text-right marginTop20">
+      <button class="btn btn-warning " mat-dialog-close>Cancel</button> &nbsp;&nbsp;
+      <button class="btn btn-primary " type="submit">Bid Now</button>
+      
+      
+    </div>
+  </div>
+  </form>
+</div>
+<div class="modal-footer">
+</div>

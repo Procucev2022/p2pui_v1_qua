@@ -1,0 +1,165 @@
+<form  name="vendorCapability" (ngSubmit)="vendorCapability.form.valid && onVendorCapabilitySubmit()" #vendorCapability="ngForm" novalidate>
+  <div class="col-md-12 row pad-nill">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="manPower">Total Man Power </label>
+        <div class="row check-css">
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.manPower"  #manPower="ngModel" name="manPower"
+              id="<25" value="<25" >
+            <label class="form-check-label" for="<25">
+              {{'<'}} 25
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.manPower"  #manPower="ngModel" name="manPower"
+              id="25-50" value="25-50" >
+            <label class="form-check-label" for="25-50">
+              25 {{'-'}} 50
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.manPower"  #manPower="ngModel" name="manPower"
+              id="50-100" value="50-100" >
+            <label class="form-check-label" for="50-100">
+              50 {{'-'}} 100
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.manPower"  #manPower="ngModel" name="manPower"
+              id="100-500" value="100-500" >
+            <label class="form-check-label" for="100-500">
+              100 {{'-'}} 500
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.manPower"  #manPower="ngModel" name="manPower"
+              id=">75" value=">75" >
+            <label class="form-check-label" for=">75">
+              {{'>'}} 75
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+          <label for="managerial">Managerial </label>
+          <input type="text" class="form-control" placeholder="Managerial" name="managerial" [(ngModel)]="model.managerial" #managerial="ngModel"
+          [ngClass]="{ 'is-invalid': vendorCapability.submitted && managerial.invalid }"  />
+          <div *ngIf="vendorCapability.submitted && managerial.invalid" class="invalid-feedback">
+              <div *ngIf="managerial.errors.required">Managerial is required</div>
+          </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="nonManagerial">Non-Managerial  </label>
+        <input type="text" class="form-control" placeholder="Non-Managerial" name="nonManagerial" [(ngModel)]="model.nonManagerial" #nonManagerial="ngModel"
+        [ngClass]="{ 'is-invalid': vendorCapability.submitted && nonManagerial.invalid }"  />
+        <div *ngIf="vendorCapability.submitted && nonManagerial.invalid" class="invalid-feedback">
+            <div *ngIf="nonManagerial.errors.required">Non-Managerial is required</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="machineTypes">Types of Machines  </label>
+        <input type="text" class="form-control" placeholder="Types of Machines" name="machineTypes" [(ngModel)]="model.machineTypes" #machineTypes="ngModel"
+        [ngClass]="{ 'is-invalid': vendorCapability.submitted && machineTypes.invalid }"   />
+        <div *ngIf="vendorCapability.submitted && machineTypes.invalid" class="invalid-feedback">
+            <div *ngIf="machineTypes.errors.required">Types of Machines is required</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="serviceCapacity">Monthly Supply / Service Capacity  </label>
+        <input type="text" class="form-control" placeholder="Monthly Supply / Service Capacity" name="serviceCapacity" [(ngModel)]="model.serviceCapacity" #serviceCapacity="ngModel"
+        [ngClass]="{ 'is-invalid': vendorCapability.submitted && serviceCapacity.invalid }"   />
+        <div *ngIf="vendorCapability.submitted && serviceCapacity.invalid" class="invalid-feedback">
+            <div *ngIf="serviceCapacity.errors.required">Monthly Supply / Service Capacity is required</div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="col-md-6">
+      <div class="form-group">
+        <label for="gst">GST</label>
+        <input type="text" class="form-control" placeholder="GST" name="gst" [(ngModel)]="model.gst" #gst="ngModel"
+        [ngClass]="{ 'is-invalid': vendorCapability.submitted && gst.invalid }" required />
+        <div *ngIf="vendorCapability.submitted && gst.invalid" class="invalid-feedback">
+            <div *ngIf="gst.errors.required">GST is required</div>
+        </div>
+      </div>
+    </div> -->
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="bussinessAge">Age of Business <span style="color: red;">*</span></label>
+        <div class="row check-css">
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.bussinessAge"  #bussinessAge="ngModel" name="bussinessAge"
+              id="<5years" value="<5years" required>
+            <label class="form-check-label" for="<5years">
+              {{'<'}} 5 Years
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.bussinessAge"  #bussinessAge="ngModel" name="bussinessAge"
+              id="5-10years" value="5-10years" required>
+            <label class="form-check-label" for="5-10years">
+              5 {{'-'}} 10 Years
+            </label>
+          </div>
+          <div class="form-check check-align">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.bussinessAge"  #bussinessAge="ngModel" name="bussinessAge"
+              id="10-20years" value="10-20years" required>
+            <label class="form-check-label" for="10-20years">
+              10 {{'-'}} 20 Years
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.bussinessAge"  #bussinessAge="ngModel" name="bussinessAge"
+              id=">20years" value=">20years" required>
+            <label class="form-check-label" for=">20years">
+              {{'>'}} 20years
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="capacityUtilization">Capacity Utilization </label>
+        <div class="row check-css">
+          <div class="form-check check-align">
+            <input class="form-check-input " type="radio" [(ngModel)]="model.capacityUtilization"  #capacityUtilization="ngModel" name="capacityUtilization"
+              id="<50%" value="<50%"  >
+            <label class="form-check-label" for="<50%">
+              {{'<'}} 50%
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.capacityUtilization"  #capacityUtilization="ngModel" name="capacityUtilization"
+              id="50-70%" value="50-70%"  >
+            <label class="form-check-label" for="50-70%">
+              50 {{'-'}} 70%
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" [(ngModel)]="model.capacityUtilization"  #capacityUtilization="ngModel" name="capacityUtilization"
+              id=">70%" value=">70%"  >
+            <label class="form-check-label" for=">70%">
+              {{'>'}} 70%
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <button style="float: right;" class="btn btn-primary btn-green" type="submit">Save</button>
+      <button style="float: right;" class="btn btn-secondary btn-red" type="button" (click)="onReset()">Reset</button>
+      <!-- <button style="float: right;" mat-raised-button  color="success" type="button" cdkFocusInitial (click)="onNext()">Next</button>
+      <button style="float: right;" mat-raised-button  color="accent" type="button" cdkFocusInitial (click)="onBack()">Back</button> -->
+    </div>
+  </div>
+</form>

@@ -1,0 +1,118 @@
+<div class="col-md-12 pad-nill">
+    <div class="table-title">
+        <div class="row">
+            <div class="col-sm-6">
+                <h2>PPO's</h2>
+                <p><span class="dot"></span>{{pposList?.length}} Total</p>
+            </div>
+            <div class="col-sm-6">
+
+            </div>
+        </div>
+    </div>
+    <p-table #pposGrid [columns]="pposHeaders" [value]="pposList" sortMode="multiple" [paginator]="true"
+        [rows]="pageRecordSize" id="quoteTable" [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}"
+        exportFilename="venRequest" [(selection)]="selectedData" [scrollable]="true"  [globalFilterFields]="['procucevStatus.uiDisplay', 'ppoId', 'desc', 'ppoValue', 'filterDate' ]"  [scrollHeight]="'calc(100vh - 214px)'">
+        <ng-template pTemplate="caption">
+            <div class="table-search">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                            (input)="pposGrid.filterGlobal($event.target.value, 'contains')" />
+                    </div>
+                    <div class="col-sm-6">
+                        <!-- <button type="button" class="btn btn-transparent">Clear All</button> -->
+                        <img  (click)="exportAsXLSX()" class="export-excel-icon" src="assets/images/export-excel.png" width="40" height="40" data-toggle="tooltip" title=" Export As Excel"  />
+
+
+                        <!-- <button class="btn btn-danger"><i class="fa fa-file-pdf-o"></i></button> -->
+
+                        <button class="btn btn-success btn-blue"
+                            *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_PPO_PAGE.APPROVE) != -1"
+                            [disabled]="selectedData.length==0||selectedData[0]?.procucevStatus?.uiDisplay == 'Submitted'||selectedData[0]?.procucevStatus?.uiDisplay == 'Client Accepted'||selectedData[0]?.procucevStatus?.uiDisplay == 'Client Rejected'||selectedData[0]?.procucevStatus?.uiDisplay == 'Rejected'"
+                            id="b_submitPPO" (click)="ppoActions('Submit')" type="button">Submit PPO</button>
+
+                        <button class="btn btn-success btn-green"
+                            *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_C_PPO_PAGE.ACCEPT) != -1"
+                            [disabled]="selectedData.length==0 || selectedData[0]?.procucevStatus?.uiDisplay == 'Client Accepted' || selectedData[0]?.procucevStatus?.uiDisplay == 'Client Rejected'"
+                            id="b_acceptPPO" (click)="ppoActions('Accept')" type="button">Accept</button>
+
+                        <button class="btn btn-danger btn-red"
+                            *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_C_PPO_PAGE.REJECT) != -1"
+                            [disabled]="selectedData.length==0||selectedData[0]?.procucevStatus?.uiDisplay == 'Client Accepted'||selectedData[0]?.procucevStatus?.uiDisplay == 'Client Rejected'"
+                            id="b_rejectPPO" (click)="ppoActions('Reject')" type="button">Reject</button>
+
+                        <button class="btn btn-danger btn-red"
+                            *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_PPO_PAGE.REJECT_P) != -1"
+                            [disabled]="selectedData.length==0||selectedData[0]?.procucevStatus?.uiDisplay == 'Submitted'||selectedData[0]?.procucevStatus?.uiDisplay == 'Client Accepted'||selectedData[0]?.procucevStatus?.uiDisplay == 'Client Rejected'||selectedData[0]?.procucevStatus?.uiDisplay == 'Rejected'"
+                            id="b_rejectPPO_P" (click)="ppoActions('Reject_p')" type="button">Reject</button>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th style="width: 3rem"  *ngIf="isShowCheckbox">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+                    {{col.header}}
+                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+                <th style="width: 11rem">Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr [pSelectableRow]="rowData">
+                <td style="width: 3rem" *ngIf="isShowCheckbox">
+                    <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td>
+                <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
+                    <span *ngIf="col.field == 'pr'">
+                        {{rowData['pr']?.prId}}
+                    </span>
+                    <span *ngIf="col.field != 'pr'">
+                        <span *ngIf="col.field !='procucevStatus'">
+                            <span *ngIf="col.fieldType == 'text'">{{rowData[col.field]}}</span>
+                            <span *ngIf="col.fieldType == 'date'"
+                                [title]="rowData['filterDate']">{{rowData[col.field] | date:
+                                'dd-MMM-yyyy'}}</span>
+                        </span>
+                        <span *ngIf="col.field =='procucevStatus'">
+                            <span *ngIf= "rowData[col.field].uiDisplay=='Client Accepted'">
+                                <img src="/assets/images/status/Accepted.svg">
+                                {{rowData[col.field]?.uiDisplay}}
+                            </span>
+                            <span *ngIf= "rowData[col.field].uiDisplay=='Client Rejected'">
+                                <img src="/assets/images/status/Rejected.svg">
+                                {{rowData[col.field]?.uiDisplay}}
+                            </span>
+                            <span *ngIf= "rowData[col.field].uiDisplay!='Client Accepted' && rowData[col.field].uiDisplay!='Client Rejected'">
+                                <img src="/assets/images/status/{{rowData[col.field]?.uiDisplay}}.svg">
+                                {{rowData[col.field]?.uiDisplay}}
+                            </span>
+                        </span>
+                    </span>
+                <td style="width: 11rem">
+                    <button class="btn-skelton" (click)="viewPPO(rowData)">
+                        <img src="/assets/images/new/view-doc.png" title="View PPO Details">
+                    </button>
+                    <button class="btn-skelton" (click)="viewCorresspondance(rowData)">
+                        <img src="/assets/images/new/comments-write.png" title="Add your comment">
+                    </button>
+
+                        <app-comment-alert-bell-blink [rowData]="rowData"></app-comment-alert-bell-blink>
+                </td>
+
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+                <td [attr.colspan]=" isShowCheckbox ? 6: 5" style="text-align:center;">
+                    No Records Found.
+                </td>
+            </tr>
+        </ng-template>
+
+    </p-table>
+</div>

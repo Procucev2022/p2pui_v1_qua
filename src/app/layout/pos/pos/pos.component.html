@@ -1,0 +1,159 @@
+<div class="col-md-12 pad-nill">
+    <div class="table-title">
+        <div class="row">
+          <div class="col-sm-6">
+            <h2>PO's</h2>
+            <p><span class="dot"></span>{{poList?.length}} Total</p>
+          </div>
+          <div class="col-sm-6">
+
+          </div>
+        </div>
+    </div>
+    <p-table #pposGrid dataKey="id" [columns]="posHeader" [value]="poList" sortMode="multiple" [paginator]="true" [rows]="pageRecordSize" id="quoteTable" [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}" exportFilename="venRequest" [(selection)]="selectedData"
+        [scrollable]="true" [expandedRowKeys]="expandedRows"  [scrollHeight]="'calc(100vh - 214px)'">
+        <ng-template pTemplate="caption">
+            <div class="table-search">
+                <div class="row">
+                <div class="col-sm-6">
+                    <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                    (input)="pposGrid.filterGlobal($event.target.value, 'contains')" />
+                </div>
+                <div class="col-sm-6">
+                    <img  (click)="exportAsXLSX()" class="export-excel-icon" src="assets/images/export-excel.png" width="40" height="40" data-toggle="tooltip" title=" Export As Excel"  />
+
+                </div>
+                </div>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <!-- <th style="width: 3em">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th> -->
+                <th style="width: 3rem"></th>
+                <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+                    {{col.header}}
+                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+                <th style="width: 11rem">Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
+            <tr [pSelectableRow]="rowData">
+                <!-- <td style="width: 3em">
+                    <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                </td> -->
+                <td style="width: 3rem">
+                    <button type="button" pButton pRipple [pRowToggler]="rowData"
+                      class="grid-expand" (click)="expanded ? getCloseRowDetails(rowData,$event) : getRowDetails(rowData,$event)">
+                      <span *ngIf="expanded"><i class="fa fa-chevron-down"></i></span>
+                      <span *ngIf="!expanded"><i class="fa fa-chevron-right"></i></span>
+                    </button>
+                  </td>
+                  <td [style.width]="col.width" *ngFor="let col of columns" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" >
+                    <span *ngIf="col.field != 'createdTS'">
+                    <span  *ngIf="col.field !='poStatus'">
+                        <span *ngIf="col.field!= 'advanceAmount'">
+                        <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);"
+                            (click)="getRowDetails(rowData,$event)"> {{rowData[col.field]}} </a></span>
+                    <span *ngIf="!col.isLink">
+                        <span *ngIf="col.field == 'companyName'"><app-vendor-info-icon-dialog [vendorData]="rowData"></app-vendor-info-icon-dialog> </span>
+                        <span *ngIf="col.field == 'companyName'"><img *ngIf="rowData['verifiedStatus']['uiDisplay'] == 'Completed'" width="20" src="assets/images/insta-verified.png"/></span>
+                        <span *ngIf=" col.field == 'podesc'" > {{rowData[col.field]}}</span>
+                        <span *ngIf=" col.field != 'podesc'"> {{rowData[col.field]}}</span>
+
+                  </span>
+                    </span>
+                    <span *ngIf="col.field == 'advanceAmount'">
+                        <span *ngIf="rowData['advance']">
+                            {{rowData[col.field]}}
+                        </span>
+                    <span *ngIf="!rowData['advance']">
+                            N/A
+                        </span>
+                    </span>
+                    </span>
+                    <span *ngIf="col.field =='poStatus'">
+                        {{rowData['status']?.uiDisplay}}
+                    </span>
+                    </span>
+                    <span *ngIf="col.field == 'createdTS'" [title]="rowData[col.field] | date: 'dd-MMM-yyyy hh:mm a'">
+                        {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
+                    </span>
+                </td>
+                <td style="width: 11rem">
+                    <button class="btn-skelton"
+                        *ngIf="loggedUserDetails.role.roleName === 'ClientInitiator'"
+                        (click)="editPO(rowData)">
+                        <img src="/assets/images/new/edit-data.png" title="Edit PO Details">
+                    </button>
+                    <button class="btn-skelton"
+                        (click)="viewPO(rowData)">
+                        <img src="/assets/images/new/view-doc.png" title="View PO Details">
+                    </button>
+                    <button class="btn-skelton"
+                        (click)="viewCorresspondance(rowData, 'PO-COMMENTS-MODAL')">
+                        <img src="/assets/images/new/comments-write.png" title="Add Your Comments">
+                    </button>
+                    <app-comment-alert-bell-blink [rowData]= "rowData"></app-comment-alert-bell-blink>
+
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="rowexpansion" let-rowData>
+            <tr class="child-grid" *ngIf="deliveryHeadersData">
+                <td colspan="8">
+                    <div class="p-p-3">
+                        <mat-tab-group>
+                            <mat-tab label="Delivery Details" *ngIf="deliveryHeadersData">
+                                <app-common-grid [gridData]="deliveryHeadersData" [parentId]="poId" (actionEvent)="onClickCommonGrid($event)"></app-common-grid>
+                            </mat-tab>
+                            <mat-tab label="PO Item Details">
+                                <div class="rfqContainer">
+                                    <app-po-items [poData]="selectedPoData" [poId]="poId"></app-po-items>
+                                </div>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+                <td [attr.colspan]="5" style="text-align:center;">
+                    No Records Found.
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+</div>
+
+<!-- <div class="col-12" *ngIf="deliveryHeadersData" #h1>
+    <mat-tab-group>
+        <mat-tab label="Delivery Details" *ngIf="deliveryHeadersData">
+
+        </mat-tab>
+        <mat-tab label="PO Item Details">
+            <div class="rfqContainer">
+                <app-po-items [poData]="selectedPoData" [poId]="poId"></app-po-items>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</div> -->
+<div class="col-12">
+    <mat-tab-group>
+        <mat-tab label="Delivery ASNs" *ngIf="deliveryAsnsData">
+            <div class="rfqContainer">
+                <app-common-grid [gridData]="deliveryAsnsData" [parentId]="selectedDeliveryId" (actionEvent)="onClickCommonGrid($event)"></app-common-grid>
+            </div>
+        </mat-tab>
+        <mat-tab label="Delivery Item Details" *ngIf="deliveryItemsData">
+            <div class="rfqContainer">
+                <app-common-grid [gridData]="deliveryItemsData" [parentId]="selectedDeliveryId" (actionEvent)="onClickCommonGrid($event)"></app-common-grid>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</div>

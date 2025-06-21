@@ -1,0 +1,88 @@
+::ng-deep .ui-overlaypanel::before {
+    border-width: 10px;
+    margin-left: -10px
+}
+
+.pointer{
+    font-size: 18px;
+    // cursor: pointer;
+}
+
+// .pointer:hover{
+//     color: #ff753f;
+// }
+::ng-deep .ui-overlaypanel:after,
+::ng-deep .ui-overlaypanel::before {
+    bottom: 100%;
+    left: calc(var(--overlayArrowLeft, 0) + 1.25rem);
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+::ng-deep .ui-overlaypanel::before {
+    border: solid transparent;
+    border-color: rgba(255, 255, 255, 0);
+    border-bottom-color: #f2f2f2;
+}
+
+::ng-deep .ui-overlaypanel {
+    border-radius: 4px !important;
+    background-color: #037cd9 !important;
+    color: #fff7f7 !important;
+    border: none !important;
+}
+
+::ng-deep body .ui-overlaypanel .ui-overlaypanel-content {
+    padding: 0 !important;
+    border: 2px solid #dae1e7 !important;
+    border-radius: 4px !important;
+}
+::ng-deep .tooltip-inner {
+    min-width: 245px !important;
+    background-color: #037cd9 !important;
+    max-width: 520px !important;
+}
+::ng-deep  .bs-tooltip-top .arrow::before{
+    border-width: 0.4em 0.4em !important;
+    border-top-color: #1c89dd !important;
+}
+table.vendor-info-table {
+    //  min-width: 400px;
+    margin-left: 4px;
+
+    tr th::after {
+        content: ':';
+    }
+
+    tr td {
+        padding: 4px;
+    }
+
+    tr th {
+        color: #0C2146;
+        // padding: 4px;
+        font-size: 9px;
+        letter-spacing: 0.5px;
+        text-align: left;
+        padding-right: 10px;
+        min-width: 110px;
+    }
+
+    tr td {
+        width: auto;
+        padding-top: 0 !important;
+        font-size: 12px;
+        text-align: left;
+        max-width: 238px !important;
+        text-overflow: ellipsis;
+        overflow-x: hidden !important;
+        white-space: nowrap;
+    }
+
+    tr th {
+        padding-bottom: 0 !important;
+    }
+}

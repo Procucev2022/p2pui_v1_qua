@@ -1,0 +1,774 @@
+<div class="col-md-12 pad-nill"   #pposRef>
+    <div class="table-title">
+      <div class="row">
+        <div class="col-sm-6">
+          <h2>Item Stock</h2>
+          <!-- <p><span class="dot"></span>{{itemList.length}} Total</p> -->
+        </div>
+        <div class="col-sm-6">
+          <button *ngIf="roleName == 'CategoryManager2'" style="display: flex;align-items: center;" class="btn btn-primary btn-blue" type="button" (click)="createItem()"><i
+              class="fa fa-plus"></i> <span>New Item</span></button>
+        </div>
+      </div>
+    </div>
+
+    <p-table dataKey="id"  [ngClass]="{  'bfs-container': isBFSView}"  #itemCatalogueTable [columns]="itemHeaders" [value]="itemList"
+    sortMode="multiple" [paginator]="true" [rows]="pageRecordSize" id="prqTable" [rowsPerPageOptions]="pageOptions"
+    [tableStyle]="{ minWidth: '100%'}" exportFilename="items details" [(selection)]="selectedData" [scrollable]="true"
+    [scrollHeight]="'calc(100vh - 218px)'"  >
+      <!-- [expandedRowKeys]="expandedRows" -->
+      <ng-template pTemplate="caption">
+        <div class="table-search">
+          <div class="row" style="align-items: center;">
+            <div class="col-sm-4">
+              <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                (input)="itemCatalogueTable.filterGlobal($event.target.value, 'contains')" />
+            </div>
+            <div class="col-sm-8">
+               <h5 style="text-align: left;">Not finding items you want? You can raise <span class="link-cls" (click)="navigateToGMT('gmtName')"><b>RFQ here</b></span>  to get quotes directly on email</h5>
+               <span> *QYP : Quote Your Price</span>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th style="width: 3em"> &nbsp;
+          </th>
+          <ng-container *ngFor="let col of columns">
+            <th [style.width]="col.width" [pSortableColumn]="col.field" [title]="col.fieldTitle">
+              {{col.header}}
+              <p-sortIcon [field]="col.field"></p-sortIcon>
+            </th>
+          </ng-container>
+          <th   style="width:18rem">Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
+        <tr [pSelectableRow]="rowData" class="">
+          <td style="width: 3em">
+                <button  type="button" pButton pRipple [pRowToggler]="rowData"
+                (click)="expanded ? getCloseRFQs(rowData,$event) : getRFQs(rowData,$event)"
+                    class="grid-expand" *ngIf="['CategoryManager','CategoryManager2'].includes(roleName)">
+                   <i class="fa fa-chevron-down" [ngClass]="{'fa-chevron-down': expanded, 'fa-chevron-right': !expanded}"></i>
+                </button>
+            </td>
+          <td  *ngFor="let col of columns" [style.width]="col.width"
+          [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }"
+          [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"
+          [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
+
+            <span *ngIf="!col.isLink && col.fieldType != 'date' && col.field != 'description' && col.field != 'specification'"  class="align-items-center price-icon-alignment"   [ngClass]="{'price-icon-alignment': col.field == 'price'}">
+                    <span [ngClass]="{'price-content': col.field == 'price'}">
+                    <span *ngIf="col.field == 'itemNumber'">
+                        <span *ngIf="rowData?.itemNumber != null && rowData?.itemNumber != ''">{{rowData[col.field]}}</span>
+                        <span *ngIf="rowData?.itemNumber == null || rowData?.itemNumber  == ''" class="cellLinkCls" (click)=" getVendorAndClientListByItemId(rowData,$event, true)">Assign Category</span>
+                    </span>
+                    <span *ngIf="col.field != 'itemNumber'">
+                        <span *ngIf=" col.field == 'sellPrice'">{{ (rowData?.buyPriceDisclosure == true ||  rowData[col.field] >0) ? (rowData[col.field]) : 'QYP' }}</span>
+                        <span *ngIf=" col.field != 'sellPrice'">  {{rowData[col.field]}}</span>
+                    </span>
+                </span>
+            </span>
+
+            <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
+              {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
+            </span>
+            <span *ngIf="col.field == 'description' || col.field == 'specification'" [title]="rowData[col.field]" >
+                <button type="button" class="btn-skelton"  *ngIf="rowData?.imagesFlag == true && col.field == 'description'" >  <app-bfs-images-view [selectedId]="rowData.id"></app-bfs-images-view>
+                </button>  {{rowData[col.field]}}
+            </span>
+
+          </td>
+          <td   style="width:18rem">
+            <button type="button" class="btn-skelton" >
+                <img src="/assets/images/new/view-doc.png" (click)="onViewItemDetails(rowData, false)"
+                    title="View Item Details"> &nbsp;&nbsp;
+                    <img src="/assets/images/new/edit-data.png" *ngIf="roleName == 'CategoryManager2'" (click)="onEditBFSItemDetails(rowData)"
+                    title="Edit BFS Item Details"> &nbsp;&nbsp;
+                    <span class="blink" *ngIf="  (rowData.commentsFlag && rowData.commentsFlag  == true)">
+                        <i class="fa fa-bell" aria-hidden="true"></i>
+                    </span>
+                    <img src="/assets/images/new/comments-write.png"  (click)="openCreateCommentsByBuyer(rowData)" />
+
+            </button>
+
+            <!-- <button type="button" class="btn-skelton" *ngIf="roleName == 'CategoryManager'" (click)="editDescription(rowData, editItem)">
+            <img src="/assets/images/new/edit-data.png" title="Edit Item Description">
+          </button> -->
+
+            <button type="button" class="btn btn-blue" *ngIf="!['CategoryManager','CategoryManager2'].includes(roleName)    && (rowData.status.status == 'BFS_NEW')" (click)="onBidReqest(rowData)">Bid Request</button>
+            <button type="button" class="btn btn-orange" *ngIf="!['CategoryManager','CategoryManager2'].includes(roleName)  && (rowData.status && rowData.status.status == 'BID_REQUESTED')" disabled>Requested</button>
+
+        </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="rowexpansion" let-rowData>
+        <tr class="child-grid child-grid-row" *ngIf="selectedRowData">
+            <td colspan="8">
+                <div class="p-p-3">
+                  <mat-tab-group>
+                    <mat-tab label="Interested Buyers" *ngIf="selectedRowData ">
+                        <div class="rfqContainer ">
+                            <div class="table-title">
+                                <div class="row">
+                                  <div class="col-sm-6 mt-2">
+                                    <h2 style="margin: 10px 0 0;
+                                    font-size: 18px;
+                                    float: left;
+                                    font-weight: 500;
+                                    color: #1a6895;">Requested Buyers</h2>
+                                    <p><span class="dot"></span>{{requestUserGridData.gridValue?.length}} Total</p>
+                                  </div>
+                                  <div class="col-sm-6">
+                                  </div>
+                                </div>
+                              </div>
+                            <app-bfs-common-grid *ngIf="isShowGrid" [gridData]="requestUserGridData" (onGridAction)="onGridAction($event)"></app-bfs-common-grid>
+
+
+                        </div>
+                    </mat-tab>
+                  </mat-tab-group>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+      <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+          <td [attr.colspan]="5" style="text-align:center;">
+            No Records Found.
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="paginatorleft">
+        <div  *ngIf="itemCatalogueTable._totalRecords > 0">
+          <b>Showing {{itemCatalogueTable.first+1}} to {{itemCatalogueTable.first+itemCatalogueTable.rows > itemCatalogueTable.totalRecords?itemCatalogueTable.totalRecords: itemCatalogueTable.first+itemCatalogueTable.rows}} of {{itemCatalogueTable.totalRecords}}</b>
+          <!-- <app-page-info [totalRecords]="itemList.length" [pageData]="paginatoryDetails"></app-page-info> -->
+        </div>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <p-sidebar [(visible)]="isCreateItemForm" position="right"
+    styleClass="ui-sidebar-lg" [style]="{width:'100vw'}">
+    <h3>Create Item</h3>
+    <div class="col-12">
+        <div class="  row"  >
+            <div class="col-12">
+                <div class="row">
+                 <div class="col-12">
+                     <fieldset class="col-12 row  mt-3 fieldSec">
+                         <legend class="displayFlexCenter">Item Details</legend>
+                         <div class="col-12">
+                            <mat-tab-group #tabGrp (selectedTabChange)="tabChanged($event)">
+                                <mat-tab label="Single Item Entry" tabindex="0" >
+                                  <div class="rfqContainer ">
+                                        <div class="col-12">
+                                            <form class="row" [formGroup]="itemForm" novalidate (ngSubmit)="onAddItemsToCart()">
+                                                <div class="col-4 mb-1 form-group">
+                                                    <label class="form-label required">Organization</label>
+                                                    <div class="input-group">
+                                                        <input *ngIf="selectedOrgData" class="form-control" placeholder="Search Organization" disabled [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedOrgData.companyName" />
+                                                        <input *ngIf="!selectedOrgData" class="form-control" placeholder="Search Organization"  disabled/>
+                                                          <button class="btn btn-blue" type="button" (click)="onSelectOrgForm()">Select Organization</button>
+                                                    </div>
+
+                                                </div>
+                                                    <div class="col-2 mb-1">
+                                                    <label class="form-label required">User</label>
+                                                    <select class="form-control" formControlName="user">
+                                                        <option value="">--Select--</option>
+                                                        <option *ngFor="let user of userList" [ngValue]="user">{{user.username}}</option>
+                                                    </select>
+                                                </div>
+                                                    <div class="col-2 mb-1">
+                                                        <label class="form-label required">Item Description</label>
+                                                        <input type="text" class="form-control"  formControlName="description" placeholder="Item Description" />
+
+                                                    </div>
+                                                    <div class="col-2 mb-1">
+                                                        <label class="form-label required">Category</label>
+                                                        <p-autoComplete  formControlName="category" showEmptyMessage="true"
+                                                        [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
+                                                         [suggestions]="filtered_categoryList" panelInputClass="p-auto-panel-cls" [minLength]="1"
+                                                           [dropdown]="true"
+                                                          (completeMethod)="filterAutoCompleteData($event, 'categoryList','filtered_categoryList',   true)"
+                                                           >
+                                                                    <ng-template let-segment pTemplate="item">
+                                                                        <div class="segment-item">
+                                                                            <div>{{segment}}</div>
+                                                                        </div>
+                                                                    </ng-template>
+                                                        </p-autoComplete>
+                                                    </div>
+                                                    <div class="col-2 mb-1">
+                                                        <label class="form-label required">Item Specification</label>
+                                                        <input class="form-control" formControlName="specification" placeholder="Item Specification" />
+                                                    </div>
+                                                    <!-- <div class="col-2 mb-1">
+                                                        <label class="form-label required">Item Number</label>
+                                                        <input class="form-control" formControlName="itemNumber" placeholder="Item Number" />
+                                                    </div> -->
+                                                    <div class="col-2 mb-1">
+                                                        <label class="form-label required">UOM</label>
+                                                        <input class="form-control" formControlName="unitofMeasures" placeholder="Item UOM" />
+                                                        <div class="error" *ngIf="itemForm.controls.unitofMeasures.errors && (itemForm.controls.unitofMeasures.errors.invalid || itemForm.controls.unitofMeasures.errors.pattern)">
+                                                        Only Alphabets allowed and  No Special Characters not allowed.
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-2 mb-1">
+                                                    <label class="form-label required">Age Of Asset <small>(In Months)</small></label>
+                                                    <input class="form-control" formControlName="ageOfAsset" type="text" placeholder="Age of asset" />
+                                                    <p class="error"  *ngIf="(itemForm.controls?.ageOfAsset?.touched && itemForm.controls.ageOfAsset.errors) && (itemForm.controls.ageOfAsset.errors.invalid )">Aseet Age should be Number</p>
+
+
+                                                </div>
+                                                    <div class="col-2 mb-1">
+                                                            <label class="form-label required">Available Quantity</label>
+                                                            <input class="form-control" formControlName="availableQuantity" type="number" placeholder="Available Quantity" />
+                                                            <p class="error"  *ngIf="(itemForm.controls?.availableQuantity?.touched && itemForm.controls.availableQuantity.errors) && (itemForm.controls.availableQuantity.errors.invalid || itemForm.controls.availableQuantity.errors.required)">Quantity is a mandatory field & should be number</p>
+                                                    </div>
+
+                                                <div class="col-2 mb-1">
+                                                    <label class="form-label required">Do you know Buy Price?</label>
+                                                    <div style="    display: flex;
+                                                    align-items: center;
+                                                    padding: 4px;">
+                                                        <input type="radio" name="r2" [value]="true" formControlName="buyPriceDisclosure" (click)="onChangePriceDisclosure(true)" />&nbsp;&nbsp;Yes &nbsp;&nbsp;&nbsp;
+                                                        <input type="radio" name="r2" [value]="false" formControlName="buyPriceDisclosure" (click)="onChangePriceDisclosure(false)" />&nbsp;&nbsp;No
+                                                    </div>
+                                                </div>
+                                                <div class="col-2 mb-1" *ngIf="itemForm.controls.buyPriceDisclosure.value && itemForm.controls.buyPriceDisclosure.value == true">
+                                                    <label class="form-label required">Buy Price(Per Unit)</label>
+                                                    <input class="form-control" formControlName="sellPrice" type="number" placeholder="Buy Price" (change)="onPriceDiscountChange()" />
+                                                    <p class="error"  *ngIf="(itemForm.controls?.sellPrice?.touched && itemForm.controls.sellPrice.errors) && (itemForm.controls.sellPrice.errors.invalid || itemForm.controls.sellPrice.errors.required)">Buy Price is a mandatory field & should be number</p>
+                                                </div>
+                                                <div class="col-2 mb-1" *ngIf="itemForm.controls.buyPriceDisclosure.value && itemForm.controls.buyPriceDisclosure.value == true">
+                                                    <label class="form-label required">Discount(%)</label>
+
+                                                    <input class="form-control" formControlName="discount" type="number" placeholder="Discount" (change)="onPriceDiscountChange()"/>
+                                                    <p class="error"  *ngIf="(itemForm.controls?.discount?.touched && itemForm.controls.discount.errors) && (itemForm.controls.discount.errors.invalid || itemForm.controls.discount.errors.required)">Discount is a mandatory field & should be number</p>
+                                                </div>
+                                                <div class="col-2 mb-1" *ngIf="itemForm.controls.buyPriceDisclosure.value == true ||  itemForm.controls.buyPriceDisclosure.value == false">
+                                                    <label class="form-label" [ngClass]="{'required':  itemForm.controls.buyPriceDisclosure.value == false}">Sale Price(Per Unit)</label>
+                                                    <input class="form-control" formControlName="askPrice"  type="number" placeholder="Sale Price"  />
+                                                </div>
+                                                <div class="col-2 mb-1">
+                                                    <label class="form-label required">Location</label>
+                                                    <input class="form-control" formControlName="location"  type="text" placeholder="Location"  />
+                                                </div>
+
+                                                <div class="col-2 mb-1">
+                                                    <label class="form-label required" >BFS Group</label>
+                                                    <p-autoComplete  formControlName="bfsGroup" showEmptyMessage="true"
+                                                    [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
+                                                     [suggestions]="filtered_divisionsList" panelInputClass="p-auto-panel-cls" [minLength]="1"
+                                                       [dropdown]="true"
+                                                      (completeMethod)="filterAutoCompleteData($event, 'divisionsList','filtered_divisionsList',   true)"
+                                                       >
+                                                                <ng-template let-segment pTemplate="item">
+                                                                    <div class="segment-item">
+                                                                        <div>{{segment}}</div>
+                                                                    </div>
+                                                                </ng-template>
+                                                    </p-autoComplete>
+                                                </div>
+                                                <div class="col-4 mb-1">
+                                                    <label class="form-label">Remarks</label>
+                                                    <input class="form-control" formControlName="remarks"  type="text" placeholder="Remarks.."  />
+                                                </div>
+                                                    <div class="col-4 mt-3 btn-block  " style="display: flex;align-items: center;justify-content: space-evenly; ">
+
+                                                        <button class="btn btn-blue ml-3" type="submit" [disabled]="!itemForm.valid" >{{ isEditForm ? "Update Item" : "Add Item"}}   </button>
+                                                        <button class="btn btn-red" type="reset">Reset</button>
+                                                    </div>
+                                                    <div class="col-4 mb-1">
+                                                        <label>Attachments</label>
+                                                        <input type="file" (click)="fileInput2.value = null" #fileInput2   (change)="fileUploadEvent($event.target.files, false)"  class="form-control" id="i_commentFile" />
+                                                        <div class="col-12 " *ngIf="commentFilesDataList.length>0" style="margin-top: 5px;
+                                                        font-size: 13px;">
+                                                            <div class="choosenFileCls"><b>File Chosen :</b><br />
+                                                                    <span *ngFor="let file of commentFilesDataList;let i = index">
+                                                                        <span> {{file.fileName}}</span>
+                                                                         &nbsp;&nbsp;<span class="removeIcon"  (click)="removeFiles(i)" title="Remove File"><i class="fa fa-times-circle" aria-hidden="true"></i> Remove</span>
+                                                                      <br/> </span> </div>
+                                                            </div>
+                                                    </div>
+                                                    <div class="col-4 mb-1">
+                                                        <label>Images(Item's Profile)</label>
+                                                        <input type="file" (click)="fileInput3.value = null" #fileInput3  (change)="fileUploadEventForImages($event.target.files, false)"  class="form-control" id="i_commentFile" />
+                                                        <p style="font-size: 12px;font-style: bold;">Allowed File Format: PNG/JPG/JPEG</p>
+                                                        <div class="col-12 " *ngIf="commentFilesDataListImg.length>0" style="margin-top: 5px;
+                                                        font-size: 13px;">
+                                                            <div class="choosenFileCls"><b>File Chosen : </b><br />
+                                                                    <span *ngFor="let file of commentFilesDataListImg;let i = index">
+                                                                        <span> {{file.fileName}}</span>
+                                                                         &nbsp;&nbsp;<span class="removeIcon"  (click)="removeFilesImg(i)" title="Remove File"><i class="fa fa-times-circle" aria-hidden="true"></i> Remove</span>
+                                                                      <br/> </span> </div>
+                                                            </div>
+                                                    </div>
+
+
+                                        </form>
+                                    </div>
+                                  </div>
+                                </mat-tab>
+                                <mat-tab label="Bulk Upload Entry" tabindex="1">
+                                  <div class="rfqContainer row" >
+                                    <div class="col-6 row">
+                                        <div class="col-12 mb-1 form-group">
+                                            <label class="form-label required">Organization</label>
+                                            <div class="input-group">
+                                                <input *ngIf="selectedOrgData" class="form-control" placeholder="Search Organization" disabled [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedOrgData.companyName" />
+                                                <input *ngIf="!selectedOrgData" class="form-control" placeholder="Search Organization"  disabled/>
+                                                  <button class="btn btn-blue" type="button" (click)="onSelectOrgForm()">Select Organization</button>
+                                            </div>
+                                        </div>
+                                            <div class="col-12 mb-1">
+                                            <label class="form-label required">User</label>
+                                            <select class="form-control"  [(ngModel)]="boqSelectedUser" [ngModelOptions]="{standalone: true}">
+                                                <option value="">--Select--</option>
+                                                <option *ngFor="let user of userList" [ngValue]="user" >{{user.username}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mr-o pr-0 ">
+                                        <div class="row">
+                                            <h5>File Upload<span class="boq-sample-cls">
+                                               <a  (click)="downloadSampleBOQ()" style="font-size:12px;cursor:  pointer;color:blue;" [title]="'Download Sample BOQ'">  <img class="cursor-pointer" src="/assets/images/new/download.svg" width="30" height="30"  aria-hidden="true" title="Download Sample BOQ File" /> Download Format </a>
+                                            </span></h5>
+                                            <div class="col-12">
+                                                <div class="form-group row">
+                                                    <div class="fileUploadCls" fileDragDrop (files)="uploadBOQFile($event)" (click)="fileInput1.click()"
+                                                    id="d_commentFile">
+                                                    <input type="file" (click)="fileInput1.value = null" #fileInput1 [(ngModel)]="fileData"
+                                                        (change)="uploadBOQFile($event)" hidden class="form-control" id="i_commentFile" />
+                                                    </div>
+                                                    <div class="fileInfoCls">
+                                                    <i class="fa fa-info-circle"></i> File Validation : <span style="color: #000;">
+                                                        File should be either (.xls/.xlsx) document
+                                                    </span>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-8  mt-2" *ngIf="boqFile" style="margin-top: 5px;   font-size: 11px;">
+                                                        <span class="choosenFileCls">File Chosen : <span>
+                                                            <img   class="export-excel-icon" src="assets/images/export-excel.png" width="30" height="30"   />
+                                                            {{boqFile?.fileName}}</span>
+                                                            <span class="removeIcon" (click)="removeFile()" title="Remove File"><i class="fa fa-times-circle"
+                                                                aria-hidden="true"></i> Remove</span>
+                                                        </span>
+                                                </div>
+                                            <div class="col-4 mt-2" [ngClass]="{'col-12': !boqFile, 'col-4':boqFile}" style="display: flex;align-items: center;flex-direction: row-reverse;">
+                                                <button class="btn btn-blue " type="button" [disabled]="!boqFile" (click)="onUploadFile()">Upload</button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                  </div>
+                                </mat-tab>
+                              </mat-tab-group>
+                         </div>
+
+                         <!-- <div class="col-1 orText">
+                             <div class="">| | OR | |</div>
+                         </div> -->
+
+                     </fieldset>
+                 </div>
+
+                </div>
+             </div>
+             <div class="col-12 mt-3 row">
+                 <fieldset class=" col-12 fieldSec ">
+                        <legend class="displayFlexCenter">Items In Cart <span class="cart"> <i class="fa fa-shopping-cart" aria-hidden="true"></i> <span class="cart-count">{{itemGridData.gridValue.length}}</span></span></legend>
+                        <div class="col-12">
+                                <app-bfs-common-grid *ngIf="isShowGrid" [gridData]="itemGridData" (onGridAction)="onGridAction($event)"></app-bfs-common-grid>
+                        </div>
+                </fieldset>
+             </div>
+
+        </div>
+    </div>
+    <div class="col-12" style="display: flex;align-items: center;flex-direction: row-reverse;    position: fixed;
+    bottom: 16px;right: 16px;" >
+       <button class="btn btn-green" (click)="onSubmitAddItem()">Submit</button>
+       <button class="btn btn-red" (click)="onCloseItemForm()">Close</button>
+
+    </div>
+    <ng-template #selectOrgTemplate>
+        <div class="modal-header">
+            <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+            <div class="col-6">
+                <h5>Select Organization</h5>
+            </div>
+
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-6 mb-1">
+                    <input type="text" class="form-control" [(ngModel)]="searchedOrgString"
+                        placeholder="Enter Organization Name" />
+                </div>
+                <div class="col-5"><button class="btn btn-blue" (click)="searchForOrgs()">Search</button></div>
+
+                <div class="col-12 orgList">
+                    <ul style="list-style:  none;">
+                        <li style="padding:4px 10px;" *ngFor="let org of filtered_organizationList" title="Select Organization" (click)="onChooseOrg(org)">{{org.companyName}} ,
+                            {{org.city}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</p-sidebar>
+<ng-template #viewItemDetailsTemplate>
+    <div class="modal-header">
+        <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+        <div class="col-6">
+            <h5>{{isBidRequest ? 'Bid': ''}} Item Details</h5>
+        </div>
+
+    </div>
+    <div class="modal-body">
+        <div class="row itemDetailsView">
+          <div class="col-6" [ngClass]="{'col-4': isBidRequest}">
+            <label>Item Number</label>
+            <label>{{selectedRowData.itemNumber}}</label>
+          </div>
+          <div class="col-6" [ngClass]="{'col-4': isBidRequest}">
+            <label>Item Description</label>
+            <label>{{selectedRowData.description}}</label>
+          </div>
+          <div class="col-6" [ngClass]="{'col-4': isBidRequest}">
+            <label>Specification</label>
+            <label>{{selectedRowData.specification}}</label>
+          </div>
+          <div class="col-6" [ngClass]="{'col-4': isBidRequest}">
+            <label>UOM</label>
+            <label>{{selectedRowData?.unitofMeasures}}</label>
+          </div>
+          <div class="col-6" [ngClass]="{'col-4': isBidRequest}">
+            <label>Item Category</label>
+            <label>{{selectedRowData.category}}</label>
+          </div>
+          <div class="col-6"  [ngClass]="{'col-4': isBidRequest}">
+            <label>Age Of Asset(In Months)</label>
+            <label>{{selectedRowData.ageOfAsset}}</label>
+          </div>
+          <div class="col-6" [ngClass]="{'col-4': isBidRequest}">
+            <label>Available Quantity</label>
+            <label>{{selectedRowData.availableQuantity}}</label>
+          </div>
+          <div class="col-6" [ngClass]="{'col-4': isBidRequest}">
+            <label>Total Quantity</label>
+            <label>{{selectedRowData.totalQuantity}}</label>
+          </div>
+          <div class="col-6" [ngClass]="{'col-4': isBidRequest}">
+            <label>Buy Price(Per Unit)</label>
+            <label>{{selectedRowData.sellPrice >0 ? selectedRowData.sellPrice: 'QYP'}}</label>
+          </div>
+          <div class="col-6" [ngClass]="{'col-4': isBidRequest}">
+            <label>Discount(%)</label>
+            <label>{{selectedRowData.discount}}</label>
+          </div>
+          <div class="col-6" [ngClass]="{'col-4': isBidRequest}">
+            <label>Sale Price(Per Unit)</label>
+            <label>{{selectedRowData.askPrice}}</label>
+          </div>
+          <div class="col-6" [ngClass]="{'col-4': isBidRequest}">
+            <label>BFS Group</label>
+            <label>{{selectedRowData.bfsGroup}}</label>
+          </div>
+          <div class="col-6" [ngClass]="{'col-4': isBidRequest}">
+            <label>Location</label>
+            <label>{{selectedRowData.location}}</label>
+          </div>
+
+          <div class="col-6" [ngClass]="{'col-4': isBidRequest}">
+            <label>Created Time</label>
+            <label>{{selectedRowData.createdTS | date: 'dd-MMM-yyyy hh:MM:ss a'}}</label>
+          </div>
+          <div class="col-12" [ngClass]="{'col-4': isBidRequest}">
+            <label>Remarks</label>
+            <label>{{selectedRowData.remarks ? selectedRowData.remarks: '--'}}</label>
+          </div>
+          <div class="col-12" [ngClass]="{'col-4': isBidRequest}">
+            <label for="attachments">Attachment</label>
+            <app-download-attachments *ngIf="selectedRowData.bfsDocuments" [filesList]="selectedRowData.bfsDocuments"></app-download-attachments>
+          </div>
+         <div class="col-12" *ngIf="isBidRequest">
+            <div class="row  bid-sec mt-3 p-2">
+                <div class="col-9">
+                    <div class="form-group input-group">
+                        <label class="form-label required displayFlexCenter" ><input type="radio" name="r1" value="price" [(ngModel)]="bidType" /> &nbsp;&nbsp; Bid By Price</label>
+                        <input type="number" placeholder="Bid In Price" class="form-control" (change)="onChangeBidValue(true)" [(ngModel)]="bidItemObj.price" [disabled]="bidType !='price'"/>
+                    </div>
+                    <div class="form-group input-group" *ngIf="selectedRowData.buyPriceDisclosure == true">
+                        <label class="form-label required displayFlexCenter"><input type="radio" name="r1" value="discount"  [(ngModel)]="bidType"/>&nbsp;&nbsp; Bid By Discount(%)</label>
+                        <input type="number" placeholder="Bid In Discount" class="form-control"  (change)="onChangeBidValue(false)" [(ngModel)]="bidItemObj.discount"[disabled]="bidType =='price'"/>
+                    </div>
+                    <div class="form-group input-group">
+                        <label class="form-label required ">Quanity</label>
+                        <input type="number" placeholder="Quantity" [(ngModel)]="bidItemObj.quantity" class="form-control"  />
+                    </div>
+                    <div class="form-group input-group">
+                        <label class="form-label">Remarks</label>
+                        <input type="text" placeholder="remarks" [(ngModel)]="bidItemObj.remarks" class="form-control"  />
+                    </div>
+                  </div>
+                  <div class="col-3" style="display: flex;align-items: center;">
+                    <button class="btn btn-blue" (click)="onSubmitBid()">Submit</button>
+                  </div>
+                  <p style="font-size: 12px;"><b>Note:</b> Bid Amount Calculating over Buy Price.</p>
+            </div>
+
+        </div>
+        </div>
+    </div>
+</ng-template>
+
+
+
+<ng-template #addOrEditCommentsTemplate>
+    <div class="modal-header">
+        <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+        <div class="col-6">
+            <h5>Comments</h5>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-12" *ngIf="!['CategoryManager','CategoryManager2'].includes(roleName)">
+                <div class="row">
+                    <div class="form-group col-6">
+                        <label>Your Comments</label>
+                        <select class="form-control" [(ngModel)]="commentContent.text">
+                            <option disabled hidden selected value="">Select Your Comment</option>
+                            <option *ngFor="let comm of commentsList">{{comm}}</option>
+                        </select>
+                    </div>
+                    <div class="col-6" style="display: inline-flex;
+                    align-items: end;">
+                        <button class="btn btn-red" (click)="onCloseComments()">Close</button>
+                        <button class="btn btn-blue" (click)="createCommentsByBuyer()">Submit</button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-12 mt-3"><h5>Comment History:</h5></div>
+            <div class="col-12" *ngIf="commentContentList.length>0" style="max-height: 232px;
+                            overflow-y: auto;">
+                <div *ngFor="let comment of commentContentList" class="comment-list">
+                    <div class="audit-panel">
+                        <span> {{comment.commentedBy}}</span>
+                        <span> {{comment.createdTS | date: 'dd-MMM-yyyy HH:mm:ss a'}}</span>
+                    </div>
+                    <div class="comment-content"> {{comment?.comments}}</div>
+                </div>
+            </div>
+            <div class="col-12" *ngIf="commentContentList.length <= 0">
+                <div  class="alert alert-warning">No Comments Availabe.</div>
+            </div>
+        </div>
+
+
+    </div>
+</ng-template>
+
+<p-sidebar [(visible)]="isEditBFSItem" position="right"
+styleClass="ui-sidebar-lg" [style]="{width:'100vw'}">
+<h3>Edit Item Details</h3>
+<div class="col-12">
+    <div class="  row"  >
+        <div class="col-12">
+            <div class="row">
+             <div class="col-12">
+                 <fieldset class="col-12 row  mt-3 fieldSec">
+                     <legend class="displayFlexCenter">Item Details</legend>
+                     <div class="col-12">
+                              <div class="rfqContainer ">
+                                    <div class="col-12">
+                                        <form class="row" [formGroup]="itemForm" novalidate  >
+                                            <div class="col-6 mb-1 form-group">
+                                                <label class="form-label required">Organization</label>
+                                                <div class="input-group">
+                                                    <input *ngIf="selectedOrgData" class="form-control" placeholder="Search Organization" disabled [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedOrgData.companyName" />
+                                                    <input *ngIf="!selectedOrgData" class="form-control" placeholder="Search Organization"  disabled/>
+                                                </div>
+
+                                            </div>
+                                                <!-- <div class="col-2 mb-1">
+                                                <label class="form-label required">User</label>
+                                                <select class="form-control" formControlName="user">
+                                                    <option value="">--Select--</option>
+                                                    <option *ngFor="let user of userList" [ngValue]="user">{{user.username}}</option>
+                                                </select>
+                                            </div> -->
+                                                <div class="col-6 mb-1">
+                                                    <label class="form-label required">Item Description</label>
+                                                    <input type="text" class="form-control"  formControlName="description" placeholder="Item Description" />
+
+                                                </div>
+                                                <div class="col-6 mb-1">
+                                                    <label class="form-label required">Category</label>
+                                                    <input class="form-control" formControlName="category" placeholder="Item Specification" />
+                                                </div>
+                                                <div class="col-6 mb-1">
+                                                    <label class="form-label required">Item Specification</label>
+                                                    <input class="form-control" formControlName="specification" placeholder="Item Specification" />
+                                                </div>
+                                                <!-- <div class="col-2 mb-1">
+                                                    <label class="form-label required">Item Number</label>
+                                                    <input class="form-control" formControlName="itemNumber" placeholder="Item Number" />
+                                                </div> -->
+                                                <div class="col-6 mb-1">
+                                                    <label class="form-label required">UOM</label>
+                                                    <input class="form-control" formControlName="unitofMeasures" placeholder="Item UOM" />
+                                                    <div class="error" *ngIf="itemForm.controls.unitofMeasures.errors && (itemForm.controls.unitofMeasures.errors.invalid || itemForm.controls.unitofMeasures.errors.pattern)">
+                                                    Only Alphabets allowed and  No Special Characters not allowed.
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 mb-1">
+                                                <label class="form-label required">Age Of Asset(In Months)</label>
+                                                <input class="form-control" formControlName="ageOfAsset" type="number" placeholder="Age of asset" />
+                                                <p class="error"  *ngIf="(itemForm.controls?.ageOfAsset?.touched && itemForm.controls.ageOfAsset.errors) && (itemForm.controls.ageOfAsset.errors.invalid )">Aseet Age should be Number</p>
+
+
+                                            </div>
+                                                <div class="col-6 mb-1">
+                                                        <label class="form-label required">Available Quantity</label>
+                                                        <input class="form-control" formControlName="availableQuantity" type="number" placeholder="Available Quantity" />
+                                                        <p class="error"  *ngIf="(itemForm.controls?.availableQuantity?.touched && itemForm.controls.availableQuantity.errors) && (itemForm.controls.availableQuantity.errors.invalid || itemForm.controls.availableQuantity.errors.required)">Quantity is a mandatory field & should be number</p>
+                                                </div>
+
+
+                                                <div class="col-6 mb-1">
+                                                    <label class="form-label required">Do you know Buy Price?</label>
+                                                    <div style="    display: flex;
+                                                    align-items: center;
+                                                    padding: 4px;">
+                                                        <input type="radio" name="buyPriceDisclosure" [value]="true" formControlName="buyPriceDisclosure" (click)="onChangePriceDisclosure(true)" />&nbsp;&nbsp;Yes &nbsp;&nbsp;&nbsp;
+                                                        <input type="radio" name="buyPriceDisclosure" [value]="false" formControlName="buyPriceDisclosure" (click)="onChangePriceDisclosure(false)" />&nbsp;&nbsp;No
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 mb-1" *ngIf="itemForm.controls.buyPriceDisclosure.value && itemForm.controls.buyPriceDisclosure.value == true">
+                                                    <label class="form-label required">Buy Price(Per Unit)</label>
+                                                    <input class="form-control" formControlName="sellPrice" type="number" placeholder="Buy Price" (change)="onPriceDiscountChange()" />
+                                                    <p class="error"  *ngIf="(itemForm.controls?.sellPrice?.touched && itemForm.controls.sellPrice.errors) && (itemForm.controls.sellPrice.errors.invalid || itemForm.controls.sellPrice.errors.required)">Buy Price is a mandatory field & should be number</p>
+                                                </div>
+                                                <div class="col-6 mb-1" *ngIf="itemForm.controls.buyPriceDisclosure.value && itemForm.controls.buyPriceDisclosure.value == true">
+                                                    <label class="form-label required">Discount(%)</label>
+
+                                                    <input class="form-control" formControlName="discount" type="number" placeholder="Discount" (change)="onPriceDiscountChange()"/>
+                                                    <p class="error"  *ngIf="(itemForm.controls?.discount?.touched && itemForm.controls.discount.errors) && (itemForm.controls.discount.errors.invalid || itemForm.controls.discount.errors.required)">Discount is a mandatory field & should be number</p>
+                                                </div>
+                                                <div class="col-6 mb-1" *ngIf="itemForm.controls.buyPriceDisclosure.value == true ||  itemForm.controls.buyPriceDisclosure.value == false">
+                                                    <label class="form-label" [ngClass]="{'required':  itemForm.controls.buyPriceDisclosure.value == false}">Sale Price(Per Unit)</label>
+                                                    <input class="form-control" formControlName="askPrice"  type="number" placeholder="Sale Price"  />
+                                                </div>
+                                            <div class="col-6 mb-1">
+                                                <label class="form-label required">Location</label>
+                                                <input class="form-control" formControlName="location"  type="text" placeholder="Location"  />
+                                            </div>
+
+                                            <div class="col-6 mb-1">
+                                                <label class="form-label required" >BFS Group</label>
+                                                <p-autoComplete  formControlName="bfsGroup" showEmptyMessage="true"
+                                                [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
+                                                 [suggestions]="filtered_divisionsList" panelInputClass="p-auto-panel-cls" [minLength]="1"
+                                                   [dropdown]="true"
+                                                  (completeMethod)="filterAutoCompleteData($event, 'divisionsList','filtered_divisionsList',   true)"
+                                                   >
+                                                            <ng-template let-segment pTemplate="item">
+                                                                <div class="segment-item">
+                                                                    <div>{{segment}}</div>
+                                                                </div>
+                                                            </ng-template>
+                                                </p-autoComplete>
+                                            </div>
+                                            <div class="col-6 mb-1">
+                                                <label class="form-label">Remarks</label>
+                                                <input class="form-control" formControlName="remarks"  type="text" placeholder="Remarks.."  />
+                                            </div>
+
+                                                <div class="col-6 mb-1">
+                                                    <label>Attachments</label>
+                                                    <input type="file" (click)="fileInput.value = null" #fileInput   (change)="fileUploadEvent($event.target.files, true)"  class="form-control" id="i_commentFile" />
+                                                    <div class="col-12 " *ngIf="editBFSItemData?.bfsDocuments.length>0" style="margin-top: 5px;
+                                                    font-size: 13px;">
+                                                        <div class="choosenFileCls"><b>File Chosen :</b><br />
+                                                                <span *ngFor="let file of editBFSItemData?.bfsDocuments;let i = index">
+                                                                    <span> {{file.fileName}}</span>
+                                                                     &nbsp;&nbsp;<span class="removeIcon"  (click)="removeFilesList(i)" title="Remove File"><i class="fa fa-times-circle" aria-hidden="true"></i> Remove</span>
+                                                                  <br/> </span> </div>
+                                                        </div>
+                                                </div>
+
+                                                <div class="col-6 mb-1">
+                                                    <label>Images(Item's Profile) s</label>
+                                                    <input type="file" (click)="fileInput3.value = null" #fileInput3  (change)="fileUploadEventForImages($event.target.files, true)"  class="form-control" id="i_commentFile" />
+                                                    <p style="font-size: 12px;font-style: bold;">Allowed File Format: PNG/JPG/JPEG</p>
+                                                    <div class="col-12 " *ngIf="editBFSItemData?.bfsImages.length>0" style="margin-top: 5px;
+                                                    font-size: 13px;">
+                                                        <div class="choosenFileCls"><b>File Chosen : </b><br />
+                                                                <span *ngFor="let file of editBFSItemData.bfsImages;let i = index">
+                                                                    <span>
+                                                                        <img [src]="file.file" [alt]="file.fileName" width="100" height="100" />
+                                                                    </span>
+                                                                    <!-- <span> {{file.fileName}}</span> -->
+                                                                     &nbsp;&nbsp;<span class="removeIcon cursor-pointer"  (click)="removeFilesImgForEdit(i)" title="Remove File"><i class="fa fa-times-circle" aria-hidden="true"></i> Remove</span>
+                                                                  <br/> </span> </div>
+                                                        </div>
+                                                </div>
+
+
+                                    </form>
+                                </div>
+                              </div>
+
+                     </div>
+
+
+                 </fieldset>
+             </div>
+
+            </div>
+         </div>
+
+    </div>
+</div>
+<div class="col-12" style="display: flex;align-items: center;flex-direction: row-reverse;    position: fixed;
+bottom: 16px;right: 16px;" >
+   <button class="btn btn-green" (click)="updateBFSItemData()">Update</button>
+   <button class="btn btn-red" (click)="onCloseEditForm()">Close</button>
+
+</div>
+<ng-template #selectOrgTemplate>
+    <div class="modal-header">
+        <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+        <div class="col-6">
+            <h5>Select Organization</h5>
+        </div>
+
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-6 mb-1">
+                <input type="text" class="form-control" [(ngModel)]="searchedOrgString"
+                    placeholder="Enter Organization Name" />
+            </div>
+            <div class="col-5"><button class="btn btn-blue" (click)="searchForOrgs()">Search</button></div>
+
+            <div class="col-12 orgList">
+                <ul style="list-style:  none;">
+                    <li style="padding:4px 10px;" *ngFor="let org of filtered_organizationList" title="Select Organization" (click)="onChooseOrg(org)">{{org.companyName}} ,
+                        {{org.city}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</ng-template>
+</p-sidebar>

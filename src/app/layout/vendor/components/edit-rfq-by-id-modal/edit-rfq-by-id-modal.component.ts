@@ -1,0 +1,260 @@
+import { Component, HostListener, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ToastrService } from 'ngx-toastr';
+import { AppConfig } from 'src/app/app.config';
+import { CreateRfqService } from 'src/app/layout/category-mgr/services/create-rfq.service';
+import { ConvertToBase64Service } from 'src/app/shared/modules/common-share/services/convert-to-base64.service';
+import { EncryDecryService } from 'src/app/shared/services';
+import swal from 'sweetalert2';
+@Component({
+    selector: 'app-edit-rfq-by-id-modal',
+    templateUrl: './edit-rfq-by-id-modal.component.html',
+    styleUrls: ['./edit-rfq-by-id-modal.component.scss']
+})
+export class EditRfqByIdModalComponent implements OnInit {
+    fileData: any;
+    paginatoryDetails: any;
+    pageRecordSize: any;
+    pageOptions: any;
+    selectedData: any;
+    viewRFQbyIDdetails: any;
+    isShowItemsSectionOnly: boolean = false;
+    dragAreaClass: string;
+    commentFileData: string;
+    commentFileType: any;
+    commentFilesDataList: any = [];
+    loggedUserPermissions: any;
+    loggedUserDetails: any;
+    loggedUserName: any;
+    roleName: any;
+    categoryList: any =[];
+    filtered_categoryList: any =[];
+    divisionsList: any =[];
+
+    constructor(private dialogRef: MatDialogRef<EditRfqByIdModalComponent>,private encryDecryService: EncryDecryService,
+        @Inject(MAT_DIALOG_DATA) data, private convertSer: ConvertToBase64Service, private createRfqService: CreateRfqService,
+        private toaster: ToastrService
+
+    ) {
+        this.viewRFQbyIDdetails = data;
+        console.log(this.viewRFQbyIDdetails);
+    }
+
+    rfqDetailsHeaders: any = [
+
+        { field: 'description', header: 'Description', isLink: false, fieldType: 'text' },
+        { field: 'brand', header: 'Specification', isLink: false, fieldType: 'text' },
+
+        { field: 'quantity', header: 'Quantity', isLink: false, fieldType: 'number' },
+        { field: 'unitofMeasures', header: 'UOM', isLink: false, fieldType: 'text' },
+        // { field: 'unitprice', header: 'Unit Price', isLink: false },
+    ];
+
+    ngOnInit() {
+        this.isShowItemsSectionOnly = this.viewRFQbyIDdetails.showItemsOnly;
+        this.pageRecordSize = AppConfig.GRID_PAGE_INFO.initpageSize;
+        this.pageOptions = AppConfig.GRID_PAGE_INFO.pageOptions;
+        const temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
+        this.loggedUserPermissions = temp.details.listofPermission;
+        this.loggedUserDetails = temp.details;
+        this.loggedUserName = this.loggedUserDetails.username;
+        this.roleName = this.loggedUserDetails.role.roleName;
+        if(this.roleName == 'ClientInitiator'){
+            // this.rfqDetailsHeaders.splice(2, 0, { field: 'division', header: 'Division', isLink: false, fieldType: 'list' },);
+                this.createRfqService.getGMTDivisions().subscribe((res: any) => {
+                    this.divisionsList = res || [];
+                });
+        }else{
+            // this.rfqDetailsHeaders.splice(2, 0, { field: 'category', header: 'Category', isLink: false , fieldType: 'list'},);
+            this.rfqDetailsHeaders.splice(4, 0, { field: 'remarks', header: 'Remarks', isLink: false, fieldType: 'text' },);
+
+            this.createRfqService.getGMTDivisions().subscribe((res: any) => {
+                this.divisionsList = res || [];
+            });
+            if(this.viewRFQbyIDdetails.division){
+                this.onChangeDivision(true);
+            }
+            if(this.viewRFQbyIDdetails.isCreateRFQScreen){
+                this.createRfqService.getGMTCategories().subscribe((res: any) => {
+                    this.categoryList = res || [];
+                    this.filtered_categoryList =[];
+                });
+
+            }
+
+        }
+    }
+
+    onChangeDivision(isInitial:boolean){
+        const obj = {"division": this.viewRFQbyIDdetails.division};
+        this.createRfqService.getGMTCategoriesByDivision(obj).subscribe((res: any) => {
+            this.categoryList = res || [];
+            if(!isInitial){
+                this.viewRFQbyIDdetails.category = '';
+            }
+            this.filtered_categoryList =[];
+        });
+    }
+    filterAutoCompleteData(event, inputArrayName, outputArrayName, isStringType) {
+
+        let filtered: any[] = [];
+        this[outputArrayName] = [];
+        const query = isStringType ? event.query.toLowerCase() : event.query;
+
+        this.filtered_categoryList = this[inputArrayName].filter(ele => ele != null && (ele.toLowerCase().includes(query)));
+    }
+
+    closeDialog() {
+        this.dialogRef.close({ event: 'Cancel' });
+    }
+
+    zoomout() {
+        this.dialogRef.updateSize('70%');
+    }
+
+    zoomin() {
+        this.dialogRef.updateSize('90%');
+    }
+
+    getImageURL(file: any) {
+        let url = '';
+        if (file['fileName'].split('.').splice(-1) == 'xlsx' || file['fileName'].split('.').splice(-1) == 'xls' || file['fileName'].split('.').splice(-1) == 'csv') {
+            url = '/assets/images/export-excel.png'
+        } else if (file['fileName'].split('.').splice(-1) == 'pdf') {
+            url = '/assets/images/new/download-pdf.svg'
+        } else if (file['fileName'].split('.').splice(-1) == 'png' || file['fileName'].split('.').splice(-1) == 'PNG' || file['fileName'].split('.').splice(-1) == 'JPG' || file['fileName'].split('.').splice(-1) == 'jpeg' || file['fileName'].split('.').splice(-1) == 'jpg') {
+            url = '/assets/images/new/download-img.png'
+        } else {
+            url = '/assets/images/new/download-file.png'
+        }
+        return url;
+    }
+    fileUploadEvent(files) {
+        const fileData = event;
+        // console.log('event1', event);
+        const file = files[0];
+        this.convertSer.getBase64(file).then((data: string) => {
+            const temp = {
+                fileName: file.name,
+                file: data.split(',')[1],
+            };
+
+            // For Single files upload
+            this.commentFileData = data.split(',')[1];
+            this.commentFileType = file.name;
+
+            // For Muliple files upload
+            this.commentFilesDataList.push(temp);
+        });
+    }
+
+    @HostListener('dragover', ['$event']) onDragOver(event: any) {
+        this.dragAreaClass = 'droparea';
+        event.preventDefault();
+    }
+    @HostListener('dragenter', ['$event']) onDragEnter(event: any) {
+        this.dragAreaClass = 'droparea';
+        event.preventDefault();
+    }
+    @HostListener('dragend', ['$event']) onDragEnd(event: any) {
+        this.dragAreaClass = 'dragarea';
+        event.preventDefault();
+    }
+    @HostListener('dragleave', ['$event']) onDragLeave(event: any) {
+        this.dragAreaClass = 'dragarea';
+        event.preventDefault();
+    }
+    @HostListener('drop', ['$event']) onDrop(event: any) {
+        console.log('in the ondrop');
+        this.dragAreaClass = 'dragarea';
+        event.preventDefault();
+        event.stopPropagation();
+        if (event.dataTransfer.files) {
+            const files: FileList = event.dataTransfer.files;
+            this.fileUploadEvent(files);
+        }
+    }
+
+    removeFile(index) {
+        this.commentFileData = null;
+        this.commentFileType = null;
+        this.commentFilesDataList.splice(index, 1)
+    }
+
+
+    saveAndAccept(){
+        if(!this.viewRFQbyIDdetails.projectDesc){
+            this.toaster.warning("Please Enter Project Description/Reference", 'Warning')
+            return;
+        }
+        if(!this.viewRFQbyIDdetails.category){
+            this.toaster.warning("Please assign Category to RFQ", 'Warning')
+            return;
+        }
+        console.log('reod data', this.viewRFQbyIDdetails)
+        this.viewRFQbyIDdetails['rfqDocument'] = [...this.viewRFQbyIDdetails['rfqDocument'], ...this.commentFilesDataList];
+        this.viewRFQbyIDdetails['fromClient'] = this.loggedUserDetails.role.roleName == 'ClientInitiator';
+        this.createRfqService.editRFQByClient(this.viewRFQbyIDdetails).subscribe((res:any)=>{
+            if (res.status == 'Success') {
+                this.toaster.success(res.message, 'Success');
+                this.dialogRef.close({success: true});
+            } else {
+                this.toaster.error(res.message, 'Failed')
+            }
+        })
+    }
+    onSaveAndSend(){
+        if(!this.viewRFQbyIDdetails.projectDesc){
+            this.toaster.warning("Please Enter Project Description/Reference", 'Warning')
+            return;
+        }
+        console.log('reod data', this.viewRFQbyIDdetails)
+        if(!this.viewRFQbyIDdetails.category){
+            this.toaster.warning("Please assign Category to RFQ", 'Warning')
+            return;
+        }
+        this.viewRFQbyIDdetails['rfqDocument'] = [...this.viewRFQbyIDdetails['rfqDocument'], ...this.commentFilesDataList];
+        this.viewRFQbyIDdetails['fromClient'] = this.loggedUserDetails.role.roleName == 'ClientInitiator';
+        this.createRfqService.onSaveAndSend(this.viewRFQbyIDdetails).subscribe((res:any)=>{
+            if (res.status == 'Success') {
+                this.toaster.success(res.message, 'Success');
+                this.dialogRef.close({success: true});
+            } else {
+                this.toaster.error(res.message, 'Failed')
+            }
+        })
+    }
+    onSaveRFQByClientInitiator(){
+        this.viewRFQbyIDdetails['rfqDocument'] = [...this.viewRFQbyIDdetails['rfqDocument'], ...this.commentFilesDataList];
+        this.viewRFQbyIDdetails['fromClient'] = this.loggedUserDetails.role.roleName == 'ClientInitiator';
+        this.createRfqService.editRFQByClient(this.viewRFQbyIDdetails).subscribe((res:any)=>{
+            if (res.status == 'Success') {
+                this.toaster.success(res.message, 'Success');
+                this.dialogRef.close({success: true});
+            } else {
+                this.toaster.error(res.message, 'Failed')
+            }
+        })
+    }
+
+    closeModal(){
+        swal({
+            title: '<h6>Are you sure you want to Close the RFQ!<h6>',
+            html: '<h4>You will be lost Unsaved changes?</h4>',
+            confirmButtonText: 'Yes',
+            confirmButtonColor: '#006dd5',
+            cancelButtonColor: '#d63636',
+            showCancelButton: true,
+            reverseButtons: true
+           }).then((result) => {
+            if (result.value) {
+               console.log('value',result);
+               this.dialogRef.close();
+            }
+          });
+    }
+
+    onDeleteExistedAttachment(index){
+        this.viewRFQbyIDdetails.rfqDocument = this.viewRFQbyIDdetails.rfqDocument.filter((ele, i) => i != index)
+    }
+}

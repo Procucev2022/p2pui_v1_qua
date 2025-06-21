@@ -1,0 +1,65 @@
+<div class="col-12">
+  <div class="row">
+      <!-- <div class="col-12 page-title">
+          <h5>Auction Details</h5>
+      </div> -->
+      <div class="col-12 marginTop20 " style="padding-top: 6px;">
+          <div class="prqContainer row">
+              <div class="col-md-12">
+
+                  <p-table #scheduledAuctionTableDataGrid [columns]="scheduledAuctionHeaders" [value]="scheduledAuctionTableData" sortMode="multiple"
+                      [paginator]="true" [rows]="pageRecordSize" id="quoteTable" [rowsPerPageOptions]="pageOptions"
+                          [style]="{'width': '100%'}" exportFilename="venRequest" [(selection)]="selectedData" [scrollable]="true">
+                          <ng-template pTemplate="caption">
+                          <div class="searchPanel">
+
+                              <!-- <button style="float: right;margin-right: 10px;margin-left: 10px;"
+                              mat-raised-button id="b_approvePR" (click)="createIssue()"
+                              color="primary" cdkFocusInitial type="button">Create</button> -->
+
+                              <input type="text" pInputText size="50" placeholder="Search.."
+                              (input)="scheduledAuctionTableDataGrid.filterGlobal($event.target.value, 'contains')" style="width:auto; float: right;" />
+
+                          </div>
+                          </ng-template>
+
+                          <ng-template pTemplate="header" let-columns>
+                          <tr>
+                              <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.field == 'id'? '270px': 'auto'">
+                              {{col.header}}
+                              <p-sortIcon [field]="col.field"></p-sortIcon>
+                              </th>
+                              <th>
+                                Actions
+                              </th>
+                          </tr>
+                          </ng-template>
+                          <ng-template pTemplate="body" let-rowData let-columns="columns">
+                          <tr [pSelectableRow]="rowData">
+                              <td *ngFor="let col of columns" [style.width]="col.field == 'id'? '270px': 'auto'">
+
+                              <span>{{rowData[col.field]}}</span>
+                              <td><span class="linkCls" *ngIf="isBidNow == 'live'" (click)="bidNow(rowData)"><i class="fa fa-hand-o-up" aria-hidden="true"></i> Bid Now</span></td>
+                          </tr>
+                          </ng-template>
+                          <ng-template pTemplate="emptymessage" let-columns>
+                          <tr>
+                              <td [attr.colspan]="5" style="text-align:center;">
+                              No Records Found.
+                              </td>
+                          </tr>
+                          </ng-template>
+                          <ng-template pTemplate="paginatorleft">
+                          <div *ngIf="scheduledAuctionTableDataGrid._totalRecords > 0">
+                            <b>Showing {{scheduledAuctionTableDataGrid.first+1}} to {{scheduledAuctionTableDataGrid.first+scheduledAuctionTableDataGrid.rows > scheduledAuctionTableDataGrid.totalRecords?scheduledAuctionTableDataGrid.totalRecords: scheduledAuctionTableDataGrid.first+scheduledAuctionTableDataGrid.rows}} of {{scheduledAuctionTableDataGrid.totalRecords}}</b>
+                              <!-- <app-page-info [totalRecords]="scheduledAuctionTableData?.length" [pageData]="paginatoryDetails"></app-page-info> -->
+                          </div>
+                          </ng-template>
+                  </p-table>
+
+              </div>
+
+          </div>
+      </div>
+  </div>
+</div>

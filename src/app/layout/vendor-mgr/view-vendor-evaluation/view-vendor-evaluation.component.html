@@ -1,0 +1,375 @@
+<div class="modal-header">
+    <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+    <div class="col-6">Vendor Evaluation Details</div>
+</div>
+<div class="modal-body row">
+    <div class="col-12">
+        <h5>Vendor Info</h5>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>Vendor Name : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.vendorName }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>Address : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.address }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>Location : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.location }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>Pan : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.pan }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>GST Number : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.gst }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>Annual Turnover : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.annualTurnOver }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>Types of Goods & Services : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.goodsType }}</span> </label>
+            </div>
+        </div>
+        <div class="col-12 row">
+            <label>Current Clients : </label>
+            <ng-container *ngFor="let c of vendorEvaluationData.client">
+                <div class="col-3 row">
+                    <label>{{c.clientName}}</label>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <h5>Capability</h5>
+    </div>
+
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>Total Man Power : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.manPower }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>Managerial : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.managerial }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>Non-Managerial : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.nonManagerial }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>Types of Machines : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.machineTypes }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>Monthly Supply / Service Capacity : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.serviceCapacity }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>Age of Business : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.bussinessAge }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>Capacity Utilization : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.capacityUtilization }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <h5>Quality</h5>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>Quality Certification : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.qualityCertification }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>Raw Material Sources : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.materialSource }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>Raw Material Test Certificates : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.testCertifcates }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>Quality Testing : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.qualityTesting }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>Packing Quality : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.packingQuality }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>Client rejections in a month : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.clientRejections }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>Sub Contracting : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.subContracting }}</span> </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <h5>Commercial</h5>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>No of new enquires per month : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.enquires }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>New Client Conversion Rate : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.conversionRate }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>Existing Client Service Life : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.clientService }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>Bill Discounting Opted : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.billDiscounting }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>Financial Stability : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.financialStability }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-6">
+                <label>Regular Client Payment Cycle : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.paymentCycle }}</span> </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <h5>Client Reference</h5>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <div class="col-6">
+                <label>No of Existing Clients : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.existingClients }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <div class="col-6">
+                <label>FeedBack taken from : </label>
+            </div>
+            <div class="col-6">
+                <label> <span class="label-value">{{ vendorEvaluationData?.reffernceFeedback }}</span> </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 row">
+        <ng-container *ngFor="let feedBack of vendorEvaluationData.feedback">
+            <div class="col-4 row">
+                <div class="col-9">
+                    <label>Client Name : </label>
+                </div>
+                <div class="col-3">
+                    <label> <span class="label-value">{{ feedBack?.clientName }}</span> </label>
+                </div>
+            </div>
+            <div class="col-4 row">
+                <div class="col-9">
+                    <label>Pricing Feedback : </label>
+                </div>
+                <div class="col-3">
+                    <label> <span class="label-value">{{ feedBack?.pricingFeedback }}</span> </label>
+                </div>
+            </div>
+            <div class="col-4 row">
+                <div class="col-9">
+                    <label>Delivery Feedback : </label>
+                </div>
+                <div class="col-3">
+                    <label> <span class="label-value">{{ feedBack?.deliveryFeedback }}</span> </label>
+                </div>
+            </div>
+            <div class="col-4 row">
+                <div class="col-9">
+                    <label>Professionalism Feedback : </label>
+                </div>
+                <div class="col-3">
+                    <label> <span class="label-value">{{ feedBack?.professionalismFeedback }}</span> </label>
+                </div>
+            </div>
+            <div class="col-4 row">
+                <div class="col-9">
+                    <label>Quality Feedback : </label>
+                </div>
+                <div class="col-3">
+                    <label> <span class="label-value">{{ feedBack?.qualityFeedback }}</span> </label>
+                </div>
+            </div>
+            <div class="col-4 row">
+                <div class="col-9">
+                    <label>Service Feedback : </label>
+                </div>
+                <div class="col-3">
+                    <label> <span class="label-value">{{ feedBack?.serviceFeedback }}</span> </label>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>

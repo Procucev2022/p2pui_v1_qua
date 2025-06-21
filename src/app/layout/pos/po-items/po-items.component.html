@@ -1,0 +1,59 @@
+<div class="col-12 pad-nill">
+    <div class="table-title">
+        <div class="row">
+          <div class="col-sm-6">
+            <h2>PO ID :{{poData?.poId}}</h2>
+            <p><span class="dot"></span>{{poLineItemsData?.length}} Total</p>
+          </div>
+          <div class="col-sm-6">
+            <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+            (input)="poLineItemsViewTable.filterGlobal($event.target.value, 'contains')" style="float: right;"/>
+          </div>
+        </div>
+      </div>
+  <p-table dataKey="id" #poLineItemsViewTable [columns]="poItemsHeaders" [value]="poLineItemsData" [scrollable]="true" sortMode="multiple" [paginator]="true" [rows]="pageRecordSize"  id="rfqTable"
+  [rowsPerPageOptions]="pageOptions" [style]="{width:'100%'}" exportFilename="rfq details" [(selection)]="selectedData">
+         <!-- <ng-template pTemplate="caption" >
+            <div class="col-12 row pad-nill">
+                <div class="col-4 pad-nill">
+                    <h5 class="screen-head">PO ID :{{poData?.poId}}</h5>
+                </div>
+                <div class="col-8 searchPanel pad-nill">
+                 <input type="text" pInputText size="50" placeholder="Search.."
+                     (input)="poLineItemsViewTable.filterGlobal($event.target.value, 'contains')"
+                     style="width:auto; float: right;" />
+             </div>
+             </div>
+         </ng-template> -->
+         <ng-template pTemplate="header" let-columns>
+             <tr>
+                 <th [style.width]="col.width" *ngFor="let col of columns" [pSortableColumn]="col.field">
+                     {{col.header}}
+                     <p-sortIcon [field]="col.field"></p-sortIcon>
+                 </th>
+             </tr>
+         </ng-template>
+         <ng-template pTemplate="body" let-rowData let-columns="columns">
+             <tr [pSelectableRow]="rowData">
+               <td *ngFor="let col of columns" [style.width]="col.width"  [ngClass]="{'table-cell-overflow-ellipse' : col.field == 'description' || col.field == 'brand' }">
+                 <span *ngIf="col.field == 'description' || col.field == 'brand' " [title]="rowData[col.field]">{{rowData[col.field]}}</span>
+                 <span *ngIf="col.field != 'description' && col.field != 'brand' ">{{rowData[col.field]}}</span>
+                </td>
+             </tr>
+         </ng-template>
+         <ng-template pTemplate="emptymessage" let-columns>
+             <tr>
+                 <td [attr.colspan]="5" style="text-align:center;">
+                     No Records Found.
+                 </td>
+             </tr>
+         </ng-template>
+         <ng-template pTemplate="paginatorleft">
+             <div *ngIf="poLineItemsViewTable._totalRecords > 0">
+                <b>Showing {{poLineItemsViewTable.first+1}} to {{poLineItemsViewTable.first+poLineItemsViewTable.rows > poLineItemsViewTable.totalRecords?poLineItemsViewTable.totalRecords: poLineItemsViewTable.first+poLineItemsViewTable.rows}} of {{poLineItemsViewTable.totalRecords}}</b>
+                 <!-- <app-page-info [totalRecords]="poLineItemsData.length" [pageData]="paginatoryDetails">
+                 </app-page-info> -->
+             </div>
+         </ng-template>
+   </p-table>
+</div>
