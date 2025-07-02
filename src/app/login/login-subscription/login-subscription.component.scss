@@ -403,25 +403,26 @@ a.btn.btn-primary {
     }
 
     .card-box {
-        height: 200px;
-        border: 2px solid;
-        background: #ffffff;
-        margin-bottom: 2rem;
-        padding: 2rem;
-        border-radius: 18px;
-        color: #fff !important;
-        position: relative;
-        text-decoration: none !important;
-        width: 80%;
-        margin-left: 15%;
-        border: 3px solid #000;
-        display: flex;
-        align-items: center;
+      height: 328px;
+      border: 2px solid;
+      background: #ffffff;
+      margin-bottom: 2rem;
+      padding: 8rem 2rem;
+      border-radius: 18px;
+      color: #fff !important;
+      position: relative;
+      text-decoration: none !important;
+      width: 80%;
+      margin-left: 15%;
+      border: 3px solid #FFF;
+      align-items: center;
+      margin-top: 100px;
+      box-shadow: 0px 1px 6px 2px #a4a4a4;
 
 
         .content {
             width: 85%;
-            margin-left: 15%;
+            margin-left: 7.5%;
 
             h2 {
                 color: #302c2a;
@@ -435,25 +436,28 @@ a.btn.btn-primary {
         }
 
         .btn-blue {
-            position: absolute;
-            bottom: -16px;
-            right: 22px;
-            background: #ff4800 !important;
-            color: #ffffff !important;
-            border-color: #c4bbf6 !important;
-            border-radius: 20px !important;
-            border: 4px !important;
-            min-width: 161px;
+          bottom: -16px;
+          right: 22px;
+          background: #ff4800 !important;
+          color: #ffffff !important;
+          border-color: #c4bbf6 !important;
+          border-radius: 20px !important;
+          border: 4px !important;
+          min-width: 100%;
+          margin-top: 2rem;
+          font-variant: all-small-caps;
+          font-weight: 400 !important;
         }
 
         img {
-            position: absolute;
-            left: -65px;
-            top: 14%;
-            width: 140px;
-            height: 140px;
-            border-radius: 52% !important;
-            border: 3px solid #000;
+          position: absolute;
+          left: calc(50% - 80px);
+          top: -18%;
+          width: 160px;
+          height: 160px;
+          border-radius: 52% !important;
+          border: 3px solid #ffffff;
+          box-shadow: -1px -4px 4px 3px #a4a4a4;
         }
     }
 }
