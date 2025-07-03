@@ -6,7 +6,7 @@ import * as CryptoJS from 'crypto-js';
 export class EncryDecryService {
 
   constructor() { }
- 
+
   //The set method is use for encrypt the value.
   set(keys, value){
     var key = CryptoJS.enc.Utf8.parse(keys);

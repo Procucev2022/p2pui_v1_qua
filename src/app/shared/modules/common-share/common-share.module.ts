@@ -89,6 +89,7 @@ import { ConfirmationService } from 'primeng/api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { VendorViewModelComponent } from './components/vendor-view-model/vendor-view-model.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TreeTableModule } from 'primeng/treetable';
 
 // import { AgGridAngular } from 'ag-grid-angular';
 @NgModule({
@@ -136,6 +137,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
         FormsModule,
         ReactiveFormsModule,
         TableModule,
+        TreeTableModule
         // AgGridAngular
     ],
 
@@ -209,6 +211,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
         FormsModule,
         ReactiveFormsModule,
         VendorViewModelComponent,
+        TreeTableModule
 
     ],
     providers: [

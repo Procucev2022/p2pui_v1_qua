@@ -1,10 +1,10 @@
 .mat-tab-body-content {
-    overflow: unset !important;
+  overflow: unset !important;
 }
 
 .mat-tab-body-content.ng-trigger.ng-trigger-translateTab {
-    overflow: unset !important;
-    height: auto !important;
+  overflow: unset !important;
+  height: auto !important;
 }
 
 .ui-table-scrollable-body {
@@ -17,62 +17,61 @@
 
 .mat-tab-label,
 .mat-tab-link {
-    font-size: 18px !important;
+  font-size: 18px !important;
 }
 
 
-@media screen and (min-width: 1441px) and (max-width: 1600px) {
-    .ui-table-scrollable-body {
-        overflow: auto;
-        position: relative;
-        height: auto;
-        max-height: 530px;
-        overflow-y: auto;
-    }
+ @media screen and (min-width: 1441px) and (max-width: 1600px) {
+  .ui-table-scrollable-body {
+    overflow: auto;
+    position: relative;
+    height: auto;
+    max-height: 530px;
+    overflow-y: auto;
+}
+ }
+
+ @media screen and (min-width: 1367px) and (max-width: 1440px) {
+  .ui-table-scrollable-body {
+    overflow: auto;
+    position: relative;
+    height: auto;
+    max-height: 500px;
+    overflow-y: auto;
+}
+ }
+
+ @media screen and (min-width: 1281px) and (max-width: 1366px) {
+  .ui-table-scrollable-body {
+    overflow: auto;
+    position: relative;
+    height: auto;
+    max-height: 460px;
+    overflow-y: auto;
 }
 
-@media screen and (min-width: 1367px) and (max-width: 1440px) {
-    .ui-table-scrollable-body {
-        overflow: auto;
-        position: relative;
-        height: auto;
-        max-height: 500px;
-        overflow-y: auto;
-    }
+.main-container[_ngcontent-c3] {
+  margin-top: 56px;
+  margin-left: 200px;
+  padding: 13px;
+  -ms-overflow-x: hidden;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  position: relative;
+  overflow: hidden;
+  max-height: 87vh;
+  height: auto;
 }
-
-@media screen and (min-width: 1281px) and (max-width: 1366px) {
-    .ui-table-scrollable-body {
-        overflow: auto;
-        position: relative;
-        height: auto;
-        max-height: 460px;
-        overflow-y: auto;
-    }
-
-    .main-container[_ngcontent-c3] {
-        margin-top: 56px;
-        margin-left: 200px;
-        padding: 13px;
-        -ms-overflow-x: hidden;
-        overflow-x: hidden;
-        overflow-y: hidden;
-        position: relative;
-        overflow: hidden;
-        max-height: 87vh;
-        height: auto;
-    }
+ }
+ @media screen and (min-width: 1025px) and (max-width: 1280px) {
+  .ui-table-scrollable-body {
+    overflow: auto;
+    position: relative;
+    height: auto;
+    max-height: 405px;
+    overflow-y: auto;
 }
-
-@media screen and (min-width: 1025px) and (max-width: 1280px) {
-    .ui-table-scrollable-body {
-        overflow: auto;
-        position: relative;
-        height: auto;
-        max-height: 405px;
-        overflow-y: auto;
-    }
-}
+ }
 
 
 
@@ -82,7 +81,7 @@ body a {
 }
 
 body .ui-table .ui-table-thead>tr>th {
-    // height: 51px;
+// height: 51px;
     // line-height: 150%;
     // color: #000000;
     // padding: 0.871em 0.857em;
@@ -95,39 +94,29 @@ body .ui-table .ui-table-thead>tr>th {
     // text-shadow: 0px 0px 0px #000000;
     height: 51px;
     line-height: 150%;
+    // color: #475467;
     color: #000000;
     padding: 0.871em 0.857em;
-    border: none;
+    border: 0px solid #eef0f2;
     font-weight: 500;
-    background-color: #0c21461c;
+    background-color: #f2f5fc;
     font-size: 1rem;
     line-height: 1.5;
     letter-spacing: 0.00938em;
     text-shadow: 0px 0px 0px #000000;
 }
-
-body .ui-table .ui-table-tbody>tr>td {
-    // background: inherit;
-    // border: 0px solid #c8c8c8;
-    // padding: 0.829em 0.857em;
-    // line-height: 28px;
-    // color: #242426;
-    // font-size: 1rem;
-    // line-height: 1.5;
-    // letter-spacing: 0.00938em;
-    // text-shadow: 0px 0px 0px #242426;
+body .ui-table .ui-table-tbody > tr > td {
     background: inherit;
     border: 0px solid #c8c8c8;
     padding: 0.829em 0.857em;
     line-height: 28px;
-    color: #646262;
-    font-size: 0.8rem;
+    color: #242426;
+    font-size: 1rem;
     line-height: 1.5;
     letter-spacing: 0.00938em;
-    font-weight: 520;
+    text-shadow: 0px 0px 0px #242426;
 }
-
-body .ui-table .ui-table-tbody>tr.ui-state-highlight {
+body .ui-table .ui-table-tbody > tr.ui-state-highlight {
     background-color: #0000 !important;
     color: #0C2146 !important;
     box-shadow: inset 2px 0px 1px 0px #0C2146;
@@ -139,252 +128,206 @@ body .ui-table .ui-table-tbody>tr.ui-state-highlight {
 ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
-}
+  }
 
-/* Track */
-::-webkit-scrollbar-track {
+  /* Track */
+  ::-webkit-scrollbar-track {
     background: #f1f1f1;
-}
+  }
 
-/* Handle */
-::-webkit-scrollbar-thumb {
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
     background: #888;
-}
+  }
 
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
     background: #555;
-}
+  }
 
 
 
 // new Design Implementation
 
 .table-title {
-    color: #0C2146;
-    border-radius: 3px 3px 0 0;
-    // padding: 15px 0px;
-    padding-bottom: 15px;
+  color: #0C2146;
+  border-radius: 3px 3px 0 0;
+  // padding: 15px 0px;
+  padding-bottom: 15px;
 }
-
 .table-title h2 {
-    margin: 5px 0 0;
-    font-size: 24px;
-    float: left;
-    font-weight: 700;
-    //   color: #262d3b;
-    color: #074193;
+  margin: 5px 0 0;
+  font-size: 24px;
+  float: left;
+  font-weight: 700;
+  color: #262d3b;
 }
-
 .table-title p {
-    margin: 5px 0 0;
-    font-size: 14px;
-    float: left;
-    font-weight: 600;
-    color: #788091;
-    padding: 6px;
+  margin: 5px 0 0;
+  font-size: 14px;
+  float: left;
+  font-weight: 600;
+  color: #788091;
+  padding: 6px;
 }
-
 .table-title .btn-group {
-    float: right;
+  float: right;
 }
-
 .table-title .btn {
-    float: right;
-    font-size: 1em !important;
-    min-width: 50px;
-    border-radius: 5px !important;
-    border: none;
-    outline: none !important;
-    margin-left: 10px;
-    max-height: 48px;
-    min-height: 48px;
+  float: right;
+  font-size: 1em !important;
+  min-width: 50px;
+  border-radius: 5px !important;
+  border: none;
+  outline: none !important;
+  margin-left: 10px;
+  max-height: 48px;
+  min-height: 48px;
 }
-
 .table-title .btn i {
-    float: left;
-    font-size: 19px;
-    margin: 0px 6px;
-    font-weight: 700;
+  float: left;
+  font-size: 19px;
+  margin: 0px 6px;
+  font-weight: 700;
 }
-
 .table-title .btn span {
-    float: left;
-    margin-top: 2px;
+  float: left;
+  margin-top: 2px;
 }
 
-.rippel-btn {
-    border: 1px solid #315eff !important;
-    color: #315eff !important;
-    box-shadow: none !important;
-    background-color: #fff !important;
+.rippel-btn{
+  border: 1px solid #315eff !important;
+  color: #315eff !important;
+  box-shadow: none !important;
+  background-color: #fff !important;
 }
 
-.rippel-btn-size {
-    max-height: 40px !important;
-    min-height: 40px !important;
+.rippel-btn-size{
+  max-height: 40px !important;
+  min-height: 40px !important;
 }
-
-.btn-light {
-    border: 2px solid #ccc !important;
+.btn-light{
+  border: 2px solid #ccc !important;
 }
-
 .main-input {
-    background: #fff;
-    height: 42px;
-    width: 400px;
-    color: #a7b1ab;
-    border: 2px solid #D0D5DD;
-    box-shadow: 0px 1px 2px #1018280d;
-    margin-bottom: 0px;
-    -webkit-appearance: none;
-    border-radius: 4px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    display: inline-block;
-    text-align: left;
-    font-weight: 500;
-    padding: 0px 0px 0px 55px;
-    font-size: 16px;
-    background: #ffffff url(http://seodesigns.com/projects/TD/images/search.png) 18px 12px no-repeat;
-    background-size: 18px 18px;
-    float: left;
+  background: #fff;
+  height: 42px;
+  width: 400px;
+  color: #a7b1ab;
+  border: 1px solid #D0D5DD;
+  box-shadow: 0px 1px 2px #1018280d;
+  margin-bottom: 0px;
+  -webkit-appearance: none;
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  display: inline-block;
+  text-align: left;
+  font-weight: 500;
+  padding: 0px 0px 0px 55px;
+  font-size: 16px;
+  background: #ffffff url(http://seodesigns.com/projects/TD/images/search.png) 18px 12px no-repeat;
+  background-size: 18px 18px;
+  float: left;
 }
-
-.grid-expand {
-    border: none;
-    font-size: 10px;
-    width: 24px;
-    height: 24px;
-    background: #e9f2ff80;
-    border-radius: 4px;
-
-    span {
-        color: #164b99;
-    }
+.grid-expand{
+  border: none;
+  font-size: 10px;
+  width: 24px;
+  height: 24px;
+  background: #e9f2ff80;
+  border-radius: 4px;
+  span{
+      color: #164b99;
+  }
 }
-
 .table-search {
-    color: #0C2146;
-    border-radius: 3px 3px 0 0;
-    padding: 15px;
+  color: #0C2146;
+  border-radius: 3px 3px 0 0;
+  padding: 15px;
 }
-
 .table-search .btn {
-    float: right;
-    font-size: 13px !important;
-    //   min-width: 44px;
-    border-radius: 5px !important;
-    border: none;
-    outline: none !important;
-    margin-left: 10px;
-    max-height: 42px;
-    min-height: 42px;
-    padding: 10px !important;
+  float: right;
+  font-size: 13px !important;
+//   min-width: 44px;
+  border-radius: 5px !important;
+  border: none;
+  outline: none !important;
+  margin-left: 10px;
+  max-height: 42px;
+  min-height: 42px;
+  padding: 10px !important;
 }
-
 .table-search i {
-    font-size: 16px;
+  font-size: 16px;
 }
-
-.table-search .btn-transparent {
-    background-color: #fff;
-    border: 1px solid #D0D5DD;
-    box-shadow: 0px 1px 2px #1018280d;
-    color: #344054;
-    font-weight: 600;
-    padding: 10px 20px !important;
+.table-search .btn-transparent{
+  background-color: #fff;
+  border: 1px solid #D0D5DD;
+  box-shadow: 0px 1px 2px #1018280d;
+  color: #344054;
+  font-weight: 600;
+  padding: 10px 20px !important;
 }
-
 .dot {
-    height: 12px;
-    width: 12px;
-    background-color: #ff4800;
-    border-radius: 50%;
-    display: inline-block;
-    margin: 0px 3px 0px 6px;
+  height: 12px;
+  width: 12px;
+  background-color: green;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 0px 3px 0px 6px;
 }
-
-.child-grid {
-    background: #f4f4f4 !important;
+.child-grid{
+  background: #f4f4f4 !important;
 }
 
 
 // .............!
 
-body .ui-table .ui-table-caption,
-body .ui-table .ui-table-summary {
-    background-color: #ffffff;
-    color: #333333;
-    border: 1px solid #ffffff;
-    padding: 0px;
-    text-align: right;
-    height: 75px;
+body .ui-table .ui-table-caption, body .ui-table .ui-table-summary {
+  background-color: #ffffff;
+  color: #333333;
+  border: 1px solid #ffffff;
+  padding: 0px;
+  text-align: right;
+  height: 75px;
 }
 
 .ui-table {
-    position: relative;
-    border: 2px solid #E1E5EC;
-    box-sizing: border-box;
-    box-shadow: 0px 4px 8px -2px #1018281a, 0px 2px 4px -2px #1018280f;
-    border-radius: 4px;
+  position: relative;
+  border: 2px solid #E1E5EC;
+  box-sizing: border-box;
+  box-shadow: 0px 4px 8px -2px #1018281a, 0px 2px 4px -2px #1018280f;
+  border-radius: 4px;
 }
 
-.table-search .ui-dropdown {
-    background: #ffffff;
-    border: 1px solid #cccccc !important;
-    transition: border-color 0.2s;
-    line-height: 2;
-    text-align: left;
-    padding-left: 1em;
-    width: 150px !important;
+.table-search .ui-dropdown{
+  background: #ffffff;
+  border: 1px solid #cccccc !important;
+  transition: border-color 0.2s;
+  line-height: 2;
+  text-align: left;
+  padding-left: 1em;
+  width: 150px !important;
 }
-
-.ui-paginator-pages .ui-paginator-page.ui-state-active {
-    background-color: transparent !important;
-    color: #000000 !important;
-    font-weight: 600;
+.ui-paginator-pages .ui-paginator-page.ui-state-active{
+  background-color: transparent !important;
+  color: #000000 !important;
+  font-weight: 600;
 }
-
 body .ui-paginator {
-    background-color: #ffffff;
-    border-top: 1px solid #eaecf1 !important;
-    margin: 0;
-    text-align: right;
-    padding: 7px 5px;
-    border: none;
+  background-color: #ffffff;
+  border-top: 1px solid #eaecf1 !important;
+  margin: 0;
+  text-align: right;
+  padding: 4px 5px;
+  border: none;
+}
+body .ui-table .ui-table-tbody > tr{
+  border: 1px solid #efefef;
+}
+body .ui-table .ui-table-tbody > tr:nth-child(even){
+  border: 1px solid #efefef;
+  background: white;
 }
 
-body .ui-table .ui-table-tbody>tr {
-    border: 2px solid #0e4ebf12;
-    border-left: none;
-}
-
-body .ui-table .ui-table-tbody>tr:nth-child(even) {
-    border: 1px solid #efefef;
-    background: white;
-}
-
-body .ui-table .ui-sortable-column.ui-state-highlight {
-    background-color: #8d96a3;
-    color: #ffffff;
-}
-
-
-body .ui-table .ui-table-tbody > tr.ui-state-highlight {
-    background-color: #0000 !important;
-    color: #0C2146 !important;
-    box-shadow: inset 3px 0px 1px 0px #007ad9;
-    position: relative;
-}
-body .ui-table .ui-table-tbody > tr > td {
-    background: inherit;
-    border: 0px solid #c8c8c8;
-    padding: 0.629em 0.857em;
-    line-height: 19px;
-    color: #646262;
-    font-size: 0.8rem;
-    /* line-height: 1.5; */
-    letter-spacing: 0.00938em;
-    font-weight: 520;
-}

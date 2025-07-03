@@ -40,6 +40,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonShareModule } from './shared/modules/common-share/common-share.module';
 import { RouterModule } from '@angular/router';
+import { TreeTableModule } from 'primeng/treetable';
 
 
 @NgModule({
@@ -77,7 +78,8 @@ import { RouterModule } from '@angular/router';
         ToastModule,
         InputTextModule,
         ProgressBarModule,
-        ChartModule
+        ChartModule,
+        TreeTableModule
 
     ],
     declarations: [AppComponent, LoaderComponent, TimeoutModalComponent, GridPageInfoComponent],
