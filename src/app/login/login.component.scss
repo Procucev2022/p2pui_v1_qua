@@ -429,3 +429,18 @@ small {
     border-radius: 0;
     padding: 60px;
 }
+
+.circle-container2[_ngcontent-ng-c966424302] .circle[_ngcontent-ng-c966424302] .item[_ngcontent-ng-c966424302]:nth-child(2) {
+  transform: rotate(124deg);
+  position: absolute;
+  right: 15%;
+  top: 24%;
+  box-shadow: 10px 1px 2px 3px rgba(25, 26, 26, 0.6784313725);
+}
+.circle-container2[_ngcontent-ng-c966424302] .circle[_ngcontent-ng-c966424302] .item[_ngcontent-ng-c966424302]:nth-child(1) {
+  transform: rotate(123deg);
+  position: absolute;
+  top: 34%;
+  left: -15%;
+  box-shadow: -9px 4px 2px 3px rgba(25, 26, 26, 0.6784313725);
+}

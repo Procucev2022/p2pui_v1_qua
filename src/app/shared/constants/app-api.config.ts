@@ -1,14 +1,21 @@
 export class AppApiConfig {
 
-    public static ACCESS_TOKEN_PATH = '/oauth/token';
+  public static apiEndpoint = 'https://p2pv1servicesdev-etfrcte5fhdvfrd4.centralindia-01.azurewebsites.net';
+  public static LOGGED_USER_PATH = '/rest/users/user/loggedUser';
+  public static ACCESS_TOKEN_PATH = '/authenticate';
+
+
+
+
+  ////Legacy APIS
+
     public static REFRESH_TOKEN_PATH = '/oauth/refreshToken';
     public static ACCESS_TOKEN = localStorage.getItem('at');
     public static loggedUserRole = 'Category Manager';
-
+    // https://p2pv1servicesdev-etfrcte5fhdvfrd4.centralindia-01.azurewebsites.net/authenticate
     // public static apiEndpoint =  'https://p2pproduction1-gcbhcag6fpgedpb3.centralindia-01.azurewebsites.net/procucev';
     // https://p2pprodservices.azurewebsites.net --- prod
-    public static apiEndpoint = 'https://devp2pindia-c5c7gfhhbsdxaycm.centralindia-01.azurewebsites.net/procucev';
-    public static LOGGED_USER_PATH = '/rest/users/user/loggedUser';
+
     public static FORGOT_PASSWORD = '/password/forgotPassword';
 
 

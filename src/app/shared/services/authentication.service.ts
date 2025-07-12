@@ -31,11 +31,15 @@ export class AuthenticationService {
         formdata.append('username', req.userName);  // 'venu.gade@procucev.com');
         formdata.append('password', req.userPassword); // 'Welcome@123');
         formdata.append('grant_type', 'password');
+        const payload: any  ={
+          username : req.userName,
+          password :  req.userPassword
+        }
 
         return this.http
             .post<any>(AppApiConfig.apiEndpoint + AppApiConfig.ACCESS_TOKEN_PATH,
-                formdata,
-                httpOptions
+                payload,
+            httpOptions
             )
             .pipe(
                 take(1),
@@ -53,7 +57,9 @@ export class AuthenticationService {
 
 
     getLoggedUserData(req): Observable<any> {
-        return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.LOGGED_USER_PATH, req, {});
+      //https://p2pv1servicesdev-etfrcte5fhdvfrd4.centralindia-01.azurewebsites.net/rest/users/user/loggedUser
+      return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.LOGGED_USER_PATH, req, {});
+      // return this.http.post('https://p2pv1servicesdev-etfrcte5fhdvfrd4.centralindia-01.azurewebsites.net/rest/users/user/loggedUser', req, {});
     }
 
     saveLoggedUserData(req): Observable<any> {

@@ -70,7 +70,7 @@ export class RequestInterceptor implements HttpInterceptor {
                     'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'POST, GET, PATCH, OPTIONS, DELETE',
                     'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
-                    'Authorization': 'bearer ' + (tkn ? tkn : ''),
+                    'Authorization': 'Bearer ' + (tkn ? tkn : ''),
                 });
                 const authReq = req.clone({ headers });
                 return next.handle(authReq);
