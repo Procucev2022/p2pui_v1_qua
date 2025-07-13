@@ -3,9 +3,31 @@ export class AppApiConfig {
   public static apiEndpoint = 'https://p2pv1servicesdev-etfrcte5fhdvfrd4.centralindia-01.azurewebsites.net';
   public static LOGGED_USER_PATH = '/rest/users/user/loggedUser';
   public static ACCESS_TOKEN_PATH = '/authenticate';
+  public static GET_RFQS_FOR_NOPR_FOR_CLIENT_INITIATOR = "/rest/gmt/getNoPrRfqByClient";
+  public static GET_DOCUMENTS_BY_RFQ_ID = '/procucev/rest/gmt/fetchRfqById';
+  public static GET_RFQ_BY_ID = '/procucev/rest/gmt/fetchRfqById';
+  public static FETCH_ALL_RFQ_IDS_BY_GMT_CLIENTINTIATOR='/rest/gmt/getClientRfqIds';
+  public static CREATE_RFQ_FOR_NOPR_WITH_ITEMS_BY_CLIENT ='/gmt/createRFQForNoPrByClient';
+  public static CREATE_RFQ_FOR_NOPR_WITH_ITEMS ='/rest/gmt/createRFQForNoPrWithItems';
+  public static GET_ALL_DIVISIONS_GMT= '/procucev/rest/gmt/getAllDivisions';
+  public static EDIT_RFQ_BY_CLIENT_GMT = '/gmt/editRFQForNoPrByClient';
+  public static CONVERT_RFQ_FOR_ITEMS = '/gmt/convertRfqBoq';
+  public static QUERY_SUPPORT_MAIL = '/gmt/client/sendingQueryMail'
+  public static FETCH_ALL_RFQS_BY_GTM_VENDOR = '/gmt/fetchAllGMTRfqs';
+  public static GET_CATEGORIES_BY_DIVISION_GMT= '/procucev/rest/gmt/getCategoryByDivision';
+  public static RAISE_QUERY_FOR_RFQ_BY_GMT_VENDOR ='/procucev/rest/gmt/raiseQueryByVendor';
+  public static IGNORE_RFQ_BY_GMT_VENDOR ='/procucev/rest/gmt/ignoreRfqByVendor';
+  public static REQUEST_RFQ_BY_GMT_VENDOR = '/procucev/rest/gmt/requestRfqByVendors';
+  public static GET_ALL_CATEGORIES_GMT= '/rest/gmt/getAllCategories';
+  public static GET_RFQS_FOR_NOPR = "/procucev/rest/gmt/getRFQsForNoPR";
+  public static GET_ALL_VENDORS =  "/procucev/rest/gmt/getAllVendors";
+  public static GET_All_VENDORS_BY_CATEGORY ="/procucev/rest/gmt/getAllVendorsByCategory";
+  public static GET_VENDORS_BY_RFQ_ID_FOR_GMT = '/rest/gmt/getVendorsByGmtRFQ';
+  public static ACCEPT_GMT_VENDOR_BY_CM = "/rest/gmt/approveVendor";
+  public static REJECT_GMT_VENDOR_BY_CM ='/procucev/rest/gmt/rejectRfqForVendorByCM2';
 
 
-
+  public static GET_ALL_ITEM_MASTER_FOR_RFQ = "/rest/itemcode/getAllItemMasterForRFQ"; //NEED TO DICSUSS
 
   ////Legacy APIS
 
@@ -286,7 +308,6 @@ export class AppApiConfig {
     public static UPDATE_ITEM_CATALOGUE_REQ_BY_CLIENT = '/rest/itemcode/updateItemCatalogueReqByClient';
     public static CREATE_ITEM_CATALOGUE_REQ_BY_BOQ_FILE = '/rest/itemcode/createItemCatalogueReqByClient';
     public static GET_ITEM_CATALOGUE_REQ_BY_ID = '/rest/itemcode/getItemCatalogueReqById';
-    public static CONVERT_RFQ_FOR_ITEMS = '/rest/categoryManager/convertRfqBoq';
 
 
     // For BFS APIs
@@ -591,30 +612,21 @@ export class AppApiConfig {
 
     public static FETCH_ALL_RFQS_BY_ID = '/rest/rfq/fetchAllRfqs';
     public static FETCH_ALL_RFQS_BY_GMT_CATEGORYMANAGER= '/rest/rfq/fetchAllGMTRfqsForCM';
-    public static FETCH_ALL_RFQ_IDS_BY_GMT_CLIENTINTIATOR='/rest/client/getClientRfqIds'
-    public static QUERY_SUPPORT_MAIL = '/rest/client/sendingQueryMail'
     public static FETCH_ALL_CLIENT_RFQS_BY_GMT_CATEGORYMANAGER= '/rest/rfq/fetchAllClientGMTRfqsForCM';
-    public static FETCH_ALL_RFQS_BY_GTM_VENDOR = '/rest/rfq/fetchAllGMTRfqs';
-    public static REQUEST_RFQ_BY_GMT_VENDOR = '/rest/rfq/requestRfqByVendors';
-    public static GET_VENDORS_BY_RFQ_ID_FOR_GMT = '/rest/rfq/getVendorsByGmtRFQ';
     public static GET_VENDORS_INFO_BY_ID_GMT = '/rest/vendor/vendorInfoById';
     public static GET_CLIENT_INFO_BY_ID_GMT = '/rest/client/getUserById';
     public static GET_ITEMS_BY_RFQ_ID_FOR_GMT ='/rest/categoryManager/getItemsbyrfqid';
-    public static IGNORE_RFQ_BY_GMT_VENDOR ='/rest/rfq/ignoreRfqByVendor';
-    public static RAISE_QUERY_FOR_RFQ_BY_GMT_VENDOR ='/rest/rfq/raiseQueryByVendor';
     public static PAN_VALIDATION ='/partialvendor/validateClientDetails';
     public static OTP_VALIDATION ='/partialvendor/validateOtp';
     public static GET_CLIENT_DETAILS_BY_PAN ="/partialvendor/getClientByPan";
     public static SUBMIT_CLIENT_SELF_REGISTRATION ="/partialvendor/SelfClientRegistration";
     public static SEND_OTP_TO_MAIL ="/partialvendor/sendOtp";
-    public static ACCEPT_GMT_VENDOR_BY_CM = "/rest/rfq/approveVendor";
-    public static REJECT_GMT_VENDOR_BY_CM ='/rest/rfq/rejectRfqForVendorByCM2';
 
     public static GET_QUOTATION_LINE_ITEMS_BY_ID = '/rest/vendorManager/getQuotationItemByQuotation';
 
     public static GET_ITEMS_BY_RFQ_ID = '/rest/categoryManager/getItemsbyrfqid';
 
-    public static GET_DOCUMENTS_BY_RFQ_ID = '/rest/rfq/fetchRfqById';
+
 
     public static UPLOAD_QUOTATION = '/rest/rfq/uploadQuotation';
 
@@ -662,8 +674,6 @@ export class AppApiConfig {
     public static REQUEST_VENDOR = '/rest/categoryManager/requestVendor';
 
     public static GET_ALL_REQ_VENDORS = '/rest/categoryManager/getAllReqVendors';
-
-    public static GET_RFQ_BY_ID = '/rest/rfq/fetchRfqById';
 
     public static REQ_COMPLETED = '/rest/categoryManager/requestCompleted';
 
@@ -785,13 +795,7 @@ export class AppApiConfig {
 
 
     public static  GET_ALL_SUB_CATEGORY_FOR_RFQ = "/rest/itemcode/getAllSubCategoryForRFQ";
-    public static GET_ALL_ITEM_MASTER_FOR_RFQ = "/rest/itemcode/getAllItemMasterForRFQ";
-    public static GET_ALL_VENDORS =  "/rest/vendor/getAllVendors";
-    public static GET_All_VENDORS_BY_CATEGORY ="/rest/vendor/getAllVendorsByCategory"
-    public static GET_RFQS_FOR_NOPR = "/rest/categoryManager/getRFQsForNoPR";
-    public static GET_RFQS_FOR_NOPR_FOR_CLIENT_INITIATOR = "/rest/rfq/getNoPrRfqByClient";
-    public static CREATE_RFQ_FOR_NOPR_WITH_ITEMS ='/rest/categoryManager/createRFQForNoPrWithItems';
-    public static CREATE_RFQ_FOR_NOPR_WITH_ITEMS_BY_CLIENT ='/rest/categoryManager/createRFQForNoPrByClient';
+
     public static FORWARD_RFQ_TO_VENDORS = '/rest/categoryManager/forwardRfq';
     public static GET_QUOTATIONS_COUNT = '/rest/categoryManager/getEmailCount';
     public static CREATE_AUTHENTICATE_USER = '/rest/users/saveAuth';
@@ -800,11 +804,7 @@ export class AppApiConfig {
     public static GET_GMT_FOR_REG_CLIENTS = '/rest/client/getSelfRegisterClients';
     public static ACCEPT_GMT_FOR_REG_CLIENTS = '/rest/client/acceptSelfRegisterClient';
     public static REJECT_GMT_FOR_REG_CLIENTS =   '/rest/client/ignoreSelfRegisterClient';
-    public static EDIT_RFQ_BY_CLIENT_GMT = '/rest/categoryManager/editRFQForNoPrByClient';
     public static ACCEPT_AND_SAVE_RFQ_BY_CM = '/rest/categoryManager/editAndResendRfqByCM';
-    public static GET_ALL_DIVISIONS_GMT= '/rest/categoryManager/getAllDivisions';
-    public static GET_CATEGORIES_BY_DIVISION_GMT= '/rest/categoryManager/getCategoryByDivision';
-    public static GET_ALL_CATEGORIES_GMT= '/rest/categoryManager/getAllCategories';
     public static UPDATE_CLIENT_DETAILS_GMT= '/rest/client/editClient';
     public static UPDATE_USER_DETAILS_GMT= '/rest/client/editUser';
     public static DELETE_USER_FOR_REG_CLIENT = '/rest/users/disableUser';
