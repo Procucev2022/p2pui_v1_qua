@@ -27,6 +27,15 @@ export class AppApiConfig {
   public static REJECT_GMT_VENDOR_BY_CM ='/rest/gmt/rejectRfqForVendorByCM2';
 
 
+
+  public static FORWARD_RFQ_TO_VENDORS = '/rest/gmt/forwardRfq';
+  public static FETCH_ALL_RFQS_BY_GMT_CATEGORYMANAGER= '/rest/gmt/fetchAllGMTRfqsForCM';
+  public static GET_ITEMS_BY_RFQ_ID_FOR_GMT ='/rest/gmt/getVendorsByGmtRFQ';
+  public static GET_LINE_ITEMS_BY_RFQ = '/rest/gmt/getVendorsByGmtRFQ';
+  public static GET_ITEMS_BY_RFQ_ID = '/rest/gmt/getVendorsByGmtRFQ';
+  public static FETCH_ALL_CLIENT_RFQS_BY_GMT_CATEGORYMANAGER= '/rest/gmt/fetchAllClientGMTRfqsForCM';
+
+
   public static GET_ALL_ITEM_MASTER_FOR_RFQ = "/rest/itemcode/getAllItemMasterForRFQ"; //NEED TO DICSUSS
 
   ////Legacy APIS
@@ -47,7 +56,6 @@ export class AppApiConfig {
     public static GET_PR_LINE_ITEMS_BY_PR = '/rest/categoryManager/getItemsbyprid';
 
     public static GET_QUOTATIONS_BY_RFQ = '/rest/categoryManager/getQuotationbyRFQ';
-    public static GET_LINE_ITEMS_BY_RFQ = '/rest/categoryManager/getItemsbyrfqid';
     public static GET_VENDORS_BY_RFQ = '/rest/categoryManager/getVendorbyRFQ';
 
     public static GET_VENDORS_BY_CATEGORY = '/rest/categoryManager/getVendorByCategory';
@@ -611,11 +619,8 @@ export class AppApiConfig {
     public static GET_ALL_RFQS_BY_VENDOR_ID = '/rest/vendorManager/getAllRfqsByVendorId';
 
     public static FETCH_ALL_RFQS_BY_ID = '/rest/rfq/fetchAllRfqs';
-    public static FETCH_ALL_RFQS_BY_GMT_CATEGORYMANAGER= '/rest/rfq/fetchAllGMTRfqsForCM';
-    public static FETCH_ALL_CLIENT_RFQS_BY_GMT_CATEGORYMANAGER= '/rest/rfq/fetchAllClientGMTRfqsForCM';
     public static GET_VENDORS_INFO_BY_ID_GMT = '/rest/vendor/vendorInfoById';
     public static GET_CLIENT_INFO_BY_ID_GMT = '/rest/client/getUserById';
-    public static GET_ITEMS_BY_RFQ_ID_FOR_GMT ='/rest/categoryManager/getItemsbyrfqid';
     public static PAN_VALIDATION ='/partialvendor/validateClientDetails';
     public static OTP_VALIDATION ='/partialvendor/validateOtp';
     public static GET_CLIENT_DETAILS_BY_PAN ="/partialvendor/getClientByPan";
@@ -624,7 +629,6 @@ export class AppApiConfig {
 
     public static GET_QUOTATION_LINE_ITEMS_BY_ID = '/rest/vendorManager/getQuotationItemByQuotation';
 
-    public static GET_ITEMS_BY_RFQ_ID = '/rest/categoryManager/getItemsbyrfqid';
 
 
 
@@ -795,8 +799,6 @@ export class AppApiConfig {
 
 
     public static  GET_ALL_SUB_CATEGORY_FOR_RFQ = "/rest/itemcode/getAllSubCategoryForRFQ";
-
-    public static FORWARD_RFQ_TO_VENDORS = '/rest/categoryManager/forwardRfq';
     public static GET_QUOTATIONS_COUNT = '/rest/categoryManager/getEmailCount';
     public static CREATE_AUTHENTICATE_USER = '/rest/users/saveAuth';
     public static UPDATE_AUTHENTICATE_USER = '/rest/users/updateAuth';
