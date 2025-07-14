@@ -12,7 +12,7 @@ export class AppApiConfig {
   public static GET_ALL_DIVISIONS_GMT= '/rest/gmt/getAllDivisions';
   public static EDIT_RFQ_BY_CLIENT_GMT = '/rest/gmt/editRFQForNoPrByClient';
   public static CONVERT_RFQ_FOR_ITEMS = '/rest/gmt/convertRfqBoq';
-  public static QUERY_SUPPORT_MAIL = '/rest/gmt/client/sendingQueryMail'
+  public static QUERY_SUPPORT_MAIL = '/rest/gmt/sendingQueryMail'
   public static FETCH_ALL_RFQS_BY_GTM_VENDOR = '/rest/gmt/fetchAllGMTRfqs';
   public static GET_CATEGORIES_BY_DIVISION_GMT= '/rest/gmt/getCategoryByDivision';
   public static RAISE_QUERY_FOR_RFQ_BY_GMT_VENDOR ='/rest/gmt/raiseQueryByVendor';

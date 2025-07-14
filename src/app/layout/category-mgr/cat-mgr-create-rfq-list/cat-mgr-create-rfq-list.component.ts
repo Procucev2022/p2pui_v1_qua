@@ -274,7 +274,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
 
     onSelectedVendor(event, item) {
         console.log('event', event, item);
-        const findIndex = this.vendorListObjs.findIndex(ele => ele.companyName === event)
+        const findIndex = this.vendorListObjs.findIndex(ele => ele.companyName === event.value)
         if (findIndex > -1) {
             this.vendorForm.setValidators([]);
             this.isAutoPopulated = true;
@@ -286,7 +286,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
         } else {
             this.fb.group({
                 id: new FormControl('MANUALENTRYID_' + Math.random()),
-                companyName: new FormControl(event, Validators.required),
+                companyName: new FormControl(event.value, Validators.required),
                 city: new FormControl('', Validators.required),
                 mobileNo: new FormControl('', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]),
                 email: new FormControl('', [Validators.required, Validators.email]),
