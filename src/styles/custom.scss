@@ -1173,3 +1173,11 @@ input[type='radio'] {
     display: none !important;
 }
 
+::ng-deep .grid-expand {
+  border: none;
+  font-size: 10px;
+  width: 24px;
+  height: 24px;
+  background: rgb(30 53 85 / 50%) !important;
+  border-radius: 4px;
+}

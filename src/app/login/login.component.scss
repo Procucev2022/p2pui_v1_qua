@@ -14,7 +14,7 @@ $topnav-background-color: #0C2146;
   text-align: center;
   color: #fff;
   margin: 0px;
-  background: #0f2d9a;
+  background: #00dbff;
   // padding: 3em;
   .form-control {
     background: #FFFFFF;
@@ -362,7 +362,6 @@ small {
     border-radius: 0% 0% 10% 10%;
     -webkit-transform: rotateZ(237deg);
     transform: rotateZ(237deg);
-    background: #102d9a0d;
     // /* box-shadow: -9px 4px 2px 3px #191a1aad;
     .img{
         width: 100%;
@@ -414,9 +413,9 @@ small {
 }
 
 .left-section  {
-    background: linear-gradient(0deg, rgba(12, 34, 140, 0.8), rgba(12, 34, 140, 0.8)), linear-gradient(270deg, #000000 31.08%, #505886 95.34%);
-    padding: 60px 0px;
-    clip-path: ellipse(90% 100% at left);
+  background: linear-gradient(0deg, rgb(5 5 5), rgb(7 65 147)), linear-gradient(270deg, #000000 31.08%, #000000 95.34%);
+  padding: 60px 0px;
+  clip-path: ellipse(90% 100% at left);
 }
 
 .d  {
@@ -430,17 +429,17 @@ small {
     padding: 60px;
 }
 
-.circle-container2[_ngcontent-ng-c966424302] .circle[_ngcontent-ng-c966424302] .item[_ngcontent-ng-c966424302]:nth-child(2) {
+.circle-container2 .circle .item:nth-child(2) {
   transform: rotate(124deg);
   position: absolute;
-  right: 15%;
+  right: 8%;
   top: 24%;
   box-shadow: 10px 1px 2px 3px rgba(25, 26, 26, 0.6784313725);
 }
-.circle-container2[_ngcontent-ng-c966424302] .circle[_ngcontent-ng-c966424302] .item[_ngcontent-ng-c966424302]:nth-child(1) {
+.circle-container2 .circle .item:nth-child(1) {
   transform: rotate(123deg);
-  position: absolute;
-  top: 34%;
-  left: -15%;
-  box-shadow: -9px 4px 2px 3px rgba(25, 26, 26, 0.6784313725);
+    position: absolute;
+    top: 34%;
+    left: -26%;
+    box-shadow: -9px 4px 2px 3px rgba(25, 26, 26, 0.6784313725);
 }

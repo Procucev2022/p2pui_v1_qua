@@ -69,7 +69,7 @@ export class RfqService {
     }
 
     getItemsByRFQIdForGMT(req: any) {
-        return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.GET_ITEMS_BY_RFQ_ID_FOR_GMT, req)
+        return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.GET_ITEMS_BY_RFQ_ID, req)
     }
 
     ignoreRFQByGTMVendor(req: any) {

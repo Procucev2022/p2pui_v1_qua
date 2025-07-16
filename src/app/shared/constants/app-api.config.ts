@@ -32,8 +32,9 @@ export class AppApiConfig {
   public static FETCH_ALL_RFQS_BY_GMT_CATEGORYMANAGER= '/rest/gmt/fetchAllGMTRfqsForCM';
   public static GET_ITEMS_BY_RFQ_ID_FOR_GMT ='/rest/gmt/getVendorsByGmtRFQ';
   public static GET_LINE_ITEMS_BY_RFQ = '/rest/gmt/getVendorsByGmtRFQ';
-  public static GET_ITEMS_BY_RFQ_ID = '/rest/gmt/getVendorsByGmtRFQ';
+  public static GET_ITEMS_BY_RFQ_ID = '/rest/gmt/getItemsbyrfqid';
   public static FETCH_ALL_CLIENT_RFQS_BY_GMT_CATEGORYMANAGER= '/rest/gmt/fetchAllClientGMTRfqsForCM';
+  public static GET_VENDORS_BY_RFQ = '/rest/gmt/getVendorbyRFQ';
 
 
   public static GET_ALL_ITEM_MASTER_FOR_RFQ = "/rest/itemcode/getAllItemMasterForRFQ"; //NEED TO DICSUSS
@@ -56,7 +57,6 @@ export class AppApiConfig {
     public static GET_PR_LINE_ITEMS_BY_PR = '/rest/categoryManager/getItemsbyprid';
 
     public static GET_QUOTATIONS_BY_RFQ = '/rest/categoryManager/getQuotationbyRFQ';
-    public static GET_VENDORS_BY_RFQ = '/rest/categoryManager/getVendorbyRFQ';
 
     public static GET_VENDORS_BY_CATEGORY = '/rest/categoryManager/getVendorByCategory';
 

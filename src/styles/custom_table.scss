@@ -235,7 +235,7 @@ body .ui-table .ui-table-tbody > tr.ui-state-highlight {
   font-size: 10px;
   width: 24px;
   height: 24px;
-  background: #e9f2ff80;
+  background: #868c9480;
   border-radius: 4px;
   span{
       color: #164b99;
@@ -331,3 +331,11 @@ body .ui-table .ui-table-tbody > tr:nth-child(even){
   background: white;
 }
 
+::ng-deep .grid-expand {
+  border: none;
+  font-size: 10px;
+  width: 24px;
+  height: 24px;
+  background: rgb(30 53 85 / 50%) !important;
+  border-radius: 4px;
+}
