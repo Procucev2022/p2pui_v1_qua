@@ -362,7 +362,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
     onSendRFQ(rowData: any) {
 
         this.selectedRFQData = { ...rowData };
-        this.isCreateRFQView = true;
+
         this.isSendRFQToVendorScreen = true;
         this.currentStep = 2;
         this.projectForm.controls['category'].setValue(this.selectedRFQData.category);
@@ -372,6 +372,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
             const gridValue = Array.isArray(result) ? result : [];
             this.vendorGridData.gridValue = gridValue.map(ele => {return {...ele,isSendRFQToVendorScreen: this.isSendRFQToVendorScreen? true: false}})
         });
+        this.isCreateRFQView = true;
     }
 
 

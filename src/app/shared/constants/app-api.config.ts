@@ -806,7 +806,7 @@ export class AppApiConfig {
     public static GET_GMT_FOR_REG_CLIENTS = '/rest/client/getSelfRegisterClients';
     public static ACCEPT_GMT_FOR_REG_CLIENTS = '/rest/client/acceptSelfRegisterClient';
     public static REJECT_GMT_FOR_REG_CLIENTS =   '/rest/client/ignoreSelfRegisterClient';
-    public static ACCEPT_AND_SAVE_RFQ_BY_CM = '/rest/categoryManager/editAndResendRfqByCM';
+    public static ACCEPT_AND_SAVE_RFQ_BY_CM = '/rest/gmt/editAndResendRfqByCM';
     public static UPDATE_CLIENT_DETAILS_GMT= '/rest/client/editClient';
     public static UPDATE_USER_DETAILS_GMT= '/rest/client/editUser';
     public static DELETE_USER_FOR_REG_CLIENT = '/rest/users/disableUser';

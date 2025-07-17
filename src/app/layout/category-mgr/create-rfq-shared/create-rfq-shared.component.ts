@@ -257,7 +257,7 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
 
     onSelectedVendor(event:any) {
         console.log('event', event);
-        const findIndex = this.vendorListObjs.findIndex(ele => ele.companyName === event)
+        const findIndex = this.vendorListObjs.findIndex(ele => ele.companyName === event.value)
         if (findIndex > -1) {
             this.vendorForm.setValidators([]);
             this.isAutoPopulated = true;
