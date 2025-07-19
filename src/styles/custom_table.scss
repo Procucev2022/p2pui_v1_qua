@@ -160,7 +160,7 @@ body .ui-table .ui-table-tbody > tr.ui-state-highlight {
   font-size: 24px;
   float: left;
   font-weight: 700;
-  color: #262d3b;
+  color: #ff4800;
 }
 .table-title p {
   margin: 5px 0 0;
@@ -235,7 +235,7 @@ body .ui-table .ui-table-tbody > tr.ui-state-highlight {
   font-size: 10px;
   width: 24px;
   height: 24px;
-  background: #868c9480;
+  background: #276a9f;
   border-radius: 4px;
   span{
       color: #164b99;
@@ -244,7 +244,7 @@ body .ui-table .ui-table-tbody > tr.ui-state-highlight {
 .table-search {
   color: #0C2146;
   border-radius: 3px 3px 0 0;
-  padding: 15px;
+  padding: 0px;
 }
 .table-search .btn {
   float: right;
@@ -336,6 +336,83 @@ body .ui-table .ui-table-tbody > tr:nth-child(even){
   font-size: 10px;
   width: 24px;
   height: 24px;
-  background: rgb(30 53 85 / 50%) !important;
+  background: #276a9f !important;
   border-radius: 4px;
+}
+
+
+// new CSS for V1
+
+
+.p-datatable .p-datatable-tbody > tr > td {
+  text-align: left;
+  border: none !important;
+  border-width: 0 0 1px 0;
+  padding: 0.5rem 1rem !important;
+}
+
+.p-datatable .p-datatable-thead > tr > th{
+ background-color:  #485a6c1c
+}
+
+
+body .ui-table .ui-table-tbody > tr:nth-child(even){
+  border: 1px solid #efefef;
+  background-color: red !important;
+}
+
+.p-datatable .p-datatable-tbody > tr > td:nth-child(1) {
+  border-top-left-radius: 10px !important;
+  border-bottom-left-radius: 10px !important;
+  position: relative;
+}
+.p-datatable .p-datatable-tbody > tr > td:last-child {
+    border-top-right-radius: 10px !important;
+    border-bottom-right-radius: 10px !important;
+}
+
+.p-datatable .p-datatable-tbody > tr:nth-child(even) {
+  background: #ffffff;
+  color: #495057;
+  transition: box-shadow 0.2s;
+  border-radius: 10px;
+  background: rgb(34 83 140 / 10%);
+  border-spacing: 0 10px;
+    border-collapse: separate;
+}
+
+.p-datatable .p-datatable-tbody > tr:nth-child(odd) {
+  background: #ffffff;
+  color: #495057;
+  transition: box-shadow 0.2s;
+  border-radius: 10px;
+  background: rgb(255 72 0 / 7%);
+}
+
+::ng-deep .p-datatable .p-datatable-tbody > tr{
+
+  border-spacing: 0 10px;
+    border-collapse: separate;
+}
+
+table, .p-datatable-table{
+  border-spacing: 0 3px !important;
+  border-collapse: separate;
+}
+.grid-expand {
+  border: none;
+  font-size: 14px;
+  width: auto;
+  height: 20px;
+  background: none;
+  border-radius: 4px;
+  position: absolute;
+  left: 0;
+  top: 8px;
+  span {
+    color: #FF9800 !important;
+    padding: 3px 7px 3px 10px;
+    background: #3f9fe8a8;
+    border-radius: 20px;
+  }
 }

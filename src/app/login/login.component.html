@@ -30,7 +30,7 @@
           </form>
       </div>
   </div> -->
-  <div class="col-md-4 left-section curved-line">
+  <div class="col-md-8 left-section curved-line">
       <img src="/assets/images/Graphic_branding.svg" width="350">
       <div id="demo" class="carousel slide" data-ride="carousel">
           <!-- Indicators -->
@@ -64,124 +64,62 @@
       </div>
   </div>
 
-  <div class="col-md-8 " style="    background: #00ddff;">
+  <div class="col-md-4 " style="    background: #00BCD4;">
       <div class="row" style="margin-bottom: 63px;">
           <div class="col-6" style=" margin-top:15px;padding-left:20px ; text-align:left;">
               <label><span style="font-size: 20px;color: #fffbff;">
-                      For Buyer - Start Registration - <a [routerLink]="['/login/reg-client']"> <span
-                              class="blink testing" style="color: #FF9800;">Click Here</span></a> </span>
+                      For Buyer
+                      <span class="reg-text">Start Registration - <a [routerLink]="['/login/reg-client']"> <span
+                              class="blink testing" style="color: #F44336;font-weight: bold;">Click Here</span></a> </span></span>
               </label>
           </div>
           <div class="col-6" style=" margin-top:15px;padding-right:20px ; text-align:right;">
               <label><span style="font-size: 20px;color: #fffbff;">
-                      For Seller - Start Registration - <a [routerLink]="['registervendor']"> <span
-                              class="blink testing" style="color: #FF9800;">Click Here</span></a> </span>
+                      For Seller
+                      <span class="reg-text">Start Registration - <a [routerLink]="['registervendor']"> <span
+                              class="blink testing" style="color: #F44336;font-weight: bold;">Click Here</span></a> </span></span>
               </label>
           </div>
       </div>
-      <div class="row right-section">
-          <div class=" col-md-5 col-xs-12 subc-log-sec circle-container2">
-              <!-- <div class="dps-panel">
-              <div class="dps">
-                  <img src="assets/images/new/DPS.png" class="card-img-top" alt="assets/images/new/DPS.png">
-                  <div class="content">
-                      <h5 class="card-title">Digital Procurement Service</h5>
-                      <p> <i class="fa fa-hand-o-right" aria-hidden="true"></i> Source to Pay Technology with Dynamic Pricing. Streamlining procurement operations & bringing transparency</p>
-                  </div>
-
-              </div>
-              <div class="dps">
-
-                  <div class="content">
-                      <h5 class="card-title">Get My Quote</h5>
-                      <p> <i class="fa fa-hand-o-right" aria-hidden="true"></i> Buyers find their perfect vendor fit and sellers expand their business opportunities</p>
-
-                  </div>
-                  <img src="assets/images/new/GMT.png" class="card-img-top" alt="assets/images/new/DPS.png">
-              </div>
-              <div class="dps">
-                  <img src="assets/images/new/BFS.png" class="card-img-top" alt="assets/images/new/DPS.png">
-                  <div class="content">
-                      <h5 class="card-title">Buy From Stock</h5>
-                      <p><i class="fa fa-hand-o-right" aria-hidden="true"></i> Acting as a marketplace where Enterprises can easily buy and sell excess inventory</p>
-
-                  </div>
-
-              </div>
-              <div class="dps">
-                  <img src="assets/images/new/proCPX -White.svg" class="card-img-top" alt="assets/images/new/DPS.png">
-                  <div class="content">
-                      <h5 class="card-title">Buy From Stock</h5>
-                      <p><i class="fa fa-hand-o-right" aria-hidden="true"></i> Acting as a marketplace where Enterprises can easily buy and sell excess inventory</p>
-
-                  </div>
-
-              </div>
-              </div> -->
-              <div class="circle">
-                  <!-- <div class="item">
-                      <img src="assets/images/new/proCPX -White.svg" class="card-img-top img" alt="assets/images/new/DPS.png">  </div>
-                  <div class="item">
-                      <img src="assets/images/new/DPS.svg" class="card-img-top img" alt="assets/images/new/DPS.png">
-
-                  </div> -->
-                  <div class="item">
-                      <img src="assets/images/new/GMT.png" class="card-img-top img" alt="assets/images/new/DPS.png">
-                  </div>
-                  <div class="item">
-                      <img src="assets/images/new/BFS.svg" class="card-img-top img" alt="assets/images/new/DPS.png">
-                  </div>
-              </div>
-          </div>
-          <div class="col-md-7  col-xs -12 login-form">
-              <div class="col-md-8 col-xs-12 d ">
-
-                  <!-- <div > -->
+      <div class="row right-section m-4 mt-lg-5">
+          <div class="col-md-12  col-xs -12 login-form row">
+                <div class="col-12">
                   <img src="assets/images/Procucev_Logo.svg" width="250px" class="" />
                   <p>Login to access your account</p>
-                  <form role="form">
-                      <div class="col-md-12">
-                          <p *ngIf="isCreadentialsEmpty">Please Enter User Name & Password</p>
-                          <div class="form-content">
-                              <div class="form-group">
-                                  <div class="col-12 input-label"><label for="email">Email:</label></div>
-                                  <input type="text" name="userName" [(ngModel)]="userName"
-                                      (keydown)="resetCredentialsMsg()" class="form-control" id=""
-                                      placeholder="Enter Your Email" style="margin-bottom: 30px;">
-                              </div>
-                              <!-- <div class="form-group">
-                                  <div class="col-12 input-label"><label for="paswd">Password:</label></div>
-                                  <input type="password" name="userPassword" [(ngModel)]="userPassword"
-                                      (keydown)="resetCredentialsMsg()" class="form-control" id="" placeholder="Password">
-                              </div> -->
+                </div>
+                 <div class="col-12">
 
-                              <div class="form-group">
-                                  <div class="col-12 input-label"><label for="paswd">Password:</label></div>
-                                  <input [type]="visiblePassword?'text':'password'" name="userPassword"
-                                      [(ngModel)]="userPassword" (keydown)="resetCredentialsMsg()"
-                                      class="form-control" id="" placeholder="Password">
-                                  <span class="eyeicon" (click)="viewPassword()"><i
-                                          [ngClass]="visiblePassword?'fa fa-eye fa-lg':'fa fa-eye-slash fa-lg'"></i></span>
-                              </div>
-                          </div>
-                          <div style="text-align: end;">
-                              <small (click)="forgotpassword()">Forgot password</small>
-                              <!-- <small>Click Here</small> -->
-                          </div>
-                          <div class="row">
-                              <!-- <div class="col-6"> -->
-                              <button class="btn btn-primary" (click)="onLoggedin()">Login</button>
-                              <!-- </div> -->
-                              <!-- <div class="col-6"> -->
-                              <button class="btn btn-primary" type="reset" style="margin-top: 0px;">Reset</button>
-                              <!-- </div> -->
-                          </div>
+                  <form role="form" class="row">
+                    <div class="col-12 ">
+                        <p *ngIf="isCreadentialsEmpty">Please Enter User Name & Password</p>
+                        <div class="form-content">
+                            <div class="form-group">
+                                <div class="col-12 input-label"><label for="email">Email:</label></div>
+                                <input type="text" name="userName" [(ngModel)]="userName"
+                                    (keydown)="resetCredentialsMsg()" class="form-control" id=""
+                                    placeholder="Enter Your Email" style="margin-bottom: 30px;">
+                            </div>
 
-                          <!-- <button class="btn btn-success mt-0" type="reset" (click) ="registerVendor()">Register here - for Vendors</button> -->
-                      </div>
-                  </form>
-                  <!-- </div> -->
-              </div>
+                            <div class="form-group">
+                                <div class="col-12 input-label"><label for="paswd">Password:</label></div>
+                                <input [type]="visiblePassword?'text':'password'" name="userPassword"
+                                    [(ngModel)]="userPassword" (keydown)="resetCredentialsMsg()"
+                                    class="form-control" id="" placeholder="Password">
+                                <span class="eyeicon" (click)="viewPassword()"><i
+                                        [ngClass]="visiblePassword?'fa fa-eye fa-lg':'fa fa-eye-slash fa-lg'"></i></span>
+                            </div>
+                        </div>
+                        <div style="text-align: end;">
+                            <small (click)="forgotpassword()">Forgot password</small>
+                        </div>
+                        <div class="row login-btns">
+                            <button class="btn btn-primary" (click)="onLoggedin()">Login</button>
+                            <button class="btn btn-danger" type="reset" style="margin-top: 0px;">Reset</button>
+                        </div>
+                    </div>
+                </form>
+                 </div>
+
           </div>
 
       </div>

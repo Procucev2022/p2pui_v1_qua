@@ -34,23 +34,23 @@ export class CatMgrCreateRfqListComponent implements OnInit {
     stepsList = [ ];
     rfqsTableHeadersForCM: any = [
         { field: 'rfqId', header: 'RFQ Id', isLink: false, width: '190px', fieldType: 'text', isExceedContent: false },
-        { field: 'projectDesc', header: 'Description', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
-        { field: 'category', header: 'Category', isLink: false, width: '190px', fieldType: 'text', isExceedContent: false },
+        { field: 'projectDesc', header: 'Description', isLink: false, width: '240px', fieldType: 'text', isExceedContent: true },
+        { field: 'category', header: 'Category', isLink: false, width: '240px', fieldType: 'text', isExceedContent: true },
         { field: 'division', header: 'Division ', isLink: false, width: '190px', fieldType: 'text', isExceedContent: false },
         { field: 'noOfVendors', header: 'Vendors', isLink: false, fieldType: 'text', width: '180px', isExceedContent: false },
         // { field: 'noOfQuotes', header: 'Quotes', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
-        { field: 'createdTS', header: 'Created Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
-        { field: 'createdBy', header: 'Created By', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true }
+        { field: 'createdTS', header: 'Created Date', isLink: false, fieldType: 'date', width: '225px', isExceedContent: false },
+        { field: 'createdBy', header: 'Created By', isLink: false, width: '190px', fieldType: 'text', isExceedContent: true }
     ];
     rfqsTableHeadersForClientInitiator: any = [
         { field: 'rfqId', header: 'RFQ Id', isLink: false, width: '190px', fieldType: 'text', isExceedContent: false },
-        { field: 'projectDesc', header: 'Description', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
-        { field: 'division', header: 'Division ', isLink: false, width: '190px', fieldType: 'text', isExceedContent: false },
+        { field: 'projectDesc', header: 'Description', isLink: false, width: '240px', fieldType: 'text', isExceedContent: true },
+        { field: 'division', header: 'Division ', isLink: false, width: '240px', fieldType: 'text', isExceedContent: false },
         // { field: 'noOfVendors', header: 'Vendors', isLink: false, fieldType: 'text', width: '180px', isExceedContent: false },
         // { field: 'noOfQuotes', header: 'Quotes', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
-        { field: 'createdTS', header: 'Created Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
-        { field: 'createdBy', header: 'Created By', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
-        { field: 'quotationReceived', header: 'Quotation Received', isLink: false, width: '200px', fieldType: 'text', isExceedContent: false },
+        { field: 'createdTS', header: 'Created Date', isLink: false, fieldType: 'date', width: '195px', isExceedContent: false },
+        { field: 'createdBy', header: 'Created By', isLink: false, width: '195px', fieldType: 'text', isExceedContent: true },
+        { field: 'quotationReceived', header: 'Quotation Received', isLink: false, width: '205px', fieldType: 'text', isExceedContent: false },
         { field: 'status_display', header: 'Status', isLink: false, fieldType: 'text', width: '180px', isExceedContent: false }
 
     ];

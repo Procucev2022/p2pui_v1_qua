@@ -294,26 +294,29 @@ $topnav-background-color: #fff;
 
 ::ng-deep .gmt-container {
     ::ng-deep .sidebar {
-        background: linear-gradient(89.98deg, #ae5431 1.88%, #FFC107 99.65%) !important;
+        background: linear-gradient(89.98deg, #346ec0 1.88%, #45bbff 99.65%) !important
     }
 
     .sidebar .list-group a:hover {
         opacity: 1;
         text-decoration: none;
-        background: linear-gradient(89.98deg, #ae5431 1.88%, #FFC107 99.65%) !important;
+        background: linear-gradient(89.98deg, #03A9F4 1.88%, #00BCD4 99.65%) !important
     }
 
-    .sidebar .list-group a.router-link-active {
+    .sidebar .list-group  a.router-link-active {
         opacity: 1;
-        background: linear-gradient(89.98deg, #ae5431 1.88%, #ff4800 99.65%) !important;
-        border-left: 4px solid #FFC107 !important;
+        background: linear-gradient(89.98deg, #03A9F4 1.88%, #00BCD4 99.65%) !important;
+        border-left: 4px solid #45BBFF;
     }
+
+
+
 
     .sidebar .list-group a:hover {
-        opacity: 1;
-        text-decoration: none;
-        background: linear-gradient(89.98deg, #ae5431 1.88%, #ff4800 99.65%) !important;
-    }
+      opacity: 1;
+      text-decoration: none;
+      background: linear-gradient(89.98deg, #a231ae7d 1.88%, #a132ac59 99.65%) !important;
+  }
 }
 
 ::ng-deep .bfs-container {
@@ -351,12 +354,12 @@ $topnav-background-color: #fff;
 
 .expiry-text {
 
-    background: #263b5f;
+    background: none;
 }
 
 .gmt-container {
 
     .expiry-text {
-        background: #e7a114;
+        background: none;
     }
 }

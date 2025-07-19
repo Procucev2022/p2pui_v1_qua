@@ -28,7 +28,7 @@
     <div *ngIf="currentRole == 'Vendor' || currentRole == 'Registration' || currentRole == 'PartialVendor'; else catMgrTemplate"    >
     <p-table [ngClass]="{'gmt-container': isGMTView}"  #rfqTable [columns]="rfqsTableHeadersForGMTVendor" [value]="rfqDataList" sortMode="multiple"
       [paginator]="true" [rows]="pageRecordSize" id="rfqTable" [rowsPerPageOptions]="pageOptions"
-          [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData"  [scrollable]="true" [scrollHeight]="'calc(100vh - 214px)'">
+          [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData"  [scrollable]="true" [scrollHeight]="'calc(100vh -  170px)'">
           <ng-template pTemplate="caption">
             <div class="table-search">
               <div class="row">
@@ -132,7 +132,7 @@
         <p-table [ngClass]="{'gmt-container': isGMTView}" dataKey="id" #prqTable [columns]="rfqsTableHeadersForCategoryManger" [value]="rfqDataList" sortMode="multiple" [paginator]="true"
         [rows]="pageRecordSize" id="prqTable" [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}"
         exportFilename="roles details" [(selection)]="selectedData" [scrollable]="true"
-        [scrollable]="true" [scrollHeight]="'calc(100vh - 214px)'">
+        [scrollable]="true" [scrollHeight]="'calc(100vh -  170px)'">
         <ng-template pTemplate="caption">
             <div class="table-search">
             <div class="row">

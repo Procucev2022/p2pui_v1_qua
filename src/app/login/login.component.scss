@@ -15,6 +15,7 @@ $topnav-background-color: #0C2146;
   color: #fff;
   margin: 0px;
   background: #00dbff;
+
   // padding: 3em;
   .form-control {
     background: #FFFFFF;
@@ -180,6 +181,7 @@ small {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 15%;
 }
 
 .dps {
@@ -211,6 +213,18 @@ small {
   position: absolute;
   top: -42vh;
   right: -20px;
+}
+
+
+.login-btns {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .btn {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
 }
 
 @media only screen and (max-width: 767px) {
@@ -249,7 +263,7 @@ small {
 }
 
 .curved-line {
-//   clip-path: ellipse(99% 100% at left);
+  //   clip-path: ellipse(99% 100% at left);
 }
 
 /* Adding decorative ends (optional) */
@@ -362,11 +376,12 @@ small {
     border-radius: 0% 0% 10% 10%;
     -webkit-transform: rotateZ(237deg);
     transform: rotateZ(237deg);
+
     // /* box-shadow: -9px 4px 2px 3px #191a1aad;
-    .img{
-        width: 100%;
-        height: 100%;
-        border-radius: 27% !important;
+    .img {
+      width: 100%;
+      height: 100%;
+      border-radius: 27% !important;
     }
   }
 
@@ -412,21 +427,20 @@ small {
 
 }
 
-.left-section  {
+.left-section {
   background: linear-gradient(0deg, rgb(5 5 5), rgb(7 65 147)), linear-gradient(270deg, #000000 31.08%, #000000 95.34%);
   padding: 60px 0px;
-  clip-path: ellipse(90% 100% at left);
 }
 
-.d  {
-    width: 600px;
-    height: 600px;
-    background: #FFFFFF;
-    border: 1px solid #E6ECEF;
-    box-sizing: border-box;
-    box-shadow: 0px 1px 5px 1px #fafafacc;
-    border-radius: 0;
-    padding: 60px;
+.d {
+  width: 600px;
+  height: 600px;
+  background: #FFFFFF;
+  border: 1px solid #E6ECEF;
+  box-sizing: border-box;
+  box-shadow: 0px 1px 5px 1px #fafafacc;
+  border-radius: 0;
+  padding: 60px;
 }
 
 .circle-container2 .circle .item:nth-child(2) {
@@ -436,10 +450,29 @@ small {
   top: 24%;
   box-shadow: 10px 1px 2px 3px rgba(25, 26, 26, 0.6784313725);
 }
+
 .circle-container2 .circle .item:nth-child(1) {
   transform: rotate(123deg);
-    position: absolute;
-    top: 34%;
-    left: -26%;
-    box-shadow: -9px 4px 2px 3px rgba(25, 26, 26, 0.6784313725);
+  position: absolute;
+  top: 34%;
+  left: -26%;
+  box-shadow: -9px 4px 2px 3px rgba(25, 26, 26, 0.6784313725);
+}
+
+.reg-text {
+  font-size: 15px;
+  display: block;
+
+}
+
+button [type="reset"] {
+  color: #fff;
+  background-color: #FF9800;
+  border-color: #ff9800;
+
+  &:hover {
+
+    background-color: #FF9800;
+    border-color: #ff9800;
+  }
 }

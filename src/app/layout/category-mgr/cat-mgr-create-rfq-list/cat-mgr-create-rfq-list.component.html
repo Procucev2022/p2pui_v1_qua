@@ -20,7 +20,7 @@
     <p-table  [ngClass]="{  'gmt-container': isGMTView}"  #rfqTableRef [columns]="rfqsTableHeaders" [value]="rfqDataList"  dataKey="id"
        sortMode="multiple"  [paginator]="true" [rows]="pageRecordSize" id="rfqTable" [rowsPerPageOptions]="pageOptions"
         [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData"
-         [scrollable]="true" [scrollHeight]="'calc(100vh - 214px)'"  >
+         [scrollable]="true" [scrollHeight]="'calc(100vh -  170px)'"  >
         <ng-template pTemplate="caption">
             <div class="table-search">
                 <div class="row">
@@ -345,14 +345,14 @@
                     </fieldset>
                  </div>
                  <div class="col-12">
-                    <fieldset class="col-12 row mt-3 fieldSec">
-                        <legend>Attachments</legend>
+                  <fieldset class="col-12 row mt-3 fieldSec">
+                      <legend>Attachments</legend>
 
-                        <div class="col-8 mb-1">
-                            <app-common-attachments [isViewOnly]="false" [attachments]="attachements" (actionEvent)="getAttachedDocsList($event)"></app-common-attachments>
-                        </div>
-                    </fieldset>
-                </div>
+                      <div class="col-8 mb-1">
+                          <app-common-attachments [isViewOnly]="false" [attachments]="attachements" (actionEvent)="getAttachedDocsList($event)"></app-common-attachments>
+                      </div>
+                  </fieldset>
+              </div>
             </div>
             <div class="col-12 row mr-0 pr-0"  *ngIf="currentStep== 2">
                 <div class="col-12 row">
