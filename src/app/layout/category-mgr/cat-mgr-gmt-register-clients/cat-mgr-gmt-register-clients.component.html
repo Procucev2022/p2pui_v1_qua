@@ -19,7 +19,7 @@
                 <p-table [ngClass]="{  'gmt-container': isGMTView}" #clientTableRef [columns]="clientTableHeaders" [value]="clientsList"  dataKey="id"
        sortMode="multiple"  [paginator]="true" [rows]="pageRecordSize" id="rfqTable" [rowsPerPageOptions]="pageOptions"
         [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData"
-         [scrollable]="true" [scrollHeight]="'calc(100vh -  170px)'" [expandedRowKeys]="expandedRows">
+         [scrollable]="true" [scrollHeight]="'calc(100vh  - 205px)'" [expandedRowKeys]="expandedRows">
          <ng-template pTemplate="caption">
             <div class="table-search">
               <div class="row">

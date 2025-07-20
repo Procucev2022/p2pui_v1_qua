@@ -230,7 +230,8 @@
                         <ng-container *ngFor="let file of viewRFQbyIDdetails.rfqDocument;let i=index">
                             <div class="col-12 uploadedFiles">
                                 <div class="col-8">
-                                    <img class="doc-icon" [src]="getImageURL(file)" src="/assets/images/file.svg" width="30" height="30">
+                                  <div class="attached">
+                                    <img class="doc-icon" [src]="getImageURL(file)" src="/assets/images/file.svg" width="30" height="30" style="margin-right: 10px;">
                                     <span style="margin-right: 2rem">{{ file?.fileName }}</span>
                                     <!-- <span>{{ file?.name }}</span> -->
 
@@ -261,7 +262,9 @@
                                         <img class="cursor-pointer" src="/assets/images/new/download.svg" data-toggle="tooltip" [title]="'Download '+ file['fileName']" width="30" height="30"  aria-hidden="true" title="Download Attachment" />
                                     </a>
                                     <i class="fa fa-trash" style="font-size: 1.5rem;color:red ;margin-left:10px; cursor: pointer;" (click)="onDeleteExistedAttachment(i)"></i>
-                                </div>
+
+                                  </div>
+                                    </div>
                             </div>
                         </ng-container>
                         <div class="content-value" *ngIf="viewRFQbyIDdetails.rfqDocument.length == 0">

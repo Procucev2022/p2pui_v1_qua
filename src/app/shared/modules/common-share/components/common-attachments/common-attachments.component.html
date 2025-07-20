@@ -1,1 +1,52 @@
- 
+<div class="row">
+  <div class="col-12 input-text-fields-area" *ngIf="!isViewOnly">
+    <label for="attachments" class="">Documents</label>
+    <div class="">
+      <div class="fileUploadCls" style="height: 59px" fileDragDrop
+        (files)="filesDropped($event)" (click)="fileInput.click()" id="d_auctionFile">
+        <input type="file" (click)="fileInput.value = null" name="fileInput" #fileInput
+          (change)="fileUploadEvent($event,false)" hidden class="form-control" id="i_auctionFile" />
+
+      </div>
+      <div class="fileInfoCls" style="color: #f00;font-size: 11px;">
+        <i class="fa fa-info-circle"></i> Note : <span style="color: #000;
+      font-size: 10px;;">
+          File should be either (.xls/.xlsx) / (.doc/.docx) / (Jpg/Jpeg/Png) or (.txt/.pdf) document
+        </span>
+      </div>
+    </div>
+
+  </div>
+  <div class="col-sm-12">
+    <div>
+      <label for="text" style="background: #f2f2f2;
+      color: #141415;
+      padding: 6px;" class="col-form-label">Uploaded Documents:</label>
+      <div style="border: 1px solid #f2f2f2;
+      height: 124px;
+      overflow-y: auto;
+  " [ngStyle]="{height: attachments.length>0? 'auto': '50px'}">
+        <div class="files-list" *ngFor="let file of attachments;let i=index">
+          <p style="margin-bottom: 0px;
+              list-style: circle;
+              padding: 4px;
+              padding-left: 10px;
+              color: #0C2146;
+              font-size: 14px;">{{ file?.fileName }}
+            <button class="delete-file" style="border-radius: 50%;
+                border: none;
+                background: none;" type="button" (click)="deleteAttachments(i)">
+              <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+          </p>
+        </div>
+        <div *ngIf="attachments.length <= 0">
+          <p>No Documents uploaded/available.</p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
