@@ -39,6 +39,30 @@ export class AppApiConfig {
 
   public static GET_ALL_ITEM_MASTER_FOR_RFQ = "/rest/itemcode/getAllItemMasterForRFQ"; //NEED TO DICSUSS
 
+
+  public static GET_GMT_FOR_REG_CLIENTS = '/rest/gmt/getSelfRegisterClients';
+  public static UPDATE_USER_DETAILS_GMT= '/rest/gmt/editUser';
+  public static ACCEPT_GMT_FOR_REG_CLIENTS = '/rest/gmt/acceptSelfRegisterClient';
+  public static DELETE_USER_FOR_REG_CLIENT = '/rest/gmt/disableUser';
+  public static GET_CLIENT_USER_BY_CLIENT = '/rest/gmt/getclientusersByclient';
+  public static REJECT_GMT_FOR_REG_CLIENTS =   '/rest/gmt/ignoreSelfRegisterClient';
+  public static ACCEPT_AND_SAVE_RFQ_BY_CM = '/rest/gmt/editAndResendRfqByCM';
+  public static CHANGE_PASSWORD = '/rest/users/changePswd';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   ////Legacy APIS
 
     public static REFRESH_TOKEN_PATH = '/oauth/refreshToken';
@@ -131,7 +155,6 @@ export class AppApiConfig {
 
     public static GET_UPDATE_ORG_TC = '/rest/vendorManager/updateOrgTc';
 
-    public static CHANGE_PASSWORD = '/rest/users/changePswd';
 
     public static GET_VENDOR_BY_STATUS = '/rest/vendor/getVendorByStatus';
 
@@ -685,7 +708,6 @@ export class AppApiConfig {
 
     public static CLOSE_REQ = '/rest/categoryManager/closerequestVendor';
     public static GET_CLIENT_ROLES = '/rest/client/getclientRoles';
-    public static GET_CLIENT_USER_BY_CLIENT = '/rest/client/getclientusersByclient';
     /*Pre Vendor Data*/
     public static GET_ALL_PRE_VENDORS = '/rest/preVendor/fetchAllVendors';
     public static UPLOAD_PRE_VENDORS = '/rest/preVendor/excel';
@@ -803,13 +825,7 @@ export class AppApiConfig {
     public static CREATE_AUTHENTICATE_USER = '/rest/users/saveAuth';
     public static UPDATE_AUTHENTICATE_USER = '/rest/users/updateAuth';
     public static GET_GMT_SUMMARY = '/rest/categoryManager/getGMTSummary';
-    public static GET_GMT_FOR_REG_CLIENTS = '/rest/client/getSelfRegisterClients';
-    public static ACCEPT_GMT_FOR_REG_CLIENTS = '/rest/client/acceptSelfRegisterClient';
-    public static REJECT_GMT_FOR_REG_CLIENTS =   '/rest/client/ignoreSelfRegisterClient';
-    public static ACCEPT_AND_SAVE_RFQ_BY_CM = '/rest/gmt/editAndResendRfqByCM';
     public static UPDATE_CLIENT_DETAILS_GMT= '/rest/client/editClient';
-    public static UPDATE_USER_DETAILS_GMT= '/rest/client/editUser';
-    public static DELETE_USER_FOR_REG_CLIENT = '/rest/users/disableUser';
     public static BFS_GET_REQUESTED_BY_ITEMS_BY_BUYER ="/rest/bfs/getRequestedItemByBuyer"
 
 

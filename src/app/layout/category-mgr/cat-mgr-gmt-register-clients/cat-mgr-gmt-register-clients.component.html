@@ -8,7 +8,7 @@
       </div>
     </div>
   </div>
-<div class="row col-12">
+<div class="col-12">
 
         <div class="row">
 
@@ -81,8 +81,9 @@
                     </ng-template>
                     <ng-template pTemplate="emptymessage" let-columns>
                         <tr>
-                            <td [attr.colspan]="itemCartTableHeaders.length" style="text-align:center;">
-                               {{gridData.gridEmptyMsg}}
+                            <td [attr.colspan]="clientTableHeaders.length" style="text-align:center;">
+                               <!-- {{gridData.gridEmptyMsg}} -->
+                               No Data Available
                             </td>
                         </tr>
                     </ng-template>

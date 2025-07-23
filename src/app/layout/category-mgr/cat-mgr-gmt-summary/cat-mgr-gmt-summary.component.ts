@@ -36,6 +36,7 @@ export class CatMgrGmtSummaryComponent implements OnInit {
             this.isLoaded =true;
         }, 200);
     })
+    this.isLoaded= true;
   }
 
   onGridAction(event:any){
