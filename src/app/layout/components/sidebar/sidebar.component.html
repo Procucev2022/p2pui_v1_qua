@@ -407,13 +407,13 @@
                                 <span>Send RFQ</span>
                             </a>
                             </li>
-                            <li *ngIf="loggedUserDetails?.role.roleName == 'CategoryManager2'">
+                            <!-- <li *ngIf="loggedUserDetails?.role.roleName == 'CategoryManager2'">
                                 <a class="list-group-item" [routerLink]="['/categorymgr/gmt-summary']"
                                 [routerLinkActive]="['router-link-active']">
                                 <i class="fa fa-user"></i> &nbsp;
                                 <span>Summary</span>
                             </a>
-                            </li>
+                            </li> -->
                         </ul>
                     </li>
                 </ul>
@@ -545,14 +545,14 @@
                             <i class="fa fa-user"></i> &nbsp;
                             <span>Create RFQ</span>
                         </a>
-                        </li>
+                        <!-- </li>
                         <li *ngIf="loggedUserDetails?.role.roleName == 'CategoryManager2'">
                             <a class="list-group-item" [routerLink]="['/categorymgr/gmt-summary']"
                             [routerLinkActive]="['router-link-active']">
                             <i class="fa fa-user"></i> &nbsp;
                             <span>Summary</span>
                         </a>
-                        </li>
+                        </li> -->
                         <li *ngIf="loggedUserDetails?.role.roleName == 'Vendor' || loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor' || loggedUserDetails?.role.roleName == 'CategoryManager' ||  loggedUserDetails?.role.roleName == 'CategoryManager2'">
                             <a class="list-group-item" [routerLink]="['/categorymgr/gmt-rqfs']"
                             [routerLinkActive]="['router-link-active']">

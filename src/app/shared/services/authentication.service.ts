@@ -269,7 +269,7 @@ export class AuthenticationService {
                             window.location.reload();
                         });
                     } else {
-                        this.router.navigate(['/categorymgr/gmt-summary']).then(() => {
+                        this.router.navigate(['/categorymgr/gmt-rqfs']).then(() => {
                             window.location.reload();
                         });
                     }
