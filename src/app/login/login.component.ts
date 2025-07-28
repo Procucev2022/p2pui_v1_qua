@@ -16,9 +16,19 @@ export class LoginComponent implements OnInit {
 
     userName;
     userPassword;
+    mobileNumber;
     isCreadentialsEmpty: boolean;
     routerParams: any;
     visiblePassword = false;
+    otpEnabled: boolean = false;
+    otp :any  ={
+      otp1: '',
+      otp2: '',
+      otp3: '',
+      otp4: '',
+      otp5: '',
+      otp6: '',
+    }
     constructor(
         public router: Router,
         private authService: AuthenticationService,
@@ -31,6 +41,7 @@ export class LoginComponent implements OnInit {
         // console.log('intervalid', this.authService.clearIntervalId);
 
         // clearInterval(this.authService.clearIntervalId);
+        this.triggerOTP();
         this.routerParams = this.route.snapshot.queryParams;
         console.log('param', this.routerParams);
         localStorage.clear();
@@ -44,12 +55,108 @@ export class LoginComponent implements OnInit {
 
     }
 
+
+    onKeyDown(key:string, $event){
+      console.log('key', key, $event.target.value);
+      this.otp[key] = $event.target.value;
+      const allowedKeys = [
+        'Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'
+      ];
+      const inputs = document.getElementById("inputs");
+      if(($event.key >= '0' && $event.key <= '9' ) ||  allowedKeys.includes($event.key) ){
+        this.otp[key] = !isNaN($event.key)? $event.key: this.otp[key];
+        console.log("otp", this.otp)
+        if($event.key == 'Backspace'){
+          const next = $event.target.nextElementSibling;
+          this.otp[key]= ''
+          const prev =$event.target.previousElementSibling;
+          prev.focus();
+        }else if(($event.key >= '0' && $event.key <= '9') || (['Delete', 'Tab'].includes($event.key)) ){
+          const next = $event.target.nextElementSibling;
+          if (next) {
+              next.focus();
+          }
+        }
+      }else{
+        this.otp[key] = ''
+      }
+
+    }
+
+    onLoginMethodChange(event:any){
+
+      if(this.otpEnabled){
+        this.otpEnabled = !this.otpEnabled;
+        if(!this.mobileNumber || isNaN(this.mobileNumber)  ){
+
+        }
+      }else{
+        this.toastService.warning("Enter Registered Mobile Number");
+        this.otpEnabled = false;
+      }
+    }
+    triggerOTP(){
+      // script.js
+      const inputs = document.getElementById("inputs");
+
+      // inputs.addEventListener("input", function (e:any) {
+      // const target = e.target;
+      // const val = e.target.value;
+
+      // if (isNaN(val)) {
+      //     target.value = "";
+      //     return;
+      // }
+
+      // if (val != "") {
+      //     const next = target.nextElementSibling;
+      //     if (next) {
+      //         next.focus();
+      //     }
+      // }
+      // });
+
+      // inputs.addEventListener("keyup", function (e:any) {
+      // const target = e.target;
+      // const key = Number(e.key)? e.key:  e.key.toLowerCase();
+
+
+      // if( key &&  !isNaN(key) ){
+
+      // }
+      // if (key == "backspace" || key == "delete") {
+      //     target.value = "";
+      //     const prev = target.previousElementSibling;
+      //     if (prev) {
+      //         prev.focus();
+      //     }
+      //     return;
+      // }
+      // });
+    }
+
     onLoggedin() {
         if (this.userName == null || this.userPassword == null) {
             this.isCreadentialsEmpty = true;
             return false;
         }
-        this.authService.getAccessToken({ 'userName': this.userName, 'userPassword': this.userPassword }).pipe(first()).subscribe(data => {
+        let reqPayload = {}
+        if(this.otpEnabled){
+          reqPayload = {
+            "username":this.userName,
+            "phone": this.mobileNumber,
+            "otp":true
+
+          }
+        }else{
+          reqPayload = {
+            "username":this.userName,
+            "phone": this.mobileNumber,
+            'password': this.userPassword
+
+          }
+        }
+        this.authService.getAccessToken(reqPayload).pipe(first()).subscribe(data => {
             console.log(data);
             localStorage.setItem('loggedUser', this.userName);
             localStorage.setItem('at', data.access_token);

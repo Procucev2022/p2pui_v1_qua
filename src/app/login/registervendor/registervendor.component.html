@@ -27,26 +27,28 @@
                     <p *ngIf="vendorRegistrationForm?.controls?.mail?.touched && vendorRegistrationForm?.controls?.mail?.errors?.pattern ">* Invalid EmailId  </p>
                 </div>
                 <form name="vendorRegistrationForm" class="row" [formGroup]="vendorRegistrationForm">
-                    <div class="col-md-4  col-xs-12 mt-2">
-                        <label for="companyName">Country: <b   style="color: red;">*</b></label>
-                       <div class="">
-
-                        <span style="display: flex; align-items: center;">
-                           <input type="radio"  formControlName="india" id="india1" (click)="changeCountryValue(true)" value="true" class="form-control mr-1" name="india"> <label for="india1">India</label>
-                           <input type="radio"   formControlName="india" id="india2"  (click)="changeCountryValue(false)"value="false" class="form-control ml-5 mr-1" name="india"> <label for="india2">Out Of India</label>
-                        </span>
-                       </div>
-                    </div>
                     <div class="col-md-4  col-xs-12   mt-2">
                         <label for="name">Company Name: <b style="color: red;">*</b></label>
-                        <input type="text" required id="name" class="form-control" name="name" formControlName="name"
+                        <input type="text" required id="name" class="form-control" name="companyName" formControlName="companyName"
                             placeholder="Company Name">
                         <div
-                            *ngIf="(vendorRegistrationForm?.controls?.name?.touched) && vendorRegistrationForm?.controls?.name.status=='INVALID'">
+                            *ngIf="(vendorRegistrationForm?.controls?.companyName?.touched) && vendorRegistrationForm?.controls?.companyName.status=='INVALID'">
                             <div style="color: red;">Company Name is required</div>
                         </div>
                     </div>
-                    <div class="col-md-4  col-xs-12  mt-2">
+                    <div class="col-md-4  col-xs-12   mt-2">
+                      <label for="name">Name: <b style="color: red;">*</b></label>
+                      <input type="text" required id="name" class="form-control" name="name" formControlName="name"
+                          placeholder="Enter Name">
+                      <div
+                          *ngIf="(vendorRegistrationForm?.controls?.name?.touched) && vendorRegistrationForm?.controls?.name.status=='INVALID'">
+                          <div style="color: red;">Name is required</div>
+                      </div>
+                  </div>
+                    <div class="col-md-12 row" style="    border: 2px solid #80808040;
+                    margin: 4px auto;
+                    padding-bottom: 16px;">
+                      <div class="col-md-4  col-xs-12  mt-2">
                         <label for="email">EMail Id: <b style="color: red;">*</b></label>
                         <input type="email" required id="mail" class="form-control" name="mail"
                             pattern="^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$" formControlName="mail" placeholder="EMail Id">
@@ -60,24 +62,50 @@
                                 enter valid Email Id</div>
                         </div>
                     </div>
+                    <div class="col-md-4 col-xs-12 mb-1">
+                      <label for="name">Mobile Number:<b style="color: red;">*</b></label>
+                      <input type="text" maxlength="10" minlength="10" id="adress" class="form-control"
+                      *ngIf="vendorRegistrationForm?.controls?.india.value == 'true'"  name="phoneNumber" formControlName="phoneNumber" placeholder="Mobile Number">
+                      <input type="text"  id="adress" class="form-control"
+                      *ngIf="vendorRegistrationForm?.controls?.india.value != 'true'"name="phoneNumber" formControlName="phoneNumber" placeholder="Mobile Number">
+                      <div
+                          *ngIf="(vendorRegistrationForm?.controls?.phoneNumber?.touched ) && vendorRegistrationForm?.controls?.phoneNumber?.errors">
+                          <div *ngIf="(vendorRegistrationForm?.controls?.phoneNumber.errors.required)"
+                              style="color: red;">Mobile
+                              number is required</div>
+                              <div  style="color: red;" *ngIf="vendorRegistrationForm?.controls?.phoneNumber?.errors?.invalid">
+                                  Mobile number must be exactly 10 digits.
+                                </div>
+                      </div>
+                  </div>
+
+                  <div class="col-md-4"  style="    display: flex;align-items: center;">
+                      <button class="btn btn-primary" (click)="sendOTPs()"  type="button" *ngIf="!isOTPVerified">{{isOTPSent? 'Resend OTPs': 'Send OTPs'}}</button>
+                  </div>
+                  <div class="col-12 row" style="margin:6px auto">
+                                <div class="col-md-4"><input class="form-control" type="number"   formControlName="mobileOtp" name="mobileOtp"    placeholder="Enter Mobile OTP" maxlength="6" /></div>
+                                <div class="col-md-4"><input  class="form-control" type="number"   formControlName="emailOtp" name="emailOtp"    placeholder="Enter EMail OTP" maxlength="6" /></div>
+                                <div class="col-md-4" style="display: flex;align-items: center;">
+                                  <button class="btn btn-primary" (click)="verifyOtps()" type="button" *ngIf="!isOTPVerified">Validate OTPs</button>
+                                </div>
+                                <div class="col-md-12"
+                                      *ngIf="(vendorRegistrationForm.controls?.organizationPhonenumber?.touched ) && vendorRegistrationForm.controls?.organizationPhonenumber?.errors">
+                                      <div *ngIf="(vendorRegistrationForm.controls.organizationPhonenumber.errors.required)"
+                                          style="color: red;">Mobile
+                                          number is required</div>
+                                          <div  style="color: red;" *ngIf="vendorRegistrationForm.controls?.organizationPhonenumber?.errors?.invalid">
+                                              Mobile number must be exactly 10 digits.
+                                            </div>
+                                  </div>
+                              </div>
+                    </div>
+
 
 
                     <ng-container  *ngIf="vendorRegistrationForm?.controls?.india.value == 'true'">
 
 
-                    <div class="col-md-4 col-xs-12   mt-2">
-                        <label for="name">PAN: <b style="color: red;">*</b></label>
-                        <input type="text" required id="pan" class="form-control" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
-                            placeholder="PAN" name="pan" formControlName="pan">
-                        .<div
-                            *ngIf="(vendorRegistrationForm?.controls?.pan?.touched) && vendorRegistrationForm?.controls?.pan.status=='INVALID'">
-                            <div *ngIf="(vendorRegistrationForm?.controls?.pan.errors.required)" style="color: red;">PAN
-                                is
-                                required</div>
-                            <div *ngIf="(vendorRegistrationForm?.controls?.pan.errors.pattern)" style="color: red;">Please
-                                enter valid PAN number</div>
-                        </div>
-                    </div>
+
                     <div class="col-md-4  col-xs-12  mt-2">
                         <label for="email">GSTIN <b style="color: red;">*</b></label>
                         <input type="text" required id="gstin" class="form-control" name="gstin" formControlName="gstin"
@@ -88,33 +116,7 @@
                         </div>
                     </div>
                  </ng-container>
-                 <ng-container  *ngIf="vendorRegistrationForm?.controls?.india.value == 'false'">
-                    <div class="col-md-4  col-xs-12 mb-1"  >
-                        <label for="crn">Company Registration Number(CRN): <b style="color: red;">*</b></label>
-                        <input type="text" id="crn" class="form-control" name="crn" placeholder="Company Registration Number(CRN)"
-                            formControlName="crn">
-                        <div
-                            *ngIf="(vendorRegistrationForm?.controls?.crn?.touched  ) && vendorRegistrationForm?.controls?.crn?.errors">
-                            <div style="color: red;">CRN is required</div>
-                        </div>
-                    </div>
-                </ng-container>
-                <div class="col-md-4 col-xs-12 mb-1">
-                    <label for="name">Mobile Number:<b style="color: red;">*</b></label>
-                    <input type="text" maxlength="10" minlength="10" id="adress" class="form-control"
-                    *ngIf="vendorRegistrationForm?.controls?.india.value == 'true'"  name="phoneNumber" formControlName="phoneNumber" placeholder="Mobile Number">
-                    <input type="text"  id="adress" class="form-control"
-                    *ngIf="vendorRegistrationForm?.controls?.india.value != 'true'"name="phoneNumber" formControlName="phoneNumber" placeholder="Mobile Number">
-                    <div
-                        *ngIf="(vendorRegistrationForm?.controls?.phoneNumber?.touched ) && vendorRegistrationForm?.controls?.phoneNumber?.errors">
-                        <div *ngIf="(vendorRegistrationForm?.controls?.phoneNumber.errors.required)"
-                            style="color: red;">Mobile
-                            number is required</div>
-                            <div  style="color: red;" *ngIf="vendorRegistrationForm?.controls?.phoneNumber?.errors?.invalid">
-                                Mobile number must be exactly 10 digits.
-                              </div>
-                    </div>
-                </div>
+
 
 
                     <div class="col-md-4  col-xs-12  mt-2">
@@ -126,20 +128,6 @@
                             <div style="color: red;">Address is required</div>
                         </div>
                     </div>
-                    <!-- <div class="col-4  mt-2">
-                        <label for="text">MSME: <b style="color: red;">*</b></label>
-                        <div class="rd-box">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" required type="radio" name="msme" id="i_Yes" [value]="true"
-                                    formControlName="testCtrl">
-                                <label class="form-check-label" for="Product">Yes</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="msme" id="i_No" [value]="false" formControlName="testCtrl">
-                                <label class="form-check-label" for="Service">No</label>
-                            </div>
-                        </div>
-                    </div> -->
 
 
 

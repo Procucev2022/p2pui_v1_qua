@@ -29,6 +29,7 @@ export class ClientRegisterComponent implements OnInit {
     panVerificationIniatiated: boolean = false;
     otp: any;
     isClientDataView:boolean;
+    isOTPSent: boolean = false;
 
     constructor(private modalDialog:MatDialog, private toaster: ToastrService, private vendorRegSer: VendorRegistrationService, private router: Router) { }
 
@@ -43,17 +44,15 @@ export class ClientRegisterComponent implements OnInit {
             companyName: new FormControl('', [Validators.required]),
             organizationPhonenumber: new FormControl('', [Validators.required]),
             email: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')]),
-            clientSector: new FormControl('', [Validators.required]),
+            // clientSector: new FormControl('', [Validators.required]),
             address1: new FormControl('', [Validators.required]),
             state: new FormControl('', [Validators.required]),
-            pan: new FormControl('', [Validators.required, Validators.pattern('[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[a-zA-Z0-9]{3}')]),
+            // pan: new FormControl('', [Validators.required, Validators.pattern('[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[a-zA-Z0-9]{3}')]),
             india: new FormControl('true', [Validators.required] ),
-            crn: new FormControl('')
+            emailOTP: new FormControl(''),
+            mobileOTP: new FormControl('')
         });
-        this.clientRegForm.disable();
-        this.clientRegForm.controls['pan'].enable();
-        this.clientRegForm.controls['crn'].enable();
-        this.clientRegForm.controls['india'].enable();
+        // this.clientRegForm.disable();
 
     }
 
@@ -104,15 +103,52 @@ export class ClientRegisterComponent implements OnInit {
 
         }
     }
-    verifyOtp() {
+
+    sendOTPs(){
+
+      if(this.clientRegForm.value.organizationPhonenumber && this.clientRegForm.value.email && this.clientRegForm.value.companyName){
+          this.isOTPSent = true;
+          this.isOTPVerified = false;
+          const reqPayload = {
+            tempEmail: sessionStorage.getItem('tempEmail') ? sessionStorage.getItem('tempEmail'): '',
+            tempPhone:  sessionStorage.getItem('tempPhone')? sessionStorage.getItem('tempPhone'): '',
+            "companyName": this.clientRegForm.value.companyName,
+            "organizationPhonenumber":this.clientRegForm.value.organizationPhonenumber,
+            "email":this.clientRegForm.value.email,
+
+
+          }
+
+          this.vendorRegSer.sendAllOTPs(reqPayload).subscribe((res: any) => {
+            this.isOTPSent = res && (res.otpSentToEmail || res.otpSentToMobile);
+            if (this.isOTPSent) {
+              this.clientRegForm.controls['email'].disable();
+              this.clientRegForm.controls['organizationPhonenumber'].disable();
+              this.clientRegForm.controls['companyName'].disable();
+              this
+              this.clientRegForm.updateValueAndValidity();
+              this.toaster.success("OTPs sent to given Mobile & Email Id");
+            }
+        })
+      }else{
+        this.toaster.warning("Please Enter Company name,  EmailId & Mobile Number", 'Warning');
+      }
+    }
+    verifyOtps() {
         let obj: any = {
-            "email": this.clientRegForm.value.email,
-            "userOtp": this.otp
+          "companyName":this.clientRegForm.getRawValue().companyName,
+          "organizationPhonenumber":this.clientRegForm.getRawValue().organizationPhonenumber,
+          "email":this.clientRegForm.getRawValue().email,
+          "emailOtp":this.clientRegForm.value.emailOtp,
+          "mobileOtp":this.clientRegForm.value.mobileOtp,
         }
-        this.vendorRegSer.verifyOTP(obj).subscribe((res: any) => {
-            this.isOTPVerified = res && res.status == 'Success' ? true : false;
+
+        this.vendorRegSer.validateAllOTPs(obj).subscribe((res: any) => {
+            this.isOTPVerified = res && res.status == 'success' ? true : false;
             if (this.isOTPVerified) {
                 this.clientRegForm.controls['email'].disable();
+                this.clientRegForm.controls['organizationPhonenumber'].disable();
+                this.clientRegForm.controls['companyName'].disable();
             }
         })
     }
@@ -142,17 +178,17 @@ export class ClientRegisterComponent implements OnInit {
         } else {
 
             let obj: any = { "pan": this.transformPan() };
-            this.vendorRegSer.panOrEamilValidation(obj).subscribe((res: any) => {
-                this.isPanExist = res.exists ? res.exists : false;
-                if (this.isPanExist)
-                    this.clientRegForm.disable();
-                else
-                    this.clientRegForm.controls.pan.disable();
-                    this.panVerificationIniatiated = true;
-            })
-            if (!this.isPanExist) {
-                this.clientRegForm.enable();
-            }
+            // this.vendorRegSer.panOrEamilValidation(obj).subscribe((res: any) => {
+            //     this.isPanExist = res.exists ? res.exists : false;
+            //     if (this.isPanExist)
+            //         this.clientRegForm.disable();
+            //     else
+            //         this.clientRegForm.controls.pan.disable();
+            //         this.panVerificationIniatiated = true;
+            // })
+            // if (!this.isPanExist) {
+            //     this.clientRegForm.enable();
+            // }
         }
 
     }
@@ -163,32 +199,31 @@ export class ClientRegisterComponent implements OnInit {
         return pan;
     }
 
-    getDetailsByPan() {
-        this.existedClientDetails = null;
-        this.isEmailExists = false;
-        let obj: any = { "pan": this.transformPan() }
-        this.vendorRegSer.getDetailsByPan(obj).subscribe((res: any) => {
-            console.log('pan details', res)
-            if (res && res.id) {
-                this.existedClientDetails = res;
-                this.updateFormData();
-            }
+    // getDetailsByPan() {
+    //     this.existedClientDetails = null;
+    //     this.isEmailExists = false;
+    //     let obj: any = { "pan": this.transformPan() }
+    //     this.vendorRegSer.getDetailsByPan(obj).subscribe((res: any) => {
+    //         console.log('pan details', res)
+    //         if (res && res.id) {
+    //             this.existedClientDetails = res;
+    //             this.updateFormData();
+    //         }
 
-        })
-    }
-    updateFormData() {
-        this.clientRegForm.patchValue({
-            name: '',
-            companyName: this.existedClientDetails.companyName,
-            organizationPhonenumber: this.existedClientDetails.organizationPhonenumber,
-            address1: this.existedClientDetails.address1,
-            state: this.existedClientDetails.state,
-            clientSector: this.existedClientDetails.clientSector,
-            email: ''
-        })
-        this.enableDisableFormCtrl();
+    //     })
+    // }
+    // updateFormData() {
+    //     this.clientRegForm.patchValue({
+    //         name: '',
+    //         companyName: this.existedClientDetails.companyName,
+    //         organizationPhonenumber: this.existedClientDetails.organizationPhonenumber,
+    //         address1: this.existedClientDetails.address1,
+    //         state: this.existedClientDetails.state,
+    //         email: ''
+    //     })
+    //     this.enableDisableFormCtrl();
 
-    }
+    // }
     enableDisableFormCtrl() {
         Object.keys(this.clientRegForm.controls).forEach(ctrl => {
             if (!['name', 'email', 'organizationPhonenumber'].includes(ctrl)) {
@@ -217,8 +252,9 @@ export class ClientRegisterComponent implements OnInit {
         this.successMessage = '';
         this.isOTPVerified = false;
         this.showOtpBox = false;
+        this.isOTPSent = false;
         this.panVerificationIniatiated = false;
-        this.onlyPanEnable();
+        // this.onlyPanEnable();
 
     }
 
@@ -246,28 +282,25 @@ export class ClientRegisterComponent implements OnInit {
     registerVendor(clientRegForm: FormGroup) {
         console.log(clientRegForm);
         if (clientRegForm.valid) {
-            if (this.isEmailExists) {
-                this.toaster.warning("Email already Existed", "Warning")
-                return false;
-            }
             if (!this.isOTPVerified) {
-                this.toaster.warning("Email verification is Pending, Pls do that!", "Warning")
+                this.toaster.warning("Email & Mobile verification is Pending, Pls do that!", "Warning")
                 return false;
             }
             console.log('the form is ');
-            const splitGST = this.clientRegForm.getRawValue().pan.split('');
-            const pan = splitGST.slice(2, splitGST.length-3).join('')
+            const regData = this.clientRegForm.getRawValue();
+            // const splitGST = this.clientRegForm.getRawValue().pan.split('');
+            // const pan = splitGST.slice(2, splitGST.length-3).join('')
             const requestObject = {
-                'name': clientRegForm.controls.name.value,
-                'companyName': clientRegForm.controls.companyName.value,
-                'organizationPhonenumber': clientRegForm.controls.organizationPhonenumber.value,
-                'email': clientRegForm.controls.email.value,
-                'clientSector': clientRegForm.controls.clientSector.value,
-                'pan':pan,
-                'address1': clientRegForm.controls.address1.value,
-                'state': clientRegForm.controls.state.value,
-                'india':clientRegForm.controls.india.value,
-                'crn':clientRegForm.controls.crn.value,
+                'name':regData.name,
+                'companyName': regData.companyName,
+                'organizationPhonenumber': regData.organizationPhonenumber,
+                'email': regData.email,
+                'clientSector': '',
+                'pan':'',
+                'address1': regData.address1,
+                'state': regData.state,
+                'india': regData.india,
+                'crn': '',
             };
             this.vendorRegSer.submitSelfClientRegistration(requestObject).subscribe((r) => {
                 const res = JSON.parse(JSON.stringify(r));

@@ -20,8 +20,8 @@
         </div>
     </div>
     <div class="row  ">
-
-        <div class="col-md-12 col-xs-12">
+        <div class="col-md-2"></div>
+        <div class=" col-md-8 col-xs-12  ">
             <div class="card " >
 
                 <div class="card-body">
@@ -35,7 +35,7 @@
                     </div>
                     <form name="clientRegForm" [formGroup]="clientRegForm" (ngSubmit)='registerVendor(clientRegForm)'>
                         <div class="row">
-                            <div class="col-md-4  col-xs-12 mb-1">
+                            <!-- <div class="col-md-4  col-xs-12 mb-1">
                                 <label for="companyName">Country : <b   style="color: red;">*</b></label>
                                <div class="">
 
@@ -44,8 +44,8 @@
                                    <input type="radio"   formControlName="india" id="india2"  (click)="changeCountryValue(false)"value="false" class="form-control ml-5 mr-1" name="india"> <label for="india2">Out Of India</label>
                                 </span>
                                </div>
-                            </div>
-                            <div class="col-md-4  col-xs-12 mb-1" *ngIf="clientRegForm.controls.india.value == 'false'">
+                            </div> -->
+                            <!-- <div class="col-md-4  col-xs-12 mb-1" *ngIf="clientRegForm.controls.india.value == 'false'">
                                 <label for="companyName">Company Registration Number(CRN): <b style="color: red;">*</b></label>
                                 <input type="text" id="crn" class="form-control" name="crn" placeholder="Company Registration Number(CRN)"
                                     formControlName="crn">
@@ -53,8 +53,8 @@
                                     *ngIf="(clientRegForm?.controls?.crn?.touched ) && clientRegForm.controls.crn.errors">
                                     <div style="color: red;">CRN  is required</div>
                                 </div>
-                            </div>
-                            <div class="col-md-4 col-xs-12 mb-1 pan-field" *ngIf="clientRegForm.controls.india.value == 'true'">
+                            </div> -->
+                            <!-- <div class="col-md-4 col-xs-12 mb-1 pan-field" *ngIf="clientRegForm.controls.india.value == 'true'">
                                 <label for="name" style="display: block;">Company GST: <b style="color: red;">*</b></label>
                                 <input type="text" required id="pan" class="form-control" pattern="" name="pan"
                                     formControlName="pan" placeholder="Company GST" >
@@ -69,8 +69,8 @@
                                     <div *ngIf="(clientRegForm.controls.pan.errors.pattern)" style="color: red;">Please enter
                                         valid GST number</div>
                                 </div>
-                            </div>
-                            <div class="col-md-4  col-xs-12 mb-1">
+                            </div> -->
+                            <div class="col-md-6  col-xs-12 mb-1">
                                 <label for="companyName">Company Name: <b style="color: red;">*</b></label>
                                 <input type="text" id="companyName" class="form-control" name="companyName" placeholder="Company Name"
                                     formControlName="companyName">
@@ -79,7 +79,7 @@
                                     <div style="color: red;">Company Name is required</div>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-xs-12 mb-1">
+                            <div class="col-md-6 col-xs-12 mb-1">
                                 <label for="name">Name: <b style="color: red;">*</b></label>
                                 <input type="text" required id="name" class="form-control" name="name" formControlName="name" placeholder="Name">
                                 <div
@@ -88,59 +88,64 @@
                                         required</div>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-xs-12 mb-1">
-                                <label for="name">Mobile Number: <b style="color: red;">*</b></label>
-                                <input type="text" maxlength="10" minlength="10" id="adress" class="form-control"
-                                *ngIf="clientRegForm.controls.india.value == 'true'"  name="organizationPhonenumber" formControlName="organizationPhonenumber" placeholder="Mobile Number">
-                                <input type="text"  id="adress" class="form-control"
-                                *ngIf="clientRegForm.controls.india.value != 'true'"name="organizationPhonenumber" formControlName="organizationPhonenumber" placeholder="Mobile Number">
-                                <div
-                                    *ngIf="(clientRegForm.controls?.organizationPhonenumber?.touched ) && clientRegForm.controls?.organizationPhonenumber?.errors">
-                                    <div *ngIf="(clientRegForm.controls.organizationPhonenumber.errors.required)"
-                                        style="color: red;">Mobile
-                                        number is required</div>
-                                        <div  style="color: red;" *ngIf="clientRegForm.controls?.organizationPhonenumber?.errors?.invalid">
-                                            Mobile number must be exactly 10 digits.
-                                          </div>
-                                </div>
-                            </div>
 
-                            <div class="col-md-4  col-xs-12 mb-1">
-                                <label for="email">Company EMail Id: <b style="color: red;">*</b></label>
-                                <input type="email" required id="email" class="form-control" name="email" placeholder="Company Email Id"
-                                    formControlName="email" (blur)="checkEmailValidity()" [disabled]="isOTPVerified">
-                                    <span style="color:blue;" *ngIf="!isEmailExists" > OTP Verification <span  *ngIf="!isOTPVerified "
-                                        style="    color: #3F51B5;
-                                        font-size: 18px;
-                                        border-bottom: 1px solid;
-                                        cursor: pointer;"
-                                        (click)="sendOTP()" [ngModelOptions]="{standalone: true}"> Get OTP</span>
-                                    </span>
-                                    <span style="color: green;" *ngIf="isOTPVerified">EMail Verified</span>
-                                <div
-                                    *ngIf="(clientRegForm.controls.email.touched ) && clientRegForm.controls.email.errors">
-                                    <div *ngIf="(clientRegForm.controls.email.errors.required)" style="color: red;">Email is
-                                        required</div>
-                                    <div *ngIf="(clientRegForm.controls.email.errors.pattern)" style="color: red;">Please enter
-                                        valid Email id</div>
-                                </div>
-                                <div class="error" *ngIf="isEmailExists"> Email Already Registered. Please click here to <a routerLink="/login" style="margin-left: 5px;font-weight: 600; " >Login</a>
+                            <div class="col-md-12 row" style="    border: 2px solid #80808040;
+                            margin: 4px auto;
+                            padding-bottom: 16px;">
+                                <div class="col-md-4 col-xs-12 mb-1">
+                                  <label for="name">Mobile Number: <b style="color: red;">*</b></label>
+                                  <input type="text" maxlength="10" minlength="10" id="adress" class="form-control"
+                                  *ngIf="clientRegForm.controls.india.value == 'true'"  name="organizationPhonenumber" formControlName="organizationPhonenumber" placeholder="Mobile Number" [disabled]="isOTPVerified || isOTPSent">
+                                  <span style="color: green;" *ngIf="isOTPVerified">Mobile Number Verified</span>
+                                  <div
+                                      *ngIf="(clientRegForm.controls?.organizationPhonenumber?.touched ) && clientRegForm.controls?.organizationPhonenumber?.errors">
+                                      <div *ngIf="(clientRegForm.controls.organizationPhonenumber.errors.required)"
+                                          style="color: red;">Mobile
+                                          number is required</div>
+                                          <div  style="color: red;" *ngIf="clientRegForm.controls?.organizationPhonenumber?.errors?.invalid">
+                                              Mobile number must be exactly 10 digits.
+                                            </div>
+                                  </div>
+                              </div>
 
-                                </div>
-                                <div>
+                              <div class="col-md-4  col-xs-12 mb-1">
+                                  <label for="email">Company EMail Id: <b style="color: red;">*</b></label>
+                                  <input type="email" required id="email" class="form-control" name="email" placeholder="Company Email Id"
+                                      formControlName="email"  [disabled]="isOTPVerified || isOTPSent">
+                                      <span style="color: green;" *ngIf="isOTPVerified">EMail Verified</span>
+                                  <div
+                                      *ngIf="(clientRegForm.controls.email.touched ) && clientRegForm.controls.email.errors">
+                                      <div *ngIf="(clientRegForm.controls.email.errors.required)" style="color: red;">Email is
+                                          required</div>
+                                      <div *ngIf="(clientRegForm.controls.email.errors.pattern)" style="color: red;">Please enter
+                                          valid Email id</div>
+                                  </div>
+                                  <div>
 
+                                  </div>
+                              </div>
+                              <div class="col-md-4"  style="    display: flex;align-items: center;">
+                                  <button class="btn btn-primary" (click)="sendOTPs()"  type="button" *ngIf="!isOTPVerified">{{isOTPSent? 'Resend OTPs': 'Send OTPs'}}</button>
+                              </div>
+                              <div class="col-12 row">
+                                <div class="col-md-4"><input class="form-control" type="number"   formControlName="mobileOTP" name="mobileOTP"    placeholder="Enter Mobile OTP" maxlength="6" /></div>
+                                <div class="col-md-4"><input  class="form-control" type="number"   formControlName="emailOTP" name="emailOTP"    placeholder="Enter EMail OTP" maxlength="6" /></div>
+                                <div class="col-md-4" style="display: flex;align-items: center;">
+                                  <button class="btn btn-primary" (click)="verifyOtps()" type="button" *ngIf="!isOTPVerified">Validate OTPs</button>
                                 </div>
-                            </div>
-                            <div class="col-md-4  col-xs-12 mb-1" *ngIf="showOtpBox">
-                                <label for="email">Enter OTP from email  <b style="color: red;">*</b></label>
-                                <div class="otp-box">
-                                    <input type="number" required id="otp" class="form-control" name="otp" placeholder="Enter 6 Digits OTP "
-                                    [(ngModel)]="otp"  minlength="4" maxlength="4" [disabled]="isOTPVerified" [ngModelOptions]="{standalone: true}">
-                                    <span class="btn btn-green" (click)="verifyOtp()" *ngIf="!isOTPVerified">Verify</span>
-                                </div>
-                                <span *ngIf="isOTPVerified" style="color: green;">{{"OTP Verified Successfully"}}</span>
-                            </div>
-                            <div class="col-md-4  col-xs-12 mb-1">
+                                <div class="col-md-12"
+                                      *ngIf="(clientRegForm.controls?.organizationPhonenumber?.touched ) && clientRegForm.controls?.organizationPhonenumber?.errors">
+                                      <div *ngIf="(clientRegForm.controls.organizationPhonenumber.errors.required)"
+                                          style="color: red;">Mobile
+                                          number is required</div>
+                                          <div  style="color: red;" *ngIf="clientRegForm.controls?.organizationPhonenumber?.errors?.invalid">
+                                              Mobile number must be exactly 10 digits.
+                                            </div>
+                                  </div>
+                              </div>
+                          </div>
+
+                            <!-- <div class="col-md-6  col-xs-12 mb-1">
                                 <label for="clientSector">Sector  <b style="color: red;">*</b></label>
                                 <select class="form-control required" name="clientSector" [disabled]="isClientDataView" id="clientSector"
                                     placeholder="Select Sector" formControlName="clientSector">
@@ -153,8 +158,8 @@
                                             client Sector is required</div>
                                     </div>
                                 </select>
-                            </div>
-                            <div class="col-md-4  col-xs-12 mb-1">
+                            </div> -->
+                            <div class="col-md-6  col-xs-12 mb-1">
                                 <label for="name">City <b style="color: red;">*</b></label>
                                 <textarea type="text" required id="adress" class="form-control" name="address1"
                                     formControlName="address1" placeholder="City"> </textarea>
@@ -164,7 +169,7 @@
                                         required</div>
                                 </div>
                             </div>
-                            <div class="col-md-4  col-xs-12 mb-1" *ngIf="clientRegForm.controls.india.value == 'true'">
+                            <div class="col-md-6  col-xs-12 mb-1" *ngIf="clientRegForm.controls.india.value == 'true'">
                                 <label for="state">State  <b style="color: red;">*</b></label>
                                 <select class="form-control" name="state" formControlName="state" [disabled]="isClientDataView"
                                     id="state" placeholder="State">
