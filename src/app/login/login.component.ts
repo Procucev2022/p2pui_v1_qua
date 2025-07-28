@@ -21,6 +21,7 @@ export class LoginComponent implements OnInit {
     routerParams: any;
     visiblePassword = false;
     otpEnabled: boolean = false;
+    isOTPSent:boolean;
     otp :any  ={
       otp1: '',
       otp2: '',
@@ -29,6 +30,8 @@ export class LoginComponent implements OnInit {
       otp5: '',
       otp6: '',
     }
+    otpNumber: any;
+  isOTPVerified: boolean;
     constructor(
         public router: Router,
         private authService: AuthenticationService,
@@ -84,16 +87,11 @@ export class LoginComponent implements OnInit {
     }
 
     onLoginMethodChange(event:any){
-
-      if(this.otpEnabled){
-        this.otpEnabled = !this.otpEnabled;
-        if(!this.mobileNumber || isNaN(this.mobileNumber)  ){
-
-        }
-      }else{
-        this.toastService.warning("Enter Registered Mobile Number");
-        this.otpEnabled = false;
+      if(!this.mobileNumber || isNaN(this.mobileNumber)  ){
+        this.toastService.error("Enter Valid Registered Mobile Number", 'Failed');
+        return;
       }
+      this.otpEnabled = !this.otpEnabled;
     }
     triggerOTP(){
       // script.js
@@ -140,15 +138,33 @@ export class LoginComponent implements OnInit {
             this.isCreadentialsEmpty = true;
             return false;
         }
-        let reqPayload = {}
+        let reqPayload:any = {}
         if(this.otpEnabled){
-          reqPayload = {
-            "username":this.userName,
-            "phone": this.mobileNumber,
-            "otp":true
-
+          if(!this.mobileNumber){
+            this.toastService.warning("Enter Mobile Number", "Warning");
+            return;
           }
-        }else{
+          if(this.isOTPSent && this.isOTPVerified){  // OTP Sent & Verified Scenario
+
+            reqPayload = {
+              "username":this.userName,
+              "phone": this.mobileNumber
+
+            }
+          }else{ //  TO send OTP
+            reqPayload = {
+              "username":this.userName,
+              "phone": this.mobileNumber,
+              "otp":true
+
+            }
+          }
+
+        }else{ // If Password only provided
+          if(!this.mobileNumber || this.userPassword ){
+            this.toastService.warning("Enter Mobile Number & Password", "Warning");
+            return;
+          }
           reqPayload = {
             "username":this.userName,
             "phone": this.mobileNumber,
@@ -156,8 +172,13 @@ export class LoginComponent implements OnInit {
 
           }
         }
-        this.authService.getAccessToken(reqPayload).pipe(first()).subscribe(data => {
-            console.log(data);
+        const body = {...reqPayload, "tempEmail": sessionStorage.getItem('tempEmail') ? sessionStorage.getItem('tempEmail'): '',
+        "tempPhone":  sessionStorage.getItem('tempPhone')? sessionStorage.getItem('tempPhone'): '',}
+        // "tempEmail": sessionStorage.getItem('tempEmail') ? sessionStorage.getItem('tempEmail'): '',
+        this.authService.getAccessToken(body).pipe(first()).subscribe(data => {
+          if(data && reqPayload.otp == true ){
+              this.isOTPSent = true;
+          }else{
             localStorage.setItem('loggedUser', this.userName);
             localStorage.setItem('at', data.access_token);
             localStorage.setItem('rt', data.refresh_token);
@@ -165,10 +186,36 @@ export class LoginComponent implements OnInit {
             if (data['access_token']) {
                 this.getLoggerUserData();
             }
+          }
 
         }, (error) => {
             this.toastService.error(error.error_description, 'Failed');
         });
+
+    }
+
+
+    sendOrValidateOTP(){
+
+      if(!this.isOTPSent){
+        this.onLoggedin();
+      }else{
+        this.validateEmailOTP();
+      }
+    }
+
+
+    validateEmailOTP(){
+      this.authService.validateEmailOTP({ "email": this.userName,"tempEmail": sessionStorage.getItem('tempEmail') ? sessionStorage.getItem('tempEmail'): '',
+      "userOtp": this.otpNumber}).subscribe((res:any)=>{
+        if(res && res.status.toLowerCase() == 'success'){
+          this.isOTPVerified = true;
+          this.toastService.success('OTP Verified Successfully!', 'Success');
+            this.onLoggedin();
+        }else{
+           this.toastService.error('OTP Verification Failed', 'Failed');
+        }
+      })
 
     }
 
@@ -182,7 +229,8 @@ export class LoginComponent implements OnInit {
 
 
         const req = {
-            'username': localStorage.getItem('loggedUser')
+            'username': localStorage.getItem('loggedUser'),
+            'phone': this.mobileNumber
         };
 
         this.authService.getLoggedUserData(req).subscribe((data) => {

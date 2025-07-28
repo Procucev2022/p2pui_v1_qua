@@ -170,10 +170,13 @@ export class RegistervendorComponent implements OnInit {
     verifyOtps() {
         let obj: any = {
           "companyName":this.vendorRegistrationForm.getRawValue().companyName,
-          "phoneNumber":this.vendorRegistrationForm.getRawValue().phoneNumber,
+          "organizationPhonenumber":this.vendorRegistrationForm.getRawValue().phoneNumber,
           "email":this.vendorRegistrationForm.getRawValue().mail,
           "emailOtp":this.vendorRegistrationForm.value.emailOtp,
           "mobileOtp":this.vendorRegistrationForm.value.mobileOtp,
+          "tempEmail": sessionStorage.getItem('tempEmail') ? sessionStorage.getItem('tempEmail'): '',
+          "tempPhone":  sessionStorage.getItem('tempPhone')? sessionStorage.getItem('tempPhone'): '',
+
         }
 
         this.vendorRegSer.validateAllOTPs(obj).subscribe((res: any) => {

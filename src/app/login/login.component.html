@@ -112,7 +112,7 @@
                                 justify-content: right;">
 
                               <label class="switch-login-method">
-                                <input type="checkbox" style="    width: 24px;
+                                <input type="checkbox" [disabled]="!mobileNumber" style="    width: 24px;
                                 height: 24px;" (change)="onLoginMethodChange($event)" [(ngModel)]="otpEnabled" [value]="'true'" [checked]="otpEnabled">
                               </label>   Login With  OTP (Via Email)
                             </div>
@@ -131,7 +131,10 @@
 
                                 <div class="otp-container">
                                   <label>Enter OTP</label>
-                                  <div id="inputs" class="inputs">
+                                  <button class="btn btn-blue" (click)="sendOrValidateOTP()" [disabled]="isOTPVerified">{{!isOTPSent? 'Send ':'Validate '+  'OTP'}}</button>
+                                  <input type="number"  class="form-control"style="width:50%" maxLength="6" placeholder="Enter 6digits OTP here..." name="otpNumber" [(ngModel)] ="otpNumber" [ngModelOptions]="{standalone: true}"  [disabled]="isOTPVerified"/>
+
+                                  <!-- <div id="inputs" class="inputs">
                                       <input class="input" type="text"
                                           inputmode="numeric" maxlength="1" [(ngModel)]="otp.otp1" name="otp1" (keydown)="onKeyDown('otp1', $event)"   [ngModelOptions]="{standalone: true}"/>
                                       <input class="input" type="text"
@@ -144,7 +147,7 @@
                                          inputmode="numeric" maxlength="1"  [(ngModel)]="otp.otp5" name="otp5" (keydown)="onKeyDown('otp5', $event)"  [ngModelOptions]="{standalone: true}"/>
                                       <input class="input" type="text"
                                           inputmode="numeric" maxlength="1"  [(ngModel)]="otp.otp6" name="otp6" (keydown)="onKeyDown('otp6', $event)"  [ngModelOptions]="{standalone: true}"/>
-                                  </div>
+                                  </div> -->
                               </div>
                             </div>
                         </div>

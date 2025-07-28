@@ -141,6 +141,8 @@ export class ClientRegisterComponent implements OnInit {
           "email":this.clientRegForm.getRawValue().email,
           "emailOtp":this.clientRegForm.value.emailOtp,
           "mobileOtp":this.clientRegForm.value.mobileOtp,
+          "tempEmail": sessionStorage.getItem('tempEmail') ? sessionStorage.getItem('tempEmail'): '',
+           "tempPhone":  sessionStorage.getItem('tempPhone')? sessionStorage.getItem('tempPhone'): '',
         }
 
         this.vendorRegSer.validateAllOTPs(obj).subscribe((res: any) => {
