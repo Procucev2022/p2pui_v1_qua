@@ -62,6 +62,17 @@ export class VendorRegistrationService {
 
     }
 
+    sendAllOTPs(data: any) {
+      return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.OTPs_SENT, data, {});
+
+  }
+
+  validateAllOTPs(data: any) {
+    return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.  VALIDATE_ALL_OTPS, data, {});
+
+}
+
+
     //get Details By Pan
     getDetailsByPan(data: any) {
         return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.GET_CLIENT_DETAILS_BY_PAN, data, {});

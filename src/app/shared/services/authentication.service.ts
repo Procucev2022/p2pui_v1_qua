@@ -26,6 +26,8 @@ export class AuthenticationService {
     $expiresTime = new BehaviorSubject(this.expiresInSeconds)
     constructor(private http: HttpClient, private router: Router, private encryDecryService: EncryDecryService, private toaster: ToastrService) { }
     SYSTEM_VIEW_CONFIG: any = SystemViewConfig;
+
+
     public getAccessToken(req): Observable<any> {
         const formdata: FormData = new FormData();
         formdata.append('username', req.userName);  // 'venu.gade@procucev.com');
@@ -38,7 +40,7 @@ export class AuthenticationService {
 
         return this.http
             .post<any>(AppApiConfig.apiEndpoint + AppApiConfig.ACCESS_TOKEN_PATH,
-                payload,
+                req,
             httpOptions
             )
             .pipe(
@@ -49,6 +51,11 @@ export class AuthenticationService {
                     return data;
                 })
             );
+    }
+
+    validateEmailOTP(data: any) {
+        return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.OTP_VALIDATION, data, {});
+
     }
 
     updateExpiredTime(time){

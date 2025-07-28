@@ -65,7 +65,7 @@
   </div>
 
   <div class="col-md-4 " style="    background: #00BCD4;">
-      <div class="row" style="margin-bottom: 63px;">
+      <div class="row" style="margin-bottom: 0px;">
           <div class="col-6" style=" margin-top:15px;padding-left:20px ; text-align:left;">
               <label><span style="font-size: 20px;color: #fffbff;">
                       For Buyer
@@ -81,7 +81,7 @@
               </label>
           </div>
       </div>
-      <div class="row right-section m-4 mt-lg-5">
+      <div class="row right-section m-4">
           <div class="col-md-12  col-xs -12 login-form row">
                 <div class="col-12">
                   <img src="assets/images/Procucev_Logo.svg" width="250px" class="" />
@@ -99,8 +99,27 @@
                                     (keydown)="resetCredentialsMsg()" class="form-control" id=""
                                     placeholder="Enter Your Email" style="margin-bottom: 30px;">
                             </div>
+                              <div class="form-group">
+                                <div class="col-12 input-label"><label for="mobile">Mobile Number(Registered):</label></div>
+                                <input  inputmode="numeric" name="mobileNumber" [(ngModel)]="mobileNumber" maxlength="10"
+                                    (keydown)="resetCredentialsMsg()" class="form-control" id=""
+                                    placeholder="Enter Your Your Registered" style="margin-bottom: 30px;">
+                            </div>
 
-                            <div class="form-group">
+                            <div class="row  " style="    display: flex
+                            ;
+                                align-items: center;
+                                justify-content: right;">
+
+                              <label class="switch-login-method">
+                                <input type="checkbox" [disabled]="!mobileNumber" style="    width: 24px;
+                                height: 24px;" (change)="onLoginMethodChange($event)" [(ngModel)]="otpEnabled" [value]="'true'" [checked]="otpEnabled">
+                              </label>   Login With  OTP (Via Email)
+                            </div>
+
+
+
+                            <div class="form-group"  *ngIf="!otpEnabled">
                                 <div class="col-12 input-label"><label for="paswd">Password:</label></div>
                                 <input [type]="visiblePassword?'text':'password'" name="userPassword"
                                     [(ngModel)]="userPassword" (keydown)="resetCredentialsMsg()"
@@ -108,10 +127,34 @@
                                 <span class="eyeicon" (click)="viewPassword()"><i
                                         [ngClass]="visiblePassword?'fa fa-eye fa-lg':'fa fa-eye-slash fa-lg'"></i></span>
                             </div>
+                            <div class="form-group" *ngIf="otpEnabled">
+
+                                <div class="otp-container">
+                                  <label>Enter OTP</label>
+                                  <button class="btn btn-blue" (click)="sendOrValidateOTP()" [disabled]="isOTPVerified">{{!isOTPSent? 'Send ':'Validate '+  'OTP'}}</button>
+                                  <input type="number"  class="form-control"style="width:50%" maxLength="6" placeholder="Enter 6digits OTP here..." name="otpNumber" [(ngModel)] ="otpNumber" [ngModelOptions]="{standalone: true}"  [disabled]="isOTPVerified"/>
+
+                                  <!-- <div id="inputs" class="inputs">
+                                      <input class="input" type="text"
+                                          inputmode="numeric" maxlength="1" [(ngModel)]="otp.otp1" name="otp1" (keydown)="onKeyDown('otp1', $event)"   [ngModelOptions]="{standalone: true}"/>
+                                      <input class="input" type="text"
+                                          inputmode="numeric" maxlength="1"  [(ngModel)]="otp.otp2" name="otp2" (keydown)="onKeyDown('otp2', $event)"  [ngModelOptions]="{standalone: true}" />
+                                      <input class="input" type="text"
+                                          inputmode="numeric" maxlength="1"   [(ngModel)]="otp.otp3" name="otp3" (keydown)="onKeyDown('otp3', $event)" [ngModelOptions]="{standalone: true}" />
+                                      <input class="input" type="text"
+                                          inputmode="numeric" maxlength="1"  [(ngModel)]="otp.otp4" name="otp4" (keydown)="onKeyDown('otp4', $event)" [ngModelOptions]="{standalone: true}" />
+                                      <input class="input" type="text"
+                                         inputmode="numeric" maxlength="1"  [(ngModel)]="otp.otp5" name="otp5" (keydown)="onKeyDown('otp5', $event)"  [ngModelOptions]="{standalone: true}"/>
+                                      <input class="input" type="text"
+                                          inputmode="numeric" maxlength="1"  [(ngModel)]="otp.otp6" name="otp6" (keydown)="onKeyDown('otp6', $event)"  [ngModelOptions]="{standalone: true}"/>
+                                  </div> -->
+                              </div>
+                            </div>
                         </div>
+
                         <div style="text-align: end;">
-                            <small (click)="forgotpassword()">Forgot password</small>
-                        </div>
+                          <small (click)="forgotpassword()">Forgot password</small>
+                      </div>
                         <div class="row login-btns">
                             <button class="btn btn-primary" (click)="onLoggedin()">Login</button>
                             <button class="btn btn-danger" type="reset" style="margin-top: 0px;">Reset</button>

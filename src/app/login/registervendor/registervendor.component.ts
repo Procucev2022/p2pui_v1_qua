@@ -18,8 +18,9 @@ export class RegistervendorComponent implements OnInit {
     // private fb: FormBuilder;
     generalModel: any = {};
     contacts: FormArray;
-    vendorForm: FormGroup;
     vendorRegistrationForm: FormGroup;
+    isOTPVerified: boolean;
+    isOTPSent: boolean;
     // states: any[] = this.getStatesArray();
 
     constructor(private modalDialog: MatDialog, private fb: FormBuilder, private toaster: ToastrService, private vendorRegSer: VendorRegistrationService, private router: Router) { }
@@ -35,14 +36,15 @@ export class RegistervendorComponent implements OnInit {
     generateClientForm() {
         this.vendorRegistrationForm = new FormGroup({
             name: new FormControl('', [Validators.required,]),
+            companyName: new FormControl('', [Validators.required,]),
             phoneNumber: new FormControl('', [Validators.required, tenDigitPhoneNumberValidator()]),
             mail: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')]),
             gstin: new FormControl('', [Validators.required]),
             address: new FormControl('', [Validators.required]),
-            pan: new FormControl('', [Validators.required, Validators.pattern('[A-Z]{5}[0-9]{4}[A-Z]{1}')]),
             india: new FormControl('true', [Validators.required]),
-            crn: new FormControl(''),
-            products: new FormControl('', [Validators.required])
+            products: new FormControl('', [Validators.required]),
+            mobileOtp: new FormControl(''),
+            emailOtp: new FormControl('')
         });
 
     }
@@ -51,25 +53,10 @@ export class RegistervendorComponent implements OnInit {
     changeCountryValue(isIndia){
         if(isIndia){
 
-            this.vendorRegistrationForm.controls['crn'].setValue('');
-            this.vendorRegistrationForm.controls['crn'].clearValidators();
             this.vendorRegistrationForm.controls['phoneNumber'].setValue('');
             this.vendorRegistrationForm.controls['phoneNumber'].clearValidators();
             this.vendorRegistrationForm.controls['phoneNumber'].setValidators([Validators.required, tenDigitPhoneNumberValidator()]);
             this.vendorRegistrationForm.controls['gstin'].setValidators([Validators.required]);
-            this.vendorRegistrationForm.controls['pan'].setValidators([Validators.required, Validators.pattern('[A-Z]{5}[0-9]{4}[A-Z]{1}')]);
-            this.vendorRegistrationForm.controls['pan'].setValue('');
-        }else{
-            this.vendorRegistrationForm.enable();
-            this.vendorRegistrationForm.controls['crn'].setValue('');
-            this.vendorRegistrationForm.controls['crn'].setValidators([Validators.required]);
-            this.vendorRegistrationForm.controls['pan'].clearValidators();
-            this.vendorRegistrationForm.controls['gstin'].clearValidators();
-            this.vendorRegistrationForm.controls['pan'].setValue('');
-            this.vendorRegistrationForm.controls['gstin'].setValue('');
-            this.vendorRegistrationForm.controls['phoneNumber'].setValue('');
-            this.vendorRegistrationForm.controls['phoneNumber'].clearValidators();
-            this.vendorRegistrationForm.controls['phoneNumber'].setValidators([Validators.required]);
         }
     }
     registerVendor( form:any) {
@@ -77,15 +64,13 @@ export class RegistervendorComponent implements OnInit {
             const formValue =this.vendorRegistrationForm.getRawValue();
             console.log('the form is ');
             const requestObject = {
-                'companyName': formValue.name,
-                'organizationPhonenumber': formValue.phoneNumber,
+                'companyName': formValue.companyName,
+                'phoneNumber': formValue.phoneNumber,
                 'email': formValue.mail,
-                'pan': formValue.pan,
                 'gstin': formValue.gstin,
                 'address1': formValue.address,
                 'details': formValue.products,
                 'india': formValue.india,
-                'crn': formValue.crn
 
             };
 
@@ -149,6 +134,59 @@ export class RegistervendorComponent implements OnInit {
             if (result && result.event === 'close') {
             }
         });
+    }
+
+
+    sendOTPs(){
+
+      if(this.vendorRegistrationForm.value.phoneNumber && this.vendorRegistrationForm.value.mail && this.vendorRegistrationForm.value.companyName){
+          this.isOTPSent = true;
+          this.isOTPVerified = false;
+          const reqPayload = {
+            tempEmail: sessionStorage.getItem('tempEmail') ? sessionStorage.getItem('tempEmail'): '',
+            tempPhone:  sessionStorage.getItem('tempPhone')? sessionStorage.getItem('tempPhone'): '',
+            "companyName": this.vendorRegistrationForm.value.companyName,
+            "phoneNumber":this.vendorRegistrationForm.value.phoneNumber,
+            "email":this.vendorRegistrationForm.value.mail,
+
+
+          }
+
+          this.vendorRegSer.sendAllOTPs(reqPayload).subscribe((res: any) => {
+            this.isOTPSent = res && (res.otpSentToEmail || res.otpSentToMobile);
+            if (this.isOTPSent) {
+              this.vendorRegistrationForm.controls['email'].disable();
+              this.vendorRegistrationForm.controls['phoneNumber'].disable();
+              this.vendorRegistrationForm.controls['companyName'].disable();
+              this
+              this.vendorRegistrationForm.updateValueAndValidity();
+              this.toaster.success("OTPs sent to given Mobile & Email Id");
+            }
+        })
+      }else{
+        this.toaster.warning("Please Enter Company name,  EmailId & Mobile Number", 'Warning');
+      }
+    }
+    verifyOtps() {
+        let obj: any = {
+          "companyName":this.vendorRegistrationForm.getRawValue().companyName,
+          "organizationPhonenumber":this.vendorRegistrationForm.getRawValue().phoneNumber,
+          "email":this.vendorRegistrationForm.getRawValue().mail,
+          "emailOtp":this.vendorRegistrationForm.value.emailOtp,
+          "mobileOtp":this.vendorRegistrationForm.value.mobileOtp,
+          "tempEmail": sessionStorage.getItem('tempEmail') ? sessionStorage.getItem('tempEmail'): '',
+          "tempPhone":  sessionStorage.getItem('tempPhone')? sessionStorage.getItem('tempPhone'): '',
+
+        }
+
+        this.vendorRegSer.validateAllOTPs(obj).subscribe((res: any) => {
+            this.isOTPVerified = res && res.status == 'success' ? true : false;
+            if (this.isOTPVerified) {
+                this.vendorRegistrationForm.controls['email'].disable();
+                this.vendorRegistrationForm.controls['phoneNumber'].disable();
+                this.vendorRegistrationForm.controls['companyName'].disable();
+            }
+        })
     }
 }
 

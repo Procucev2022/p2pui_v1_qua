@@ -49,6 +49,11 @@ export class AppApiConfig {
   public static ACCEPT_AND_SAVE_RFQ_BY_CM = '/rest/gmt/editAndResendRfqByCM';
   public static CHANGE_PASSWORD = '/rest/users/changePswd';
 
+  public static OTPs_SENT ='/partialvendor/validateClient';
+  public static VALIDATE_ALL_OTPS = '/partialvendor/validateAllOtps';
+  public static VALIDATE_EMAIL_OTP = '/partialvendor/validateAllOtps';
+ 
+
 
 
 
