@@ -231,7 +231,7 @@ export class LoginComponent implements OnInit {
       this.authService.validateEmailOTP({
          "email": this.userName,
         "tempEmail": sessionStorage.getItem('tempEmail') ? sessionStorage.getItem('tempEmail'): '',
-        "userOtp": this.otpNumber}
+        "emailOtp": this.otpNumber}
         ).subscribe((res:any)=>{
         if(res && res.status.toLowerCase() == 'success'){
           this.isOTPVerified = true;

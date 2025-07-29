@@ -60,6 +60,10 @@ export class RegistervendorComponent implements OnInit {
         }
     }
     registerVendor( form:any) {
+      if(!this.isOTPVerified ){
+        this.toaster.error('EMail & Mobile Verification Not yet completed!', 'Failure');
+        return;
+      }
         if (this.vendorRegistrationForm.valid) {
             const formValue =this.vendorRegistrationForm.getRawValue();
             console.log('the form is ');
@@ -168,6 +172,12 @@ export class RegistervendorComponent implements OnInit {
       }
     }
     verifyOtps() {
+      if(!(this.vendorRegistrationForm.getRawValue().phoneNumber && this.vendorRegistrationForm.getRawValue().mail
+      && this.vendorRegistrationForm.getRawValue().companyName && this.vendorRegistrationForm.value.emailOtp &&
+      this.vendorRegistrationForm.value.mobileOtp)){
+        this.toaster.warning("Please Enter Company name,  EmailId & Mobile Number", 'Warning');
+        return ;
+      }
         let obj: any = {
           "companyName":this.vendorRegistrationForm.getRawValue().companyName,
           "organizationPhonenumber":this.vendorRegistrationForm.getRawValue().phoneNumber,
