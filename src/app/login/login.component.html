@@ -113,7 +113,7 @@
 
                               <label class="switch-login-method">
                                 <input type="checkbox" [disabled]="!mobileNumber" style="    width: 24px;
-                                height: 24px;" (change)="onLoginMethodChange($event)" [(ngModel)]="otpEnabled" [value]="true" [checked]="otpEnabled">
+                                height: 24px;" (click)="onLoginMethodChange($event)" [(ngModel)]="otpEnabled" [value]="true" [checked]="otpEnabled">
                               </label>   Login With  OTP (Via Email)
                             </div>
 
@@ -127,7 +127,7 @@
                                 <span class="eyeicon" (click)="viewPassword()"><i
                                         [ngClass]="visiblePassword?'fa fa-eye fa-lg':'fa fa-eye-slash fa-lg'"></i></span>
                             </div>
-                            <div class="form-group" *ngIf="otpEnabled">
+                            <div class="form-group" *ngIf="otpEnabled && mobileNumber && userName ">
 
                                 <div class="otp-container">
                                   <input type="number"  class="form-control"style="width:50%" maxLength="6" placeholder="Enter 6digits OTP here..." name="otpNumber" [(ngModel)] ="otpNumber" [ngModelOptions]="{standalone: true}"
