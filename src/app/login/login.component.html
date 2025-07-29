@@ -113,7 +113,7 @@
 
                               <label class="switch-login-method">
                                 <input type="checkbox" [disabled]="!mobileNumber" style="    width: 24px;
-                                height: 24px;" (change)="onLoginMethodChange($event)" [(ngModel)]="otpEnabled" [value]="'true'" [checked]="otpEnabled">
+                                height: 24px;" (change)="onLoginMethodChange($event)" [(ngModel)]="otpEnabled" [value]="true" [checked]="otpEnabled">
                               </label>   Login With  OTP (Via Email)
                             </div>
 
@@ -130,9 +130,9 @@
                             <div class="form-group" *ngIf="otpEnabled">
 
                                 <div class="otp-container">
-                                  <label>Enter OTP</label>
+                                  <input type="number"  class="form-control"style="width:50%" maxLength="6" placeholder="Enter 6digits OTP here..." name="otpNumber" [(ngModel)] ="otpNumber" [ngModelOptions]="{standalone: true}"
+                                  [disabled]="  isOTPVerified || (!mobileNumber || !userName) " />
                                   <button class="btn btn-blue" (click)="sendOrValidateOTP()" [disabled]="isOTPVerified">{{!isOTPSent? 'Send ':'Validate '+  'OTP'}}</button>
-                                  <input type="number"  class="form-control"style="width:50%" maxLength="6" placeholder="Enter 6digits OTP here..." name="otpNumber" [(ngModel)] ="otpNumber" [ngModelOptions]="{standalone: true}"  [disabled]="isOTPVerified"/>
 
                                   <!-- <div id="inputs" class="inputs">
                                       <input class="input" type="text"
@@ -155,7 +155,7 @@
                         <div style="text-align: end;">
                           <small (click)="forgotpassword()">Forgot password</small>
                       </div>
-                        <div class="row login-btns">
+                        <div class="row login-btns" *ngIf="!otpEnabled">
                             <button class="btn btn-primary" (click)="onLoggedin()">Login</button>
                             <button class="btn btn-danger" type="reset" style="margin-top: 0px;">Reset</button>
                         </div>

@@ -92,6 +92,8 @@ export class LoginComponent implements OnInit {
         return;
       }
       this.otpEnabled = !this.otpEnabled;
+      this.isOTPSent =false;
+      this.isOTPVerified= false;
     }
     triggerOTP(){
       // script.js
@@ -161,8 +163,8 @@ export class LoginComponent implements OnInit {
           }
 
         }else{ // If Password only provided
-          if(!this.mobileNumber || this.userPassword ){
-            this.toastService.warning("Enter Mobile Number & Password", "Warning");
+          if(!this.mobileNumber || !this.userPassword || !this.userName ){
+            this.toastService.warning("Enter EmailId, Mobile Number & Password", "Warning");
             return;
           }
           reqPayload = {
@@ -176,18 +178,38 @@ export class LoginComponent implements OnInit {
         "tempPhone":  sessionStorage.getItem('tempPhone')? sessionStorage.getItem('tempPhone'): '',}
         // "tempEmail": sessionStorage.getItem('tempEmail') ? sessionStorage.getItem('tempEmail'): '',
         this.authService.getAccessToken(body).pipe(first()).subscribe(data => {
-          if(data && reqPayload.otp == true ){
-              this.isOTPSent = true;
-          }else{
-            localStorage.setItem('loggedUser', this.userName);
-            localStorage.setItem('at', data.access_token);
-            localStorage.setItem('rt', data.refresh_token);
-            localStorage.setItem('et', data.expires_in);
-            if (data['access_token']) {
-                this.getLoggerUserData();
+          if(data && data.status == 'error'){
+              if(data.methodType =='otp'){
+                    this.toastService.error(data.message, 'Failed');
+                    this.isOTPSent = false;
+                }else if(data &&  data.methodType =='validate'){
+
+                    this.toastService.error(data.message, 'Failed');
+                }
+          }else if(data && data.status == 'success'){
+            if(data.methodType =='otp'){
+                this.toastService.success(data.message, 'Success');
+                this.isOTPSent = true;
+            }else if(data &&  data.methodType =='validate' && this.isOTPVerified){
+              localStorage.setItem('loggedUser', this.userName);
+              localStorage.setItem('loggedUserMobile', this.mobileNumber);
+              localStorage.setItem('at', data.access_token);
+              localStorage.setItem('rt', data.refresh_token);
+              localStorage.setItem('et', data.expires_in);
+              if (data['access_token']) {
+                  this.getLoggerUserData();
+              }
+            }else if(data &&  data.methodType =='authenticated'){
+              localStorage.setItem('loggedUser', this.userName);
+              localStorage.setItem('loggedUserMobile', this.mobileNumber);
+              localStorage.setItem('at', data.access_token);
+              localStorage.setItem('rt', data.refresh_token);
+              localStorage.setItem('et', data.expires_in);
+              if (data['access_token']) {
+                  this.getLoggerUserData();
+              }
             }
           }
-
         }, (error) => {
             this.toastService.error(error.error_description, 'Failed');
         });
@@ -206,14 +228,17 @@ export class LoginComponent implements OnInit {
 
 
     validateEmailOTP(){
-      this.authService.validateEmailOTP({ "email": this.userName,"tempEmail": sessionStorage.getItem('tempEmail') ? sessionStorage.getItem('tempEmail'): '',
-      "userOtp": this.otpNumber}).subscribe((res:any)=>{
+      this.authService.validateEmailOTP({
+         "email": this.userName,
+        "tempEmail": sessionStorage.getItem('tempEmail') ? sessionStorage.getItem('tempEmail'): '',
+        "userOtp": this.otpNumber}
+        ).subscribe((res:any)=>{
         if(res && res.status.toLowerCase() == 'success'){
           this.isOTPVerified = true;
           this.toastService.success('OTP Verified Successfully!', 'Success');
             this.onLoggedin();
         }else{
-           this.toastService.error('OTP Verification Failed', 'Failed');
+           this.toastService.error(res.message, 'Failed');
         }
       })
 
@@ -230,7 +255,7 @@ export class LoginComponent implements OnInit {
 
         const req = {
             'username': localStorage.getItem('loggedUser'),
-            'phone': this.mobileNumber
+            'phone': localStorage.getItem('loggedUserMobile'),
         };
 
         this.authService.getLoggedUserData(req).subscribe((data) => {
