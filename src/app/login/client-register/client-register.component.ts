@@ -49,8 +49,8 @@ export class ClientRegisterComponent implements OnInit {
             state: new FormControl('', [Validators.required]),
             // pan: new FormControl('', [Validators.required, Validators.pattern('[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[a-zA-Z0-9]{3}')]),
             india: new FormControl('true', [Validators.required] ),
-            emailOTP: new FormControl(''),
-            mobileOTP: new FormControl('')
+            emailOtp: new FormControl(''),
+            mobileOtp: new FormControl('')
         });
         // this.clientRegForm.disable();
 
@@ -135,6 +135,9 @@ export class ClientRegisterComponent implements OnInit {
       }
     }
     verifyOtps() {
+
+      if(this.clientRegForm.getRawValue().organizationPhonenumber && this.clientRegForm.getRawValue().email && this.clientRegForm.getRawValue().companyName &&
+        this.clientRegForm.getRawValue().emailOtp && this.clientRegForm.getRawValue().mobileOtp){
         let obj: any = {
           "companyName":this.clientRegForm.getRawValue().companyName,
           "organizationPhonenumber":this.clientRegForm.getRawValue().organizationPhonenumber,
@@ -153,6 +156,9 @@ export class ClientRegisterComponent implements OnInit {
                 this.clientRegForm.controls['companyName'].disable();
             }
         })
+        }else{
+          this.toaster.warning("Please Enter Company name,  EmailId & Mobile Number, OTPs ", 'Warning');
+        }
     }
 
     onlyPanEnable() {
