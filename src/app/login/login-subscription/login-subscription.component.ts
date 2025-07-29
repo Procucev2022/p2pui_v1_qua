@@ -18,7 +18,8 @@ export class LoginSubscriptionComponent implements OnInit {
   ngOnInit() {
 
     const req  = {
-        'username':  localStorage.getItem('loggedUser')
+        'username':  localStorage.getItem('loggedUser'),
+        'phone': localStorage.getItem('loggedUserMobile')
       };
 
       this.authService.getLoggedUserData(req).subscribe((data) => {
