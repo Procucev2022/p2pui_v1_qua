@@ -110,7 +110,7 @@ export class ClientRegisterComponent implements OnInit {
           this.isOTPSent = true;
           this.isOTPVerified = false;
           const reqPayload = {
-            tempEmail: sessionStorage.getItem('tempEmail') ? sessionStorage.getItem('tempEmail'): '',
+            tempEmail: sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail'): '',
             tempPhone:  sessionStorage.getItem('tempPhone')? sessionStorage.getItem('tempPhone'): '',
             "companyName": this.clientRegForm.value.companyName,
             "organizationPhonenumber":this.clientRegForm.value.organizationPhonenumber,
@@ -144,7 +144,7 @@ export class ClientRegisterComponent implements OnInit {
           "email":this.clientRegForm.getRawValue().email,
           "emailOtp":this.clientRegForm.value.emailOtp,
           "mobileOtp":this.clientRegForm.value.mobileOtp,
-          "tempEmail": sessionStorage.getItem('tempEmail') ? sessionStorage.getItem('tempEmail'): '',
+          "tempEmail": sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail'): '',
            "tempPhone":  sessionStorage.getItem('tempPhone')? sessionStorage.getItem('tempPhone'): '',
         }
 

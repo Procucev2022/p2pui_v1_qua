@@ -174,9 +174,9 @@ export class LoginComponent implements OnInit {
 
           }
         }
-        const body = {...reqPayload, "tempEmail": sessionStorage.getItem('tempEmail') ? sessionStorage.getItem('tempEmail'): '',
+        const body = {...reqPayload, "tempEmail": sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail'): '',
         "tempPhone":  sessionStorage.getItem('tempPhone')? sessionStorage.getItem('tempPhone'): '',}
-        // "tempEmail": sessionStorage.getItem('tempEmail') ? sessionStorage.getItem('tempEmail'): '',
+        // "tempEmail": sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail'): '',
         this.authService.getAccessToken(body).pipe(first()).subscribe(data => {
           if(data && data.status == 'error'){
               if(data.methodType =='otp'){
@@ -230,7 +230,7 @@ export class LoginComponent implements OnInit {
     validateEmailOTP(){
       this.authService.validateEmailOTP({
          "email": this.userName,
-        "tempEmail": sessionStorage.getItem('tempEmail') ? sessionStorage.getItem('tempEmail'): '',
+        "tempEmail": sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail'): '',
         "emailOtp": this.otpNumber}
         ).subscribe((res:any)=>{
         if(res && res.status.toLowerCase() == 'success'){

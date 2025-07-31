@@ -147,7 +147,7 @@ export class RegistervendorComponent implements OnInit {
           this.isOTPSent = true;
           this.isOTPVerified = false;
           const reqPayload = {
-            tempEmail: sessionStorage.getItem('tempEmail') ? sessionStorage.getItem('tempEmail'): '',
+            tempEmail: sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail'): '',
             tempPhone:  sessionStorage.getItem('tempPhone')? sessionStorage.getItem('tempPhone'): '',
             "companyName": this.vendorRegistrationForm.value.companyName,
             "phoneNumber":this.vendorRegistrationForm.value.phoneNumber,
@@ -184,7 +184,7 @@ export class RegistervendorComponent implements OnInit {
           "email":this.vendorRegistrationForm.getRawValue().mail,
           "emailOtp":this.vendorRegistrationForm.value.emailOtp,
           "mobileOtp":this.vendorRegistrationForm.value.mobileOtp,
-          "tempEmail": sessionStorage.getItem('tempEmail') ? sessionStorage.getItem('tempEmail'): '',
+          "tempEmail": sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail'): '',
           "tempPhone":  sessionStorage.getItem('tempPhone')? sessionStorage.getItem('tempPhone'): '',
 
         }

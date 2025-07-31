@@ -53,7 +53,7 @@ import { SubCategoryDropdownComponent } from './components/sub-category-dropdown
 import { PriceAnalyticsGraphModalComponent } from './price-analytics-graph-modal/price-analytics-graph-modal.component';
 import { PriceTrendChartComponent } from 'src/app/layout/client/price-trend-chart/price-trend-chart.component';
 import { AuthenticateLoggedUserComponent } from './components/authenticate-logged-user/authenticate-logged-user.component';
-import {ToggleButtonModule} from 'primeng/togglebutton';
+// import {ToggleButtonModule} from 'primeng/togglebutton';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { BlockCopyPasteDirective } from './directives/block-copy-paste.directive';
 import { GmtVendorInfoModalComponent } from './components/gmt-vendor-info-modal/gmt-vendor-info-modal.component';
@@ -130,7 +130,7 @@ import { TreeTableModule } from 'primeng/treetable';
         DialogModule,
         ChartModule,
         StepsModule,
-        ToggleButtonModule,
+        // ToggleButtonModule,
         MatButtonToggleModule,
         ConfirmDialogModule,
         RatingModule.forRoot(),
@@ -196,7 +196,7 @@ import { TreeTableModule } from 'primeng/treetable';
         PriceTrendChartComponent,
         StepsModule,
         AuthenticateLoggedUserComponent,
-        ToggleButtonModule,
+        // ToggleButtonModule,
         MatButtonToggleModule,
         BlockCopyPasteDirective,
         GmtVendorInfoModalComponent,
