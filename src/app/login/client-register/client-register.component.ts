@@ -155,6 +155,8 @@ export class ClientRegisterComponent implements OnInit {
                 this.clientRegForm.controls['email'].disable();
                 this.clientRegForm.controls['organizationPhonenumber'].disable();
                 this.clientRegForm.controls['companyName'].disable();
+                this.clientRegForm.updateValueAndValidity();
+                
             }
         })
         }else{

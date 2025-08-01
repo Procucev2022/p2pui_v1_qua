@@ -83,6 +83,7 @@ visible: boolean;
                 'address1': formValue.address,
                 'details': formValue.products,
                 'india': formValue.india,
+                'zipCode': formValue.pinCode
 
             };
 
@@ -188,8 +189,7 @@ visible: boolean;
             if (this.isOTPSent) {
               this.vendorRegistrationForm.controls['email'].disable();
               this.vendorRegistrationForm.controls['phoneNumber'].disable();
-              this.vendorRegistrationForm.controls['companyName'].disable();
-              this
+              this.vendorRegistrationForm.controls['companyName'].disable(); 
               this.vendorRegistrationForm.updateValueAndValidity();
               this.toaster.success("OTPs sent to given Mobile & Email Id");
             }
@@ -222,6 +222,7 @@ visible: boolean;
                 this.vendorRegistrationForm.controls['email'].disable();
                 this.vendorRegistrationForm.controls['phoneNumber'].disable();
                 this.vendorRegistrationForm.controls['companyName'].disable();
+                this.vendorRegistrationForm.updateValueAndValidity();
             }
         })
     }
