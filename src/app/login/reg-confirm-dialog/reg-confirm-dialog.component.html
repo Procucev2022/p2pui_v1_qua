@@ -1,7 +1,7 @@
 
 
     <div class="modal-header">
-        <button class="btn btn-warning modal-close-btn" mat-dialog-close>✖</button>
+        <button class="btn btn-warning modal-close-btn" (click)="onCloseModal()"  >✖</button>
         <div class="col-12">
             <h5  style="color: orange;">Registration Successfully Completed!</h5>
         </div>
@@ -12,5 +12,5 @@
         </p>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-blue" mat-dialog-close>Ok</button>
+        <button class="btn btn-blue" (click)="onCloseModal()" >Ok</button>
     </div>

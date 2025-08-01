@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
 @Component({
@@ -10,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class RegConfirmDialogComponent implements OnInit , OnDestroy{
 
-  constructor(private router: Router) { }
+  constructor(private router: Router,private modalDialog:MatDialog) { }
 
   ngOnInit() {
   }
@@ -18,6 +19,10 @@ export class RegConfirmDialogComponent implements OnInit , OnDestroy{
 
   ngOnDestroy(){
     this.router.navigate(['/login'] );
+  }
+
+  onCloseModal(){
+    this.modalDialog.closeAll();
   }
 
 }
