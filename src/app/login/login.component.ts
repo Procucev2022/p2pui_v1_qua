@@ -136,7 +136,7 @@ export class LoginComponent implements OnInit {
     }
 
     onLoggedin() {
-        if ( (this.otpEnabled &&   this.userName == null) || (!this.otpEnabled &&   this.userName == null && this.userPassword == null)) {
+        if ( (this.otpEnabled &&   this.userName == null) || (!this.otpEnabled &&  ( this.userName == null || this.userPassword == null))) {
             this.isCreadentialsEmpty = true;
             return false;
         }
