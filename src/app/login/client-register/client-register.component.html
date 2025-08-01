@@ -160,29 +160,16 @@
                                 </select>
                             </div> -->
                             <div class="col-md-6  col-xs-12 mb-1">
-                                <label for="name">City <b style="color: red;">*</b></label>
-                                <textarea type="text" required id="adress" class="form-control" name="address1"
-                                    formControlName="address1" placeholder="City"> </textarea>
+                                <label for="name">Pincode <b style="color: red;">*</b></label>
+                                <input type="text" required id="adress" class="form-control" name="pinCode"
+                                    formControlName="pinCode" placeholder="Pincode (6digits)" (keypress)="numberOnly($event)"  />
                                 <div
-                                    *ngIf="(clientRegForm.controls.address1.touched  ) && clientRegForm.controls.address1.errors">
-                                    <div style="color: red;" *ngIf="(clientRegForm.controls.address1.required)">Address is
+                                    *ngIf="(clientRegForm.controls.pinCode.touched  ) && clientRegForm.controls.pinCode.errors">
+                                    <div style="color: red;" *ngIf="(clientRegForm.controls.pinCode.required)">PinCode is
                                         required</div>
                                 </div>
                             </div>
-                            <div class="col-md-6  col-xs-12 mb-1" *ngIf="clientRegForm.controls.india.value == 'true'">
-                                <label for="state">State  <b style="color: red;">*</b></label>
-                                <select class="form-control" name="state" formControlName="state" [disabled]="isClientDataView"
-                                    id="state" placeholder="State">
-                                    <option disabled [value]="''" selected>Select</option>
-                                    <option *ngFor="let state of states; let j = index" [ngValue]="state">{{state}}
-                                    </option>
-                                </select>
-                                <div
-                                    *ngIf="(clientRegForm.controls.state.touched  ) && clientRegForm.controls.state.errors">
-                                    <div style="color: red;" *ngIf="(clientRegForm.controls.sector.state.required)">State is
-                                        required</div>
-                                </div>
-                            </div>
+                          
                             <div class="col-md-12  col-xs-12   row">
                                 <div class="col-md-6  col-xs-12" style="color:rgb(36, 36, 115)">
                                     <b>Note :</b> If Already Registered! Click here for <a routerLink="/login" style="margin-left: 5px;font-weight: 600;border-bottom: 2px solid;">Login</a>
@@ -191,7 +178,7 @@
                                       <button class="btn btn-blue " type="submit" style="float: right;" [disabled]="isEmailExists">
                                           <span>Register</span>
                                       </button>
-                                      <button class="btn btn-red " type="button" (click)="clientRegFormReset()" style="float: right;">
+                                      <button class="btn btn-red " type="button" (click)="resetWholeForm()" style="float: right;">
                                           <span>Reset</span>
                                       </button>
                                   </div>
@@ -245,3 +232,4 @@
     </div>
 
 </div>
+<p-confirmdialog />

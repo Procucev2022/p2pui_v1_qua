@@ -52,6 +52,7 @@
                         <label for="email">EMail Id: <b style="color: red;">*</b></label>
                         <input type="email" required id="mail" class="form-control" name="mail"
                             pattern="^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$" formControlName="mail" placeholder="EMail Id">
+                              <span style="color: green;" *ngIf="isOTPVerified">EMail is verified</span>
                         <div
                             *ngIf="(vendorRegistrationForm?.controls?.mail?.touched) && vendorRegistrationForm?.controls?.mail.status=='INVALID'">
                             <div *ngIf="(vendorRegistrationForm?.controls?.mail.errors.required)" style="color: red;">
@@ -65,9 +66,8 @@
                     <div class="col-md-4 col-xs-12 mb-1">
                       <label for="name">Mobile Number:<b style="color: red;">*</b></label>
                       <input type="text" maxlength="10" minlength="10" id="adress" class="form-control"
-                      *ngIf="vendorRegistrationForm?.controls?.india.value == 'true'"  name="phoneNumber" formControlName="phoneNumber" placeholder="Mobile Number">
-                      <input type="text"  id="adress" class="form-control"
-                      *ngIf="vendorRegistrationForm?.controls?.india.value != 'true'"name="phoneNumber" formControlName="phoneNumber" placeholder="Mobile Number">
+                      *ngIf="vendorRegistrationForm?.controls?.india.value == 'true'"  name="phoneNumber" formControlName="phoneNumber" placeholder="Mobile Number" />
+                        <span style="color: green;" *ngIf="isOTPVerified">MobileNumber is verified</span>
                       <div
                           *ngIf="(vendorRegistrationForm?.controls?.phoneNumber?.touched ) && vendorRegistrationForm?.controls?.phoneNumber?.errors">
                           <div *ngIf="(vendorRegistrationForm?.controls?.phoneNumber.errors.required)"
@@ -120,12 +120,12 @@
 
 
                     <div class="col-md-4  col-xs-12  mt-2">
-                        <label for="name">Registered Office Adress: <b style="color: red;">*</b></label>
-                        <textarea type="text" required id="adress" class="form-control" name="address" formControlName="address"
-                            placeholder="Registered Office Adress"> </textarea>
+                        <label for="name">PinCode: <b style="color: red;">*</b></label>
+                        <input type="text" required id="pinCode" class="form-control" name="pinCode" formControlName="pinCode"
+                            placeholder="PinCode (6digits)"  maxlength="6" (keypress)="numberOnly($event)" />
                         <div
-                            *ngIf="(vendorRegistrationForm?.controls?.address?.touched) && vendorRegistrationForm?.controls?.address.status=='INVALID'">
-                            <div style="color: red;">Address is required</div>
+                            *ngIf="(vendorRegistrationForm?.controls?.pinCode?.touched) && vendorRegistrationForm?.controls?.pinCode.status=='INVALID'">
+                            <div style="color: red;">PinCode (6digits) is required</div>
                         </div>
                     </div>
 
@@ -154,7 +154,7 @@
                             (click)='registerVendor(vendorRegistrationForm)' style="float: right;">
                             <span>Register</span>
                         </button>
-                        <button class="btn btn-primary btn-red" type="button" (click)="vendorRegistrationForm.reset()"
+                        <button class="btn btn-primary btn-red" type="button" (click)="resetVendorForm()"
                             style="float: right;">
                             <span>Reset</span>
                         </button>
@@ -205,3 +205,5 @@
         </div>
     </div>
 </div>
+<!-- <p-confirmdialog />
+<p-confirmdialog id="dialog" [visible]="visible" (onHide)="visible = false" message="Are you sure you want to proceed?" header="Confirmation" icon="pi pi-exclamation-triangle" /> -->

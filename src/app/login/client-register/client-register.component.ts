@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { NgForm, FormGroup, FormBuilder, FormArray, FormControl, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
@@ -6,6 +6,7 @@ import { VendorRegistrationService } from 'src/app/vendor-registration/services/
 import { AppApiConfig } from './../../../app/shared/constants/app-api.config';
 import { RegConfirmDialogComponent } from '../reg-confirm-dialog/reg-confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationService } from 'primeng/api';
 @Component({
     selector: 'app-client-register',
     templateUrl: './client-register.component.html',
@@ -31,7 +32,8 @@ export class ClientRegisterComponent implements OnInit {
     isClientDataView:boolean;
     isOTPSent: boolean = false;
 
-    constructor(private modalDialog:MatDialog, private toaster: ToastrService, private vendorRegSer: VendorRegistrationService, private router: Router) { }
+    constructor(private modalDialog:MatDialog, private toaster: ToastrService, private vendorRegSer: VendorRegistrationService,
+        private confirmationService: ConfirmationService,  private cd: ChangeDetectorRef,  private router: Router) { }
 
     ngOnInit() {
         console.log('contacts form');
@@ -44,13 +46,12 @@ export class ClientRegisterComponent implements OnInit {
             companyName: new FormControl('', [Validators.required]),
             organizationPhonenumber: new FormControl('', [Validators.required]),
             email: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')]),
-            // clientSector: new FormControl('', [Validators.required]),
-            address1: new FormControl('', [Validators.required]),
-            state: new FormControl('', [Validators.required]),
+            // clientSector: new FormControl('', [Validators.required]), 
             // pan: new FormControl('', [Validators.required, Validators.pattern('[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[a-zA-Z0-9]{3}')]),
             india: new FormControl('true', [Validators.required] ),
             emailOtp: new FormControl(''),
-            mobileOtp: new FormControl('')
+            mobileOtp: new FormControl(''),
+            pinCode: new FormControl('', [Validators.required])
         });
         // this.clientRegForm.disable();
 
@@ -266,6 +267,24 @@ export class ClientRegisterComponent implements OnInit {
 
     }
 
+    resetWholeForm(){ 
+        this.cd.detectChanges();
+         this.confirmationService.confirm({
+            header: 'Confirmation',
+            rejectLabel: 'No',
+            acceptLabel: 'Yes',
+            message: `Are you sure about to discard the changes!`,
+            accept: () => {
+                this.isOTPSent = false;
+                this.clientRegFormReset();
+                this.isOTPVerified = false;
+            },
+            reject: () => {
+               
+            }
+        });
+    }
+
     checkEmailValidity() {
         if (this.clientRegForm.value.email) {
             let obj: any = { "email": this.clientRegForm.value.email };
@@ -285,7 +304,13 @@ export class ClientRegisterComponent implements OnInit {
     isInvalidPAN() {
         return !this.clientRegForm.controls['pan'].value
     }
-
+  numberOnly(event): boolean {
+        const charCode = event.which ? event.which : event.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
 
     registerVendor(clientRegForm: FormGroup) {
         console.log(clientRegForm);
@@ -304,11 +329,10 @@ export class ClientRegisterComponent implements OnInit {
                 'organizationPhonenumber': regData.organizationPhonenumber,
                 'email': regData.email,
                 'clientSector': '',
-                'pan':'',
-                'address1': regData.address1,
-                'state': regData.state,
+                'pan':'', 
                 'india': regData.india,
                 'crn': '',
+                'zipCode': regData.pinCode
             };
             this.vendorRegSer.submitSelfClientRegistration(requestObject).subscribe((r) => {
                 const res = JSON.parse(JSON.stringify(r));

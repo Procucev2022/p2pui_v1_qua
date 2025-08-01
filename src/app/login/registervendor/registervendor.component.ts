@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm, FormGroup, FormBuilder, FormArray, FormControl, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
@@ -6,6 +6,7 @@ import { VendorRegistrationService } from 'src/app/vendor-registration/services/
 import { HttpHeaders } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { RegConfirmDialogComponent } from '../reg-confirm-dialog/reg-confirm-dialog.component';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
     selector: 'app-registervendor',
@@ -13,7 +14,7 @@ import { RegConfirmDialogComponent } from '../reg-confirm-dialog/reg-confirm-dia
     styleUrls: ['./registervendor.component.scss']
 })
 export class RegistervendorComponent implements OnInit {
-
+visible: boolean;
     contactsForm: FormGroup;
     // private fb: FormBuilder;
     generalModel: any = {};
@@ -23,7 +24,7 @@ export class RegistervendorComponent implements OnInit {
     isOTPSent: boolean;
     // states: any[] = this.getStatesArray();
 
-    constructor(private modalDialog: MatDialog, private fb: FormBuilder, private toaster: ToastrService, private vendorRegSer: VendorRegistrationService, private router: Router) { }
+    constructor(private modalDialog: MatDialog, private fb: FormBuilder, private toaster: ToastrService, private vendorRegSer: VendorRegistrationService, private router: Router, private confirmationService: ConfirmationService,  private cd: ChangeDetectorRef) { }
 
     ngOnInit() {
 
@@ -40,15 +41,22 @@ export class RegistervendorComponent implements OnInit {
             phoneNumber: new FormControl('', [Validators.required, tenDigitPhoneNumberValidator()]),
             mail: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')]),
             gstin: new FormControl('', [Validators.required]),
-            address: new FormControl('', [Validators.required]),
             india: new FormControl('true', [Validators.required]),
             products: new FormControl('', [Validators.required]),
             mobileOtp: new FormControl(''),
-            emailOtp: new FormControl('')
+            emailOtp: new FormControl(''),
+            pinCode: new FormControl('', [Validators.required])
         });
 
     }
 
+     numberOnly(event): boolean {
+        const charCode = event.which ? event.which : event.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
 
     changeCountryValue(isIndia){
         if(isIndia){
@@ -93,6 +101,25 @@ export class RegistervendorComponent implements OnInit {
             return;
         }
 
+    }
+
+    resetVendorForm(){ 
+        this.visible = true;
+        this.cd.detectChanges();
+         this.confirmationService.confirm({
+            header: 'Confirmation',
+            rejectLabel: 'No',
+            acceptLabel: 'Yes',
+            message: `Are you sure about to discard the changes!`,
+            accept: () => {
+                this.isOTPSent = false;
+                this.vendorRegistrationForm.reset();
+                this.isOTPVerified = false;
+            },
+            reject: () => {
+               
+            }
+        });
     }
 
 
