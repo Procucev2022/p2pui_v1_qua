@@ -17,12 +17,13 @@ import swal from 'sweetalert2';
 export class CatMgrGmtRegisterClientsComponent implements OnInit {
     isLoaded: boolean = false;
     clientTableHeaders: any = [
-        { field: 'companyId', header: 'Company Id', isLink: true, isExceedContent: false, width: '155px' },
-        { field: 'companyName', header: 'Company Name', isLink: false, isExceedContent: true, width: '165px' },
-        { field: 'clientSector', header: 'Sector', isLink: false, isExceedContent: true, width: '145px' },
-        { field: 'pan', header: 'PAN', isLink: false, isExceedContent: true, width: '125px' },
-        { field: 'organizationPhonenumber', header: 'Phone Number', isLink: false, isExceedContent: true, width: '125px' },
-        { field: 'address1', header: 'City', isLink: false, isExceedContent: true, width: '165px' },
+
+
+        { field: 'fullName', header: 'User Name', isLink: true, isExceedContent: false, width: '155px' },
+        { field: 'companyName', header: 'Company Name', isLink: false, isExceedContent: true, width: '165px' }, 
+        { field: 'zipCode', header: 'PinCode', isLink: false, isExceedContent: true, width: '125px' },
+        { field: 'phone', header: 'Phone Number', isLink: false, isExceedContent: true, width: '125px' },
+        { field: 'username', header: 'user Email', isLink: false, isExceedContent: true, width: '165px' },
         { field: 'status', header: 'Status', isLink: false, isExceedContent: true, width: '135px' },
     ];
 
@@ -92,8 +93,7 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
         if(isAceept){
             this.createRfqService.acceptGMTRegisteredClient({ 'id': rowData.id }).subscribe((res: any) => {
                 if (res && res.status == 'Success') {
-                    this.toaster.success(res.message, 'Success');
-                    this.getUsersByClient();
+                    this.toaster.success(res.message, 'Success'); 
                     this.getRegClients();
                 }else{
                     this.toaster.error(res.message, 'Error');
@@ -104,7 +104,7 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
             this.createRfqService. ignoreGMTRegisteredClient({ 'id': rowData.id }).subscribe((res: any) => {
                 if (res && res.status == 'Success') {
                     this.toaster.success(res.message, 'Success');
-                    this.getUsersByClient();
+                    this.getRegClients();
                 }else{
                     this.toaster.error(res.message, 'Error');
 
@@ -145,7 +145,7 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
     }
 
     getRegClients() {
-        this.createRfqService.getGMTRegisteredClients().subscribe((res: any) => {
+        this.createRfqService.getGMTRegisteredClientsWithUser().subscribe((res: any) => {
             if (res) {
                 this.clientsList =  Array.isArray(res)? res.map(ele =>{ return {...ele, status: ele.clientStatus ?ele.clientStatus.uiDisplay: '-'}}): [];
                 this.isLoaded = true;
