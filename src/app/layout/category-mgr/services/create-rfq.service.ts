@@ -73,6 +73,14 @@ export class CreateRfqService {
     }
 
 
+        getGMTRegisteredClientsWithUser(){
+        return this.httpService.get(AppApiConfig.apiEndpoint +AppApiConfig.GET_CLIENT_WITH_USER_LIST_CM2,  {} )
+
+    }
+    //
+
+
+
     acceptGMTRegisteredClient(rowData:any){
         return this.httpService.post(AppApiConfig.apiEndpoint +AppApiConfig.ACCEPT_GMT_FOR_REG_CLIENTS, rowData, {} )
 

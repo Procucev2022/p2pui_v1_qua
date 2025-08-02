@@ -52,7 +52,7 @@ export class AppApiConfig {
   public static OTPs_SENT ='/partialvendor/validateClient';
   public static VALIDATE_ALL_OTPS = '/partialvendor/validateAllOtps';
   public static VALIDATE_EMAIL_OTP = '/partialvendor/validateAllOtps';
- 
+  public static GET_CLIENT_WITH_USER_LIST_CM2 = '/rest/gmt/getGmtBuyers';
 
 
 

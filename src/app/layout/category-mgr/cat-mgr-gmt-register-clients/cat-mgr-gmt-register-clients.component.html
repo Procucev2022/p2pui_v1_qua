@@ -19,7 +19,7 @@
                 <p-table [ngClass]="{  'gmt-container': isGMTView}" #clientTableRef [columns]="clientTableHeaders" [value]="clientsList"  dataKey="id"
        sortMode="multiple"  [paginator]="true" [rows]="pageRecordSize" id="rfqTable" [rowsPerPageOptions]="pageOptions"
         [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData"
-         [scrollable]="true" [scrollHeight]="'calc(100vh  - 205px)'" [expandedRowKeys]="expandedRows">
+         [scrollable]="true" [scrollHeight]="'calc(100vh  - 205px)'"  >
          <ng-template pTemplate="caption">
             <div class="table-search">
               <div class="row">
@@ -34,23 +34,16 @@
           </ng-template>
          <ng-template pTemplate="header" let-columns>
                         <tr>
-                            <th style="width: 3em"></th>
+                             
                             <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
                                 {{col.header}}
                             </th>
-                            <th style="width: 4rem;">Actions</th>
+                            <th style="width: 16rem;">Actions</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
                         <tr [pSelectableRow]="rowData">
-                            <td style="width: 3em;">
-                                <button type="button" pButton pRipple [pRowToggler]="rowData"
-                                (click)="expanded ? getCloseClients(rowData,$event) : getClients(rowData,$event)"
-                                class="grid-expand">
-                                <span *ngIf="expanded"><i class="fa fa-chevron-down"></i></span>
-                                    <span *ngIf="!expanded"><i class="fa fa-chevron-right"></i></span>
-                                </button>
-                            </td>
+                            
                             <td [style.width]="col.width" *ngFor="let col of columns"
                                 [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }"
                                 [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"
@@ -60,25 +53,16 @@
                                     <i class="fa fa-bell" aria-hidden="true"></i>
                                 </span>
                             </td>
-                        <td style="width: 4rem;">
-                            <img class="cursor-pointer" src="/assets/images/new/edit-data.png"  width="28" style="width:28px;margin-right: 10px;" title="Edit Client"  (click)="onEditClient(rowData, true)">
+                        <td style="width: 16rem;"  >
+                            <span *ngIf="!(rowData.status == 'Accepted' || rowData.status =='Ignored')">
+ <button class="btn btn-blue" (click)="onAcceptUserByClient(rowData, true)">Accept</button>
+                            <button class="btn btn-red" (click)="onAcceptUserByClient(rowData,false)">Reject</button>
+                            </span>
+                           
+                            <!-- <img class="cursor-pointer" src="/assets/images/new/edit-data.png"  width="28" style="width:28px;margin-right: 10px;" title="Edit Client"  (click)="onEditClient(rowData, true)"> -->
                         </td>
                         </tr>
-                    </ng-template>
-                    <ng-template pTemplate="rowexpansion" let-rowData>
-                        <tr class="child-grid" *ngIf="selectedData.length ==1">
-                            <td colspan="9">
-                                <div #childGridEle *ngIf="isShowChildGrid">
-
-                                    <mat-tab-group class="" >
-                                        <mat-tab label="Users">
-                                            <ng-container *ngTemplateOutlet="clientUsersRef"></ng-container>
-                                        </mat-tab>
-                                    </mat-tab-group>
-                                </div>
-                            </td>
-                        </tr>
-                    </ng-template>
+                    </ng-template> 
                     <ng-template pTemplate="emptymessage" let-columns>
                         <tr>
                             <td [attr.colspan]="clientTableHeaders.length" style="text-align:center;">
