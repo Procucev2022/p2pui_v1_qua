@@ -143,8 +143,8 @@ export class ClientRegisterComponent implements OnInit {
           "companyName":this.clientRegForm.getRawValue().companyName,
           "organizationPhonenumber":this.clientRegForm.getRawValue().organizationPhonenumber,
           "email":this.clientRegForm.getRawValue().email,
-          "emailOtp":this.clientRegForm.value.emailOtp,
-          "mobileOtp":this.clientRegForm.value.mobileOtp,
+          "emailOtp":this.clientRegForm.value.emailOtp.toString(),
+          "mobileOtp":this.clientRegForm.value.mobileOtp.toString(),
           "tempEmail": sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail'): '',
            "tempPhone":  sessionStorage.getItem('tempPhone')? sessionStorage.getItem('tempPhone'): '',
         }
@@ -156,7 +156,7 @@ export class ClientRegisterComponent implements OnInit {
                 this.clientRegForm.controls['organizationPhonenumber'].disable();
                 this.clientRegForm.controls['companyName'].disable();
                 this.clientRegForm.updateValueAndValidity();
-                
+
             }
         })
         }else{

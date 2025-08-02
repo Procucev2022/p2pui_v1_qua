@@ -118,9 +118,11 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
 
     getCloseClients(selectedRowData, event) {
         this.expandedRows = {};
+        this.isShowChildGrid = false;
     }
 
     getClients(selectedRowData, event) {
+         this.isShowChildGrid = false;
         this.expandedRows = {};
         const thisRef = this;
         this.usersList =[];
@@ -135,13 +137,11 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
     }
 
     getUsersByClient(){
-        this.isShowChildGrid = false;
+       
         this.catProcService.getClientUserByClient({id: this.selectedClientData.id}).subscribe((res:any)=>{
             this.usersList = Array.isArray(res)? res.map(ele =>{ return {...ele, status: ele.clientStatus.uiDisplay}}): [];
-        });
-        setTimeout(() => {
-            this.isShowChildGrid =true;
-        }, 500);
+               this.isShowChildGrid =true;
+        }); 
     }
 
     getRegClients() {
