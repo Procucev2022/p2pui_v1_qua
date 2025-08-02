@@ -114,8 +114,9 @@ small {
   font-weight: 400;
   font-size: 16px;
   line-height: 170%;
-  text-align: center;
-  color: #86B9E8;
+text-align: center;
+    color: #f6ff99;
+    letter-spacing: 1px;
 }
 
 
@@ -490,6 +491,7 @@ button [type="reset"] {
   align-items: center;
   border: 2px solid #80808021;
   padding: 4px 6px 10px 4px;
+  width: 100%;
   .input {
     width: 30px;
     border: none;
@@ -518,3 +520,13 @@ button [type="reset"] {
   display: flex;
   align-items: center;
  }
+
+
+ .btn {
+    width: 100% !important;
+    margin: 7px;
+}
+.btn.disabled, .btn:disabled {
+    opacity: 1;
+    color: #d8e2b2a8 !important;
+}

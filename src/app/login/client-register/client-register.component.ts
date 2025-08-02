@@ -106,29 +106,35 @@ export class ClientRegisterComponent implements OnInit {
     }
 
     sendOTPs(){
-
-      if(this.clientRegForm.value.organizationPhonenumber && this.clientRegForm.value.email && this.clientRegForm.value.companyName){
+    const clientRegForm = this.clientRegForm.getRawValue();
+      if(clientRegForm.organizationPhonenumber && clientRegForm.email && clientRegForm.companyName){
           this.isOTPSent = true;
           this.isOTPVerified = false;
           const reqPayload = {
             tempEmail: sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail'): '',
             tempPhone:  sessionStorage.getItem('tempPhone')? sessionStorage.getItem('tempPhone'): '',
-            "companyName": this.clientRegForm.value.companyName,
-            "organizationPhonenumber":this.clientRegForm.value.organizationPhonenumber,
-            "email":this.clientRegForm.value.email,
+            "companyName": clientRegForm.companyName,
+            "organizationPhonenumber":clientRegForm.organizationPhonenumber,
+            "email":clientRegForm.email,
 
 
           }
 
           this.vendorRegSer.sendAllOTPs(reqPayload).subscribe((res: any) => {
-            this.isOTPSent = res && (res.otpSentToEmail || res.otpSentToMobile);
+            this.isOTPSent = res && (res.otpSentToEmail && res.otpSentToMobile);
             if (this.isOTPSent) {
               this.clientRegForm.controls['email'].disable();
               this.clientRegForm.controls['organizationPhonenumber'].disable();
               this.clientRegForm.controls['companyName'].disable();
-              this
               this.clientRegForm.updateValueAndValidity();
               this.toaster.success("OTPs sent to given Mobile & Email Id");
+            }else{
+                if(!res.otpSentToEmail){
+                    this.toaster.error("Email OTP sending failed", 'Warning');
+                }
+                if(!res.otpSentToMobile){
+                  this.toaster.error("Mobile OTP sending failed", 'Warning');
+                }
             }
         })
       }else{
@@ -156,7 +162,9 @@ export class ClientRegisterComponent implements OnInit {
                 this.clientRegForm.controls['organizationPhonenumber'].disable();
                 this.clientRegForm.controls['companyName'].disable();
                 this.clientRegForm.updateValueAndValidity();
-
+                this.toaster.success(res.message, 'Success');
+            }else{
+                 this.toaster.error(res.message, 'Failed');
             }
         })
         }else{
@@ -270,21 +278,23 @@ export class ClientRegisterComponent implements OnInit {
     }
 
     resetWholeForm(){ 
-        this.cd.detectChanges();
-         this.confirmationService.confirm({
-            header: 'Confirmation',
-            rejectLabel: 'No',
-            acceptLabel: 'Yes',
-            message: `Are you sure about to discard the changes!`,
-            accept: () => {
-                this.isOTPSent = false;
+             this.isOTPSent = false;
                 this.clientRegFormReset();
+                this.clientRegForm.enable();
                 this.isOTPVerified = false;
-            },
-            reject: () => {
+        // this.cd.detectChanges();
+        //  this.confirmationService.confirm({
+        //     header: 'Confirmation',
+        //     rejectLabel: 'No',
+        //     acceptLabel: 'Yes',
+        //     message: `Are you sure about to discard the changes!`,
+        //     accept: () => {
+           
+        //     },
+        //     reject: () => {
                
-            }
-        });
+        //     }
+        // });
     }
 
     checkEmailValidity() {
@@ -334,7 +344,8 @@ export class ClientRegisterComponent implements OnInit {
                 'pan':'', 
                 'india': regData.india,
                 'crn': '',
-                'zipCode': regData.pinCode
+                'zipCode': regData.pinCode,
+                'isWebApp': true
             };
             this.vendorRegSer.submitSelfClientRegistration(requestObject).subscribe((r) => {
                 const res = JSON.parse(JSON.stringify(r));

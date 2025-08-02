@@ -40,8 +40,8 @@ visible: boolean;
             companyName: new FormControl('', [Validators.required,]),
             phoneNumber: new FormControl('', [Validators.required, tenDigitPhoneNumberValidator()]),
             mail: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')]),
-            gstin: new FormControl('', [Validators.required]),
-            india: new FormControl('true', [Validators.required]),
+            gstin: new FormControl(''),
+            india: new FormControl('true'),
             products: new FormControl('', [Validators.required]),
             mobileOtp: new FormControl(''),
             emailOtp: new FormControl(''),
@@ -83,7 +83,8 @@ visible: boolean;
                 'address1': formValue.address,
                 'details': formValue.products,
                 'india': formValue.india,
-                'zipCode': formValue.pinCode
+                'zipCode': formValue.pinCode,
+                'isWebApp': true
 
             };
 
@@ -105,22 +106,26 @@ visible: boolean;
     }
 
     resetVendorForm(){ 
-        this.visible = true;
-        this.cd.detectChanges();
-         this.confirmationService.confirm({
-            header: 'Confirmation',
-            rejectLabel: 'No',
-            acceptLabel: 'Yes',
-            message: `Are you sure about to discard the changes!`,
-            accept: () => {
-                this.isOTPSent = false;
-                this.vendorRegistrationForm.reset();
-                this.isOTPVerified = false;
-            },
-            reject: () => {
+         this.isOTPSent = false;
+        this.vendorRegistrationForm.reset();
+        this.vendorRegistrationForm.enable();
+        this.isOTPVerified = false;
+        // this.visible = true;
+        // this.cd.detectChanges();
+        //  this.confirmationService.confirm({
+        //     header: 'Confirmation',
+        //     rejectLabel: 'No',
+        //     acceptLabel: 'Yes',
+        //     message: `Are you sure about to discard the changes!`,
+        //     accept: () => {
+        //         this.isOTPSent = false;
+        //         this.vendorRegistrationForm.reset();
+        //         this.isOTPVerified = false;
+        //     },
+        //     reject: () => {
                
-            }
-        });
+        //     }
+        // });
     }
 
 
@@ -185,13 +190,20 @@ visible: boolean;
           }
 
           this.vendorRegSer.sendAllOTPs(reqPayload).subscribe((res: any) => {
-            this.isOTPSent = res && (res.otpSentToEmail || res.otpSentToMobile);
+            this.isOTPSent = res && (res.otpSentToEmail && res.otpSentToMobile);
             if (this.isOTPSent) {
-              this.vendorRegistrationForm.controls['email'].disable();
+              this.vendorRegistrationForm.controls['mail'].disable();
               this.vendorRegistrationForm.controls['phoneNumber'].disable();
               this.vendorRegistrationForm.controls['companyName'].disable(); 
               this.vendorRegistrationForm.updateValueAndValidity();
               this.toaster.success("OTPs sent to given Mobile & Email Id");
+            }else{
+                if(!res.otpSentToEmail){
+                    this.toaster.error("Email OTP sending failed", 'Warning');
+                }
+                if(!res.otpSentToMobile){
+                  this.toaster.error("Mobile OTP sending failed", 'Warning');
+                }
             }
         })
       }else{
@@ -219,10 +231,13 @@ visible: boolean;
         this.vendorRegSer.validateAllOTPs(obj).subscribe((res: any) => {
             this.isOTPVerified = res && res.status == 'success' ? true : false;
             if (this.isOTPVerified) {
-                this.vendorRegistrationForm.controls['email'].disable();
+                this.vendorRegistrationForm.controls['mail'].disable();
                 this.vendorRegistrationForm.controls['phoneNumber'].disable();
                 this.vendorRegistrationForm.controls['companyName'].disable();
                 this.vendorRegistrationForm.updateValueAndValidity();
+                 this.toaster.success(res.message ,'Success');
+            }else{
+                    this.toaster.warning(res.message ,'Failed');
             }
         })
     }
