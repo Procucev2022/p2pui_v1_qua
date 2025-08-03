@@ -343,9 +343,7 @@ export class LoginComponent implements OnInit {
     })
   }
 
-  forgotpassword() {
-       this.toastService.error("Forgot Password temporarily out of service!", 'Failed');
-       return;
+  forgotpassword() { 
     this.router.navigate(['login/forgotpassword']);
   }
 

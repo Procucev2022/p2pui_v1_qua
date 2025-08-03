@@ -53,6 +53,7 @@ export class AppApiConfig {
   public static VALIDATE_ALL_OTPS = '/partialvendor/validateAllOtps';
   public static VALIDATE_EMAIL_OTP = '/partialvendor/validateAllOtps';
   public static GET_CLIENT_WITH_USER_LIST_CM2 = '/rest/gmt/getGmtBuyers';
+  public static FORGOT_PASSWORD = '/rest/users/forgotPassword';
 
 
 
@@ -77,7 +78,6 @@ export class AppApiConfig {
     // public static apiEndpoint =  'https://p2pproduction1-gcbhcag6fpgedpb3.centralindia-01.azurewebsites.net/procucev';
     // https://p2pprodservices.azurewebsites.net --- prod
 
-    public static FORGOT_PASSWORD = '/password/forgotPassword';
 
 
     // Category Manager

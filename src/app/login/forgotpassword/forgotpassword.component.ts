@@ -14,6 +14,7 @@ import { NgForm } from '@angular/forms';
 export class ForgotpasswordComponent implements OnInit {
 
     userName;
+    phone:any;
     isEmailEmpty: boolean;
     routerParams: any;
     constructor(
@@ -36,7 +37,8 @@ export class ForgotpasswordComponent implements OnInit {
         }
         console.log(form)
         let req ={
-            "username":form.value.userName
+            "username":form.value.userName,
+            "phone": form.value.phone
         }
         console.log(req)
         this.authService.forgotpassword(req).subscribe((res:any) =>{
@@ -56,6 +58,12 @@ export class ForgotpasswordComponent implements OnInit {
     }
 
 
-
+  numberOnly(event): boolean {
+        const charCode = event.which ? event.which : event.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
 
 }

@@ -64,7 +64,7 @@ export class HeaderComponent implements OnInit {
             imgURL: is_Authenticated == true ? 'assets/images/new/auth-green.svg' : 'assets/images/new/auth-red.svg'
         }
         localStorage.setItem('userFullName', this.loggedUserDetails.fullName);
-        this.getVisitorCount();
+        // this.getVisitorCount();
     }
 
     getVisitorCount(){
