@@ -14,6 +14,9 @@ import { first } from 'rxjs/operators';
 export class PasswordChangeComponent implements OnInit {
   passwdForm: FormGroup;
   submitted: boolean;
+  otpNumber: any;
+  isOTPVerified: boolean;
+  isOTPSent: boolean;
 
   ngOnInit() {
     this.submitted = false;
@@ -58,6 +61,7 @@ export class PasswordChangeComponent implements OnInit {
     if (this.passwdForm.valid) {
       const obj  = {
         'userName': localStorage.getItem('loggedUser'),
+        'phone': localStorage.getItem('loggedUserMobile'),
         'password': this.passwdForm.value.oldPwd,
         'newpassword': this.passwdForm.value.newPwd
         };
@@ -75,7 +79,7 @@ export class PasswordChangeComponent implements OnInit {
           }
 
         }, (error) => {
-            // this.toastService.error(error.error_description, 'Failed');
+            // this.toastrService.error(error.error_description, 'Failed');
             this.toastrService.warning('Password updated successfully, Login failed, please try again!!!', 'Failed');
             this.router.navigate(['/login'], {queryParams: { regId: localStorage.getItem('regId')} });
         });
@@ -86,6 +90,7 @@ export class PasswordChangeComponent implements OnInit {
     } else {
       this.toastrService.error('Please enter the mandatory fields', 'Failed');
     }
+
 
 
 
@@ -109,6 +114,54 @@ export class PasswordChangeComponent implements OnInit {
     // localStorage.setItem('isLoggedin', 'true')
     // this.router.navigate(['/vendor/vendorReg'], {queryParams: { regId: '131121-131312'} });
   }
+
+
+  
+    getValidateOTP(){
+
+       if (this.otpNumber) {
+          this.authService.validateEmailOTP({
+              "email":  localStorage.getItem('loggedUser'),
+              "tempEmail": sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail') : '',
+              "emailOtp": this.otpNumber.toString()
+            }
+            ).subscribe((res: any) => {
+              if (res && res.status.toLowerCase() == 'success') {
+                this.isOTPVerified = true;
+                this.toastrService.success('OTP Verified Successfully!', 'Success'); 
+                this.updatePassword();
+              } else {
+                this.toastrService.error(res.message, 'Failed');
+              }
+            })
+       }else{
+          this.toastrService.error('Please enter the mandatory fields', 'Failed');
+       }
+      
+    }
+
+    getOTP(){
+      const  reqPayload = { 
+          "otp": true,
+          'username': localStorage.getItem('loggedUser'),
+          "phone": localStorage.getItem('loggedUserMobile'),
+          "tempEmail": sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail') : '',
+          "tempPhone": sessionStorage.getItem('tempPhone') ? sessionStorage.getItem('tempPhone') : '',
+        }
+      this.authService.getAccessToken(reqPayload).pipe(first()).subscribe(data => {
+        if (data && data.status == 'error') {
+        }else if (data && data.status == 'success') {
+          if (data.methodType == 'otp') {
+            this.toastrService.success(data.message, 'Success');
+            this.isOTPSent = true;
+          }
+        }
+
+        if(!this.isOTPSent){ 
+           this.toastrService.error('OTP Sent Failed', 'Failed');
+        }
+      });
+    }
 
   getLoggerUserData() {
     // alert('helo log')

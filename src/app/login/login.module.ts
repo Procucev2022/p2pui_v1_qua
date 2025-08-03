@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-//import {BrowserAnimationsModule } from '@angular/platform-browser/animations'
+// import {BrowserAnimationsModule } from '@angular/platform-browser/animations'
 
 import { LoginRoutingModule } from './login-routing.module';
 import { LoginComponent } from './login.component';
@@ -24,8 +24,7 @@ import { CommonShareModule } from '../shared/modules/common-share/common-share.m
         LoginRoutingModule,
         FormsModule,
         ReactiveFormsModule,
-        CommonShareModule,
-        //BrowserAnimationsModule
+        CommonShareModule
     ],
     schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
 
