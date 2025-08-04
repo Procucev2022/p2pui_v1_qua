@@ -1,4 +1,4 @@
-<p-table [ngClass]="{  'gmt-container': isGMTView}" dataKey="id" #poLineItemsViewTable  #commonGridTableRef [columns]="commonGridTableHeaders" [value]="commonGridList" [selection]="'single'"  [scrollable]="true" [scrollHeight]="'170px'">
+<p-table *ngIf="isShowGrid" [ngClass]="{  'gmt-container': isGMTView}" dataKey="id" #poLineItemsViewTable  #commonGridTableRef [columns]="commonGridTableHeaders" [value]="commonGridList" [selection]="'single'"  [scrollable]="true" [scrollHeight]="'170px'">
     <ng-template pTemplate="caption" >
         <div class="table-search">
            <div class="row">
