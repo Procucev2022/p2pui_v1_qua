@@ -53,7 +53,7 @@ export class AppApiConfig {
   public static VALIDATE_ALL_OTPS = '/partialvendor/validateAllOtps';
   public static VALIDATE_EMAIL_OTP = '/partialvendor/validateAllOtps';
   public static GET_CLIENT_WITH_USER_LIST_CM2 = '/rest/gmt/getGmtBuyers';
-  public static FORGOT_PASSWORD = '/rest/users/forgotPassword';
+  public static FORGOT_PASSWORD = '/partialvendor/forgotPassword';
 
 
 
