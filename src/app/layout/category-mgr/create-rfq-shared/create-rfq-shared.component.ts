@@ -122,7 +122,7 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
         ],
         isMultiSelectAllows: false, gridEmptyMsg: 'No Delivery Details avaliable in Cart'
     }
-    isShowGrid: boolean = true;
+    isShowGrid: boolean = false;
     categoryList: any = [];
     filtered_categoryList: any = [];
     descriptionList: any = [];
@@ -606,7 +606,7 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
         this.isShowGrid = false;
         setTimeout(() => {
             this.isShowGrid = true;
-        }, 100)
+        }, 1000)
     }
 
     onEditVendor(rowData) {

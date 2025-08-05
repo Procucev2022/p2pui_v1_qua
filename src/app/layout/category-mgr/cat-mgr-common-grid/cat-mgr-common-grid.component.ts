@@ -15,6 +15,7 @@ export class CatMgrCommonGridComponent implements OnInit, OnChanges {
     @Output() onGridAction: EventEmitter<any> = new EventEmitter()
     currentView: any;
     isGMTView: boolean;
+    isShowGrid:boolean =false;
     constructor() { }
 
     ngOnInit() {
@@ -25,10 +26,12 @@ export class CatMgrCommonGridComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
+        this.isShowGrid = false;
         if (changes && changes.gridData.currentValue != changes.gridData.previousValue) {
             this.commonGridTableHeaders= changes.gridData.currentValue.gridHeaders;
             this.commonGridList = changes.gridData.currentValue.gridValue;
             this.commonGridActions = changes.gridData.currentValue.actionsList || [];
+            this.isShowGrid = true;
         }
     }
 
