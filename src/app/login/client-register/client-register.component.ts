@@ -44,11 +44,11 @@ export class ClientRegisterComponent implements OnInit {
         this.clientRegForm = new FormGroup({
             name: new FormControl('', [Validators.required,]),
             companyName: new FormControl('', [Validators.required]),
-            organizationPhonenumber: new FormControl('', [Validators.required]),
-            email: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')]),
+            organizationPhonenumber: new FormControl('',[Validators.required, tenDigitPhoneNumberValidator()]),
+            email: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$'), Validators.email]),
             // clientSector: new FormControl('', [Validators.required]), 
             // pan: new FormControl('', [Validators.required, Validators.pattern('[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[a-zA-Z0-9]{3}')]),
-            india: new FormControl('true', [Validators.required] ),
+            india: new FormControl('true', [Validators.required]),
             emailOtp: new FormControl(''),
             mobileOtp: new FormControl(''),
             pinCode: new FormControl('', [Validators.required])
@@ -57,33 +57,7 @@ export class ClientRegisterComponent implements OnInit {
 
     }
 
-    changeCountryValue(isIndia){
-        if(isIndia){
 
-            this.clientRegForm.controls['pan'].setValue('');
-            this.clientRegForm.controls['pan'].setValidators([Validators.required]);
-            this.clientRegForm.controls['crn'].setValue('');
-            this.clientRegForm.controls['crn'].clearValidators();
-            this.clientRegForm.disable();
-            this.clientRegForm.controls['pan'].enable();
-            this.clientRegForm.controls['organizationPhonenumber'].setValue('');
-
-            this.clientRegForm.controls['india'].enable();
-            this.clientRegForm.controls['organizationPhonenumber'].clearValidators();
-            this.clientRegForm.controls['organizationPhonenumber'].setValidators([Validators.required, tenDigitPhoneNumberValidator()]);
-        }else{
-            this.clientRegForm.enable();
-            this.clientRegForm.controls['crn'].enable();
-            this.clientRegForm.controls['crn'].setValue('');
-            this.clientRegForm.controls['crn'].setValidators([Validators.required]);
-            this.clientRegForm.controls['pan'].setValue('');
-            this.clientRegForm.controls['pan'].clearValidators();
-            this.clientRegForm.controls['state'].clearValidators();
-            this.clientRegForm.controls['state'].setValue('');
-            this.clientRegForm.controls['organizationPhonenumber'].clearValidators();
-            this.clientRegForm.controls['organizationPhonenumber'].setValidators([Validators.required]);
-        }
-    }
     sendOTP() {
         if (this.clientRegForm.value.email) {
             if (this.isEmailExists) {
@@ -105,70 +79,70 @@ export class ClientRegisterComponent implements OnInit {
         }
     }
 
-    sendOTPs(){
-    const clientRegForm = this.clientRegForm.getRawValue();
-      if(clientRegForm.organizationPhonenumber && clientRegForm.email && clientRegForm.companyName){
-          this.isOTPSent = true;
-          this.isOTPVerified = false;
-          const reqPayload = {
-            tempEmail: sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail'): '',
-            tempPhone:  sessionStorage.getItem('tempPhone')? sessionStorage.getItem('tempPhone'): '',
-            "companyName": clientRegForm.companyName,
-            "organizationPhonenumber":clientRegForm.organizationPhonenumber,
-            "email":clientRegForm.email,
+    sendOTPs() {
+        const clientRegForm = this.clientRegForm.getRawValue();
+        if (clientRegForm.organizationPhonenumber && clientRegForm.email && clientRegForm.companyName) {
+            this.isOTPSent = true;
+            this.isOTPVerified = false;
+            const reqPayload = {
+                tempEmail: sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail') : '',
+                tempPhone: sessionStorage.getItem('tempPhone') ? sessionStorage.getItem('tempPhone') : '',
+                "companyName": clientRegForm.companyName,
+                "organizationPhonenumber": clientRegForm.organizationPhonenumber,
+                "email": clientRegForm.email,
 
 
-          }
-
-          this.vendorRegSer.sendAllOTPs(reqPayload).subscribe((res: any) => {
-            this.isOTPSent = res && (res.otpSentToEmail && res.otpSentToMobile);
-            if (this.isOTPSent) {
-              this.clientRegForm.controls['email'].disable();
-              this.clientRegForm.controls['organizationPhonenumber'].disable();
-              this.clientRegForm.controls['companyName'].disable();
-              this.clientRegForm.updateValueAndValidity();
-              this.toaster.success("OTPs sent to given Mobile & Email Id");
-            }else{
-                if(!res.otpSentToEmail){
-                    this.toaster.error("Email OTP sending failed", res.message);
-                }
-                if(!res.otpSentToMobile){
-                  this.toaster.error("Mobile OTP sending failed", res.message);
-                }
             }
-        })
-      }else{
-        this.toaster.warning("Please Enter Company name,  EmailId & Mobile Number", 'Warning');
-      }
+
+            this.vendorRegSer.sendAllOTPs(reqPayload).subscribe((res: any) => {
+                this.isOTPSent = res && (res.otpSentToEmail && res.otpSentToMobile);
+                if (this.isOTPSent) {
+                    this.clientRegForm.controls['email'].disable();
+                    this.clientRegForm.controls['organizationPhonenumber'].disable();
+                    this.clientRegForm.controls['companyName'].disable();
+                    this.clientRegForm.updateValueAndValidity();
+                    this.toaster.success("OTPs sent to given Mobile & Email Id");
+                } else {
+                    if (!res.otpSentToEmail) {
+                        this.toaster.error("Email OTP sending failed", res.message);
+                    }
+                    if (!res.otpSentToMobile) {
+                        this.toaster.error("Mobile OTP sending failed", res.message);
+                    }
+                }
+            })
+        } else {
+            this.toaster.warning("Please Enter Company name,  EmailId & Mobile Number", 'Warning');
+        }
     }
     verifyOtps() {
 
-      if(this.clientRegForm.getRawValue().organizationPhonenumber && this.clientRegForm.getRawValue().email && this.clientRegForm.getRawValue().companyName &&
-        this.clientRegForm.getRawValue().emailOtp && this.clientRegForm.getRawValue().mobileOtp){
-        let obj: any = {
-          "companyName":this.clientRegForm.getRawValue().companyName,
-          "organizationPhonenumber":this.clientRegForm.getRawValue().organizationPhonenumber,
-          "email":this.clientRegForm.getRawValue().email,
-          "emailOtp":this.clientRegForm.value.emailOtp.toString(),
-          "mobileOtp":this.clientRegForm.value.mobileOtp.toString(),
-          "tempEmail": sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail'): '',
-           "tempPhone":  sessionStorage.getItem('tempPhone')? sessionStorage.getItem('tempPhone'): '',
-        }
-
-        this.vendorRegSer.validateAllOTPs(obj).subscribe((res: any) => {
-            this.isOTPVerified = res && res.status == 'success' ? true : false;
-            if (this.isOTPVerified) {
-                this.clientRegForm.controls['email'].disable();
-                this.clientRegForm.controls['organizationPhonenumber'].disable();
-                this.clientRegForm.controls['companyName'].disable();
-                this.clientRegForm.updateValueAndValidity();
-                this.toaster.success(res.message, 'Success');
-            }else{
-                 this.toaster.error(res.message, 'Failed');
+        if (this.clientRegForm.getRawValue().organizationPhonenumber && this.clientRegForm.getRawValue().email && this.clientRegForm.getRawValue().companyName &&
+            this.clientRegForm.getRawValue().emailOtp && this.clientRegForm.getRawValue().mobileOtp) {
+            let obj: any = {
+                "companyName": this.clientRegForm.getRawValue().companyName,
+                "organizationPhonenumber": this.clientRegForm.getRawValue().organizationPhonenumber,
+                "email": this.clientRegForm.getRawValue().email,
+                "emailOtp": this.clientRegForm.value.emailOtp.toString(),
+                "mobileOtp": this.clientRegForm.value.mobileOtp.toString(),
+                "tempEmail": sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail') : '',
+                "tempPhone": sessionStorage.getItem('tempPhone') ? sessionStorage.getItem('tempPhone') : '',
             }
-        })
-        }else{
-          this.toaster.warning("Please Enter Company name,  EmailId & Mobile Number, OTPs ", 'Warning');
+
+            this.vendorRegSer.validateAllOTPs(obj).subscribe((res: any) => {
+                this.isOTPVerified = res && res.status == 'success' ? true : false;
+                if (this.isOTPVerified) {
+                    this.clientRegForm.controls['email'].disable();
+                    this.clientRegForm.controls['organizationPhonenumber'].disable();
+                    this.clientRegForm.controls['companyName'].disable();
+                    this.clientRegForm.updateValueAndValidity();
+                    this.toaster.success(res.message, 'Success');
+                } else {
+                    this.toaster.error(res.message, 'Failed');
+                }
+            })
+        } else {
+            this.toaster.warning("Please Enter Company name,  EmailId & Mobile Number, OTPs ", 'Warning');
         }
     }
 
@@ -184,7 +158,7 @@ export class ClientRegisterComponent implements OnInit {
     }
 
     onValidatePan() {
-        if( this.clientRegForm.controls.pan.errors){
+        if (this.clientRegForm.controls.pan.errors) {
             this.toaster.warning("Invalid GST", "Warning")
             return;
         }
@@ -212,9 +186,9 @@ export class ClientRegisterComponent implements OnInit {
 
     }
 
-    transformPan(){
+    transformPan() {
         const splitGST = this.clientRegForm.getRawValue().pan.split('');
-        const pan = splitGST.slice(2, splitGST.length-3).join('');
+        const pan = splitGST.slice(2, splitGST.length - 3).join('');
         return pan;
     }
 
@@ -253,7 +227,7 @@ export class ClientRegisterComponent implements OnInit {
         })
     }
 
-    resetOtherCtrlExceptPan(){
+    resetOtherCtrlExceptPan() {
         this.successMessage = '';
         this.isOTPVerified = false;
         this.showOtpBox = false;
@@ -277,11 +251,12 @@ export class ClientRegisterComponent implements OnInit {
 
     }
 
-    resetWholeForm(){ 
-             this.isOTPSent = false;
-                this.clientRegFormReset();
-                this.clientRegForm.enable();
-                this.isOTPVerified = false;
+    resetWholeForm() {
+        this.isOTPSent = false;
+        this.clientRegFormReset();
+        this.clientRegForm.enable();
+        this.isOTPVerified = false;
+        this.isOTPSent = false;
         // this.cd.detectChanges();
         //  this.confirmationService.confirm({
         //     header: 'Confirmation',
@@ -289,10 +264,10 @@ export class ClientRegisterComponent implements OnInit {
         //     acceptLabel: 'Yes',
         //     message: `Are you sure about to discard the changes!`,
         //     accept: () => {
-           
+
         //     },
         //     reject: () => {
-               
+
         //     }
         // });
     }
@@ -316,7 +291,7 @@ export class ClientRegisterComponent implements OnInit {
     isInvalidPAN() {
         return !this.clientRegForm.controls['pan'].value
     }
-  numberOnly(event): boolean {
+    numberOnly(event): boolean {
         const charCode = event.which ? event.which : event.keyCode;
         if (charCode > 31 && (charCode < 48 || charCode > 57)) {
             return false;
@@ -336,12 +311,12 @@ export class ClientRegisterComponent implements OnInit {
             // const splitGST = this.clientRegForm.getRawValue().pan.split('');
             // const pan = splitGST.slice(2, splitGST.length-3).join('')
             const requestObject = {
-                'name':regData.name,
+                'name': regData.name,
                 'companyName': regData.companyName,
                 'organizationPhonenumber': regData.organizationPhonenumber,
                 'email': regData.email,
                 'clientSector': '',
-                'pan':'', 
+                'pan': '',
                 'india': regData.india,
                 'crn': '',
                 'zipCode': regData.pinCode,
@@ -354,7 +329,7 @@ export class ClientRegisterComponent implements OnInit {
                     this.successMessage = res.message;
                     this.clientRegFormReset();
                     this.confirmRegistration();
-                    this.panVerificationIniatiated =false;
+                    this.panVerificationIniatiated = false;
 
                 } else if (res.status === 'Failure' || res.status === 'failure') {
                     this.toaster.error(res.errorMessage, 'Failure');
@@ -366,17 +341,17 @@ export class ClientRegisterComponent implements OnInit {
         }
     }
 
-    confirmRegistration(){
+    confirmRegistration() {
         this.modalDialog.open(RegConfirmDialogComponent, {
             width: '40%',
             minHeight: '300px',
             data: 'data',
-          }).afterClosed().subscribe((result) => {
+        }).afterClosed().subscribe((result) => {
             console.log('result.event', result.event);
             if (result && result.event === 'close') {
             }
-          });
-      }
+        });
+    }
 
 }
 
