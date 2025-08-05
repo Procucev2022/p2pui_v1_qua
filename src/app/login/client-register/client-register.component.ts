@@ -130,10 +130,10 @@ export class ClientRegisterComponent implements OnInit {
               this.toaster.success("OTPs sent to given Mobile & Email Id");
             }else{
                 if(!res.otpSentToEmail){
-                    this.toaster.error("Email OTP sending failed", 'Warning');
+                    this.toaster.error("Email OTP sending failed", res.message);
                 }
                 if(!res.otpSentToMobile){
-                  this.toaster.error("Mobile OTP sending failed", 'Warning');
+                  this.toaster.error("Mobile OTP sending failed", res.message);
                 }
             }
         })
