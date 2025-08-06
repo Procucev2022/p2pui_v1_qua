@@ -95,7 +95,7 @@
                                 <div class="col-md-4 col-xs-12 mb-1">
                                   <label for="name">Mobile Number: <b style="color: red;">*</b></label>
                                   <input type="text" maxlength="10" minlength="10" id="adress" class="form-control"
-                                     name="organizationPhonenumber" formControlName="organizationPhonenumber" placeholder="Mobile Number" [disabled]="isOTPVerified || isOTPSent">
+                                     name="organizationPhonenumber" formControlName="organizationPhonenumber" placeholder="Mobile Number"  (keypress)="numberOnly($event)"  maxlength="10" minlength="10"  [disabled]="isOTPVerified || isOTPSent">
                                   <span style="color: green;" *ngIf="isOTPVerified">Mobile Number Verified</span>
                                   <div
                                       *ngIf="(clientRegForm.controls?.organizationPhonenumber?.touched ) && clientRegForm.controls?.organizationPhonenumber?.errors">
@@ -141,7 +141,7 @@
                                           <div  style="color: red;" *ngIf="clientRegForm.controls?.organizationPhonenumber?.errors?.invalid">
                                               Mobile number must be exactly 10 digits.
                                             </div>
-                                  </div>
+                                </div> 
                               </div>
                           </div>
 

@@ -1,45 +1,13 @@
 <div class="login-page row" [@routerTransition]>
-  <!-- <div class="">
-      <h3>Welcome to
-          <span class="scroll-cap">P</span><span class="scroll-cap1">rocurement </span>
-          <span class="scroll-cap">A</span><span class="scroll-cap1">utomation and </span>
-          <span class="scroll-cap">TE</span><span class="scroll-cap1">chnified </span>
-          <span class="scroll-cap">S</span><span class="scroll-cap1">ourcing </span>
-          <span class="scroll-cap1">Service </span> </h3>
-      </div>
-  <div class="row justify-content-md-center">
-      <div class="col-md-4 procucevlogin">
-          <img src="assets/images/logo_procuceve.JPG" width="250px" class="" />
-          <h1 class="marginTop20">Login</h1>
-          <form role="form">
-              <div class="" *ngIf="isCreadentialsEmpty" style="font-size: 14px; color: rgb(255, 253, 253);">Please Enter User Name & Password</div>
-              <div class="form-content">
-                  <div class="form-group">
-                      <input type="text" name="userName" [(ngModel)]="userName" (keydown)="resetCredentialsMsg()" class="form-control input-underline input-lg" id="" placeholder="Enter Your Email">
-                  </div>
-
-                  <div class="form-group">
-                      <input type="password" name="userPassword" [(ngModel)]="userPassword" (keydown)="resetCredentialsMsg()" class="form-control input-underline input-lg" id="" placeholder="Password">
-                  </div>
-              </div>
-
-              &nbsp;
-              <button class="btn rounded-btn" style=" width: 217px; margin-bottom: 25px;"  (click)="onLoggedin()">{{ 'Log in'}}</button>
-              <div ><span class="" style="color: #b5cde2;"> Forgot password ? &nbsp;<span (click)="forgotpassword()" style="    color: #fff;border-bottom: 1px dashed; cursor: pointer;">Click Here</span> </span></div>
-
-          </form>
-      </div>
-  </div> -->
-  <div class="col-md-8 left-section curved-line">
+    <!-- <img class="bg-img" src="assets/images/new/login-bg.svg" [ngClass]="{'class': true}" /> -->
+  <!-- <div class="col-md-8 left-section curved-line">
       <img src="/assets/images/Graphic_branding.svg" width="350">
-      <div id="demo" class="carousel slide" data-ride="carousel">
-          <!-- Indicators -->
+      <div id="demo" class="carousel slide" data-ride="carousel"> 
           <ul class="carousel-indicators">
               <li data-target="#demo" data-slide-to="0" class="active"></li>
               <li data-target="#demo" data-slide-to="1"></li>
               <li data-target="#demo" data-slide-to="2"></li>
-          </ul>
-          <!-- The slideshow -->
+          </ul> 
           <div class="carousel-inner">
               <div class="carousel-item active">
                   <h4>Welcome to Procurement Automation and TEchnified Sourcing Service</h4><br />
@@ -62,30 +30,51 @@
                       www.procucev.com </b></a>
           </div>
       </div>
-  </div>
+  </div> -->
 
-  <div class="col-md-4 " style="    background: #00BCD4;">
+  <div class="col-md-3  col-sm-12"  >
       <div class="row" style="margin-bottom: 0px;">
-          <div class="col-6" style=" margin-top:15px;padding-left:20px ; text-align:left;">
+          <div class="col-12" style=" margin-top:15px;padding-left:20px ; text-align:left;">
               <label><span style="font-size: 20px;color: #fffbff;">
                       For Buyer
                       <span class="reg-text">Start Registration - <a [routerLink]="['/login/reg-client']"> <span
                               class="blink testing" style="color: #F44336;font-weight: bold;">Click Here</span></a> </span></span>
               </label>
           </div>
-          <div class="col-6" style=" margin-top:15px;padding-right:20px ; text-align:right;">
-              <label><span style="font-size: 20px;color: #fffbff;">
-                      For Seller
-                      <span class="reg-text">Start Registration - <a [routerLink]="['registervendor']"> <span
-                              class="blink testing" style="color: #F44336;font-weight: bold;">Click Here</span></a> </span></span>
-              </label>
+          <div class="col-md-12">
+            <div class="gmt-box">
+                <img src="assets/images/new/GMT.png" />
+                <div class="list-item">
+                    <ul>
+                        <li>Get My Quote is the one platform that connects 
+                            verified Buyers and Sellers for seamless industrial sourcing.
+                        </li>
+                        <li>
+                            GMT simplifies sourcing and boosts efficiency for both sides.
+                        </li>
+                    </ul>
+                </div>
+            </div>
           </div>
+          
       </div>
-      <div class="row right-section m-4">
+      
+
+  </div>
+  <div class="col-md-6 col-sm-12" style="display: flex;
+    align-items: center;
+    justify-content: center;">
+    <div class="row right-section m-4">
           <div class="col-md-12  col-xs -12 login-form row">
+                <div class="qua-box">
+<img class="qua-cls" src="assets/images/new/qua-img.png" width="130" height="130" />
+                </div>
+                
                 <div class="col-12">
-                  <img src="assets/images/Procucev_Logo.svg" width="250px" class="" />
-                  <p>Login to access your account</p>
+                  <img src="assets/images/Procucev_Logo.svg" width="250px" class="" style="width: 80%;" />
+                  <p style="    color: #000;
+    font-size: 1.5rem;
+    font-weight: 600;">Login to access your account</p>
                 </div>
                  <div class="col-12">
 
@@ -109,7 +98,8 @@
                             <div class="row  " style="    display: flex
                             ;
                                 align-items: center;
-                                justify-content: right;">
+                                justify-content: right;color: #000;
+    font-weight: 600;">
 
                               <label class="switch-login-method">
                                 <input type="checkbox" [disabled]="!mobileNumber" style="    width: 24px;
@@ -165,8 +155,9 @@
                           <small (click)="forgotpassword()">Forgot password</small>
                       </div>
                         <div class="row login-btns" *ngIf="!otpEnabled">
-                            <button class="btn btn-primary" (click)="onLoggedin()">Login</button>
+                           
                             <button class="btn btn-danger" type="reset" style="margin-top: 0px;">Reset</button>
+                             <button class="btn btn-primary" (click)="onLoggedin()">Login</button>
                         </div>
                     </div>
                 </form>
@@ -175,6 +166,34 @@
           </div>
 
       </div>
+
+  </div>
+  <div class="col-md-3 col-sm-12">
+    <div class="row">
+        <div class="col-12" style=" margin-top:15px;padding-right:20px ; text-align:right;">
+              <label><span style="font-size: 20px;color: #fffbff;">
+                      For Seller
+                      <span class="reg-text">Start Registration - <a [routerLink]="['registervendor']"> <span
+                              class="blink testing" style="color: #F44336;font-weight: bold;">Click Here</span></a> </span></span>
+              </label>
+          </div>
+          <div class="col-md-12">
+            <div class="gmt-box">
+                <img src="assets/images/new/BFS_w.png" class="card-img-top" alt="assets/images/new/BFS_w.png">
+                <div class="list-item">
+                    <ul>
+                        <li>Buy From Stock (BFS) <br />
+                            Revolutionize Inventory 
+                        </li>
+                        <li>
+                            Faster procurement with <br /> real-time access to available <br />
+                            inventory and instant deals.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+          </div>
+    </div>
 
   </div>
 </div>

@@ -180,10 +180,10 @@ visible: boolean;
           this.isOTPSent = true;
           this.isOTPVerified = false;
           const reqPayload = {
-            tempEmail: sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail'): '',
-            tempPhone:  sessionStorage.getItem('tempPhone')? sessionStorage.getItem('tempPhone'): '',
+            "tempEmail": sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail'): '',
+            "tempPhone":  sessionStorage.getItem('tempPhone')? sessionStorage.getItem('tempPhone'): '',
             "companyName": this.vendorRegistrationForm.value.companyName,
-            "phoneNumber":this.vendorRegistrationForm.value.phoneNumber,
+            "organizationPhonenumber":this.vendorRegistrationForm.value.phoneNumber,
             "email":this.vendorRegistrationForm.value.mail,
 
 
@@ -199,10 +199,10 @@ visible: boolean;
               this.toaster.success("OTPs sent to given Mobile & Email Id");
             }else{
                 if(!res.otpSentToEmail){
-                    this.toaster.error("Email OTP sending failed", 'Warning');
+                    this.toaster.error("Email OTP sending failed", res.message);
                 }
                 if(!res.otpSentToMobile){
-                  this.toaster.error("Mobile OTP sending failed", 'Warning');
+                  this.toaster.error("Mobile OTP sending failed", res.message);
                 }
             }
         })

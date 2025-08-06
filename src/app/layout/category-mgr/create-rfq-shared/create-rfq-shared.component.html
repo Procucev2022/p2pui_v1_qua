@@ -91,10 +91,10 @@
                 </fieldset>
             </div>
             <div class="col-12 mt-3 row">
-                <fieldset  class=" col-12 fieldSec">
+                <fieldset  class=" col-12 fieldSec"  *ngIf="isShowGrid" >
                     <legend class="displayFlexCenter">Vendors In Cart <span class="cart"> <i class="fa fa-shopping-cart" aria-hidden="true"></i> <span class="cart-count">{{vendorGridData.gridValue.length}}</span></span>
                     </legend>
-                   <app-cat-mgr-common-grid   *ngIf="isShowGrid" [gridData]="vendorGridData" (onGridAction)="onGridAction($event)"></app-cat-mgr-common-grid>
+                   <app-cat-mgr-common-grid  [gridData]="vendorGridData" (onGridAction)="onGridAction($event)"></app-cat-mgr-common-grid>
                 </fieldset>
             </div>
         </div>
