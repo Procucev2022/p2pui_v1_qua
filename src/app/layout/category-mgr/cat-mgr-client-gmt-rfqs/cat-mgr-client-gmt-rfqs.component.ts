@@ -506,6 +506,10 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
   }
 
   onForwardRFQ(rowData:any){
+    if(rowData.status_ui_display != 'Accepted'){
+          this.toastrService.warning("Sorry, Only Accepted RFQs allowed for Forward to Vendors", 'Warning');
+        return;
+    }
       this.selectedRfqData = null;
       this.isSendRFQ =true;
       setTimeout(()=>{
