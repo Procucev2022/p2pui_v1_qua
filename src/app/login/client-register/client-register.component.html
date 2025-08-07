@@ -117,7 +117,7 @@
                                       *ngIf="(clientRegForm.controls.email.touched ) && clientRegForm.controls.email.errors">
                                       <div *ngIf="(clientRegForm.controls.email.errors.required)" style="color: red;">Email is
                                           required</div>
-                                      <div *ngIf="(clientRegForm.controls.email.errors.pattern)" style="color: red;">Please enter
+                                      <div *ngIf="(clientRegForm.controls.email.errors.invalid || clientRegForm.controls.email.errors.invalidEmail)" style="color: red;">Please enter
                                           valid Email id</div>
                                   </div>
                                   <div>

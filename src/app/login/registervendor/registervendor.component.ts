@@ -39,7 +39,7 @@ visible: boolean;
             name: new FormControl('', [Validators.required,]),
             companyName: new FormControl('', [Validators.required,]),
             phoneNumber: new FormControl('', [Validators.required, tenDigitPhoneNumberValidator()]),
-            mail: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')]),
+            mail: new FormControl('', [Validators.required, Validators.email, strictEmailValidator()]),
             gstin: new FormControl('', [gstinValidator()]),
             india: new FormControl('true'),
             products: new FormControl('', [Validators.required]),
@@ -263,5 +263,14 @@ export function gstinValidator(): ValidatorFn {
       return null; // Don't validate empty value here
     }
     return GSTIN_REGEX.test(value.toUpperCase()) ? null : { invalidGstin: true };
+  };
+}
+
+export function strictEmailValidator(): ValidatorFn {
+  const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value = control.value;
+    if (!value) return null;
+    return EMAIL_REGEX.test(value) ? null : { invalidEmail: true };
   };
 }

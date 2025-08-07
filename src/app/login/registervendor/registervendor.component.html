@@ -58,9 +58,8 @@
                             <div *ngIf="(vendorRegistrationForm?.controls?.mail.errors.required)" style="color: red;">
                                 Email Id is
                                 required</div>
-                            <div *ngIf="(vendorRegistrationForm?.controls?.mail.errors.pattern)" style="color: red;">
-                                Please
-                                enter valid Email Id</div>
+                            <div *ngIf="(vendorRegistrationForm?.controls?.mail.errors.invalidEmail || vendorRegistrationForm?.controls?.mail.errors.invalid)" style="color: red;">
+                                Please  enter valid Email Id</div>
                         </div>
                     </div>
                     <div class="col-md-4 col-xs-12 mb-1">
@@ -96,7 +95,7 @@
                                           <div  style="color: red;" *ngIf="vendorRegistrationForm.controls?.organizationPhonenumber?.errors?.invalid">
                                               Mobile number must be exactly 10 digits.
                                             </div>
-                                  </div>
+                                  </div>invalidEmail
                               </div>
                     </div>
 

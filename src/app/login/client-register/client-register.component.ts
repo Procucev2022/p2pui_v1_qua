@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { NgForm, FormGroup, FormBuilder, FormArray, FormControl, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
+import { NgForm, FormGroup, FormBuilder, FormArray, FormControl, Validators, AbstractControl, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { VendorRegistrationService } from 'src/app/vendor-registration/services/vendor-registration.service';
@@ -45,7 +45,7 @@ export class ClientRegisterComponent implements OnInit {
             name: new FormControl('', [Validators.required,]),
             companyName: new FormControl('', [Validators.required]),
             organizationPhonenumber: new FormControl('',[Validators.required, tenDigitPhoneNumberValidator()]),
-            email: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$'), Validators.email]),
+            email: new FormControl('', [Validators.required,Validators.email,  strictEmailValidator()]),
             // clientSector: new FormControl('', [Validators.required]), 
             // pan: new FormControl('', [Validators.required, Validators.pattern('[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[a-zA-Z0-9]{3}')]),
             india: new FormControl('true', [Validators.required]),
@@ -363,3 +363,14 @@ export function tenDigitPhoneNumberValidator(): ValidatorFn {
     };
 }
 
+
+
+
+export function strictEmailValidator(): ValidatorFn {
+  const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value = control.value;
+    if (!value) return null;
+    return EMAIL_REGEX.test(value) ? null : { invalidEmail: true };
+  };
+}
