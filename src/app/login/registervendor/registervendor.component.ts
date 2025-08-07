@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { NgForm, FormGroup, FormBuilder, FormArray, FormControl, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
+import { NgForm, FormGroup, FormBuilder, FormArray, FormControl, Validators, AbstractControl, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { VendorRegistrationService } from 'src/app/vendor-registration/services/vendor-registration.service';
@@ -40,7 +40,7 @@ visible: boolean;
             companyName: new FormControl('', [Validators.required,]),
             phoneNumber: new FormControl('', [Validators.required, tenDigitPhoneNumberValidator()]),
             mail: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')]),
-            gstin: new FormControl(''),
+            gstin: new FormControl('', [gstinValidator()]),
             india: new FormControl('true'),
             products: new FormControl('', [Validators.required]),
             mobileOtp: new FormControl(''),
@@ -250,4 +250,18 @@ export function tenDigitPhoneNumberValidator(): ValidatorFn {
         const valid = phoneRegex.test(control.value);
         return valid ? null : { 'invalidPhoneNumber': { value: control.value } };
     };
+}
+
+
+
+export function gstinValidator(): ValidatorFn {
+  const GSTIN_REGEX = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+  
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value = control.value;
+    if (!value) {
+      return null; // Don't validate empty value here
+    }
+    return GSTIN_REGEX.test(value.toUpperCase()) ? null : { invalidGstin: true };
+  };
 }

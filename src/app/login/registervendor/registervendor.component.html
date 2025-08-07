@@ -100,22 +100,14 @@
                               </div>
                     </div>
 
-
-
-                    <ng-container  *ngIf="vendorRegistrationForm?.controls?.india.value == 'true'">
-
-
+ 
 
                     <div class="col-md-4  col-xs-12  mt-2">
-                        <label for="email">GSTIN <b style="color: red;">*</b></label>
-                        <input type="text" required id="gstin" class="form-control" name="gstin" formControlName="gstin"
-                            placeholder="GSTIN">
-                        <div
-                            *ngIf="(vendorRegistrationForm?.controls?.gstin?.touched) && vendorRegistrationForm?.controls?.gstin.status=='INVALID'">
-                            <div style="color: red;">GSTIN is required</div>
-                        </div>
-                    </div>
-                 </ng-container>
+                        <label for="email">GSTIN <b style="color: red;">*</b>s</label>
+                        <input type="text" required id="gstin" class="form-control" name="gstin" formControlName="gstin"   placeholder="GSTIN" /> 
+                            <div style="color: red;" *ngIf="vendorRegistrationForm?.controls?.gstin?.touched && vendorRegistrationForm?.controls?.gstin?.errors?.invalidGstin">Invalid GSTIN format </div>
+                        
+                    </div> 
 
 
 
