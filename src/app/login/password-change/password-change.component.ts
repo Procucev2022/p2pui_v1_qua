@@ -120,6 +120,10 @@ export class PasswordChangeComponent implements OnInit {
     getValidateOTP(){
 
        if (this.otpNumber) {
+        if(this.otpNumber.length <6){
+            this.toastrService.error('Please enter 6digits OTP value', 'Failed');
+          return;
+        }
           this.authService.validateEmailOTP({
               "email":  localStorage.getItem('loggedUser'),
               "tempEmail": sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail') : '',
@@ -209,5 +213,13 @@ export class PasswordChangeComponent implements OnInit {
     this.submitted = false;
     this.passwdForm.reset();
   }
+
+    numberOnly(event): boolean {
+        const charCode = event.which ? event.which : event.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
 
 }

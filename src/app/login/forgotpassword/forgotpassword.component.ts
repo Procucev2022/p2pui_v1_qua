@@ -17,6 +17,9 @@ export class ForgotpasswordComponent implements OnInit {
     phone:any;
     isEmailEmpty: boolean;
     routerParams: any;
+    intervalTime: any;
+    isSentMail:boolean;
+    redirectIn: number = 10;
     constructor(
       public router: Router,
       private authService: AuthenticationService,
@@ -43,7 +46,9 @@ export class ForgotpasswordComponent implements OnInit {
         console.log(req)
         this.authService.forgotpassword(req).subscribe((res:any) =>{
             if(res.statusCode == 'Success'){
-                this.toastService.success(res.errorMessage,'Success')
+                this.toastService.success(res.errorMessage,'Success');
+                this.isSentMail = true;
+                this.navigateToLoginPage();
             }else{
                 this.toastService.error(res.errorMessage,'Failure')
             }
@@ -55,6 +60,21 @@ export class ForgotpasswordComponent implements OnInit {
 
     resetCredentialsMsg(){
         this.isEmailEmpty = false;
+    }
+
+    navigateToLoginPage() {
+        this.userName ='';
+        this.phone ='';
+        this.intervalTime = setInterval(()=>{
+            if(this.redirectIn > 0){
+                this.redirectIn --;
+            }else{
+                clearInterval(this.intervalTime);
+                this.isSentMail = false;
+                this.router.navigate(["/login"])
+            }
+
+        }, 1000)
     }
 
 
