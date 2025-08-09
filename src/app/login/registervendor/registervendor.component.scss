@@ -133,3 +133,89 @@ form label {
         align-items: center;
     }
 }
+
+
+.reg-page-container {
+    max-height: 118vh;
+    background: #FFF;
+    height: 117.6vh;
+
+
+    .left-section {
+        border-right: 5px solid black;
+
+        .logo {
+            text-align: center;
+
+            img {
+                width: 70%;
+                margin-top: 2rem;
+            }
+        }
+
+        .sub-imgs {
+            text-align: center;
+
+            img {
+                width: 190px;
+                height: 190px;
+            }
+        }
+
+        .content-box {
+            background-color: #f0f0f0;
+            min-height: 300px;
+            border-radius: 14px;
+            height: 578px;
+            /* border: 2px solid grey; */
+            width: 90%;
+            margin-left: 5%;
+
+            h4 {
+                text-align: center;
+                padding: 8px;
+                margin-top: 1rem;
+                text-decoration: underline;
+                font-weight: bold;
+            }
+
+            .title-gmt {
+                margin-top: 1rem;
+            }
+
+            ul.gmt-list {
+                margin-bottom: 2rem;
+            }
+
+            ul li {
+                font-size: 1.5rem;
+                margin-left: 4rem;
+                font-weight: 600;
+            }
+        }
+
+    }
+
+    .right-section {
+        background-color: #de7f52;
+
+        .title {
+            text-align: center;
+            text-decoration: underline;
+            font-weight: 600;
+        }
+
+        input {
+            border-radius: 30px !important;
+            border: 3px solid black !important;
+            font-size: 1.2rem;
+        }
+
+        form label {
+            font-weight: 600;
+            text-align: center !important;
+            width: 100%;
+            font-size: 1.2rem !important;
+        }
+    }
+}
