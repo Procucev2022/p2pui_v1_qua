@@ -32,7 +32,7 @@
 
         </div>
         <div class="col-8 right-section p-5">
-            <h4 class="title">Seller Registration </h4>
+            <h4 class="title" style="font-size: 2rem;margin-top: 2rem;">Seller Registration </h4>
             <div  style="color: #fff" class="error-block" >
                     <p *ngIf="vendorRegistrationForm?.controls?.india.value == 'true' && vendorRegistrationForm?.controls?.phoneNumber?.touched && vendorRegistrationForm?.controls?.phoneNumber?.errors?.invalidPhoneNumber ">
                        * Mobile number must be  10 digits and Not Preceeded with 0.</p>
@@ -94,7 +94,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2" style="    display: flex;align-items: center;">
+                        <div class="col-md-2" style="display: flex;align-items: center;margin-top:2rem">
                             <button class="btn btn-primary" (click)="sendOTPs()" type="button" style="width: 100%; background: #3c60a4 !important; color: #fff !important; border-radius: 30px !important; font-size: 1.1rem !important; padding: 0 !important; font-weight: 400 !important; border: none !important;" *ngIf="!isOTPVerified">{{isOTPSent? 'Resend OTPs': 'Send OTPs'}}</button>
                         </div>
 
