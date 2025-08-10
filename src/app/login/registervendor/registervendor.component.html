@@ -81,6 +81,8 @@
                             <label for="name">Mobile Number:<b style="color: #fff">*</b></label>
                             <input type="text" maxlength="10" minlength="10" id="adress" class="form-control"
                                 name="phoneNumber" formControlName="phoneNumber" placeholder="Mobile Number" />
+                                
+                                     <span style="font-size: 12px;">(Provide mobile number, so you can access on WhatsApp)</span>
                             <span style="color: green;" *ngIf="isOTPVerified">MobileNumber is verified</span>
                             <div
                                 *ngIf="(vendorRegistrationForm?.controls?.phoneNumber?.touched ) && vendorRegistrationForm?.controls?.phoneNumber?.errors">
