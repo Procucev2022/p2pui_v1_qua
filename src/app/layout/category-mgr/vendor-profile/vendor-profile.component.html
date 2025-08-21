@@ -1,0 +1,233 @@
+ 
+<div class="container-fluid">
+    <div class="table-title">
+      <div class="row">
+        <div class="col-sm-6">
+          <h2 class="text-center">My Profile</h2>
+          <!-- <p><span class="dot"></span>{{itemList.length}} Total</p> -->
+        </div> 
+      </div>
+    </div>
+    <div  >
+        <form class="row" (ngSubmit)="updateVendorForm()"  [formGroup]="vendorForm" novalidate>
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" class="form-control" formControlName="name"/>
+                </div>
+            </div>
+             <div class="col-6">
+                <div class="form-group">
+                    <label for="name">EMail Id</label>
+                    <input type="text" class="form-control" formControlName="mail" disabled/>
+                </div>
+            </div>
+             <div class="col-6">
+                <div class="form-group">
+                    <label for="name">Mobile Number</label>
+                    <input type="text" class="form-control" formControlName="organizationPhonenumber" disabled/>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="name">GSTIN</label>
+                    <input type="text" class="form-control" formControlName="gstin"/>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="name">Registered Office Address (CITY)</label>
+                    <textarea type="text" class="form-control" formControlName="city"></textarea>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="name">Product & Service Categories</label>
+                    <input type="text" class="form-control" formControlName="products"/>
+                </div>
+            </div>
+            <div class="col-12">
+                <div formArrayName="categoryDivisions" >
+                    <div *ngFor="let group of items.controls; let i = index" [formGroupName]="i" class="row">
+                    
+                         
+                            <div class="col-6"  >
+                                <label class="form-label required">Division</label>
+                                <p-autoComplete  formControlName="division" showEmptyMessage="true"
+                                [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
+                                    [suggestions]="filtered_divisionsList" panelInputClass="p-auto-panel-cls" [minLength]="1"
+                                    [dropdown]="true"
+                                    (completeMethod)="filterAutoCompleteData($event, 'divisionsList','filtered_divisionsList',   true)"
+                                    >
+                                            <ng-template let-segment pTemplate="item">
+                                                <div class="segment-item">
+                                                    <div>{{segment}}</div>
+                                                </div>
+                                            </ng-template>
+                                </p-autoComplete>
+                            </div>
+                            <div class="col-6"  >
+                                <label class="form-label required">Category</label>
+                                 <select class="form-control" name="se1" formControlName="category"> 
+                                    <option *ngFor="let val of categoryList">{{val}}</option>
+                                </select>
+                                <!-- <p-autoComplete  formControlName="category" showEmptyMessage="true"
+                                [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
+                                    [suggestions]="filtered_categoryList" panelInputClass="p-auto-panel-cls" [minLength]="1"
+                                    [dropdown]="true"
+                                    (completeMethod)="filterAutoCompleteData($event, 'categoryList','filtered_categoryList',   true)"
+                                    >
+                                            <ng-template let-segment pTemplate="item">
+                                                <div class="segment-item">
+                                                    <div>{{segment}}</div>
+                                                </div>
+                                            </ng-template>
+                                </p-autoComplete> -->
+                            </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-12 mt-3">
+                <label style="font-weight: bold;">Branches Details:</label>
+                <div formArrayName="branches">
+                    <div *ngFor="let address of branches.controls; let i = index" [formGroupName]="i" class="mb-3    mr-2 border p-3 row" [ngClass]="{'mt-3': i>0}">
+                            <div class="col-2">Branch Location</div>
+                            <div class="col-2">City</div>
+                            <div class="col-2">Contact Person</div>
+                            <div class="col-2">Mobile No.</div>
+                            <div class="col-2">EmailId</div>
+                            <div class="col-2"></div>
+                            <div class="col-2"> 
+                                <input formControlName="location" class="form-control" />
+                            </div>
+                            <div class="col-2"> 
+                                <input formControlName="city" class="form-control" />
+                            </div>
+                            <div class="col-2"> 
+                                <input formControlName="contactName" class="form-control" />
+                            </div>
+                            <div class="col-2"> 
+                                <input formControlName="mobileNumber" class="form-control" />
+                            </div>
+                            <div class="col-2"> 
+                                <input formControlName="EmailId" class="form-control" />
+                            </div> 
+                            <div class="col-2">
+                                <button type="button" class="btn btn-secondary" (click)="addBranch()">Add 1+</button>
+                                <button type="button" *ngIf="i >0" class="btn btn-danger" (click)="removeBranch(i)">Remove</button>
+                            </div>
+                       </div>
+                </div>
+
+            </div>
+            
+            <div class="col-12 mt-5 mb-5">
+                 <div class="row">
+                    <div class="col-md-4" *ngFor="let card of subscriptionPlansList"
+                    [ngClass]="getClassName(card)">
+                    <div class="card mb-4 shadow-sm"> 
+                        <div class="card-body">
+                        <div class="active-title" [ngClass]="card.analyticsLevel == selectedSubscription ? 'fade-in' : 'fade-out'">
+                           <i class="fa fa-check-circle-o "></i>  Selected</div>
+                        <h5 class="card-title">{{ card.analyticsLevel }}</h5> 
+                        <div class="list">
+                            <ul>
+                                <li>
+                                    <span>
+                                        <span class="label-text">Buyer Visibility </span>
+                                        <span class="label-vakue">{{card.buyerVisibility}} 
+                                        </span>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span>
+                                        <span class="label-text">RFQ Clarification</span>
+                                        <span class="label-vakue">{{card.rfqClarification ? 'Yes': 'No'}}
+                                            <i class="fa"  [ngClass]=" card.rfqClarification ? 'fa-check-circle-o': ' fa-times-circle'"></i></span>
+                                    </span>
+                                </li>
+                                 <li>
+                                    <span>
+                                        <span class="label-text">RFQ Expiry Alert</span>
+                                        <span class="label-vakue">{{card.rfqExpiryAlert? 'Yes': 'No'}}   
+                                            <i class="fa" [ngClass]="card.rfqExpiryAlert ? 'fa-check-circle-o': ' fa-times-circle'"></i>
+                                        </span>
+                                    </span>
+                                </li>
+                                 <li>
+                                    <span>
+                                        <span class="label-text">Accumulated RFQ Status</span>
+                                        <span class="label-vakue">{{card.accumulatedRfqStatus? 'Yes': 'No'}}
+                                             <i class="fa"  [ngClass]=" card.accumulatedRfqStatus ? 'fa-check-circle-o': ' fa-times-circle'"></i>
+                                        </span>
+                                    </span>
+                                </li>
+                                 <li>
+                                    <span>
+                                        <span class="label-text">Automated Quotation</span>
+                                        <span class="label-vakue">{{card.automatedQuotation? 'Yes': 'No'}}
+                                             <i class="fa"  [ngClass]=" card.automatedQuotation ? 'fa-check-circle-o': ' fa-times-circle'"></i>
+                                        </span>
+                                    </span>
+                                </li>
+                                 <li>
+                                    <span>
+                                        <span class="label-text">Catalogue Creation</span>
+                                        <span class="label-vakue">{{card.catalogueCreation? 'Yes': 'No'}}
+                                             <i class="fa"  [ngClass]=" card.catalogueCreation ? 'fa-check-circle-o': ' fa-times-circle'"></i>
+                                        </span>
+                                    </span>
+                                </li>
+                                 <li>
+                                    <span>
+                                        <span class="label-text">Dedicated Support</span>
+                                        <span class="label-vakue">{{card.dedicatedSupport? 'Yes': 'No'}}
+                                             <i class="fa"  [ngClass]=" card.dedicatedSupport ? 'fa-check-circle-o': ' fa-times-circle'"></i>
+                                        </span>
+                                    </span>
+                                </li>
+                                 <li>
+                                    <span>
+                                        <span class="label-text">Industry Insights</span>
+                                        <span class="label-vakue">{{card.industryInsights? 'Yes': 'No'}}
+                                             <i class="fa"  [ngClass]=" card.industryInsights ? 'fa-check-circle-o': ' fa-times-circle'"></i>
+                                        </span>
+                                    </span>
+                                </li>
+                                 <li>
+                                    <span>
+                                        <span class="label-text">Per RFQ Price</span>
+                                        <span class="label-vakue">{{card.perRfqPrice | currency: 'INR'}}</span>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                           
+                         <div class="col-12">
+                                <button class="btn btn-primary" style="width: 100%;border-color:#fff !important;" (click)="updateSubscription(card.analyticsLevel)"> {{selectedSubscription == card.analyticsLevel ?'Selected': 'Subscribe'}}</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    </div>
+                </div>
+
+            </div>
+        </form>
+        <!-- <div class="col-12">
+             <div class="col-sm-6" style="display: inline-flex;align-items: center;" >
+            <label style="width: 175px; font-weight: 600;">Division By</label>
+            <select class="form-control" name="se1" [(ngModel)]="vendorRegObj.division" (change)="filterRFQsBYDivision()"> 
+                <option *ngFor="let val of divisionsList">{{val}}</option>
+            </select>
+          </div>
+          <div class="col-sm-6" style="display: inline-flex;align-items: center;" >
+            <label style="width: 175px; font-weight: 600;">Category By</label>
+            <select class="form-control" name="se1" [(ngModel)]="vendorRegObj.category" > 
+                <option *ngFor="let val of categoryList">{{val}}</option>
+            </select>
+          </div>
+        </div> -->
+    </div>
+</div>

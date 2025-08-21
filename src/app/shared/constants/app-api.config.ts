@@ -54,7 +54,7 @@ export class AppApiConfig {
   public static VALIDATE_EMAIL_OTP = '/partialvendor/validateAllOtps';
   public static GET_CLIENT_WITH_USER_LIST_CM2 = '/rest/gmt/getGmtBuyers';
   public static FORGOT_PASSWORD = '/partialvendor/forgotPassword';
-
+  public static GET_VENDOR_BY_ID = '/rest/vendor/getVendorById';
 
 
 
@@ -153,8 +153,6 @@ export class AppApiConfig {
     public static GET_ALL_VENDORS_BY_ITEM_CODE_FOR_CM = '/rest/categoryManager/itemCodeSearchByCM';
 
     public static APPROVE_VENDOR_REGISTRATION = '/rest/vendor/approveVendorRegistration';
-
-    public static GET_VENDOR_BY_ID = '/rest/vendor/getVendorById';
 
     public static GET_VENDOR_TC = '/rest/vendorManager/getVendorTc';
 

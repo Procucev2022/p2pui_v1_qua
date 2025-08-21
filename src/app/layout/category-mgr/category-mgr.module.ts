@@ -42,6 +42,7 @@ import { RfqSupportQueryComponent } from './rfq-support-query/rfq-support-query.
 import { FaqsDocumentComponent } from './faqs-document/faqs-document.component';
 import { CapexAuctionsComponent } from './capex-auctions/capex-auctions.component';
 import { CapexCatMgrPostAuctionComparComponent } from 'src/app/shared/modules/common-share/components/capex-cat-mgr-post-auction-compar/capex-cat-mgr-post-auction-compar.component';
+import { VendorProfileComponent } from './vendor-profile/vendor-profile.component';
 
 
 
@@ -89,7 +90,8 @@ import { CapexCatMgrPostAuctionComparComponent } from 'src/app/shared/modules/co
         RfqSupportQueryComponent,
         FaqsDocumentComponent,
         CapexAuctionsComponent,
-        CapexCatMgrPostAuctionComparComponent
+        CapexCatMgrPostAuctionComparComponent,
+        VendorProfileComponent
     ],
     exports:[ ],
     // entryComponents: [CatMgrVendorSearchComponent]
