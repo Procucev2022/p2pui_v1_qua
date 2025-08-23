@@ -8,7 +8,7 @@
         </div> 
       </div>
     </div>
-    <div  >
+    <div  [hidden]="!isFirstScreen">
         <form class="row" (ngSubmit)="updateVendorForm()"  [formGroup]="vendorForm" novalidate>
             <div class="col-6">
                 <div class="form-group">
@@ -46,52 +46,36 @@
                     <input type="text" class="form-control" formControlName="details"/>
                 </div>
             </div>
-            <div class="col-12">
-                <div>
-                    <button style="float: right;" class="btn btn-blue" (click)="onEditCategory()" type="button">{{isEdit ? 'Save Category' : 'Edit Category'}}</button>
-                </div>
-
-                <div formArrayName="divisionCategories"  *ngIf="!isEdit">
+            <div class="col-12"> 
+                 <div formArrayName="divisionCategories">
                     <div *ngFor="let group of items.controls; let i = index" [formGroupName]="i" class="row">
-                    
-                         
-                            <div class="col-6"  >
-                                <label class="form-label required">Division</label>
-                                <input type="text"  formControlName="division" placeholder="Division" disabled class="form-control" />
-                                
-                            </div>
-                            <div class="col-6"  >
-                                <label class="form-label required">Category</label>
-                               <input type="text"  formControlName="category" placeholder="category" disabled class="form-control" />
-                            </div>
-                    </div>
-                </div>
-                 <div formArrayName="divisionCategories"  *ngIf="isEdit">
-                    <div *ngFor="let group of items.controls; let i = index" [formGroupName]="i" class="row">
-                    
-                         
                             <div class="col-6"  >
                                 <label class="form-label ">Division</label>
-                                <p-autoComplete  formControlName="division" showEmptyMessage="true"
+                                <!-- <p-autoComplete  formControlName="division" showEmptyMessage="true"
                                 [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
-                                    [suggestions]="filtered_divisionsList" panelInputClass="p-auto-panel-cls" [minLength]="1"
+                                    [suggestions]="divisionFormList[index].filtered_divisionList" panelInputClass="p-auto-panel-cls" [minLength]="1"
                                     [dropdown]="true"
-                                    (completeMethod)="filterAutoCompleteData($event, 'divisionsList','filtered_divisionsList',   true)"
-                                      (onSelect)="onItemSelected($event, i)"
-
+                                    (completeMethod)="filterAutoCompleteData($event, 'divisionsList' ,  true, index)"
+                                      (onSelect)="onItemSelected($event, i)" placeholder="Select Division"
                                     >
                                             <ng-template let-segment pTemplate="item">
                                                 <div class="segment-item">
                                                     <div>{{segment}}</div>
                                                 </div>
                                             </ng-template>
-                                </p-autoComplete>
+                                </p-autoComplete> -->
+
+                                <select class="form-control" name="se1" formControlName="division"
+                                  (change)="filterCategoryListByDivision($event, i)">
+                                    <option disabled   value="">--Select--</option>
+                                    <option *ngFor="let val of divisionFormList[i].divisionList">{{val}}</option>
+                                </select>
                             </div>
                             <div class="col-6"  >
                                 <label class="form-label required">Category</label>
                                  <select class="form-control" name="se1" formControlName="category">
                                     <option disabled   value="">--Select--</option>
-                                    <option *ngFor="let val of categoryList">{{val}}</option>
+                                    <option *ngFor="let val of divisionFormList[i].categoryList">{{val}}</option>
                                 </select> 
                             </div>
                     </div>
@@ -128,7 +112,29 @@
 
             </div>
             
-            <div class="col-12 mt-5 mb-5">
+            
+            <div class="col-12">
+                <button type="button" class="btn btn-red" (click)="resetToOriginalState()">Reset To Previous Version</button>
+                <button type="button" class="btn btn-blue" (click)="goToNextScreen()">Next to Plans Selection Screen </button>
+            </div>
+        </form>
+        <!-- <div class="col-12">
+             <div class="col-sm-6" style="display: inline-flex;align-items: center;" >
+            <label style="width: 175px; font-weight: 600;">Division By</label>
+            <select class="form-control" name="se1" [(ngModel)]="vendorRegObj.division" (change)="filterRFQsBYDivision()"> 
+                <option *ngFor="let val of divisionsList">{{val}}</option>
+            </select>
+          </div>
+          <div class="col-sm-6" style="display: inline-flex;align-items: center;" >
+            <label style="width: 175px; font-weight: 600;">Category By</label>
+            <select class="form-control" name="se1" [(ngModel)]="vendorRegObj.category" > 
+                <option *ngFor="let val of categoryList">{{val}}</option>
+            </select>
+          </div>
+        </div> -->
+    </div>
+    <div class="" [hidden]="isFirstScreen">
+<div class="col-12 mt-5 mb-5">
                  <div class="row">
                     <div class="col-md-4" *ngFor="let card of subscriptionPlansList; let i = index"
                     [ngClass]="getClassName(card)">
@@ -221,24 +227,6 @@
                 </div>
 
             </div>
-            <div class="col-12">
-                <button type="button" class="btn btn-red" (click)="resetToOriginalState()">Reset To Previous Version</button>
-                <button type="submit" class="btn btn-blue">Update Profile</button>
-            </div>
-        </form>
-        <!-- <div class="col-12">
-             <div class="col-sm-6" style="display: inline-flex;align-items: center;" >
-            <label style="width: 175px; font-weight: 600;">Division By</label>
-            <select class="form-control" name="se1" [(ngModel)]="vendorRegObj.division" (change)="filterRFQsBYDivision()"> 
-                <option *ngFor="let val of divisionsList">{{val}}</option>
-            </select>
-          </div>
-          <div class="col-sm-6" style="display: inline-flex;align-items: center;" >
-            <label style="width: 175px; font-weight: 600;">Category By</label>
-            <select class="form-control" name="se1" [(ngModel)]="vendorRegObj.category" > 
-                <option *ngFor="let val of categoryList">{{val}}</option>
-            </select>
-          </div>
-        </div> -->
+             <button type="button" class="btn btn-blue" (click)="goToPreviousScreen()">Previous Screen</button>
     </div>
 </div>

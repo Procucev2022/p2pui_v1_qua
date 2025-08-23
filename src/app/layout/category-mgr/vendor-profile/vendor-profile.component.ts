@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { RfqService } from '../../vendor/services/rfq.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-vendor-profile',
@@ -28,6 +29,7 @@ export class VendorProfileComponent {
     { title: 'Card 3', text: 'This is the third card.', img: 'https://via.placeholder.com/150' }
   ];
   vendorForm: FormGroup;
+  isFirstScreen: boolean = true;
   generalModel: {
     companyName: any; pan: any; gstin: any; msme: any;
     // 'msme':this.vendorRegObj.msme ? this.vendorRegObj.msme : 'no',
@@ -106,6 +108,7 @@ export class VendorProfileComponent {
   //     "industryInsights": true,
   //     "perRfqPrice": 300.0
   //   }];
+  divisionFormList:any =[]
   constructor(private vendorRegSer: VendorRegistrationService, private encryDecryService: EncryDecryService,
     private dialog: MatDialog,
     private rfqservice: RfqService,
@@ -119,15 +122,67 @@ export class VendorProfileComponent {
       this.getVendorById(this.loggedUserDetails.org.id)
     }
     this.buildVendorForm();
+   
     this.createRfqService.getSubscriptionsList().subscribe((res: any) => {
       this.subscriptionPlansList = res.data && res.data.plans ? res.data.plans : []
-    })
+    });
+
+    for(let i=0; i< 5; i++){
+      this.divisionFormList.push({
+        selectedCategory: '',
+        selectedDivision: '',
+        divisionList: [],
+        categoryList: [],
+        filtered_divisionList: [],
+        filtered_categoryList: []
+      });
+    } 
+
+
     this.createRfqService.getGMTDivisions().subscribe((res: any) => {
       this.divisionsList = res || [];
-      if (this.divisionsList.length > 0) {
-        this.getCategoryByDivision(this.divisionsList[0]);
-      }
+      if( this.divisionsList.length > 0){
+        this.filtered_divisionsList = this.divisionsList;
+        this.divisionFormList.forEach((ele:any, index)=>{
+          ele.divisionList = this.divisionsList;
+          ele.categoryList = [];
+        })
+      } 
+      
     });
+
+
+    //     this.divisionsList = [
+    //     {
+    //         "divisionName": "Electrical",
+    //         "id": 1,
+    //         "categoryList": [
+    //             "Cables & Wires",
+    //             "Circuit Breakers",
+    //             "Transformers"
+    //         ]
+    //     },
+    //     {
+    //         "divisionName": "Mechanical",
+    //         "id": 2,
+    //         "categoryList": [
+    //             "Pumps",
+    //             "Valves",
+    //             "Compressors"
+    //         ]
+    //     },
+    //     {
+    //         "divisionName": "Civil",
+    //         "id": 3,
+    //         "categoryList": [
+    //             "Cement",
+    //             "Steel",
+    //             "Bricks"
+    //         ]
+    //     }
+    // ]
+
+
     // this.divisionsList = [
     //   "CAPEX - Equipment & Machinery",
     //   "Civil Works",
@@ -143,12 +198,16 @@ export class VendorProfileComponent {
 
   }
 
+  buildDivisionCategoryList(index, division) {
+
+  }
+
 
   getCategoryByDivision(division) {
     const obj = { "division": division };
-    this.createRfqService.getGMTCategoriesByDivision(obj).subscribe((res: any) => {
-      this.categoryList = res || [];
-    });
+    // this.createRfqService.getGMTCategoriesByDivision(obj).subscribe((res: any) => {
+    //   this.categoryList = res || [];
+    // });
   }
   buildVendorForm() {
     this.vendorForm = this.fb.group({
@@ -179,9 +238,16 @@ export class VendorProfileComponent {
 
 
   onItemSelected(event, index) {
-    const obj = { "division": event.value };
+    const obj = { "division": event.target.value };
     this.createRfqService.getGMTCategoriesByDivision(obj).subscribe((res: any) => {
       this.categoryList = res || [];
+      if(this.categoryList.length > 0) {
+        this.filtered_categoryList = this.categoryList;
+        this.divisionFormList[index].filtered_categoryList = this.categoryList;
+        this.divisionFormList[index].selectedDivision = event.value;
+        this.divisionFormList[index].selectedCategory = '';
+        this.divisionFormList[index].categoryList = this.categoryList;
+      }
     });
     this.categoryList = [
       "Agriculture Equipments",
@@ -325,8 +391,8 @@ export class VendorProfileComponent {
 
 
     if (this.vendorRegObj.branches) {
-      const divisionCategories = [{ category: 'Agriculture Equipments', division: 'CAPEX - Equipment & Machinery', email: 'abc@gmail.com', address: 'HMT' },
-      { branchName: 'bng', category: 'Conveyors', division: 'CAPEX - Equipment & Machinery', address: 'HMT' }
+      const divisionCategories = [{ category: 'Fire Extinguishers', division: 'Occupational Health and Safety', email: 'abc@gmail.com', address: 'HMT' },
+      { branchName: 'bng', category: 'Fire Extinguishers', division: 'Occupational Health and Safety', address: 'HMT' }
       ]
       this.vendorRegObj.divisionCategories = divisionCategories;
       const divisionArray = this.vendorForm.get('divisionCategories') as FormArray;
@@ -401,17 +467,43 @@ export class VendorProfileComponent {
 
 
 
-  filterAutoCompleteData(event, inputArrayName, outputArrayName, isStringType) {
-    this[outputArrayName] = [];
+  filterAutoCompleteData(event, inputArrayName, isStringType, index) { 
     const query = isStringType ? event.query.toLowerCase() : event.query;
 
-    this[outputArrayName] = this[inputArrayName].filter(ele => ele != null && (ele.toLowerCase().includes(query)));
+  
+    if(inputArrayName == 'divisionsList'){
+        const filtered_divisionList = this.divisionFormList[index].divisionList.filter(ele => ele != null && (ele.toLowerCase().includes(query)));
+
+      this.divisionFormList[index].filtered_divisionList = filtered_divisionList;
+    }
+  }
+
+  filterCategoryListByDivision(event, index) {
+    const obj = { "division": event.target.value };
+    this.createRfqService.getGMTCategoriesByDivision(obj).subscribe((res: any) => {
+      this.categoryList = res || [];
+      if(this.categoryList.length > 0) {
+        this.filtered_categoryList = this.categoryList;
+        this.divisionFormList[index].filtered_categoryList = this.categoryList;
+        this.divisionFormList[index].selectedDivision = event.value;
+        this.divisionFormList[index].selectedCategory = '';
+        this.divisionFormList[index].categoryList = this.categoryList;
+      }
+    });
   }
 
   getClassName(subData: any) {
     return subData.analyticsLevel.toLowerCase() == 'basic' ?
       'yellowClass' : subData.analyticsLevel.toLowerCase() == 'regular' ? 'blueClass' : 'purpleClass';
 
+  }
+
+  goToNextScreen() {
+    this.isFirstScreen = false;
+  } 
+
+  goToPreviousScreen() {
+    this.isFirstScreen = true;
   }
 
   updateSubscription(selectedPlan: any, index: number) {
