@@ -13,13 +13,13 @@
             <div class="col-6">
                 <div class="form-group">
                     <label for="name">Your Name</label>
-                    <input type="text" class="form-control" formControlName="name"/>
+                    <input type="text" class="form-control" formControlName="companyName"/>
                 </div>
             </div>
              <div class="col-6">
                 <div class="form-group">
                     <label for="name">EMail Id</label>
-                    <input type="text" class="form-control" formControlName="mail" disabled/>
+                    <input type="text" class="form-control" formControlName="email" disabled/>
                 </div>
             </div>
              <div class="col-6">
@@ -43,21 +43,42 @@
             <div class="col-12">
                 <div class="form-group">
                     <label for="name">Product & Service Categories</label>
-                    <input type="text" class="form-control" formControlName="products"/>
+                    <input type="text" class="form-control" formControlName="details"/>
                 </div>
             </div>
             <div class="col-12">
-                <div formArrayName="categoryDivisions" >
+                <div>
+                    <button style="float: right;" class="btn btn-blue" (click)="onEditCategory()" type="button">{{isEdit ? 'Save Category' : 'Edit Category'}}</button>
+                </div>
+
+                <div formArrayName="divisionCategories"  *ngIf="!isEdit">
                     <div *ngFor="let group of items.controls; let i = index" [formGroupName]="i" class="row">
                     
                          
                             <div class="col-6"  >
                                 <label class="form-label required">Division</label>
+                                <input type="text"  formControlName="division" placeholder="Division" disabled class="form-control" />
+                                
+                            </div>
+                            <div class="col-6"  >
+                                <label class="form-label required">Category</label>
+                               <input type="text"  formControlName="category" placeholder="category" disabled class="form-control" />
+                            </div>
+                    </div>
+                </div>
+                 <div formArrayName="divisionCategories"  *ngIf="isEdit">
+                    <div *ngFor="let group of items.controls; let i = index" [formGroupName]="i" class="row">
+                    
+                         
+                            <div class="col-6"  >
+                                <label class="form-label ">Division</label>
                                 <p-autoComplete  formControlName="division" showEmptyMessage="true"
                                 [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
                                     [suggestions]="filtered_divisionsList" panelInputClass="p-auto-panel-cls" [minLength]="1"
                                     [dropdown]="true"
                                     (completeMethod)="filterAutoCompleteData($event, 'divisionsList','filtered_divisionsList',   true)"
+                                      (onSelect)="onItemSelected($event, i)"
+
                                     >
                                             <ng-template let-segment pTemplate="item">
                                                 <div class="segment-item">
@@ -68,21 +89,10 @@
                             </div>
                             <div class="col-6"  >
                                 <label class="form-label required">Category</label>
-                                 <select class="form-control" name="se1" formControlName="category"> 
+                                 <select class="form-control" name="se1" formControlName="category">
+                                    <option disabled   value="">--Select--</option>
                                     <option *ngFor="let val of categoryList">{{val}}</option>
-                                </select>
-                                <!-- <p-autoComplete  formControlName="category" showEmptyMessage="true"
-                                [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
-                                    [suggestions]="filtered_categoryList" panelInputClass="p-auto-panel-cls" [minLength]="1"
-                                    [dropdown]="true"
-                                    (completeMethod)="filterAutoCompleteData($event, 'categoryList','filtered_categoryList',   true)"
-                                    >
-                                            <ng-template let-segment pTemplate="item">
-                                                <div class="segment-item">
-                                                    <div>{{segment}}</div>
-                                                </div>
-                                            </ng-template>
-                                </p-autoComplete> -->
+                                </select> 
                             </div>
                     </div>
                 </div>
@@ -92,29 +102,25 @@
                 <label style="font-weight: bold;">Branches Details:</label>
                 <div formArrayName="branches">
                     <div *ngFor="let address of branches.controls; let i = index" [formGroupName]="i" class="mb-3    mr-2 border p-3 row" [ngClass]="{'mt-3': i>0}">
-                            <div class="col-2">Branch Location</div>
-                            <div class="col-2">City</div>
+                            <div class="col-2">Branch Name</div> 
                             <div class="col-2">Contact Person</div>
-                            <div class="col-2">Mobile No.</div>
                             <div class="col-2">EmailId</div>
-                            <div class="col-2"></div>
+                            <div class="col-3">Address</div>
+                            <div class="col-3"></div> 
                             <div class="col-2"> 
-                                <input formControlName="location" class="form-control" />
+                                <input formControlName="branchName" class="form-control" placeholder="Branch Name" />
                             </div>
                             <div class="col-2"> 
-                                <input formControlName="city" class="form-control" />
+                                <input formControlName="contactPerson" class="form-control"  placeholder="Contact Person" />
                             </div>
                             <div class="col-2"> 
-                                <input formControlName="contactName" class="form-control" />
+                                <input formControlName="email" class="form-control"  placeholder="EmailId" />
                             </div>
-                            <div class="col-2"> 
-                                <input formControlName="mobileNumber" class="form-control" />
-                            </div>
-                            <div class="col-2"> 
-                                <input formControlName="EmailId" class="form-control" />
+                            <div class="col-3"> 
+                                <input formControlName="address" class="form-control"  placeholder="Address"/>
                             </div> 
-                            <div class="col-2">
-                                <button type="button" class="btn btn-secondary" (click)="addBranch()">Add 1+</button>
+                            <div class="col-3">
+                                <button type="button" class="btn btn-secondary" (click)="addBranch()">Add 1+ More</button>
                                 <button type="button" *ngIf="i >0" class="btn btn-danger" (click)="removeBranch(i)">Remove</button>
                             </div>
                        </div>
@@ -124,11 +130,11 @@
             
             <div class="col-12 mt-5 mb-5">
                  <div class="row">
-                    <div class="col-md-4" *ngFor="let card of subscriptionPlansList"
+                    <div class="col-md-4" *ngFor="let card of subscriptionPlansList; let i = index"
                     [ngClass]="getClassName(card)">
                     <div class="card mb-4 shadow-sm"> 
                         <div class="card-body">
-                        <div class="active-title" [ngClass]="card.analyticsLevel == selectedSubscription ? 'fade-in' : 'fade-out'">
+                        <div class="active-title" [ngClass]="isMatchedPlan(card.id)  ? 'fade-in' : 'fade-out'">
                            <i class="fa fa-check-circle-o "></i>  Selected</div>
                         <h5 class="card-title">{{ card.analyticsLevel }}</h5> 
                         <div class="list">
@@ -205,7 +211,8 @@
                         </div>
                            
                          <div class="col-12">
-                                <button class="btn btn-primary" style="width: 100%;border-color:#fff !important;" (click)="updateSubscription(card.analyticsLevel)"> {{selectedSubscription == card.analyticsLevel ?'Selected': 'Subscribe'}}</button>
+                                <button class="btn btn-primary" style="width: 100%;border-color:#fff !important;" 
+                                (click)="updateSubscription(card, i)"  type="button"> {{isMatchedPlan(card.id) ?'Selected': 'Subscribe'}}</button>
                             </div>
                         </div>
                     </div>
@@ -213,6 +220,10 @@
                     </div>
                 </div>
 
+            </div>
+            <div class="col-12">
+                <button type="button" class="btn btn-red" (click)="resetToOriginalState()">Reset To Previous Version</button>
+                <button type="submit" class="btn btn-blue">Update Profile</button>
             </div>
         </form>
         <!-- <div class="col-12">

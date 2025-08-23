@@ -33,6 +33,11 @@ export class VendorRegistrationService {
         return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.GET_VENDOR_BY_ID, data, {});
     }
 
+    getGMTSellerById(data): Observable<any> {
+        return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.GET_GMT_SELLER_BY_ID, data, {});
+    }
+    
+
     getUpdateOrgTc(data): Observable<any> {
         return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.GET_UPDATE_ORG_TC, data, {});
     }
@@ -45,6 +50,8 @@ export class VendorRegistrationService {
         // return this.http.post('http://104.154.48.179:8080/authprocucev/rest1/vendor/submitVendorRegistration',data)
         return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.EDIT_VENDOR, data, {});
     }
+
+    
 
     submitSelfVendorRegistration(data: any) {
 

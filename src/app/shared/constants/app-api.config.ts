@@ -55,6 +55,11 @@ export class AppApiConfig {
   public static GET_CLIENT_WITH_USER_LIST_CM2 = '/rest/gmt/getGmtBuyers';
   public static FORGOT_PASSWORD = '/partialvendor/forgotPassword';
   public static GET_VENDOR_BY_ID = '/rest/vendor/getVendorById';
+  public static GET_GMT_SELLER_BY_ID = '/rest/gmt/getOrgById';
+
+  //EDIT profile module
+  public static GET_SUBSCRIPTIONS_LIST = '/rest/gmt/getSubscriptionPlans';
+  public static UPDATE_SELLER_DATA = '/rest/users/updateSeller';
 
 
 

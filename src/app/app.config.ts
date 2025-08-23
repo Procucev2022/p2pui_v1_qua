@@ -39,11 +39,11 @@ export const SystemViewConfig = {
 export const GMT_SYSTEM_SCREENS_LIST ={
    'CategoryManager' :['/categorymgr/create-rfq', '/categorymgr/gmt-rqfs', '/categorymgr/client-gmt-rqfs'], // 3 Screens
    'CategoryManager2':['/categorymgr/gmt-rqfs', '/categorymgr/gmt-summary','/categorymgr/gmt-reg-clients','/categorymgr/client-gmt-rqfs'], // 4 Screens
-   'ClientInitiator':['/categorymgr/create-rfq', '/categorymgr/gmt-rfq-support','/categorymgr/gmt-rfq-faqs'], // 3 Screens
+   'ClientInitiator':['/categorymgr/create-rfq', '/categorymgr/gmt-rfq-support','/categorymgr/gmt-rfq-faqs', '/categorymgr/vendor-profile'], // 3 Screens
 
-   'Registration': ['/categorymgr/gmt-rqfs','/categorymgr/gmt-rfq-faqs'], // 2 Screens
-   'PartialVendor':['/categorymgr/gmt-rqfs','/categorymgr/gmt-rfq-faqs'],// 2 Screens
-   'Vendor': ['/categorymgr/gmt-rqfs','/categorymgr/gmt-rfq-faqs'],// 2 Screens
+   'Registration': ['/categorymgr/gmt-rqfs','/categorymgr/gmt-rfq-faqs', '/categorymgr/vendor-profile'], // 2 Screens
+   'PartialVendor':['/categorymgr/gmt-rqfs','/categorymgr/gmt-rfq-faqs', '/categorymgr/vendor-profile'],// 2 Screens
+   'Vendor': ['/categorymgr/gmt-rqfs','/categorymgr/gmt-rfq-faqs', '/categorymgr/vendor-profile'],// 2 Screens
 }
 
 export const BFS_SYSTEM_SCREEN_LIST ={
