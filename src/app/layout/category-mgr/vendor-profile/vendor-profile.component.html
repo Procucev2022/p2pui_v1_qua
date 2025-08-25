@@ -6,47 +6,67 @@
           <h2 class="text-center">My Profile</h2>
           <!-- <p><span class="dot"></span>{{itemList.length}} Total</p> -->
         </div> 
+         <div class="col-12"  >
+            <p-steps [model]="stepsList" styleClass="steps-custom" [activeIndex]="currentStep-1"></p-steps>
+        </div>
       </div>
     </div>
     <div  [hidden]="!isFirstScreen">
         <form class="row" (ngSubmit)="updateVendorForm()"  [formGroup]="vendorForm" novalidate>
             <div class="col-6">
-                <div class="form-group">
-                    <label for="name">Your Name</label>
+                <div class="form-group ">
+                    <label for="name" class="required"
+                    >Your Name</label>
                     <input type="text" class="form-control" formControlName="companyName"/>
                 </div>
             </div>
              <div class="col-6">
                 <div class="form-group">
-                    <label for="name">EMail Id</label>
+                    <label for="name" class="required">EMail Id</label>
                     <input type="text" class="form-control" formControlName="email" disabled/>
                 </div>
             </div>
              <div class="col-6">
                 <div class="form-group">
-                    <label for="name">Mobile Number</label>
+                    <label for="name" class="required">Mobile Number</label>
                     <input type="text" class="form-control" formControlName="organizationPhonenumber" disabled/>
                 </div>
             </div>
             <div class="col-6">
                 <div class="form-group">
                     <label for="name">GSTIN</label>
-                    <input type="text" class="form-control" formControlName="gstin"/>
+                    <input type="text" required id="gstin" class="form-control" name="gstin" formControlName="gstin"
+                            placeholder="GSTIN" />
+                        <div style="color: #fff"
+                            *ngIf="vendorForm?.controls?.gstin?.touched && vendorForm?.controls?.gstin?.errors?.invalidGstin">
+                            Invalid GSTIN format </div>
                 </div>
             </div>
             <div class="col-6">
-                <div class="form-group">
-                    <label for="name">Registered Office Address (CITY)</label>
+                <div class="form-group ">
+                    <label for="name" class="required">Registered Office Address (City)</label>
                     <textarea type="text" class="form-control" formControlName="city"></textarea>
+                </div>
+            </div>
+             <div class="col-6">
+                <div class="form-group required">
+                    <label for="name" class="required">ZipCode</label>
+                   <input type="text" required id="zipCode" class="form-control" name="zipCode"
+                            formControlName="zipCode" placeholder="ZipCode (6digits)" maxlength="6"
+                            (keypress)="numberOnly($event)" />
+                        <div
+                            *ngIf="(vendorForm.controls?.zipCode?.touched) && vendorForm.controls?.zipCode.status=='INVALID'">
+                            <div style="color: #fff">ZipCode (6digits) is required</div>
+                        </div>
                 </div>
             </div>
             <div class="col-12">
                 <div class="form-group">
                     <label for="name">Product & Service Categories</label>
-                    <input type="text" class="form-control" formControlName="details"/>
+                    <input type="text" class="form-control" formControlName="details" placeholder="Product & Service Categories seperated by ,"/>
                 </div>
             </div>
-            <div class="col-12"> 
+            <div class="col-12" *ngIf="isShowDivisions"> 
                  <div formArrayName="divisionCategories">
                     <div *ngFor="let group of items.controls; let i = index" [formGroupName]="i" class="row">
                             <div class="col-6"  >
@@ -67,15 +87,15 @@
 
                                 <select class="form-control" name="se1" formControlName="division"
                                   (change)="filterCategoryListByDivision($event, i)">
-                                    <option disabled   value="">--Select--</option>
-                                    <option *ngFor="let val of divisionFormList[i].divisionList">{{val}}</option>
+                                    <option     value="">--Select--</option>
+                                    <option *ngFor="let val of divisionFormList[i].divisionList" value="{{val}}">{{val}}</option>
                                 </select>
                             </div>
                             <div class="col-6"  >
-                                <label class="form-label required">Category</label>
+                                <label class="form-label  ">Category</label>
                                  <select class="form-control" name="se1" formControlName="category">
-                                    <option disabled   value="">--Select--</option>
-                                    <option *ngFor="let val of divisionFormList[i].categoryList">{{val}}</option>
+                                    <option     value="">--Select--</option>
+                                    <option *ngFor="let val of divisionFormList[i].categoryList" value="{{val}}">{{val}}</option>
                                 </select> 
                             </div>
                     </div>
@@ -113,9 +133,9 @@
             </div>
             
             
-            <div class="col-12">
-                <button type="button" class="btn btn-red" (click)="resetToOriginalState()">Reset To Previous Version</button>
+            <div class="col-12" style="display: flex; direction: rtl;">
                 <button type="button" class="btn btn-blue" (click)="goToNextScreen()">Next to Plans Selection Screen </button>
+                <button type="button" class="btn btn-red" (click)="resetToOriginalState()">Reset To Previous Version</button>
             </div>
         </form>
         <!-- <div class="col-12">
@@ -137,10 +157,10 @@
 <div class="col-12 mt-5 mb-5">
                  <div class="row">
                     <div class="col-md-4" *ngFor="let card of subscriptionPlansList; let i = index"
-                    [ngClass]="getClassName(card)">
+                    [ngClass]="getClassName(card)"> 
                     <div class="card mb-4 shadow-sm"> 
                         <div class="card-body">
-                        <div class="active-title" [ngClass]="isMatchedPlan(card.id)  ? 'fade-in' : 'fade-out'">
+                        <div class="active-title" [ngClass]="isMatchedPlan(card.id) ? 'fade-in' : 'fade-out'">
                            <i class="fa fa-check-circle-o "></i>  Selected</div>
                         <h5 class="card-title">{{ card.analyticsLevel }}</h5> 
                         <div class="list">
@@ -216,17 +236,20 @@
                             </ul>
                         </div>
                            
-                         <div class="col-12">
+                         <div class="col-12" >
                                 <button class="btn btn-primary" style="width: 100%;border-color:#fff !important;" 
-                                (click)="updateSubscription(card, i)"  type="button"> {{isMatchedPlan(card.id) ?'Selected': 'Subscribe'}}</button>
+                                (click)="updateSubscription(card)"  type="button"> {{isMatchedPlan(card.id) ?'Selected': 'Subscribe'}}</button>
                             </div>
                         </div>
-                    </div>
+                    </div> 
                     
                     </div>
-                </div>
-
+                </div> 
+            </div> 
+            <div class="col-12" style="display: flex; direction: rtl;">
+                
+                <button type="button" class="btn btn-blue" (click)="updateVendorForm()">Update My Data </button>
+                <button type="button" class="btn btn-blue" (click)="goToPreviousScreen()">Previous Screen</button>
             </div>
-             <button type="button" class="btn btn-blue" (click)="goToPreviousScreen()">Previous Screen</button>
     </div>
 </div>

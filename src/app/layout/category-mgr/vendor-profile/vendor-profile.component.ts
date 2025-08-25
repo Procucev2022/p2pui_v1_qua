@@ -39,7 +39,7 @@ export class VendorProfileComponent {
   };
   loggedUserRole: any;
   loggedUserDetails: any;
-  selectedSubscriptions: any = [];
+  selectedSubscription: any;
   selectedData: any[];
   rfqDataList: any[];
   cache_rfqDataList: any[];
@@ -49,6 +49,12 @@ export class VendorProfileComponent {
   filtered_categoryList: any = [];
   subscriptionPlansList = [];
   isEdit: boolean = false;
+  stepsList = [
+    { label: 'Basic Details' },
+    { label: 'Subscription Plan Details' },
+  ];
+
+  currentStep = 1;
   // [
 
   //   {
@@ -108,7 +114,8 @@ export class VendorProfileComponent {
   //     "industryInsights": true,
   //     "perRfqPrice": 300.0
   //   }];
-  divisionFormList:any =[]
+  divisionFormList: any = []
+  isShowDivisions: boolean;
   constructor(private vendorRegSer: VendorRegistrationService, private encryDecryService: EncryDecryService,
     private dialog: MatDialog,
     private rfqservice: RfqService,
@@ -122,12 +129,12 @@ export class VendorProfileComponent {
       this.getVendorById(this.loggedUserDetails.org.id)
     }
     this.buildVendorForm();
-   
+
     this.createRfqService.getSubscriptionsList().subscribe((res: any) => {
       this.subscriptionPlansList = res.data && res.data.plans ? res.data.plans : []
     });
 
-    for(let i=0; i< 5; i++){
+    for (let i = 0; i < 5; i++) {
       this.divisionFormList.push({
         selectedCategory: '',
         selectedDivision: '',
@@ -136,19 +143,19 @@ export class VendorProfileComponent {
         filtered_divisionList: [],
         filtered_categoryList: []
       });
-    } 
+    }
 
 
     this.createRfqService.getGMTDivisions().subscribe((res: any) => {
       this.divisionsList = res || [];
-      if( this.divisionsList.length > 0){
+      if (this.divisionsList.length > 0) {
         this.filtered_divisionsList = this.divisionsList;
-        this.divisionFormList.forEach((ele:any, index)=>{
+        this.divisionFormList.forEach((ele: any, index) => {
           ele.divisionList = this.divisionsList;
           ele.categoryList = [];
         })
-      } 
-      
+      }
+
     });
 
 
@@ -198,9 +205,6 @@ export class VendorProfileComponent {
 
   }
 
-  buildDivisionCategoryList(index, division) {
-
-  }
 
 
   getCategoryByDivision(division) {
@@ -211,19 +215,17 @@ export class VendorProfileComponent {
   }
   buildVendorForm() {
     this.vendorForm = this.fb.group({
-      companyName: new FormControl('', [Validators.required,]),
+      companyName: new FormControl({ value: '', disabled: true }, [Validators.required,]),
       organizationPhonenumber: new FormControl({ value: '', disabled: true }, [Validators.required]),
       email: new FormControl({ value: '', disabled: true }, [Validators.required, Validators.email]),
       pan: new FormControl(''),
       address1: new FormControl(''),
       address2: new FormControl(''),
-      city: new FormControl(''),
-      zipCode: new FormControl(''),
-      contactPerson: new FormControl(''),
+      city: new FormControl('', [Validators.required]),
       website: new FormControl(''),
       gstin: new FormControl('', [gstinValidator()]),
-      products: new FormControl('', [Validators.required]),
-      pinCode: new FormControl('', [Validators.required]),
+      details: new FormControl('', []),
+      zipCode: new FormControl('', [Validators.required]),
       divisionCategories: this.fb.array(this.createCategoryDivisionGroups(5)),
       branches: this.fb.array([this.createBranch()])
 
@@ -237,11 +239,19 @@ export class VendorProfileComponent {
   }
 
 
+  numberOnly(event): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
+  }
+
   onItemSelected(event, index) {
     const obj = { "division": event.target.value };
     this.createRfqService.getGMTCategoriesByDivision(obj).subscribe((res: any) => {
       this.categoryList = res || [];
-      if(this.categoryList.length > 0) {
+      if (this.categoryList.length > 0) {
         this.filtered_categoryList = this.categoryList;
         this.divisionFormList[index].filtered_categoryList = this.categoryList;
         this.divisionFormList[index].selectedDivision = event.value;
@@ -249,20 +259,6 @@ export class VendorProfileComponent {
         this.divisionFormList[index].categoryList = this.categoryList;
       }
     });
-    this.categoryList = [
-      "Agriculture Equipments",
-      "Conveyors",
-      "Diesel Gensets",
-      "Dumpers",
-      "Excavators",
-      "Fork Lifts",
-      "Hydraulic Press",
-      "Loaders",
-      "Material Handling Equipments",
-      "Panels",
-      "Plastic Moulding Machine",
-      "Tipper"
-    ]
     const formArray = this.vendorForm.get('divisionCategories') as FormArray;
     formArray.at(index).get('category')?.setValue('');
 
@@ -289,7 +285,7 @@ export class VendorProfileComponent {
 
   createCategoryDivisionGroup(): FormGroup {
     return this.fb.group({
-      category: ['' ],
+      category: [''],
       division: ['']
     });
   }
@@ -353,27 +349,12 @@ export class VendorProfileComponent {
   }
 
   bindData() {
-    // companyName: new FormControl('', [Validators.required,]),
-    // organizationPhonenumber: new FormControl({ value: '', disabled: true }, [Validators.required]),
-    // email: new FormControl({ value: '', disabled: true }, [Validators.required, Validators.email]),
-    // pan: new FormControl(''),
-    // address1: new FormControl(''),
-    // address2: new FormControl(''),
-    // city: new FormControl(''),
-    // zipCode: new FormControl(''),
-    // contactPerson: new FormControl(''),
-    // website: new FormControl(''),
-    // gstin: new FormControl('', [gstinValidator()]),
-    // products: new FormControl('', [Validators.required]),
-    // pinCode: new FormControl('', [Validators.required]),
-    // divisionCategories: this.fb.array(this.createCategoryDivisionGroups(5)),
-    // branch
     this.vendorForm.patchValue(this.vendorRegObj);
     if (this.vendorRegObj.branches) {
       const skillsArray = this.vendorForm.get('branches') as FormArray;
       skillsArray.clear(); // Clear existing controls if any
 
-      this.vendorRegObj.branches.forEach(skill => {
+      this.vendorRegObj.branches.forEach((skill: any) => {
         skillsArray.push(
           this.fb.group({
             branchName: [skill.branchName],
@@ -385,25 +366,23 @@ export class VendorProfileComponent {
       });
 
     }
-    const skillsArrays = this.vendorForm.get('branches') as FormArray;
-    skillsArrays.clear();
-    skillsArrays.push(this.createBranch());
 
 
-    if (this.vendorRegObj.branches) {
-      const divisionCategories = [{ category: 'Fire Extinguishers', division: 'Occupational Health and Safety', email: 'abc@gmail.com', address: 'HMT' },
-      { branchName: 'bng', category: 'Fire Extinguishers', division: 'Occupational Health and Safety', address: 'HMT' }
-      ]
-      this.vendorRegObj.divisionCategories = divisionCategories;
+
+    // const divisionCategories = [{ category: 'Fire Extinguishers', division: 'Occupational Health and Safety', email: 'abc@gmail.com', address: 'HMT' },
+    // { branchName: 'bng', category: 'Fire Extinguishers', division: 'Occupational Health and Safety', address: 'HMT' }
+    // ]
+    // this.vendorRegObj.divisionCategories = divisionCategories;
+    if (this.vendorRegObj.divisionCategories) {
+
       const divisionArray = this.vendorForm.get('divisionCategories') as FormArray;
-      divisionArray.clear(); // Clear existing controls if any
-      //  category: ['', Validators.required],
-      //       division: 
-      this.vendorRegObj.divisionCategories.forEach((skill: any) => {
+      divisionArray.clear();
+      this.vendorRegObj.divisionCategories.forEach((skill: any, index: any) => {
+        this.getCategoryListAndBindForInitialValue(skill.division, index);
         divisionArray.push(
           this.fb.group({
-            category: [{ value: skill.category, disabled: true }],
-            division: [{ value: skill.division, disabled: true }],
+            category: [skill.category],
+            division: [skill.division],
           })
         );
       });
@@ -415,6 +394,11 @@ export class VendorProfileComponent {
       }
 
     }
+    this.selectedSubscription = this.vendorRegObj.subscriptionPlan;
+
+    setTimeout(() => {
+      this.isShowDivisions = true;
+    }, 500);
 
     // this.bindGeneralModelData();
   }
@@ -433,7 +417,7 @@ export class VendorProfileComponent {
         control.get('contactPerson').enable();
         control.get('email').enable();
         control.get('address').enable();
-      }); 
+      });
     } else {
       const divisionArray = this.vendorForm.get('divisionCategories') as FormArray;
       divisionArray.controls.forEach(control => {
@@ -467,12 +451,12 @@ export class VendorProfileComponent {
 
 
 
-  filterAutoCompleteData(event, inputArrayName, isStringType, index) { 
+  filterAutoCompleteData(event, inputArrayName, isStringType, index) {
     const query = isStringType ? event.query.toLowerCase() : event.query;
 
-  
-    if(inputArrayName == 'divisionsList'){
-        const filtered_divisionList = this.divisionFormList[index].divisionList.filter(ele => ele != null && (ele.toLowerCase().includes(query)));
+
+    if (inputArrayName == 'divisionsList') {
+      const filtered_divisionList = this.divisionFormList[index].divisionList.filter(ele => ele != null && (ele.toLowerCase().includes(query)));
 
       this.divisionFormList[index].filtered_divisionList = filtered_divisionList;
     }
@@ -482,11 +466,23 @@ export class VendorProfileComponent {
     const obj = { "division": event.target.value };
     this.createRfqService.getGMTCategoriesByDivision(obj).subscribe((res: any) => {
       this.categoryList = res || [];
-      if(this.categoryList.length > 0) {
+      if (this.categoryList.length > 0) {
         this.filtered_categoryList = this.categoryList;
         this.divisionFormList[index].filtered_categoryList = this.categoryList;
         this.divisionFormList[index].selectedDivision = event.value;
         this.divisionFormList[index].selectedCategory = '';
+        this.divisionFormList[index].categoryList = this.categoryList;
+      }
+    });
+  }
+
+  getCategoryListAndBindForInitialValue(division, index) {
+    const obj = { "division": division };
+    this.createRfqService.getGMTCategoriesByDivision(obj).subscribe((res: any) => {
+      this.categoryList = res || [];
+      if (this.categoryList.length > 0) {
+        this.filtered_categoryList = this.categoryList;
+        this.divisionFormList[index].filtered_categoryList = this.categoryList;
         this.divisionFormList[index].categoryList = this.categoryList;
       }
     });
@@ -500,47 +496,62 @@ export class VendorProfileComponent {
 
   goToNextScreen() {
     this.isFirstScreen = false;
-  } 
+    this.currentStep = 2;
+  }
 
   goToPreviousScreen() {
     this.isFirstScreen = true;
+    this.currentStep = 1;
   }
 
-  updateSubscription(selectedPlan: any, index: number) {
-    const findIndex = this.selectedSubscriptions.map(plan => plan.id).findIndex((planId: any) => planId == selectedPlan.id);
-    if (findIndex < 0) {
-      this.selectedSubscriptions.push(selectedPlan);
-    } else {
-      this.selectedSubscriptions = this.selectedSubscriptions.filter((plan: any) => plan.id != selectedPlan.id)
+  updateSubscription(selectedPlan: any) {
+    if (this.selectedSubscription && selectedPlan.id == this.selectedSubscription.id) {
+      this.selectedSubscription = '';
+      return;
     }
-
+    this.selectedSubscription = selectedPlan;
   }
 
 
   isMatchedPlan(id: string) {
-    const findIndex = this.selectedSubscriptions.map(plan => plan.id).findIndex((planId: any) => planId == id);
-    return findIndex < 0 ? false : true;
+    return this.selectedSubscription && this.selectedSubscription.id === id ? true : false;
   }
 
   resetToOriginalState() {
     this.vendorForm.reset();
+    this.bindData();
+    this.isEdit = false;
+    this.isFirstScreen = true;
+    this.currentStep = 1;
 
   }
 
 
   updateVendorForm() {
     // if (this.vendorForm.valid) {
-      const obj = this.vendorForm.getRawValue();
-      obj.id = this.vendorRegObj.id;
-      obj.subscriptionPlans = this.selectedSubscriptions;
-      console.log('obj', obj)
-      this.createRfqService.updateSellerData(obj).subscribe((res: any) => {
-        this.toastrService.success('Vendor Updated Successfully', 'Success');
-        this.getVendorById(this.loggedUserDetails.org.id)
-        this.isEdit = false;
-      }, (error) => {
-        this.toastrService.error('Error while updating vendor', 'Error');
-      })
+    if (!this.selectedSubscription) {
+      this.toastrService.error('Please select subscription plan', 'Error');
+      return;
+    }
+    if (this.vendorForm.invalid) {
+      this.toastrService.error('Please fill all required fields', 'Error');
+      return;
+    }
+    const obj = this.vendorForm.getRawValue();
+    obj.id = this.vendorRegObj.id;
+    obj.subscriptionPlan = this.selectedSubscription ? { id: this.selectedSubscription.id } : '';
+    console.log('obj', obj)
+    obj.divisionCategories = obj.divisionCategories.filter(ele => ele.category && ele.division);
+    obj.branches = obj.branches.filter(ele => ele.branchName && ele.contactPerson && ele.email && ele.address);
+    // obj.branches = obj.branches.filter(ele => ele.branch
+    this.createRfqService.updateSellerData(obj).subscribe((res: any) => {
+      this.toastrService.success('Vendor Updated Successfully', 'Success');
+      this.getVendorById(this.loggedUserDetails.org.id)
+      this.isEdit = false;
+      this.isFirstScreen = true;
+    }, (error) => {
+      this.toastrService.error('Error while updating vendor', 'Error');
+    })
     // } else {
     //   this.toastrService.error('Please fill all required fields', 'Error');
     // }
