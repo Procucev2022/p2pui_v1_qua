@@ -585,7 +585,7 @@ export class VendorProfileComponent {
     }
     setTimeout(() => {
       this.divisionFormList[i].categoryList = categoryList;
-    }, 100);
+    }, 10);
   }
 }
 
