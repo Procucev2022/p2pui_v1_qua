@@ -17,6 +17,7 @@ export class VendorProfileSubscriptionsComponent {
   subscriptionPlansList = [];
   loggedUserDetails: any;
   vendorRegObj: any;
+  currentPlan: any;
 
   constructor(private vendorRegSer: VendorRegistrationService, private encryDecryService: EncryDecryService,
     private rfqservice: RfqService,
@@ -25,9 +26,9 @@ export class VendorProfileSubscriptionsComponent {
   ) {
     const temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
     this.loggedUserDetails = temp.details;
-       this.createRfqService.getSubscriptionsList().subscribe((res: any) => {
-        this.subscriptionPlansList = res.data && res.data.plans ? res.data.plans : []
-      });
+    this.createRfqService.getSubscriptionsList().subscribe((res: any) => {
+      this.subscriptionPlansList = res.data && res.data.plans ? res.data.plans : []
+    });
 
     if (this.loggedUserDetails) {
       this.getVendorById(this.loggedUserDetails.org.id)
@@ -35,14 +36,14 @@ export class VendorProfileSubscriptionsComponent {
 
   }
 
-   getClassName(subData: any) {
+  getClassName(subData: any) {
     return subData.analyticsLevel.toLowerCase() == 'basic' ?
       'yellowClass' : subData.analyticsLevel.toLowerCase() == 'regular' ? 'blueClass' : 'purpleClass';
 
   }
 
 
-    isMatchedPlan(id: string) {
+  isMatchedPlan(id: string) {
     return this.selectedSubscription && this.selectedSubscription.id === id ? true : false;
   }
   getVendorById(id) {
@@ -51,13 +52,15 @@ export class VendorProfileSubscriptionsComponent {
       this.vendorRegObj = response;
       console.log('response', response)
       this.selectedSubscription = this.vendorRegObj.subscriptionPlan;
+
+      this.currentPlan = this.vendorRegObj.subscriptionPlan.analyticsLevel;
     }, (error) => {
 
     });
   }
 
   updateVendorForm() {
-    
+
     // if (this.vendorForm.valid) {
     if (!this.selectedSubscription) {
       this.toastrService.error('Please select subscription plan', 'Error');
