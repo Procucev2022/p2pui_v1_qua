@@ -136,7 +136,7 @@ export class VendorProfileComponent {
 
     for (let i = 0; i < 5; i++) {
       this.divisionFormList.push({
-        selectedCategory: '',
+        selectedCategory: [],
         selectedDivision: '',
         divisionList: [],
         categoryList: [],
@@ -255,7 +255,7 @@ export class VendorProfileComponent {
         this.filtered_categoryList = this.categoryList;
         this.divisionFormList[index].filtered_categoryList = this.categoryList;
         this.divisionFormList[index].selectedDivision = event.value;
-        this.divisionFormList[index].selectedCategory = '';
+        this.divisionFormList[index].selectedCategory = [];
         this.divisionFormList[index].categoryList = this.categoryList;
       }
     });
@@ -378,7 +378,7 @@ export class VendorProfileComponent {
       const divisionArray = this.vendorForm.get('divisionCategories') as FormArray;
       divisionArray.clear();
       this.vendorRegObj.divisionCategories.forEach((skill: any, index: any) => {
-        this.getCategoryListAndBindForInitialValue(skill.division, index);
+        this.getCategoryListAndBindForInitialValue(skill.division, index, skill.category);
         divisionArray.push(
           this.fb.group({
             category: [skill.category],
@@ -470,13 +470,13 @@ export class VendorProfileComponent {
         this.filtered_categoryList = this.categoryList;
         this.divisionFormList[index].filtered_categoryList = this.categoryList;
         this.divisionFormList[index].selectedDivision = event.value;
-        this.divisionFormList[index].selectedCategory = '';
+        this.divisionFormList[index].selectedCategory = [];
         this.divisionFormList[index].categoryList = this.categoryList;
       }
     });
   }
 
-  getCategoryListAndBindForInitialValue(division, index) {
+  getCategoryListAndBindForInitialValue(division, index, category) {
     const obj = { "division": division };
     this.createRfqService.getGMTCategoriesByDivision(obj).subscribe((res: any) => {
       this.categoryList = res || [];
@@ -484,6 +484,7 @@ export class VendorProfileComponent {
         this.filtered_categoryList = this.categoryList;
         this.divisionFormList[index].filtered_categoryList = this.categoryList;
         this.divisionFormList[index].categoryList = this.categoryList;
+        this.divisionFormList[index].selectedCategory = [category];
       }
     });
   }
@@ -512,6 +513,9 @@ export class VendorProfileComponent {
     this.selectedSubscription = selectedPlan;
   }
 
+  isMatchedCategory(index, val: string) {
+    return this.divisionFormList[index].selectedCategory && this.divisionFormList[index].selectedCategory.indexOf(val) > -1;
+  }
 
   isMatchedPlan(id: string) {
     return this.selectedSubscription && this.selectedSubscription.id === id ? true : false;
@@ -556,6 +560,32 @@ export class VendorProfileComponent {
     //   this.toastrService.error('Please fill all required fields', 'Error');
     // }
 
+  }
+
+  isCategorySelected(i, val){
+    return false //this.divisionFormList[i].selectedCategory && this.divisionFormList[i].selectedCategory.indexOf(val) > -1;
+  }
+
+  onCategoryChange(event, i){
+    const value = event.target.value;
+    const categoryList = this.divisionFormList[i].categoryList;
+    this.divisionFormList[i].categoryList = []
+    if (event.target.checked) {
+      const index = this.divisionFormList[i].selectedCategory ? this.divisionFormList[i].selectedCategory.indexOf(value)  : -1;
+      if(index > -1){
+        this.divisionFormList[i].selectedCategory.splice(index, 1);
+      }else{
+        this.divisionFormList[i].selectedCategory.push(value);
+      }
+    } else {
+     const index = this.divisionFormList[i].selectedCategory ? this.divisionFormList[i].selectedCategory.indexOf(value)  : -1;
+      if(index > -1){
+        this.divisionFormList[i].selectedCategory.splice(index, 1);
+      }
+    }
+    setTimeout(() => {
+      this.divisionFormList[i].categoryList = categoryList;
+    }, 100);
   }
 }
 

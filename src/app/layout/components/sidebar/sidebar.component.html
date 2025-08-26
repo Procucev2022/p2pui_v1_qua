@@ -589,6 +589,15 @@
                             <span>My Profile</span>
                         </a>
                         </li>
+                         <li *ngIf="loggedUserDetails?.role.roleName ==    'Vendor' || loggedUserDetails?.role.roleName ==    'ClientInitiator' || 
+                        loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor'">
+                            <a class="list-group-item" [routerLink]="['/categorymgr/vendor-profile-subscriptions']"
+                            [routerLinkActive]="['router-link-active']">
+                            <i class="fa fa-user"></i> &nbsp;
+                            <span>My Subscripion Plan</span>
+                        </a>
+                        </li>
+                        
                         <li *ngIf="loggedUserDetails?.role.roleName ==    'Vendor' || loggedUserDetails?.role.roleName ==    'ClientInitiator' || loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor'">
                             <a class="list-group-item" [routerLink]="['/categorymgr/gmt-rfq-faqs']"
                             [routerLinkActive]="['router-link-active']">

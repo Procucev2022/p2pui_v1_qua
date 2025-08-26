@@ -43,6 +43,7 @@ import { FaqsDocumentComponent } from './faqs-document/faqs-document.component';
 import { CapexAuctionsComponent } from './capex-auctions/capex-auctions.component';
 import { CapexCatMgrPostAuctionComparComponent } from 'src/app/shared/modules/common-share/components/capex-cat-mgr-post-auction-compar/capex-cat-mgr-post-auction-compar.component';
 import { VendorProfileComponent } from './vendor-profile/vendor-profile.component';
+import { VendorProfileSubscriptionsComponent } from './vendor-profile-subscriptions/vendor-profile-subscriptions.component';
 
 
 
@@ -91,7 +92,8 @@ import { VendorProfileComponent } from './vendor-profile/vendor-profile.componen
         FaqsDocumentComponent,
         CapexAuctionsComponent,
         CapexCatMgrPostAuctionComparComponent,
-        VendorProfileComponent
+        VendorProfileComponent,
+        VendorProfileSubscriptionsComponent
     ],
     exports:[ ],
     // entryComponents: [CatMgrVendorSearchComponent]

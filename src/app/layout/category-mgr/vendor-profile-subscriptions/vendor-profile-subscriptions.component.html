@@ -1,0 +1,107 @@
+<div class="container-fluid">
+    <div class="col-12 mt-5 mb-5">
+        <div class="row">
+            <div class="col-md-4" *ngFor="let card of subscriptionPlansList; let i = index"
+                [ngClass]="getClassName(card)">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-body">
+                        <div class="active-title" [ngClass]="isMatchedPlan(card.id) ? 'fade-in' : 'fade-out'">
+                            <i class="fa fa-check-circle-o "></i> Selected
+                        </div>
+                        <h5 class="card-title">{{ card.analyticsLevel }}</h5>
+                        <div class="list">
+                            <ul>
+                                <li>
+                                    <span>
+                                        <span class="label-text">Buyer Visibility </span>
+                                        <span class="label-vakue">{{card.buyerVisibility}}
+                                        </span>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span>
+                                        <span class="label-text">RFQ Clarification</span>
+                                        <span class="label-vakue">{{card.rfqClarification ? 'Yes': 'No'}}
+                                            <i class="fa"
+                                                [ngClass]=" card.rfqClarification ? 'fa-check-circle-o': ' fa-times-circle'"></i></span>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span>
+                                        <span class="label-text">RFQ Expiry Alert</span>
+                                        <span class="label-vakue">{{card.rfqExpiryAlert? 'Yes': 'No'}}
+                                            <i class="fa"
+                                                [ngClass]="card.rfqExpiryAlert ? 'fa-check-circle-o': ' fa-times-circle'"></i>
+                                        </span>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span>
+                                        <span class="label-text">Accumulated RFQ Status</span>
+                                        <span class="label-vakue">{{card.accumulatedRfqStatus? 'Yes': 'No'}}
+                                            <i class="fa"
+                                                [ngClass]=" card.accumulatedRfqStatus ? 'fa-check-circle-o': ' fa-times-circle'"></i>
+                                        </span>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span>
+                                        <span class="label-text">Automated Quotation</span>
+                                        <span class="label-vakue">{{card.automatedQuotation? 'Yes': 'No'}}
+                                            <i class="fa"
+                                                [ngClass]=" card.automatedQuotation ? 'fa-check-circle-o': ' fa-times-circle'"></i>
+                                        </span>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span>
+                                        <span class="label-text">Catalogue Creation</span>
+                                        <span class="label-vakue">{{card.catalogueCreation? 'Yes': 'No'}}
+                                            <i class="fa"
+                                                [ngClass]=" card.catalogueCreation ? 'fa-check-circle-o': ' fa-times-circle'"></i>
+                                        </span>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span>
+                                        <span class="label-text">Dedicated Support</span>
+                                        <span class="label-vakue">{{card.dedicatedSupport? 'Yes': 'No'}}
+                                            <i class="fa"
+                                                [ngClass]=" card.dedicatedSupport ? 'fa-check-circle-o': ' fa-times-circle'"></i>
+                                        </span>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span>
+                                        <span class="label-text">Industry Insights</span>
+                                        <span class="label-vakue">{{card.industryInsights? 'Yes': 'No'}}
+                                            <i class="fa"
+                                                [ngClass]=" card.industryInsights ? 'fa-check-circle-o': ' fa-times-circle'"></i>
+                                        </span>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span>
+                                        <span class="label-text">Per RFQ Price</span>
+                                        <span class="label-vakue">{{card.perRfqPrice | currency: 'INR'}}</span>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="col-12">
+                            <button class="btn btn-primary" style="width: 100%;border-color:#fff !important;"
+                                (click)="updateSubscription(card)" type="button"> {{isMatchedPlan(card.id) ?'Selected':
+                                'Subscribe'}}</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-12" style="display: flex; direction: rtl;">
+
+        <button type="button" class="btn btn-blue" (click)="updateVendorForm()">Update My Plan </button>
+    </div>
+</div>

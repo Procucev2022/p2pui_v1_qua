@@ -24,6 +24,7 @@ import { CapexAuctionsComponent } from './capex-auctions/capex-auctions.componen
 import { CapexCatMgrPostAuctionComparComponent } from 'src/app/shared/modules/common-share/components/capex-cat-mgr-post-auction-compar/capex-cat-mgr-post-auction-compar.component';
 import { RouterModule, Routes } from '@angular/router';
 import { VendorProfileComponent } from './vendor-profile/vendor-profile.component';
+import { VendorProfileSubscriptionsComponent } from './vendor-profile-subscriptions/vendor-profile-subscriptions.component';
 const routes: Routes = [
     { path: '', redirectTo: 'procurequests', pathMatch: 'prefix' },
     { path: 'dashboard', component: CatMgrDashboardComponent },
@@ -50,7 +51,8 @@ const routes: Routes = [
     {path: 'gmt-reg-clients', component: CatMgrGmtRegisterClientsComponent},
     {path: 'gmt-rfq-support', component: RfqSupportQueryComponent},
     {path: 'vendor-profile', component: VendorProfileComponent},
-    {path: 'gmt-rfq-faqs', component: FaqsDocumentComponent}
+    {path: 'gmt-rfq-faqs', component: FaqsDocumentComponent},
+    {path: 'vendor-profile-subscriptions', component: VendorProfileSubscriptionsComponent}
 ];
 @NgModule({
     imports: [RouterModule.forChild(routes)],
