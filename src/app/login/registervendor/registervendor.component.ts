@@ -77,7 +77,7 @@ visible: boolean;
             console.log('the form is ');
             const requestObject = {
                 'companyName': formValue.companyName,
-                'phoneNumber': formValue.phoneNumber,
+                'organizationPhonenumber': formValue.phoneNumber,
                 'email': formValue.mail,
                 'gstin': formValue.gstin,
                 'address1': formValue.address,

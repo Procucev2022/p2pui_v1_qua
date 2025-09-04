@@ -469,7 +469,7 @@ export class VendorProfileComponent {
       if (this.categoryList.length > 0) {
         this.filtered_categoryList = this.categoryList;
         this.divisionFormList[index].filtered_categoryList = this.categoryList;
-        this.divisionFormList[index].selectedDivision = event.value;
+        this.divisionFormList[index].selectedDivision = event.target.value;
         this.divisionFormList[index].selectedCategory = [];
         this.divisionFormList[index].categoryList = this.categoryList;
       }
