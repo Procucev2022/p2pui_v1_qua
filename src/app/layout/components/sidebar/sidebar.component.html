@@ -560,6 +560,13 @@
                             <span>RFQ Summary</span>
                         </a>
                         </li>
+                          <li *ngIf="  loggedUserDetails?.role.roleName == 'CategoryManager'">
+                            <a class="list-group-item" [routerLink]="['/categorymgr/vendor-summary']"
+                            [routerLinkActive]="['router-link-active']">
+                            <i class="fa fa-user"></i> &nbsp;
+                            <span>Vendor Summary</span>
+                        </a>
+                        </li>
                         <li *ngIf=" loggedUserDetails?.role.roleName == 'CategoryManager2'">
                             <a class="list-group-item" [routerLink]="['/categorymgr/gmt-reg-clients']"
                             [routerLinkActive]="['router-link-active']">

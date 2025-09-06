@@ -59,6 +59,10 @@ export class RfqService {
         return this.http.get(AppApiConfig.apiEndpoint + AppApiConfig.FETCH_ALL_RFQS_BY_GMT_CATEGORYMANAGER, {})
     }
 
+    getAllRFQsSummaryByCategory() {
+        return this.http.get(AppApiConfig.apiEndpoint + AppApiConfig.CAT_MGR_VENDOR_SUMMARY, {})
+    } 
+    
     getAllClientRFQsByGMTForCMandCM2() {
         return this.http.get(AppApiConfig.apiEndpoint + AppApiConfig.FETCH_ALL_CLIENT_RFQS_BY_GMT_CATEGORYMANAGER, {})
     }

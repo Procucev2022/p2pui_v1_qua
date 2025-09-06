@@ -60,6 +60,9 @@ export class AppApiConfig {
   //EDIT profile module
   public static GET_SUBSCRIPTIONS_LIST = '/rest/gmt/getSubscriptionPlans';
   public static UPDATE_SELLER_DATA = '/rest/users/updateSeller';
+  
+
+  public static CAT_MGR_VENDOR_SUMMARY = '/rest/users/vendorSummary';
 
 
 
