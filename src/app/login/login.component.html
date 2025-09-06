@@ -1,4 +1,20 @@
 <div class="login-page row" [@routerTransition]>
+    <div class="col-md-12 row">
+         <div class="col-6" style=" margin-top:15px;padding-left:20px ; text-align:left;">
+              <label><span style="font-size: 24px;color: #fffbff;">
+                      For Buyer
+                      <span class="reg-text">Start Registration - <a [routerLink]="['/login/reg-client']"> <span
+                              class="blink testing" style="color: #CDDC39;font-weight: bold;">Click Here</span></a> </span></span>
+              </label>
+          </div>
+          <div class="col-6" style=" margin-top:15px;padding-right:20px ; text-align:right;">
+              <label><span style="font-size: 24px;color: #fffbff;">
+                      For Seller
+                      <span class="reg-text">Start Registration - <a [routerLink]="['registervendor']"> <span
+                              class="blink testing" style="color: #CDDC39;font-weight: bold;">Click Here</span></a> </span></span>
+              </label>
+          </div>
+    </div>
     <!-- <img class="bg-img" src="assets/images/new/login-bg.svg" [ngClass]="{'class': true}" /> -->
   <!-- <div class="col-md-8 left-section curved-line">
       <img src="/assets/images/Graphic_branding.svg" width="350">
@@ -34,13 +50,7 @@
 
   <div class="col-md-3  col-sm-12"  >
       <div class="row" style="margin-bottom: 0px;">
-          <div class="col-12" style=" margin-top:15px;padding-left:20px ; text-align:left;">
-              <label><span style="font-size: 20px;color: #fffbff;">
-                      For Buyer
-                      <span class="reg-text">Start Registration - <a [routerLink]="['/login/reg-client']"> <span
-                              class="blink testing" style="color: #CDDC39;font-weight: bold;">Click Here</span></a> </span></span>
-              </label>
-          </div>
+         
           <div class="col-md-12">
             <div class="gmt-box">
                 <img src="assets/images/new/GMT.png" />
@@ -67,11 +77,11 @@
     <div class="row right-section m-4">
           <div class="col-md-12  col-xs -12 login-form row">
                 <div class="qua-box">
-<img class="qua-cls" src="assets/images/new/qua-img.png" width="130" height="130" />
+<img class="qua-cls" src="assets/images/new/qua.png" width="130" height="130" />
                 </div>
                 
                 <div class="col-12">
-                  <img src="assets/images/Procucev_Logo.svg" width="250px" class="" style="width: 80%;" />
+                  <img src="assets/images/new/By.png" width="250px" height="140" class="" style="width: 80%;" />
                   <p style="    color: #000;
     font-size: 1.5rem;
     font-weight: 600;">Login to access your account</p>
@@ -166,13 +176,7 @@
   </div>
   <div class="col-md-3 col-sm-12">
     <div class="row">
-        <div class="col-12" style=" margin-top:15px;padding-right:20px ; text-align:right;">
-              <label><span style="font-size: 20px;color: #fffbff;">
-                      For Seller
-                      <span class="reg-text">Start Registration - <a [routerLink]="['registervendor']"> <span
-                              class="blink testing" style="color: #CDDC39;font-weight: bold;">Click Here</span></a> </span></span>
-              </label>
-          </div>
+        
           <div class="col-md-12">
             <div class="gmt-box">
                 <img src="assets/images/new/BFS_w.png" class="card-img-top" alt="assets/images/new/BFS_w.png">
@@ -191,5 +195,8 @@
           </div>
     </div>
 
+  </div>
+  <div class="col-12 web-link ">
+    <p class="text-center">For more information about our services/offerings - Visit : <a class="text-primary" target="_blank" href="https://www.procucev.com">www.procucev.com</a></p>
   </div>
 </div>

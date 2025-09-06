@@ -84,7 +84,7 @@ img.bg-img {
   align-items: center;
   background: #fff;
   width: 65%;
-  margin-top: 19% !important;
+  margin-top: 0% !important;
   border-radius: 10%;
   min-height: 633px;
 
@@ -143,7 +143,7 @@ small {
 
 .blink {
   animation: blink 1s infinite;
-  font-size: 15px;
+  font-size: 24px;
 }
 
 @keyframes blink {
@@ -235,7 +235,7 @@ small {
   justify-content: space-between;
 
   .btn {
-   width:  46% !important;
+    width: 46% !important;
     margin-bottom: 2rem;
   }
 }
@@ -470,7 +470,7 @@ small {
 }
 
 .reg-text {
-  font-size: 15px;
+  font-size: 24px;
 
 }
 
@@ -548,7 +548,7 @@ button [type="reset"] {
   padding: 2rem;
   position: relative;
   height: 516px;
-  margin-top: 176px; 
+  margin-top: 176px;
   border-radius: 10%;
 
   img {
@@ -572,15 +572,31 @@ button [type="reset"] {
   }
 }
 
-.qua-box{
-    position: absolute;
-    top: -30%;
-    border-radius: 50%;
-    border: 3px solid;
-    width: 150px;
-    background: #fff;
+.qua-box {
+  position: absolute;
+  top: -26%; 
+  border-radius: 50%;
+  border: 3px solid;
+  width: 150px;
+  background: #fff;
 }
 
 img.qua-cls {
-    border-radius: 45% 45% 0 0;
+  border-radius: 45% 45% 0 0;
+}
+
+.web-link{
+  text-align: center !important;
+    font-weight: bold;
+    font-size: 24px;
+    display: flex ;
+    align-self: self-end;
+}
+
+.text-center{
+  text-align: center !important;
+    width: 100%;
+    a{
+      color: yellow !important;
+    }
 }
