@@ -140,7 +140,10 @@ export class ClientRegisterComponent implements OnInit {
                 } else {
                     this.toaster.error(res.message, 'Failed');
                 }
-            })
+            },
+                (error) => {
+                    this.toaster.error('OTP Verification Failed', 'Failed');    
+                });
         } else {
             this.toaster.warning("Please Enter Company name,  EmailId & Mobile Number, OTPs ", 'Warning');
         }
