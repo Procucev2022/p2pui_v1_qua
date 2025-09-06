@@ -66,23 +66,15 @@ export class PasswordChangeComponent implements OnInit {
         'newpassword': this.passwdForm.value.newPwd
         };
       this.authService.updatePassword(obj).subscribe((response) => {
-        localStorage.setItem('isLoggedin', 'true');
-        // this.router.navigate(['/login'], {queryParams: { regId: localStorage.getItem('regId')} });
-        this.authService.getAccessToken({'userName': localStorage.getItem('loggedUser'), 'userPassword': this.passwdForm.value.newPwd}).pipe(first()).subscribe(data => {
-          console.log(data);
-          localStorage.setItem('loggedUser', localStorage.getItem('loggedUser'));
-          localStorage.setItem('at', data.access_token);
-          localStorage.setItem('rt', data.refresh_token);
-          localStorage.setItem('et', data.expires_in);
-          if (data['access_token']) {
-              this.getLoggerUserData();
-          }
 
-        }, (error) => {
-            // this.toastrService.error(error.error_description, 'Failed');
-            this.toastrService.warning('Password updated successfully, Login failed, please try again!!!', 'Failed');
-            this.router.navigate(['/login'], {queryParams: { regId: localStorage.getItem('regId')} });
-        });
+        if(response.status && response.status.toLowerCase() === 'success'){
+          this.toastrService.success('Password updated successfully, You will be redirected to login page shortly.', 'Success');
+           setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000);
+        } else {
+          this.toastrService.error(response.message, 'Failed');
+        }
 
       }, (error) => {
         this.toastrService.error('Password did not updated successfully, please try again!!!', 'Failed');

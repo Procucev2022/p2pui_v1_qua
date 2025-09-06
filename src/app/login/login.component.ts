@@ -203,6 +203,8 @@ export class LoginComponent implements OnInit {
         } else if (data && data.methodType == 'validate') {
 
           this.toastService.error(data.message, 'Failed');
+        }else{
+          this.toastService.error(data.message, 'Failed');
         }
       } else if (data && data.status == 'success') {
         if (data.methodType == 'otp') {

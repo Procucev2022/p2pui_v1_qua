@@ -50,7 +50,7 @@ const routes: Routes = [
     {path: 'client-gmt-rqfs', component: CatMgrClientGmtRfqsComponent},
     {path: 'gmt-reg-clients', component: CatMgrGmtRegisterClientsComponent},
     {path: 'gmt-rfq-support', component: RfqSupportQueryComponent},
-    {path: 'vendor-profile', component: VendorProfileComponent},
+    {path: 'my-profile', component: VendorProfileComponent},
     {path: 'gmt-rfq-faqs', component: FaqsDocumentComponent},
     {path: 'vendor-profile-subscriptions', component: VendorProfileSubscriptionsComponent}
 ];

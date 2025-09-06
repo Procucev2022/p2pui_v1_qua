@@ -533,10 +533,7 @@ export class VendorProfileComponent {
 
   updateVendorForm() {
     // if (this.vendorForm.valid) {
-    if (!this.selectedSubscription) {
-      this.toastrService.error('Please select subscription plan', 'Error');
-      return;
-    }
+     
     if (this.vendorForm.invalid) {
       this.toastrService.error('Please fill all required fields', 'Error');
       return;
