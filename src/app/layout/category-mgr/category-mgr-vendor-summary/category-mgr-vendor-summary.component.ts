@@ -53,15 +53,15 @@ export class CategoryMgrVendorSummaryComponent {
         { field: 'companyId', header: 'Company Id', isLink: false, width: '150px', fieldType: 'text', isExceedContent: false } ,
         { field: 'companyName', header: 'Company Name', isLink: false, width: '190px', fieldType: 'text', isExceedContent: false },   
         { field: 'subscribed', header: 'Subscribed', isLink: false, fieldType: 'text', width: '180px', isExceedContent: false },   
-        { field: 'rfqsCreated', header: 'Rfqs Created', isLink: false, width: '170px', fieldType: 'text', isExceedContent: false },
-        { field: 'rfqsConsumed', header: 'Rfqs Consumed', isLink: false, width: '170px', fieldType: 'text', isExceedContent: false },
+        { field: 'rfqsCreated', header: 'RFQ Credits', isLink: false, width: '170px', fieldType: 'text', isExceedContent: false },
+        { field: 'rfqsConsumed', header: 'RFQs Consumed', isLink: false, width: '170px', fieldType: 'text', isExceedContent: false },
         
-        { field: 'subscriptionExpiry', header: 'Expires In', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
+        { field: 'quotesSubmitted', header: 'Quotes Submitted', isLink: false, fieldType: 'text', width: '180px', isExceedContent: false },
+        { field: 'subscriptionExpiry', header: 'Expiry On', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false }
         // { field: 'vendorClass', header: 'Class', isLink: false, width: '120px', fieldType: 'text', isExceedContent: true },
         // { field: 'lastLogin', header: 'Last Logged In', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
         
 
-        { field: 'quotesSubmitted', header: 'Quotes Submitted', isLink: false, fieldType: 'text', width: '180px', isExceedContent: false },
     ];
 
     vendorTableHeaders: any = [

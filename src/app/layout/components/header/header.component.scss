@@ -198,11 +198,32 @@ $topnav-background-color: #0C2146;
         font-weight: 600;
         color: #114771;
     }
-    span{
+
+    span {
         color: #ff4800;
         font-weight: 700;
         letter-spacing: 2px;
         padding-left: 10px;
         padding-right: 10px;
+    }
+}
+
+
+.userValue1 {
+    color: #344992;
+    font-family: math;
+    letter-spacing: 0.5px;
+    font-weight: 600; 
+    flex-direction: column-reverse;
+    margin-right: 2rem;
+    span:nth-child(1){
+        color: #de5828;
+        min-width: 252px !important;
+        &::after{
+            content: ':';
+        }
+    }
+    span:nth-child(2){
+        min-width: 300px
     }
 }

@@ -6,10 +6,10 @@
     <div class="navbar-brand logo-adjust" [ngClass]="{addCustomCls: sidebar, transition: sidebar}" [hidden]="!sidebar">
         <img src="/assets/images/logo_mini_procuceve.png" [routerLink]="['/dashboard']">
     </div>
-    <button class="navbar-toggler" type="button" (click)="toggleSidebar()">
+ <button class="navbar-toggler" type="button" (click)="toggleSidebar()">
         <i class="fa fa-bars text-muted" aria-hidden="true"></i>
     </button>
-
+   
     <div class="collapse navbar-collapse">
 
         <div class="navbar-nav ml-auto">
@@ -19,6 +19,12 @@
                     <span>{{visitorsCount}}</span>
                 </div>
             </li> -->
+              <div class="">
+                <div class="userValue1"><span>Organization</span> <span> {{orgName}}</span></div>
+                   
+                <div class="userValue1"><span>Role</span><span> {{roleName}}</span>
+                </div>
+            </div>
             <li class="profile_menu" #profileMenu>
                 <img class="prof" (click)="onProfileClick()" width="45" src="/assets/images/menu/userProfile.png">
                 <!-- <img src="/assets/images/menu/help-circle.svg"> -->
@@ -28,10 +34,7 @@
                             <div class="userInfo">{{loggedUserName}}</div>
                             <div class="userInfoEmail">{{loggedUserName}}</div>
                         </div>
-                        <div class="col-12 role alg">
-                            <div class="userValue"><span>Organization:</span> {{orgName}}</div>
-                            <div class="userValue"><span>Role:</span> {{roleName}}</div>
-                        </div>
+                        
                         <div class="col-12 alg">
                             <div class="userValue" style="cursor:not-allowed;">Profile Settings<img src="/assets/images/menu/users.svg"></div>
                         </div>
