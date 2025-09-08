@@ -6,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { RfqService } from '../../vendor/services/rfq.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { filter } from 'rxjs';
+
 
 @Component({
   selector: 'app-vendor-profile',
@@ -116,6 +116,9 @@ export class VendorProfileComponent {
   //   }];
   divisionFormList: any = []
   isShowDivisions: boolean;
+  roleName: any;
+  loggedUserName: any;
+  isBuyer: boolean = false;
   constructor(private vendorRegSer: VendorRegistrationService, private encryDecryService: EncryDecryService,
     private dialog: MatDialog,
     private rfqservice: RfqService,
@@ -123,8 +126,12 @@ export class VendorProfileComponent {
     private createRfqService: CreateRfqService,
     private fb: FormBuilder
   ) {
+
     const temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
     this.loggedUserDetails = temp.details;
+    this.loggedUserName = this.loggedUserDetails.username;
+    this.roleName = this.loggedUserDetails.role.roleName === 'Registration' ? 'Vendor' : this.loggedUserDetails.role.roleName;
+    this.isBuyer = this.loggedUserDetails.role.roleName === 'ClientInitiator';
     if (this.loggedUserDetails) {
       this.getVendorById(this.loggedUserDetails.org.id)
     }
@@ -230,6 +237,10 @@ export class VendorProfileComponent {
       branches: this.fb.array([this.createBranch()])
 
     });
+
+
+
+    console.log('vendorForm', this.vendorForm)
 
   }
 
@@ -400,6 +411,9 @@ export class VendorProfileComponent {
       this.isShowDivisions = true;
     }, 500);
 
+    //  if(this.isBuyer){
+    this.addBranch();
+    // }
     // this.bindGeneralModelData();
   }
 
@@ -533,17 +547,40 @@ export class VendorProfileComponent {
 
   updateVendorForm() {
     // if (this.vendorForm.valid) {
-     
+    if(this.branches.invalid){
+      this.toastrService.error('Please fill at least one branch details', 'Error');
+      return;
+    }
+    if(this.vendorForm.controls.zipCode?.errors){
+      this.toastrService.error('Please enter valid Pincode', 'Error');
+      return;
+    }
+    if(this.vendorForm?.controls?.gstin?.errors?.invalidGstin){
+      this.toastrService.error('Please enter valid GSTIN', 'Error');
+      return;
+    }
     if (this.vendorForm.invalid) {
       this.toastrService.error('Please fill all required fields', 'Error');
       return;
     }
+    
     const obj = this.vendorForm.getRawValue();
     obj.id = this.vendorRegObj.id;
     obj.subscriptionPlan = this.selectedSubscription ? { id: this.selectedSubscription.id } : '';
     console.log('obj', obj)
-    obj.divisionCategories = obj.divisionCategories.filter(ele => ele.category && ele.division);
-    obj.branches = obj.branches.filter(ele => ele.branchName && ele.contactPerson && ele.email && ele.address);
+     obj.branches = obj.branches.filter(ele => ele.branchName && ele.contactPerson && ele.email && ele.address);
+    if (this.isBuyer) {
+      this.createRfqService.updateBuyerData(obj).subscribe((res: any) => {
+        this.toastrService.success('Buyer Updated Successfully', 'Success');
+        this.getVendorById(this.loggedUserDetails.org.id)
+        this.isEdit = false;
+        this.isFirstScreen = true;
+      }, (error) => {
+        this.toastrService.error('Error while updating buyer', 'Error');
+      });
+    } else {
+      obj.divisionCategories = obj.divisionCategories.filter(ele => ele.category && ele.division);
+      
     // obj.branches = obj.branches.filter(ele => ele.branch
     this.createRfqService.updateSellerData(obj).subscribe((res: any) => {
       this.toastrService.success('Vendor Updated Successfully', 'Success');
@@ -556,34 +593,34 @@ export class VendorProfileComponent {
     // } else {
     //   this.toastrService.error('Please fill all required fields', 'Error');
     // }
-
   }
+}
 
-  isCategorySelected(i, val){
-    return false //this.divisionFormList[i].selectedCategory && this.divisionFormList[i].selectedCategory.indexOf(val) > -1;
-  }
+isCategorySelected(i, val){
+  return false //this.divisionFormList[i].selectedCategory && this.divisionFormList[i].selectedCategory.indexOf(val) > -1;
+}
 
-  onCategoryChange(event, i){
-    const value = event.target.value;
-    const categoryList = this.divisionFormList[i].categoryList;
-    this.divisionFormList[i].categoryList = []
-    if (event.target.checked) {
-      const index = this.divisionFormList[i].selectedCategory ? this.divisionFormList[i].selectedCategory.indexOf(value)  : -1;
-      if(index > -1){
-        this.divisionFormList[i].selectedCategory.splice(index, 1);
-      }else{
-        this.divisionFormList[i].selectedCategory.push(value);
-      }
+onCategoryChange(event, i){
+  const value = event.target.value;
+  const categoryList = this.divisionFormList[i].categoryList;
+  this.divisionFormList[i].categoryList = []
+  if (event.target.checked) {
+    const index = this.divisionFormList[i].selectedCategory ? this.divisionFormList[i].selectedCategory.indexOf(value) : -1;
+    if (index > -1) {
+      this.divisionFormList[i].selectedCategory.splice(index, 1);
     } else {
-     const index = this.divisionFormList[i].selectedCategory ? this.divisionFormList[i].selectedCategory.indexOf(value)  : -1;
-      if(index > -1){
-        this.divisionFormList[i].selectedCategory.splice(index, 1);
-      }
+      this.divisionFormList[i].selectedCategory.push(value);
     }
-    setTimeout(() => {
-      this.divisionFormList[i].categoryList = categoryList;
-    }, 10);
+  } else {
+    const index = this.divisionFormList[i].selectedCategory ? this.divisionFormList[i].selectedCategory.indexOf(value) : -1;
+    if (index > -1) {
+      this.divisionFormList[i].selectedCategory.splice(index, 1);
+    }
   }
+  setTimeout(() => {
+    this.divisionFormList[i].categoryList = categoryList;
+  }, 10);
+}
 }
 
 export function gstinValidator(): ValidatorFn {

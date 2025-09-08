@@ -11,7 +11,7 @@
         </div> -->
       </div>
     </div>
-    <div  [hidden]="!isFirstScreen">
+    <div  >
         <form class="row" (ngSubmit)="updateVendorForm()"  [formGroup]="vendorForm" novalidate>
             <div class="col-6">
                 <div class="form-group ">
@@ -37,7 +37,7 @@
                     <label for="name">GSTIN</label>
                     <input type="text" required id="gstin" class="form-control" name="gstin" formControlName="gstin"
                             placeholder="GSTIN" />
-                        <div style="color: #fff"
+                        <div style="color: #ca1e1e"
                             *ngIf="vendorForm?.controls?.gstin?.touched && vendorForm?.controls?.gstin?.errors?.invalidGstin">
                             Invalid GSTIN format </div>
                 </div>
@@ -66,7 +66,7 @@
                     <input type="text" class="form-control" formControlName="details" placeholder="Product & Service Categories seperated by ,"/>
                 </div>
             </div>
-            <div class="col-12" *ngIf="isShowDivisions"> 
+            <div class="col-12" *ngIf="isShowDivisions && !isBuyer"> 
                  <div formArrayName="divisionCategories" style="    border: 2px solid #8080804a;
     margin-top: 1rem;">
                     <label style="font-weight: bold;" class="mt-3">Select Divisions & Categories:</label>
@@ -116,8 +116,8 @@
                 
                 <div formArrayName="branches" style="border:2px solid #8080804a; margin-top: 1rem;">
                     <label style="font-weight: bold;">Branches Details:</label>
-                    <div *ngFor="let address of branches.controls; let i = index" [formGroupName]="i" class="row border p-1 m-3 pb-3" [ngClass]="{'mt-3': i>0}" style="background: #6a9adf2b;
-    border-radius: 4px;">
+                    <div *ngFor="let address of branches.controls; let i = index" [formGroupName]="i" class="row border p-1 m-3 pb-3" 
+                    [ngClass]="{'mt-3': i>0}" style="background: #6a9adf2b; border-radius: 4px;">
                             <div class="col-2">Branch Name</div> 
                             <div class="col-2">Contact Person</div>
                             <div class="col-2">EmailId</div>
