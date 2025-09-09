@@ -121,6 +121,10 @@ export class CreateRfqService {
         return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.UPDATE_BUYER_DATA, data, {});
     }
     
+    //
+    getBuyerDataById(data: any) { 
+           return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.GET_BUYER_BY_ID, data, {});
+    }
     getSubscriptionsList(){
         return this.httpService.get(AppApiConfig.apiEndpoint +AppApiConfig.GET_SUBSCRIPTIONS_LIST,  {} )
     }

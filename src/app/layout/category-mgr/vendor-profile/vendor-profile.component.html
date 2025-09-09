@@ -60,13 +60,13 @@
                         </div>
                 </div>
             </div>
-            <div class="col-12">
+            <div class="col-12"  *ngIf="!isBuyer">
                 <div class="form-group">
                     <label for="name">Product & Service Categories</label>
                     <input type="text" class="form-control" formControlName="details" placeholder="Product & Service Categories seperated by ,"/>
                 </div>
             </div>
-            <div class="col-12" *ngIf="isShowDivisions && !isBuyer"> 
+            <div class="col-12" *ngIf="isShowDivisions"> 
                  <div formArrayName="divisionCategories" style="    border: 2px solid #8080804a;
     margin-top: 1rem;">
                     <label style="font-weight: bold;" class="mt-3">Select Divisions & Categories:</label>
@@ -112,7 +112,7 @@
                 </div>
 
             </div>
-            <div class="col-12 mt-3">
+            <div class="col-12 mt-3" *ngIf="!isBuyer">
                 
                 <div formArrayName="branches" style="border:2px solid #8080804a; margin-top: 1rem;">
                     <label style="font-weight: bold;">Branches Details:</label>

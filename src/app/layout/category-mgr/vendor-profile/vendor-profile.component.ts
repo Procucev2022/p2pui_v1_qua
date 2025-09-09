@@ -133,7 +133,11 @@ export class VendorProfileComponent {
     this.roleName = this.loggedUserDetails.role.roleName === 'Registration' ? 'Vendor' : this.loggedUserDetails.role.roleName;
     this.isBuyer = this.loggedUserDetails.role.roleName === 'ClientInitiator';
     if (this.loggedUserDetails) {
-      this.getVendorById(this.loggedUserDetails.org.id)
+      if (this.isBuyer) {
+        this.getBuyerDataById(this.loggedUserDetails.id)
+      }else{
+        this.getVendorById(this.loggedUserDetails.org.id)
+      } 
     }
     this.buildVendorForm();
 
@@ -233,10 +237,13 @@ export class VendorProfileComponent {
       gstin: new FormControl('', [gstinValidator()]),
       details: new FormControl('', []),
       zipCode: new FormControl('', [Validators.required]),
-      divisionCategories: this.fb.array(this.createCategoryDivisionGroups(5)),
-      branches: this.fb.array([this.createBranch()])
+      divisionCategories: this.fb.array(this.createCategoryDivisionGroups(5))
 
     });
+
+    if(!this.isBuyer){
+      this.vendorForm.addControl('branches', this.fb.array([this.createBranch()]) );
+    }
 
 
 
@@ -343,7 +350,20 @@ export class VendorProfileComponent {
 
   onChangeDivision() {
 
+    
   }
+
+  getBuyerDataById(id) {
+    this.vendorRegObj = null;
+    this.createRfqService.getBuyerDataById({ id: id }).subscribe((response) => {
+      this.vendorRegObj = response;
+      console.log('response', response) 
+      this.bindData() 
+    }, (error) => {
+
+    });
+  }
+
   getVendorById(id) {
     this.vendorRegObj = null;
     this.vendorRegSer.getGMTSellerById({ id: id }).subscribe((response) => {
@@ -357,11 +377,12 @@ export class VendorProfileComponent {
     }, (error) => {
 
     });
+  
   }
 
   bindData() {
     this.vendorForm.patchValue(this.vendorRegObj);
-    if (this.vendorRegObj.branches) {
+    if (this.vendorRegObj.branches && !this.isBuyer) {
       const skillsArray = this.vendorForm.get('branches') as FormArray;
       skillsArray.clear(); // Clear existing controls if any
 
@@ -411,9 +432,9 @@ export class VendorProfileComponent {
       this.isShowDivisions = true;
     }, 500);
 
-    //  if(this.isBuyer){
-    this.addBranch();
-    // }
+      if(!this.isBuyer){
+         this.addBranch();
+    }
     // this.bindGeneralModelData();
   }
 
@@ -547,9 +568,11 @@ export class VendorProfileComponent {
 
   updateVendorForm() {
     // if (this.vendorForm.valid) {
-    if(this.branches.invalid){
-      this.toastrService.error('Please fill at least one branch details', 'Error');
-      return;
+    if(!this.isBuyer){
+      if(this.branches.invalid ){
+        this.toastrService.error('Please fill all branch details', 'Error');
+        return;
+      } 
     }
     if(this.vendorForm.controls.zipCode?.errors){
       this.toastrService.error('Please enter valid Pincode', 'Error');
@@ -568,11 +591,16 @@ export class VendorProfileComponent {
     obj.id = this.vendorRegObj.id;
     obj.subscriptionPlan = this.selectedSubscription ? { id: this.selectedSubscription.id } : '';
     console.log('obj', obj)
-     obj.branches = obj.branches.filter(ele => ele.branchName && ele.contactPerson && ele.email && ele.address);
+    if(!this.isBuyer){
+      obj.branches = obj.branches.filter(ele => ele.branchName && ele.contactPerson && ele.email && ele.address);
+    }
     if (this.isBuyer) {
+      obj.id = this.vendorRegObj.id;
+      obj.userId = this.vendorRegObj.userId;
+      delete obj.subscriptionPlan;
       this.createRfqService.updateBuyerData(obj).subscribe((res: any) => {
         this.toastrService.success('Buyer Updated Successfully', 'Success');
-        this.getVendorById(this.loggedUserDetails.org.id)
+        this.getBuyerDataById(this.loggedUserDetails.id)
         this.isEdit = false;
         this.isFirstScreen = true;
       }, (error) => {
