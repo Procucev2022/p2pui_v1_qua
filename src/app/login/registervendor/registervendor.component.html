@@ -191,7 +191,7 @@
                             </button>
                         </div>
                         <div class="col-5">
-                            <button class="btn btn-primary btn-blue" type="button"
+                            <button class="btn btn-primary btn-blue" type="button" [disabled]="!isOTPVerified"
                                 (click)='registerVendor(vendorRegistrationForm)' style="float: right;
     width: 90%;
     background: #2b418d !important;
