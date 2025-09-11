@@ -72,8 +72,25 @@ visible: boolean;
         this.toaster.error('EMail & Mobile Verification Not yet completed!', 'Failure');
         return;
       }
-        if (this.vendorRegistrationForm.valid) {
+        // if (this.vendorRegistrationForm.valid) {
+
             const formValue =this.vendorRegistrationForm.getRawValue();
+            if(!formValue.companyName || !formValue.name || !formValue.mail || !formValue.phoneNumber || !formValue.pinCode || !formValue.products){
+                if(!formValue.companyName){
+                    this.toaster.error('Please enter Company Name', 'Failure'); 
+                }else if(!formValue.name){
+                    this.toaster.error('Please enter Contact Person Name', 'Failure');
+                }else if(!formValue.mail){
+                    this.toaster.error('Please enter Email ID', 'Failure');
+                }else if(!formValue.phoneNumber){
+                    this.toaster.error('Please enter Phone Number', 'Failure');
+                }else if(!formValue.pinCode){
+                    this.toaster.error('Please enter Pin Code', 'Failure');
+                }else if(!formValue.products){
+                    this.toaster.error('Please enter Products', 'Failure');
+                }
+                return;
+            }
             console.log('the form is ');
             const requestObject = {
                 'companyName': formValue.companyName,
@@ -98,10 +115,10 @@ visible: boolean;
                     this.toaster.error(res.errorMessage, 'Failure');
                 }
             });
-        } else {
-            this.toaster.error('Please enter all required details', 'Failure');
-            return;
-        }
+        // } else {
+        //     this.toaster.error('Please enter all required details', 'Failure');
+        //     return;
+        // }
 
     }
 

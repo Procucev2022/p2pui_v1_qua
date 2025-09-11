@@ -48,10 +48,10 @@ export class ClientRegisterComponent implements OnInit {
             email: new FormControl('', [Validators.required,Validators.email,  strictEmailValidator()]),
             // clientSector: new FormControl('', [Validators.required]), 
             // pan: new FormControl('', [Validators.required, Validators.pattern('[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[a-zA-Z0-9]{3}')]),
-            india: new FormControl('true', [Validators.required]),
+            india: new FormControl('true' ),
             emailOtp: new FormControl(''),
             mobileOtp: new FormControl(''),
-            pinCode: new FormControl('', [Validators.required])
+            pinCode: new FormControl('')
         });
         // this.clientRegForm.disable();
 
@@ -173,18 +173,7 @@ export class ClientRegisterComponent implements OnInit {
             return;
         } else {
 
-            let obj: any = { "pan": this.transformPan() };
-            // this.vendorRegSer.panOrEamilValidation(obj).subscribe((res: any) => {
-            //     this.isPanExist = res.exists ? res.exists : false;
-            //     if (this.isPanExist)
-            //         this.clientRegForm.disable();
-            //     else
-            //         this.clientRegForm.controls.pan.disable();
-            //         this.panVerificationIniatiated = true;
-            // })
-            // if (!this.isPanExist) {
-            //     this.clientRegForm.enable();
-            // }
+            let obj: any = { "pan": this.transformPan() }; 
         }
 
     }
@@ -194,32 +183,7 @@ export class ClientRegisterComponent implements OnInit {
         const pan = splitGST.slice(2, splitGST.length - 3).join('');
         return pan;
     }
-
-    // getDetailsByPan() {
-    //     this.existedClientDetails = null;
-    //     this.isEmailExists = false;
-    //     let obj: any = { "pan": this.transformPan() }
-    //     this.vendorRegSer.getDetailsByPan(obj).subscribe((res: any) => {
-    //         console.log('pan details', res)
-    //         if (res && res.id) {
-    //             this.existedClientDetails = res;
-    //             this.updateFormData();
-    //         }
-
-    //     })
-    // }
-    // updateFormData() {
-    //     this.clientRegForm.patchValue({
-    //         name: '',
-    //         companyName: this.existedClientDetails.companyName,
-    //         organizationPhonenumber: this.existedClientDetails.organizationPhonenumber,
-    //         address1: this.existedClientDetails.address1,
-    //         state: this.existedClientDetails.state,
-    //         email: ''
-    //     })
-    //     this.enableDisableFormCtrl();
-
-    // }
+ 
     enableDisableFormCtrl() {
         Object.keys(this.clientRegForm.controls).forEach(ctrl => {
             if (!['name', 'email', 'organizationPhonenumber'].includes(ctrl)) {
@@ -259,20 +223,7 @@ export class ClientRegisterComponent implements OnInit {
         this.clientRegFormReset();
         this.clientRegForm.enable();
         this.isOTPVerified = false;
-        this.isOTPSent = false;
-        // this.cd.detectChanges();
-        //  this.confirmationService.confirm({
-        //     header: 'Confirmation',
-        //     rejectLabel: 'No',
-        //     acceptLabel: 'Yes',
-        //     message: `Are you sure about to discard the changes!`,
-        //     accept: () => {
-
-        //     },
-        //     reject: () => {
-
-        //     }
-        // });
+        this.isOTPSent = false; 
     }
 
     checkEmailValidity() {
@@ -304,13 +255,28 @@ export class ClientRegisterComponent implements OnInit {
 
     registerVendor(clientRegForm: FormGroup) {
         console.log(clientRegForm);
-        if (clientRegForm.valid) {
+        // if (clientRegForm.valid) {
+            
             if (!this.isOTPVerified) {
                 this.toaster.warning("Email & Mobile verification is Pending, Pls do that!", "Warning")
                 return false;
             }
             console.log('the form is ');
             const regData = this.clientRegForm.getRawValue();
+            if(!regData.companyName || !regData.name || !regData.email || !regData.organizationPhonenumber || !regData.pinCode){
+                if(!regData.companyName){
+                    this.toaster.error('Please enter Company Name', 'Failure'); 
+                } else if(!regData.name){
+                    this.toaster.error('Please enter Name', 'Failure'); 
+                } else if(!regData.email){
+                    this.toaster.error('Please enter Email', 'Failure');    
+                } else if(!regData.organizationPhonenumber){
+                    this.toaster.error('Please enter Mobile Number', 'Failure');    
+                } else if(!regData.pinCode){
+                    this.toaster.error('Please enter Pin Code', 'Failure');
+                }   
+                return;
+            }
             // const splitGST = this.clientRegForm.getRawValue().pan.split('');
             // const pan = splitGST.slice(2, splitGST.length-3).join('')
             const requestObject = {
@@ -338,10 +304,11 @@ export class ClientRegisterComponent implements OnInit {
                     this.toaster.error(res.errorMessage, 'Failure');
                 }
             });
-        } else {
-            this.toaster.error('Please enter all required details', 'Failure');
-            return;
-        }
+        // } 
+        // else {
+        //     this.toaster.error('Please enter all required details', 'Failure');
+        //     return;
+        // }
     }
 
     confirmRegistration() {
