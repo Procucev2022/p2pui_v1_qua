@@ -304,36 +304,8 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
       });
       setTimeout(() => {
           this.isChildGridShow = true;
-      }, 200);
-
-      // this.vendorsList = [
-      //     {
-      //         "id": "140bb2f2-7154-4686-a7b6-03ca082ff153",
-      //         "createdBy": null,
-      //         "lastModifiedBy": null,
-      //         "createdTS": null,
-      //         "lastModifiedTS": null,
-      //         "vendor": null,
-      //         "rfq": null,
-      //         "vendorUuid": "3b601125-e39d-483a-ada7-bed8794bc504",
-      //         "vendorName": "soft world",
-      //         "vendorId": "SOF220508165630",
-      //         "status_ui_display": "New",
-      //         "status": { "id": "102", "createdBy": "Harshitha", "lastModifiedBy": null, "createdTS": null, uiDisplay: 'New' }
-      //     }, {
-      //         "id": "140bb2f2-7154-4686-a7b6-03ca082ff154",
-      //         "createdBy": null,
-      //         "lastModifiedBy": null,
-      //         "createdTS": null,
-      //         "lastModifiedTS": null,
-      //         "vendor": null,
-      //         "rfq": null,
-      //         "vendorUuid": "3b601125-e39d-483a-ada7-bed8794bc504",
-      //         "vendorName": "soft world ltd",
-      //         "vendorId": "SOF220508165632", "status_ui_display": "In Progress",
-      //         "status": { "id": "102", "createdBy": "Harshitha", "lastModifiedBy": null, "createdTS": null, uiDisplay: 'New' }
-      //     },
-      // ]
+      },300);
+ 
   }
 
   getLineItemsByRFQ() {

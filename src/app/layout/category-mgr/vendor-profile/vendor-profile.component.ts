@@ -499,6 +499,7 @@ export class VendorProfileComponent {
 
   filterCategoryListByDivision(event, index) {
     const obj = { "division": event.target.value };
+     this.divisionFormList[index].selectedDivision =event.target.value;
     this.createRfqService.getGMTCategoriesByDivision(obj).subscribe((res: any) => {
       this.categoryList = res || [];
       if (this.categoryList.length > 0) {
@@ -567,13 +568,7 @@ export class VendorProfileComponent {
 
 
   updateVendorForm() {
-    // if (this.vendorForm.valid) {
-    if(!this.isBuyer){
-      if(this.branches.invalid ){
-        this.toastrService.error('Please fill all branch details', 'Error');
-        return;
-      } 
-    }
+    // if (this.vendorForm.valid) { 
     if(this.vendorForm.controls.zipCode?.errors){
       this.toastrService.error('Please enter valid Pincode', 'Error');
       return;
@@ -593,6 +588,7 @@ export class VendorProfileComponent {
     console.log('obj', obj)
     if(!this.isBuyer){
       obj.branches = obj.branches.filter(ele => ele.branchName && ele.contactPerson && ele.email && ele.address);
+      
     }
     if (this.isBuyer) {
       obj.id = this.vendorRegObj.id;

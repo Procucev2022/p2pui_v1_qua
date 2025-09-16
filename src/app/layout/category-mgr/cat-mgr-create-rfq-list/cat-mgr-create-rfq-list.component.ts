@@ -632,16 +632,16 @@ export class CatMgrCreateRfqListComponent implements OnInit {
     }
 
     onDeleteItem(rowData: any) {
-        this.itemGridData.gridValue = this.itemGridData.gridValue.filter(ele => ele.id != rowData.id);
+        this.itemGridData.gridValue = [...this.itemGridData.gridValue.filter(ele => ele.id != rowData.id)];
         this.reloadGridComponent();
     }
 
     onDeleteVendor(rowData: any) {
-        this.vendorGridData.gridValue = this.vendorGridData.gridValue.filter(ele => ele.id != rowData.id);
+        this.vendorGridData.gridValue = [...this.vendorGridData.gridValue.filter(ele => ele.id != rowData.id)];
         this.reloadGridComponent();
     }
     onDeleteDelivery(rowData: any) {
-        this.deliveryGridData.gridValue = this.deliveryGridData.gridValue.filter(ele => ele.id != rowData.id);
+        this.deliveryGridData.gridValue = [...this.deliveryGridData.gridValue.filter(ele => ele.id != rowData.id)];
         this.reloadGridComponent();
     }
 
@@ -649,7 +649,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
         this.isShowGrid = false;
         setTimeout(() => {
             this.isShowGrid = true;
-        }, 100)
+        }, 300)
     }
 
     onEditVendor(rowData) {
