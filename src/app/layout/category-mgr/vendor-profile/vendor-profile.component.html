@@ -98,7 +98,7 @@
                                   <ul class="five-column-list" *ngIf="divisionFormList[i].categoryList?.length > 0">
                                     <li *ngFor="let val of divisionFormList[i].categoryList; let j = index;" style="margin-right: 10px;" class="form-check form-check-inline">
                                         <input type="checkbox" style="width: 20px;height: 20px;;" [value]="val"  id="d1_cat_{{j}}_{{val}}"  
-                                        (click)="onCategoryChange($event, i)" [checked]="isMatchedCategory(i, val)"  />
+                                        (click)="onCategoryChange($event, i, j)" [checked]="isMatchedCategory(i, val)"  />
                                          <label style="margin-right: 5px;" for="d1_cat_{{j}}_{{val}}">{{val}}</label>
 
                                     </li>

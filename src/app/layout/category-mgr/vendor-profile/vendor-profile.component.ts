@@ -381,6 +381,7 @@ export class VendorProfileComponent {
   }
 
   bindData() {
+    this.isShowDivisions = false;
     this.vendorForm.patchValue(this.vendorRegObj);
     if (this.vendorRegObj.branches && !this.isBuyer) {
       const skillsArray = this.vendorForm.get('branches') as FormArray;
@@ -408,18 +409,36 @@ export class VendorProfileComponent {
     if (this.vendorRegObj.divisionCategories) {
 
       const divisionArray = this.vendorForm.get('divisionCategories') as FormArray;
+
+
       divisionArray.clear();
-      this.vendorRegObj.divisionCategories.forEach((skill: any, index: any) => {
-        this.getCategoryListAndBindForInitialValue(skill.division, index, skill.category);
+      const grouped = this.vendorRegObj.divisionCategories.reduce((acc, item) => {
+        const key = item.division;
+        if (!acc[key]) {
+          acc[key] = [];
+        }
+        acc[key].push(item.category);
+        return acc;
+      }, {});
+
+      // Convert to array format if needed
+      const finalDivisionCategories = Object.entries(grouped).map(([division, categories]) => ({
+        division,
+        categories
+      }));
+
+      finalDivisionCategories.forEach((skill: any, index: any) => {
+        this.divisionFormList[index].selectedDivision = skill.division;
+        this.getCategoryListAndBindForInitialValue(skill.division, index, skill.categories);
         divisionArray.push(
           this.fb.group({
-            category: [skill.category],
+            category: [skill.categories],
             division: [skill.division],
           })
         );
       });
-      if (this.vendorRegObj.divisionCategories.length < 5) {
-        const remaining = 5 - this.vendorRegObj.divisionCategories.length;
+      if (finalDivisionCategories.length < 5) {
+        const remaining = 5 - finalDivisionCategories.length;
         for (let i = 0; i < remaining; i++) {
           divisionArray.push(this.createCategoryDivisionGroup());
         }
@@ -498,11 +517,22 @@ export class VendorProfileComponent {
   }
 
   filterCategoryListByDivision(event, index) {
-    const obj = { "division": event.target.value };
-     this.divisionFormList[index].selectedDivision =event.target.value;
-    this.createRfqService.getGMTCategoriesByDivision(obj).subscribe((res: any) => {
-      this.categoryList = res || [];
-      if (this.categoryList.length > 0) {
+    const value = event.target.value;
+    const divisionArray = this.vendorForm.get('divisionCategories') as FormArray;
+    if(value && this.divisionFormList.filter(ele => ele.selectedDivision === value).length > 0){
+      this.toastrService.error('This division is already selected. Please choose a different division.', 'Error');
+      divisionArray.at(index).get('division')?.setValue('');
+      this.divisionFormList[index].selectedDivision = '';
+      this.divisionFormList[index].categoryList = [];
+      this.divisionFormList[index].selectedCategory = [];
+      this.divisionFormList[index].filtered_categoryList = [];
+      return;
+    }
+      const obj = { "division": event.target.value };
+      this.divisionFormList[index].selectedDivision =event.target.value;
+      this.createRfqService.getGMTCategoriesByDivision(obj).subscribe((res: any) => {
+        this.categoryList = res || [];
+        if (this.categoryList.length > 0) {
         this.filtered_categoryList = this.categoryList;
         this.divisionFormList[index].filtered_categoryList = this.categoryList;
         this.divisionFormList[index].selectedDivision = event.target.value;
@@ -520,7 +550,7 @@ export class VendorProfileComponent {
         this.filtered_categoryList = this.categoryList;
         this.divisionFormList[index].filtered_categoryList = this.categoryList;
         this.divisionFormList[index].categoryList = this.categoryList;
-        this.divisionFormList[index].selectedCategory = [category];
+        this.divisionFormList[index].selectedCategory = category;
       }
     });
   }
@@ -586,6 +616,21 @@ export class VendorProfileComponent {
       obj.branches = obj.branches.filter(ele => ele.branchName && ele.contactPerson && ele.email && ele.address);
       
     }
+    let divisionCategoriesList= [];
+    if(this.divisionFormList.length>0){
+      this.divisionFormList.forEach((element, index) => {
+        if(element.selectedDivision && element.selectedCategory && element.selectedCategory.length>0){
+          element.selectedCategory.forEach(catEle => {
+            divisionCategoriesList.push({division: element.selectedDivision, category: catEle})
+          });
+        }
+        if( element.selectedCategory.length < 1){
+          this.divisionFormList[index].selectedDivision = '';
+          this.divisionFormList[index].categoryList = [];
+        }
+      });
+    }
+    obj.divisionCategories = divisionCategoriesList;
     if (this.isBuyer) {
       obj.id = this.vendorRegObj.id;
       obj.userId = this.vendorRegObj.userId;
@@ -599,7 +644,7 @@ export class VendorProfileComponent {
         this.toastrService.error('Error while updating buyer', 'Error');
       });
     } else {
-      obj.divisionCategories = obj.divisionCategories.filter(ele => ele.category && ele.division);
+     
       
     // obj.branches = obj.branches.filter(ele => ele.branch
     this.createRfqService.updateSellerData(obj).subscribe((res: any) => {
@@ -620,25 +665,25 @@ isCategorySelected(i, val){
   return false //this.divisionFormList[i].selectedCategory && this.divisionFormList[i].selectedCategory.indexOf(val) > -1;
 }
 
-onCategoryChange(event, i){
+onCategoryChange(event, divisionIndex, categoryIndex){
   const value = event.target.value;
-  const categoryList = this.divisionFormList[i].categoryList;
-  this.divisionFormList[i].categoryList = []
+  const categoryList = this.divisionFormList[divisionIndex].categoryList;
+  this.divisionFormList[divisionIndex].categoryList = []
   if (event.target.checked) {
-    const index = this.divisionFormList[i].selectedCategory ? this.divisionFormList[i].selectedCategory.indexOf(value) : -1;
+    const index = this.divisionFormList[divisionIndex].selectedCategory ? this.divisionFormList[divisionIndex].selectedCategory.indexOf(value) : -1;
     if (index > -1) {
-      this.divisionFormList[i].selectedCategory.splice(index, 1);
+      this.divisionFormList[divisionIndex].selectedCategory.splice(index, 1);
     } else {
-      this.divisionFormList[i].selectedCategory.push(value);
+      this.divisionFormList[divisionIndex].selectedCategory.push(value);
     }
   } else {
-    const index = this.divisionFormList[i].selectedCategory ? this.divisionFormList[i].selectedCategory.indexOf(value) : -1;
+    const index = this.divisionFormList[divisionIndex].selectedCategory ? this.divisionFormList[divisionIndex].selectedCategory.indexOf(value) : -1;
     if (index > -1) {
-      this.divisionFormList[i].selectedCategory.splice(index, 1);
+      this.divisionFormList[divisionIndex].selectedCategory.splice(index, 1);
     }
   }
   setTimeout(() => {
-    this.divisionFormList[i].categoryList = categoryList;
+    this.divisionFormList[divisionIndex].categoryList = categoryList;
   }, 10);
 }
 }
