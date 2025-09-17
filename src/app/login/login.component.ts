@@ -213,7 +213,7 @@ export class LoginComponent implements OnInit {
            this.enableResentOTP();
         } else if (data && data.methodType == 'validate' && this.isOTPVerified) {
           localStorage.setItem('loggedUser', this.userName);
-          localStorage.setItem('loggedUserMobile', this.mobileNumber);
+          localStorage.setItem('loggedUserMobile', '+91'+this.mobileNumber);
           localStorage.setItem('at', data.access_token);
           localStorage.setItem('rt', data.refresh_token);
           localStorage.setItem('et', data.expires_in);
@@ -222,7 +222,7 @@ export class LoginComponent implements OnInit {
           }
         } else if (data && data.methodType == 'authenticated') {
           localStorage.setItem('loggedUser', this.userName);
-          localStorage.setItem('loggedUserMobile', this.mobileNumber);
+          localStorage.setItem('loggedUserMobile', '+91'+this.mobileNumber);
           localStorage.setItem('at', data.access_token);
           localStorage.setItem('rt', data.refresh_token);
           localStorage.setItem('et', data.expires_in);
