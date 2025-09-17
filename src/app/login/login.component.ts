@@ -191,7 +191,7 @@ export class LoginComponent implements OnInit {
       }
     }
     const body = {
-      ...reqPayload, "tempEmail": sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail') : '',
+      ...reqPayload, "phone": "+91"+reqPayload.phone, "tempEmail": sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail') : '',
       "tempPhone": sessionStorage.getItem('tempPhone') ? sessionStorage.getItem('tempPhone') : '',
     }
     // "tempEmail": sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail'): '',

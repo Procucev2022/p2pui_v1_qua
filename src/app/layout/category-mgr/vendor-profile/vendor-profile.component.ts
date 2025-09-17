@@ -576,11 +576,7 @@ export class VendorProfileComponent {
     if(this.vendorForm?.controls?.gstin?.errors?.invalidGstin){
       this.toastrService.error('Please enter valid GSTIN', 'Error');
       return;
-    }
-    if (this.vendorForm.invalid) {
-      this.toastrService.error('Please fill all required fields', 'Error');
-      return;
-    }
+    } 
     
     const obj = this.vendorForm.getRawValue();
     obj.id = this.vendorRegObj.id;
