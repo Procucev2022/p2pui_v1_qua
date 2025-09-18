@@ -482,6 +482,32 @@ export class CatMgrCreateRfqListComponent implements OnInit {
         return this.rfqForm.controls;
     }
 
+   get isInvalidDescription(){
+     let description = this.itemForm.controls.description.value?.trim();
+        if(description && description.split(' ').length >1){
+           description = description.replace(/\s+/g, '');
+        }
+        return (this.itemForm.controls.description.dirty) &&
+            (   this.isOnlySpecialCharacters(description) ||
+            this.startsWithSpecialChar(description));
+    }
+
+    get isEmptyDescription(){
+        return this.itemForm.controls.description.dirty && this.itemForm.controls.description.value.trim() == '';
+    }
+
+    isOnlySpecialCharacters(description) {
+        const regex = /^[^a-zA-Z0-9\s]+$/;
+       
+        return regex.test(description);
+    }
+
+    startsWithSpecialChar(str) {
+        const regex = /^[^a-zA-Z0-9]/;
+        return regex.test(str);
+    }
+
+
 
     buildRFQForms() {
         this.projectForm = this.fb.group({
@@ -572,6 +598,14 @@ export class CatMgrCreateRfqListComponent implements OnInit {
             this.toaster.warning('Pls fill the required fields');
             return;
         }
+        if(this.itemForm.controls.description.value.trim() == ''){
+            this.toaster.warning('Description is required', 'Warning');
+            return;
+        }
+        if(this.itemForm.controls.quantity.value == 0) {
+            this.toaster.warning('Quantity must be greater than 0', 'Warning');
+            return;
+        }
         if (this.isEditForm) {
             const index = this.itemGridData.gridValue.findIndex(ele => {
                 return (ele.id == this.itemForm.value['id'])
@@ -581,7 +615,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
             this.reloadGridComponent();
         } else {
             this.itemForm.controls.id.setValue('MANUALENTRYID_' + Math.random());
-            this.itemGridData.gridValue.push(this.itemForm.getRawValue());
+            this.itemGridData.gridValue.push({ ...this.itemForm.getRawValue(), description: this.itemForm.controls.description.value.trim() });
             this.toaster.success('Item added to Cart!', 'Success');
         }
         this.reloadGridComponent();

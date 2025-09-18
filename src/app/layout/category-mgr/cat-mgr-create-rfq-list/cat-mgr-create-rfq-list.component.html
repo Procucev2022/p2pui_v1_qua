@@ -220,10 +220,15 @@
                                                                 </div>
                                                             </ng-template>
                                                 </p-autoComplete>
+                                                <p *ngIf="isEmptyDescription" class="error pt-2">Description is a mandatory field and cannot be empty or contain only spaces.</p>
+                                                <p class="error pt-2" *ngIf="isInvalidDescription">
+                                                   Description cannot be consist only of special characters And not starts with special characters
+                                                </p>
                                              </div>
                                              <div class="col-12 mb-1">
                                                  <label class="form-label required">Item Specification</label>
                                                  <input class="form-control" formControlName="specification" placeholder="Item Specification" />
+                                                 
                                              </div>
                                              <div class="col-6 mb-1">
                                                  <label class="form-label required">UOM</label>
@@ -236,6 +241,7 @@
                                                      <label class="form-label required">Quantity</label>
                                                      <input class="form-control" formControlName="quantity" type="number" placeholder="Item Quantity" />
                                                      <p class="error"  *ngIf="(itemForm.controls?.quantity?.touched && itemForm.controls.quantity.errors) && (itemForm.controls.quantity.errors.invalid || itemForm.controls.quantity.errors.required)">Quantity is a mandatory field & should be number</p>
+                                                     <p class="error" *ngIf="!itemForm.controls.quantity.errors && itemForm.controls.quantity.value == 0">Quantity must be greater than 0</p>
                                              </div>
                                              <div class="col-7 mb-1">
                                                 <label class="form-label">Remarks</label>
@@ -244,7 +250,7 @@
                                             </div>
                                              <div class="col-5 mt-3 btn-block  " style="display: flex;align-items: center;justify-content: space-evenly; ">
 
-                                                 <button class="btn btn-blue ml-3" type="submit" [disabled]="!itemForm.valid" >   {{ isEditForm ? 'Update': 'Add'}} Item</button>
+                                                 <button class="btn btn-blue ml-3" type="submit" [disabled]="!itemForm.valid || isInvalidDescription || isEmptyDescription" >   {{ isEditForm ? 'Update': 'Add'}} Item</button>
                                                  <button class="btn btn-red" type="reset">Reset</button>
                                              </div>
 
