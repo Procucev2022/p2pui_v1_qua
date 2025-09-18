@@ -236,7 +236,7 @@ export class VendorProfileComponent {
       website: new FormControl(''),
       gstin: new FormControl('', [gstinValidator()]),
       details: new FormControl('', []),
-      zipCode: new FormControl('', [Validators.required]),
+      zipCode: new FormControl('', [Validators.required, Validators.pattern('^[1-9][0-9]{5}$')]),
       divisionCategories: this.fb.array(this.createCategoryDivisionGroups(5))
 
     });

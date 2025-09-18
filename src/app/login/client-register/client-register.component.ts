@@ -51,7 +51,7 @@ export class ClientRegisterComponent implements OnInit {
             india: new FormControl('true' ),
             emailOtp: new FormControl(''),
             mobileOtp: new FormControl(''),
-            pinCode: new FormControl('')
+            pinCode: new FormControl('', [Validators.required, Validators.pattern('^[1-9][0-9]{5}$')]),
         });
         // this.clientRegForm.disable();
 
@@ -275,6 +275,10 @@ export class ClientRegisterComponent implements OnInit {
                 } else if(!regData.pinCode){
                     this.toaster.error('Please enter Pin Code', 'Failure');
                 }   
+                return;
+            }
+            if(this.clientRegForm.controls['email'].errors){
+                this.toaster.error('Please enter valid Email', 'Failure'); 
                 return;
             }
             // const splitGST = this.clientRegForm.getRawValue().pan.split('');

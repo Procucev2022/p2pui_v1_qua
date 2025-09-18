@@ -151,7 +151,7 @@
                         <label for="name">PinCode: <b style="color: #fff">*</b></label>
                         <input type="text" required id="pinCode" class="form-control" name="pinCode"
                             formControlName="pinCode" placeholder="PinCode (6digits)" maxlength="6"
-                            (keypress)="numberOnly($event)" />
+                            (keypress)="numberOnly($event)"  minlength="6"/>
                         <div
                             *ngIf="(vendorRegistrationForm?.controls?.pinCode?.touched) && vendorRegistrationForm?.controls?.pinCode.status=='INVALID'">
                             <div style="color: #fff">PinCode (6digits) is required</div>

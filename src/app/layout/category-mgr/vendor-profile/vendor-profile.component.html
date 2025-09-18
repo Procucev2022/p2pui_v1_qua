@@ -52,7 +52,7 @@
                 <div class="form-group required">
                     <label for="name" class="required">ZipCode</label>
                    <input type="text" required id="zipCode" class="form-control" name="zipCode"
-                            formControlName="zipCode" placeholder="ZipCode (6digits)" maxlength="6"
+                            formControlName="zipCode" placeholder="ZipCode (6digits)" maxlength="6" minlength="6"
                             (keypress)="numberOnly($event)" />
                         <div
                             *ngIf="(vendorForm.controls?.zipCode?.touched) && vendorForm.controls?.zipCode.status=='INVALID'">
