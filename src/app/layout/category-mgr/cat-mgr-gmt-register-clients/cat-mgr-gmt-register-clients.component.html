@@ -48,7 +48,12 @@
                                 [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }"
                                 [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"
                                 [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
-                                {{rowData[col.field]}}
+                                  <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
+                                    {{rowData[col.field] | date: 'dd-MMM-yyyy hh:mm:ss a'}}
+                                </span>
+                                <span *ngIf="col.fieldType != 'date'">
+                                    {{rowData[col.field]}}
+                                </span>
                                 <span class="blink" *ngIf="col.field=='companyId' && (rowData.newClientStatus && rowData.newClientStatus == true)">
                                     <i class="fa fa-bell" aria-hidden="true"></i>
                                 </span>
