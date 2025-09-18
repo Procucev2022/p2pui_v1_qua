@@ -239,8 +239,11 @@
                                 <div class="row">
                                     <div class="col-md-5 col-xs-12 mb-1">
                                             <label for="name">Mobile Number: <b style="color: red;">*</b></label>
-                                            <input type="text" maxlength="10" minlength="10" id="adress" class="form-control"
-                                                name="organizationPhonenumber" formControlName="organizationPhonenumber" placeholder="Mobile Number"  (keypress)="numberOnly($event)"  maxlength="10" minlength="10"  [disabled]="isOTPVerified || isOTPSent">
+                                            <div class="mobile-box">
+                                                <span style="color: #fff;">IN +91</span>
+                                                <input type="text" maxlength="10" minlength="10" id="adress" class="form-control"
+                                                    name="organizationPhonenumber" formControlName="organizationPhonenumber" placeholder="Mobile Number"  (keypress)="numberOnly($event)"  maxlength="10" minlength="10"  [disabled]="isOTPVerified || isOTPSent">
+                                                </div>
                                                 <span style="font-size: 12px;">(Provide mobile number, so you can access on WhatsApp)</span>
                                             <span style="color: green;" *ngIf="isOTPVerified">Mobile Number Verified</span>
                                             <div

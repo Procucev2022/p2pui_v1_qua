@@ -79,9 +79,11 @@
                         </div>
                         <div class="col-md-5 col-xs-12  mt-3 mb-3">
                             <label for="name">Mobile Number:<b style="color: #fff">*</b></label>
-                            <input type="text" maxlength="10" minlength="10" id="adress" class="form-control"
-                                name="phoneNumber" formControlName="phoneNumber" placeholder="Mobile Number" />
-                                
+                                <div class="mobile-box">
+                                    <span style="color: #344054;">IN +91</span>
+                                    <input type="text" maxlength="10" minlength="10" id="adress" class="form-control"
+                                        name="phoneNumber" formControlName="phoneNumber" placeholder="Mobile Number" />
+                                </div>
                                      <span style="font-size: 12px;">(Provide mobile number, so you can access on WhatsApp)</span>
                             <span style="color: green;" *ngIf="isOTPVerified">MobileNumber is verified</span>
                             <div
