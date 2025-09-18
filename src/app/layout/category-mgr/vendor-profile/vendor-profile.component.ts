@@ -670,6 +670,17 @@ onCategoryChange(event, divisionIndex, categoryIndex){
   const categoryList = this.divisionFormList[divisionIndex].categoryList;
   this.divisionFormList[divisionIndex].categoryList = []
   if (event.target.checked) {
+    const allSelectedCategories = this.divisionFormList.flatMap(item => item.selectedCategory);
+  console.log("All selected categories:", allSelectedCategories);
+  console.log("Total count:", allSelectedCategories.length);
+  if (allSelectedCategories.length >= 5) {
+    this.toastrService.warning('You can select a maximum of 5 categories across all divisions.', 'Warning');
+    // Revert the checkbox state
+    event.target.checked = false;
+    this.divisionFormList[divisionIndex].categoryList = categoryList;
+    return;
+  }
+
     const index = this.divisionFormList[divisionIndex].selectedCategory ? this.divisionFormList[divisionIndex].selectedCategory.indexOf(value) : -1;
     if (index > -1) {
       this.divisionFormList[divisionIndex].selectedCategory.splice(index, 1);

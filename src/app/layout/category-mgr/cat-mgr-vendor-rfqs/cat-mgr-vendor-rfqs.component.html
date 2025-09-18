@@ -275,8 +275,8 @@
               <td style="width: 11rem;" *ngIf="currentRole == 'CategoryManager'">
 
                 <span >
-                    <button (click)="onAcceptOrRejectVendor(rowData, true)" class="btn btn-blue pr-l" [disabled]="rowData.status_ui_display == 'New'" >Approve</button>
-                        <button (click)="onAcceptOrRejectVendor(rowData, false)" class="btn btn-orange"  [disabled]="rowData.status_ui_display == 'New'"  >Reject</button>
+                    <button (click)="onAcceptOrRejectVendor(rowData, true)" class="btn btn-blue pr-l" [disabled]="rowData.status_ui_display == 'New' || rowData.status_ui_display == 'Approved'" >Approve</button>
+                        <button (click)="onAcceptOrRejectVendor(rowData, false)" class="btn btn-orange"  [disabled]="rowData.status_ui_display == 'New' || rowData.status_ui_display == 'Rejected' "  >Reject</button>
                 </span>
               </td>
           </tr>
