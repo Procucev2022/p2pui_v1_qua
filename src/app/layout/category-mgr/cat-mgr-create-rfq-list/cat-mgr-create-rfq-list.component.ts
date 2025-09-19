@@ -495,11 +495,24 @@ export class CatMgrCreateRfqListComponent implements OnInit {
     get isEmptyDescription(){
         return this.itemForm.controls.description.dirty && this.itemForm.controls.description.value.trim() == '';
     }
+     get isEmptySpecification(){
+        return this.itemForm.controls.specification.dirty && this.itemForm.controls.specification.value.trim() == '';
+    }
 
-    isOnlySpecialCharacters(description) {
+    get isInvalidSpecification(){
+        let specification = this.itemForm.controls.specification.value?.trim();
+            if(specification && specification.split(' ').length >1){
+            specification = specification.replace(/\s+/g, '');
+            }
+            return (this.itemForm.controls.specification.dirty) &&
+                (   this.isOnlySpecialCharacters(specification) ||
+                this.startsWithSpecialChar(specification));
+    }
+
+    isOnlySpecialCharacters(specification) {
         const regex = /^[^a-zA-Z0-9\s]+$/;
-       
-        return regex.test(description);
+
+        return regex.test(specification);
     }
 
     startsWithSpecialChar(str) {

@@ -209,7 +209,7 @@
                                              <div class="col-12 mb-1">
                                                  <label class="form-label required">Item Description</label>
                                                  <p-autoComplete  formControlName="description" showEmptyMessage="false"
-                                                    [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
+                                                    [emptyMessage]="" styleClass="form-control" inputStyleClass="p-auto-cls"
                                                     [suggestions]="filtered_descriptionList" panelInputClass="p-auto-panel-cls" [minLength]="1"
                                                     [dropdown]="true"
                                                     (completeMethod)="filterAutoCompleteData($event, 'descriptionList','filtered_descriptionList',   true)"
@@ -228,6 +228,10 @@
                                              <div class="col-12 mb-1">
                                                  <label class="form-label required">Item Specification</label>
                                                  <input class="form-control" formControlName="specification" placeholder="Item Specification" />
+                                                  <p *ngIf="isEmptySpecification" class="error pt-2">Specification is a mandatory field and cannot be empty or contain only spaces.</p>
+                                                    <p class="error pt-2" *ngIf="isInvalidSpecification">
+                                                    Specification cannot be consist only of special characters And not starts with special characters
+                                                    </p>
                                                  
                                              </div>
                                              <div class="col-6 mb-1">
@@ -250,7 +254,8 @@
                                             </div>
                                              <div class="col-5 mt-3 btn-block  " style="display: flex;align-items: center;justify-content: space-evenly; ">
 
-                                                 <button class="btn btn-blue ml-3" type="submit" [disabled]="!itemForm.valid || isInvalidDescription || isEmptyDescription" >   {{ isEditForm ? 'Update': 'Add'}} Item</button>
+                                                 <button class="btn btn-blue ml-3" type="submit"
+                                                  [disabled]="!itemForm.valid || isInvalidDescription || isEmptyDescription || isEmptySpecification || isInvalidSpecification" >   {{ isEditForm ? 'Update': 'Add'}} Item</button>
                                                  <button class="btn btn-red" type="reset">Reset</button>
                                              </div>
 
