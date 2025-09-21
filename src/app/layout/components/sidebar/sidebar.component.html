@@ -595,8 +595,7 @@
                             <i class="fa fa-user"></i> &nbsp;
                             <span>My Profile</span>
                         </a>
-                           <li *ngIf="loggedUserDetails?.role.roleName ==    'Vendor' || loggedUserDetails?.role.roleName ==    'ClientInitiator' || 
-                        loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor'">
+                           <li *ngIf="loggedUserDetails?.role.roleName ==    'Vendor' ||  loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor'">
                             <a class="list-group-item" [routerLink]="['/categorymgr/vendor-catalogue']"
                             [routerLinkActive]="['router-link-active']">
                             <i class="fa fa-user"></i> &nbsp;
