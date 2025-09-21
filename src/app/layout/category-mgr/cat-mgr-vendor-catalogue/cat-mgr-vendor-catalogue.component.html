@@ -1,0 +1,178 @@
+<div class="table-title">
+    <div class="row">
+      <div class="col-sm-6">
+        <h2>Vendor Catalogue</h2>
+        <p><span class="dot"></span>{{cataloguesList.length}} Total</p>
+      </div>
+      <div class="col-sm-6">
+        <div class="add-new-btn">
+          <button class="btn btn-blue" (click)="onAddCatlogue()"><i class="fa fa-plus" aria-hidden="true"></i> Add New Catalogue</button>
+      </div>
+    </div>
+  </div>
+<div class="col-12">
+
+        <div class="row">
+
+
+            <div class="col-12" *ngIf="isLoaded">
+
+
+                <p-table [ngClass]="{  'gmt-container': isGMTView}" #clientTableRef [columns]="clientTableHeaders" [value]="cataloguesList"  dataKey="id"
+       sortMode="multiple"  [paginator]="true" [rows]="pageRecordSize" id="rfqTable" [rowsPerPageOptions]="pageOptions"
+        [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData"
+         [scrollable]="true" [scrollHeight]="'calc(100vh  - 205px)'"  >
+         <ng-template pTemplate="caption">
+            <div class="table-search">
+              <div class="row">
+                <div class="col-sm-6">
+                  <input class="main-input" type="text" pInputText size="50" placeholder="Search..."
+                    (input)="clientTableRef.filterGlobal($event.target.value, 'contains')" />
+                </div>
+                <div class="col-sm-6">
+                </div>
+              </div>
+            </div>
+          </ng-template>
+         <ng-template pTemplate="header" let-columns>
+                        <tr>
+                             
+                            <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+                                {{col.header}}
+                            </th> 
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
+                        <tr [pSelectableRow]="rowData">
+                            
+                            <td [style.width]="col.width" *ngFor="let col of columns"
+                                [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }"
+                                [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"
+                                [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
+                                  <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
+                                    {{rowData[col.field] | date: 'dd-MMM-yyyy hh:mm:ss a'}}
+                                </span>
+                                <span *ngIf="col.fieldType != 'date'">
+                                    {{rowData[col.field]}}
+                                </span>
+                                <span class="blink" *ngIf="col.field=='companyId' && (rowData.newClientStatus && rowData.newClientStatus == true)">
+                                    <i class="fa fa-bell" aria-hidden="true"></i>
+                                </span>
+                            </td> 
+                        </tr>
+                    </ng-template> 
+                    <ng-template pTemplate="emptymessage" let-columns>
+                        <tr>
+                            <td [attr.colspan]="clientTableHeaders.length" style="text-align:center;">
+                               <!-- {{gridData.gridEmptyMsg}} -->
+                               No Data Available
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+
+            </div>
+        </div>
+
+</div>
+
+
+
+<ng-template #onAddCatlogTemplateRef>
+    <div class="modal-header"> 
+        <!-- validations yet to write -->
+        <h5>Add Catalogue Details</h5>
+        <button class="btn-skelton modal-close-btn" mat-dialog-close>✖</button>
+    </div>
+    <div class="modal-body" style="overflow-x: hidden;">
+    <div class="form p-3">
+        <form [formGroup]="catalogueForm" (ngSubmit)="onAddUpdateCatalogueDetails()"   autocomplete="off" novalidate>
+
+            <div class="form-group">
+                <label class="form-label required">Material Description</label>
+                <input type="text" class="form-control"  formControlName="materialDescription" placeholder="Material Description" />
+                <p class="error-message" *ngIf="catalogueForm.get('materialDescription').hasError('required') && catalogueForm.get('materialDescription').touched">Material Description cannot be empty</p>
+                <p class="error-message" *ngIf="isInvalidDescription(catalogueForm, 'materialDescription')">Material Description cannot have special characters</p>
+            </div>
+            <div class="form-group">
+                <label class="form-label required">UOM</label>
+                <input type="text" class="form-control"  formControlName="uom" placeholder="UOM" />
+                <p class="error-message" *ngIf="catalogueForm.get('uom').hasError('required') && catalogueForm.get('uom').touched">UOM cannot be empty</p>
+            </div>
+            <div class="form-group">
+                <label class="form-label required">Min Order Quantity</label>
+                <input type="number" formControlName="minOrderQuantity"  placeholder="Enter Min Order Quantity"   class="form-control" />
+                <p class="error-message" *ngIf="catalogueForm.get('minOrderQuantity').hasError('required') && catalogueForm.get('minOrderQuantity').touched">Min Order Quantity cannot be empty</p>
+            </div>
+             <div class="form-group">
+                <label class="form-label required">Price Per UOM</label>
+                <input type="number" formControlName="pricePerUom"  placeholder="Enter Price Per UOM"
+                    class="form-control" />
+                <p class="error-message" *ngIf="catalogueForm.get('pricePerUom').hasError('required') && catalogueForm.get('pricePerUom').touched">Price Per UOM cannot be empty</p>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label required">GST Percentage(%)</label>
+                <input type="number" formControlName="gstPercentage"  placeholder="Enter GST Percentage"
+                    class="form-control" />
+                <p class="error-message" *ngIf="catalogueForm.get('gstPercentage').hasError('required') && catalogueForm.get('gstPercentage').touched">GST Percentage cannot be empty</p>
+            </div>
+
+
+            <div class="form-group">
+                <label class="form-label required">Available Quantity </label>
+                <input type="text" formControlName="availableQuantity"  placeholder="Available Quantity "
+                    class="form-control" />
+                <p class="error-message" *ngIf="catalogueForm.get('availableQuantity').hasError('required') && catalogueForm.get('availableQuantity').touched">Available Quantity cannot be empty</p>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label required">Lead Time for MOQ (In Days)</label>
+                <input type="text" formControlName="leadTimeForMoq"  placeholder="Lead Time for MOQ"
+                    class="form-control" />
+                <p class="error-message" *ngIf="catalogueForm.get('leadTimeForMoq').hasError('required') && catalogueForm.get('leadTimeForMoq').touched">Lead Time for MOQ cannot be empty</p>
+            </div>
+
+            <div class="input-group mt-4 " style="justify-content: right;">
+                <button class="btn btn-blue" [disabled]="!catalogueForm.valid">Update</button>
+                <button class="btn btn-red" (click)="resetForm()">Reset</button>
+            </div>
+        </form>
+    </div>
+    </div>
+</ng-template>
+
+
+<!-- <ng-template #editUserTemplateRef>
+    <div class="modal-header">
+        <h3>Edit User Details</h3>
+        <button class="btn-skelton modal-close-btn" mat-dialog-close>✖</button>
+    </div>
+    <div class="modal-body">
+    <div class="form">
+        <form [formGroup]="userForm" (ngSubmit)="updateUserDetails()"   autocomplete="off" novalidate>
+            <div class="form-group">
+                <label>Full Name </label>
+                <input type="text" formControlName="fullName"  placeholder="Enter Full Name "
+                    class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Username/Email</label>
+                <input type="email" class="form-control"  formControlName="username" placeholder="Enter Email" />
+            </div>
+
+            <div class="form-group">
+                <label>Phone Number  </label>
+                <input type="email" formControlName="phone"  placeholder="Enter  Phone Number"
+                    class="form-control" />
+            </div>
+
+
+            <div class="input-group mt-4 " style="justify-content: right;">
+                <button class="btn btn-blue" [disabled]="!userForm.valid">Update</button>
+                <button class="btn btn-red" (click)="resetForm()">Reset</button>
+            </div>
+        </form>
+    </div>
+    </div>
+</ng-template> -->

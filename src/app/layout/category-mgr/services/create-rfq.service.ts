@@ -77,9 +77,14 @@ export class CreateRfqService {
         return this.httpService.get(AppApiConfig.apiEndpoint +AppApiConfig.GET_CLIENT_WITH_USER_LIST_CM2,  {} )
 
     }
-    //
+    //GET_VENDOR_CATALOGUES
+    getVendorCatalogues(req:any){
+        return this.httpService.post(AppApiConfig.apiEndpoint +AppApiConfig.GET_VENDOR_CATALOGUES,  req, {})
+    }
 
-
+    addVendorCatalogue(req:any){
+        return this.httpService.post(AppApiConfig.apiEndpoint +AppApiConfig.ADD_VENDOR_CATALOGUE,  req, {})
+    }
 
     acceptGMTRegisteredClient(rowData:any){
         return this.httpService.post(AppApiConfig.apiEndpoint +AppApiConfig.ACCEPT_GMT_FOR_REG_CLIENTS, rowData, {} )

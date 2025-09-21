@@ -26,6 +26,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { VendorProfileComponent } from './vendor-profile/vendor-profile.component';
 import { VendorProfileSubscriptionsComponent } from './vendor-profile-subscriptions/vendor-profile-subscriptions.component';
 import { CategoryMgrVendorSummaryComponent } from './category-mgr-vendor-summary/category-mgr-vendor-summary.component';
+import { CatMgrVendorCatalogueComponent } from './cat-mgr-vendor-catalogue/cat-mgr-vendor-catalogue.component';
 const routes: Routes = [
     { path: '', redirectTo: 'procurequests', pathMatch: 'prefix' },
     { path: 'dashboard', component: CatMgrDashboardComponent },
@@ -54,7 +55,8 @@ const routes: Routes = [
     {path: 'my-profile', component: VendorProfileComponent},
     {path: 'gmt-rfq-faqs', component: FaqsDocumentComponent},
     {path: 'vendor-profile-subscriptions', component: VendorProfileSubscriptionsComponent},
-    {path: 'vendor-summary', component: CategoryMgrVendorSummaryComponent}
+    {path: 'vendor-summary', component: CategoryMgrVendorSummaryComponent},
+    {path: 'vendor-catalogue', component: CatMgrVendorCatalogueComponent}
 ];
 @NgModule({
     imports: [RouterModule.forChild(routes)],
