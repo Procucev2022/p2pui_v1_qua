@@ -137,6 +137,14 @@ export class PasswordChangeComponent implements OnInit {
     }
 
     getOTP(){
+      if(this.oldPwd.valid == false || this.newPwd.valid == false || this.confirmPwd.valid == false){
+        this.toastrService.error('Please enter Old Password, New Password and Confirm Password', 'Failed');
+        return;
+      }
+      if(  this.passwdForm.errors.pwdsDontMatch){
+        this.toastrService.error('New Password and Confirm Password should be same and not empty', 'Failed');
+        return;
+      }
       const  reqPayload = { 
           "otp": true,
           'username': localStorage.getItem('loggedUser'),
