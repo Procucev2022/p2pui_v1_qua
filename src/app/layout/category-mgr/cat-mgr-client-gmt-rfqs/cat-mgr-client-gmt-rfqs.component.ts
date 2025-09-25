@@ -25,7 +25,7 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
   loggedUserPermissions: any;
   viewRFQByIdData: any;
   rfqTableHeaders = [];
-  expandedRows: {} = {};
+  expandedRows: any = {};
 
   @ViewChild('vendorInfoTemplate') vendorInfoTemplate: any;
   queryList: any = [];
@@ -48,7 +48,7 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
       { field: 'projectDesc', header: 'Description', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
       { field: 'companyName', header: 'Company Name', isLink: false, width: '180px', fieldType: 'text', isExceedContent: true },
       { field: 'phoneNumber', header: 'Contact', isLink: false, width: '180px', fieldType: 'text', isExceedContent: true },
-       { field: 'createdBy', header: 'Created By', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
+       { field: 'createdBy', header: 'Created By', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
       { field: 'createdTs', header: 'Creation Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
       { field: 'status_ui_display', header: 'Status', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
   ];
@@ -273,20 +273,21 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
 
   }
 
-  getRFQs(selectedRowData, event) {
+  getRFQs(event:any) {
       this.expandedRows = {};
       const thisRef = this;
-      thisRef.expandedRows[selectedRowData.id] = 1;
+      thisRef.expandedRows[event.data.id] = true;
       this.vendorsList =[];
       this.itemsList =[];
-      this.selectedData = [selectedRowData];
-      this.selectedRfqData = Object.assign({}, selectedRowData);
-      this.rfqId = selectedRowData.rfqId;
+      this.selectedData = [event.data];
+      this.selectedRfqData = Object.assign({}, event.data);
+      this.rfqId = event.data.rfqId;
       this.getVendorsByRfq();
       this.getLineItemsByRFQ();
   }
 
-  getCloseRFQs(selectedRowData, event) {
+  getCloseRFQs(event:any) {
+      this.expandedRows[event.data.id] = false;
       this.expandedRows = {};
   }
 

@@ -3,6 +3,7 @@ import { AuthenticationService } from '../../shared/services/authentication.serv
 import { Router } from '@angular/router';
 import { EncryDecryService } from '../../../app/shared/services';
 import { SystemViewConfig } from 'src/app/app.config';
+import { LoaderService } from '../../shared/modules/common-share/services/loader.service';
 
 @Component({
   selector: 'app-login-subscription',
@@ -13,7 +14,7 @@ export class LoginSubscriptionComponent implements OnInit {
     data: any;
     SYSTEM_VIEW_CONFIG = SystemViewConfig;
   constructor(private authService: AuthenticationService, private router: Router,
-    private encryDecryService: EncryDecryService) { }
+    private encryDecryService: EncryDecryService, private loaderService: LoaderService) { }
 
   ngOnInit() {
 
@@ -35,13 +36,14 @@ export class LoginSubscriptionComponent implements OnInit {
         });
     }
         onSelectedSubscriptions(sysValue){
-            this.authService.onSelectedSubscriptions(sysValue, this.data)
+            this.loaderService.isLoading.next(true);
+            this.authService.onSelectedSubscriptions(sysValue, this.data);
 
           }
 
 
           backToLogin(){
             localStorage.clear();
-            this.router.navigate(['/login'])
+            this.router.navigate(['/login']);
           }
 }

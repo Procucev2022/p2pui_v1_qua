@@ -135,7 +135,8 @@
 
         <p-table [ngClass]="{'gmt-container': isGMTView}" dataKey="id" #prqTable [columns]="rfqsTableHeadersForCategoryManger" [value]="rfqDataList" sortMode="multiple" [paginator]="true"
         [rows]="pageRecordSize" id="prqTable" [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}"
-        exportFilename="roles details" [(selection)]="selectedData" [scrollable]="true"
+        exportFilename="roles details" [(selection)]="selectedData" [scrollable]="true" [expandedRowKeys]="expandedRows"
+       (onRowExpand)="getRFQs($event)" (onRowCollapse)="getCloseRFQs($event)"
         [scrollable]="true" [scrollHeight]="'calc(100vh  - 205px)'">
         <ng-template pTemplate="caption">
             <div class="table-search">
@@ -164,7 +165,7 @@
             <tr [pSelectableRow]="rowData">
             <td style="width: 3rem">
                 <button type="button" pButton pRipple [pRowToggler]="rowData"
-                    class="grid-expand"   (click)="expanded ? getCloseRFQs(rowData,$event) : getRFQs(rowData,$event)" >
+                    class="grid-expand"     >
                     <span *ngIf="expanded"><i class="fa fa-chevron-down"></i></span>
                     <span *ngIf="!expanded"><i class="fa fa-chevron-right"></i></span>
                 </button>

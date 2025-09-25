@@ -9,7 +9,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="currentRole == 'Vendor' || currentRole == 'Registration' || currentRole == 'PartialVendor'; else catMgrTemplate"  >
+      <div *ngIf="currentRole == 'Vendor' || currentRole == 'Registration' || currentRole == 'PartialVendor'"  >
         <p-table [ngClass]="{'gmt-container': isGMTView}"  #rfqTable [columns]="rfqsTableHeadersForGMTVendor" [value]="rfqDataList" sortMode="multiple"
           [paginator]="true" [rows]="pageRecordSize" id="rfqTable" [rowsPerPageOptions]="pageOptions"
               [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData"  [scrollable]="true" [scrollHeight]="'calc(100vh  - 205px)'">
@@ -75,11 +75,11 @@
 
 
     <!-- For CategoryManger or CategoryManger2 -->
-    <ng-template #catMgrTemplate>
-
+    <div *ngIf=" !(currentRole == 'Vendor' || currentRole == 'Registration' || currentRole == 'PartialVendor')"> 
         <p-table [ngClass]="{'gmt-container': isGMTView}" dataKey="id" #prqTable [columns]="rfqsTableHeadersForCategoryManger" [value]="rfqDataList" sortMode="multiple" [paginator]="true"
       [rows]="pageRecordSize" id="prqTable" [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}"
-      exportFilename="roles details" [(selection)]="selectedData" [scrollable]="true"
+      exportFilename="roles details" [(selection)]="selectedData" [scrollable]="true" [expandedRowKeys]="expandedRows"
+       (onRowExpand)="getRFQs($event)" (onRowCollapse)="getCloseRFQs($event)"
       [scrollable]="true" [scrollHeight]="'calc(100vh  - 205px)'">
       <ng-template pTemplate="caption">
           <div class="table-search">
@@ -106,17 +106,26 @@
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
           <tr [pSelectableRow]="rowData">
-          <td style="width: 3em">
+          <!-- <td style="width: 3em">
               <button type="button" pButton pRipple [pRowToggler]="rowData"
-                  class="grid-expand"   (click)="expanded ? getCloseRFQs(rowData,$event) : getRFQs(rowData,$event)" >
+                  class="grid-expand"   (click)="expanded ? getRFQs(rowData,$event) : getRFQs(rowData,$event)" >
                   <span *ngIf="expanded"><i class="fa fa-chevron-down"></i></span>
                   <span *ngIf="!expanded"><i class="fa fa-chevron-right"></i></span>
               </button>
+          </td> -->
+          <td style="width: 3em">
+            <button type="button" pButton pRipple [pRowToggler]="rowData"
+                  class="grid-expand"  >
+                  <span *ngIf="expanded"><i class="fa fa-chevron-down"></i></span>
+                  <span *ngIf="!expanded"><i class="fa fa-chevron-right"></i></span>
+              </button>
+              <!-- <p-button type="button" pRipple [pRowToggler]="rowData" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" /> -->
           </td>
-          <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
+          <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}" 
+           [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
                   <span *ngIf="!col.isLink">
                           <span *ngIf="col.fieldType != 'date'" [ngClass]="{'blueCls': col.field == 'rfqId' && rowData.byClient == true}">
-                              {{rowData[col.field]}}
+                              {{rowData[col.field]}} 
                           </span>
                           <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
                             {{rowData['createdTs'] | date: 'dd-MMM-yyyy'}}
@@ -133,7 +142,7 @@
           </td>
           </tr>
       </ng-template>
-      <ng-template pTemplate="rowexpansion" let-rowData>
+      <ng-template  pTemplate="rowexpansion" let-rowData>
           <tr class="child-grid" *ngIf=" selectedData && selectedData?.length ==1">
               <td colspan="9">
                   <p #h1> <label>RFQ Id:</label> {{rfqId}}</p>
@@ -158,7 +167,7 @@
           </tr>
       </ng-template>
       </p-table>
-        </ng-template>
+    </div>
 
 </div>
 <ng-template #vendorTemplate>

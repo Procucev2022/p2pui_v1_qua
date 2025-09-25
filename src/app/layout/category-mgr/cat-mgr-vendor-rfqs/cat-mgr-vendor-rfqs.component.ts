@@ -29,7 +29,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
     loggedUserPermissions: any;
     viewRFQByIdData: any;
     rfqTableHeaders = [];
-    expandedRows: {} = {};
+    expandedRows: any = {};
     queryList: any = [];
     categoryList: any = [];
     rfqsTableHeadersForGMTVendor: any = [
@@ -342,22 +342,24 @@ export class CatMgrVendorRfqsComponent implements OnInit {
 
     }
 
-    getRFQs(selectedRowData, event) {
+    getRFQs(event) {
         this.expandedRows = {};
         const thisRef = this;
-        thisRef.expandedRows[selectedRowData.id] = 1;
+        thisRef.expandedRows[event.data.id] = 1;
+           thisRef.expandedRows[event.data.id] = true;
         this.vendorsList =[];
         this.itemsList =[];
-        this.selectedData = [selectedRowData];
-        this.selectedRfqData = Object.assign({}, selectedRowData);
-        this.rfqId = selectedRowData.rfqId;
+        this.selectedData = [event.data];
+        this.selectedRfqData = Object.assign({}, event.data);
+        this.rfqId = event.data.rfqId;
         this.getVendorsByRfq();
         this.getLineItemsByRFQ();
         //   this.h1.nativeElement.scrollIntoView({behavior: 'smooth'});
     }
 
-    getCloseRFQs(selectedRowData, event) {
-        this.expandedRows = {};
+    getCloseRFQs(event) {
+        this.expandedRows[event.data.id] = false;
+      this.expandedRows = {};
     }
 
     getVendorsByRfq() {
