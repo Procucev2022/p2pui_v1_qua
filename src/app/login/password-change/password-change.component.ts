@@ -145,10 +145,17 @@ export class PasswordChangeComponent implements OnInit {
         this.toastrService.error('New Password and Confirm Password should be same and not empty', 'Failed');
         return;
       }
+      const phoneNumber = localStorage.getItem('loggedUserMobile');
+      let added91Number = '';
+      if(!!phoneNumber && phoneNumber.toString().length == 10){
+        added91Number = '+91'+ phoneNumber.toString();
+      }else{
+        added91Number = phoneNumber;
+      }
       const  reqPayload = { 
           "otp": true,
           'username': localStorage.getItem('loggedUser'),
-          "phone": "+91"+localStorage.getItem('loggedUserMobile'),
+          "phone": added91Number,
           "tempEmail": sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail') : '',
           "tempPhone": sessionStorage.getItem('tempPhone') ? sessionStorage.getItem('tempPhone') : '',
         }
