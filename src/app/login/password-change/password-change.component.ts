@@ -148,7 +148,7 @@ export class PasswordChangeComponent implements OnInit {
       const  reqPayload = { 
           "otp": true,
           'username': localStorage.getItem('loggedUser'),
-          "phone": localStorage.getItem('loggedUserMobile'),
+          "phone": "+91"+localStorage.getItem('loggedUserMobile'),
           "tempEmail": sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail') : '',
           "tempPhone": sessionStorage.getItem('tempPhone') ? sessionStorage.getItem('tempPhone') : '',
         }
