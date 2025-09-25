@@ -141,7 +141,7 @@ export class PasswordChangeComponent implements OnInit {
         this.toastrService.error('Please enter Old Password, New Password and Confirm Password', 'Failed');
         return;
       }
-      if(  this.passwdForm.errors.pwdsDontMatch){
+      if( !!this.passwdForm.errors &&  this.passwdForm.errors.pwdsDontMatch){
         this.toastrService.error('New Password and Confirm Password should be same and not empty', 'Failed');
         return;
       }
