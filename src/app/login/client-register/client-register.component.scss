@@ -137,7 +137,7 @@ form label {
     max-height: 118vh;
     background: #FFF;
     height: 117.6vh;
-    overflow: hidden;
+    overflow-x: hidden  !important;
 
 
     .left-section {
