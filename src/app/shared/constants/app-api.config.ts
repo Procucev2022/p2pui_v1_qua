@@ -17,7 +17,7 @@ export class AppApiConfig {
   public static GET_CATEGORIES_BY_DIVISION_GMT= '/rest/gmt/getCategoryByDivision';
   public static RAISE_QUERY_FOR_RFQ_BY_GMT_VENDOR ='/rest/gmt/raiseQueryByVendor';
   public static IGNORE_RFQ_BY_GMT_VENDOR ='/rest/gmt/ignoreRfqByVendor';
-  public static REQUEST_RFQ_BY_GMT_VENDOR = '/rest/gmt/requestRfqByVendors';
+  public static REQUEST_RFQ_BY_GMT_VENDOR = '/rest/gmt/requestRfqBySellers';
   public static GET_ALL_CATEGORIES_GMT= '/rest/gmt/getAllCategories';
   public static GET_RFQS_FOR_NOPR = "/rest/gmt/getRFQsForNoPR";
   public static GET_ALL_VENDORS =  "/rest/gmt/getAllVendors";
