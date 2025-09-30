@@ -74,7 +74,7 @@ export class CatMgrVendorCatalogueComponent implements OnInit{
     //     { field: 'leadTimeForMoq', header: 'Lead Time for MOQ', isLink: false,isExceedContent: true, width: '215px' },
     //     { field: 'availableQuantity', header: 'Available Qty.', isLink: false, isExceedContent: false, width: '135px' },
         this.catalogueForm = new FormGroup({
-            materialDescription: new FormControl('?', [Validators.required]),
+            materialDescription: new FormControl('', [Validators.required]),
             uom: new FormControl('', [Validators.required]),
             minOrderQuantity: new FormControl('', [Validators.required]),
             pricePerUom: new FormControl('', [Validators.required]),
