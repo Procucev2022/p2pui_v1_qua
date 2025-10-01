@@ -112,7 +112,7 @@ export class PasswordChangeComponent implements OnInit {
     getValidateOTP(){
 
        if (this.otpNumber) {
-        if(this.otpNumber.length <6){
+        if((this.otpNumber.toString().length <6)){
             this.toastrService.error('Please enter 6digits OTP value', 'Failed');
           return;
         }
@@ -137,10 +137,25 @@ export class PasswordChangeComponent implements OnInit {
     }
 
     getOTP(){
+      if(this.oldPwd.valid == false || this.newPwd.valid == false || this.confirmPwd.valid == false){
+        this.toastrService.error('Please enter Old Password, New Password and Confirm Password', 'Failed');
+        return;
+      }
+      if( !!this.passwdForm.errors &&  this.passwdForm.errors.pwdsDontMatch){
+        this.toastrService.error('New Password and Confirm Password should be same and not empty', 'Failed');
+        return;
+      }
+      const phoneNumber = localStorage.getItem('loggedUserMobile');
+      let added91Number = '';
+      if(!!phoneNumber && phoneNumber.toString().length == 10){
+        added91Number = '+91'+ phoneNumber.toString();
+      }else{
+        added91Number = phoneNumber;
+      }
       const  reqPayload = { 
           "otp": true,
           'username': localStorage.getItem('loggedUser'),
-          "phone": localStorage.getItem('loggedUserMobile'),
+          "phone": added91Number,
           "tempEmail": sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail') : '',
           "tempPhone": sessionStorage.getItem('tempPhone') ? sessionStorage.getItem('tempPhone') : '',
         }

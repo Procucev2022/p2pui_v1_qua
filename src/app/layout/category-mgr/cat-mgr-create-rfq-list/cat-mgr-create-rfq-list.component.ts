@@ -499,6 +499,10 @@ export class CatMgrCreateRfqListComponent implements OnInit {
         return this.itemForm.controls.specification.dirty && this.itemForm.controls.specification.value.trim() == '';
     }
 
+
+    get isEmptyUOM(){
+        return this.itemForm.controls.unitofMeasures.dirty && this.itemForm.controls.unitofMeasures.value.trim() == '';
+    }
     get isInvalidSpecification(){
         let specification = this.itemForm.controls.specification.value?.trim();
             if(specification && specification.split(' ').length >1){
@@ -810,6 +814,12 @@ export class CatMgrCreateRfqListComponent implements OnInit {
     }
 
     createRFQ() {
+
+        if(this.deliveryForm.invalid) {
+            this.toaster.warning('Please fill all Delivery details', 'Warning');
+            return;
+        }
+
 
         const projectFormData = this.projectForm.getRawValue();
         const deliveryFormData = this.deliveryForm.getRawValue();

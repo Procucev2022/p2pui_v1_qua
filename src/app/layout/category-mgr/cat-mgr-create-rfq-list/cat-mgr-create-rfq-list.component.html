@@ -84,12 +84,15 @@
 
                 </td>
                 <td style="width: 16em; " >
-                    <span *ngIf="roleName != 'ClientInitiator'">
+                      <span *ngIf="roleName == 'ClientInitiator'">
                         <button type="button" class="btn-skelton"
-                        >
-                        <img src="/assets/images/new/view-doc.png" (click)="onViewRFQDetails(rowData, false)"
-                            title="View RFQ Details">
-                    </button>
+                            >
+                            <img src="/assets/images/new/view-doc.png" (click)="onViewRFQDetails(rowData, false)"
+                                title="View RFQ Details">
+                        </button>
+                    </span>
+                    <span *ngIf="roleName != 'ClientInitiator'">
+                      
                     <button type="button" class="btn-skelton"
                     >
                     <img src="/assets/images/new/forward.png" class="forward"  (click)="onSendRFQ(rowData)"width="44" height="34"
@@ -168,7 +171,7 @@
                         </div>
                            <div class="col-6"  *ngIf="roleName != 'ClientInitiator'">
                             <label class="form-label required">Category</label>
-                            <p-autoComplete  formControlName="category" showEmptyMessage="true"
+                            <p-autoComplete  formControlName="category" showEmptyMessage="false"
                             [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
                              [suggestions]="filtered_categoryList" panelInputClass="p-auto-panel-cls" [minLength]="1"
                                [dropdown]="true"
@@ -209,7 +212,7 @@
                                              <div class="col-12 mb-1">
                                                  <label class="form-label required">Item Description</label>
                                                  <p-autoComplete  formControlName="description" showEmptyMessage="false"
-                                                    [emptyMessage]="" styleClass="form-control" inputStyleClass="p-auto-cls"
+                                                    [emptyMessage]="''" styleClass="form-control" inputStyleClass="p-auto-cls"
                                                     [suggestions]="filtered_descriptionList" panelInputClass="p-auto-panel-cls" [minLength]="1"
                                                     [dropdown]="true"
                                                     (completeMethod)="filterAutoCompleteData($event, 'descriptionList','filtered_descriptionList',   true)"
@@ -240,6 +243,7 @@
                                                  <div class="error" *ngIf="itemForm.controls.unitofMeasures.errors && (itemForm.controls.unitofMeasures.errors.invalid || itemForm.controls.unitofMeasures.errors.pattern)">
                                                     Only Alphabets allowed and  No Special Characters not allowed.
                                                  </div>
+                                                <p *ngIf="isEmptyUOM" class="error pt-2">UOM is a mandatory field and cannot be empty</p>
                                              </div>
                                              <div class="col-6 mb-1">
                                                      <label class="form-label required">Quantity</label>
@@ -255,7 +259,7 @@
                                              <div class="col-5 mt-3 btn-block  " style="display: flex;align-items: center;justify-content: space-evenly; ">
 
                                                  <button class="btn btn-blue ml-3" type="submit"
-                                                  [disabled]="!itemForm.valid || isInvalidDescription || isEmptyDescription || isEmptySpecification || isInvalidSpecification" >   {{ isEditForm ? 'Update': 'Add'}} Item</button>
+                                                  [disabled]="!itemForm.valid || isInvalidDescription || isEmptyDescription || isEmptySpecification || isInvalidSpecification || isEmptyUOM" >   {{ isEditForm ? 'Update': 'Add'}} Item</button>
                                                  <button class="btn btn-red" type="reset">Reset</button>
                                              </div>
 

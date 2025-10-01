@@ -297,15 +297,15 @@ export class ClientRegisterComponent implements OnInit {
             };
             this.vendorRegSer.submitSelfClientRegistration(requestObject).subscribe((r) => {
                 const res = JSON.parse(JSON.stringify(r));
-                if (res.status === 'Success' || res.status === 'success' || res.statusCode === '1001') {
+                if (res.status === 'Success' || res.status === 'success' ) {
                     this.toaster.success(res.message, 'Success');
                     this.successMessage = res.message;
                     this.clientRegFormReset();
                     this.confirmRegistration();
                     this.panVerificationIniatiated = false;
 
-                } else if (res.status === 'Failure' || res.status === 'failure') {
-                    this.toaster.error(res.errorMessage, 'Failure');
+                } else  {
+                    this.toaster.error(res.message, 'Failure');
                 }
             });
         // } 
