@@ -169,6 +169,8 @@ small {
   width: 100px;
   height: 100px;
   border-radius: 50%;
+  border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
   justify-content: center;
 }
 
@@ -558,6 +560,8 @@ button [type="reset"] {
     top: -16%;
     left: 28%;
     border-radius: 50%;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
   }
 
   .list-item {
@@ -580,6 +584,8 @@ button [type="reset"] {
     border: 3px solid;
     width: 177px;
     background: #fff;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 img.qua-cls {

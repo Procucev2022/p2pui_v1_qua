@@ -416,8 +416,7 @@ a.btn.btn-primary {
       margin-left: 15%;
       border: 3px solid #FFF;
       align-items: center;
-      margin-top: 100px;
-      box-shadow: 0px 1px 6px 2px #a4a4a4;
+      margin-top: 100px; 
 
 
         .content {
@@ -455,9 +454,8 @@ a.btn.btn-primary {
           top: -18%;
           width: 160px;
           height: 160px;
-          border-radius: 52% !important;
-          border: 3px solid #ffffff;
-          box-shadow: -1px -4px 4px 3px #a4a4a4;
+          border-radius:52% 52% 0 0 !important;
+          border: 3px solid #ffffff; 
         }
     }
 }

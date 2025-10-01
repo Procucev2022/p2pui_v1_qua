@@ -112,7 +112,7 @@ export class PasswordChangeComponent implements OnInit {
     getValidateOTP(){
 
        if (this.otpNumber) {
-        if(this.otpNumber.length <6){
+        if((this.otpNumber.toString().length <6)){
             this.toastrService.error('Please enter 6digits OTP value', 'Failed');
           return;
         }

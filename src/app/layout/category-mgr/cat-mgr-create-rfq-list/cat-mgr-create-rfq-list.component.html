@@ -84,12 +84,15 @@
 
                 </td>
                 <td style="width: 16em; " >
-                    <span *ngIf="roleName != 'ClientInitiator'">
+                      <span *ngIf="roleName == 'ClientInitiator'">
                         <button type="button" class="btn-skelton"
-                        >
-                        <img src="/assets/images/new/view-doc.png" (click)="onViewRFQDetails(rowData, false)"
-                            title="View RFQ Details">
-                    </button>
+                            >
+                            <img src="/assets/images/new/view-doc.png" (click)="onViewRFQDetails(rowData, false)"
+                                title="View RFQ Details">
+                        </button>
+                    </span>
+                    <span *ngIf="roleName != 'ClientInitiator'">
+                      
                     <button type="button" class="btn-skelton"
                     >
                     <img src="/assets/images/new/forward.png" class="forward"  (click)="onSendRFQ(rowData)"width="44" height="34"
@@ -168,7 +171,7 @@
                         </div>
                            <div class="col-6"  *ngIf="roleName != 'ClientInitiator'">
                             <label class="form-label required">Category</label>
-                            <p-autoComplete  formControlName="category" showEmptyMessage="true"
+                            <p-autoComplete  formControlName="category" showEmptyMessage="false"
                             [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
                              [suggestions]="filtered_categoryList" panelInputClass="p-auto-panel-cls" [minLength]="1"
                                [dropdown]="true"
