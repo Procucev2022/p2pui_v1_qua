@@ -84,7 +84,7 @@
 
                 </td>
                 <td style="width: 16em; " >
-                      <span *ngIf="roleName == 'ClientInitiator'">
+                      <span *ngIf="roleName == 'ClientInitiator' || roleName == 'CategoryManager' ">
                         <button type="button" class="btn-skelton"
                             >
                             <img src="/assets/images/new/view-doc.png" (click)="onViewRFQDetails(rowData, false)"
