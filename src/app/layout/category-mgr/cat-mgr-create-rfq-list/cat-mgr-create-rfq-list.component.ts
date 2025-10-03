@@ -553,7 +553,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
             // address: new FormControl('', Validators.required),
             state: new FormControl(null, Validators.required),
             city: new FormControl('', Validators.required),
-            pincode : new FormControl('', Validators.required)
+            pincode : new FormControl('', [Validators.required, Validators.pattern('^[1-9][0-9]{5}$')])
         });
 
         if(this.isIndian){
@@ -579,6 +579,13 @@ export class CatMgrCreateRfqListComponent implements OnInit {
         this.toaster.success('Vendor added to Cart!', 'Success');
     }
 
+      numberOnly(event): boolean {
+        const charCode = event.which ? event.which : event.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
     onAddVendorsToCart() {
         if (this.vendorForm.invalid) {
             this.toaster.warning('Pls fill the required fields', 'Warning');
@@ -817,6 +824,16 @@ export class CatMgrCreateRfqListComponent implements OnInit {
 
         if(this.deliveryForm.invalid) {
             this.toaster.warning('Please fill all Delivery details', 'Warning');
+            return;
+        }
+
+        if(this.deliveryForm.getRawValue().city.trim() == '' ||  !isNaN(this.deliveryForm.getRawValue().city) || this.deliveryForm.getRawValue().city == null){
+            this.toaster.warning('Address is should not empty and not allowed numeric values alone', 'Warning');
+            return;
+        }
+
+        if(this.projectForm.value.projectDesc.trim() == '' ||  !isNaN(this.projectForm.value.projectDesc) || this.projectForm.value.projectDesc == null){
+            this.toaster.warning('Please enter Project Description', 'Warning');
             return;
         }
 
