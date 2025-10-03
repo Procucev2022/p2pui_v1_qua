@@ -70,6 +70,9 @@ export class PasswordChangeComponent implements OnInit {
         if(response.status && response.status.toLowerCase() === 'success'){
           this.toastrService.success('Password updated successfully, You will be redirected to login page shortly.', 'Success');
            setTimeout(() => {
+            localStorage.removeItem('loggedUserMobile');
+            localStorage.removeItem('loggedUser');
+            localStorage.removeItem('logData');
             this.router.navigate(['/login']);
           }, 3000);
         } else {
@@ -152,26 +155,28 @@ export class PasswordChangeComponent implements OnInit {
       }else{
         added91Number = phoneNumber;
       }
-      const  reqPayload = { 
-          "otp": true,
-          'username': localStorage.getItem('loggedUser'),
-          "phone": added91Number,
-          "tempEmail": sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail') : '',
-          "tempPhone": sessionStorage.getItem('tempPhone') ? sessionStorage.getItem('tempPhone') : '',
-        }
-      this.authService.getAccessToken(reqPayload).pipe(first()).subscribe(data => {
-        if (data && data.status == 'error') {
-        }else if (data && data.status == 'success') {
-          if (data.methodType == 'otp') {
-            this.toastrService.success(data.message, 'Success');
-            this.isOTPSent = true;
-          }
-        }
 
-        if(!this.isOTPSent){ 
-           this.toastrService.error('OTP Sent Failed', 'Failed');
-        }
-      });
+      this.updatePassword(); 
+      // const  reqPayload = { 
+      //     "otp": true,
+      //     'username': localStorage.getItem('loggedUser'),
+      //     "phone": added91Number,
+      //     "tempEmail": sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail') : '',
+      //     "tempPhone": sessionStorage.getItem('tempPhone') ? sessionStorage.getItem('tempPhone') : '',
+      //   }
+      // this.authService.getAccessToken(reqPayload).pipe(first()).subscribe(data => {
+      //   if (data && data.status == 'error') {
+      //   }else if (data && data.status == 'success') {
+      //     if (data.methodType == 'otp') {
+      //       this.toastrService.success(data.message, 'Success');
+      //       this.isOTPSent = true;
+      //     }
+      //   }
+
+      //   if(!this.isOTPSent){ 
+      //      this.toastrService.error('OTP Sent Failed', 'Failed');
+      //   }
+      // });
     }
 
   getLoggerUserData() {
