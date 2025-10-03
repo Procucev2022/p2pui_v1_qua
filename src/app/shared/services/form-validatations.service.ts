@@ -29,6 +29,24 @@ export class FormValidatationsService {
     };
   }
 
+  
+  alphabetValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    const isValid = /^[A-Za-z\s]*$/.test(value); // allows letters and spaces
+    return isValid ? null : { alphabetOnly: true };
+  }
+
+  alphaNumericNotNumericOnly(control: AbstractControl): ValidationErrors | null {
+  const value = control.value;
+  if (!value) return null;
+
+  const hasLetters = /[A-Za-z]/.test(value);
+  const isNumericOnly = /^[0-9]+$/.test(value);
+
+  return hasLetters || !isNumericOnly ? null : { numericOnly: true };
+}
+
+
   isInvalidDescription(formName: FormGroup, controlName: string) {
     let description = formName.controls[controlName].value?.trim();
     if (description && description.split(' ').length > 1) {
@@ -67,4 +85,12 @@ export class FormValidatationsService {
     const regex = /^[^a-zA-Z0-9]/;
     return regex.test(controlValue);
   }
+
+
+  pincodeValidator(control: AbstractControl): ValidationErrors | null {
+  const value = control.value;
+  const isValid = /^[1-9][0-9]{5}$/.test(value);
+  return isValid ? null : { invalidPincode: true };
+}
+
 }

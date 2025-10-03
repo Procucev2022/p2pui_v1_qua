@@ -7,6 +7,7 @@ import { AppApiConfig } from './../../../app/shared/constants/app-api.config';
 import { RegConfirmDialogComponent } from '../reg-confirm-dialog/reg-confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationService } from 'primeng/api';
+import { FormValidatationsService } from 'src/app/shared/services/form-validatations.service';
 @Component({
     selector: 'app-client-register',
     templateUrl: './client-register.component.html',
@@ -33,7 +34,8 @@ export class ClientRegisterComponent implements OnInit {
     isOTPSent: boolean = false;
 
     constructor(private modalDialog:MatDialog, private toaster: ToastrService, private vendorRegSer: VendorRegistrationService,
-        private confirmationService: ConfirmationService,  private cd: ChangeDetectorRef,  private router: Router) { }
+        private confirmationService: ConfirmationService,  private cd: ChangeDetectorRef,  
+        private router: Router, private formValidatorService: FormValidatationsService) { }
 
     ngOnInit() {
         console.log('contacts form');
@@ -42,8 +44,8 @@ export class ClientRegisterComponent implements OnInit {
 
     generateClientForm() {
         this.clientRegForm = new FormGroup({
-            name: new FormControl('', [Validators.required,]),
-            companyName: new FormControl('', [Validators.required]),
+            name: new FormControl('', [Validators.required, this.formValidatorService.alphabetValidator]),
+            companyName: new FormControl('', [Validators.required, this.formValidatorService.alphaNumericNotNumericOnly]),
             organizationPhonenumber: new FormControl('',[Validators.required, tenDigitPhoneNumberValidator()]),
             email: new FormControl('', [Validators.required,Validators.email,  strictEmailValidator()]),
             // clientSector: new FormControl('', [Validators.required]), 
@@ -51,7 +53,7 @@ export class ClientRegisterComponent implements OnInit {
             india: new FormControl('true' ),
             emailOtp: new FormControl(''),
             mobileOtp: new FormControl(''),
-            pinCode: new FormControl('', [Validators.required, Validators.pattern('^[1-9][0-9]{5}$')]),
+            pinCode: new FormControl('', [Validators.required, this.formValidatorService.pincodeValidator]),
         });
         // this.clientRegForm.disable();
 
@@ -81,6 +83,37 @@ export class ClientRegisterComponent implements OnInit {
 
     sendOTPs() {
         const clientRegForm = this.clientRegForm.getRawValue();
+        if(!clientRegForm.companyName || clientRegForm.companyName.trim() == '' ){
+            this.toaster.warning("Please enter  Company Name", 'Warning');
+            return;
+        }
+        
+        if( this.clientRegForm.controls.companyName.errors ){
+            this.toaster.warning("Company Name must not be numeric only", 'Warning');
+            return;
+        }
+       
+
+        if(!clientRegForm.name  || clientRegForm.name.trim() == ''){
+            this.toaster.warning("Please enter  Name", 'Warning'); 
+            return;
+        }
+        if(   this.clientRegForm.controls.name.errors && this.clientRegForm.controls.name.errors.alphabetOnly ){
+            this.toaster.warning("Name must contain only alphabetic characters", 'Warning');
+            return;
+        } 
+        if(this.clientRegForm.controls.organizationPhonenumber.errors ){
+            this.toaster.warning("Please enter valid mobile number", 'Warning');
+            return;
+        }
+          if(this.clientRegForm.controls.email.errors?.required){
+            this.toaster.warning("Please enter  email id", 'Warning');
+            return;
+        }
+        if(this.clientRegForm.controls.email.errors ){
+            this.toaster.warning("Please enter valid email id", 'Warning');
+            return;
+        }
         if (clientRegForm.organizationPhonenumber && clientRegForm.email && clientRegForm.companyName) {
             this.isOTPSent = true;
             this.isOTPVerified = false;
@@ -116,7 +149,20 @@ export class ClientRegisterComponent implements OnInit {
         }
     }
     verifyOtps() {
-
+        const clientRegForm = this.clientRegForm.getRawValue();
+        if(!clientRegForm.emailOtp || clientRegForm.emailOtp.toString().trim() == '' ){
+            this.toaster.warning("Please enter  Email OTP", 'Warning');
+            return;
+        }else if(clientRegForm.emailOtp && clientRegForm.emailOtp.toString().length !== 6  ){
+            this.toaster.warning("Please enter valid 6digits Email OTP", 'Warning');
+            return;
+        }else if(!clientRegForm.mobileOtp || clientRegForm.mobileOtp.toString().trim() == '' ){
+            this.toaster.warning("Please enter  Mobile OTP", 'Warning');    
+            return;
+        }else if(clientRegForm.mobileOtp && clientRegForm.mobileOtp.toString().length !== 6  ){
+            this.toaster.warning("Please enter valid 6digits Mobile OTP", 'Warning');
+            return;
+        }
         if (this.clientRegForm.getRawValue().organizationPhonenumber && this.clientRegForm.getRawValue().email && this.clientRegForm.getRawValue().companyName &&
             this.clientRegForm.getRawValue().emailOtp && this.clientRegForm.getRawValue().mobileOtp) {
             let obj: any = {
@@ -135,6 +181,7 @@ export class ClientRegisterComponent implements OnInit {
                     this.clientRegForm.controls['email'].disable();
                     this.clientRegForm.controls['organizationPhonenumber'].disable();
                     this.clientRegForm.controls['companyName'].disable();
+                    this.clientRegForm.controls['name'].disable();
                     this.clientRegForm.updateValueAndValidity();
                     this.toaster.success(res.message, 'Success');
                 } else {
@@ -279,6 +326,18 @@ export class ClientRegisterComponent implements OnInit {
             }
             if(this.clientRegForm.controls['email'].errors){
                 this.toaster.error('Please enter valid Email', 'Failure'); 
+                return;
+            } 
+            if(this.clientRegForm.controls['name'].errors){
+                this.toaster.error('Please enter valid Name', 'Failure'); 
+                return;
+            }
+            if(this.clientRegForm.controls['organizationPhonenumber'].errors){
+                this.toaster.error('Please enter valid Mobile Number', 'Failure'); 
+                return;
+            }
+            if(this.clientRegForm.controls['pinCode'].errors){
+                this.toaster.error('Please enter valid Pin Code', 'Failure'); 
                 return;
             }
             // const splitGST = this.clientRegForm.getRawValue().pan.split('');
