@@ -210,3 +210,8 @@ span.acc-title {
   left: 0 !important;
   height: 40px !important;
 }
+
+
+::ng-deep .empty-results-cls p-autocomplete p-overlay {
+    display: none !important;
+}

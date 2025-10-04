@@ -81,37 +81,45 @@ export class ClientRegisterComponent implements OnInit {
         }
     }
 
-    sendOTPs() {
+    isValidFormControls(){
         const clientRegForm = this.clientRegForm.getRawValue();
-        if(!clientRegForm.companyName || clientRegForm.companyName.trim() == '' ){
-            this.toaster.warning("Please enter  Company Name", 'Warning');
-            return;
-        }
-        
-        if( this.clientRegForm.controls.companyName.errors ){
-            this.toaster.warning("Company Name must not be numeric only", 'Warning');
-            return;
-        }
-       
-
-        if(!clientRegForm.name  || clientRegForm.name.trim() == ''){
+        let isValid = true;
+      
+         if(!clientRegForm.name  || clientRegForm.name.trim() == ''){
             this.toaster.warning("Please enter  Name", 'Warning'); 
-            return;
+            return false;
         }
         if(   this.clientRegForm.controls.name.errors && this.clientRegForm.controls.name.errors.alphabetOnly ){
             this.toaster.warning("Name must contain only alphabetic characters", 'Warning');
-            return;
+            return false;
+        } 
+
+        if( this.clientRegForm.controls.companyName.errors ){
+            this.toaster.warning("Company Name must not be numeric only", 'Warning');
+            return false;
+        }
+         if(!clientRegForm.companyName || clientRegForm.companyName.trim() == '' ){
+            this.toaster.warning("Please enter  Company Name", 'Warning');
+            return false;
         } 
         if(this.clientRegForm.controls.organizationPhonenumber.errors ){
             this.toaster.warning("Please enter valid mobile number", 'Warning');
-            return;
+            return false;
         }
           if(this.clientRegForm.controls.email.errors?.required){
             this.toaster.warning("Please enter  email id", 'Warning');
-            return;
+            return false;
         }
         if(this.clientRegForm.controls.email.errors ){
             this.toaster.warning("Please enter valid email id", 'Warning');
+            return false;
+        }
+        return isValid;
+    }
+
+    sendOTPs() {
+        const clientRegForm = this.clientRegForm.getRawValue();
+        if(!this.isValidFormControls()){
             return;
         }
         if (clientRegForm.organizationPhonenumber && clientRegForm.email && clientRegForm.companyName) {
@@ -149,6 +157,9 @@ export class ClientRegisterComponent implements OnInit {
         }
     }
     verifyOtps() {
+          if(!this.isValidFormControls()){
+            return;
+        }
         const clientRegForm = this.clientRegForm.getRawValue();
         if(!clientRegForm.emailOtp || clientRegForm.emailOtp.toString().trim() == '' ){
             this.toaster.warning("Please enter  Email OTP", 'Warning');
