@@ -133,6 +133,7 @@
                                     <div style="color: #fb9898;" *ngIf="(clientRegForm.controls.pinCode.required)">PinCode is
                                         required</div>
                                     <div style="color: #fb9898;" *ngIf="clientRegForm.controls.pinCode.errors.invalidPincode">Please enter valid 6 digit PinCode.</div>
+                                    <div style="color: #fb9898;"*ngIf="(clientRegForm?.controls?.pinCode?.touched) && clientRegForm.controls.pinCode.errors?.repeatedDigits">PinCode must not contain repeated digits.</div>
                                 </div>
                             </div>
                           

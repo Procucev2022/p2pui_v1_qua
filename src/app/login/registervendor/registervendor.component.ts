@@ -7,6 +7,7 @@ import { HttpHeaders } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { RegConfirmDialogComponent } from '../reg-confirm-dialog/reg-confirm-dialog.component';
 import { ConfirmationService } from 'primeng/api';
+import { FormValidatationsService } from 'src/app/shared/services/form-validatations.service';
 
 @Component({
     selector: 'app-registervendor',
@@ -24,7 +25,9 @@ visible: boolean;
     isOTPSent: boolean;
     // states: any[] = this.getStatesArray();
 
-    constructor(private modalDialog: MatDialog, private fb: FormBuilder, private toaster: ToastrService, private vendorRegSer: VendorRegistrationService, private router: Router, private confirmationService: ConfirmationService,  private cd: ChangeDetectorRef) { }
+    constructor(private modalDialog: MatDialog, private fb: FormBuilder, private toaster: ToastrService, 
+        private vendorRegSer: VendorRegistrationService, private router: Router, private confirmationService: ConfirmationService, 
+         private cd: ChangeDetectorRef, private formValidatorService: FormValidatationsService) { }
 
     ngOnInit() {
 
@@ -36,18 +39,54 @@ visible: boolean;
 
     generateClientForm() {
         this.vendorRegistrationForm = new FormGroup({
-            name: new FormControl('', [Validators.required,]),
-            companyName: new FormControl('', [Validators.required,]),
-            phoneNumber: new FormControl('', [Validators.required, tenDigitPhoneNumberValidator()]),
+            name: new FormControl('', [Validators.required, this.formValidatorService.alphabetValidator]),
+            companyName: new FormControl('', [Validators.required, this.formValidatorService.alphaNumericNotNumericOnly]),
+            phoneNumber: new FormControl('', [Validators.required,  tenDigitPhoneNumberValidator()]),
             mail: new FormControl('', [Validators.required, Validators.email, strictEmailValidator()]),
             gstin: new FormControl('', [gstinValidator()]),
             india: new FormControl('true'),
             products: new FormControl('', [Validators.required]),
             mobileOtp: new FormControl(''),
             emailOtp: new FormControl(''),
-            pinCode: new FormControl('', [Validators.required])
+            pinCode: new FormControl('', [Validators.required, this.formValidatorService.pincodeValidator])
         });
 
+    }
+
+    isValidFormControls(){
+        const vendorRegistrationForm = this.vendorRegistrationForm.getRawValue();
+        let isValid = true;
+      
+         if(!vendorRegistrationForm.name  || vendorRegistrationForm.name.trim() == ''){
+            this.toaster.warning("Please enter  Name", 'Warning'); 
+            return false;
+        }
+        if(   this.vendorRegistrationForm.controls.name.errors && this.vendorRegistrationForm.controls.name.errors.alphabetOnly ){
+            this.toaster.warning("Name must contain only alphabetic characters", 'Warning');
+            return false;
+        } 
+
+        if( this.vendorRegistrationForm.controls.companyName.errors ){
+            this.toaster.warning("Company Name must not be numeric only", 'Warning');
+            return false;
+        }
+         if(!vendorRegistrationForm.companyName || vendorRegistrationForm.companyName.trim() == '' ){
+            this.toaster.warning("Please enter  Company Name", 'Warning');
+            return false;
+        } 
+        if(this.vendorRegistrationForm.controls.phoneNumber.errors ){
+            this.toaster.warning("Please enter valid mobile number", 'Warning');
+            return false;
+        }
+          if(this.vendorRegistrationForm.controls.mail.errors?.required){
+            this.toaster.warning("Please enter  email id", 'Warning');
+            return false;
+        }
+        if(this.vendorRegistrationForm.controls.mail.errors ){
+            this.toaster.warning("Please enter valid email id", 'Warning');
+            return false;
+        }
+        return isValid;
     }
 
      numberOnly(event): boolean {
@@ -90,6 +129,15 @@ visible: boolean;
                     this.toaster.error('Please enter Products', 'Failure');
                 }
                 return;
+            }
+
+            if(!this.isValidFormControls()){
+                return;
+            }
+            
+            if(this.vendorRegistrationForm.controls.gstin.errors ){
+                this.toaster.warning("Please enter valid GSTIN", 'Warning');
+                return false;
             }
             console.log('the form is ');
             const requestObject = {
@@ -192,6 +240,9 @@ visible: boolean;
 
 
     sendOTPs(){
+    if(!this.isValidFormControls()){
+                return;
+    }
 
       if(this.vendorRegistrationForm.value.phoneNumber && this.vendorRegistrationForm.value.mail && this.vendorRegistrationForm.value.companyName){
           this.isOTPSent = true;
@@ -228,12 +279,23 @@ visible: boolean;
       }
     }
     verifyOtps() {
-      if(!(this.vendorRegistrationForm.getRawValue().phoneNumber && this.vendorRegistrationForm.getRawValue().mail
-      && this.vendorRegistrationForm.getRawValue().companyName && this.vendorRegistrationForm.value.emailOtp &&
-      this.vendorRegistrationForm.value.mobileOtp)){
-        this.toaster.warning("Please Enter Company name,  EmailId & Mobile Number", 'Warning');
-        return ;
-      }
+        if(!this.isValidFormControls()){
+            return;
+        }
+        const vendorRegForm = this.vendorRegistrationForm.getRawValue();
+        if(!vendorRegForm.emailOtp || vendorRegForm.emailOtp.toString().trim() == '' ){
+            this.toaster.warning("Please enter  Email OTP", 'Warning');
+            return;
+        }else if(vendorRegForm.emailOtp && vendorRegForm.emailOtp.toString().length !== 6  ){
+            this.toaster.warning("Please enter valid 6digits Email OTP", 'Warning');
+            return;
+        }else if(!vendorRegForm.mobileOtp || vendorRegForm.mobileOtp.toString().trim() == '' ){
+            this.toaster.warning("Please enter  Mobile OTP", 'Warning');    
+            return;
+        }else if(vendorRegForm.mobileOtp && vendorRegForm.mobileOtp.toString().length !== 6  ){
+            this.toaster.warning("Please enter valid 6digits Mobile OTP", 'Warning');
+            return;
+        }
         let obj: any = {
           "companyName":this.vendorRegistrationForm.getRawValue().companyName,
           "organizationPhonenumber":this.vendorRegistrationForm.getRawValue().phoneNumber,

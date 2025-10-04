@@ -504,7 +504,7 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
               this.dialog.closeAll();
               this.vendorInfo = res;
               this.dialog.open(this.vendorInfoTemplate, {
-                  width: "30%",
+                  width: "45%",
                   minHeight: "250px",
                   data: "Su",
               }).afterClosed().subscribe((res: any) => {

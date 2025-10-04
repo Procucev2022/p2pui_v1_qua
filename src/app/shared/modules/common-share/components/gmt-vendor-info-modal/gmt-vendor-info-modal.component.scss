@@ -8,3 +8,18 @@
     content: ':';
     padding-right: 20px;
 }
+.categories-list  span{
+    display: inline-block;
+    min-width: 100px;
+    border: 1px solid #e3dede;
+    background: #fbdd84;
+    padding: 4px;
+    border-radius: 8px;
+    margin: 6px;
+    letter-spacing: 0.5px;
+}
+.empty-category {
+    font-style: italic;
+    color: #888;
+    margin-top: 10px;
+}
