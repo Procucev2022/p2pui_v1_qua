@@ -87,10 +87,19 @@ export class FormValidatationsService {
   }
 
 
-  pincodeValidator(control: AbstractControl): ValidationErrors | null {
+  
+
+pincodeValidator(control: AbstractControl): ValidationErrors | null {
   const value = control.value;
-  const isValid = /^[1-9][0-9]{5}$/.test(value);
-  return isValid ? null : { invalidPincode: true };
+  if (!value) return null;
+
+  // Check for exactly 6 digits
+  const pinRegex = /^[1-9][0-9]{5}$/;
+  if (!pinRegex.test(value)) return { invalidPincode: true };
+
+  // Check if all digits are the same
+  const repeated = /^(\d)\1{5}$/.test(value);
+  return repeated ? { repeatedDigits: true } : null;
 }
 
 }
