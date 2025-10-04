@@ -149,6 +149,10 @@ export class LoginComponent implements OnInit {
     // });
   }
 
+    isValidMobile(mobile: string): boolean {
+  return /^[1-9][0-9]{9}$/.test(mobile);
+}
+
   onLoggedin() {
     if ((this.otpEnabled && this.userName == null) || (!this.otpEnabled && (this.userName == null || this.userPassword == null))) {
       this.isCreadentialsEmpty = true;
@@ -156,6 +160,10 @@ export class LoginComponent implements OnInit {
     }
     let reqPayload: any = {}
     if (this.otpEnabled) {
+      if(!this.isValidMobile(this.mobileNumber)){
+        this.toastService.warning("Enter Valid Mobile Number", "Warning");
+        return;
+      }
       if (!this.mobileNumber) {
         this.toastService.warning("Enter Mobile Number", "Warning");
         return;
@@ -237,6 +245,14 @@ export class LoginComponent implements OnInit {
 
   }
 
+   numberOnly(event): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
+  }
+
   resendOTP() {
     clearInterval(this.clearIntervalTime);
     this.isOTPSent = false;
@@ -259,7 +275,7 @@ export class LoginComponent implements OnInit {
 
   validateEmailOTP() {
     if (!(this.otpNumber && this.otpNumber.toString().length == 6)) {
-      this.toastService.warning("Enter Valid 6Digits OTP", 'Warning');
+      this.toastService.warning("Enter Valid 6 Digits OTP", 'Warning');
       return;
     }
     this.authService.validateEmailOTP({
