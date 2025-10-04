@@ -11,14 +11,7 @@
         <label><b>EmailId</b></label>
         <label>{{vendorInfo.email}}</label>
     </div>
-    <div class="form-group">
-        <label><b>Category</b></label>
-        <label>{{vendorInfo.category}}</label>
-    </div>
-    <div class="form-group">
-        <label><b>Sub Category</b></label>
-        <label>{{vendorInfo.subCategory}}</label>
-    </div>
+    
     <div class="form-group">
         <label><b>Bussiness Age</b></label>
         <label>{{vendorInfo.bussinessAge ? vendorInfo.bussinessAge: '-'}}</label>
@@ -32,6 +25,13 @@
         <label><b>Vendor Class</b></label>
         <label>{{vendorInfo.vendorClass}}</label>
     </div>
+     <div class="form-group">
+        <label><b>Categories</b></label>
+        <label></label>
+      
+    </div>
+      <div class="categories-list"> <span *ngFor="let category of vendorInfo.categories">{{category}}</span></div>
+      <div class="empty-category" *ngIf="!vendorInfo.categories || vendorInfo.categories.length === 0">No Categories Found</div>
 </div>
 <div *ngIf="!vendorInfo">
     No Details Found

@@ -1,6 +1,6 @@
 export class AppApiConfig {
-
-  public static apiEndpoint = 'https://quaservicesp.procucev.com';
+//   public static apiEndpoint = 'https://p2pv1servicesdev-etfrcte5fhdvfrd4.centralindia-01.azurewebsites.net';
+ public static apiEndpoint = 'https://quaservicesp.procucev.com';
   public static LOGGED_USER_PATH = '/rest/users/user/loggedUser';
   public static ACCESS_TOKEN_PATH = '/authenticate';
   public static GET_RFQS_FOR_NOPR_FOR_CLIENT_INITIATOR = "/rest/gmt/getNoPrRfqByClient";
@@ -346,7 +346,7 @@ export class AppApiConfig {
     public static DELINK_VENDOR_ITEM_FROM_CLIENT = '/rest/itemcode/delinkVendorItemFromClient';
     public static GET_ITEM_PRICE_APPROVALS = '/rest/itemcode/getApprovalItems';
     public static APPROVE_ITEM_PRICE = '/rest/itemcode/approveVendorItem';
-    public static GET_VENDOR_INFO = '/rest/vendor/vendorInfoById';
+    public static GET_VENDOR_INFO = '/rest/gmt/getVendorInfo';
     public static GET_DYNAMIC_PRICING_ITEMS = '/rest/itemcode/getDynamicPricingItems';
     public static GET_DYNAMIC_PRICING_ITEMS_FOR_CM = '/rest/categoryManager/getDynamicPricingItemsByCM';
     public static UPDATE_SUB_CATEGORY_DETAILS = '/rest/itemcode/editSubCategoryByVM';
@@ -656,7 +656,7 @@ export class AppApiConfig {
     public static GET_ALL_RFQS_BY_VENDOR_ID = '/rest/vendorManager/getAllRfqsByVendorId';
 
     public static FETCH_ALL_RFQS_BY_ID = '/rest/rfq/fetchAllRfqs';
-    public static GET_VENDORS_INFO_BY_ID_GMT = '/rest/vendor/vendorInfoById';
+    public static GET_VENDORS_INFO_BY_ID_GMT = '/rest/gmt/getVendorInfo';
     public static GET_CLIENT_INFO_BY_ID_GMT = '/rest/client/getUserById';
     public static PAN_VALIDATION ='/partialvendor/validateClientDetails';
     public static OTP_VALIDATION ='/partialvendor/validateOtp';
