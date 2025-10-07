@@ -645,7 +645,7 @@ export class VendorProfileComponent {
       });
     } else {
      
-      
+      obj.subscriptionPlan = this.selectedSubscription ? this.selectedSubscription : null;
     // obj.branches = obj.branches.filter(ele => ele.branch
     this.createRfqService.updateSellerData(obj).subscribe((res: any) => {
       this.toastrService.success('Vendor Updated Successfully', 'Success');

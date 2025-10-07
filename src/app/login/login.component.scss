@@ -170,7 +170,7 @@ small {
   height: 100px;
   border-radius: 50%;
   border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
+  border-bottom-left-radius: 0;
   justify-content: center;
 }
 
@@ -558,7 +558,7 @@ button [type="reset"] {
     width: 155px;
     height: 162px;
     top: -16%;
-    left: 28%;
+    left: 26%;
     border-radius: 50%;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
@@ -577,41 +577,42 @@ button [type="reset"] {
 }
 
 .qua-box {
-      position: absolute;
-    left: 36%;
-    top: -80%;
-    border-radius: 50%;
-    border: 3px solid;
-    width: 177px;
-    background: #fff;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
+  position: absolute;
+  left: 34%;
+  top: -112%;
+  border-radius: 50%;
+  border: 3px solid;
+  width: 177px;
+  background: #fff;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
 img.qua-cls {
   border-radius: 45% 45% 0 0;
 }
 
-.web-link{
+.web-link {
   text-align: center !important;
-    font-weight: bold;
-    font-size: 24px;
-    display: flex ;
-    align-self: self-end;
+  font-weight: bold;
+  font-size: 24px;
+  display: flex;
+  align-self: self-end;
 }
 
-.text-center{
+.text-center {
   text-align: center !important;
-    width: 100%;
-    a{
-      color: yellow !important;
-    }
+  width: 100%;
+
+  a {
+    color: yellow !important;
+  }
 }
 
-img.by-cls  {
-    position: absolute;
-    bottom: -22px;
-    left: 41%;
-    width: 35px;
-    height: 27px;
+img.by-cls {
+  position: absolute;
+  bottom: -22px;
+  left: 41%;
+  width: 35px;
+  height: 27px;
 }
