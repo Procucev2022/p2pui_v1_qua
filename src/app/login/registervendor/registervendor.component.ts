@@ -244,39 +244,36 @@ visible: boolean;
                 return;
     }
 
-      if(this.vendorRegistrationForm.value.phoneNumber && this.vendorRegistrationForm.value.mail && this.vendorRegistrationForm.value.companyName){
-          this.isOTPSent = true;
-          this.isOTPVerified = false;
-          const reqPayload = {
-            "tempEmail": sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail'): '',
-            "tempPhone":  sessionStorage.getItem('tempPhone')? sessionStorage.getItem('tempPhone'): '',
-            "companyName": this.vendorRegistrationForm.value.companyName,
-            "organizationPhonenumber":this.vendorRegistrationForm.value.phoneNumber,
-            "email":this.vendorRegistrationForm.value.mail,
+        this.isOTPSent = true;
+        this.isOTPVerified = false;
+        const reqPayload = {
+        "tempEmail": sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail'): '',
+        "tempPhone":  sessionStorage.getItem('tempPhone')? sessionStorage.getItem('tempPhone'): '',
+        "companyName": this.vendorRegistrationForm.value.companyName,
+        "organizationPhonenumber":this.vendorRegistrationForm.value.phoneNumber,
+        "email":this.vendorRegistrationForm.value.mail,
 
 
-          }
+        }
 
-          this.vendorRegSer.sendAllOTPs(reqPayload).subscribe((res: any) => {
+        this.vendorRegSer.sendAllOTPs(reqPayload).subscribe((res: any) => {
             this.isOTPSent = res && (res.otpSentToEmail && res.otpSentToMobile);
             if (this.isOTPSent) {
-              this.vendorRegistrationForm.controls['mail'].disable();
-              this.vendorRegistrationForm.controls['phoneNumber'].disable();
-              this.vendorRegistrationForm.controls['companyName'].disable(); 
-              this.vendorRegistrationForm.updateValueAndValidity();
-              this.toaster.success("OTPs sent to given Mobile & Email Id");
+                this.vendorRegistrationForm.controls['mail'].disable();
+                this.vendorRegistrationForm.controls['phoneNumber'].disable();
+                this.vendorRegistrationForm.controls['companyName'].disable(); 
+                this.vendorRegistrationForm.updateValueAndValidity();
+                this.toaster.success("OTPs sent to given Mobile & Email Id");
             }else{
                 if(!res.otpSentToEmail){
                     this.toaster.error("Email OTP sending failed", res.message);
-                }
-                if(!res.otpSentToMobile){
-                  this.toaster.error("Mobile OTP sending failed", res.message);
+            }
+            if(!res.otpSentToMobile){
+                this.toaster.error("Mobile OTP sending failed", res.message);
                 }
             }
         })
-      }else{
-        this.toaster.warning("Please Enter Company name,  EmailId & Mobile Number", 'Warning');
-      }
+      
     }
     verifyOtps() {
         if(!this.isValidFormControls()){

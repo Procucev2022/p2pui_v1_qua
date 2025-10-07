@@ -67,7 +67,7 @@ export class VendorProfileSubscriptionsComponent {
       return;
     }
     const obj = this.vendorRegObj;
-    obj.subscriptionPlan = this.selectedSubscription ? { id: this.selectedSubscription.id } : '';
+    obj.subscriptionPlan = this.selectedSubscription ? { id: this.selectedSubscription.id } : null;
     this.createRfqService.updateSellerData(obj).subscribe((res: any) => {
       this.toastrService.success('Vendor Updated Successfully', 'Success');
       this.getVendorById(this.loggedUserDetails.org.id)
