@@ -607,7 +607,7 @@ export class VendorProfileComponent {
       this.toastrService.error('Please enter valid GSTIN', 'Error');
       return;
     } 
-    
+
     const obj = this.vendorForm.getRawValue();
     obj.id = this.vendorRegObj.id;
     obj.subscriptionPlan = this.selectedSubscription ? { id: this.selectedSubscription.id } : '';
@@ -631,6 +631,10 @@ export class VendorProfileComponent {
       });
     }
     obj.divisionCategories = divisionCategoriesList;
+    if( obj.divisionCategories.length < 1){
+      this.toastrService.error('Please select at least one division and category', 'Error');
+      return;
+    }
     if (this.isBuyer) {
       obj.id = this.vendorRegObj.id;
       obj.userId = this.vendorRegObj.userId;
