@@ -379,7 +379,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
     //For View RFQ Details - ReadOnly
 
     onViewRFQDetails(rowData, isEdit) {
-        if(isEdit && this.roleName == 'ClientInitiator' && rowData.status_display == 'Accepted' || rowData.status_display == 'Published'){
+        if(isEdit && this.roleName == 'ClientInitiator' && (rowData.status_display == 'Accepted' || rowData.status_display == 'Published')){
             this.toaster.warning("RFQ Already  Accepted. \n You're not allowed at this moment!", "Warning")
             return;
         }

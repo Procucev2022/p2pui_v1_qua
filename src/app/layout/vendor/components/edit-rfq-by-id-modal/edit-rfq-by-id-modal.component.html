@@ -18,7 +18,7 @@
                     <div class="col-12 cust-card">
                         <div class="form-group row" style="margin-top: 15px"  >
                             <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
-                                class="col-sm-5 col-form-label">Project Description/Reference </label>
+                                class="col-sm-5 col-form-label form-label required">Project Description/Reference </label>
                             <div class="col-sm-5 content-value" style="padding: 7px 16px">
                                 <input class="form-control" type="text" [(ngModel)] ="viewRFQbyIDdetails.projectDesc" name="projectDesc"/>
                             </div>
@@ -34,7 +34,7 @@
 
                         <div class="form-group row" style="margin-top: 15px"  >
                             <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
-                                class="col-sm-5 col-form-label">Division </label>
+                                class="col-sm-5 col-form-label form-label required">Division </label>
                             <div class="col-sm-5 content-value" style="padding: 7px 16px" >
                                 <select class="form-control" name="s1"  *ngIf="this.viewRFQbyIDdetails.isCreateRFQScreen == true"    [(ngModel)] ="viewRFQbyIDdetails.division" (change)="onChangeDivision(false)">
                                     <option [value]="null || '' " selected="selected" disabled >Select</option>

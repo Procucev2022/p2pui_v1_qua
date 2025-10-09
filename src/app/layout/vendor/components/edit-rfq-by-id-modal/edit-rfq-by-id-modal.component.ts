@@ -225,6 +225,9 @@ export class EditRfqByIdModalComponent implements OnInit {
         })
     }
     onSaveRFQByClientInitiator(){
+        if(!this.isValidationPassed()){
+            return;
+        }
         this.viewRFQbyIDdetails['rfqDocument'] = [...this.viewRFQbyIDdetails['rfqDocument'], ...this.commentFilesDataList];
         this.viewRFQbyIDdetails['fromClient'] = this.loggedUserDetails.role.roleName == 'ClientInitiator';
         this.createRfqService.editRFQByClient(this.viewRFQbyIDdetails).subscribe((res:any)=>{
@@ -235,6 +238,79 @@ export class EditRfqByIdModalComponent implements OnInit {
                 this.toaster.error(res.message, 'Failed')
             }
         })
+    }
+
+    isValidationPassed(){
+        if(!this.viewRFQbyIDdetails.projectDesc){
+            this.toaster.warning("Please Enter Project Description/Reference", 'Warning')
+            return false;
+        }   
+        if(!this.viewRFQbyIDdetails.division){
+            this.toaster.warning("Please assign Division to RFQ", 'Warning')
+            return false;
+        }
+        //viewRFQbyIDdetails.rfqItem
+        for(const item of this.viewRFQbyIDdetails.rfqItem){
+            if(!item.description || !item.brand || !item.quantity || !item.unitofMeasures){
+                this.toaster.warning("Please Enter all fields for all items", 'Warning')
+                return false;
+            }
+            if(isNaN(item.quantity) || item.quantity <= 0){
+                this.toaster.warning("Please Enter valid Quantity for all items", 'Warning')
+                return false;
+            }
+            if(!isNaN(item.description)  ){
+                this.toaster.warning("Please Enter valid Description for all items", 'Warning')
+                return false;
+            }
+            if(!isNaN(item.brand)  ){
+                this.toaster.warning("Please Enter valid Specification for all items", 'Warning')
+                return false;
+            }
+            if(!isNaN(item.unitofMeasures) ){
+                this.toaster.warning("Please Enter valid UOM for all items", 'Warning')
+                return false;
+            }
+            //unitofMeasures not contains number
+            if(/\d/.test(item.unitofMeasures)){
+                this.toaster.warning("Please Enter valid UOM for all items", 'Warning')
+                return false;
+            }
+            
+        }
+        //viewRFQbyIDdetails.clientdeliverylocationrfq
+        for(const loc of this.viewRFQbyIDdetails.clientdeliverylocationrfq){
+           
+            if(!isNaN(loc.city)  ){
+                this.toaster.warning("Please Enter valid City for all Delivery Location", 'Warning')
+                return false;
+            }
+            if(!isNaN(loc.state)  ){
+                this.toaster.warning("Please Enter valid State for all Delivery Location", 'Warning')
+                return false;
+            } 
+            if(!loc.pincode) {
+                this.toaster.warning("Please Enter valid Pincode for all Delivery Location", 'Warning')
+                return false;
+            }
+            const value = loc.pincode;
+            
+
+                // Check for exactly 6 digits
+                const pinRegex = /^[1-9][0-9]{5}$/;
+                if (!pinRegex.test(value)) {
+                    this.toaster.warning("Please Enter valid Pincode for all Delivery Locations", 'Warning');
+                    return false;
+                }  
+
+                // Check if all digits are the same
+                const repeated = /^(\d)\1{5}$/.test(value);
+                if (repeated) {
+                    this.toaster.warning("Same digit repeated, Please enter a valid Pincode for all Delivery Locations", 'Warning');
+                    return false;
+                } 
+        }
+        return true;
     }
 
     closeModal(){
