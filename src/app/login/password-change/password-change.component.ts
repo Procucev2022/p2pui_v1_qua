@@ -28,7 +28,7 @@ export class PasswordChangeComponent implements OnInit {
   constructor(fb: FormBuilder, private toastrService: ToastrService, private router: Router, private encryDecryService: EncryDecryService, private authService: AuthenticationService) {
     this.passwdForm = fb.group({
       'oldPwd': ['', Validators.required],
-      'newPwd': ['', Validators.required],
+      'newPwd': ['', [Validators.required, this.passwordPatternValidator.bind(this)]],
       'confirmPwd': ['', Validators.required]
     }, {
       validator: this.matchPwds
@@ -55,6 +55,31 @@ export class PasswordChangeComponent implements OnInit {
     }
     return null;
   }
+
+  passwordPatternValidator(control: AbstractControl) {
+    // const regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}$');
+    const regex = new RegExp('^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$'); 
+    const valid = regex.test(control.value);
+    return valid ? null : { invalidPassword: true };
+  }
+ 
+
+  hasLetter(): boolean {
+    return /[A-Za-z]/.test(this.newPwd.value);
+  }
+
+  hasNumber(): boolean {
+    return /\d/.test(this.newPwd.value);
+  }
+
+  hasSpecialChar(): boolean {
+    return /[@$!%*?&]/.test(this.newPwd.value);
+  }
+
+  isMinLength(): boolean {
+    return this.newPwd.value.length >= 8;
+  }
+
 
   updatePassword() {
     this.submitted = true;
@@ -140,10 +165,28 @@ export class PasswordChangeComponent implements OnInit {
     }
 
     getOTP(){
-      if(this.oldPwd.valid == false || this.newPwd.valid == false || this.confirmPwd.valid == false){
-        this.toastrService.error('Please enter Old Password, New Password and Confirm Password', 'Failed');
+      if(this.oldPwd.valid == false){
+        this.toastrService.error('Please enter Old Password ', 'Failed');
         return;
       }
+      if(this.newPwd.value.trim() == ''){
+        this.toastrService.error('Please enter New Password', 'Failed');
+        return;
+      }
+      
+      if(!this.hasLetter() || !this.hasNumber() || !this.hasSpecialChar() || !this.isMinLength()){
+        this.toastrService.error('New Password must contain at least one letter, one number, one special character(@$!%*?&) and minimum 8 characters', 'Failed');
+        return;
+      }
+      if(this.confirmPwd.valid == false){
+        this.toastrService.error('Please enter Confirm Password', 'Failed');
+        return;
+      }
+      if(this.confirmPwd.value !== this.newPwd.value){
+        this.toastrService.error('Confirm Password and New Password should  be same', 'Failed');
+        return;
+      }
+
       if( !!this.passwdForm.errors &&  this.passwdForm.errors.pwdsDontMatch){
         this.toastrService.error('New Password and Confirm Password should be same and not empty', 'Failed');
         return;
