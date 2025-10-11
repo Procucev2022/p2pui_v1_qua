@@ -32,6 +32,7 @@ export class ClientRegisterComponent implements OnInit {
     otp: any;
     isClientDataView:boolean;
     isOTPSent: boolean = false;
+    isValidPincode: boolean = false;
 
     constructor(private modalDialog:MatDialog, private toaster: ToastrService, private vendorRegSer: VendorRegistrationService,
         private confirmationService: ConfirmationService,  private cd: ChangeDetectorRef,  
@@ -311,6 +312,14 @@ export class ClientRegisterComponent implements OnInit {
         return true;
     }
 
+    onupdatePincodeValidationStatus(event:any){
+        if(event && event.pincodeIsValid){ 
+            this.isValidPincode = true; 
+        } else {
+            this.isValidPincode = false;
+        }
+    }
+
     registerVendor(clientRegForm: FormGroup) {
         console.log(clientRegForm);
         // if (clientRegForm.valid) {
@@ -349,6 +358,10 @@ export class ClientRegisterComponent implements OnInit {
             }
             if(this.clientRegForm.controls['pinCode'].errors){
                 this.toaster.error('Please enter valid Pin Code', 'Failure'); 
+                return;
+            }
+            if(!this.isValidPincode){
+                this.toaster.error('Please validate Pin Code', 'Failure'); 
                 return;
             }
             // const splitGST = this.clientRegForm.getRawValue().pan.split('');

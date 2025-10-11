@@ -23,6 +23,8 @@ visible: boolean;
     vendorRegistrationForm: FormGroup;
     isOTPVerified: boolean;
     isOTPSent: boolean;
+    
+    isValidPincode: boolean = false;
     // states: any[] = this.getStatesArray();
 
     constructor(private modalDialog: MatDialog, private fb: FormBuilder, private toaster: ToastrService, 
@@ -53,6 +55,13 @@ visible: boolean;
 
     }
 
+       onupdatePincodeValidationStatus(event:any){
+        if(event && event.pincodeIsValid){ 
+            this.isValidPincode = true; 
+        } else {
+            this.isValidPincode = false;
+        }
+    }
     isValidFormControls(){
         const vendorRegistrationForm = this.vendorRegistrationForm.getRawValue();
         let isValid = true;
@@ -86,6 +95,14 @@ visible: boolean;
             this.toaster.warning("Please enter valid email id", 'Warning');
             return false;
         }
+        if(this.vendorRegistrationForm.controls.products.errors || !vendorRegistrationForm.products || vendorRegistrationForm.products.trim() == ''){
+            this.toaster.warning("Please enter valid Products", 'Warning');
+            return false;
+        }
+        if(this.isValidPincode == false){
+            this.toaster.warning("Please validate Pin Code", 'Warning');
+            return false;
+        }
         return isValid;
     }
 
@@ -117,18 +134,18 @@ visible: boolean;
             if(!formValue.companyName || !formValue.name || !formValue.mail || !formValue.phoneNumber || !formValue.pinCode || !formValue.products){
                 if(!formValue.companyName){
                     this.toaster.error('Please enter Company Name', 'Failure'); 
+                    return;
                 }else if(!formValue.name){
                     this.toaster.error('Please enter Contact Person Name', 'Failure');
+                     return;
                 }else if(!formValue.mail){
-                    this.toaster.error('Please enter Email ID', 'Failure');
+                    this.toaster.error('Please enter Email ID', 'Failure'); return;
                 }else if(!formValue.phoneNumber){
-                    this.toaster.error('Please enter Phone Number', 'Failure');
-                }else if(!formValue.pinCode){
-                    this.toaster.error('Please enter Pin Code', 'Failure');
-                }else if(!formValue.products){
-                    this.toaster.error('Please enter Products', 'Failure');
+                    this.toaster.error('Please enter Phone Number', 'Failure'); return;
+                } else if(!formValue.products){
+                    this.toaster.error('Please enter Products', 'Failure'); return; 
                 }
-                return;
+               
             }
 
             if(!this.isValidFormControls()){
