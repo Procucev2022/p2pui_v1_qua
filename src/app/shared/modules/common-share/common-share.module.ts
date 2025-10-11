@@ -90,6 +90,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { VendorViewModelComponent } from './components/vendor-view-model/vendor-view-model.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TreeTableModule } from 'primeng/treetable';
+import { PincodeControlComponent } from './components/pincode-control/pincode-control.component';
 
 // import { AgGridAngular } from 'ag-grid-angular';
 @NgModule({
@@ -145,7 +146,7 @@ import { TreeTableModule } from 'primeng/treetable';
         GmtVendorInfoModalComponent,
         DownloadAttachmentsComponent, QuotCompareViewComponent,
         CapexCatMgrQuoteComparComponent,
-        ProCpxVendorSummaryComponent,ProCpxVendorPPOsComponent, ProCpxVendorSummaryClientsComponent, ProCpxVendorSummaryLayoutComponent, VendorViewModelComponent],
+        ProCpxVendorSummaryComponent,ProCpxVendorPPOsComponent, ProCpxVendorSummaryClientsComponent, ProCpxVendorSummaryLayoutComponent, VendorViewModelComponent, PincodeControlComponent],
     exports: [
         DialogModule,
         CommonModule,
@@ -211,7 +212,8 @@ import { TreeTableModule } from 'primeng/treetable';
         FormsModule,
         ReactiveFormsModule,
         VendorViewModelComponent,
-        TreeTableModule
+        TreeTableModule,
+        PincodeControlComponent
 
     ],
     providers: [

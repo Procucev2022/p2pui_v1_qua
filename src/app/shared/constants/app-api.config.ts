@@ -66,6 +66,7 @@ export class AppApiConfig {
   public static CAT_MGR_VENDOR_SUMMARY = '/rest/users/vendorSummary';
   public static GET_VENDOR_CATALOGUES = '/rest/catalogue/getCataloguesBySeller';
   public static ADD_VENDOR_CATALOGUE = '/rest/catalogue/saveCatalogue';
+  public static GET_PINCODE_VALIDATION = '/partialvendor/getCityPincode';
 
 
 

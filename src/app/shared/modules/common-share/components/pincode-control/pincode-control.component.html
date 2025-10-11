@@ -1,0 +1,20 @@
+ 
+ <form [formGroup]="parentFormGroup"   >
+      <label for="pincode" class="{{labelClassName}}">{{label}}:</label>
+ <div class="input-group">
+ 
+     <input class="form-control" type="text"  class="{{className}}" [formControlName]="inputFormControlName" placeholder="Enter PIN code" (click)="isValid = false"
+       (keypress)="numberOnly($event);" maxlength="6"  minlength="6" [disabled]="isValid" />
+
+ 
+
+  <button type="button" class="{{buttonClassName}}" (click)="validatePincode()"  >{{isValid ? 'Edit Pincode' : 'Validate'}} </button>
+ </div>
+  <div *ngIf="parentFormGroup.get(inputFormControlName)?.touched && parentFormGroup.get(inputFormControlName)?.invalid">
+    <small *ngIf="parentFormGroup.get(inputFormControlName)?.errors?.invalidFormat">❗ Invalid PIN format.</small>
+    <small *ngIf="parentFormGroup.get(inputFormControlName)?.errors?.repeatedDigits">❗ Cannot be all same digits.</small>
+  </div>
+    <div *ngIf="isValid">
+        <small class="greenStar">✔ Valid PIN code.</small>
+    </div>
+</form>

@@ -124,17 +124,11 @@
                               </div>
                           </div>
                           <div class="col-md-3 mt-4"></div>
-                            <div class="col-md-4  col-xs-12 mt-4">
-                                <label for="name">Pincode <b style="color: #fb9898;">*</b></label>
-                                <input type="text" required id="adress" class="form-control" name="pinCode"
-                                    formControlName="pinCode" placeholder="Pincode (6digits)" (keypress)="numberOnly($event)" maxlength="6"  minlength="6"/>
-                                <div
-                                    *ngIf="(clientRegForm.controls.pinCode.touched  ) && clientRegForm.controls.pinCode.errors">
-                                    <div style="color: #fb9898;" *ngIf="(clientRegForm.controls.pinCode.required)">PinCode is
-                                        required</div>
-                                    <div style="color: #fb9898;" *ngIf="clientRegForm.controls.pinCode.errors.invalidPincode">Please enter valid 6 digit PinCode.</div>
-                                    <div style="color: #fb9898;"*ngIf="(clientRegForm?.controls?.pinCode?.touched) && clientRegForm.controls.pinCode.errors?.repeatedDigits">PinCode must not contain repeated digits.</div>
-                                </div>
+                            <div class="col-md-4  col-xs-12 mt-4"> 
+                                <app-pincode-control [inputFormControlName]="'pinCode'" [className]="'pincode-control border-radius-round'"
+                                [buttonClassName]="'btn btn-orange'"
+                                 [parentFormGroup]="clientRegForm" [labelClassName]="'form-label required whiteStar'" [label]="'PinCode'" 
+                                 (updatePincodeValidationStatus)="onupdatePincodeValidationStatus($event)"></app-pincode-control>
                             </div>
                           
                             <div class="col-md-12  col-xs-12">

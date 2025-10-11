@@ -84,4 +84,7 @@ export class CommentsService {
     return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.SAVE_ASN_COMMENTS, data, {});
   }
 
+  getValidatePincode(data): Observable<any> {
+    return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.GET_PINCODE_VALIDATION, data, {});
+  }
 }
