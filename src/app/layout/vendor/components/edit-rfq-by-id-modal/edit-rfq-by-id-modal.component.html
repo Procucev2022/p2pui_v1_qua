@@ -171,19 +171,16 @@
                                 <label for="state" style="font-size: medium; font-weight: bolder;"
                                     class="col-sm-5 col-form-label">State:</label>
                                 <div class="col-sm-5 col-form-label">
-                                    <input class="form-control" type="text" [(ngModel)] ="location.state" name="state"/>
+                                    <input class="form-control" type="text" [(ngModel)] ="location.state" name="state" disabled/>
                                 </div>
                             </div>
                             <div class="form-group row"  >
-                                <label for="state" style="font-size: medium; font-weight: bolder;"
-                                    class="col-sm-5 col-form-label">Zip Code:</label>
-                                <div class="col-sm-5 col-form-label">
-                                    <input class="form-control" type="number" #zipCodeInput="ngModel" [(ngModel)] ="location.pincode" minlength="6"
-                                     maxlength="6"  name="pincode" onkeydown="return event.keyCode !== 69"  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"/>
+                                <app-pincode-control [inputFormControlName]="''" [className]="'pincode-control '" [inputValue]="location.pincode"
+                                [parentObject]="location.pincode"
+                                                [buttonClassName]="'btn btn-orange'"
+                                                [parentFormGroup]="''" [labelClassName]="'form-label required '" [label]="'Pincode / Zipcode'" 
+                                                (updatePincodeValidationStatus)="onupdatePincodeValidationStatus($event, i)"></app-pincode-control>
 
-                                    <div *ngIf="zipCodeInput.errors">
-                                        Zip Code must be 6 digits.
-                                      </div></div>
                             </div>
                         </mat-card>
                     </div>

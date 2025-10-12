@@ -158,6 +158,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
     divisionsList: any =[];
     filtered_divisionsList =[];
     isIndian: any = true;
+    isValidPincode: boolean;
 
     constructor(
         private encryDecryService: EncryDecryService,
@@ -423,6 +424,20 @@ export class CatMgrCreateRfqListComponent implements OnInit {
 
     }
 
+    onupdatePincodeValidationStatus(event:any){
+    console.log('Pincode validation status event:', event);
+            if(event && event.pincodeIsValid){ 
+                this.isValidPincode = true;  
+                if(event.state){
+                this.deliveryForm.get('state')?.setValue(event.state);
+                this.deliveryForm.get('state')?.disable();
+                }
+            } else {
+                this.isValidPincode = false;
+                this.deliveryForm.get('state')?.setValue(null);
+            }
+        }
+
     viewRFQByIdModal() {
         const dialogConfig = new MatDialogConfig();
 
@@ -556,6 +571,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
             pincode : new FormControl('', [Validators.required, Validators.pattern('^[1-9][0-9]{5}$')])
         });
 
+         this.deliveryForm.get('state')?.disable();
         if(this.isIndian){
            this.deliveryForm.controls.state.clearValidators();
            this.deliveryForm.controls.state.clearValidators();
@@ -834,6 +850,11 @@ export class CatMgrCreateRfqListComponent implements OnInit {
 
         if(this.projectForm.value.projectDesc.trim() == '' ||  !isNaN(this.projectForm.value.projectDesc) || this.projectForm.value.projectDesc == null){
             this.toaster.warning('Please enter Project Description', 'Warning');
+            return;
+        }
+
+        if(!this.isValidPincode){
+            this.toaster.warning('Please  validate Pincode', 'Warning');
             return;
         }
 

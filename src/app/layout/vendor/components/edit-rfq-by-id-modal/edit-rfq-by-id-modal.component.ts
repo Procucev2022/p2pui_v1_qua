@@ -30,6 +30,7 @@ export class EditRfqByIdModalComponent implements OnInit {
     categoryList: any =[];
     filtered_categoryList: any =[];
     divisionsList: any =[];
+    
 
     constructor(private dialogRef: MatDialogRef<EditRfqByIdModalComponent>,private encryDecryService: EncryDecryService,
         @Inject(MAT_DIALOG_DATA) data, private convertSer: ConvertToBase64Service, private createRfqService: CreateRfqService,
@@ -37,6 +38,7 @@ export class EditRfqByIdModalComponent implements OnInit {
 
     ) {
         this.viewRFQbyIDdetails = data;
+        this.viewRFQbyIDdetails.clientdeliverylocationrfq = this.viewRFQbyIDdetails.clientdeliverylocationrfq.map(loc => ({...loc, isValidPincode: true}));
         console.log(this.viewRFQbyIDdetails);
     }
 
@@ -147,6 +149,15 @@ export class EditRfqByIdModalComponent implements OnInit {
             this.commentFilesDataList.push(temp);
         });
     }
+
+      onupdatePincodeValidationStatus(event:any, index:number){
+            console.log('Pincode validation status event:', event);
+                    if(event && event.pincodeIsValid){ 
+                        this.viewRFQbyIDdetails.clientdeliverylocationrfq[index].isValidPincode = event.pincodeIsValid; 
+                    } else {
+                        this.viewRFQbyIDdetails.clientdeliverylocationrfq[index].isValidPincode = event.pincodeIsValid;
+                    }
+        }
 
     @HostListener('dragover', ['$event']) onDragOver(event: any) {
         this.dragAreaClass = 'droparea';
@@ -291,6 +302,10 @@ export class EditRfqByIdModalComponent implements OnInit {
             } 
             if(!loc.pincode) {
                 this.toaster.warning("Please Enter valid Pincode for all Delivery Location", 'Warning')
+                return false;
+            }
+            if(!loc.isValidPincode && loc.pincode) {
+                this.toaster.warning("Please Validate Pincode for all Delivery Location", 'Warning')
                 return false;
             }
             const value = loc.pincode;
