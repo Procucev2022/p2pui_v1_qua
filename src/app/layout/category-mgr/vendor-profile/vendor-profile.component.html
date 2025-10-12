@@ -49,16 +49,10 @@
                 </div>
             </div>
              <div class="col-6">
-                <div class="form-group required">
-                    <label for="name" class="required">ZipCode</label>
-                   <input type="text" required id="zipCode" class="form-control" name="zipCode"
-                            formControlName="zipCode" placeholder="ZipCode (6digits)" maxlength="6" minlength="6"
-                            (keypress)="numberOnly($event)" />
-                        <div
-                            *ngIf="(vendorForm.controls?.zipCode?.touched) && vendorForm.controls?.zipCode.status=='INVALID'">
-                            <div style="color: #fff">ZipCode (6digits) is required</div>
-                        </div>
-                </div>
+                 <app-pincode-control [inputFormControlName]="'zipCode'" [className]="'pincode-control '"
+                                [buttonClassName]="'btn btn-orange'"
+                                 [parentFormGroup]="vendorForm" [labelClassName]="'form-label required '" [label]="'Zipcode'" 
+                                 (updatePincodeValidationStatus)="onupdatePincodeValidationStatus($event)"></app-pincode-control>
             </div>
             <div class="col-12"  *ngIf="!isBuyer">
                 <div class="form-group">

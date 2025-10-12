@@ -1,4 +1,6 @@
  
+ <ng-container *ngIf="parentFormGroup">
+ 
  <form [formGroup]="parentFormGroup"   >
       <label for="pincode" class="{{labelClassName}}">{{label}}:</label>
  <div class="input-group">
@@ -18,3 +20,17 @@
         <small class="greenStar">✔ Valid PIN code.</small>
     </div>
 </form>
+
+</ng-container>
+    <ng-container *ngIf="!parentFormGroup">
+        <label for="pincode" class="{{labelClassName}}">{{label}}:</label>
+        <div class="input-group">
+            <input class="form-control" type="text"  class="{{className}}" [(ngModel)]="inputValue" name="pincode" placeholder="Enter PIN code" (keyup)="onChangePinCode()"
+                (keypress)="numberOnly($event);" maxlength="6"  minlength="6" [disabled]="isValid" />
+            <button type="button" class="{{buttonClassName}}" (click)="validatePincode()"  >{{isValid ? 'Edit Pincode' : 'Validate'}} </button>
+        </div>
+        <div *ngIf="inputValue?.length > 0 && (inputValue?.length < 6 || inputValue?.length > 6)">
+            <small *ngIf="inputValue?.length < 6">❗ PIN code must be 6 digits.</small>
+            <small *ngIf="inputValue?.length > 6">❗ PIN code must be 6 digits.</small>
+        </div>
+    </ng-container>

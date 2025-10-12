@@ -119,6 +119,7 @@ export class VendorProfileComponent {
   roleName: any;
   loggedUserName: any;
   isBuyer: boolean = false;
+  isValidPincode: boolean = false;
   constructor(private vendorRegSer: VendorRegistrationService, private encryDecryService: EncryDecryService,
     private dialog: MatDialog,
     private rfqservice: RfqService,
@@ -397,6 +398,8 @@ export class VendorProfileComponent {
           })
         );
       });
+      
+      this.vendorForm.get('city')?.disable();
 
     }
 
@@ -606,7 +609,11 @@ export class VendorProfileComponent {
     if(this.vendorForm?.controls?.gstin?.errors?.invalidGstin){
       this.toastrService.error('Please enter valid GSTIN', 'Error');
       return;
-    } 
+    }
+    if(!this.isValidPincode && this.vendorForm.controls.zipCode?.value != this.vendorRegObj.zipCode){
+      this.toastrService.error('Please Validate Pincode', 'Error');
+      return;
+    }
 
     const obj = this.vendorForm.getRawValue();
     obj.id = this.vendorRegObj.id;
@@ -668,6 +675,21 @@ export class VendorProfileComponent {
 isCategorySelected(i, val){
   return false //this.divisionFormList[i].selectedCategory && this.divisionFormList[i].selectedCategory.indexOf(val) > -1;
 }
+
+ onupdatePincodeValidationStatus(event:any){
+  console.log('Pincode validation status event:', event);
+        if(event && event.pincodeIsValid){ 
+            this.isValidPincode = true; 
+            if(event.city){
+              this.vendorForm.get('city')?.setValue(event.city);
+            }
+            if(event.state){
+              this.vendorForm.get('state')?.setValue(event.state);
+            }
+        } else {
+            this.isValidPincode = false;
+        }
+    }
 
 onCategoryChange(event, divisionIndex, categoryIndex){
   const value = event.target.value;

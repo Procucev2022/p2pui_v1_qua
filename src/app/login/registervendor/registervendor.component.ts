@@ -106,6 +106,42 @@ visible: boolean;
         return isValid;
     }
 
+     isValidFormOTPControls(){
+        const vendorRegistrationForm = this.vendorRegistrationForm.getRawValue();
+        let isValid = true;
+      
+         if(!vendorRegistrationForm.name  || vendorRegistrationForm.name.trim() == ''){
+            this.toaster.warning("Please enter  Name", 'Warning'); 
+            return false;
+        }
+        if(   this.vendorRegistrationForm.controls.name.errors && this.vendorRegistrationForm.controls.name.errors.alphabetOnly ){
+            this.toaster.warning("Name must contain only alphabetic characters", 'Warning');
+            return false;
+        } 
+
+        if( this.vendorRegistrationForm.controls.companyName.errors ){
+            this.toaster.warning("Company Name must not be numeric only", 'Warning');
+            return false;
+        }
+         if(!vendorRegistrationForm.companyName || vendorRegistrationForm.companyName.trim() == '' ){
+            this.toaster.warning("Please enter  Company Name", 'Warning');
+            return false;
+        } 
+        if(this.vendorRegistrationForm.controls.phoneNumber.errors ){
+            this.toaster.warning("Please enter valid mobile number", 'Warning');
+            return false;
+        }
+          if(this.vendorRegistrationForm.controls.mail.errors?.required){
+            this.toaster.warning("Please enter  email id", 'Warning');
+            return false;
+        }
+        if(this.vendorRegistrationForm.controls.mail.errors ){
+            this.toaster.warning("Please enter valid email id", 'Warning');
+            return false;
+        } 
+        return isValid;
+    }
+
      numberOnly(event): boolean {
         const charCode = event.which ? event.which : event.keyCode;
         if (charCode > 31 && (charCode < 48 || charCode > 57)) {
@@ -257,7 +293,7 @@ visible: boolean;
 
 
     sendOTPs(){
-    if(!this.isValidFormControls()){
+    if(!this.isValidFormOTPControls()){
                 return;
     }
 
@@ -293,7 +329,7 @@ visible: boolean;
       
     }
     verifyOtps() {
-        if(!this.isValidFormControls()){
+        if(!this.isValidFormOTPControls()){
             return;
         }
         const vendorRegForm = this.vendorRegistrationForm.getRawValue();

@@ -18,12 +18,41 @@ export class PincodeControlComponent {
   @Input() parentFormGroup: FormGroup = new FormGroup({});
   @Output() updatePincodeValidationStatus: EventEmitter<any> = new EventEmitter<any>();
   @Input() buttonClassName: string = 'btn btn-primary';
+  @Input() inputValue: string = '';
   isValid: boolean = false;
   constructor(private commentsService: CommentsService, private toaster: ToastrService) {
   }
 
+  onChangePinCode() {
+    this.isValid = false;
+    this.updatePincodeValidationStatus.emit({pincodeIsValid: false});
+  }
 
   validatePincode() {
+    if(this.parentFormGroup === undefined || this.parentFormGroup === null  || Object.keys(this.parentFormGroup).length === 0){
+        if(this.isValid){
+         
+          this.updatePincodeValidationStatus.emit({pincodeIsValid: false});
+          this.isValid = false; 
+          return;
+      }
+      if(this.inputValue === undefined || this.inputValue === null || this.inputValue.length !== 6){
+          this.toaster.error('Please enter a valid 6-digit PIN code.');
+           this.updatePincodeValidationStatus.emit({pincodeIsValid: false});
+           return;
+      }
+
+      this.commentsService.getValidatePincode({ pincode: this.inputValue}).subscribe((response:any) => {
+        if(response && !!response.id){ 
+          this.isValid = true; 
+          this.toaster.success('Success', 'Validated PIN code.');
+           this.updatePincodeValidationStatus.emit({pincodeIsValid: true, city: response.city, state: response.state});
+        } else {
+          this.toaster.error('Failure', response.errorMessage);
+           this.updatePincodeValidationStatus.emit({pincodeIsValid: false});
+        } 
+      });
+    }
   
     if (this.parentFormGroup.get(this.inputFormControlName)?.errors === null) {
       if(this.isValid){
@@ -40,7 +69,7 @@ export class PincodeControlComponent {
           this.parentFormGroup.get(this.inputFormControlName)?.setErrors(null);
           this.parentFormGroup.get(this.inputFormControlName)?.disable();
           this.toaster.success('Success', 'Validated PIN code.');
-           this.updatePincodeValidationStatus.emit({pincodeIsValid: true});
+           this.updatePincodeValidationStatus.emit({pincodeIsValid: true, city: response.city, state: response.state});
         } else {
           this.toaster.error('Failure', response.errorMessage);
            this.updatePincodeValidationStatus.emit({pincodeIsValid: false});

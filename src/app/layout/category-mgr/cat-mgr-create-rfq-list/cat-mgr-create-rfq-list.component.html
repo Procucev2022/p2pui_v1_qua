@@ -336,10 +336,10 @@
 
                                         </div>
                                         <div class="col-6 mb-1">
-                                            <label class="form-label required">Pin Code / Zip Code</label>
-                                            <input class="form-control" *ngIf="isIndian" formControlName="pincode" placeholder="Pin Code/ Zip Code" (keypress)="numberOnly($event)"   maxlength = "6" minlength="6" />
-                                            <input class="form-control"  *ngIf="!isIndian" formControlName="pincode" placeholder="Pin Code/ Zip Code"   />
-                                            <span style="color:red" *ngIf="deilveryCtrls.pincode.invalid && deilveryCtrls.pincode.touched">Enter Valid Pin Code</span>
+                                             <app-pincode-control [inputFormControlName]="'pincode'" [className]="'pincode-control '"
+                                                [buttonClassName]="'btn btn-orange'"
+                                                [parentFormGroup]="deliveryForm" [labelClassName]="'form-label required '" [label]="'Pincode / Zipcode'" 
+                                                (updatePincodeValidationStatus)="onupdatePincodeValidationStatus($event)"></app-pincode-control>
 
                                         </div>
 
