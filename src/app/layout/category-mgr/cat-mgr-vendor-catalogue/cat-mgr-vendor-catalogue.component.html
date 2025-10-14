@@ -91,7 +91,7 @@
 <ng-template #onAddCatlogTemplateRef>
     <div class="modal-header"> 
         <!-- validations yet to write -->
-        <h5>Add Catalogue Details</h5>
+        <h5>{{isViewMode? 'View': 'Add'}} Catalogue Details</h5>
         <button class="btn-skelton modal-close-btn" mat-dialog-close>✖</button>
     </div>
     <div class="modal-body" style="overflow-x: hidden;">
