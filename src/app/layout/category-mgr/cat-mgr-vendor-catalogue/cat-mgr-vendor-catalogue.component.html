@@ -1,7 +1,7 @@
 <div class="table-title">
     <div class="row">
       <div class="col-sm-6">
-        <h2>Vendor Catalogue</h2>
+        <h2>Seller Catalogue</h2>
         <p><span class="dot"></span>{{cataloguesList.length}} Total</p>
       </div>
       <div class="col-sm-6">
@@ -40,6 +40,7 @@
                             <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
                                 {{col.header}}
                             </th> 
+                            <th style="width: 3rem;"> Acitons</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
@@ -59,6 +60,15 @@
                                     <i class="fa fa-bell" aria-hidden="true"></i>
                                 </span>
                             </td> 
+                            <td>
+                             <span  >
+                        <button type="button" class="btn-skelton"
+                            >
+                            <img src="/assets/images/new/view-doc.png" (click)="onViewCatalogue(rowData)"  alt="View catalogue Details"
+                                title="View catalogue Details">
+                        </button>
+                    </span>
+                            </td>
                         </tr>
                     </ng-template> 
                     <ng-template pTemplate="emptymessage" let-columns>
@@ -132,10 +142,42 @@
                     class="form-control" />
                 <p class="error-message" *ngIf="catalogueForm.get('leadTimeForMoq').hasError('required') && catalogueForm.get('leadTimeForMoq').touched">Lead Time for MOQ cannot be empty</p>
             </div>
+            <div class="terms-conditions">
+                <label class="title">Terms & Conditions</label>
 
-            <div class="input-group mt-4 " style="justify-content: right;">
-                <button class="btn btn-blue" [disabled]="!catalogueForm.valid">Update</button>
+                  <div class="form-group">
+                    <label class="form-label required">Packing & Forwarding</label>
+                    <input type="text" formControlName="packingAndForwarding"  placeholder="Packing & Forwarding"
+                        class="form-control" />
+                    <p class="error-message" *ngIf="catalogueForm.get('packingAndForwarding').hasError('required') && catalogueForm.get('packingAndForwarding').touched">Packing & Forwarding cannot be empty</p>
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">Freight</label>
+                    <input type="text" formControlName="freight"  placeholder="Freight"
+                        class="form-control" />
+                    <p class="error-message" *ngIf="catalogueForm.get('freight').hasError('required') && catalogueForm.get('freight').touched">Freight cannot be empty</p>
+                </div>
+                 <div class="form-group">
+                    <label class="form-label required">Payment Terms</label>
+                    <input type="text" formControlName="paymentTerms"  placeholder="Payment Terms"
+                        class="form-control" />
+                    <p class="error-message" *ngIf="catalogueForm.get('paymentTerms').hasError('required') && catalogueForm.get('paymentTerms').touched">Payment Terms cannot be empty</p>
+                </div>
+                <div class="form-group">
+                    <label class="form-label required"> * All Prices are exclusive  of applicable  Taxes. Other Terms & Conditions</label>
+                    <input type="text" formControlName="otherTerms"  placeholder="Other Terms"
+                        class="form-control" />
+                    <p class="error-message" *ngIf="catalogueForm.get('otherTerms').hasError('required') && catalogueForm.get('otherTerms').touched">Other Terms cannot be empty</p>
+                </div>
+            </div>
+          
+
+            <div class="input-group mt-4 " style="justify-content: right;" *ngIf="!isViewMode">
+                <button class="btn btn-blue" [disabled]="!catalogueForm.valid ">Save</button>
                 <button class="btn btn-red" (click)="resetForm()">Reset</button>
+            </div>
+            <div class="input-group mt-4 " style="justify-content: right;" *ngIf="isViewMode">
+                <button class="btn btn-blue"    mat-dialog-close>Close</button> 
             </div>
         </form>
     </div>

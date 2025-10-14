@@ -49,6 +49,7 @@ export class CatMgrVendorCatalogueComponent implements OnInit{
         "Other Manufacturing", "Other Services", "Others"
     ];
     selectedUserData: any;
+    isViewMode: boolean;
     constructor(private createRfqService: CreateRfqService, private encryDecryService:EncryDecryService,
         private catProcService: CatProcuRequestsService, private toaster: ToastrService,     private dialog: MatDialog, private formValidationService: FormValidatationsService) { 
             this.formValidationService = new FormValidatationsService();
@@ -80,7 +81,12 @@ export class CatMgrVendorCatalogueComponent implements OnInit{
             pricePerUom: new FormControl('', [Validators.required]),
             leadTimeForMoq: new FormControl('', [Validators.required]),
             availableQuantity: new FormControl('', [Validators.required]),
-            gstPercentage: new FormControl('', [Validators.required])
+            gstPercentage: new FormControl('', [Validators.required]),
+            otherTerms: new FormControl('', [Validators.required]),
+            paymentTerms: new FormControl('', [Validators.required]),
+            freight: new FormControl('', [Validators.required]),
+            packingAndForwarding: new FormControl('', [Validators.required]),
+
         });
         this.getFormValidationStatus();
     }
@@ -117,8 +123,19 @@ export class CatMgrVendorCatalogueComponent implements OnInit{
         console.log(event)
     }
 
-    onAddCatlogue(){
-
+    onAddCatlogue(isEdit?:boolean){
+        this.resetForm();
+        if(isEdit){
+          this.catalogueForm.disable();
+          this.catalogueForm.patchValue(this.selectedData);
+        }else{
+               this.isViewMode = false;
+            this.selectedData = null;
+             this.catalogueForm.enable();
+        
+        }
+            this.catalogueForm.patchValue(this.selectedData);
+       
         const dialogConfig = new MatDialogConfig();
 
         // dialogConfig.disableClose = true;
@@ -203,6 +220,16 @@ export class CatMgrVendorCatalogueComponent implements OnInit{
     const regex = /^[^a-zA-Z0-9]/;
     return regex.test(controlValue);
   }
+
+  
+    //For View RFQ Details - ReadOnly
+
+    onViewCatalogue(rowData:any){
+        this.isViewMode = true;
+       this.selectedData = rowData;
+       this.onAddCatlogue(true);
+
+    }
 
 
 }
