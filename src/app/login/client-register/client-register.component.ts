@@ -33,6 +33,8 @@ export class ClientRegisterComponent implements OnInit {
     isClientDataView:boolean;
     isOTPSent: boolean = false;
     isValidPincode: boolean = false;
+    enableOTPButton: boolean = false;
+    enableOTPInSecs :number = 15;
 
     constructor(private modalDialog:MatDialog, private toaster: ToastrService, private vendorRegSer: VendorRegistrationService,
         private confirmationService: ConfirmationService,  private cd: ChangeDetectorRef,  
@@ -119,6 +121,9 @@ export class ClientRegisterComponent implements OnInit {
     }
 
     sendOTPs() {
+         this.enableOTPButton = false;
+         this.isOTPSent = false;
+           
         const clientRegForm = this.clientRegForm.getRawValue();
         if(!this.isValidFormControls()){
             return;
@@ -144,6 +149,21 @@ export class ClientRegisterComponent implements OnInit {
                     this.clientRegForm.controls['companyName'].disable();
                     this.clientRegForm.updateValueAndValidity();
                     this.toaster.success("OTPs sent to given Mobile & Email Id");
+                     setTimeout(() => {
+                        this.isOTPSent = true;
+                        this.cd.detectChanges();
+                         this.showOtpBox = true;
+                        this.enableOTPButton = true;
+                        this.enableOTPInSecs = 15;
+                    },2000);
+                    let otpInterval = setInterval(()=>{
+                        this.enableOTPInSecs = this.enableOTPInSecs -1;
+                        if(this.enableOTPInSecs == 0){
+                            this.enableOTPButton = false;
+                            clearInterval(otpInterval);
+                        }
+                        this.cd.detectChanges();
+                    },1000);
                 } else {
                     if (!res.otpSentToEmail) {
                         this.toaster.error("Email OTP sending failed", res.message);

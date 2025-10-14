@@ -99,7 +99,9 @@
                                             </div>
                                         </div>
                                         <div class="col-md-2"    >
-                                            <button class="btn btn-primary  " (click)="sendOTPs()"  type="button"  style="width: 100%; background: #03A9F4 !important; color: #fff !important; border-radius: 30px !important; font-size: 1.1rem !important; padding: 0 !important; font-weight: 400 !important; border: none !important;margin-top: 2.5rem;"  *ngIf="!isOTPVerified">{{isOTPSent? 'Resend OTPs': 'Send OTPs'}}</button>
+                                            <button class="btn btn-primary  " (click)="sendOTPs()"  type="button"  style="width: 100%; background: #03A9F4 !important; color: #fff !important; border-radius: 30px !important; font-size: 1.1rem !important; padding: 0 !important; font-weight: 400 !important; border: none !important;margin-top: 2.5rem;"  *ngIf="!isOTPVerified" [disabled]="enableOTPButton">{{isOTPSent? 'Resend OTPs': 'Send OTPs'}}
+                                                <span *ngIf="enableOTPButton && enableOTPInSecs > 0"> ({{enableOTPInSecs}} Secs.)</span>
+                                            </button>
                                         </div>
                                 </div>
                                 
@@ -109,7 +111,7 @@
                                         <div class="col-md-5"><input  class="form-control" type="text"   formControlName="emailOtp" name="emailOtp"   (keypress)="numberOnly($event)" placeholder="Enter EMail OTP" maxlength="6" minlength="6" /></div>
                                         <div class="col-md-2" style="display: flex;align-items: center;">
                                             <button class="btn btn-primary"  (click)="verifyOtps()" type="button"  style="width: 100%; background: #0a461e !important; color: #fff !important; border-radius: 30px !important; font-size: 1.1rem !important; padding: 0 !important;  font-weight: 400 !important;
-                                    border: none !important;padding: 5px;" *ngIf="!isOTPVerified">Validate OTPs</button>
+                                    border: none !important;padding: 5px;" *ngIf="!isOTPVerified" [disabled]="!isOTPSent">Validate OTPs</button>
                                         </div>
                                 </div>
                               
