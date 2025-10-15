@@ -699,13 +699,21 @@ onCategoryChange(event, divisionIndex, categoryIndex){
     const allSelectedCategories = this.divisionFormList.flatMap(item => item.selectedCategory);
   console.log("All selected categories:", allSelectedCategories);
   console.log("Total count:", allSelectedCategories.length);
-  if (allSelectedCategories.length >= 5) {
-    this.toastrService.warning('You can select a maximum of 5 categories across all divisions.', 'Warning');
+  if ((allSelectedCategories.length >=10 && this.roleName == 'ClientInitiator')) { // For Buyer, max 10 categories
+    this.toastrService.warning('You can select a maximum of 10 categories across all divisions.', 'Warning');
     // Revert the checkbox state
     event.target.checked = false;
     this.divisionFormList[divisionIndex].categoryList = categoryList;
     return;
   }
+  if(allSelectedCategories.length >=5 && this.roleName != 'ClientInitiator'){ // Seller /vendor  max 5 categories
+     this.toastrService.warning('You can select a maximum of 5 categories across all divisions.', 'Warning');
+    // Revert the checkbox state
+    event.target.checked = false;
+    this.divisionFormList[divisionIndex].categoryList = categoryList;
+     return;
+  }
+
 
     const index = this.divisionFormList[divisionIndex].selectedCategory ? this.divisionFormList[divisionIndex].selectedCategory.indexOf(value) : -1;
     if (index > -1) {
