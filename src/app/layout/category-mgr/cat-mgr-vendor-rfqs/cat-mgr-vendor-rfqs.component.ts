@@ -168,7 +168,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
 
         // dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = { ...this.viewRFQByIdData, hiddenCategory: true, showItemsOnly: true , hideSpecialRFQClosingDate: true };
+        dialogConfig.data = { ...this.viewRFQByIdData, hiddenCategory: true, showItemsOnly: false , hideSpecialRFQClosingDate: true };
         dialogConfig.minWidth = 400;
         dialogConfig.minHeight = 500;
         dialogConfig.maxWidth = 'none';
