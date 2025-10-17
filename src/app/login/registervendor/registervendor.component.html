@@ -34,7 +34,7 @@
         <div class="col-8 right-section p-5">
             <h4 class="title" style="font-size: 2rem;margin-top: 2rem;">Seller Registration </h4>
             <div  style="color: #fff" class="error-block" >
-                    <p *ngIf="vendorRegistrationForm?.controls?.india.value == 'true' && vendorRegistrationForm?.controls?.phoneNumber?.touched && vendorRegistrationForm?.controls?.phoneNumber?.errors?.invalidPhoneNumber ">
+                    <p *ngIf="vendorRegistrationForm?.controls?.india.value == 'true' && vendorRegistrationForm?.controls?.organizationPhonenumber?.touched && vendorRegistrationForm?.controls?.organizationPhonenumber?.errors?.invalidPhoneNumber ">
                        * Mobile number must be  10 digits and Not Preceeded with 0.</p>
                 <p *ngIf="vendorRegistrationForm?.controls?.pan?.touched && vendorRegistrationForm?.controls?.pan?.errors?.pattern ">* Invalid PAN Details  </p>
             </div>
@@ -81,17 +81,17 @@
                                 <div class="mobile-box">
                                     <span style="color: #344054;">IND +91</span>
                                     <input type="text" (keypress)="numberOnly($event)"  maxlength="10" minlength="10"  id="adress" class="form-control"
-                                        name="phoneNumber" formControlName="phoneNumber" placeholder="Mobile Number" style="margin-bottom:0" />
+                                        name="organizationPhonenumber" formControlName="organizationPhonenumber" placeholder="Mobile Number" style="margin-bottom:0" />
                                         <span style="color: green;" *ngIf="isOTPVerified">MobileNumber is verified</span>
                                 </div>
                                      <span style="font-size: 12px;">(Provide mobile number, so you can access on WhatsApp)</span>
                                         
                             <div
-                                *ngIf="(vendorRegistrationForm?.controls?.phoneNumber?.touched ) && vendorRegistrationForm?.controls?.phoneNumber?.errors">
-                                <div *ngIf="(vendorRegistrationForm?.controls?.phoneNumber.errors?.required)"
+                                *ngIf="(vendorRegistrationForm?.controls?.organizationPhonenumber?.touched ) && vendorRegistrationForm?.controls?.organizationPhonenumber?.errors">
+                                <div *ngIf="(vendorRegistrationForm?.controls?.organizationPhonenumber.errors?.required)"
                                     style="color: #fff">Mobile
                                     number is required</div>
-                                <div  style="color: #ffffff;" *ngIf="vendorRegistrationForm.controls?.phoneNumber?.errors?.invalid">
+                                <div  style="color: #ffffff;" *ngIf="vendorRegistrationForm.controls?.organizationPhonenumber?.errors?.invalid">
                                                         Mobile number must be exactly 10 digits.    </div>
                             </div>
                         </div>
@@ -118,16 +118,7 @@
                                 </div>
                             </div>
                            
-                            <div class="col-md-12"
-                                *ngIf="(vendorRegistrationForm.controls?.organizationPhonenumber?.touched ) && vendorRegistrationForm.controls?.organizationPhonenumber?.errors">
-                                <div *ngIf="(vendorRegistrationForm.controls.organizationPhonenumber.errors?.required)"
-                                    style="color: #fff">Mobile
-                                    number is required</div>
-                                <div style="color: #fff"
-                                    *ngIf="vendorRegistrationForm.controls?.organizationPhonenumber?.errors?.invalid">
-                                    Mobile number must be exactly 10 digits.
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
 
@@ -224,7 +215,7 @@
         <div class="card card-content ">
             <div class="card-body" style="padding-top: 0 !IMPORTANT;">
                 <div  style="color: #fff" class="error-block" >
-                    <p *ngIf="vendorRegistrationForm?.controls?.india.value == 'true' && vendorRegistrationForm?.controls?.phoneNumber?.touched && vendorRegistrationForm?.controls?.phoneNumber?.errors?.invalidPhoneNumber ">
+                    <p *ngIf="vendorRegistrationForm?.controls?.india.value == 'true' && vendorRegistrationForm?.controls?.organizationPhonenumber?.touched && vendorRegistrationForm?.controls?.organizationPhonenumber?.errors?.invalidPhoneNumber ">
                        * Mobile number must be  10 digits and Not Preceeded with 0.</p>
                     <p *ngIf="vendorRegistrationForm?.controls?.pan?.touched && vendorRegistrationForm?.controls?.pan?.errors?.pattern ">* Invalid PAN Details  </p>
                     <p *ngIf="vendorRegistrationForm?.controls?.mail?.touched && vendorRegistrationForm?.controls?.mail?.errors?.pattern ">* Invalid EmailId  </p>
@@ -268,14 +259,14 @@
                     <div class="col-md-4 col-xs-12 mb-1">
                       <label for="name">Mobile Number:<b style="color: #fff">*</b></label>
                       <input type="text" maxlength="10" minlength="10" id="adress" class="form-control"
-                      name="phoneNumber" formControlName="phoneNumber" placeholder="Mobile Number" />
+                      name="organizationPhonenumber" formControlName="organizationPhonenumber" placeholder="Mobile Number" />
                         <span style="color: green;" *ngIf="isOTPVerified">MobileNumber is verified</span>
                       <div
-                          *ngIf="(vendorRegistrationForm?.controls?.phoneNumber?.touched ) && vendorRegistrationForm?.controls?.phoneNumber?.errors">
-                          <div *ngIf="(vendorRegistrationForm?.controls?.phoneNumber.errors?.required)"
+                          *ngIf="(vendorRegistrationForm?.controls?.organizationPhonenumber?.touched ) && vendorRegistrationForm?.controls?.organizationPhonenumber?.errors">
+                          <div *ngIf="(vendorRegistrationForm?.controls?.organizationPhonenumber.errors?.required)"
                               style="color: #fff">Mobile
                               number is required</div>
-                              <div  style="color: #fff" *ngIf="vendorRegistrationForm?.controls?.phoneNumber?.errors?.invalid">
+                              <div  style="color: #fff" *ngIf="vendorRegistrationForm?.controls?.organizationPhonenumber?.errors?.invalid">
                                   Mobile number must be exactly 10 digits.
                                 </div>
                       </div>

@@ -43,7 +43,7 @@ visible: boolean;
         this.vendorRegistrationForm = new FormGroup({
             name: new FormControl('', [Validators.required, this.formValidatorService.alphabetValidator]),
             companyName: new FormControl('', [Validators.required, this.formValidatorService.alphaNumericNotNumericOnly]),
-            phoneNumber: new FormControl('', [Validators.required,  tenDigitPhoneNumberValidator()]),
+            organizationPhonenumber: new FormControl('', [Validators.required,  tenDigitPhoneNumberValidator()]),
             mail: new FormControl('', [Validators.required, Validators.email, strictEmailValidator()]),
             gstin: new FormControl('', [gstinValidator()]),
             india: new FormControl('true'),
@@ -83,7 +83,7 @@ visible: boolean;
             this.toaster.warning("Please enter  Company Name", 'Warning');
             return false;
         } 
-        if(this.vendorRegistrationForm.controls.phoneNumber.errors ){
+        if(this.vendorRegistrationForm.controls.organizationPhonenumber.errors ){
             this.toaster.warning("Please enter valid mobile number", 'Warning');
             return false;
         }
@@ -127,7 +127,7 @@ visible: boolean;
             this.toaster.warning("Please enter  Company Name", 'Warning');
             return false;
         } 
-        if(this.vendorRegistrationForm.controls.phoneNumber.errors ){
+        if(this.vendorRegistrationForm.controls.organizationPhonenumber.errors ){
             this.toaster.warning("Please enter valid mobile number", 'Warning');
             return false;
         }
@@ -153,9 +153,9 @@ visible: boolean;
     changeCountryValue(isIndia){
         if(isIndia){
 
-            this.vendorRegistrationForm.controls['phoneNumber'].setValue('');
-            this.vendorRegistrationForm.controls['phoneNumber'].clearValidators();
-            this.vendorRegistrationForm.controls['phoneNumber'].setValidators([Validators.required, tenDigitPhoneNumberValidator()]);
+            this.vendorRegistrationForm.controls['organizationPhonenumber'].setValue('');
+            this.vendorRegistrationForm.controls['organizationPhonenumber'].clearValidators();
+            this.vendorRegistrationForm.controls['organizationPhonenumber'].setValidators([Validators.required, tenDigitPhoneNumberValidator()]);
             this.vendorRegistrationForm.controls['gstin'].setValidators([Validators.required]);
         }
     }
@@ -167,7 +167,7 @@ visible: boolean;
         // if (this.vendorRegistrationForm.valid) {
 
             const formValue =this.vendorRegistrationForm.getRawValue();
-            if(!formValue.companyName || !formValue.name || !formValue.mail || !formValue.phoneNumber || !formValue.pinCode || !formValue.products){
+            if(!formValue.companyName || !formValue.name || !formValue.mail || !formValue.organizationPhonenumber || !formValue.pinCode || !formValue.products){
                 if(!formValue.companyName){
                     this.toaster.error('Please enter Company Name', 'Failure'); 
                     return;
@@ -176,7 +176,7 @@ visible: boolean;
                      return;
                 }else if(!formValue.mail){
                     this.toaster.error('Please enter Email ID', 'Failure'); return;
-                }else if(!formValue.phoneNumber){
+                }else if(!formValue.organizationPhonenumber){
                     this.toaster.error('Please enter Phone Number', 'Failure'); return;
                 } else if(!formValue.products){
                     this.toaster.error('Please enter Products', 'Failure'); return; 
@@ -195,7 +195,7 @@ visible: boolean;
             console.log('the form is ');
             const requestObject = {
                 'companyName': formValue.companyName,
-                'organizationPhonenumber': formValue.phoneNumber,
+                'organizationPhonenumber': formValue.organizationPhonenumber,
                 'email': formValue.mail,
                 'gstin': formValue.gstin,
                 'address1': formValue.address,
@@ -303,7 +303,7 @@ visible: boolean;
         "tempEmail": sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail'): '',
         "tempPhone":  sessionStorage.getItem('tempPhone')? sessionStorage.getItem('tempPhone'): '',
         "companyName": this.vendorRegistrationForm.value.companyName,
-        "organizationPhonenumber":this.vendorRegistrationForm.value.phoneNumber,
+        "organizationPhonenumber":this.vendorRegistrationForm.value.organizationPhonenumber,
         "email":this.vendorRegistrationForm.value.mail,
 
 
@@ -313,7 +313,7 @@ visible: boolean;
             this.isOTPSent = res && (res.otpSentToEmail && res.otpSentToMobile);
             if (this.isOTPSent) {
                 this.vendorRegistrationForm.controls['mail'].disable();
-                this.vendorRegistrationForm.controls['phoneNumber'].disable();
+                this.vendorRegistrationForm.controls['organizationPhonenumber'].disable();
                 this.vendorRegistrationForm.controls['companyName'].disable(); 
                 this.vendorRegistrationForm.updateValueAndValidity();
                 this.toaster.success("OTPs sent to given Mobile & Email Id");
@@ -348,7 +348,7 @@ visible: boolean;
         }
         let obj: any = {
           "companyName":this.vendorRegistrationForm.getRawValue().companyName,
-          "organizationPhonenumber":this.vendorRegistrationForm.getRawValue().phoneNumber,
+          "organizationPhonenumber":this.vendorRegistrationForm.getRawValue().organizationPhonenumber,
           "email":this.vendorRegistrationForm.getRawValue().mail,
           "emailOtp":this.vendorRegistrationForm.value.emailOtp,
           "mobileOtp":this.vendorRegistrationForm.value.mobileOtp,
@@ -361,7 +361,7 @@ visible: boolean;
             this.isOTPVerified = res && res.status == 'success' ? true : false;
             if (this.isOTPVerified) {
                 this.vendorRegistrationForm.controls['mail'].disable();
-                this.vendorRegistrationForm.controls['phoneNumber'].disable();
+                this.vendorRegistrationForm.controls['organizationPhonenumber'].disable();
                 this.vendorRegistrationForm.controls['companyName'].disable();
                 this.vendorRegistrationForm.updateValueAndValidity();
                  this.toaster.success(res.message ,'Success');
