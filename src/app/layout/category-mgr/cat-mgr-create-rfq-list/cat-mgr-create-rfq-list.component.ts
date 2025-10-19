@@ -339,6 +339,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
         this.isCreateRFQView = true;
         this.currentStep =1;
         this.isSendRFQToVendorScreen = false;
+        this.isValidPincode = false;
         this.resetScreen();
     }
 

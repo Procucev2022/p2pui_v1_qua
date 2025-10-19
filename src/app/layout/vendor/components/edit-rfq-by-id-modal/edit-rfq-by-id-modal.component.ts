@@ -73,16 +73,16 @@ export class EditRfqByIdModalComponent implements OnInit {
             this.createRfqService.getGMTDivisions().subscribe((res: any) => {
                 this.divisionsList = res || [];
             });
-            if(this.viewRFQbyIDdetails.division){
-                this.onChangeDivision(true);
-            }
-            if(this.viewRFQbyIDdetails.isCreateRFQScreen){
+            // if(this.viewRFQbyIDdetails.division){
+            //     this.onChangeDivision(true);
+            // }
+            // if(this.viewRFQbyIDdetails.isCreateRFQScreen){
                 this.createRfqService.getGMTCategories().subscribe((res: any) => {
                     this.categoryList = res || [];
                     this.filtered_categoryList =[];
                 });
 
-            }
+            // }
 
         }
     }

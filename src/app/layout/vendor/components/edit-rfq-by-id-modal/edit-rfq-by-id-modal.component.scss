@@ -40,3 +40,17 @@
   /* justify-content: space-around; */
   margin-bottom: 10px;
 }
+::ng-deep .p-auto-cls {
+  width: 100%;
+  margin: 0;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  height: 40px !important;
+}
+::ng-deep button.p-element.p-ripple.p-autocomplete-dropdown.p-button-icon-only.p-button.p-component {
+    position: absolute !important;
+    right: 0 !important;
+    top: 0 !important;
+    height: 40px !important;
+}
