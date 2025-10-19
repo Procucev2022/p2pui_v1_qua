@@ -52,23 +52,18 @@
                               <span *ngIf="roleName == 'ClientInitiator'">
                                 {{!viewRFQbyIDdetails.category? '-':viewRFQbyIDdetails.category}}
                               </span>
-                              <select class="form-control" name="s2"      [(ngModel)] ="viewRFQbyIDdetails.category"   *ngIf="roleName != 'ClientInitiator'" >
-                                    <option [value]="null || '' " selected="selected" disabled >Select</option>
-                                <option *ngFor="let dp of categoryList; let j = index" [value]="dp">
-                                    {{dp}}</option>
-                            </select>
-                              <!-- <p-autoComplete [(ngModel)] ="viewRFQbyIDdetails.category" showEmptyMessage="true"
-                              [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
-                               [suggestions]="filtered_categoryList" panelInputClass="p-auto-panel-cls" [minLength]="1"
-                                 [dropdown]="true"
-                                (completeMethod)="filterAutoCompleteData($event, 'categoryList','filtered_categoryList',   true)"
-                                 >
-                                          <ng-template let-segment pTemplate="item">
-                                              <div class="segment-item">
-                                                  <div>{{segment}}</div>
-                                              </div>
-                                          </ng-template>
-                              </p-autoComplete>  -->
+                                  <p-autoComplete   showEmptyMessage="false"  *ngIf="roleName != 'ClientInitiator'" 
+                             styleClass="form-control" inputStyleClass="p-auto-cls" [(ngModel)] ="viewRFQbyIDdetails.category" 
+                             [suggestions]="filtered_categoryList" panelInputClass="p-auto-panel-cls" [minLength]="1"
+                               [dropdown]="true"
+                              (completeMethod)="filterAutoCompleteData($event, 'categoryList','filtered_categoryList',   true)"
+                               >
+                                        <ng-template let-segment pTemplate="item">
+                                            <div class="segment-item">
+                                                <div>{{segment}}</div>
+                                            </div>
+                                        </ng-template>
+                            </p-autoComplete>  
                             </div>
                         </div>
 
