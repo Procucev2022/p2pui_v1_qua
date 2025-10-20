@@ -44,11 +44,11 @@ export class EditRfqByIdModalComponent implements OnInit {
 
     rfqDetailsHeaders: any = [
 
-        { field: 'description', header: 'Description', isLink: false, fieldType: 'text' },
-        { field: 'brand', header: 'Specification', isLink: false, fieldType: 'text' },
+        { field: 'description', header: 'Description', isLink: false, fieldType: 'text', width: '120px' },
+        { field: 'brand', header: 'Specification', isLink: false, fieldType: 'text', width: '120px' },
 
-        { field: 'quantity', header: 'Quantity', isLink: false, fieldType: 'number' },
-        { field: 'unitofMeasures', header: 'UOM', isLink: false, fieldType: 'text' },
+        { field: 'quantity', header: 'Quantity', isLink: false, fieldType: 'number', width: '120px' },
+        { field: 'unitofMeasures', header: 'UOM', isLink: false, fieldType: 'text', width: '120px' },
         // { field: 'unitprice', header: 'Unit Price', isLink: false },
     ];
 
@@ -68,7 +68,7 @@ export class EditRfqByIdModalComponent implements OnInit {
                 });
         }else{
             // this.rfqDetailsHeaders.splice(2, 0, { field: 'category', header: 'Category', isLink: false , fieldType: 'list'},);
-            this.rfqDetailsHeaders.splice(4, 0, { field: 'remarks', header: 'Remarks', isLink: false, fieldType: 'text' },);
+            this.rfqDetailsHeaders.splice(4, 0, { field: 'remarks', header: 'Remarks', isLink: false, fieldType: 'text', width: '120px' },);
 
             this.createRfqService.getGMTDivisions().subscribe((res: any) => {
                 this.divisionsList = res || [];
@@ -198,10 +198,11 @@ export class EditRfqByIdModalComponent implements OnInit {
             this.toaster.warning("Please Enter Project Description/Reference", 'Warning')
             return;
         }
-        if(!this.viewRFQbyIDdetails.category){
-            this.toaster.warning("Please assign Category to RFQ", 'Warning')
+        if(this.viewRFQbyIDdetails.rfqItem.some(item => !item.category || item.category.trim() === '' )){
+            this.toaster.warning("Please enter Category for all items", 'Warning')
             return;
         }
+
         console.log('reod data', this.viewRFQbyIDdetails)
         this.viewRFQbyIDdetails['rfqDocument'] = [...this.viewRFQbyIDdetails['rfqDocument'], ...this.commentFilesDataList];
         this.viewRFQbyIDdetails['fromClient'] = this.loggedUserDetails.role.roleName == 'ClientInitiator';
@@ -220,8 +221,12 @@ export class EditRfqByIdModalComponent implements OnInit {
             return;
         }
         console.log('reod data', this.viewRFQbyIDdetails)
-        if(!this.viewRFQbyIDdetails.category){
-            this.toaster.warning("Please assign Category to RFQ", 'Warning')
+        if(this.viewRFQbyIDdetails.rfqItem.some(item => !item.category || item.category.trim() === '' )){
+            this.toaster.warning("Please enter Category for all items", 'Warning')
+            return;
+        }
+        if(!this.viewRFQbyIDdetails.vendors || this.viewRFQbyIDdetails.vendors.length == 0){
+            this.toaster.warning("Without  Vendor assignment, Not able to send RFQ", 'Warning')
             return;
         }
         this.viewRFQbyIDdetails['rfqDocument'] = [...this.viewRFQbyIDdetails['rfqDocument'], ...this.commentFilesDataList];

@@ -296,15 +296,15 @@ visible: boolean;
     if(!this.isValidFormOTPControls()){
                 return;
     }
-
+        const vendorRegForm = this.vendorRegistrationForm.getRawValue();
         this.isOTPSent = true;
         this.isOTPVerified = false;
         const reqPayload = {
         "tempEmail": sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail'): '',
         "tempPhone":  sessionStorage.getItem('tempPhone')? sessionStorage.getItem('tempPhone'): '',
-        "companyName": this.vendorRegistrationForm.value.companyName,
-        "organizationPhonenumber":this.vendorRegistrationForm.value.organizationPhonenumber,
-        "email":this.vendorRegistrationForm.value.mail,
+        "companyName": vendorRegForm.companyName,
+        "organizationPhonenumber": vendorRegForm.organizationPhonenumber,
+        "email": vendorRegForm.mail,
 
 
         }

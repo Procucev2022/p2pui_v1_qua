@@ -415,13 +415,13 @@ export class CategoryMgrVendorSummaryComponent {
 
     getVendorInfo(rowData:any){
         this.selectedVendor = rowData;
-        this.rfqservice.getVendorInfoById({id: rowData.vendorUuid}).subscribe((res:any)=>{
+        this.rfqservice.getVendorInfoById({id: rowData.id}).subscribe((res:any)=>{
             if(res ){
                 this.dialog.closeAll();
                 this.vendorInfo = res;
                 this.dialog.open(this.vendorInfoTemplate, {
-                    width: "30%",
-                    minHeight: "250px",
+                    width: "40%",
+                    minHeight: "350px",
                     data: "Su",
                 }).afterClosed().subscribe((res: any) => {
                     this.vendorInfo = null;

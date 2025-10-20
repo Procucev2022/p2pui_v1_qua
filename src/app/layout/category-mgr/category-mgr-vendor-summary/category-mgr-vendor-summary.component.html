@@ -171,6 +171,9 @@
             </td> -->
             <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
                     <span *ngIf="!col.isLink">
+                            <span *ngIf="currentRole == 'CategoryManager' && col.field == 'companyName'" style="cursor: pointer;"> 
+                                <i class="fa fa-info-circle" aria-hidden="true" (click)="getVendorInfo(rowData )"></i>
+                            </span>
                             <span *ngIf="col.fieldType != 'date'" [ngClass]="{'blueCls': col.field == 'rfqId' && rowData.byClient == true}">
                                 <span *ngIf="col.fieldType != 'date'">
                                     <span *ngIf="col.field == 'quotationReceived'" title="Work In Progress"> {{  rowData[col.field]}}</span>
@@ -229,3 +232,48 @@
     </ng-template>
 
 </div>
+<ng-template #vendorInfoTemplate>
+    
+    <div class="modal-header">
+    <h4>Vendor Info</h4>
+    <button class="btn-skelton modal-close-btn" mat-dialog-close>✖</button>
+</div>
+<div class="modal-body vendor-info-modal" *ngIf="vendorInfo">
+    <div class="form-group">
+        <label><b>Company Name</b></label>
+        <label>{{selectedVendor?.companyName}}</label>
+    </div>
+    <div class="form-group">
+        <label><b>Vendor Details</b></label>
+        <label>{{selectedVendor?.details ? selectedVendor?.details : '-'}}</label>
+    </div>
+    <div class="form-group">
+        <label><b>EmailId</b></label>
+        <label>{{vendorInfo.email ? vendorInfo.email : '-'}}</label>
+    </div>
+    
+    <div class="form-group">
+        <label><b>GSTIN</b></label>
+        <label>{{vendorInfo.gstin ? vendorInfo.gstin: '-'}}</label>
+    </div>
+    <div class="form-group">
+        <label><b> Phone Number</b></label>
+        <label>{{vendorInfo.organizationPhonenumber ? vendorInfo.organizationPhonenumber : '-'}}</label>
+    </div>
+
+    <div class="form-group">
+        <label><b>ZipCode</b></label>
+        <label>{{vendorInfo.zipCode ? vendorInfo.zipCode : '-'}}</label>
+    </div>
+     <div class="form-group">
+        <label><b>Categories</b></label>
+        <label></label>
+      
+    </div>
+      <div class="categories-list"> <span *ngFor="let category of vendorInfo.categories">{{category}}</span></div>
+      <div class="empty-category" *ngIf="!vendorInfo.categories || vendorInfo.categories.length === 0">No Categories Found</div>
+</div>
+<div *ngIf="!vendorInfo">
+    No Details Found
+</div>
+</ng-template>
