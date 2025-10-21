@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CommentsService } from '../../services/comments.service';
 import { ToastrService } from 'ngx-toastr'; 
@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './pincode-control.component.html',
   styleUrls: ['./pincode-control.component.scss']
 })
-export class PincodeControlComponent {
+export class PincodeControlComponent implements OnInit, OnChanges {
   @Input() className: string = '';
   @Input() placeholder: string = 'Enter PIN code';
   @Input() required: boolean = false;
@@ -19,10 +19,27 @@ export class PincodeControlComponent {
   @Output() updatePincodeValidationStatus: EventEmitter<any> = new EventEmitter<any>();
   @Input() buttonClassName: string = 'btn btn-primary';
   @Input() inputValue: string = '';
-  isValid: boolean = false;
+  @Input() isValidatedPincode: boolean = false;
+  isValid: boolean = this.isValidatedPincode;
   constructor(private commentsService: CommentsService, private toaster: ToastrService) {
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['isValidatedPincode']) {
+      this.isValid = changes['isValidatedPincode'].currentValue; 
+
+    }
+
+    if(this.parentFormGroup && this.inputFormControlName){
+        if(this.isValid){
+            this.parentFormGroup.get(this.inputFormControlName)?.disable();
+        } else {
+            this.parentFormGroup.get(this.inputFormControlName)?.enable();
+        }
+      }
+  }
+  ngOnInit(): void {
+  }
   onChangePinCode() {
     this.isValid = false;
     this.updatePincodeValidationStatus.emit({pincodeIsValid: false});

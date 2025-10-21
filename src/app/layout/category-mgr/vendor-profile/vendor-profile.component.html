@@ -50,7 +50,7 @@
             </div>
              <div class="col-6">
                  <app-pincode-control [inputFormControlName]="'zipCode'" [className]="'pincode-control '"
-                                [buttonClassName]="'btn btn-orange'"
+                                [buttonClassName]="'btn btn-orange'" [isValidatedPincode]="isValidPincode"
                                  [parentFormGroup]="vendorForm" [labelClassName]="'form-label required '" [label]="'Zipcode'" 
                                  (updatePincodeValidationStatus)="onupdatePincodeValidationStatus($event)"></app-pincode-control>
             </div>

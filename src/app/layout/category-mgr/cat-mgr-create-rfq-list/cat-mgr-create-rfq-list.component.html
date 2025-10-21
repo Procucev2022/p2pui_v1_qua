@@ -335,9 +335,9 @@
                                             <input class="form-control" formControlName="city" placeholder="Delivery Location" />
 
                                         </div>
-                                        <div class="col-6 mb-1">
+                                        <div class="col-6 mb-1" *ngIf="isShowPincodeControl">
                                              <app-pincode-control [inputFormControlName]="'pincode'" [className]="'pincode-control '"
-                                                [buttonClassName]="'btn btn-orange'"
+                                                [buttonClassName]="'btn btn-orange'" [isValidatedPincode]="isValidPincode"
                                                 [parentFormGroup]="deliveryForm" [labelClassName]="'form-label required '" [label]="'Pincode / Zipcode'" 
                                                 (updatePincodeValidationStatus)="onupdatePincodeValidationStatus($event)"></app-pincode-control>
 

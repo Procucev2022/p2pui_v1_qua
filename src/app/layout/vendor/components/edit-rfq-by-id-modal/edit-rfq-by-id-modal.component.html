@@ -80,8 +80,8 @@
                                     <th style="width: 150px;">Category</th>
                                 </tr>
                             </ng-template>
-                            <ng-template pTemplate="body" let-rowData let-columns="columns">
-                                <tr [pSelectableRow]="rowData"> 
+                            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                                <tr [pSelectableRow]="rowData" id="rowData.rfqItemId"> 
                                   
                                     <td *ngFor="let col of columns" [style.width]="col.width">
                                         <input class="form-control" *ngIf="col.fieldType=='text' ||  col.fieldType=='number'" [type]="col.fieldType" [(ngModel)] ="rowData[col.field]" [name]="rowData[col.field]"/>
@@ -96,20 +96,9 @@
                                            {{dp}}</option>
                                    </select> 
                                     </td>
-                                      <td style="width: 150px;">
-                                        <p-autoComplete   showEmptyMessage="false"   
-                             styleClass="form-control" inputStyleClass="p-auto-cls" [(ngModel)] ="rowData.category" 
-                             [suggestions]="filtered_categoryList" panelInputClass="p-auto-panel-cls" [minLength]="1"
-                               [dropdown]="true"  appendTo="body"
-
-                              (completeMethod)="filterAutoCompleteData($event, 'categoryList','filtered_categoryList',   true)"
-                               >
-                                        <ng-template let-segment pTemplate="item">
-                                            <div class="segment-item">
-                                                <div>{{segment}}</div>
-                                            </div>
-                                        </ng-template>
-                            </p-autoComplete>  
+                                      <td style="width: 150px;">  
+                                        <span (click)="onSelectCategoryModal(rowData, rowIndex, itemModal)" style="color:blue; cursor: pointer;">{{rowData.category? rowData.category : 'Select Category'}}</span>
+                                             
                                     </td>
                                 </tr>
                             </ng-template>
@@ -264,3 +253,43 @@
 
     </div>
    </mat-dialog-actions>
+
+   <ng-template #itemModal let-dialogRef="dialogRef">
+
+        <div class="modal-header">
+            <h5>Select Item : {{selectedItem?.description}}</h5>
+        </div>
+        <div class="modal-body" style="height: 277px;">
+            <div class="row">
+                <div class="col-12">
+                    <div class="view-details-panel-cls">
+                        <div class="panel-content-box">
+                            <div class="col-12 cust-card">
+                                <div class="form-group" *ngIf="selectedItem">
+                                <label>Select Category</label>
+                                <p-autoComplete   showEmptyMessage="false"   
+                                                        styleClass="form-control" inputStyleClass="p-auto-cls" [(ngModel)] ="selectedItemCategory" name="category"
+                                                        [suggestions]="filtered_categoryList" panelInputClass="p-auto-panel-cls" [minLength]="1"
+                                                        [dropdown]="true"    placeholder="Select Category"
+
+                                                        (completeMethod)="filterAutoCompleteData($event, 'categoryList','filtered_categoryList',   true)"
+                                                        >
+                                                                    <ng-template let-segment pTemplate="item">
+                                                                        <div class="segment-item">
+                                                                            <div>{{segment}}</div>
+                                                                        </div>
+                                                                    </ng-template>
+                                                        </p-autoComplete> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+         <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeModalItemModal()">Close</button>
+                <button type="button" class="btn btn-primary" (click)="saveCategory()">Save</button>
+            </div>
+   </ng-template>

@@ -159,6 +159,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
     filtered_divisionsList =[];
     isIndian: any = true;
     isValidPincode: boolean;
+    isShowPincodeControl: boolean;
 
     constructor(
         private encryDecryService: EncryDecryService,
@@ -341,8 +342,15 @@ export class CatMgrCreateRfqListComponent implements OnInit {
         this.isSendRFQToVendorScreen = false;
         this.isValidPincode = false;
         this.resetScreen();
+        this.showPincodeControl();
     }
 
+    showPincodeControl(){
+           this.isShowPincodeControl = false;
+        setTimeout(() => {
+            this.isShowPincodeControl = true;
+        });
+    }
     resetScreen() {
         this.itemForm.reset();
         this.projectForm.reset();
