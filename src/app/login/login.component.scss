@@ -28,16 +28,17 @@ img.bg-img {
 
   // padding: 3em;
   .form-control {
-    background: #FFFFFF;
-    border: 1px solid #D0D5DD !important;
+    background: #F6F6F6 !important;
+    border: none !important;
     box-sizing: border-box;
-    // box-shadow: 0px 1px 2px rgb(16 24 40 / 5%) !important;
-    border-radius: 4px;
+    border-radius: 0;
+    box-shadow: none; //0px 1px 2px rgb(16 24 40 / 5%) !important; 
     flex: none;
     order: 1;
     align-self: stretch;
     flex-grow: 0;
     height: 44px;
+    margin-bottom: 10px !important;
     left: 0px;
     top: 0px;
   }
@@ -83,10 +84,11 @@ img.bg-img {
   justify-content: center;
   align-items: center;
   background: #fff;
-  width: 65%;
+  width: 510px;
+  height: 587px;
   margin-top: 0% !important;
   border-radius: 10%;
-  min-height: 633px;
+  margin-top: 2rem !important;
 
 }
 
@@ -94,7 +96,7 @@ img.bg-img {
   width: 600px;
   height: 600px;
   background: #FFFFFF;
-  border: 1px solid #E6ECEF;
+  border: none !important;
   box-sizing: border-box;
   box-shadow: -3px -1px 10px 7px #0a229f1f;
   border-radius: 12px;
@@ -555,10 +557,10 @@ button [type="reset"] {
 
   img {
     position: absolute;
-    width: 155px;
-    height: 162px;
-    top: -16%;
-    left: 26%;
+    width: 163px;
+    height: 165px;
+    top: -20%;
+    left: 25%;
     border-radius: 50%;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
@@ -579,10 +581,12 @@ button [type="reset"] {
 .qua-box {
   position: absolute;
   left: 34%;
-  top: -112%;
+  top: -130%;
   border-radius: 50%;
   border: 3px solid;
   width: 177px;
+  height: 166px;
+  padding-top: 10px;
   background: #fff;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
