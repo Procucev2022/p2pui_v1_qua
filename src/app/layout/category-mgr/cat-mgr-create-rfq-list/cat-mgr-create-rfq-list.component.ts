@@ -349,6 +349,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
            this.isShowPincodeControl = false;
         setTimeout(() => {
             this.isShowPincodeControl = true;
+            this.deliveryForm.controls['pincode'].enable();
         });
     }
     resetScreen() {

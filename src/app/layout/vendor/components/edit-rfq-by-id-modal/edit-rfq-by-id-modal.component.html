@@ -77,7 +77,7 @@
                                         {{col.header}}
                                         <p-sortIcon [field]="col.field"></p-sortIcon>
                                     </th>
-                                    <th style="width: 150px;">Category</th>
+                                    <th style="width: 150px;" *ngIf="roleName == 'CategoryManager'">Category</th>
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
@@ -96,7 +96,7 @@
                                            {{dp}}</option>
                                    </select> 
                                     </td>
-                                      <td style="width: 150px;">  
+                                      <td style="width: 150px;" *ngIf="roleName == 'CategoryManager'">  
                                         <span (click)="onSelectCategoryModal(rowData, rowIndex, itemModal)" style="color:blue; cursor: pointer;">{{rowData.category? rowData.category : 'Select Category'}}</span>
                                              
                                     </td>
@@ -141,13 +141,21 @@
                                     <input class="form-control" type="text" [(ngModel)] ="location.state" name="state" disabled/>
                                 </div>
                             </div>
-                            <div class="form-group row"  >
+                            <div class="form-group row"  *ngIf="roleName != 'CategoryManager'">
+                               
                                 <app-pincode-control [inputFormControlName]="''" [className]="'pincode-control '" [inputValue]="location.pincode"
-                                [parentObject]="location.pincode"
+                                [parentObject]="location.pincode" 
                                                 [buttonClassName]="'btn btn-orange'"
                                                 [parentFormGroup]="''" [labelClassName]="'form-label required '" [label]="'Pincode / Zipcode'" 
                                                 (updatePincodeValidationStatus)="onupdatePincodeValidationStatus($event, i)"></app-pincode-control>
 
+                            </div>
+                            <div class="form-group row" *ngIf="roleName == 'CategoryManager'">
+                                <label for="pincode" style="font-size: medium; font-weight: bolder;"
+                                    class="col-sm-5 col-form-label required">Pincode / Zipcode</label>
+                                <div class="col-sm-5 col-form-label">
+                                    <input class="form-control" type="text" [(ngModel)] ="location.pincode" name="pincode" disabled/>
+                                </div>
                             </div>
                         </mat-card>
                     </div>
