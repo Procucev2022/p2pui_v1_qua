@@ -36,7 +36,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
         { field: 'rfqId', header: 'RFQ Id', isLink: false, width: '190px', fieldType: 'text', isExceedContent: false },
         { field: 'projectDesc', header: 'Description', isLink: false, width: '240px', fieldType: 'text', isExceedContent: true },
         { field: 'category', header: 'Category', isLink: false, width: '240px', fieldType: 'text', isExceedContent: true },
-        { field: 'division', header: 'Division ', isLink: false, width: '190px', fieldType: 'text', isExceedContent: false },
+        // { field: 'division', header: 'Division ', isLink: false, width: '190px', fieldType: 'text', isExceedContent: false },
         { field: 'noOfVendors', header: 'Vendors', isLink: false, fieldType: 'text', width: '180px', isExceedContent: false },
         // { field: 'noOfQuotes', header: 'Quotes', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
         { field: 'createdTS', header: 'Created Date', isLink: false, fieldType: 'date', width: '225px', isExceedContent: false },
@@ -160,6 +160,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
     isIndian: any = true;
     isValidPincode: boolean;
     isShowPincodeControl: boolean;
+    isForwardRFQ: boolean;
 
     constructor(
         private encryDecryService: EncryDecryService,
@@ -370,8 +371,8 @@ export class CatMgrCreateRfqListComponent implements OnInit {
     }
 
 
-    onSendRFQ(rowData: any) {
-
+    onSendRFQ(rowData: any, isForward: boolean) {
+        this.isForwardRFQ = isForward;
         this.selectedRFQData = { ...rowData };
 
         this.isSendRFQToVendorScreen = true;
@@ -958,14 +959,16 @@ export class CatMgrCreateRfqListComponent implements OnInit {
                     "email": item.email,
                     "otherEmails": item.otherEmails,
                     "vendorcategory": null,
-                    "subCategory": null
+                    "subCategory": null,
+                     "requestType": this.isForwardRFQ ? 'Forward' : 'Invite'
 
                 }
             } else {
                 vendor = {
                     "id": item.id,
                     "otherEmails": item.otherEmails,
-                    "email": item.email
+                    "email": item.email,
+                    "requestType": this.isForwardRFQ ? 'Forward' : 'Invite'
                 }
             }
             return vendor;

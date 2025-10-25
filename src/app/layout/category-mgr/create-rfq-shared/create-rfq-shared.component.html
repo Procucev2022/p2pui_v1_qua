@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-12 table-title pb-0"><h2>Forward RFQ</h2></div>
+    <div class="col-12 table-title pb-0"><h2>  {{ isRFQFORWARD == true ? 'Send RFQ' : 'Invite RFQ' }} </h2></div>
 
 
     <div class="col-12 create-rfq-body row">
@@ -145,6 +145,6 @@
     </div>
     <div class="col-12 mt-3 mr-3" style="display: flex;align-items: center;flex-direction: row-reverse;    position: fixed;
     bottom: 16px;right: 16px;"  >
-    <button class="btn btn-orange ml-3" type="button"   (click)="onForwardRFQ()" [disabled]="(vendorGridData.gridValue.length<=0 )">{{ 'Send RFQ'}} </button>
+    <button class="btn btn-orange ml-3" type="button"   (click)="onForwardRFQ()" [disabled]="(vendorGridData.gridValue.length<=0 )">{{ this.isRFQFORWARD == true ? 'Send RFQ' : 'Invite RFQ' }} </button>
    </div>
 </div>

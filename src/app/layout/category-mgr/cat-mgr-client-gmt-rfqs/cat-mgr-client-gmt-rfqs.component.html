@@ -101,7 +101,7 @@
               {{col.header}}
               <p-sortIcon [field]="col.field"></p-sortIcon>
           </th>
-          <th style="width: 8em;">Actions</th>
+          <th style="width: 13em;">Actions</th>
           </tr>
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
@@ -133,12 +133,13 @@
 
                   </span>
           </td>
-          <td style="width: 8em;">
+          <td style="width: 13em;">
               <img class="cursor-pointer" src="/assets/images/new/edit-data.png"  width="28" style="width:28px;margin-right: 10px;" title="Edit RFQ"  (click)="onViewRFQDetails(rowData, true, false)">
 
-              <img src="/assets/images/new/forward.png" class="forward"  (click)="onForwardRFQ(rowData)"width="44" height="34"
-                  title="Forward RFQ Details">
-
+              <img src="/assets/images/new/forward.png" class="forward cursor-pointer"  (click)="onForwardRFQ(rowData, true)"width="44" height="34"
+                  title="Forward RFQ Details"> 
+              <img src="/assets/images/new/invite.png " class="forward cursor-pointer"  (click)="onForwardRFQ(rowData, false)"width="30" height="24"
+                  title="Invite RFQ Details">
           </td>
           </tr>
       </ng-template>
@@ -347,7 +348,7 @@
   <p-sidebar [(visible)]="isSendRFQ" position="right"
     styleClass="ui-sidebar-lg" [style]="{width:'100vw'}">
 
-    <app-create-rfq-shared *ngIf="selectedRfqData" (onCloseRFQForwardScreen)="closeForwardRFQScreen()" [rfqDetails]="selectedRfqData"></app-create-rfq-shared>
+    <app-create-rfq-shared *ngIf="selectedRfqData" (onCloseRFQForwardScreen)="closeForwardRFQScreen()" [rfqDetails]="selectedRfqData" [isRFQFORWARD]="isRFQFORWARD"></app-create-rfq-shared>
 
 </p-sidebar>
 
