@@ -82,6 +82,7 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
   isSendRFQ: boolean =false;
   selectedVendor: any;
   vendorInfo: any;
+    isRFQFORWARD: boolean;
   constructor(private dialog: MatDialog,
       private encryDecryService: EncryDecryService,
       private rfqservice: RfqService,
@@ -478,13 +479,14 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
 
   }
 
-  onForwardRFQ(rowData:any){
+  onForwardRFQ(rowData:any, isRFQFORWARD: boolean){
     if(rowData.status_ui_display != 'Accepted'){
           this.toastrService.warning("Sorry, Only Accepted RFQs allowed for Forward to Vendors", 'Warning');
         return;
     }
       this.selectedRfqData = null;
       this.isSendRFQ =true;
+      this.isRFQFORWARD = isRFQFORWARD;
       setTimeout(()=>{
           this.selectedRfqData = rowData;
       },100)

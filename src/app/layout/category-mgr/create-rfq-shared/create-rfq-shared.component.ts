@@ -156,6 +156,7 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
 
     @Input() rfqDetails: any;
     @Output() onCloseRFQForwardScreen = new EventEmitter();
+    @Input() isRFQFORWARD: boolean = true;
     constructor(
         private encryDecryService: EncryDecryService,
         private rfqservice: RfqService,
@@ -699,8 +700,12 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
         this.itemForm.reset();
         this.vendorForm.reset();
     }
+    
+    onForwardRFQ() {
+        this.sendRFQToVendors();
+    }
 
-    onForwardRFQ(){
+    onInviteRFQ(){
         this.sendRFQToVendors();
     }
 
@@ -733,14 +738,17 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
                     "email": item.email,
                     "otherEmails": item.otherEmails,
                     "vendorcategory": null,
-                    "subCategory": null
+                    "subCategory": null,
+                    "requestType": this.isRFQFORWARD ? 'Forward' : 'Invite'
+
 
                 }
             } else {
                 vendor = {
                     "id": item.id,
                     "otherEmails": item.otherEmails,
-                    "email": item.email
+                    "email": item.email,
+                    "requestType": this.isRFQFORWARD ? 'Forward' : 'Invite'
                 }
             }
             return vendor;
