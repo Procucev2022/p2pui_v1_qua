@@ -553,7 +553,7 @@
                             <span>Summary</span>
                         </a>
                         </li> -->
-                        <li *ngIf="loggedUserDetails?.role.roleName == 'Vendor' || loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor' || loggedUserDetails?.role.roleName == 'CategoryManager' ||  loggedUserDetails?.role.roleName == 'CategoryManager2'">
+                        <li *ngIf="!(loggedUserDetails?.role.roleName == 'Vendor' || loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor') &&( loggedUserDetails?.role.roleName == 'CategoryManager' ||  loggedUserDetails?.role.roleName == 'CategoryManager2')">
                             <a class="list-group-item" [routerLink]="['/categorymgr/gmt-rqfs']"
                             [routerLinkActive]="['router-link-active']">
                             <i class="fa fa-user"></i> &nbsp;
@@ -595,7 +595,7 @@
                             <i class="fa fa-user"></i> &nbsp;
                             <span>My Profile</span>
                         </a>
-                           <li *ngIf="loggedUserDetails?.role.roleName ==    'Vendor' ||  loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor'">
+                          <!--     <li *ngIf="loggedUserDetails?.role.roleName ==    'Vendor' ||  loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor'">
                             <a class="list-group-item" [routerLink]="['/categorymgr/vendor-catalogue']"
                             [routerLinkActive]="['router-link-active']">
                             <i class="fa fa-user"></i> &nbsp;
@@ -603,14 +603,14 @@
                         </a>
                        
                         </li>
-                         <li *ngIf="loggedUserDetails?.role.roleName ==    'Vendor' || 
+                      <li *ngIf="loggedUserDetails?.role.roleName ==    'Vendor' || 
                         loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor'">
                             <a class="list-group-item" [routerLink]="['/categorymgr/vendor-profile-subscriptions']"
                             [routerLinkActive]="['router-link-active']">
                             <i class="fa fa-user"></i> &nbsp;
                             <span>My Subscripion Plan</span>
                         </a>
-                        </li>
+                        </li> -->
                         
                         <li *ngIf="loggedUserDetails?.role.roleName ==    'Vendor' || loggedUserDetails?.role.roleName ==    'ClientInitiator' || loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor'">
                             <a class="list-group-item" [routerLink]="['/categorymgr/gmt-rfq-faqs']"
