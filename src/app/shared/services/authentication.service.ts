@@ -103,7 +103,7 @@ export class AuthenticationService {
                 localStorage.setItem('isLoggedin', 'true');
 
                 if ([this.SYSTEM_VIEW_CONFIG.GMT_BASIC, this.SYSTEM_VIEW_CONFIG.GMT_BASIC_PLUS, this.SYSTEM_VIEW_CONFIG.GMT_PROF].includes(systemView)) {
-                    this.router.navigate(['/categorymgr/gmt-rqfs']).then(() => {
+                    this.router.navigate(['/categorymgr/my-profile']).then(() => {
                         window.location.reload();
                     });
 
