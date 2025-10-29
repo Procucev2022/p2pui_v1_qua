@@ -1,147 +1,137 @@
-
-    <div class="row reg-page-container">
-        <div class="col-4 left-section">
-            <div class="row">
-                <div class="col-12 logo">
-                    <img class="logo" src="assets/images/Procucev_Logo.svg" />
-                </div>
-                <div class="col-12 sub-imgs">
-                    <img src="assets/images/new/BFS_w.png" width="150" height="150" alt="assets/images/new/BFS_w.png">
-                    <img src="assets/images/new/GMT.png" width="150" height="150" />
-                </div>
-                <div class="content-box">
-                    <h4 class="title-gmt">GMT:</h4>
-                    <ul class="gmt-list">
-                        <li>Effortless Sourcing</li>
-                        <li>Faster Turnarounds</li>
-                        <li>Reduced Costs</li> 
-                    </ul>
-                    <h4>BFS:</h4>
-                    <ul class="bfs-list">
-                        <li>Access to Vast Marketplace</li>
-                        <li>Cost Savings</li>
-                        <li>User Friendly Platform</li>
-                        <li>Boost Sustainability</li>
-                    </ul>
-                </div>
+<div class="row reg-page-container">
+    <div class="col-4 left-section">
+        <div class="row">
+            <div class="col-12 logo">
+                <img class="logo" src="assets/images/Procucev_Logo.svg" />
             </div>
-
+            <div class="col-12 sub-imgs">
+                <img src="assets/images/new/BFS_w.png" width="150" height="150" alt="assets/images/new/BFS_w.png">
+                <img src="assets/images/new/GMT.png" width="150" height="150" />
+            </div>
+            <div class="content-box">
+                <h4 class="title-gmt">GMT:</h4>
+                <ul class="gmt-list">
+                    <li>Effortless Sourcing</li>
+                    <li>Faster Turnarounds</li>
+                    <li>Reduced Costs</li>
+                </ul>
+                <h4>BFS:</h4>
+                <ul class="bfs-list">
+                    <li>Access to Vast Marketplace</li>
+                    <li>Cost Savings</li>
+                    <li>User Friendly Platform</li>
+                    <li>Boost Sustainability</li>
+                </ul>
+            </div>
         </div>
-        <div class="col-8 right-section p-5">
-            <h4 class="title" style="font-size: 2rem;margin-top: 2rem;">Buyer Registration </h4>
-            <div  style="color: #fff" class="error-block" >
-                    <p *ngIf="clientRegForm?.controls?.india.value == 'true' && clientRegForm?.controls?.phoneNumber?.touched && clientRegForm?.controls?.phoneNumber?.errors?.invalidPhoneNumber ">
-                       * Mobile number must be  10 digits and Not Preceeded with 0.</p>
-                <p *ngIf="clientRegForm?.controls?.pan?.touched && clientRegForm?.controls?.pan?.errors?.pattern ">* Invalid PAN Details  </p>
-                <p *ngIf="clientRegForm?.controls?.mail?.touched && clientRegForm?.controls?.mail?.errors?.pattern ">* Invalid EmailId  </p>
-            </div>
-            <div class="registration-form">
-                <form name="clientRegForm" [formGroup]="clientRegForm" (ngSubmit)='registerVendor(clientRegForm)'>
-                        <div class="row"> 
-                            
-                            <div class="col-md-5 col-xs-12 mt-4">
-                                <label for="name">Your Name: <b style="color: #fb9898;">*</b></label>
-                                <input type="text" required id="name" class="form-control" name="name" formControlName="name" placeholder="Name">
-                                <div
-                                    *ngIf="(clientRegForm.controls?.name?.touched ) && clientRegForm.controls?.name.errors ">
-                                    <div style="color: #fb9898;" *ngIf="clientRegForm.controls?.name.errors.required">Name is
-                                        required</div>
-                                    <div style="color: #fb9898;" *ngIf="clientRegForm.controls?.name.errors.alphabetOnly">Name must contain only alphabetic characters.</div>
+
+    </div>
+    <div class="col-8 right-section p-5">
+        <h4 class="title" style="font-size: 2rem;margin-top: 2rem;">Buyer Registration </h4>
+        <div class="alert  mt-3" *ngIf="hasAnyErrors()"
+            style="display: flex; align-items: center; color:#fff;align-self: center;">
+            <span (click)="op.toggle($event)" style="cursor: pointer; "><i class="fa fa-exclamation-triangle"
+                    style="font-size: 2rem;" aria-hidden="true"></i> Pls fill all
+                required
+                fields & clear all errors. Click here to view errors!
+            </span>
+        </div>
+
+
+        <div class="registration-form">
+            <form name="clientRegForm" [formGroup]="clientRegForm" (ngSubmit)='registerVendor(clientRegForm)'>
+                <div class="row">
+
+                    <div class="col-md-5 col-xs-12 mt-4">
+                        <label for="name">Your Name: <b style="color: #fb9898;">*</b></label>
+                        <input type="text" required id="name" class="form-control" name="name" formControlName="name"
+                            placeholder="Name">
+
+                    </div>
+                    <div class="col-md-5  col-xs-12 mt-4">
+                        <label for="companyName">Company Name: <b style="color: #fb9898;">*</b></label>
+                        <input type="text" id="companyName" class="form-control" name="companyName"
+                            placeholder="Company Name" formControlName="companyName">
+
+                    </div>
+                    <div class="col-md-12 mt-4" style="">
+                        <div class="row">
+                            <div class="col-md-5 col-xs-12 mb-1">
+                                <label for="name">Mobile Number: <b style="color: #fb9898;">*</b></label>
+                                <div class="mobile-box">
+                                    <span style="color: #fff;">IND +91</span>
+                                    <input type="text" maxlength="10" minlength="10" id="adress" class="form-control"
+                                        name="organizationPhonenumber" formControlName="organizationPhonenumber"
+                                        placeholder="Mobile Number" (keypress)="numberOnly($event)" maxlength="10"
+                                        minlength="10" [disabled]="isOTPVerified || isOTPSent">
+                                </div>
+                                <span style="font-size: 12px;">(Provide mobile number, so you can access on
+                                    WhatsApp)</span>
+                                <span style="color: green;" *ngIf="isOTPVerified">Mobile Number Verified</span>
+
+                            </div>
+                            <div class="col-md-5  col-xs-12 mb-1">
+                                <label for="email">Company EMail Id: <b style="color: #fb9898;">*</b></label>
+                                <input type="email" required id="email" class="form-control" name="email"
+                                    placeholder="Company Email Id" formControlName="email"
+                                    [disabled]="isOTPVerified || isOTPSent">
+                                <span style="color: green;" *ngIf="isOTPVerified">EMail Verified</span>
+
+                                <div>
                                 </div>
                             </div>
-                            <div class="col-md-5  col-xs-12 mt-4">
-                                <label for="companyName">Company Name: <b style="color: #fb9898;">*</b></label>
-                                <input type="text" id="companyName" class="form-control" name="companyName" placeholder="Company Name"
-                                    formControlName="companyName">
-                                <div
-                                    *ngIf="(clientRegForm.controls.companyName.touched ) && clientRegForm.controls.companyName.errors?.required">
-                                    <div style="color: #fb9898;">Company Name is required</div>
-                                </div>
-                                <div *ngIf="(clientRegForm.controls.companyName.touched )
-                                && clientRegForm.controls.companyName.errors?.numericOnly">
-                                    <div style="color: #fb9898;">Company Name must not be numeric only</div>
+                            <div class="col-md-2">
+                                <button class="btn btn-primary  " (click)="sendOTPs()" type="button"
+                                    style="width: 100%; background: #03A9F4 !important; color: #fff !important; border-radius: 30px !important; font-size: 1.1rem !important; padding: 0 !important; font-weight: 400 !important; border: none !important;margin-top: 2.5rem;"
+                                    *ngIf="!isOTPVerified" [disabled]="enableOTPButton">{{isOTPSent? 'Resend OTPs':
+                                    'Send OTPs'}}
+                                    <span *ngIf="enableOTPButton && enableOTPInSecs > 0"> ({{enableOTPInSecs}}
+                                        Secs.)</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <div class="row">
+                                <div class="col-md-5"><input class="form-control" type="text"
+                                        formControlName="mobileOtp" name="mobileOtp" (keypress)="numberOnly($event)"
+                                        placeholder="Enter Mobile OTP" maxlength="6" minlength="6" /></div>
+                                <div class="col-md-5"><input class="form-control" type="text" formControlName="emailOtp"
+                                        name="emailOtp" (keypress)="numberOnly($event)" placeholder="Enter EMail OTP"
+                                        maxlength="6" minlength="6" /></div>
+                                <div class="col-md-2" style="display: flex;align-items: center;">
+                                    <button class="btn btn-primary" (click)="verifyOtps()" type="button" style="width: 100%; background: #0a461e !important; color: #fff !important; border-radius: 30px !important; font-size: 1.1rem !important; padding: 0 !important;  font-weight: 400 !important;
+                                    border: none !important;padding: 5px;" *ngIf="!isOTPVerified"
+                                        [disabled]="!isOTPSent">Validate OTPs</button>
                                 </div>
                             </div>
-                            <div class="col-md-12 mt-4" style="">
-                                <div class="row">
-                                    <div class="col-md-5 col-xs-12 mb-1">
-                                            <label for="name">Mobile Number: <b style="color: #fb9898;">*</b></label>
-                                            <div class="mobile-box">
-                                                <span style="color: #fff;">IND +91</span>
-                                                <input type="text" maxlength="10" minlength="10" id="adress" class="form-control"
-                                                    name="organizationPhonenumber" formControlName="organizationPhonenumber" placeholder="Mobile Number"  (keypress)="numberOnly($event)"  maxlength="10" minlength="10"  [disabled]="isOTPVerified || isOTPSent">
-                                                </div>
-                                                <span style="font-size: 12px;">(Provide mobile number, so you can access on WhatsApp)</span>
-                                            <span style="color: green;" *ngIf="isOTPVerified">Mobile Number Verified</span>
-                                            <div
-                                                *ngIf="(clientRegForm.controls?.organizationPhonenumber?.touched ) && clientRegForm.controls?.organizationPhonenumber?.errors">
-                                                <div *ngIf="(clientRegForm.controls.organizationPhonenumber.errors.required)"
-                                                    style="color: #fb9898;">Mobile
-                                                    number is required</div>
-                                                    <div  style="color: #fb9898;" *ngIf="clientRegForm.controls?.organizationPhonenumber?.errors?.invalid">
-                                                        Mobile number must be exactly 10 digits.
-                                                        </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-5  col-xs-12 mb-1">
-                                            <label for="email">Company EMail Id: <b style="color: #fb9898;">*</b></label>
-                                            <input type="email" required id="email" class="form-control" name="email" placeholder="Company Email Id"
-                                                formControlName="email"  [disabled]="isOTPVerified || isOTPSent">
-                                                <span style="color: green;" *ngIf="isOTPVerified">EMail Verified</span>
-                                            <div
-                                                *ngIf="(clientRegForm.controls.email.touched ) && clientRegForm.controls.email.errors">
-                                                <div *ngIf="(clientRegForm.controls.email.errors.required)" style="color: #fb9898;">Email is
-                                                    required</div>
-                                                <div *ngIf="(clientRegForm.controls.email.errors.invalid || clientRegForm.controls.email.errors.invalidEmail)" style="color: #fb9898;">Please enter
-                                                    valid Email id</div>
-                                            </div>
-                                            <div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2"    >
-                                            <button class="btn btn-primary  " (click)="sendOTPs()"  type="button"  style="width: 100%; background: #03A9F4 !important; color: #fff !important; border-radius: 30px !important; font-size: 1.1rem !important; padding: 0 !important; font-weight: 400 !important; border: none !important;margin-top: 2.5rem;"  *ngIf="!isOTPVerified" [disabled]="enableOTPButton">{{isOTPSent? 'Resend OTPs': 'Send OTPs'}}
-                                                <span *ngIf="enableOTPButton && enableOTPInSecs > 0"> ({{enableOTPInSecs}} Secs.)</span>
-                                            </button>
-                                        </div>
-                                </div>
-                                
-                              <div class="col-12 mt-4">
-                                <div class="row">
-                                        <div class="col-md-5"><input class="form-control" type="text"   formControlName="mobileOtp" name="mobileOtp"  (keypress)="numberOnly($event)"   placeholder="Enter Mobile OTP" maxlength="6" minlength="6" /></div>
-                                        <div class="col-md-5"><input  class="form-control" type="text"   formControlName="emailOtp" name="emailOtp"   (keypress)="numberOnly($event)" placeholder="Enter EMail OTP" maxlength="6" minlength="6" /></div>
-                                        <div class="col-md-2" style="display: flex;align-items: center;">
-                                            <button class="btn btn-primary"  (click)="verifyOtps()" type="button"  style="width: 100%; background: #0a461e !important; color: #fff !important; border-radius: 30px !important; font-size: 1.1rem !important; padding: 0 !important;  font-weight: 400 !important;
-                                    border: none !important;padding: 5px;" *ngIf="!isOTPVerified" [disabled]="!isOTPSent">Validate OTPs</button>
-                                        </div>
-                                </div>
-                              
-                                <div class="col-md-12 mt-4"
-                                      *ngIf="(clientRegForm.controls?.organizationPhonenumber?.touched ) && clientRegForm.controls?.organizationPhonenumber?.errors">
-                                      <div *ngIf="(clientRegForm.controls.organizationPhonenumber.errors.required)"
-                                          style="color: #fb9898;">Mobile  number is required</div>
-                                          <div  style="color: #fb9898;" *ngIf="clientRegForm.controls?.organizationPhonenumber?.errors?.invalid">
-                                              Mobile number must be exactly 10 digits.
-                                            </div>
-                                </div> 
-                              </div>
-                          </div>
-                          <div class="col-md-3 mt-4"></div>
-                            <div class="col-md-4  col-xs-12 mt-4"> 
-                                <app-pincode-control [inputFormControlName]="'pinCode'" [className]="'pincode-control border-radius-round'"
-                                [buttonClassName]="'btn btn-orange'"
-                                 [parentFormGroup]="clientRegForm" [labelClassName]="'form-label required whiteStar'" [label]="'PinCode'" 
-                                 (updatePincodeValidationStatus)="onupdatePincodeValidationStatus($event)"></app-pincode-control>
+
+                            <div class="col-md-12 mt-4"
+                                *ngIf="(clientRegForm.controls?.organizationPhonenumber?.touched ) && clientRegForm.controls?.organizationPhonenumber?.errors">
+
                             </div>
-                          
-                            <div class="col-md-12  col-xs-12">
+                        </div>
+                    </div>
+                    <div class="col-md-3 mt-4"></div>
+                    <div class="col-md-4  col-xs-12 mt-4">
+                        <app-pincode-control [inputFormControlName]="'pinCode'"
+                            [className]="'pincode-control border-radius-round'" [buttonClassName]="'btn btn-orange'"
+                            [parentFormGroup]="clientRegForm" [labelClassName]="'form-label required whiteStar'"
+                            [label]="'PinCode'"
+                            (updatePincodeValidationStatus)="onupdatePincodeValidationStatus($event)"></app-pincode-control>
+                    </div>
+
+                    <div class="col-md-12  col-xs-12">
+                        <div class="row">
+                            <div class="col-md-6  col-xs-12 mt-3" style="color:rgb(234, 229, 189)">
+                                <b>Note :</b> If Already Registered! Click here for <a routerLink="/login"
+                                    style="margin-left: 5px;font-weight: 600;border-bottom: 2px solid;color:rgb(255, 254, 254)">Login</a>
+                            </div>
+                            <div class="col-md-12  col-xs-12 btn-blocks mt-5">
                                 <div class="row">
-                                    <div class="col-md-6  col-xs-12 mt-3" style="color:rgb(234, 229, 189)">
-                                        <b>Note :</b> If Already Registered! Click here for <a routerLink="/login" style="margin-left: 5px;font-weight: 600;border-bottom: 2px solid;color:rgb(255, 254, 254)">Login</a>
-                                    </div>
-                                  <div class="col-md-12  col-xs-12 btn-blocks mt-5">
-                                    <div class="row">
-                                        <div class="col-md-5">
-                                            <button class="btn btn-blue " type="submit"    [disabled]="isEmailExists || !isOTPVerified  " style="float: right;
+                                    <div class="col-md-5">
+                                        <button class="btn btn-blue " type="submit"
+                                            [disabled]="isEmailExists || !isOTPVerified  " style="float: right;
     width: 100%;
     background: #8BC34A !important;
     color: #fff !important;
@@ -149,33 +139,78 @@
     font-size: 1.4rem !important;
     padding: 0 !important;
     font-weight: 400 !important;">
-                                                <span>Register</span>
-                                            </button>
-                                        </div>
-                                        <div class="col-md-5">
+                                            <span>Register</span>
+                                        </button>
+                                    </div>
+                                    <div class="col-md-5">
 
-                                            <button class="btn btn-red " type="button" (click)="resetWholeForm()" 
-    
-    style="float: right;
+                                        <button class="btn btn-red " type="button" (click)="resetWholeForm()" style="float: right;
     width: 100%;
     background: #b41b2d !important;
     color: #fff !important;
     border-radius: 30px !important;
     font-size: 1.4rem !important;
     padding: 0 !important;
-    font-weight: 400 !important;"> 
-                                                <span>Reset</span>
-                                            </button>
-                                        </div>
+    font-weight: 400 !important;">
+                                            <span>Reset</span>
+                                        </button>
                                     </div>
-                                     
-                                  </div>
                                 </div>
-                                
-                            </div>
 
+                            </div>
                         </div>
-                    </form>
-            </div>
+
+                    </div>
+
+                </div>
+            </form>
         </div>
     </div>
+</div>
+
+
+<p-overlayPanel #op>
+    <div class="confirmation-content">
+        <ul id="error-list">
+
+
+            <li style="color: #fb9898;" *ngIf="clientRegForm.controls?.name.errors?.required">Name is
+                required</li>
+            <li style="color: #fb9898;" *ngIf="clientRegForm.controls?.name.errors?.alphabetOnly">Name
+                must contain only alphabetic characters.</li>
+
+            <li  style="color: #fb9898;"*ngIf="  clientRegForm.controls.companyName.errors?.required">
+                <div >Company Name is required</div>
+            </li>
+            <li style="color: #fb9898;"*ngIf=" clientRegForm.controls.companyName.errors?.numericOnly">
+                <div  >Company Name must not be numeric only</div>
+            </li>
+
+            <li style="color: #fb9898;"
+                *ngIf="  clientRegForm?.controls?.phoneNumber?.errors?.invalidPhoneNumber ">
+                Mobile number must be 10 digits and Not Preceeded with 0.
+
+            </li>
+
+            <li *ngIf="(clientRegForm.controls.organizationPhonenumber.errors?.required)" style="color: #fb9898;">Mobile
+                number is required  </li>
+            <li style="color: #fb9898;" *ngIf="clientRegForm.controls.organizationPhonenumber.errors ">
+                Mobile number must be exactly 10 digits.
+            </li>
+
+            <li *ngIf="(clientRegForm.controls.email.errors?.required)" style="color: #fb9898;">
+                Email is required</li>
+            <li *ngIf="(clientRegForm.controls.email.errors?.invalid || clientRegForm.controls.email.errors?.invalidEmail)"
+                style="color: #fb9898;">Please enter valid Email id</li>
+            <li *ngIf="clientRegForm?.controls?.pan?.touched && clientRegForm?.controls?.pan?.errors?.pattern ">
+                Invalid PAN Details
+            </li>
+            <li *ngIf="clientRegForm?.controls?.mail?.touched && clientRegForm?.controls?.mail?.errors?.pattern ">
+                Invalid Email Details</li>
+            <li *ngIf="  !isOTPVerified" style="color: #fb9898;">OTP is not verified</li>
+            <li *ngIf="!isValidPincode" style="color: #fb9898;">Invalid Pincode </li>
+
+
+        </ul>
+    </div>
+</p-overlayPanel>

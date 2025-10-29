@@ -33,34 +33,29 @@
         </div>
         <div class="col-8 right-section pl-5 pr-5 pt-2 pb-2">
             <h4 class="title" style="font-size: 2rem;margin-top: 2rem;">Seller Registration </h4>
-            <div  style="color: #fff" class="error-block" >
-                  
-                 </div>
+            <div class="alert  mt-3" *ngIf="hasAnyErrors()" style="display: flex; align-items: center; color:#fff;align-self: center;"> 
+                <span (click)="op.toggle($event)" style="cursor: pointer; "><i
+                    class="fa fa-exclamation-triangle" style="font-size: 2rem;" aria-hidden="true"></i> Pls fill all
+                required
+                fields & clear all errors. Click here to view errors!
+                </span>
+            </div>
+
+
             <div class="registration-form">
                 <form name="vendorRegistrationForm" class="row" [formGroup]="vendorRegistrationForm">
                     <div class="col-md-5  col-xs-12   mt-3 mb-3">
                         <label for="name">Company Name: <b style="color: #fff">*</b></label>
                         <input type="text" required id="name" class="form-control" name="companyName"
                             formControlName="companyName" placeholder="Company Name">
-                        <div
-                            *ngIf="(vendorRegistrationForm?.controls?.companyName?.touched) && vendorRegistrationForm?.controls?.companyName.errors?.required">
-                            <div style="color: #fff">Company Name is required</div>
-                        </div>
-                          <div *ngIf="(vendorRegistrationForm.controls.companyName.touched )
-                                && vendorRegistrationForm.controls.companyName.errors?.numericOnly ">
-                                    <div style="color: #fff;">Company Name must not be numeric only</div>
-                                </div>
+
                     </div>
                     <div class="col-md-5  col-xs-12    mt-3 mb-3">
                         <label for="name">Name: <b style="color: #fff">*</b></label>
                         <input type="text" required id="name" class="form-control" name="name" formControlName="name"
                             placeholder="Enter Name">
-                        <div
-                            *ngIf="(vendorRegistrationForm?.controls?.name?.touched) && vendorRegistrationForm?.controls?.name.errors?.required">
-                            <div style="color: #fff">Name is required</div>
-                        </div>
-                          <div style="color: #ffffff;" *ngIf="vendorRegistrationForm.controls?.name.errors?.alphabetOnly">Name must contain only alphabetic characters.</div>
-                               
+
+
                     </div>
                     <div class="col-md-12 row" style="    ">
                         <div class="col-md-5 col-xs-12   mt-3 mb-3">
@@ -69,33 +64,29 @@
                                 pattern="^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$" formControlName="mail"
                                 placeholder="EMail Id">
                             <span style="color: green;" *ngIf="isOTPVerified">EMail is verified</span>
-                             <div  style="color: #ffffff;" *ngIf="(vendorRegistrationForm.controls?.mail?.touched ) && vendorRegistrationForm.controls.mail.errors?.required">
-                                Email is required </div>
-                                 <div style="color: #ffffff;" *ngIf="vendorRegistrationForm?.controls?.mail?.touched && vendorRegistrationForm?.controls?.mail?.errors?.pattern ">* Invalid EmailId  </div>
-                           
+
+
                         </div>
                         <div class="col-md-5 col-xs-12  mt-3 mb-3">
                             <label for="name">Mobile Number:<b style="color: #fff">*</b></label>
-                                <div class="mobile-box">
-                                    <span style="color: #344054;">IND +91</span>
-                                    <input type="text" (keypress)="numberOnly($event)"  maxlength="10" minlength="10"  id="adress" class="form-control"
-                                        name="organizationPhonenumber" formControlName="organizationPhonenumber" placeholder="Mobile Number" style="margin-bottom:0" />
-                                        <span style="color: green;" *ngIf="isOTPVerified">MobileNumber is verified</span>
-                                </div>
-                                     <span style="font-size: 12px;color:rgb(17, 17, 17)">(Provide mobile number, so you can access on WhatsApp)</span>
-                                        
-                            <div
-                                *ngIf="(vendorRegistrationForm?.controls?.organizationPhonenumber?.touched ) && vendorRegistrationForm?.controls?.organizationPhonenumber?.errors">
-                                <div *ngIf="(vendorRegistrationForm?.controls?.organizationPhonenumber.errors?.required)"
-                                    style="color: #fff">Mobile
-                                    number is required</div>
-                                <p     style="color: #fff; font-size: 12px;" *ngIf=" !vendorRegistrationForm?.controls?.organizationPhonenumber.errors?.required && vendorRegistrationForm?.controls?.india.value == 'true' && vendorRegistrationForm?.controls?.organizationPhonenumber?.touched && vendorRegistrationForm?.controls?.organizationPhonenumber?.errors?.invalidPhoneNumber ">
-                       * Mobile number must be  10 digits and Not Preceeded with 0.</p>
+                            <div class="mobile-box">
+                                <span style="color: #344054;">IND +91</span>
+                                <input type="text" (keypress)="numberOnly($event)" maxlength="10" minlength="10"
+                                    id="adress" class="form-control" name="organizationPhonenumber"
+                                    formControlName="organizationPhonenumber" placeholder="Mobile Number"
+                                    style="margin-bottom:0" />
+                                <span style="color: green;" *ngIf="isOTPVerified">MobileNumber is verified</span>
                             </div>
+                            <span style="font-size: 12px;color:rgb(17, 17, 17)">(Provide mobile number, so you can
+                                access on WhatsApp)</span>
+
+
                         </div>
 
                         <div class="col-md-2" style="display: flex;align-items: center;margin-top:2rem">
-                            <button class="btn btn-primary" (click)="sendOTPs()" type="button" style="width: 100%; background: #3c60a4 !important; color: #fff !important; border-radius: 30px !important; font-size: 1.1rem !important; padding: 0 !important; font-weight: 400 !important; border: none !important;" *ngIf="!isOTPVerified">{{isOTPSent? 'Resend OTPs': 'Send OTPs'}}</button>
+                            <button class="btn btn-primary" (click)="sendOTPs()" type="button"
+                                style="width: 100%; background: #3c60a4 !important; color: #fff !important; border-radius: 30px !important; font-size: 1.1rem !important; padding: 0 !important; font-weight: 400 !important; border: none !important;"
+                                *ngIf="!isOTPVerified">{{isOTPSent? 'Resend OTPs': 'Send OTPs'}}</button>
                         </div>
 
 
@@ -104,19 +95,22 @@
                             <div class="row">
                                 <div class="col-md-5">
                                     <input class="form-control" type="text" formControlName="emailOtp" name="emailOtp"
-                                        (keypress)="numberOnly($event)" placeholder="Enter EMail OTP" maxlength="6" minlength="6" />
+                                        (keypress)="numberOnly($event)" placeholder="Enter EMail OTP" maxlength="6"
+                                        minlength="6" />
                                 </div>
                                 <div class="col-md-5">
                                     <input class="form-control" type="text" formControlName="mobileOtp" name="mobileOtp"
-                                     (keypress)="numberOnly($event)"   placeholder="Enter Mobile OTP" maxlength="6" minlength="6" />
+                                        (keypress)="numberOnly($event)" placeholder="Enter Mobile OTP" maxlength="6"
+                                        minlength="6" />
                                 </div>
                                 <div class="col-md-2" style="display: flex;align-items: center;">
                                     <button class="btn btn-primary" (click)="verifyOtps()" type="button" style="width: 100%; background: #0a461e !important; color: #fff !important; border-radius: 30px !important; font-size: 1.1rem !important; padding: 0 !important;  font-weight: 400 !important;
-                                    border: none !important;padding: 5px;" *ngIf="!isOTPVerified">Validate OTPs</button>
+                                    border: none !important;padding: 5px;" *ngIf="!isOTPVerified">Validate
+                                        OTPs</button>
                                 </div>
                             </div>
-                           
-                            
+
+
                         </div>
                     </div>
 
@@ -126,19 +120,19 @@
                         <label for="email">GSTIN <span><i>(Format: 88AAAAA8888A8AA)</i></span></label>
                         <input type="text" required id="gstin" class="form-control" name="gstin" formControlName="gstin"
                             placeholder="GSTIN" />
-                        <div style="color: #fff"
-                            *ngIf="vendorRegistrationForm?.controls?.gstin?.touched && vendorRegistrationForm?.controls?.gstin?.errors?.invalidGstin">
-                            Invalid GSTIN format </div>
+
 
                     </div>
 
 
 
                     <div class="col-md-5  col-xs-12   mt-3 mb-3">
-                     <app-pincode-control [inputFormControlName]="'pinCode'" [className]="'pincode-control border-radius-round '"
-                                 [parentFormGroup]="vendorRegistrationForm" [labelClassName]="'form-label required whiteStar'" [label]="'PinCode'" 
-                                 [buttonClassName]="'btn btn-blue border-radius-round'"
-                                 (updatePincodeValidationStatus)="onupdatePincodeValidationStatus($event)"></app-pincode-control>
+                        <app-pincode-control [inputFormControlName]="'pinCode'"
+                            [className]="'pincode-control border-radius-round '"
+                            [parentFormGroup]="vendorRegistrationForm"
+                            [labelClassName]="'form-label required whiteStar'" [label]="'PinCode'"
+                            [buttonClassName]="'btn btn-blue border-radius-round'"
+                            (updatePincodeValidationStatus)="onupdatePincodeValidationStatus($event)"></app-pincode-control>
                     </div>
 
 
@@ -152,10 +146,7 @@
                                 style="color: #fff">*</b></label>
                         <input type="text" required id="adress" class="form-control" name="products"
                             formControlName="products" placeholder="Product/Service Details">
-                        <div
-                            *ngIf="(vendorRegistrationForm?.controls?.products?.touched) && vendorRegistrationForm?.controls?.products.status=='INVALID'">
-                            <div style="color: #fff">Product details is required</div>
-                        </div>
+
                     </div>
                     <div class="col-md-8  col-xs-12   link-cont" style="">
                         <b>Note :</b> If Already Registered! Click here for <a routerLink="/login"
@@ -195,198 +186,56 @@
             </div>
         </div>
     </div>
-    <!-- <div class=" ">
-        <div class="header-logo row">
-
-            <div class="col-md-4 col-xs-12 text-left">
-                <img src="assets/images/new/GMT.svg" width="150" height="150" />
-            </div>
-            <div class="col-md-4 col-xs-12 text-center">
-                <img style="" src="assets/images/Procucev_Logo.svg" width="250" height="80" />
-                <h5 class="card-title"><b>Sellers Registration</b></h5>
-            </div>
-            <div class="col-md-4 col-xs-12 bfs-logo text-right">
-                <img src="assets/images/new/bfs-logo-reg-cl.svg" width="140" height="120" />
-
-            </div>
-        </div>
-        <div class="card card-content ">
-            <div class="card-body" style="padding-top: 0 !IMPORTANT;">
-                <div  style="color: #fff" class="error-block" >
-                    <p *ngIf="vendorRegistrationForm?.controls?.india.value == 'true' && vendorRegistrationForm?.controls?.organizationPhonenumber?.touched && vendorRegistrationForm?.controls?.organizationPhonenumber?.errors?.invalidPhoneNumber ">
-                       * Mobile number must be  10 digits and Not Preceeded with 0.</p>
-                    <p *ngIf="vendorRegistrationForm?.controls?.pan?.touched && vendorRegistrationForm?.controls?.pan?.errors?.pattern ">* Invalid PAN Details  </p>
-                    <p *ngIf="vendorRegistrationForm?.controls?.mail?.touched && vendorRegistrationForm?.controls?.mail?.errors?.pattern ">* Invalid EmailId  </p>
-                </div>
-                <form name="vendorRegistrationForm" class="row" [formGroup]="vendorRegistrationForm">
-                    <div class="col-md-4  col-xs-12   mt-2">
-                        <label for="name">Company Name: <b style="color: #fff">*</b></label>
-                        <input type="text" required id="name" class="form-control" name="companyName" formControlName="companyName"
-                            placeholder="Company Name">
-                        <div
-                            *ngIf="(vendorRegistrationForm?.controls?.companyName?.touched) && vendorRegistrationForm?.controls?.companyName.status=='INVALID'">
-                            <div style="color: #fff">Company Name is required</div>
-                        </div>
-                    </div>
-                    <div class="col-md-4  col-xs-12   mt-2">
-                      <label for="name">Name: <b style="color: #fff">*</b></label>
-                      <input type="text" required id="name" class="form-control" name="name" formControlName="name"
-                          placeholder="Enter Name">
-                      <div
-                          *ngIf="(vendorRegistrationForm?.controls?.name?.touched) && vendorRegistrationForm?.controls?.name.status=='INVALID'">
-                          <div style="color: #fff">Name is required</div>
-                      </div>
-                  </div>
-                    <div class="col-md-12 row" style="    border: 2px solid #80808040;
-                    margin: 4px auto;
-                    padding-bottom: 16px;">
-                      <div class="col-md-4  col-xs-12  mt-2">
-                        <label for="email">EMail Id: <b style="color: #fff">*</b></label>
-                        <input type="email" required id="mail" class="form-control" name="mail"
-                            pattern="^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$" formControlName="mail" placeholder="EMail Id">
-                              <span style="color: green;" *ngIf="isOTPVerified">EMail is verified</span>
-                        <div
-                            *ngIf="(vendorRegistrationForm?.controls?.mail?.touched) && vendorRegistrationForm?.controls?.mail.status=='INVALID'">
-                            <div *ngIf="(vendorRegistrationForm?.controls?.mail.errors?.required)" style="color: #fff">
-                                Email Id is
-                                required</div>
-                            <div *ngIf="(vendorRegistrationForm?.controls?.mail.errors?.invalidEmail || vendorRegistrationForm?.controls?.mail.errors?.invalid)" style="color: #fff">
-                                Please  enter valid Email Id</div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-xs-12 mb-1">
-                      <label for="name">Mobile Number:<b style="color: #fff">*</b></label>
-                      <input type="text" maxlength="10" minlength="10" id="adress" class="form-control"
-                      name="organizationPhonenumber" formControlName="organizationPhonenumber" placeholder="Mobile Number" />
-                        <span style="color: green;" *ngIf="isOTPVerified">MobileNumber is verified</span>
-                      <div
-                          *ngIf="(vendorRegistrationForm?.controls?.organizationPhonenumber?.touched ) && vendorRegistrationForm?.controls?.organizationPhonenumber?.errors">
-                          <div *ngIf="(vendorRegistrationForm?.controls?.organizationPhonenumber.errors?.required)"
-                              style="color: #fff">Mobile
-                              number is required</div>
-                              <div  style="color: #fff" *ngIf="vendorRegistrationForm?.controls?.organizationPhonenumber?.errors?.invalid">
-                                  Mobile number must be exactly 10 digits.
-                                </div>
-                      </div>
-                  </div>
-
-                  <div class="col-md-4"  style="    display: flex;align-items: center;">
-                      <button class="btn btn-primary" (click)="sendOTPs()"  type="button" *ngIf="!isOTPVerified">{{isOTPSent? 'Resend OTPs': 'Send OTPs'}}</button>
-                  </div>
-                  <div class="col-12 row" style="margin:6px auto">
-                               <div class="col-md-4"><input  class="form-control" type="number"   formControlName="emailOtp" name="emailOtp"    placeholder="Enter EMail OTP" maxlength="6" /></div>
-                               <div class="col-md-4"><input class="form-control" type="number"   formControlName="mobileOtp" name="mobileOtp"    placeholder="Enter Mobile OTP" maxlength="6" /></div>
-                               <div class="col-md-4" style="display: flex;align-items: center;">
-                                  <button class="btn btn-primary" (click)="verifyOtps()" type="button" *ngIf="!isOTPVerified">Validate OTPs</button>
-                                </div>
-                                <div class="col-md-12"
-                                      *ngIf="(vendorRegistrationForm.controls?.organizationPhonenumber?.touched ) && vendorRegistrationForm.controls?.organizationPhonenumber?.errors">
-                                      <div *ngIf="(vendorRegistrationForm.controls.organizationPhonenumber.errors?.required)"
-                                          style="color: #fff">Mobile
-                                          number is required</div>
-                                          <div  style="color: #fff" *ngIf="vendorRegistrationForm.controls?.organizationPhonenumber?.errors?.invalid">
-                                              Mobile number must be exactly 10 digits.
-                                            </div>
-                                  </div>invalidEmail
-                              </div>
-                    </div>
-
- 
-
-                    <div class="col-md-4  col-xs-12  mt-2">
-                        <label for="email">GSTIN <b style="color: #fff">*</b>s</label>
-                        <input type="text" required id="gstin" class="form-control" name="gstin" formControlName="gstin"   placeholder="GSTIN" /> 
-                            <div style="color: #fff" *ngIf="vendorRegistrationForm?.controls?.gstin?.touched && vendorRegistrationForm?.controls?.gstin?.errors?.invalidGstin">Invalid GSTIN format </div>
-                        
-                    </div> 
-
-
-
-                    <div class="col-md-4  col-xs-12  mt-2">
-                        <label for="name">PinCode: <b style="color: #fff">*</b></label>
-                        <input type="text" required id="pinCode" class="form-control" name="pinCode" formControlName="pinCode"
-                            placeholder="PinCode (6digits)"  maxlength="6" (keypress)="numberOnly($event)" />
-                        <div
-                            *ngIf="(vendorRegistrationForm?.controls?.pinCode?.touched) && vendorRegistrationForm?.controls?.pinCode.status=='INVALID'">
-                            <div style="color: #fff">PinCode (6digits) is required</div>
-                        </div>
-                    </div>
-
-
-
-
-
-
-
-                    <div class="col-md-6  col-xs-12  mt-2">
-                        <label for="name">Product/Service Details:(Multiple products seperated by comma) <b
-                                style="color: #fff">*</b></label>
-                        <input type="text" required id="adress" class="form-control" name="products" formControlName="products"
-                            placeholder="Product/Service Details">
-                        <div
-                            *ngIf="(vendorRegistrationForm?.controls?.products?.touched) && vendorRegistrationForm?.controls?.products.status=='INVALID'">
-                            <div style="color: #fff">Product details is required</div>
-                        </div>
-                    </div>
-                    <div class="col-md-8  col-xs-12   link-cont" style="">
-                        <b>Note :</b> If Already Registered! Click here for <a routerLink="/login"
-                            style="margin-left: 5px;font-weight: 600;border-bottom: 2px solid;">Login</a>
-                    </div>
-                    <div class="col-md-4  col-xs-12   btn-blocks">
-                        <button class="btn btn-primary btn-blue" type="button"
-                            (click)='registerVendor(vendorRegistrationForm)' style="float: right;">
-                            <span>Register</span>
-                        </button>
-                        <button class="btn btn-primary btn-red" type="button" (click)="resetVendorForm()"
-                            style="float: right;">
-                            <span>Reset</span>
-                        </button>
-                    </div>
-
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="">
-        <div class="row">
-            <div class="col-md-6 col-xs-12 ">
-                <h1 style="    font-weight: 600;  color: #3245aa;" class="text-center">
-                    <b class="orange-cls">G</b>et <b class="orange-cls">M</b>y quo<b class="orange-cls">T</b>e
-                </h1>
-                <h4 style="    font-weight: 600;  font-size: 20px;color: #3245aa;" class="orange-cls">GMT is a powerful tool that connects vendors directly with buyers actively seeking your services.
-                </h4>
-                <p style=" margin-bottom: 0;" class="orange-cls"><b>Benefits:</b></p>
-                <ul style="font-weight: 600;">
-                    <li>Register on GMT for free and unlock new business opportunities.</li>
-                    <li>Reach a wider audience of potential clients who need what you offer </li>
-                    <li>Respond to relevant quote requests quickly and easily through our user-friendly <br /> platform.</li>
-                </ul>
-                <h5   style="font-weight: 600;color: #3245aa;">Get More Leads & Win More Deals with Get My quoTe(GMT)
-                </h5>
-            </div>
-
-            <div class="col-md-6 col-xs-12">
-                <div class="content-card" style="">
-
-                    <h1
-                        style="font-weight: 600;  text-align: center; color: #3245aa;">
-                        <b class="orange-cls">B</b>uy <b class="orange-cls">F</b>rom <b class="orange-cls">S</b>tock
-                    </h1>
-                    <h4 style="  font-weight: 600;   font-size: 18px; color: #3245aa;">BFS is a platform connecting Enterprises with Excess Stock/Inventory with wider network of ready buyers
-                    </h4>
-                    <p style=" margin-bottom: 0; " class="orange-cls"><b>Benefits:</b></p>
-                    <ul style="font-weight: 600;margin-bottom: 1.2rem;    text-align: left;">
-                        <li>Reduce storage costs and free up valuable space.   </li>
-                        <li>Generate immediate revenue from dead stock    </li>
-                        <li>Minimize financial losses associated with dead inventory.  </li>
-                        <li>Streamlined platform for easy listing and Sales & Marketing. </li>
-                    </ul>
-                    <h5 class="" style="font-weight: 600; font-size: 18px;color: #3245aa;"  >Register for Buy From Stock(BFS) and turn your excess stock into cashflow</h5>
-                </div>
-
-            </div>
-        </div>
-    </div> -->
 </div>
+<p-overlayPanel #op>
+    <div class="confirmation-content">
+        <ul id="error-list" >
+
+            <li style="color: #9b2727;"
+                *ngIf="(vendorRegistrationForm?.controls?.companyName) && vendorRegistrationForm?.controls?.companyName.errors?.required">
+                <div  >Company Name is required</div>
+            </li>
+            <li style="color: #9b2727;"*ngIf="(vendorRegistrationForm.controls.companyName.touched )
+                                && vendorRegistrationForm.controls.companyName.errors?.numericOnly ">
+                <div >Company Name must not be numeric only</div>
+            </li>
+            <li
+                *ngIf="(vendorRegistrationForm?.controls?.name) && vendorRegistrationForm?.controls?.name.errors?.required">
+                <div style="color: #9b2727">Name is required</div>
+            </li>
+            <li style="color: #9b2727;" *ngIf="vendorRegistrationForm.controls?.name.errors?.alphabetOnly">
+                Name must contain only alphabetic characters.</li>
+            <li style="color: #9b2727;"
+                *ngIf="(vendorRegistrationForm.controls?.mail ) && vendorRegistrationForm.controls.mail.errors?.required">
+                Email is required </li>
+            <li style="color: #9b2727;"
+                *ngIf="vendorRegistrationForm?.controls?.mail && vendorRegistrationForm?.controls?.mail?.errors?.pattern ">
+                * Invalid EmailId </li>
+
+            <li
+                *ngIf="(vendorRegistrationForm?.controls?.organizationPhonenumber ) && vendorRegistrationForm?.controls?.organizationPhonenumber?.errors">
+                <div *ngIf="(vendorRegistrationForm?.controls?.organizationPhonenumber.errors?.required)"
+                    style="color: #9b2727">Mobile
+                    number is required</div>
+                <p style="color: #9b2727; font-size: 12px;"
+                    *ngIf=" !vendorRegistrationForm?.controls?.organizationPhonenumber.errors?.required && vendorRegistrationForm?.controls?.india.value == 'true' && vendorRegistrationForm?.controls?.organizationPhonenumber && vendorRegistrationForm?.controls?.organizationPhonenumber?.errors?.invalidPhoneNumber ">
+                    * Mobile number must be 10 digits and Not Preceeded with 0.</p>
+            </li>
+            <li style="color: #9b2727"
+                *ngIf="vendorRegistrationForm?.controls?.gstin && vendorRegistrationForm?.controls?.gstin?.errors?.invalidGstin">
+                Invalid GSTIN format </li>
+            <li
+                *ngIf="(vendorRegistrationForm?.controls?.products) && vendorRegistrationForm?.controls?.products.status=='INVALID'">
+                <div style="color: #9b2727">Product details is required</div>
+            </li>
+            <li *ngIf="!isOTPVerified">
+                <div style="color: #9b2727" *ngIf="!isOTPVerified">Please verify OTPs to proceed</div>
+            </li>
+            
+            <li *ngIf="!isValidPincode" style="color: #fb9898;">Invalid Pincode </li>
+
+        </ul>
+    </div>
+</p-overlayPanel> 
 <!-- <p-confirmdialog />
 <p-confirmdialog id="dialog" [visible]="visible" (onHide)="visible = false" message="Are you sure you want to proceed?" header="Confirmation" icon="pi pi-exclamation-triangle" /> -->

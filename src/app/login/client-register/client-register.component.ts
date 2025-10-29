@@ -430,6 +430,16 @@ export class ClientRegisterComponent implements OnInit {
         });
     }
 
+
+        hasAnyErrors(): boolean {
+        const controls = this.clientRegForm.controls;
+        const hasErrors=  Object.keys(controls).some(key => {
+            const control = controls[key];
+            return control && control.invalid;
+        }); 
+        return hasErrors;
+    }
+
 }
 
 export function tenDigitPhoneNumberValidator(): ValidatorFn {
