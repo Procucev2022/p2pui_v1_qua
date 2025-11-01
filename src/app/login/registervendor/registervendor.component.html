@@ -44,13 +44,13 @@
 
             <div class="registration-form">
                 <form name="vendorRegistrationForm" class="row" [formGroup]="vendorRegistrationForm">
-                    <div class="col-md-5  col-xs-12   mt-3 mb-3">
+                    <div class="col-md-5 col-sm-6  col-xs-12   mt-3 mb-3">
                         <label for="name">Company Name: <b style="color: #fff">*</b></label>
                         <input type="text" required id="name" class="form-control" name="companyName"
                             formControlName="companyName" placeholder="Company Name">
 
                     </div>
-                    <div class="col-md-5  col-xs-12    mt-3 mb-3">
+                    <div class="col-md-5  col-xs-12 col-sm-6    mt-3 mb-3">
                         <label for="name">Name: <b style="color: #fff">*</b></label>
                         <input type="text" required id="name" class="form-control" name="name" formControlName="name"
                             placeholder="Enter Name">
@@ -58,7 +58,7 @@
 
                     </div>
                     <div class="col-md-12 row" style="    ">
-                        <div class="col-md-5 col-xs-12   mt-3 mb-3">
+                        <div class="col-md-5 col-sm-4 col-xs-12   mt-3 mb-3">
                             <label for="email">EMail Id: <b style="color: #fff">*</b></label>
                             <input type="email" required id="mail" class="form-control" name="mail"
                                 pattern="^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$" formControlName="mail"
@@ -67,27 +67,27 @@
 
 
                         </div>
-                        <div class="col-md-5 col-xs-12  mt-3 mb-3">
+                        <div class="col-md-7 col-sm-4 col-xs-12  mt-3 mb-3">
                             <label for="name">Mobile Number:<b style="color: #fff">*</b></label>
                             <div class="mobile-box">
                                 <span style="color: #344054;">IND +91</span>
                                 <input type="text" (keypress)="numberOnly($event)" maxlength="10" minlength="10"
                                     id="adress" class="form-control" name="organizationPhonenumber"
                                     formControlName="organizationPhonenumber" placeholder="Mobile Number"
-                                    style="margin-bottom:0" />
-                                <span style="color: green;" *ngIf="isOTPVerified">MobileNumber is verified</span>
+                                    style="margin-bottom:0" /> 
+                                    <span class="send-otp-button" (click)="sendOTPs()" type="button"
+                                style=" "
+                                *ngIf="!isOTPVerified">{{isOTPSent? 'Resend OTPs': 'Send OTPs'}}</span>
                             </div>
-                            <span style="font-size: 12px;color:rgb(17, 17, 17)">(Provide mobile number, so you can
-                                access on WhatsApp)</span>
+                                <span  style="color: green;" *ngIf="isOTPVerified">MobileNumber is verified</span>
+
+                            <div style="font-size: 12px;color:rgb(17, 17, 17)">( You can
+                                access on WhatsApp with same Number)</div>
 
 
                         </div>
 
-                        <div class="col-md-2" style="display: flex;align-items: center;margin-top:2rem">
-                            <button class="btn btn-primary" (click)="sendOTPs()" type="button"
-                                style="width: 100%; background: #3c60a4 !important; color: #fff !important; border-radius: 30px !important; font-size: 1.1rem !important; padding: 0 !important; font-weight: 400 !important; border: none !important;"
-                                *ngIf="!isOTPVerified">{{isOTPSent? 'Resend OTPs': 'Send OTPs'}}</button>
-                        </div>
+                         
 
 
 
@@ -98,16 +98,16 @@
                                         (keypress)="numberOnly($event)" placeholder="Enter EMail OTP" maxlength="6"
                                         minlength="6" />
                                 </div>
-                                <div class="col-md-5">
-                                    <input class="form-control" type="text" formControlName="mobileOtp" name="mobileOtp"
+                                <div class="col-md-7">
+                                    <div class="emailOTP-box">
+                                            <input class="form-control" type="text" formControlName="mobileOtp" name="mobileOtp"
                                         (keypress)="numberOnly($event)" placeholder="Enter Mobile OTP" maxlength="6"
                                         minlength="6" />
-                                </div>
-                                <div class="col-md-2" style="display: flex;align-items: center;">
-                                    <button class="btn btn-primary" (click)="verifyOtps()" type="button" style="width: 100%; background: #0a461e !important; color: #fff !important; border-radius: 30px !important; font-size: 1.1rem !important; padding: 0 !important;  font-weight: 400 !important;
-                                    border: none !important;padding: 5px;" *ngIf="!isOTPVerified">Validate
-                                        OTPs</button>
-                                </div>
+                                          <span class="btn btn-primary" (click)="verifyOtps()" type="button"  *ngIf="!isOTPVerified">Validate
+                                        OTPs</span>
+                                    </div>
+                                  
+                                </div> 
                             </div>
 
 

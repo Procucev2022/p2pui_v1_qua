@@ -65,29 +65,30 @@
                                         placeholder="Mobile Number" (keypress)="numberOnly($event)" maxlength="10"
                                         minlength="10" [disabled]="isOTPVerified || isOTPSent">
                                 </div>
-                                <span style="font-size: 12px;">(Provide mobile number, so you can access on
-                                    WhatsApp)</span>
+                                <div style="font-size: 12px;">( you can access on
+                                    WhatsApp with this number)</div>
                                 <span style="color: green;" *ngIf="isOTPVerified">Mobile Number Verified</span>
 
                             </div>
-                            <div class="col-md-5  col-xs-12 mb-1">
+                            <div class="col-md-7  col-xs-12 mb-1">
                                 <label for="email">Company EMail Id: <b style="color: #fb9898;">*</b></label>
-                                <input type="email" required id="email" class="form-control" name="email"
-                                    placeholder="Company Email Id" formControlName="email"
-                                    [disabled]="isOTPVerified || isOTPSent">
+                                <div class="otp-send-box">
+                                    <input type="email" required id="email" class="form-control" name="email"
+                                        placeholder="Company Email Id" formControlName="email"
+                                        [disabled]="isOTPVerified || isOTPSent">
+
+
+                                    <span class="send-otp-button " (click)="sendOTPs()" style="" *ngIf="!isOTPVerified"
+                                        [disabled]="enableOTPButton">{{isOTPSent? 'Resend OTPs':
+                                        'Send OTPs'}}
+                                        <span *ngIf="enableOTPButton && enableOTPInSecs > 0"> ({{enableOTPInSecs}}
+                                            Secs.)</span>
+                                    </span>
+                                </div>
                                 <span style="color: green;" *ngIf="isOTPVerified">EMail Verified</span>
 
                                 <div>
                                 </div>
-                            </div>
-                            <div class="col-md-2">
-                                <button class="btn btn-primary  " (click)="sendOTPs()" type="button"
-                                    style="width: 100%; background: #03A9F4 !important; color: #fff !important; border-radius: 30px !important; font-size: 1.1rem !important; padding: 0 !important; font-weight: 400 !important; border: none !important;margin-top: 2.5rem;"
-                                    *ngIf="!isOTPVerified" [disabled]="enableOTPButton">{{isOTPSent? 'Resend OTPs':
-                                    'Send OTPs'}}
-                                    <span *ngIf="enableOTPButton && enableOTPInSecs > 0"> ({{enableOTPInSecs}}
-                                        Secs.)</span>
-                                </button>
                             </div>
                         </div>
 
@@ -96,13 +97,17 @@
                                 <div class="col-md-5"><input class="form-control" type="text"
                                         formControlName="mobileOtp" name="mobileOtp" (keypress)="numberOnly($event)"
                                         placeholder="Enter Mobile OTP" maxlength="6" minlength="6" /></div>
-                                <div class="col-md-5"><input class="form-control" type="text" formControlName="emailOtp"
-                                        name="emailOtp" (keypress)="numberOnly($event)" placeholder="Enter EMail OTP"
-                                        maxlength="6" minlength="6" /></div>
-                                <div class="col-md-2" style="display: flex;align-items: center;">
-                                    <button class="btn btn-primary" (click)="verifyOtps()" type="button" style="width: 100%; background: #0a461e !important; color: #fff !important; border-radius: 30px !important; font-size: 1.1rem !important; padding: 0 !important;  font-weight: 400 !important;
-                                    border: none !important;padding: 5px;" *ngIf="!isOTPVerified"
-                                        [disabled]="!isOTPSent">Validate OTPs</button>
+                                <div class="col-md-7">
+                                    <div class="emailOTP-box">
+                                        <input class="form-control" type="text" formControlName="emailOtp"
+                                            name="emailOtp" (keypress)="numberOnly($event)"
+                                            placeholder="Enter EMail OTP" maxlength="6" minlength="6" />
+
+                                        <span class="btn btn-primary" (click)="verifyOtps()" type="button"  *ngIf="!isOTPVerified"
+                                            [disabled]="!isOTPSent">Validate OTPs</span>
+                                    </div>
+
+
                                 </div>
                             </div>
 
@@ -179,15 +184,14 @@
             <li style="color: #fb9898;" *ngIf="clientRegForm.controls?.name.errors?.alphabetOnly">Name
                 must contain only alphabetic characters.</li>
 
-            <li  style="color: #fb9898;"*ngIf="  clientRegForm.controls.companyName.errors?.required">
-                <div >Company Name is required</div>
+            <li style="color: #fb9898;" *ngIf="  clientRegForm.controls.companyName.errors?.required">
+                <div>Company Name is required</div>
             </li>
-            <li style="color: #fb9898;"*ngIf=" clientRegForm.controls.companyName.errors?.numericOnly">
-                <div  >Company Name must not be numeric only</div>
+            <li style="color: #fb9898;" *ngIf=" clientRegForm.controls.companyName.errors?.numericOnly">
+                <div>Company Name must not be numeric only</div>
             </li>
 
-            <li style="color: #fb9898;"
-                *ngIf="  clientRegForm?.controls?.phoneNumber?.errors?.invalidPhoneNumber ">
+            <li style="color: #fb9898;" *ngIf="  clientRegForm?.controls?.phoneNumber?.errors?.invalidPhoneNumber ">
                 Mobile number must be 10 digits and Not Preceeded with 0.
 
             </li>

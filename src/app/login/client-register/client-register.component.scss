@@ -137,7 +137,7 @@ form label {
     max-height: 118vh;
     background: #FFF;
     height: 117.6vh;
-    overflow-x: hidden  !important;
+    overflow-x: hidden !important;
 
 
     .left-section {
@@ -226,4 +226,73 @@ form label {
         }
     }
 
+}
+
+.otp-send-box {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+
+    input {
+        width: 70% !important;
+    }
+}
+
+.send-otp-button {
+    background: #03A9F4 !important;
+    color: #fff !important;
+    border-radius: 30px !important;
+    font-size: 1.1rem !important;
+    padding: 8px 10px !important;
+    font-weight: 400 !important;
+    border: none !important;
+}
+
+.mobile-box {
+    align-items: center;
+
+    input {
+        width: 70% !important;
+    }
+}
+
+.emailOTP-box {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+
+    input {
+        width: 70% !important;
+    }
+
+    span {
+        background: #0a461e !important;
+        color: #fff !important;
+        border-radius: 30px !important;
+        font-size: 1.1rem !important;
+        padding: 0 !important;
+        font-weight: 400 !important;
+        border: none !important;
+        padding: 5px 10px !important;
+    }
+}
+
+@media (min-width: 1080px) and (max-width: 1280px) {
+
+    .emailOTP-box {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+
+        input {
+            width: 60% !important;
+        }
+    }
+
+    .sub-imgs{
+        img{
+            width: 140px !important;
+            height: 110px !important;
+        }
+    }
 }

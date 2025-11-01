@@ -620,3 +620,37 @@ img.by-cls {
   width: 35px;
   height: 27px;
 }
+
+
+@media (min-width: 1080px) and (max-width: 1279px) {
+
+  .gmt-box {
+    img {
+      position: absolute;
+      width: 113px;
+      height: 128px;
+      top: -20%;
+      left: 25%;
+      border-radius: 50%;
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+
+    .list-item ul li {
+      font-size: 16px;
+      text-align: left;
+      margin: 10px auto;
+    }
+  }
+}
+
+@media (min-width: 1280px) {
+  .gmt-box {
+    .list-item ul li {
+      font-size: 20px;
+    }
+    img{
+      left: 22%;
+    }
+  }
+}
