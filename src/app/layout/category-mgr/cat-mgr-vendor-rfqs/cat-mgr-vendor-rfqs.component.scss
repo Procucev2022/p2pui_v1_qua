@@ -135,7 +135,7 @@ ul.menu-dot-cls {
         width: 302px;
     }
 
-   ::ng-deep .cdk-overlay-pane {
+    ::ng-deep .cdk-overlay-pane {
         min-height: 250px;
         pointer-events: auto;
         width: 99% !important;
@@ -156,3 +156,14 @@ ul.menu-dot-cls {
 //   padding: 0.5rem;
 // }
 
+
+.filter-control {
+    position: relative;
+    label {
+        position: absolute;
+        top: -25px;
+        font-size: 14px !important;
+        /* background: #fff; */
+        /* border: 1px solid; */
+    }
+}

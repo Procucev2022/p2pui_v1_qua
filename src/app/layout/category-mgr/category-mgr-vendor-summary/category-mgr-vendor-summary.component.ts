@@ -175,7 +175,7 @@ export class CategoryMgrVendorSummaryComponent {
 
         // dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = { ...this.viewRFQByIdData, hiddenCategory: true, showItemsOnly: true , hideSpecialRFQClosingDate: true };
+        dialogConfig.data = { ...this.viewRFQByIdData, hiddenCategory: true, showItemsOnly: true , hideSpecialRFQClosingDate: true, isShowAttachments: true };
         dialogConfig.minWidth = 400;
         dialogConfig.minHeight = 500;
         dialogConfig.maxWidth = 'none';

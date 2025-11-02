@@ -6,18 +6,25 @@
             <h2>RFQ Summary</h2>
             <p><span class="dot"></span>{{rfqDataList.length}} Total</p>
           </div>
-          <div class="col-sm-4" style="display: inline-flex;align-items: center;" *ngIf="currentRole== 'Vendor' || currentRole== 'PartialVendor' || currentRole== 'Registration' ">
+          <div class="col-sm-3 filter-control" style="display: inline-flex;align-items: center;" *ngIf="currentRole== 'Vendor' || currentRole== 'PartialVendor' || currentRole== 'Registration' ">
             <label style="width: 175px; font-weight: 600;">Division By</label>
             <select class="form-control" name="se1" [(ngModel)]="selectedDivision" (change)="filterRFQsBYDivision()">
                 <option value="" >All</option>
                 <option *ngFor="let val of divisionsList">{{val}}</option>
             </select>
           </div>
-          <div class="col-sm-3" style="display: inline-flex;align-items: center;" *ngIf="(currentRole== 'Vendor' || currentRole== 'PartialVendor' || currentRole== 'Registration') && selectedDivision">
+          <div class="col-sm-2 filter-control" style="display: inline-flex;align-items: center;" *ngIf="(currentRole== 'Vendor' || currentRole== 'PartialVendor' || currentRole== 'Registration') && selectedDivision">
             <label style="width: 175px; font-weight: 600;">Category By</label>
             <select class="form-control" name="se1" [(ngModel)]="selectedCategory" (change)="filterRFQsBYCategory()">
                 <option value="" >All</option>
                 <option *ngFor="let val of categoryList">{{val}}</option>
+            </select>
+          </div>
+           <div class="col-sm-2 filter-control" style="display: inline-flex;align-items: center;" *ngIf="(currentRole== 'Vendor' || currentRole== 'PartialVendor' || currentRole== 'Registration') ">
+            <label style="width: 175px; font-weight: 600;">Status</label>
+            <select class="form-control" name="se1" [(ngModel)]="selectedStatus" (change)="filterRFQsBYStatus()">
+                <option value="" >All</option>
+                <option *ngFor="let val of statusList">{{val}}</option>
             </select>
           </div>
           <div class="col-2" *ngIf="selectedCategory || selectedDivision" style="display: flex;">

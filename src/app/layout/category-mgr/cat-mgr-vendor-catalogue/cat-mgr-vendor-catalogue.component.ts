@@ -10,28 +10,28 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import swal from 'sweetalert2';
 import { FormValidatationsService } from 'src/app/shared/services/form-validatations.service';
 @Component({
-  selector: 'app-cat-mgr-vendor-catalogue',
-  templateUrl: './cat-mgr-vendor-catalogue.component.html',
-  styleUrls: ['./cat-mgr-vendor-catalogue.component.scss']
+    selector: 'app-cat-mgr-vendor-catalogue',
+    templateUrl: './cat-mgr-vendor-catalogue.component.html',
+    styleUrls: ['./cat-mgr-vendor-catalogue.component.scss']
 })
-export class CatMgrVendorCatalogueComponent implements OnInit{ 
+export class CatMgrVendorCatalogueComponent implements OnInit {
     isLoaded: boolean = false;
-    formErrorsArray:any  = [];
-    clientTableHeaders: any = [ 
+    formErrorsArray: any = [];
+    clientTableHeaders: any = [
         { field: 'materialDescription', header: 'Material Description', isLink: true, isExceedContent: true, width: '155px' },
-        { field: 'uom', header: 'UOM', isLink: false, isExceedContent: false, width: '105px' }, 
+        { field: 'uom', header: 'UOM', isLink: false, isExceedContent: false, width: '105px' },
         { field: 'minOrderQuantity', header: 'Min Order Qty.', isLink: false, isExceedContent: false, width: '125px' },
         { field: 'pricePerUom', header: 'Price Per UOM', isLink: false, isExceedContent: false, width: '125px' },
         { field: 'gstPercentage', header: 'GST Percentage(%)', isLink: false, isExceedContent: false, width: '165px' },
-        { field: 'leadTimeForMoq', header: 'Lead Time for MOQ', isLink: false,isExceedContent: true, width: '215px' },
+        { field: 'leadTimeForMoq', header: 'Lead Time for MOQ(Days)', isLink: false, isExceedContent: true, width: '215px' },
         { field: 'availableQuantity', header: 'Available Qty.', isLink: false, isExceedContent: false, width: '135px' },
-    ]; 
-    usersList =[];
+    ];
+    usersList = [];
     cataloguesList = [];
     selectedClientData: any;
     pageRecordSize: number;
     pageOptions: number[];
-    defaultPermissions:any;
+    defaultPermissions: any;
     loggedUserPermissions: any;
     loggedUserDetails: any;
     loggedUserName: any;
@@ -41,20 +41,22 @@ export class CatMgrVendorCatalogueComponent implements OnInit{
     roleName: any;
     currentView: any;
     isGMTView: boolean;
-    @ViewChild('onAddCatlogTemplateRef')onAddCatlogTemplateRef:any;
-    @ViewChild('editUserTemplateRef')editUserTemplateRef:any;
-    catalogueForm: FormGroup;  
+    @ViewChild('onAddCatlogTemplateRef') onAddCatlogTemplateRef: any;
+    @ViewChild('editUserTemplateRef') editUserTemplateRef: any;
+    catalogueForm: FormGroup;
     sectors = [
         "Steel", "Cement", "Sugar", "Retail", "Pharma", "Chemical",
         "Other Manufacturing", "Other Services", "Others"
     ];
     selectedUserData: any;
     isViewMode: boolean;
-    constructor(private createRfqService: CreateRfqService, private encryDecryService:EncryDecryService,
-        private catProcService: CatProcuRequestsService, private toaster: ToastrService,     private dialog: MatDialog, private formValidationService: FormValidatationsService) { 
-            this.formValidationService = new FormValidatationsService();
+    constructor(private createRfqService: CreateRfqService, private encryDecryService: EncryDecryService,
+        private catProcService: CatProcuRequestsService, private toaster: ToastrService,
+        private dialog: MatDialog, private formValidationService: FormValidatationsService
+        , private formValidatorService: FormValidatationsService) {
+        this.formValidationService = new FormValidatationsService();
 
-        }
+    }
 
     ngOnInit() {
         this.pageRecordSize = AppApiConfig.GRID_PAGE_INFO.initpageSize;
@@ -64,19 +66,19 @@ export class CatMgrVendorCatalogueComponent implements OnInit{
         this.loggedUserPermissions = temp.details.listofPermission;
         this.loggedUserDetails = temp.details;
         this.loggedUserName = this.loggedUserDetails.username;
-        this.roleName =this.loggedUserDetails.role.roleName;
+        this.roleName = this.loggedUserDetails.role.roleName;
         this.getVendorCatalogues();
-        this.currentView = !localStorage.getItem('system-view') ? JSON.parse(localStorage.getItem('system-view')): localStorage.getItem('system-view');
+        this.currentView = !localStorage.getItem('system-view') ? JSON.parse(localStorage.getItem('system-view')) : localStorage.getItem('system-view');
 
-        this.isGMTView = [SystemViewConfig.GMT_BASIC , SystemViewConfig.GMT_BASIC_PLUS].includes(this.currentView)? true: false;
-    //    { field: 'minOrderQuantity', header: 'Min Order Qty.', isLink: false, isExceedContent: false, width: '125px' },
-    //     { field: 'pricePerUom', header: 'Price Per UOM', isLink: false, isExceedContent: false, width: '125px' },
-    //     { field: 'gstPercentage', header: 'GST Percentage(%)', isLink: false, isExceedContent: false, width: '165px' },
-    //     { field: 'leadTimeForMoq', header: 'Lead Time for MOQ', isLink: false,isExceedContent: true, width: '215px' },
-    //     { field: 'availableQuantity', header: 'Available Qty.', isLink: false, isExceedContent: false, width: '135px' },
+        this.isGMTView = [SystemViewConfig.GMT_BASIC, SystemViewConfig.GMT_BASIC_PLUS].includes(this.currentView) ? true : false;
+        //    { field: 'minOrderQuantity', header: 'Min Order Qty.', isLink: false, isExceedContent: false, width: '125px' },
+        //     { field: 'pricePerUom', header: 'Price Per UOM', isLink: false, isExceedContent: false, width: '125px' },
+        //     { field: 'gstPercentage', header: 'GST Percentage(%)', isLink: false, isExceedContent: false, width: '165px' },
+        //     { field: 'leadTimeForMoq', header: 'Lead Time for MOQ', isLink: false,isExceedContent: true, width: '215px' },
+        //     { field: 'availableQuantity', header: 'Available Qty.', isLink: false, isExceedContent: false, width: '135px' },
         this.catalogueForm = new FormGroup({
-            materialDescription: new FormControl('', [Validators.required]),
-            uom: new FormControl('', [Validators.required]),
+            materialDescription: new FormControl('', [Validators.required, this.formValidatorService.alphaNumericNotNumericOnly]),
+            uom: new FormControl('', [Validators.required, this.formValidatorService.alphabetValidator]),
             minOrderQuantity: new FormControl('', [Validators.required]),
             pricePerUom: new FormControl('', [Validators.required]),
             leadTimeForMoq: new FormControl('', [Validators.required]),
@@ -92,28 +94,28 @@ export class CatMgrVendorCatalogueComponent implements OnInit{
     }
 
 
-    getFormValidationStatus(){
-        this.catalogueForm.valueChanges.subscribe((data)=>{ 
-     
-        const formControls = this.catalogueForm.controls;
-        this.formErrorsArray = [];
-        for (const key in formControls) {
-            if (formControls[key].invalid) {
-                const invalidControl = this.catalogueForm.get(key).invalid ? { key: key, errors: formControls[key].errors } : null ;
-                if(invalidControl)
-                this.formErrorsArray.push(invalidControl);
+    getFormValidationStatus() {
+        this.catalogueForm.valueChanges.subscribe((data) => {
+
+            const formControls = this.catalogueForm.controls;
+            this.formErrorsArray = [];
+            for (const key in formControls) {
+                if (formControls[key].invalid) {
+                    const invalidControl = this.catalogueForm.get(key).invalid ? { key: key, errors: formControls[key].errors } : null;
+                    if (invalidControl)
+                        this.formErrorsArray.push(invalidControl);
+                }
             }
-        }
-        console.log(this.formErrorsArray);
-         });
+            console.log(this.formErrorsArray);
+        });
     }
- 
- 
-     
+
+
+
     getVendorCatalogues() {
-        this.createRfqService.getVendorCatalogues({id: this.loggedUserDetails.org.id}).subscribe((res: any) => {
+        this.createRfqService.getVendorCatalogues({ id: this.loggedUserDetails.org.id }).subscribe((res: any) => {
             if (res && res.data && Array.isArray(res.data.catalogues)) {
-                this.cataloguesList =  Array.isArray(res.data.catalogues)? res.data.catalogues.map(ele =>{ return {...ele}}): [];
+                this.cataloguesList = Array.isArray(res.data.catalogues) ? res.data.catalogues.map(ele => { return { ...ele } }) : [];
                 this.isLoaded = true;
             }
         })
@@ -123,19 +125,19 @@ export class CatMgrVendorCatalogueComponent implements OnInit{
         console.log(event)
     }
 
-    onAddCatlogue(isEdit?:boolean){
+    onAddCatlogue(isEdit?: boolean) {
         this.resetForm();
-        if(isEdit){
-          this.catalogueForm.disable();
-          this.catalogueForm.patchValue(this.selectedData);
-        }else{
-               this.isViewMode = false;
-            this.selectedData = null;
-             this.catalogueForm.enable();
-        
-        }
+        if (isEdit) {
+            this.catalogueForm.disable();
             this.catalogueForm.patchValue(this.selectedData);
-       
+        } else {
+            this.isViewMode = false;
+            this.selectedData = null;
+            this.catalogueForm.enable();
+
+        }
+        this.catalogueForm.patchValue(this.selectedData);
+
         const dialogConfig = new MatDialogConfig();
 
         // dialogConfig.disableClose = true;
@@ -143,39 +145,39 @@ export class CatMgrVendorCatalogueComponent implements OnInit{
         dialogConfig.minHeight = '80vh';
         dialogConfig.maxWidth = 'none';
         dialogConfig.width = '50%';
-         const dialogRef = this.dialog.open(this.onAddCatlogTemplateRef, dialogConfig).afterClosed().subscribe(result => { console.log(result); });
-      
+        const dialogRef = this.dialog.open(this.onAddCatlogTemplateRef, dialogConfig).afterClosed().subscribe(result => { console.log(result); });
+
 
     }
 
 
-    resetForm() { 
+    resetForm() {
         this.catalogueForm.reset();
     }
 
-    onAddUpdateCatalogueDetails(){
+    onAddUpdateCatalogueDetails() {
 
-        if(this.isInvalidDescription(this.catalogueForm, 'materialDescription')){
+        if (this.isInvalidDescription(this.catalogueForm, 'materialDescription')) {
             this.toaster.warning("Material Description cannot have special characters", "Warning");
             return;
         }
 
-        if(this.catalogueForm.valid){
-            const obj:any ={
+        if (this.catalogueForm.valid) {
+            const obj: any = {
                 org: { id: this.loggedUserDetails.org.id },
                 user: this.loggedUserDetails.id,
                 ...this.catalogueForm.value,
-        };
+            };
 
-        this.createRfqService.addVendorCatalogue(obj).subscribe((res:any)=>{
-            if (res.status == 'Success') {
-                this.toaster.success(res.message, 'Success');
-                this.dialog.closeAll();
-                this.getVendorCatalogues();
-            } else {
-                this.toaster.error(res.message, 'Failed')
-            }
-        });
+            this.createRfqService.addVendorCatalogue(obj).subscribe((res: any) => {
+                if (res.status == 'Success') {
+                    this.toaster.success(res.message, 'Success');
+                    this.dialog.closeAll();
+                    this.getVendorCatalogues();
+                } else {
+                    this.toaster.error(res.message, 'Failed')
+                }
+            });
 
             // this.createRfqService.onAddUpdateCatalogueDetails(obj).subscribe((res:any)=>{
             //     if (res.status == 'Success') {
@@ -186,50 +188,66 @@ export class CatMgrVendorCatalogueComponent implements OnInit{
             //         this.toaster.error(res.message, 'Failed')
             //     }
             // })
-        }else{
+        } else {
             this.toaster.warning("Please fill the all the details", "Warning")
         }
     }
-    
 
-  isInvalidDescription(formName: FormGroup, controlName: string) {
-    let description = formName.controls[controlName].value?.trim();
-    if (description && description.split(' ').length > 1) {
-      description = description.replace(/\s+/g, '');
+
+    isInvalidDescription(formName: FormGroup, controlName: string) {
+        let description = formName.controls[controlName].value?.trim();
+        if (description && description.split(' ').length > 1) {
+            description = description.replace(/\s+/g, '');
+        }
+        return (formName.controls[controlName].dirty) &&
+            (this.isOnlySpecialCharacters(description) ||
+                this.startsWithSpecialChar(description));
     }
-    return (formName.controls[controlName].dirty) &&
-      (this.isOnlySpecialCharacters(description) ||
-        this.startsWithSpecialChar(description));
-  }
 
-  isEmptyControl(formName: FormGroup, controlName: string) {
-    return formName.controls[controlName].dirty && formName.controls[controlName].value.trim() == '';
-  }
-  isEmptySpecification(formName: FormGroup, controlName: string) {
-    return this.isEmptyControl(formName, controlName);
-  }
-     
-  
-  isOnlySpecialCharacters(controlValue: string): boolean {
-    const regex = /^[^a-zA-Z0-9\s]+$/;
+    isEmptyControl(formName: FormGroup, controlName: string) {
+        return formName.controls[controlName].dirty && formName.controls[controlName].value.trim() == '';
+    }
+    isEmptySpecification(formName: FormGroup, controlName: string) {
+        return this.isEmptyControl(formName, controlName);
+    }
 
-    return regex.test(controlValue);
-  }
-  
-  startsWithSpecialChar(controlValue: string): boolean {
-    const regex = /^[^a-zA-Z0-9]/;
-    return regex.test(controlValue);
-  }
 
-  
+    isOnlySpecialCharacters(controlValue: string): boolean {
+        const regex = /^[^a-zA-Z0-9\s]+$/;
+
+        return regex.test(controlValue);
+    }
+
+    startsWithSpecialChar(controlValue: string): boolean {
+        const regex = /^[^a-zA-Z0-9]/;
+        return regex.test(controlValue);
+    }
+
+
     //For View RFQ Details - ReadOnly
 
-    onViewCatalogue(rowData:any){
+    onViewCatalogue(rowData: any) {
         this.isViewMode = true;
-       this.selectedData = rowData;
-       this.onAddCatlogue(true);
+        this.selectedData = rowData;
+        this.onAddCatlogue(true);
 
     }
 
+    hasAnyErrors(): boolean {
+        const controls = this.catalogueForm.controls;
+        const hasErrors = Object.keys(controls).some(key => {
+            const control = controls[key];
+            return control && control.invalid;
+        });
+        return hasErrors;
+    }
 
+    
+    numberOnly(event): boolean {
+        const charCode = event.which ? event.which : event.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
 }

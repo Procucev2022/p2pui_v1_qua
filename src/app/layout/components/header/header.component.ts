@@ -129,7 +129,7 @@ export class HeaderComponent implements OnInit {
     }
 
     onSupport() {
-        if (this.roleName == 'ClientInitiator'  || this.roleName == 'CategoryManager'|| this.roleName == 'Vendor' || this.roleName == 'PartialVendor' || this.roleName =='Registration'|| this.roleName == 'Buyer' ) {
+        // if (this.roleName == 'ClientInitiator'  || this.roleName == 'CategoryManager'|| this.roleName == 'Vendor' || this.roleName == 'PartialVendor' || this.roleName =='Registration'|| this.roleName == 'Buyer' ) {
             const dialogConfig = new MatDialogConfig();
             // dialogConfig.disableClose = true;
             dialogConfig.autoFocus = true;
@@ -138,6 +138,6 @@ export class HeaderComponent implements OnInit {
             dialogConfig.maxWidth = 'none';
             dialogConfig.width = '30%';
             this.dialog.open(this.supportRef, dialogConfig).afterClosed().subscribe(result => { console.log(result); });
-        }
+        // }
     }
 }

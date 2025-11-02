@@ -103,11 +103,15 @@
                 <input type="text" class="form-control"  formControlName="materialDescription" placeholder="Material Description" />
                 <p class="error-message" *ngIf="catalogueForm.get('materialDescription').hasError('required') && catalogueForm.get('materialDescription').touched">Material Description cannot be empty</p>
                 <p class="error-message" *ngIf="isInvalidDescription(catalogueForm, 'materialDescription')">Material Description cannot have special characters</p>
+                <p class="error-message" *ngIf="(catalogueForm.controls.materialDescription.touched )
+                                && catalogueForm.controls.materialDescription.errors?.numericOnly ">Material Description cannot be numeric value</p>
             </div>
             <div class="form-group">
                 <label class="form-label required">UOM</label>
                 <input type="text" class="form-control"  formControlName="uom" placeholder="UOM" />
                 <p class="error-message" *ngIf="catalogueForm.get('uom').hasError('required') && catalogueForm.get('uom').touched">UOM cannot be empty</p>
+                <p class="error-message" *ngIf="(catalogueForm.controls.uom.touched )
+                                && catalogueForm.controls.uom.errors?.alphabetOnly">UOM must contain only alphabets</p>
             </div>
             <div class="form-group">
                 <label class="form-label required">Min Order Quantity</label>
@@ -131,14 +135,14 @@
 
             <div class="form-group">
                 <label class="form-label required">Available Quantity </label>
-                <input type="text" formControlName="availableQuantity"  placeholder="Available Quantity "
+                <input type="text" formControlName="availableQuantity"  placeholder="Available Quantity " (keypress)="numberOnly($event)"
                     class="form-control" />
                 <p class="error-message" *ngIf="catalogueForm.get('availableQuantity').hasError('required') && catalogueForm.get('availableQuantity').touched">Available Quantity cannot be empty</p>
             </div>
 
             <div class="form-group">
                 <label class="form-label required">Lead Time for MOQ (In Days)</label>
-                <input type="text" formControlName="leadTimeForMoq"  placeholder="Lead Time for MOQ"
+                <input type="text" formControlName="leadTimeForMoq"  placeholder="Lead Time for MOQ" (keypress)="numberOnly($event)"
                     class="form-control" />
                 <p class="error-message" *ngIf="catalogueForm.get('leadTimeForMoq').hasError('required') && catalogueForm.get('leadTimeForMoq').touched">Lead Time for MOQ cannot be empty</p>
             </div>

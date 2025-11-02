@@ -32,14 +32,24 @@ export class CatMgrVendorRfqsComponent implements OnInit {
     expandedRows: any = {};
     queryList: any = [];
     categoryList: any = [];
+    selectedStatus: string = '';
+    statusList: any = [
+        "New",
+        "Requested",
+        "In Progress",
+        "Quotation Received",
+        "Ignored"
+    ];
     rfqsTableHeadersForGMTVendor: any = [
-        { field: 'rfqId', header: 'RFQ Id', isLink: false, width: '170px', fieldType: 'text', isExceedContent: false },
+        { field: 'rfqId', header: 'RFQ ID', isLink: false, width: '170px', fieldType: 'text', isExceedContent: false },
         { field: 'desc', header: 'Description', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
-        { field: 'category', header: 'Category', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
-        { field: 'division', header: 'Division', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
-        { field: 'queryContent', header: 'Query', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
+        { field: 'createdTS', header: 'RFQ Date', isLink: false, fieldType: 'date',  width: '180px', isExceedContent: false},
+        { field: 'deliveryDate', header: 'Delivery Date', isLink: false, fieldType: 'date',  width: '180px', isExceedContent: false},
+        { field: 'deliveryLocation', header: 'Location', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
+        // { field: 'category', header: 'Category', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
+        // { field: 'division', header: 'Division', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
+        // { field: 'queryContent', header: 'Query', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
         // { field: 'closureDate', header: 'Closure Date', isLink: false, width: '160px', fieldType: 'date', isExceedContent: false },
-        // { field: 'createdTS', header: 'Creation Date', isLink: false, fieldType: 'date',  width: '180px', isExceedContent: false},
         // { field: 'rfqClosingDate', header: 'RFQ Due Date', isLink: false, fieldType: 'date',  width: '180px' , isExceedContent: false},
         { field: 'status_ui_display', header: 'Status', isLink: false, width: '100px', fieldType: 'text', isExceedContent: false }
     ];
@@ -168,7 +178,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
 
         // dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = { ...this.viewRFQByIdData, hiddenCategory: true, showItemsOnly: false , hideSpecialRFQClosingDate: true };
+        dialogConfig.data = { ...this.viewRFQByIdData, hiddenCategory: true, showItemsOnly: false , hideSpecialRFQClosingDate: true, isShowAttachments: false };
         dialogConfig.minWidth = 400;
         dialogConfig.minHeight = 500;
         dialogConfig.maxWidth = 'none';
@@ -253,6 +263,16 @@ export class CatMgrVendorRfqsComponent implements OnInit {
             });
         } else {
            this.getRFQsByDivisionOnly();
+        }
+    }
+
+    filterRFQsBYStatus(){
+        if (this.selectedStatus) {
+            this.rfqDataList = this.cache_rfqDataList.filter((ele: any) => {
+                return ele.status_ui_display == this.selectedStatus;
+            });
+        } else {
+            this.rfqDataList = [...this.cache_rfqDataList];
         }
     }
 

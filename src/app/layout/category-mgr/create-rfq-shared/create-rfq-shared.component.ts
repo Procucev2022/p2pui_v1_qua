@@ -391,7 +391,7 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
 
         // dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = {...this.viewRFQByIdData };
+        dialogConfig.data = {...this.viewRFQByIdData, isShowAttachments: true };
         dialogConfig.minWidth = 400;
         dialogConfig.minHeight = 500;
         dialogConfig.maxWidth = 'none';
