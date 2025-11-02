@@ -59,13 +59,25 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         // { field: 'rfqClosingDate', header: 'Closure Date', isLink: false, width: '160px', fieldType: 'date', isExceedContent: false },
         // { field: 'createdTS', header: 'Creation Date', isLink: false, fieldType: 'date',  width: '180px', isExceedContent: false},
         // { field: 'status_ui_display', header: 'Status', isLink: false, width: '150px', fieldType: 'text', isExceedContent: false }
-        { field: 'rfqId', header: 'RFQ Id', isLink: false, width: '190px', fieldType: 'text', isExceedContent: false },
-        { field: 'projectDesc', header: 'Description', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
-        { field: 'category', header: 'Category', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
-        { field: 'deliveryDate', header: 'Delivery Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
-        { field: 'quotationReceived', header: 'Quotation Received', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
 
-        { field: 'createdTs', header: 'Creation Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
+
+        // { field: 'rfqId', header: 'RFQ Id', isLink: false, width: '190px', fieldType: 'text', isExceedContent: false },
+        // { field: 'projectDesc', header: 'Description', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
+        // { field: 'category', header: 'Category', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
+        // { field: 'deliveryDate', header: 'Delivery Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
+        // { field: 'quotationReceived', header: 'Quotation Received', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
+
+        // { field: 'createdTs', header: 'Creation Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
+
+
+        { field: 'rfqId', header: 'RFQ Id', isLink: false, width: '190px', fieldType: 'text', isExceedContent: false },
+      { field: 'projectDesc', header: 'Description', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
+      { field: 'companyName', header: 'Company Name', isLink: false, width: '180px', fieldType: 'text', isExceedContent: true },
+      { field: 'phoneNumber', header: 'Contact', isLink: false, width: '180px', fieldType: 'text', isExceedContent: true },
+       { field: 'noOfVendors', header: 'No. Of Vendors', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
+       { field: 'noOfQuotes', header: 'No. Of Quotes', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
+      { field: 'createdTs', header: 'Creation Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
+      { field: 'status_ui_display', header: 'Status', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false }
     ];
 
     vendorTableHeaders: any = [

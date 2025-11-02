@@ -50,8 +50,8 @@ export class CategoryMgrVendorSummaryComponent {
         // { field: 'description', header: 'Description', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
         // { field: 'rfqClosingDate', header: 'Closure Date', isLink: false, width: '160px', fieldType: 'date', isExceedContent: false },
         // { field: 'createdTS', header: 'Creation Date', isLink: false, fieldType: 'date',  width: '180px', isExceedContent: false},
-        { field: 'companyId', header: 'Company Id', isLink: false, width: '150px', fieldType: 'text', isExceedContent: false } ,
-        { field: 'companyName', header: 'Company Name', isLink: false, width: '190px', fieldType: 'text', isExceedContent: false },   
+        // { field: 'companyId', header: 'Company Id', isLink: false, width: '150px', fieldType: 'text', isExceedContent: false } ,
+        { field: 'companyName', header: 'Seller Name', isLink: false, width: '190px', fieldType: 'text', isExceedContent: false },   
         { field: 'subscribed', header: 'Subscribed', isLink: false, fieldType: 'text', width: '180px', isExceedContent: false },   
         { field: 'rfqsCreated', header: 'RFQ Credits', isLink: false, width: '170px', fieldType: 'text', isExceedContent: false },
         { field: 'rfqsConsumed', header: 'RFQs Consumed', isLink: false, width: '170px', fieldType: 'text', isExceedContent: false },
@@ -65,8 +65,8 @@ export class CategoryMgrVendorSummaryComponent {
     ];
 
     vendorTableHeaders: any = [
-        { field: 'vendorId', header: 'Company Id', isLink: false, width: '140px', fieldType: 'text', isExceedContent: false },
-        { field: 'vendorName', header: 'Name', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
+        // { field: 'vendorId', header: 'Company Id', isLink: false, width: '140px', fieldType: 'text', isExceedContent: false },
+        { field: 'vendorName', header: 'Seller Name', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
         { field: 'query', header: 'Query', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
         { field: 'status_ui_display', header: 'Status', isLink: false, width: '100px', fieldType: 'text', isExceedContent: false },
         { field: 'createdTS', header: 'Creation Date', isLink: false, fieldType: 'date', width: '120px', isExceedContent: false },

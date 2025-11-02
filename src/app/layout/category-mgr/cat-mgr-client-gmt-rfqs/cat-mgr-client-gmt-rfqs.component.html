@@ -124,6 +124,8 @@
           <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}" 
            [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
                   <span *ngIf="!col.isLink">
+                        <i class="fa fa-info-circle" style="font-size: 1.2rem;cursor: pointer;color:rgb(255, 106, 0)" *ngIf="col.field =='companyName' " (click)="getVendorInfo(rowData, true)"></i>  
+
                           <span *ngIf="col.fieldType != 'date'" [ngClass]="{'blueCls': col.field == 'rfqId' && rowData.byClient == true}">
                               {{rowData[col.field]}} 
                           </span>
@@ -202,7 +204,7 @@
               <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
               <span *ngIf="!col.isLink">
                       <span *ngIf="col.fieldType != 'date'">
-                        <i class="fa fa-info-circle" style="font-size: 1.2rem;cursor: pointer;color:rgb(255, 106, 0)" *ngIf="col.field =='vendorName' " (click)="getVendorInfo(rowData)"></i> {{rowData[col.field]}}
+                        <i class="fa fa-info-circle" style="font-size: 1.2rem;cursor: pointer;color:rgb(255, 106, 0)" *ngIf="col.field =='vendorName' " (click)="getVendorInfo(rowData, false)"></i> {{rowData[col.field]}}
 
                       </span>
                       <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
