@@ -201,6 +201,9 @@ form label {
 
     .right-section {
         background-color: #de7f52;
+        overflow-y: auto;
+        overflow-x: hidden;
+        min-height: 100vh;
 
         .title {
             text-align: center;

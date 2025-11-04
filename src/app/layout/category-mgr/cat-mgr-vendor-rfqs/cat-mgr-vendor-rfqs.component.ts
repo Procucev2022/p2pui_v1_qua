@@ -261,6 +261,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
     }
 
     getRFQsByDivisionOnly(){
+        this.selectedStatus = '';
         this.rfqDataList = this.cache_rfqDataList.filter((ele: any) => {
             return ele.division == this.selectedDivision ;
         });
@@ -269,6 +270,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
 
 
     filterRFQsBYCategory() {
+        this.selectedStatus= ''
         if (this.selectedCategory && this.selectedDivision) {
             this.rfqDataList = this.cache_rfqDataList.filter((ele: any) => {
                 return ele.category == this.selectedCategory && ele.division == this.selectedDivision ;
@@ -280,11 +282,11 @@ export class CatMgrVendorRfqsComponent implements OnInit {
 
     filterRFQsBYStatus(){
         if (this.selectedStatus) {
-            this.rfqDataList = this.cache_rfqDataList.filter((ele: any) => {
+            this.rfqDataList = this.rfqDataList.filter((ele: any) => {
                 return ele.status_ui_display == this.selectedStatus;
             });
         } else {
-            this.rfqDataList = [...this.cache_rfqDataList];
+            this.rfqDataList = [...this.rfqDataList];
         }
     }
 
