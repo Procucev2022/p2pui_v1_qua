@@ -516,9 +516,9 @@ span.actionIcons i.view {
 
 .modal-close-btn {
     position: absolute;
-    right: -4px;
+    right: 4px;
     z-index: 1023;
-    top: -8px;
+    top: 0px;
     color: #000 !important;
     background: padding-box;
     background-color: #fff !important;
@@ -526,6 +526,12 @@ span.actionIcons i.view {
     border: 1px solid #fff !important;
     font-size: 18px !important;
     font-weight: 600 !important;
+    i.fa.fa-window-close {
+        position: absolute;
+        right: auto;
+        top: 2px;
+        left: 13px;
+    }
 }
 
 .modal-content-panel label::after {
