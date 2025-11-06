@@ -5,10 +5,10 @@
         <div class="mail-rfq-dropdown col-6 ">
             <div class="form-group">
                 <label class="form-label required">RFQ Id</label>
-                <p-autoComplete  showEmptyMessage="true"
+                <!-- <p-autoComplete  showEmptyMessage="true"
                 [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
                  [suggestions]="filtered_rfqList" panelInputClass="p-auto-panel-cls" [minLength]="1"
-                   [dropdown]="true" [(ngModel)]="messageObj.rfqId"
+                   [dropdown]="true" [(ngModel)]="messageObj.rfqId"  [forceSelection]="true"
                   (completeMethod)="filterAutoCompleteData($event, 'rfqList','filtered_rfqList',   true)"
                    >
                             <ng-template let-segment pTemplate="item">
@@ -16,7 +16,10 @@
                                     <div>{{segment}}</div>
                                 </div>
                             </ng-template>
-                </p-autoComplete>
+                </p-autoComplete> -->
+                <select  class="form-control  " [(ngModel)]="messageObj.rfqId">
+                    <option *ngFor="let rfq of rfqList" [value]="rfq">{{rfq}}</option>
+                </select>
             </div>
             <div class="form-group">
                 <label class="form-label required">Subject </label>

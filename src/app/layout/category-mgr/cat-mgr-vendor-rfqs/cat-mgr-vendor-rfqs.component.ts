@@ -605,6 +605,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         }
         if (isIgnored == true) {
             const obj = [{
+                     id: this.loggedUserDetails.id,
                 "vendor": {
                     "id": this.loggedUserDetails.org.id
                 },
@@ -644,6 +645,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         const newQueryCont = this.selectedRfqData.query ? this.selectedRfqData.query.concat("|").concat(this.queryDescContent) : this.queryDescContent;
         const newQueryCont1 = queryData ? (queryData + '|') + (this.queryDescContent) : queryData;
         const obj = {
+            id: this.loggedUserDetails.id,
             "vendor": {
                 "id": this.loggedUserDetails.org.id
             },

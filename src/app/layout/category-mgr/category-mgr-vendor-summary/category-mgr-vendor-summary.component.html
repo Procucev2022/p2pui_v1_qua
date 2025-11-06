@@ -153,7 +153,7 @@
         <ng-template pTemplate="header" let-columns>
             <tr>
             <!-- <th style="width: 3rem"></th> -->
-            <th [style.width]="col.width" *ngFor="let col of columns" [pSortableColumn]="col.field">
+            <th [style.width]="col.width" *ngFor="let col of columns" [pSortableColumn]="col.field" [ngClass]="{'text-center': col?.alignCenter}">
                 {{col.header}}
                 <p-sortIcon [field]="col.field"></p-sortIcon>
             </th>
@@ -169,7 +169,7 @@
                     <span *ngIf="!expanded"><i class="fa fa-chevron-right"></i></span>
                 </button>
             </td> -->
-            <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
+            <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent , 'text-center': col?.alignCenter}" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
                     <span *ngIf="!col.isLink">
                             <span *ngIf="currentRole == 'CategoryManager' && col.field == 'companyName'" style="cursor: pointer;"> 
                                 <i class="fa fa-info-circle" aria-hidden="true" (click)="getVendorInfo(rowData )"></i>
