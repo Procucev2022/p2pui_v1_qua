@@ -40,8 +40,7 @@
 
 .bg-container {
     // background: linear-gradient(177deg, rgba(143 207 238 / 87%,1) 30%, rgba(110 181 216,1) 70%);
-    background: linear-gradient(179deg, #ffe8df 1.88%, #ffe8df 99.65%);
-    overflow: hidden;
+    background: linear-gradient(179deg, #ffe8df 1.88%, #ffe8df 99.65%); 
     max-height: 100%;
 }
 
@@ -137,10 +136,9 @@ form label {
 
 
 .reg-page-container {
-    max-height: 118vh;
+    min-height: 118vh;
     background: #FFF;
-    height: 117.6vh;
-    overflow: hidden;
+    height: 117.6vh; 
 
 
     .left-section {
@@ -200,8 +198,7 @@ form label {
     }
 
     .right-section {
-        background-color: #de7f52;
-        overflow-y: auto;
+        background-color: #de7f52; 
         overflow-x: hidden;
         min-height: 100vh;
 
