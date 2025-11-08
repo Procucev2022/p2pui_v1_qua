@@ -500,12 +500,9 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
   }
 
   getVendorInfo(rowData:any, isFromInfoIcon: boolean = false){
-    if(isFromInfoIcon){
-        this.toastrService.info("Need to Implement Fetching Vendor Information", 'Info');
-        return true;
-    }
+    
       this.selectedVendor = rowData;
-      this.rfqservice.getVendorInfoById({id: rowData.vendorUuid}).subscribe((res:any)=>{
+      this.rfqservice.getVendorInfoById({id: rowData.companyId}).subscribe((res:any)=>{
           if(res ){
               this.dialog.closeAll();
               this.vendorInfo = res;
