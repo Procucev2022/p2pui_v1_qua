@@ -60,7 +60,8 @@ export class RfqSupportQueryComponent implements OnInit {
         const obj = {
             "rfqId": this.messageObj.rfqId,
             "subject": this.messageObj.subject,
-            "message": this.messageObj.message
+            "message": this.messageObj.message,
+            "id": this.loggedUserDetails.id
 
         }
         this.rfqservice.querySupportMailByClientIntiatory(obj).subscribe((res: any) => {
