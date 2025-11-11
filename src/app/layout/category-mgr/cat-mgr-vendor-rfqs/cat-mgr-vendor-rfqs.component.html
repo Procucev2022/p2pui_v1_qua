@@ -7,7 +7,7 @@
             <p><span class="dot"></span>{{rfqDataList.length}} Total</p>
           </div>
           <div class="col-sm-3 filter-control" style="display: inline-flex;align-items: center;" *ngIf="currentRole== 'Vendor' || currentRole== 'PartialVendor' || currentRole== 'Registration' ">
-            <label style="width: 175px; font-weight: 600;">Division By</label>
+            <label style="width: 175px; font-weight: 600;">Filter By</label>
             <select class="form-control" name="se1" [(ngModel)]="selectedDivision" (change)="filterRFQsBYDivision()">
                 <option value="" >All</option>
                 <option *ngFor="let val of divisionsList">{{val}}</option>
@@ -44,6 +44,11 @@
                     (input)="rfqTable.filterGlobal($event.target.value, 'contains')" />
                 </div>
                 <div class="col-sm-8" style="text-align: left; font-size: 16px;     padding-top: 11px;">
+                    <div class="indication-info">
+                       <span class="request-rfq">  <i class="fa fa-hand-pointer-o" aria-hidden="true"></i> - Request RFQ</span>
+                       <span class="raise-query">  <i class="fa fa-question-circle" aria-hidden="true"></i> - Raise Query</span>
+                       <span class="ignore-rfq">  <i class="fa fa-low-vision" aria-hidden="true"></i> -  Ignore RFQ</span>
+                    </div>
                     <!-- <p>Want to purchase immediately ? <span class="linkCls" (click)="onSelectSystem('bfsName')" style="font-size: 18px; border-bottom: 2px solid;"> Click here</span>  to purchase directly at your preferred price from "Buy From Stock(BFS)"</p> -->
                 </div>
               </div>
@@ -58,7 +63,7 @@
               {{col.header}}
               <p-sortIcon [field]="col.field"></p-sortIcon>
               </th>
-              <th style="width: 25rem;">Actions</th>
+              <th style="width:5rem;">Actions</th>
           </tr>
           </ng-template>
           <ng-template pTemplate="body" let-rowData let-columns="columns">
@@ -81,7 +86,7 @@
                     (click)="getRFQLineItems(rowData, $event)"> {{rowData[col.field]}} </a></span>
 
                 </td>
-                <td style="width: 25rem;">
+                <td style="width: 5rem;">
                     <!-- <span *ngIf="currentRole == 'CategoryManager2' || this.currentRole == 'CategoryManager'">
                         <button (click)="onRequestForRFQ(rowData)" class="btn btn-blue" *ngIf="rowData[col.field]?.toLowerCase() == 'new'">Accept</button>
                     </span>
@@ -92,13 +97,13 @@
                             <img src="/assets/images/new/view-doc.png" (click)="onViewRFQDetails(rowData)"
                             title="View RFQ Details">
                         </button>
-                        <button (click)="onRequestForRFQ(rowData)" class="  btn-primary" [ngClass]="{'disabledBtn btn-secondary': !(requestEnability(rowData)) }" >
+                        <button (click)="onRequestForRFQ(rowData)" class="  btn-primary" title="Request RFQ " [ngClass]="{'disabledBtn btn-secondary': !(requestEnability(rowData)) }" >
                          <i class="fa fa-hand-pointer-o" aria-hidden="true"></i>
-                          Request RFQ</button>
-                        <button (click)="onRiaseQueryOrIgnoreRFQ(rowData, false)"  class="  btn-info"   [ngClass]="{'disabledBtn btn-secondary': !(queryEnability(rowData)) }">
-                          <i class="fa fa-question-circle" aria-hidden="true"></i> Raise Query</button>
-                        <button (click)="onRiaseQueryOrIgnoreRFQ(rowData, true)" class="  btn-danger"  [ngClass]="{'disabledBtn btn-secondary': !ignoreEnability(rowData) }">
-                          <i class="fa fa-low-vision" aria-hidden="true"></i> Ignore RFQ</button>
+                         </button>
+                        <button (click)="onRiaseQueryOrIgnoreRFQ(rowData, false)"  class="  btn-info" title="Raise Query"  [ngClass]="{'disabledBtn btn-secondary': !(queryEnability(rowData)) }">
+                          <i class="fa fa-question-circle" aria-hidden="true"></i> </button>
+                        <button (click)="onRiaseQueryOrIgnoreRFQ(rowData, true)" class="  btn-danger" title="Ignore RFQ" [ngClass]="{'disabledBtn btn-secondary': !ignoreEnability(rowData) }">
+                          <i class="fa fa-low-vision" aria-hidden="true"></i> </button>
 
                          <!-- <i  (click)="op.toggle($event)" #t1 class="fa fa-ellipsis-v" aria-hidden="true" data-toggle="tooltip" title="Actions" ></i>
                         <p-overlayPanel #op [showTransitionOptions]="'0ms'"  [dismissable]="'true'"  [hideTransitionOptions]="'0ms'" appendTo="body">

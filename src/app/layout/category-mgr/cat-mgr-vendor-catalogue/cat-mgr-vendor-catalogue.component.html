@@ -146,34 +146,7 @@
                     class="form-control" />
                 <p class="error-message" *ngIf="catalogueForm.get('leadTimeForMoq').hasError('required') && catalogueForm.get('leadTimeForMoq').touched">Lead Time for MOQ cannot be empty</p>
             </div>
-            <div class="terms-conditions">
-                <label class="title">Terms & Conditions</label>
-
-                  <div class="form-group">
-                    <label class="form-label required">Packing & Forwarding</label>
-                    <input type="text" formControlName="packingAndForwarding"  placeholder="Packing & Forwarding"
-                        class="form-control" />
-                    <p class="error-message" *ngIf="catalogueForm.get('packingAndForwarding').hasError('required') && catalogueForm.get('packingAndForwarding').touched">Packing & Forwarding cannot be empty</p>
-                </div>
-                <div class="form-group">
-                    <label class="form-label required">Freight</label>
-                    <input type="text" formControlName="freight"  placeholder="Freight"
-                        class="form-control" />
-                    <p class="error-message" *ngIf="catalogueForm.get('freight').hasError('required') && catalogueForm.get('freight').touched">Freight cannot be empty</p>
-                </div>
-                 <div class="form-group">
-                    <label class="form-label required">Payment Terms</label>
-                    <input type="text" formControlName="paymentTerms"  placeholder="Payment Terms"
-                        class="form-control" />
-                    <p class="error-message" *ngIf="catalogueForm.get('paymentTerms').hasError('required') && catalogueForm.get('paymentTerms').touched">Payment Terms cannot be empty</p>
-                </div>
-                <div class="form-group">
-                    <label class="form-label required"> * All Prices are exclusive  of applicable  Taxes. Other Terms & Conditions</label>
-                    <input type="text" formControlName="otherTerms"  placeholder="Other Terms"
-                        class="form-control" />
-                    <p class="error-message" *ngIf="catalogueForm.get('otherTerms').hasError('required') && catalogueForm.get('otherTerms').touched">Other Terms cannot be empty</p>
-                </div>
-            </div>
+           
           
 
             <div class="input-group mt-4 " style="justify-content: right;" *ngIf="!isViewMode">

@@ -46,6 +46,7 @@ import { VendorProfileComponent } from './vendor-profile/vendor-profile.componen
 import { VendorProfileSubscriptionsComponent } from './vendor-profile-subscriptions/vendor-profile-subscriptions.component';
 import { CategoryMgrVendorSummaryComponent } from './category-mgr-vendor-summary/category-mgr-vendor-summary.component';
 import { CatMgrVendorCatalogueComponent } from './cat-mgr-vendor-catalogue/cat-mgr-vendor-catalogue.component';
+import { CatMgrVendorTermsCondtsComponent } from './cat-mgr-vendor-terms-condts/cat-mgr-vendor-terms-condts.component';
 
 
 
@@ -97,7 +98,8 @@ import { CatMgrVendorCatalogueComponent } from './cat-mgr-vendor-catalogue/cat-m
         VendorProfileComponent,
         VendorProfileSubscriptionsComponent,
         CategoryMgrVendorSummaryComponent,
-        CatMgrVendorCatalogueComponent
+        CatMgrVendorCatalogueComponent,
+        CatMgrVendorTermsCondtsComponent
     ],
     exports:[ ],
     // entryComponents: [CatMgrVendorSearchComponent]

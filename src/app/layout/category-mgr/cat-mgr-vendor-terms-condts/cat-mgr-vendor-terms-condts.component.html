@@ -1,0 +1,68 @@
+<div class="col-12 pad-nill">
+    <div class="table-title">
+        <div class="row" style="    display: flex;
+        align-items: center;">
+            <div class="col-sm-3">
+                <h2>Terms & Conditions</h2>
+                <p><span class="dot"></span> </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12"> 
+                <form class="" [formGroup]="catalogueForm" (ngSubmit)="onAddUpdateCatalogueDetails()" autocomplete="off"
+                    novalidate>
+                    <div class="terms-conditions row">
+
+                        <div class="col-12 form-group">
+                            <label class="form-label required">Packing & Forwarding</label>
+                            <textarea formControlName="packingAndForwarding" placeholder="Packing & Forwarding"
+                                class="form-control"></textarea>
+                            <p class="error-message"
+                                *ngIf="catalogueForm.get('packingAndForwarding').hasError('required') && catalogueForm.get('packingAndForwarding').touched">
+                                Packing & Forwarding cannot be empty</p>
+                            <p class="error-message"
+                                *ngIf="catalogueForm.get('packingAndForwarding').errors?.['numericOnly'] && catalogueForm.get('packingAndForwarding').touched">
+                                Packing & Forwarding can only contain alphanumeric characters</p>
+                        </div>
+                        <div class="col-12 form-group">
+                            <label class="form-label required">Freight</label>
+                            <textarea formControlName="freight" placeholder="Freight" class="form-control"></textarea>
+                            <p class="error-message"
+                                *ngIf="catalogueForm.get('freight').hasError('required') && catalogueForm.get('freight').touched">
+                                Freight cannot be empty</p>
+                            <p class="error-message"
+                                *ngIf="catalogueForm.get('freight').errors?.['numericOnly'] && catalogueForm.get('freight').touched">
+                                Freight can only contain alphanumeric characters</p>
+                        </div>
+                        <div class="col-12 form-group">
+                            <label class="form-label required">Payment Terms</label>
+                            <textarea formControlName="paymentTerms" placeholder="Payment Terms"
+                                class="form-control"></textarea>
+                            <p class="error-message"
+                                *ngIf="catalogueForm.get('paymentTerms').hasError('required') && catalogueForm.get('paymentTerms').touched">
+                                Payment Terms cannot be empty</p>
+                            <p class="error-message"
+                                *ngIf="catalogueForm.get('paymentTerms').hasError('numericOnly') && catalogueForm.get('paymentTerms').touched">
+                                Payment Terms can only contain alphanumeric characters</p>
+                        </div>
+                        <div class="col-12 form-group">
+                            <label class="form-label required"> * All Prices are exclusive of applicable Taxes. Other
+                                Terms & Conditions</label>
+                            <textarea formControlName="otherTerms" placeholder="Other Terms"
+                                class="form-control"></textarea>
+                            <p class="error-message"
+                                *ngIf="catalogueForm.get('otherTerms').hasError('required') && catalogueForm.get('otherTerms').touched">
+                                Other Terms cannot be empty</p>
+                            <p class="error-message"
+                                *ngIf="catalogueForm.get('otherTerms').hasError('numericOnly') && catalogueForm.get('otherTerms').touched">
+                                Other Terms can only contain alphanumeric characters</p>
+                        </div>
+                    </div>
+                    <div class="buttons mt-4">
+                        <button type="submit" class="btn btn-blue" style="min-width: 180px;" [disabled]="catalogueForm.invalid">Save</button>
+                        <button type="button" class="btn btn-red" style="min-width: 180px;" (click)="resetForm()">Reset to Previous Values</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>

@@ -35,6 +35,8 @@ export class SidebarComponent implements OnInit {
     isGMTView: boolean;
     isBFSView: boolean;
     expiredTimeInSeconds: any =  '';
+    childRepCollapsed: boolean;
+    childRep: string;
 
      constructor(private translate: TranslateService, public router: Router, @Inject(APP_CONFIG) private config: IAppConfig,
       private encryDecryService: EncryDecryService, private authService: AuthenticationService, private route: ActivatedRoute) {
@@ -168,13 +170,25 @@ export class SidebarComponent implements OnInit {
         localStorage.removeItem('isLoggedin');
     }
 
-    toggleAccordian(e,name){
-        if(this.rep == name){
+    toggleAccordian(e,name, childName?){
+        if(this.rep == name && !childName ){
             this.rep = name;
             this.repCollapsed = !this.repCollapsed
+          
         }else{
             this.rep = name;
             this.repCollapsed = true
+        }
+        if(childName){
+            if(this.childRep == childName){
+                this.childRep = childName;
+                this.childRepCollapsed = !this.childRepCollapsed    
+            }else{
+                this.childRep = childName;
+                this.childRepCollapsed = true
+            }
+        }else{
+            this.childRep = '';
         }
     }
 
