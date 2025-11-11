@@ -607,14 +607,14 @@
                         </a>
                          <ul [ngStyle]="{'display':(childRep == 'GMT-CATLOGUE' && childRepCollapsed) ? 'block' : 'none' }"
                     style="padding: 0px 0px 0px 32px;;" class="collapse list-unstyled" id="pageSubmenu">
-                            <li >
+                            <li  *ngIf="loggedUserDetails?.role.roleName ==    'Vendor' ||  loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor'">
                                 <a class="list-group-item" [routerLink]="['/categorymgr/vendor-catalogue']"
                             [routerLinkActive]="['router-link-active']">
                             <i class="fa fa-user"></i> &nbsp;
                                 <span>My Catalogue</span>
                             </a>
                             </li>
-                             <li >
+                             <li  *ngIf="loggedUserDetails?.role.roleName ==    'Vendor' ||  loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor'">
                                  <a class="list-group-item" [routerLink]="['/categorymgr/vendor-catalogue-terms-condts']"
                             [routerLinkActive]="['router-link-active']">
                             <i class="fa fa-user"></i> &nbsp;
