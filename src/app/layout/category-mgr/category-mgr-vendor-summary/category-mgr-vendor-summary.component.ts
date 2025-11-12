@@ -51,13 +51,14 @@ export class CategoryMgrVendorSummaryComponent {
         // { field: 'rfqClosingDate', header: 'Closure Date', isLink: false, width: '160px', fieldType: 'date', isExceedContent: false },
         // { field: 'createdTS', header: 'Creation Date', isLink: false, fieldType: 'date',  width: '180px', isExceedContent: false},
         // { field: 'companyId', header: 'Company Id', isLink: false, width: '150px', fieldType: 'text', isExceedContent: false } ,
-        { field: 'companyName', header: 'Seller Name', isLink: false, width: '200px', fieldType: 'text', isExceedContent: false },   
+        { field: 'companyName', header: 'Seller Name', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false },   
         { field: 'subscribed', header: 'Subscribed', isLink: false, fieldType: 'text', width: '140px', isExceedContent: false , alignCenter: true},   
         { field: 'rfqsCreated', header: 'RFQ Credits', isLink: false, width: '140px', fieldType: 'text', isExceedContent: false , alignCenter: true},
         { field: 'rfqsConsumed', header: 'RFQs Consumed', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false, alignCenter: true },
         
         { field: 'quotesSubmitted', header: 'Quotes Submitted', isLink: false, fieldType: 'text', width: '130px', isExceedContent: false, alignCenter: true },
-        { field: 'subscriptionExpiry', header: 'Expiry On', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false , alignCenter: true}
+        { field: 'subscriptionExpiry', header: 'Expiry On', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false , alignCenter: true},
+        { field: 'sourceType', header: 'Source Type', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false , alignCenter: true}
         // { field: 'vendorClass', header: 'Class', isLink: false, width: '120px', fieldType: 'text', isExceedContent: true },
         // { field: 'lastLogin', header: 'Last Logged In', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
         
@@ -146,7 +147,9 @@ export class CategoryMgrVendorSummaryComponent {
                 this.rfqDataList = res.data.map((ele: any) => {
                     const status_display = ele['status'] && ele['status']['uiDisplay'] ? ele.status.uiDisplay : ele.uiDisplay;
 
-                    return { ...ele, status_ui_display: status_display, quotationReceived: ele.quotationReceived == true? 'YES': 'WIP' }
+                    return { ...ele, status_ui_display: status_display, quotationReceived: ele.quotationReceived == true? 'YES': 'WIP' ,
+                        sourceType: ele.sourceType ? ele.sourceType == 'T' ? 'Web App': 'WhatsApp' : 'Web App'
+                    }
                 }) || [];
             } else {
                 this.rfqDataList = [];

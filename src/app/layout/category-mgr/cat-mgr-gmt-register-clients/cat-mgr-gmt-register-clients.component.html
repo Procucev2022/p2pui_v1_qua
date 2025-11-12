@@ -27,7 +27,17 @@
                   <input class="main-input" type="text" pInputText size="50" placeholder="Search..."
                     (input)="clientTableRef.filterGlobal($event.target.value, 'contains')" />
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-6 " style="display: flex; justify-content: flex-end;">
+                    <div class=" displayFlex-align" style="font-size: 18px !important; ">
+                        <span class="green  ">
+                         <i class="fa fa-check-circle green cursor-pointer" aria-hidden="true" style="font-size: 20px;" ></i> - <span style="margin-left: 8px;">Accept</span>
+                              
+                    </span>
+                    <span class="red ml-3   ">
+                          <i class="fa fa-times-circle-o red cursor-pointer" aria-hidden="true" style="font-size: 20px;" ></i> - <span style="  margin-left: 8px;">Reject</span>
+                    </span>
+                    </div>
+                    
                 </div>
               </div>
             </div>
@@ -38,7 +48,7 @@
                             <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
                                 {{col.header}}
                             </th>
-                            <th style="width: 16rem;">Actions</th>
+                            <th style="width: 8rem;">Actions</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
@@ -52,16 +62,19 @@
                                     {{rowData[col.field] | date: 'dd-MMM-yyyy hh:mm:ss a'}}
                                 </span>
                                 <span *ngIf="col.fieldType != 'date'">
+                                    <span *ngIf="col.field == 'sourceType'">
+                                        <img width="30" height="30" src="/assets/images/new/{{rowData[col.field] == 'Web App' ? 'web.png' : 'wapp.png'}}" />
+                                    </span>
                                     {{rowData[col.field]}}
                                 </span>
                                 <span class="blink" *ngIf="col.field=='companyId' && (rowData.newClientStatus && rowData.newClientStatus == true)">
                                     <i class="fa fa-bell" aria-hidden="true"></i>
                                 </span>
                             </td>
-                        <td style="width: 16rem;"  >
-                            <span *ngIf="!(rowData.status == 'Accepted' || rowData.status =='Ignored')">
- <button class="btn btn-blue" (click)="onAcceptUserByClient(rowData, true)">Accept</button>
-                            <button class="btn btn-red" (click)="onAcceptUserByClient(rowData,false)">Reject</button>
+                        <td style="width: 8rem;"  >
+                            <span *ngIf="!(rowData.status == 'Accepted' || rowData.status =='Ignored')" style="font-size: 2rem;">
+                                <i class="fa fa-check-circle green cursor-pointer mr-2" title="Accept" aria-hidden="true" (click)="onAcceptUserByClient(rowData, true)"></i> 
+                                <i class="fa fa-times-circle-o red cursor-pointer" title="Reject" aria-hidden="true" (click)="onAcceptUserByClient(rowData, false)"></i>
                             </span>
                            
                             <!-- <img class="cursor-pointer" src="/assets/images/new/edit-data.png"  width="28" style="width:28px;margin-right: 10px;" title="Edit Client"  (click)="onEditClient(rowData, true)"> -->
