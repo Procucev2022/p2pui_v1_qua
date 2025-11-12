@@ -83,11 +83,7 @@ export class CatMgrVendorCatalogueComponent implements OnInit {
             pricePerUom: new FormControl('', [Validators.required]),
             leadTimeForMoq: new FormControl('', [Validators.required]),
             availableQuantity: new FormControl('', [Validators.required]),
-            gstPercentage: new FormControl('', [Validators.required]),
-            otherTerms: new FormControl('', [Validators.required]),
-            paymentTerms: new FormControl('', [Validators.required]),
-            freight: new FormControl('', [Validators.required]),
-            packingAndForwarding: new FormControl('', [Validators.required]),
+            gstPercentage: new FormControl('', [Validators.required])
 
         });
         this.getFormValidationStatus();
