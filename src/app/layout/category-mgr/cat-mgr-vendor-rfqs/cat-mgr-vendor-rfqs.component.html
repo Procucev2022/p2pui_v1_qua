@@ -27,7 +27,7 @@
                 <option *ngFor="let val of statusList">{{val}}</option>
             </select>
           </div>
-          <div class="col-2" *ngIf="selectedCategory || selectedDivision" style="display: flex;">
+          <div class="col-2" *ngIf="selectedCategory || selectedDivision || selectedStatus" style="display: flex;">
             <button style="min-height: 0px;" class="btn btn-orange" (click)="onResetFilters()">Reset Filter</button>
           </div>
         </div>

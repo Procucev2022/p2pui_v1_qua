@@ -302,6 +302,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
     onResetFilters() {
         this.selectedCategory = '';
         this.selectedDivision = '';
+        this.selectedStatus = '';
         this.rfqDataList = [...this.cache_rfqDataList]
     }
 
