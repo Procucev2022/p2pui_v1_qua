@@ -184,7 +184,7 @@
             </td>
             <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
                     <span *ngIf="!col.isLink">
-                            <span *ngIf="col.fieldType != 'date'" [ngClass]="{'blueCls': col.field == 'rfqId' && rowData.byClient == true}">
+                            <span *ngIf="col.fieldType != 'date'"  >
                                 <span *ngIf="col.fieldType != 'date'">
                                     <span *ngIf="col.field == 'quotationReceived'" title="Work In Progress"> {{  rowData[col.field]}}</span>
                                     <span *ngIf="col.field != 'quotationReceived'" >    {{rowData[col.field]}}</span>
