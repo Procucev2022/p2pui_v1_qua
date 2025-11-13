@@ -153,7 +153,7 @@
         <ng-template pTemplate="header" let-columns>
             <tr>
             <!-- <th style="width: 3rem"></th> -->
-            <th [style.width]="col.width" *ngFor="let col of columns" [pSortableColumn]="col.field">
+            <th [style.width]="col.width" *ngFor="let col of columns" [pSortableColumn]="col.field" [ngClass]="{'text-center': col?.alignCenter}">
                 {{col.header}}
                 <p-sortIcon [field]="col.field"></p-sortIcon>
             </th>
@@ -169,7 +169,7 @@
                     <span *ngIf="!expanded"><i class="fa fa-chevron-right"></i></span>
                 </button>
             </td> -->
-            <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
+            <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent , 'text-center': col?.alignCenter}" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
                     <span *ngIf="!col.isLink">
                             <span *ngIf="currentRole == 'CategoryManager' && col.field == 'companyName'" style="cursor: pointer;"> 
                                 <i class="fa fa-info-circle" aria-hidden="true" (click)="getVendorInfo(rowData )"></i>
@@ -177,7 +177,11 @@
                             <span *ngIf="col.fieldType != 'date'" [ngClass]="{'blueCls': col.field == 'rfqId' && rowData.byClient == true}">
                                 <span *ngIf="col.fieldType != 'date'">
                                     <span *ngIf="col.field == 'quotationReceived'" title="Work In Progress"> {{  rowData[col.field]}}</span>
-                                    <span *ngIf="col.field != 'quotationReceived'" >    {{rowData[col.field]}}</span>
+                                    <span *ngIf="col.field != 'quotationReceived'" > 
+                                        <span *ngIf="col.field == 'sourceType'">
+                                            <img width="30" height="30" src="/assets/images/new/{{rowData[col.field] == 'Web App' ? 'web.png' : 'wapp.png'}}" />
+                                        </span>
+                                        {{rowData[col.field]}}</span>
                                 </span>
                                 <span class="blink" *ngIf="col.field=='rfqId' && (rowData.count && rowData.count>0)">
                                     <i class="fa fa-bell" aria-hidden="true"></i>
@@ -235,7 +239,7 @@
 <ng-template #vendorInfoTemplate>
     
     <div class="modal-header">
-    <h4>Vendor Info</h4>
+    <h4>Seller Info</h4>
     <button class="btn-skelton modal-close-btn" mat-dialog-close>✖</button>
 </div>
 <div class="modal-body vendor-info-modal" *ngIf="vendorInfo">

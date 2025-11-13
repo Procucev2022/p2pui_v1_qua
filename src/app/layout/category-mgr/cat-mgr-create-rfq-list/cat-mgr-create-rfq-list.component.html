@@ -43,7 +43,7 @@
                 <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width"> {{col.header}}
                     <p-sortIcon [field]="col.field"  *ngIf="roleName != 'ClientInitiator'"></p-sortIcon>
                 </th>
-                <th style="width: 21em;">Actions</th>
+                <th   [ngStyle]="{'width':roleName != 'ClientInitiator' ? '21em' : '14rem'}">Actions</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
@@ -83,7 +83,7 @@
                             {{rowData[col.field]}} </a></span>
 
                 </td>
-                <td style="width: 21em; " >
+                <td [ngStyle]="{'width':roleName != 'ClientInitiator' ? '21em' : '14rem'}">
                       <span *ngIf="roleName == 'ClientInitiator' || roleName == 'CategoryManager' ">
                         <button type="button" class="btn-skelton"
                             >
@@ -165,8 +165,9 @@
             <div class="col-12 row" *ngIf="currentStep== 1 && !isSendRFQToVendorScreen">
                 <div class="col-12">
                     <div class="row">
-                     <div class="col-6">
+                     <div class="col-12">
                         <form class="row"  [formGroup]="projectForm" novalidate>
+                        <div class="col-3"></div>
                         <div class="col-6">
                              <label  class="form-label required">Project Description/Reference </label>
                             <input class="form-control" formControlName="projectDesc" placeholder="Project Description" />
@@ -186,7 +187,7 @@
                                         </ng-template>
                             </p-autoComplete>
                         </div>
-                        <div class="col-6"  *ngIf="roleName == 'ClientInitiator'">
+                        <!-- <div class="col-6"  *ngIf="roleName == 'ClientInitiator'">
                             <label class="form-label required">Division</label>
                             <p-autoComplete  formControlName="division" showEmptyMessage="true"
                             [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
@@ -200,7 +201,7 @@
                                             </div>
                                         </ng-template>
                             </p-autoComplete>
-                        </div>
+                        </div> -->
                         </form>
                      </div>
                      <div class="col-12">

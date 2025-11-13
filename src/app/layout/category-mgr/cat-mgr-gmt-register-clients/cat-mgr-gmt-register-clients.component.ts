@@ -26,6 +26,7 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
         { field: 'username', header: 'user Email', isLink: false, isExceedContent: true, width: '165px' },
         { field: 'createdTS', header: 'Reg. Date & Time', isLink: false, fieldType: 'date',isExceedContent: true, width: '215px' },
         { field: 'status', header: 'Status', isLink: false, isExceedContent: true, width: '135px' },
+        { field: 'sourceType', header: 'Source Type', isLink: false, isExceedContent: false, width: '165px' },
     ];
 
     userTableHeaders =[
@@ -148,7 +149,9 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
     getRegClients() {
         this.createRfqService.getGMTRegisteredClientsWithUser().subscribe((res: any) => {
             if (res) {
-                this.clientsList =  Array.isArray(res)? res.map(ele =>{ return {...ele, status: ele.clientStatus ?ele.clientStatus.uiDisplay: '-'}}): [];
+                this.clientsList =  Array.isArray(res)? res.map(ele =>{ return {...ele, status: ele.clientStatus ?ele.clientStatus.uiDisplay: '-',
+                     sourceType: ele.sourceType ? ele.sourceType == 'T' ? 'Web App': 'WhatsApp' : 'Web App'
+                }}): [];
                 this.isLoaded = true;
             }
         })

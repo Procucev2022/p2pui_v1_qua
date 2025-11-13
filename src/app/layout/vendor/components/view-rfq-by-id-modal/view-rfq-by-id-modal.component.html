@@ -129,14 +129,14 @@
                         </div>
                         <mat-card class="col-12" *ngFor="let location of viewRFQbyIDdetails.clientdeliverylocationrfq; let i = index;">
 
-                            <div class="form-group row">
+                            <!-- <div class="form-group row">
                                 <label for="address" style="font-size: medium; font-weight: bolder;"
                                     class="col-sm-5 col-form-label">Address</label>
                                 <div class="col-sm-5 col-form-label">
                                     {{location.address}}
 
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="form-group row">
                                 <label for="city" style="font-size: medium; font-weight: bolder;"
                                     class="col-sm-5 col-form-label">City</label>
@@ -165,7 +165,7 @@
 
                 <div class="col-12 row cust-card pad-nill" *ngIf="!isShowItemsSectionOnly">
                     <label class="col-md-12" for="text">Uploaded Documents</label>
-                    <div class="col-md-12">
+                    <div class="col-md-12" *ngIf="viewRFQbyIDdetails.isShowAttachments">
                         <ng-container *ngFor="let file of viewRFQbyIDdetails.rfqDocument;let i=index">
                             <div class="col-12 uploadedFiles">
                                 <div class="col-8">
@@ -205,6 +205,14 @@
                         </ng-container>
                         <div class="content-value" *ngIf="viewRFQbyIDdetails.rfqDocument.length == 0">
                             No Documents uploaded.
+                        </div>
+                    </div>
+                    <div class="col-md-12" *ngIf="!viewRFQbyIDdetails.isShowAttachments">
+                        <div class="content-value" *ngIf="viewRFQbyIDdetails.rfqDocument.length == 0">
+                           No Attachments are available for this RFQ.
+                        </div>
+                        <div class="content-value" *ngIf="viewRFQbyIDdetails.rfqDocument.length > 0">
+                           Attachments are available !
                         </div>
                     </div>
                 </div>

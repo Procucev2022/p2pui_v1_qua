@@ -54,7 +54,7 @@ export class HeaderComponent implements OnInit {
         this.currentView = localStorage.getItem('system-view')
         console.log('user data', this.loggedUserDetails);
         this.loggedUserName = this.loggedUserDetails.username;
-        this.roleName = (this.loggedUserDetails.role.roleName === 'Registration') || (this.loggedUserDetails.role.roleName === 'PartialVendor') ? 'Seller' : this.loggedUserDetails.role.roleName;
+        this.roleName = (this.loggedUserDetails.role.roleName === 'Registration') || (this.loggedUserDetails.role.roleName === 'PartialVendor') || (this.loggedUserDetails.role.roleName === 'Vendor') ? 'Seller' : this.loggedUserDetails.role.roleName;
         this.roleName = this.roleName == 'ClientInitiator' &&  (this.currentView && this.currentView.split(' ').includes('GMT')) ? 'Buyer': this.roleName;
         this.orgName = this.loggedUserDetails.org.companyName || null;
         const is_Authenticated = this.loggedUserDetails.auth ? this.loggedUserDetails.auth : false;
@@ -129,7 +129,7 @@ export class HeaderComponent implements OnInit {
     }
 
     onSupport() {
-        if (this.roleName == 'ClientInitiator'  || this.roleName == 'CategoryManager'|| this.roleName == 'Vendor' || this.roleName == 'PartialVendor' || this.roleName =='Registration'|| this.roleName == 'Buyer' ) {
+        // if (this.roleName == 'ClientInitiator'  || this.roleName == 'CategoryManager'|| this.roleName == 'Vendor' || this.roleName == 'PartialVendor' || this.roleName =='Registration'|| this.roleName == 'Buyer' ) {
             const dialogConfig = new MatDialogConfig();
             // dialogConfig.disableClose = true;
             dialogConfig.autoFocus = true;
@@ -138,6 +138,6 @@ export class HeaderComponent implements OnInit {
             dialogConfig.maxWidth = 'none';
             dialogConfig.width = '30%';
             this.dialog.open(this.supportRef, dialogConfig).afterClosed().subscribe(result => { console.log(result); });
-        }
+        // }
     }
 }

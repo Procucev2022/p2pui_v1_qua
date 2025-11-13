@@ -35,9 +35,9 @@
                             <div class="userInfoEmail">{{loggedUserName}}</div>
                         </div>
                         
-                        <div class="col-12 alg">
+                        <!-- <div class="col-12 alg">
                             <div class="userValue" style="cursor:not-allowed;">Profile Settings<img src="/assets/images/menu/users.svg"></div>
-                        </div>
+                        </div> -->
                         <div class="col-12 alg">
                             <div class="userValue" (click)="onSupport()" style="cursor: pointer;">Support<img src="/assets/images/menu/help-circle.svg" ></div>
                         </div>
@@ -51,19 +51,19 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="col-12 alg" *ngIf="roleName=='Registration' || roleName=='PartialVendor' || roleName=='Vendor' || roleName == 'CategoryManager2'|| roleName == 'CategoryManager'">
+                        <!-- <div class="col-12 alg" *ngIf="roleName=='Registration' || roleName=='PartialVendor' || roleName=='Vendor' || roleName == 'CategoryManager2'|| roleName == 'CategoryManager'">
                             <div class="userValue" style="cursor:pointer;">
                                 <div class="btn-container">
                                     <label>Current View <i class="fa fa-window-restore" aria-hidden="true"></i></label>
                                     <div class="" role="group" aria-label="Basic example">
                                         <button   type="button" class="btn btn-primary" (click)="onSelectSystem('gmtName')" [ngClass]="{'enable-btn': currentView == SystemViewConfig.GMT_BASIC || currentView == SystemViewConfig.GMT_BASIC_PLUS}">{{ loggedUserDetails.org.gmtName}}</button>
-                                        <!-- <button   type="button" class="btn btn-primary" (click)="onSelectSystem('dpsName')"  [ngClass]="{'enable-btn': currentView == SystemViewConfig.DPS_BASIC || currentView == SystemViewConfig.DPS_BASIC_PLUS}" >{{loggedUserDetails.org.dpsName}}</button> -->
-                                        <!-- <button   type="button" class="btn btn-primary" (click)="onSelectSystem('bfsName')"  [ngClass]="{'enable-btn': currentView ==   SystemViewConfig.BFS_PRO}" >{{loggedUserDetails.org.bfsName}}</button> -->
+                                        <button   type="button" class="btn btn-primary" (click)="onSelectSystem('dpsName')"  [ngClass]="{'enable-btn': currentView == SystemViewConfig.DPS_BASIC || currentView == SystemViewConfig.DPS_BASIC_PLUS}" >{{loggedUserDetails.org.dpsName}}</button> 
+                                      <button   type="button" class="btn btn-primary" (click)="onSelectSystem('bfsName')"  [ngClass]="{'enable-btn': currentView ==   SystemViewConfig.BFS_PRO}" >{{loggedUserDetails.org.bfsName}}</button>  
                                       </div>
                                 </div>
 
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col-12 alg">
                             <div class="userValue" style="cursor: pointer;"  (click)="onLoggedout()">Logout<img src="/assets/images/menu/log-out.svg"></div>
                         </div>
@@ -83,7 +83,7 @@
     </div>
     <div class="modal-body">
         <div>
-            <h5 class="mt-5" style="    text-align: center;">For Any Support Please send mail to <b>info@procucev.com</b></h5>
+            <h5 class="mt-5" style="    text-align: center;">For Any Support Please send mail to <b>support@procucev.com</b></h5>
         </div>
     </div>
 </ng-template>

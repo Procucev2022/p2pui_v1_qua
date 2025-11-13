@@ -32,14 +32,26 @@ export class CatMgrVendorRfqsComponent implements OnInit {
     expandedRows: any = {};
     queryList: any = [];
     categoryList: any = [];
+    selectedStatus: string = '';
+    statusList: any = [
+        "New",
+        "Requested",
+        "In Progress",
+        "Approved",
+        "Quotation Received",
+        "Ignored"
+
+    ];
     rfqsTableHeadersForGMTVendor: any = [
-        { field: 'rfqId', header: 'RFQ Id', isLink: false, width: '170px', fieldType: 'text', isExceedContent: false },
+        { field: 'rfqId', header: 'RFQ ID', isLink: false, width: '170px', fieldType: 'text', isExceedContent: false },
         { field: 'desc', header: 'Description', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
-        { field: 'category', header: 'Category', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
-        { field: 'division', header: 'Division', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
-        { field: 'queryContent', header: 'Query', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
+        { field: 'createdTS', header: 'RFQ Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
+        { field: 'deliveryDate', header: 'Delivery Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
+        { field: 'deliveryLocation', header: 'Location', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
+        // { field: 'category', header: 'Category', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
+        // { field: 'division', header: 'Division', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
+        // { field: 'queryContent', header: 'Query', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
         // { field: 'closureDate', header: 'Closure Date', isLink: false, width: '160px', fieldType: 'date', isExceedContent: false },
-        // { field: 'createdTS', header: 'Creation Date', isLink: false, fieldType: 'date',  width: '180px', isExceedContent: false},
         // { field: 'rfqClosingDate', header: 'RFQ Due Date', isLink: false, fieldType: 'date',  width: '180px' , isExceedContent: false},
         { field: 'status_ui_display', header: 'Status', isLink: false, width: '100px', fieldType: 'text', isExceedContent: false }
     ];
@@ -49,13 +61,25 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         // { field: 'rfqClosingDate', header: 'Closure Date', isLink: false, width: '160px', fieldType: 'date', isExceedContent: false },
         // { field: 'createdTS', header: 'Creation Date', isLink: false, fieldType: 'date',  width: '180px', isExceedContent: false},
         // { field: 'status_ui_display', header: 'Status', isLink: false, width: '150px', fieldType: 'text', isExceedContent: false }
+
+
+        // { field: 'rfqId', header: 'RFQ Id', isLink: false, width: '190px', fieldType: 'text', isExceedContent: false },
+        // { field: 'projectDesc', header: 'Description', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
+        // { field: 'category', header: 'Category', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
+        // { field: 'deliveryDate', header: 'Delivery Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
+        // { field: 'quotationReceived', header: 'Quotation Received', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
+
+        // { field: 'createdTs', header: 'Creation Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
+
+
         { field: 'rfqId', header: 'RFQ Id', isLink: false, width: '190px', fieldType: 'text', isExceedContent: false },
         { field: 'projectDesc', header: 'Description', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
-        { field: 'category', header: 'Category', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
-        { field: 'deliveryDate', header: 'Delivery Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
-        { field: 'quotationReceived', header: 'Quotation Received', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
-
+        { field: 'companyName', header: 'Company Name', isLink: false, width: '180px', fieldType: 'text', isExceedContent: true },
+        { field: 'phoneNumber', header: 'Contact', isLink: false, width: '180px', fieldType: 'text', isExceedContent: true },
+        { field: 'noOfVendors', header: 'No. Of Vendors', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
+        { field: 'noOfQuotes', header: 'No. Of Quotes', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
         { field: 'createdTs', header: 'Creation Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
+        { field: 'status_ui_display', header: 'Status', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false }
     ];
 
     vendorTableHeaders: any = [
@@ -63,14 +87,13 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         { field: 'vendorName', header: 'Name', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
         { field: 'query', header: 'Query', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
         { field: 'status_ui_display', header: 'Status', isLink: false, width: '100px', fieldType: 'text', isExceedContent: false },
-        { field: 'createdTS', header: 'Creation Date', isLink: false, fieldType: 'date', width: '120px', isExceedContent: false },
+        { field: 'createdTS', header: 'Submitted Date', isLink: false, fieldType: 'date', width: '140px', isExceedContent: false },
     ];
     itemsTableHeaders: any = [
         { field: 'description', header: 'Item Description', isLink: false, width: '190px', fieldType: 'text', isExceedContent: true },
-        { field: 'brand', header: 'Brand', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
+        { field: 'brand', header: 'Specifications', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
         { field: 'unitofMeasures', header: 'UOM', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
-        { field: 'quantity', header: 'Quantity', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
-        { field: 'unitprice', header: 'Unit Price', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
+        { field: 'quantity', header: 'Quantity', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false }, 
         { field: 'createdTS', header: 'Creation Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
     ];
     loggedUserDetails: any;
@@ -91,7 +114,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
     selectedDivision: string = '';
     divisionsList: any = [];
     cache_rfqDataList: any = [];
-    vendorInfo: any ;
+    vendorInfo: any;
     selectedVendor: any;
     clientInfo: any;
     constructor(private dialog: MatDialog,
@@ -139,7 +162,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
                 this.rfqDataList = data.map((ele: any) => {
                     const status_display = ele['status'] && ele['status']['uiDisplay'] ? ele.status.uiDisplay : ele.uiDisplay;
 
-                    return { ...ele, status_ui_display: status_display, quotationReceived: ele.quotationReceived == true? 'YES': 'WIP' }
+                    return { ...ele, status_ui_display: status_display, quotationReceived: ele.quotationReceived == true ? 'YES' : 'WIP' }
                 }) || [];
             } else {
                 this.rfqDataList = [];
@@ -168,7 +191,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
 
         // dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = { ...this.viewRFQByIdData, hiddenCategory: true, showItemsOnly: false , hideSpecialRFQClosingDate: true };
+        dialogConfig.data = { ...this.viewRFQByIdData, hiddenCategory: true, showItemsOnly: false, hideSpecialRFQClosingDate: true, isShowAttachments: false };
         dialogConfig.minWidth = 400;
         dialogConfig.minHeight = 500;
         dialogConfig.maxWidth = 'none';
@@ -235,30 +258,50 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         });
 
         this.selectedCategory = '';
-       this.getRFQsByDivisionOnly();
+        this.getRFQsByDivisionOnly();
     }
 
-    getRFQsByDivisionOnly(){
+    getRFQsByDivisionOnly() {
+        this.selectedStatus = '';
         this.rfqDataList = this.cache_rfqDataList.filter((ele: any) => {
-            return ele.division == this.selectedDivision ;
+            return ele.division == this.selectedDivision;
         });
     }
 
 
 
     filterRFQsBYCategory() {
+        this.selectedStatus = ''
         if (this.selectedCategory && this.selectedDivision) {
             this.rfqDataList = this.cache_rfqDataList.filter((ele: any) => {
-                return ele.category == this.selectedCategory && ele.division == this.selectedDivision ;
+                return ele.category == this.selectedCategory && ele.division == this.selectedDivision;
             });
         } else {
-           this.getRFQsByDivisionOnly();
+            this.getRFQsByDivisionOnly();
         }
     }
 
-    onResetFilters(){
+    filterRFQsBYStatus() {
+        if (this.selectedStatus) {
+            this.rfqDataList = this.cache_rfqDataList.filter((ele: any) => {
+                if (this.selectedDivision && this.selectedCategory) {
+                    return ele.status_ui_display == this.selectedStatus && ele.division == this.selectedDivision && ele.category == this.selectedCategory;
+                } else if (this.selectedDivision && !this.selectedCategory) {
+                    return ele.status_ui_display == this.selectedStatus && ele.division == this.selectedDivision;
+                }
+                else {
+                    return ele.status_ui_display == this.selectedStatus;
+                }
+            });
+        } else {
+            this.rfqDataList = [...this.cache_rfqDataList];
+        }
+    }
+
+    onResetFilters() {
         this.selectedCategory = '';
         this.selectedDivision = '';
+        this.selectedStatus = '';
         this.rfqDataList = [...this.cache_rfqDataList]
     }
 
@@ -346,9 +389,9 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         this.expandedRows = {};
         const thisRef = this;
         thisRef.expandedRows[event.data.id] = 1;
-           thisRef.expandedRows[event.data.id] = true;
-        this.vendorsList =[];
-        this.itemsList =[];
+        thisRef.expandedRows[event.data.id] = true;
+        this.vendorsList = [];
+        this.itemsList = [];
         this.selectedData = [event.data];
         this.selectedRfqData = Object.assign({}, event.data);
         this.rfqId = event.data.rfqId;
@@ -359,7 +402,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
 
     getCloseRFQs(event) {
         this.expandedRows[event.data.id] = false;
-      this.expandedRows = {};
+        this.expandedRows = {};
     }
 
     getVendorsByRfq() {
@@ -408,10 +451,10 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         // ]
     }
 
-    getVendorInfo(rowData:any){
+    getVendorInfo(rowData: any) {
         this.selectedVendor = rowData;
-        this.rfqservice.getVendorInfoById({id: rowData.vendorUuid}).subscribe((res:any)=>{
-            if(res ){
+        this.rfqservice.getVendorInfoById({ id: rowData.vendorUuid }).subscribe((res: any) => {
+            if (res) {
                 this.dialog.closeAll();
                 this.vendorInfo = res;
                 this.dialog.open(this.vendorInfoTemplate, {
@@ -426,8 +469,8 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         })
     }
 
-    showClientInfoIcon(rowData:any){
-        return !rowData.acceptedDate ? false: this.getDifferenceInHours((new Date()), new Date(rowData.acceptedDate))
+    showClientInfoIcon(rowData: any) {
+        return !rowData.acceptedDate ? false : this.getDifferenceInHours((new Date()), new Date(rowData.acceptedDate))
     }
 
     getDifferenceInHours(date1: Date, date2: Date): boolean {
@@ -437,13 +480,13 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         // Convert milliseconds to hours
         const diffInHours = diffInMilliseconds / (1000 * 60 * 60);
         // console.log('diffInHours', diffInHours)
-        return diffInHours>0 && diffInHours<=48 ;
-      }
+        return diffInHours > 0 && diffInHours <= 48;
+    }
 
-    getClientInfo(rowData:any){
+    getClientInfo(rowData: any) {
         this.selectedRfqData = rowData;
-        this.rfqservice.getClientInfoById({id: rowData.userId}).subscribe((res:any)=>{
-            if(res){
+        this.rfqservice.getClientInfoById({ id: rowData.userId }).subscribe((res: any) => {
+            if (res) {
                 this.dialog.closeAll();
                 this.clientInfo = res;
                 this.dialog.open(this.clientInfoTemplate, {
@@ -523,7 +566,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
 
     // Accept or Reject Vendor by CM
     onAcceptOrRejectVendor(rowData: any, isAccepted) {
-        if(rowData.status_ui_display == 'New'){
+        if (rowData.status_ui_display == 'New') {
             this.toastrService.error("You're not allowed at this moment!", 'Warning');
             return;
         }
@@ -571,6 +614,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         }
         if (isIgnored == true) {
             const obj = [{
+                id: this.loggedUserDetails.id,
                 "vendor": {
                     "id": this.loggedUserDetails.org.id
                 },
@@ -610,6 +654,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         const newQueryCont = this.selectedRfqData.query ? this.selectedRfqData.query.concat("|").concat(this.queryDescContent) : this.queryDescContent;
         const newQueryCont1 = queryData ? (queryData + '|') + (this.queryDescContent) : queryData;
         const obj = {
+            id: this.loggedUserDetails.id,
             "vendor": {
                 "id": this.loggedUserDetails.org.id
             },

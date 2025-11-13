@@ -517,7 +517,7 @@
                                 <a class="list-group-item"
                                     [routerLink]="['/client/cient-summary']" [routerLinkActive]="['router-link-active']">
                                         <i class="fa fa-info"></i> &nbsp;
-                                        <span>Vendor Summary</span>
+                                        <span>Seller Summary</span>
                                 </a>
                             </li>
 
@@ -545,6 +545,7 @@
                             <i class="fa fa-user"></i> &nbsp;
                             <span>Create RFQ</span>
                         </a>
+                        </li>
                         <!-- </li>
                         <li *ngIf="loggedUserDetails?.role.roleName == 'CategoryManager2'">
                             <a class="list-group-item" [routerLink]="['/categorymgr/gmt-summary']"
@@ -595,12 +596,33 @@
                             <i class="fa fa-user"></i> &nbsp;
                             <span>My Profile</span>
                         </a>
-                          <!--     <li *ngIf="loggedUserDetails?.role.roleName ==    'Vendor' ||  loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor'">
-                            <a class="list-group-item" [routerLink]="['/categorymgr/vendor-catalogue']"
+                        </li>
+                       <!--
+                           <li *ngIf="loggedUserDetails?.role.roleName ==    'Vendor' ||  loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor'">
+                            <a class="list-group-item"  
+                            class="list-group-item" (click)="toggleAccordian($event, 'GMT', 'GMT-CATLOGUE')" data-toggle="collapse"
+                        aria-expanded="false"
+                           >
+                            <i class="fa fa-user"></i> &nbsp;
+                            <span>My Data <i style="float: right;padding: 3px;" class="fa fa-chevron-down"></i></span>
+                        </a>
+                         <ul [ngStyle]="{'display':(childRep == 'GMT-CATLOGUE' && childRepCollapsed) ? 'block' : 'none' }"
+                    style="padding: 0px 0px 0px 32px;;" class="collapse list-unstyled" id="pageSubmenu">
+                            <li  *ngIf="loggedUserDetails?.role.roleName ==    'Vendor' ||  loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor'">
+                                <a class="list-group-item" [routerLink]="['/categorymgr/vendor-catalogue']"
                             [routerLinkActive]="['router-link-active']">
                             <i class="fa fa-user"></i> &nbsp;
-                            <span>Seller Catalogue</span>
-                        </a>
+                                <span>My Catalogue</span>
+                            </a>
+                            </li>
+                             <li  *ngIf="loggedUserDetails?.role.roleName ==    'Vendor' ||  loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor'">
+                                 <a class="list-group-item" [routerLink]="['/categorymgr/vendor-catalogue-terms-condts']"
+                            [routerLinkActive]="['router-link-active']">
+                            <i class="fa fa-user"></i> &nbsp;
+                                <span>Terms & Conditions</span>
+                            </a>
+                            </li>
+                        </ul>
                        
                         </li>
                       <li *ngIf="loggedUserDetails?.role.roleName ==    'Vendor' || 

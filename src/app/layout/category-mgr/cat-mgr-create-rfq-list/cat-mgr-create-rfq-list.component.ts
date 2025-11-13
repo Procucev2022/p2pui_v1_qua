@@ -49,8 +49,8 @@ export class CatMgrCreateRfqListComponent implements OnInit {
         // { field: 'noOfVendors', header: 'Vendors', isLink: false, fieldType: 'text', width: '180px', isExceedContent: false },
         // { field: 'noOfQuotes', header: 'Quotes', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
         { field: 'createdTS', header: 'Created Date', isLink: false, fieldType: 'date', width: '195px', isExceedContent: false },
-        { field: 'createdBy', header: 'Created By', isLink: false, width: '195px', fieldType: 'text', isExceedContent: true },
-        { field: 'quotationReceived', header: 'Quotation Received', isLink: false, width: '205px', fieldType: 'text', isExceedContent: false },
+        // { field: 'createdBy', header: 'Created By', isLink: false, width: '195px', fieldType: 'text', isExceedContent: true },
+        { field: 'quotationReceived', header: 'Quotes', isLink: false, width: '205px', fieldType: 'text', isExceedContent: false },
         { field: 'status_display', header: 'Status', isLink: false, fieldType: 'text', width: '180px', isExceedContent: false }
 
     ];
@@ -391,6 +391,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
     //For View RFQ Details - ReadOnly
 
     onViewRFQDetails(rowData, isEdit) {
+        this.isEditForm = isEdit;
         if(isEdit && this.roleName == 'ClientInitiator' && (rowData.status_display == 'Accepted' || rowData.status_display == 'Published')){
             this.toaster.warning("RFQ Already  Accepted. \n You're not allowed at this moment!", "Warning")
             return;
@@ -454,7 +455,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
 
         // dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = {...this.viewRFQByIdData };
+        dialogConfig.data = {...this.viewRFQByIdData , isShowAttachments: true};
         dialogConfig.minWidth = 400;
         dialogConfig.minHeight = 500;
         dialogConfig.maxWidth = 'none';
@@ -590,7 +591,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
         this.onCreateItemForm();
 
         if(this.roleName == 'ClientInitiator'){
-            this.projectForm.addControl('division', this.fb.control('', Validators.required));
+            this.projectForm.addControl('division', this.fb.control('' ));
         }else{
             this.projectForm.addControl('category', this.fb.control('', Validators.required));
         }
@@ -913,11 +914,13 @@ export class CatMgrCreateRfqListComponent implements OnInit {
             "user": this.loggedUserDetails.id
         };
         if(this.roleName == 'ClientInitiator'){
-            if(this.divisionsList.find(ele => ele == projectFormData.division)){
-                obj['division']= projectFormData.division;
-            }else{
-                this.toaster.warning("Please Select Division from given list, Not allowed new Division", "Warning");
-                return;
+            if(this.isEditForm){
+                if(this.divisionsList.find(ele => ele == projectFormData.division)   ){
+                    obj['division']= projectFormData.division;
+                }else{
+                    this.toaster.warning("Please Select Division from given list, Not allowed new Division", "Warning");
+                    return;
+                }
             }
 
             this.createRFQService.createRFQByClient(obj).subscribe((res: any) => {

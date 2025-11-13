@@ -32,8 +32,8 @@
 
         </div>
         <div class="col-8 right-section pl-5 pr-5 pt-2 pb-2">
-            <h4 class="title" style="font-size: 2rem;margin-top: 2rem;">Seller Registration </h4>
-            <div class="alert  mt-3" *ngIf="hasAnyErrors()" style="display: flex; align-items: center; color:#fff;align-self: center;"> 
+            <h4 class="title" style="font-size: 2rem;margin-top: 10px;">Seller Registration </h4>
+            <div class="alert  mt-1" *ngIf="hasAnyErrors()" style="display: flex; align-items: center; color:#fff;align-self: center;"> 
                 <span (click)="op.toggle($event)" style="cursor: pointer; "><i
                     class="fa fa-exclamation-triangle" style="font-size: 2rem;" aria-hidden="true"></i> Pls fill all
                 required
@@ -152,7 +152,7 @@
                         <b>Note :</b> If Already Registered! Click here for <a routerLink="/login"
                             style="margin-left: 5px;font-weight: 600;border-bottom: 2px solid;">Login</a>
                     </div>
-                    <div class="col-md-12  col-xs-12  row  btn-blocks mt-5 mbt-5">
+                    <div class="col-md-12  col-xs-12  row  btn-blocks mt-2 mbt-2">
 
                         <div class="col-5">
                             <button class="btn btn-primary btn-red" type="button" (click)="resetVendorForm()" style="float: right;

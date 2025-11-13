@@ -135,7 +135,7 @@ ul.menu-dot-cls {
         width: 302px;
     }
 
-   ::ng-deep .cdk-overlay-pane {
+    ::ng-deep .cdk-overlay-pane {
         min-height: 250px;
         pointer-events: auto;
         width: 99% !important;
@@ -156,3 +156,38 @@ ul.menu-dot-cls {
 //   padding: 0.5rem;
 // }
 
+
+.filter-control {
+    position: relative;
+
+    label {
+        position: absolute;
+        top: -25px;
+        font-size: 14px !important;
+        /* background: #fff; */
+        /* border: 1px solid; */
+    }
+}
+
+.indication-info {
+    width: 100%;
+    display: flex;
+    float: right;
+    align-items: center;
+    justify-content: end;
+    span {
+        padding: 4px 12px;
+    }
+    .fa-hand-pointer-o , .request-rfq{
+        color:#305EFF !important
+    }
+    .fa-question-circle, .raise-query{
+        color:#17a2b8 !important
+    }
+    .fa-low-vision, .ignore-rfq{
+        color:#dc3545 !important
+    }
+}
+.btn-sec{
+    gap: 10px;
+}
