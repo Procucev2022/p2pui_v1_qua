@@ -1,11 +1,15 @@
 .header-content {
-    font-variant: all-petite-caps;
-    font-weight: bolder;
+    .title {
+
+        font-variant: all-petite-caps;
+        font-weight: bolder;
+        color: #144A9A;
+    }
 
 
     h5 {
-        font-weight: 800;
-        color: #1a417a;
+        color: #000000;
+        font-variant: normal;
     }
 }
 
@@ -223,6 +227,26 @@ a.btn.btn-primary {
         height: 70px;
     }
 
+    .gradient-button {
+        background: linear-gradient(to right, #8e2de2, #4bc0c8);
+        /* purple to light blue */
+        color: #000;
+        /* bold black text */
+        font-weight: bold;
+        font-size: 1rem;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        text-align: center;
+        transition: box-shadow 0.3s ease, transform 0.2s ease;
+    }
+
+    .gradient-button:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transform: scale(1.05);
+    }
+
     .title {
         font-weight: 700;
         font-size: 2rem;
@@ -374,6 +398,32 @@ a.btn.btn-primary {
 }
 
 .digital-container {
+    margin-left: 1rem;
+    background: #f3f6fe;
+    width: 98%;
+    position: relative;
+
+    border-radius: 40px;
+
+    .qua-logo {
+        position: absolute;
+        top: -120px;
+        left: 46%;
+        background: #f3f6fe;
+        width: 194px;
+        height: 194px;
+        padding: 10px;
+        border-radius: 100% 100% 0 0 !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+            width: 120px;
+            height: 120px;
+        }
+    }
+
     h2.title {
         font-size: 1.8rem;
         text-decoration: underline;
@@ -395,29 +445,34 @@ a.btn.btn-primary {
 
     .left-card .col-12,
     .right-card .col-12 {
-        border: 2px solid #0000ff0f;
         min-height: 100%;
-        background: #ffffff7a;
         padding: 1rem;
         border-radius: 8px;
     }
 
     .card-box {
-      height: 328px;
-      border: 2px solid;
-      background: #ffffff;
-      margin-bottom: 2rem;
-      padding: 8rem 2rem;
-      border-radius: 18px;
-      color: #fff !important;
-      position: relative;
-      text-decoration: none !important;
-      width: 80%;
-      margin-left: 15%;
-      border: 3px solid #FFF;
-      align-items: center;
-      margin-top: 100px; 
+        height: 469px;
+        border: 2px solid;
+        background: #ffffff;
+        margin-bottom: 2rem;
+        padding: 8rem 2rem;
+        border-radius: 18px;
+        color: #fff !important;
+        position: relative;
+        text-decoration: none !important;
+        width: 80%;
+        margin-left: 15%;
+        border: 3px solid #FFF;
+        align-items: center;
+        margin-top: 100px;
 
+        ul {
+            li {
+                color: #000;
+                font-weight: 550;
+                padding: 4px 8px
+            }
+        }
 
         .content {
             width: 85%;
@@ -435,27 +490,30 @@ a.btn.btn-primary {
         }
 
         .btn-blue {
-          bottom: -16px;
-          right: 22px;
-          background: #ff4800 !important;
-          color: #ffffff !important;
-          border-color: #c4bbf6 !important;
-          border-radius: 20px !important;
-          border: 4px !important;
-          min-width: 100%;
-          margin-top: 2rem;
-          font-variant: all-small-caps;
-          font-weight: 400 !important;
+            bottom: -16px;
+            right: 22px;
+            background: linear-gradient(to right, #8e2de2, #4bc0c8) !important;
+            color: #000000 !important;
+            border-color: #c4bbf6 !important;
+            border-radius: 20px !important;
+            border: 4px !important;
+            min-width: 100%;
+            margin-top: 2rem; 
+            font-weight: 800 !important;
         }
 
         img {
-          position: absolute;
-          left: calc(50% - 80px);
-          top: -18%;
-          width: 160px;
-          height: 160px;
-          border-radius:52% 52% 0 0 !important;
-          border: 3px solid #ffffff; 
+            position: absolute;
+            left: calc(50% - 80px);
+            top: -18%;
+            width: 167px;
+            height: 167px;
+            border-radius: 52% 52% 0 0 !important;
+            border: 3px solid #ffffff;
         }
+    }
+
+    .blueColor {
+        color: #004C8D !important;
     }
 }
