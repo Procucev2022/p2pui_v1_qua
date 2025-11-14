@@ -46,7 +46,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
         { field: 'rfqId', header: 'RFQ Id', isLink: false, width: '190px', fieldType: 'text', isExceedContent: false },
         { field: 'projectDesc', header: 'Description', isLink: false, width: '240px', fieldType: 'text', isExceedContent: true },
         { field: 'division', header: 'Division ', isLink: false, width: '240px', fieldType: 'text', isExceedContent: false },
-        // { field: 'noOfVendors', header: 'Vendors', isLink: false, fieldType: 'text', width: '180px', isExceedContent: false },
+        { field: 'quoteCount', header: 'Quote Count', isLink: false, fieldType: 'text', width: '180px', isExceedContent: false },
         // { field: 'noOfQuotes', header: 'Quotes', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
         { field: 'createdTS', header: 'Created Date', isLink: false, fieldType: 'date', width: '195px', isExceedContent: false },
         // { field: 'createdBy', header: 'Created By', isLink: false, width: '195px', fieldType: 'text', isExceedContent: true },
@@ -911,7 +911,8 @@ export class CatMgrCreateRfqListComponent implements OnInit {
             "remarks": this.remarks,
             "rfqDocument": this.attachements,
 
-            "user": this.loggedUserDetails.id
+            "user": this.loggedUserDetails.id,
+            "sourceType":"T"
         };
         if(this.roleName == 'ClientInitiator'){
             if(this.isEditForm){
