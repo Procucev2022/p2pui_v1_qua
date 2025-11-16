@@ -135,9 +135,10 @@ form label {
 
 .reg-page-container {
     min-height: 118vh;
-    background: #FFF;
+    background: #2e4491;
     height: 117.6vh;
-    overflow-x: hidden !important;
+    overflow: hidden !important;
+    padding: 2rem 3rem;
 
 
     .left-section {
@@ -198,31 +199,35 @@ form label {
     }
 
     .right-section {
-        background-color: #2b418d;
-        color: #fff !important;
+        background-color: #fdfdfd;
+        color: #000000 !important;
+        padding-top: 0 !important;
 
         .title {
             text-align: center;
-            text-decoration: underline;
             font-weight: 600;
         }
 
         input {
-            border-radius: 30px !important;
-            border: 3px solid black !important;
+            border-radius: 12px !important;
+            border: none !important;
             font-size: 1.2rem;
+            background-color: #E6E6E6;
         }
 
         form label {
             font-weight: 600;
-            text-align: center !important;
             width: 100%;
             font-size: 1.2rem !important;
-            color: #fff !important;
+            color: #030303 !important;
         }
 
         .btn-blocks .btn {
+            margin-top: 2rem;
+            ;
             border-radius: 30px !important;
+
+            line-height: normal;
         }
     }
 
@@ -234,25 +239,44 @@ form label {
     align-items: center;
 
     input {
-        width: 70% !important;
+        width: 90% !important;
     }
 }
 
 .send-otp-button {
-    background: #03A9F4 !important;
-    color: #fff !important;
+    background: #FD660E !important;
+    color: #000000 !important;
     border-radius: 30px !important;
     font-size: 1.1rem !important;
     padding: 8px 10px !important;
-    font-weight: 400 !important;
+    font-weight: 600 !important;
     border: none !important;
+    display: flex;
+    width: 39%;
+    text-align: center;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.emailOTP-box1 {
+
+    color: #000000 !important;
+    border-radius: 30px !important;
+    font-size: 1.1rem !important;
+    padding: 8px 10px !important;
+    font-weight: 600 !important;
+    border: none !important;
+    display: flex;
+    width: 39%;
+    text-align: center;
+    justify-content: center;
 }
 
 .mobile-box {
     align-items: center;
 
     input {
-        width: 70% !important;
+        width: 83% !important;
     }
 }
 
@@ -261,19 +285,17 @@ form label {
     gap: 10px;
     align-items: center;
 
-    input {
-        width: 70% !important;
-    }
 
     span {
-        background: #0a461e !important;
-        color: #fff !important;
+        background: #73CB00 !important;
+        color: #000000 !important;
         border-radius: 30px !important;
         font-size: 1.1rem !important;
         padding: 0 !important;
-        font-weight: 400 !important;
+        font-weight: 600 !important;
         border: none !important;
         padding: 5px 10px !important;
+        width: 39%;
     }
 }
 
@@ -289,10 +311,57 @@ form label {
         }
     }
 
-    .sub-imgs{
-        img{
+    .sub-imgs {
+        img {
             width: 140px !important;
             height: 110px !important;
         }
+    }
+}
+
+.submitBtn {
+    width: 30%;
+    background: #8BC34A !important;
+    color: #000000 !important;
+    border-radius: 25px !important;
+    font-size: 2rem !important;
+    padding: 0 !important;
+    font-weight: 600 !important;
+    font-variant: all-small-caps;
+}
+
+.resetBtn {
+    width: 200px;
+    background: #FE660F !important;
+    color: #000000 !important;
+    border-radius: 25px !important;
+    font-size: 1.2rem !important;
+    padding: 0 !important;
+    font-weight: 600 !important;
+
+}
+
+.right-section {
+    border-radius: 30px;
+    position: relative;
+    .reg-page-logo-1 {
+        left: 2rem;
+        top: 2rem;
+    }
+    .reg-page-logo-2 {
+        right: 2rem;
+        top: 2rem;
+    }
+    .reg-page-logo-3 {
+        left: 2rem;
+        bottom: 2rem;
+    }
+
+    .reg-page-logo-4 {
+        right: 2rem;
+        bottom: 2rem;
+    }
+    img {
+        position: absolute;
     }
 }
