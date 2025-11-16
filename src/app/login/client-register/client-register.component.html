@@ -1,5 +1,5 @@
 <div class="row reg-page-container">
-    <div class="col-4 left-section">
+    <!-- <div class="col-4 left-section">
         <div class="row">
             <div class="col-12 logo">
                 <img class="logo" src="assets/images/Procucev_Logo.svg" />
@@ -25,13 +25,19 @@
             </div>
         </div>
 
-    </div>
-    <div class="col-8 right-section p-5">
-        <h4 class="title" style="font-size: 2rem;margin-top: 2rem;">Buyer Registration </h4>
+    </div> -->
+    <div class="col-12 right-section p-5">
+        <img class="reg-page-logo-1" src="assets/images/new/qua-procucev.png" width="240" height="60"/>
+        <img class="reg-page-logo-2" src="assets/images/new/qua-ai-reg.png" width="107" height="107"/>
+        <img class="reg-page-logo-3" src="assets/images/new/gmt-reg.png" width="140" height="140"/>
+        <img class="reg-page-logo-4" src="assets/images/new/bfs-reg.png" width="140" height="140"/>
+
+        <h4 class="title" style="font-size: 2rem;margin-top: 2rem;
+    font-variant: all-small-caps;">Buyer Registration </h4>
         <div class="alert  mt-3" *ngIf="hasAnyErrors()"
-            style="display: flex; align-items: center; color:#fff;align-self: center;">
+            style="display: flex; align-items: center; color:#e9795d;align-self: center;">
             <span (click)="op.toggle($event)" style="cursor: pointer; "><i class="fa fa-exclamation-triangle"
-                    style="font-size: 2rem;" aria-hidden="true"></i> Pls fill all
+                    style="font-size: 2rem;color: #e6b968 !important;" aria-hidden="true"></i> Pls fill all
                 required
                 fields & clear all errors. Click here to view errors!
             </span>
@@ -42,73 +48,81 @@
             <form name="clientRegForm" [formGroup]="clientRegForm" (ngSubmit)='registerVendor(clientRegForm)'>
                 <div class="row">
 
-                    <div class="col-md-5 col-xs-12 mt-4">
+                    <div class="col-md-4 col-xs-12 mt-4">
                         <label for="name">Your Name: <b style="color: #fb9898;">*</b></label>
                         <input type="text" required id="name" class="form-control" name="name" formControlName="name"
                             placeholder="Name">
 
                     </div>
-                    <div class="col-md-5  col-xs-12 mt-4">
+                    <div class="col-md-4  col-xs-12 mt-4">
                         <label for="companyName">Company Name: <b style="color: #fb9898;">*</b></label>
                         <input type="text" id="companyName" class="form-control" name="companyName"
                             placeholder="Company Name" formControlName="companyName">
 
                     </div>
+                    <div class="col-md-4  mt-4">
+                        <app-pincode-control [inputFormControlName]="'pinCode'" [className]="'pincode-control  registrationScreen '"
+                            [buttonClassName]="'btn btn-orange border-radius-30'" [parentFormGroup]="clientRegForm"
+                            [labelClassName]="'form-label required whiteStar'" [label]="'PinCode'"
+                            (updatePincodeValidationStatus)="onupdatePincodeValidationStatus($event)"></app-pincode-control>
+                    </div>
                     <div class="col-md-12 mt-4" style="">
                         <div class="row">
-                            <div class="col-md-5 col-xs-12 mb-1">
+                            <div class="col-md-4 col-xs-12 mb-1">
                                 <label for="name">Mobile Number: <b style="color: #fb9898;">*</b></label>
                                 <div class="mobile-box">
-                                    <span style="color: #fff;">IND +91</span>
+                                    <span  >IND +91</span>
                                     <input type="text" maxlength="10" minlength="10" id="adress" class="form-control"
                                         name="organizationPhonenumber" formControlName="organizationPhonenumber"
                                         placeholder="Mobile Number" (keypress)="numberOnly($event)" maxlength="10"
                                         minlength="10" [disabled]="isOTPVerified || isOTPSent">
                                 </div>
-                                <div style="font-size: 12px;">( you can access on
+                                <div style="font-size: 12px;color: #727272;">( you can access on
                                     WhatsApp with this number)</div>
                                 <span style="color: green;" *ngIf="isOTPVerified">Mobile Number Verified</span>
 
                             </div>
-                            <div class="col-md-7  col-xs-12 mb-1">
+                            <div class="col-md-4  col-xs-12 mb-1">
                                 <label for="email">Company EMail Id: <b style="color: #fb9898;">*</b></label>
-                                <div class="otp-send-box">
+                                <div class=" ">
                                     <input type="email" required id="email" class="form-control" name="email"
                                         placeholder="Company Email Id" formControlName="email"
                                         [disabled]="isOTPVerified || isOTPSent">
 
 
-                                    <span class="send-otp-button " (click)="sendOTPs()" style="" *ngIf="!isOTPVerified"
-                                        [disabled]="enableOTPButton">{{isOTPSent? 'Resend OTPs':
-                                        'Send OTPs'}}
-                                        <span *ngIf="enableOTPButton && enableOTPInSecs > 0"> ({{enableOTPInSecs}}
-                                            Secs.)</span>
-                                    </span>
+
                                 </div>
                                 <span style="color: green;" *ngIf="isOTPVerified">EMail Verified</span>
 
                                 <div>
                                 </div>
                             </div>
+                            <div class="col-md-4 col-xs-12">
+                                <span class="send-otp-button " (click)="sendOTPs()" style="" *ngIf="!isOTPVerified"
+                                    [disabled]="enableOTPButton">{{isOTPSent? 'Resend OTPs':
+                                    'Send OTPs'}}
+                                    <span *ngIf="enableOTPButton && enableOTPInSecs > 0"> ({{enableOTPInSecs}}
+                                        Secs.)</span>
+                                </span>
+                            </div>
                         </div>
 
                         <div class="col-12 mt-4">
                             <div class="row">
-                                <div class="col-md-5"><input class="form-control" type="text"
+                                <div class="col-md-4"><input class="form-control" type="text"
                                         formControlName="mobileOtp" name="mobileOtp" (keypress)="numberOnly($event)"
                                         placeholder="Enter Mobile OTP" maxlength="6" minlength="6" /></div>
-                                <div class="col-md-7">
+                                <div class="col-md-4">
                                     <div class="emailOTP-box">
                                         <input class="form-control" type="text" formControlName="emailOtp"
                                             name="emailOtp" (keypress)="numberOnly($event)"
                                             placeholder="Enter EMail OTP" maxlength="6" minlength="6" />
 
-                                        <span class="btn btn-primary" (click)="verifyOtps()" type="button"  *ngIf="!isOTPVerified"
-                                            [disabled]="!isOTPSent">Validate OTPs</span>
-                                    </div>
-
-
+                                      
+                                    </div> 
                                 </div>
+                                <div class="col-md-4 col-xs-12 emailOTP-box ">  <span class="btn btn-primary" (click)="verifyOtps()" type="button"
+                                            *ngIf="!isOTPVerified" [disabled]="!isOTPSent">Validate OTPs</span></div>
                             </div>
 
                             <div class="col-md-12 mt-4"
@@ -117,53 +131,18 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3 mt-4"></div>
-                    <div class="col-md-4  col-xs-12 mt-4">
-                        <app-pincode-control [inputFormControlName]="'pinCode'"
-                            [className]="'pincode-control border-radius-round'" [buttonClassName]="'btn btn-orange'"
-                            [parentFormGroup]="clientRegForm" [labelClassName]="'form-label required whiteStar'"
-                            [label]="'PinCode'"
-                            (updatePincodeValidationStatus)="onupdatePincodeValidationStatus($event)"></app-pincode-control>
-                    </div>
-
-                    <div class="col-md-12  col-xs-12">
-                        <div class="row">
-                            <div class="col-md-6  col-xs-12 mt-3" style="color:rgb(234, 229, 189)">
-                                <b>Note :</b> If Already Registered! Click here for <a routerLink="/login"
-                                    style="margin-left: 5px;font-weight: 600;border-bottom: 2px solid;color:rgb(255, 254, 254)">Login</a>
-                            </div>
-                            <div class="col-md-12  col-xs-12 btn-blocks mt-5">
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        <button class="btn btn-blue " type="submit"
-                                            [disabled]="isEmailExists || !isOTPVerified  " style="float: right;
-    width: 100%;
-    background: #8BC34A !important;
-    color: #fff !important;
-    border-radius: 30px !important;
-    font-size: 1.4rem !important;
-    padding: 0 !important;
-    font-weight: 400 !important;">
-                                            <span>Register</span>
-                                        </button>
-                                    </div>
-                                    <div class="col-md-5">
-
-                                        <button class="btn btn-red " type="button" (click)="resetWholeForm()" style="float: right;
-    width: 100%;
-    background: #b41b2d !important;
-    color: #fff !important;
-    border-radius: 30px !important;
-    font-size: 1.4rem !important;
-    padding: 0 !important;
-    font-weight: 400 !important;">
-                                            <span>Reset</span>
-                                        </button>
-                                    </div>
-                                </div>
-
-                            </div>
+                    <div class="col-md-12  col-xs-12 btn-blocks text-center mt-3 ">
+                        <button class="btn  submitBtn" type="submit" [disabled]="isEmailExists || !isOTPVerified">
+                             Submit
+                        </button>
+                        <div class="col-md-12  col-xs-12 mt-3" style="color:#7393C2">
+                            <b>Note :</b> If Already Registered! Click here for <a routerLink="/login"
+                                style="margin-left: 5px;font-weight: 600;border-bottom: 2px solid;color: #7393C2">Login</a>
                         </div>
+                        <button class="btn btn-red resetBtn mt-2" type="button" (click)="resetWholeForm()">
+                            Reset
+                        </button>
+
 
                     </div>
 
@@ -197,7 +176,7 @@
             </li>
 
             <li *ngIf="(clientRegForm.controls.organizationPhonenumber.errors?.required)" style="color: #fb9898;">Mobile
-                number is required  </li>
+                number is required </li>
             <li style="color: #fb9898;" *ngIf="clientRegForm.controls.organizationPhonenumber.errors ">
                 Mobile number must be exactly 10 digits.
             </li>

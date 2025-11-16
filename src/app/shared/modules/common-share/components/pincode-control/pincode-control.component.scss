@@ -1,24 +1,47 @@
-.whiteStar{
+.whiteStar {
     color: white;
 }
-.redStar{
+
+.redStar {
     color: red;
 }
-.greenStar{
+
+.greenStar {
     color: #dce8ce;
 }
-.border-radius-round{
+
+.border-radius-round {
     border-radius: 30px !important;
-    border-top-right-radius: 30px !important; 
+    border-top-right-radius: 30px !important;
     border-bottom-right-radius: 30px !important;
 }
 
-.register-vendor-pincode{
-    color: #fff  !important;
+.register-vendor-pincode {
+    color: #fff !important;
 }
 
-.btn{
-    background-color: rgb(74, 74, 185) !important; 
+.btn {
+    background-color: rgb(74, 74, 185) !important;
     color: white !important;
     letter-spacing: 1px !important;
+}
+
+.border-radius-30 {
+    background-color: #73CB00 !important;
+    color: rgb(0, 0, 0) !important;
+    letter-spacing: 1px !important;
+    border-radius: 50px !important;
+    border: none !important;
+    font-weight: 500;
+}
+
+.btn-blocks .btn {
+    line-height: 0.5 !important;
+}
+
+::ng-deep input.registrationScreen  {
+    border-radius: 12px !important;
+    border: none !important;
+    font-size: 1.2rem;
+    background-color: #E6E6E6;
 }
