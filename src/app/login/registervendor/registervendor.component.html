@@ -3,7 +3,7 @@
 
     </nav> -->
     <div class="row reg-page-container">
-        <div class="col-4 left-section">
+        <!-- <div class="col-4 left-section">
             <div class="row">
                 <div class="col-12 logo">
                     <img class="logo" src="assets/images/Procucev_Logo.svg" />
@@ -30,157 +30,126 @@
                 </div>
             </div>
 
-        </div>
-        <div class="col-8 right-section pl-5 pr-5 pt-2 pb-2">
+        </div> -->
+        <div class="col-12 right-section pl-5 pr-5 pt-2 pb-2">
+              <img class="reg-page-logo-1" src="assets/images/new/qua-procucev.png" width="240" height="60"/>
+            <img class="reg-page-logo-2" src="assets/images/new/qua-ai-reg.png" width="107" height="97"/>
+            <img class="reg-page-logo-3" src="assets/images/new/gmt-reg.png" width="140" height="140"/>
+            <img class="reg-page-logo-4" src="assets/images/new/bfs-reg.png" width="140" height="140"/>
             <h4 class="title" style="font-size: 2rem;margin-top: 10px;">Seller Registration </h4>
-            <div class="alert  mt-1" *ngIf="hasAnyErrors()" style="display: flex; align-items: center; color:#fff;align-self: center;"> 
-                <span (click)="op.toggle($event)" style="cursor: pointer; "><i
-                    class="fa fa-exclamation-triangle" style="font-size: 2rem;" aria-hidden="true"></i> Pls fill all
-                required
-                fields & clear all errors. Click here to view errors!
+            <div class="alert  mt-1" *ngIf="hasAnyErrors()"
+                style="display: flex; align-items: center; color:#e9795d;align-self: center; margin-bottom: 0 !important;">
+                <span (click)="op.toggle($event)" style="cursor: pointer; "><i class="fa fa-exclamation-triangle"
+                        style="font-size: 2rem;" aria-hidden="true"></i> Registration Suggestions
                 </span>
             </div>
 
 
             <div class="registration-form">
                 <form name="vendorRegistrationForm" class="row" [formGroup]="vendorRegistrationForm">
-                    <div class="col-md-5 col-sm-6  col-xs-12   mt-3 mb-3">
-                        <label for="name">Company Name: <b style="color: #fff">*</b></label>
+                    <div class="col-md-4 col-sm-6  col-xs-12   mt-3 mb-3">
+                        <label for="name">Company Name: <b style="color: #c56969">*</b></label>
                         <input type="text" required id="name" class="form-control" name="companyName"
                             formControlName="companyName" placeholder="Company Name">
 
                     </div>
-                    <div class="col-md-5  col-xs-12 col-sm-6    mt-3 mb-3">
-                        <label for="name">Name: <b style="color: #fff">*</b></label>
+                    <div class="col-md-4  col-xs-12 col-sm-6    mt-3 mb-3">
+                        <label for="name">Name: <b style="color: #c56969">*</b></label>
                         <input type="text" required id="name" class="form-control" name="name" formControlName="name"
                             placeholder="Enter Name">
 
 
                     </div>
-                    <div class="col-md-12 row" style="    ">
-                        <div class="col-md-5 col-sm-4 col-xs-12   mt-3 mb-3">
-                            <label for="email">EMail Id: <b style="color: #fff">*</b></label>
-                            <input type="email" required id="mail" class="form-control" name="mail"
-                                pattern="^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$" formControlName="mail"
-                                placeholder="EMail Id">
-                            <span style="color: green;" *ngIf="isOTPVerified">EMail is verified</span>
-
-
-                        </div>
-                        <div class="col-md-7 col-sm-4 col-xs-12  mt-3 mb-3">
-                            <label for="name">Mobile Number:<b style="color: #fff">*</b></label>
-                            <div class="mobile-box">
-                                <span style="color: #344054;">IND +91</span>
-                                <input type="text" (keypress)="numberOnly($event)" maxlength="10" minlength="10"
-                                    id="adress" class="form-control" name="organizationPhonenumber"
-                                    formControlName="organizationPhonenumber" placeholder="Mobile Number"
-                                    style="margin-bottom:0" /> 
-                                    <span class="send-otp-button" (click)="sendOTPs()" type="button"
-                                style=" "
-                                *ngIf="!isOTPVerified">{{isOTPSent? 'Resend OTPs': 'Send OTPs'}}</span>
-                            </div>
-                                <span  style="color: green;" *ngIf="isOTPVerified">MobileNumber is verified</span>
-
-                            <div style="font-size: 12px;color:rgb(17, 17, 17)">( You can
-                                access on WhatsApp with same Number)</div>
-
-
-                        </div>
-
-                         
-
-
-
-                        <div class="col-12  mt-3 mb-3" style="margin-top:12px">
-                            <div class="row">
-                                <div class="col-md-5">
-                                    <input class="form-control" type="text" formControlName="emailOtp" name="emailOtp"
-                                        (keypress)="numberOnly($event)" placeholder="Enter EMail OTP" maxlength="6"
-                                        minlength="6" />
-                                </div>
-                                <div class="col-md-7">
-                                    <div class="emailOTP-box">
-                                            <input class="form-control" type="text" formControlName="mobileOtp" name="mobileOtp"
-                                        (keypress)="numberOnly($event)" placeholder="Enter Mobile OTP" maxlength="6"
-                                        minlength="6" />
-                                          <span class="btn btn-primary" (click)="verifyOtps()" type="button"  *ngIf="!isOTPVerified">Validate
-                                        OTPs</span>
-                                    </div>
-                                  
-                                </div> 
-                            </div>
-
-
-                        </div>
-                    </div>
-
-
-
-                    <div class="col-md-5  col-xs-12   mt-3 mb-3">
+                    <div class="col-md-4  col-xs-12   mt-3 mb-3">
                         <label for="email">GSTIN <span><i>(Format: 88AAAAA8888A8AA)</i></span></label>
                         <input type="text" required id="gstin" class="form-control" name="gstin" formControlName="gstin"
                             placeholder="GSTIN" />
 
 
                     </div>
-
-
-
-                    <div class="col-md-5  col-xs-12   mt-3 mb-3">
-                        <app-pincode-control [inputFormControlName]="'pinCode'"
-                            [className]="'pincode-control border-radius-round '"
-                            [parentFormGroup]="vendorRegistrationForm"
-                            [labelClassName]="'form-label required whiteStar'" [label]="'PinCode'"
-                            [buttonClassName]="'btn btn-blue border-radius-round'"
-                            (updatePincodeValidationStatus)="onupdatePincodeValidationStatus($event)"></app-pincode-control>
-                    </div>
-
-
-
-
-
-
-
-                    <div class="col-md-10 col-xs-12   mt-3 mb-3">
+                    <div class="col-md-8 col-xs-12   mt-3 mb-3">
                         <label for="name">Product/Service Details:(Multiple products seperated by comma) <b
-                                style="color: #fff">*</b></label>
+                                style="color: #c56969">*</b></label>
                         <input type="text" required id="adress" class="form-control" name="products"
                             formControlName="products" placeholder="Product/Service Details">
 
                     </div>
-                    <div class="col-md-8  col-xs-12   link-cont" style="">
-                        <b>Note :</b> If Already Registered! Click here for <a routerLink="/login"
-                            style="margin-left: 5px;font-weight: 600;border-bottom: 2px solid;">Login</a>
+                    <div class="col-md-4  col-xs-12   mt-3 mb-3">
+                        <app-pincode-control [inputFormControlName]="'pinCode'"
+                            [className]="'pincode-control   registrationScreen'"
+                            [parentFormGroup]="vendorRegistrationForm"
+                            [labelClassName]="'form-label required whiteStar'" [label]="'PinCode'"
+                            [buttonClassName]="'btn btn-blue   border-radius-30'"
+                            (updatePincodeValidationStatus)="onupdatePincodeValidationStatus($event)"></app-pincode-control>
                     </div>
-                    <div class="col-md-12  col-xs-12  row  btn-blocks mt-2 mbt-2">
-
-                        <div class="col-5">
-                            <button class="btn btn-primary btn-red" type="button" (click)="resetVendorForm()" style="float: right;
-    width: 90%;
-    background: #b41b2d !important;
-    color: #fff !important;
-    border-radius: 30px !important;
-    font-size: 1.4rem !important;
-    padding: 0 !important;
-    font-weight: 400 !important;">
-                                <span>Reset</span>
-                            </button>
-                        </div>
-                        <div class="col-5">
-                            <button class="btn btn-primary btn-blue" type="button" [disabled]="!isOTPVerified"
-                                (click)='registerVendor(vendorRegistrationForm)' style="float: right;
-    width: 90%;
-    background: #2b418d !important;
-    color: #fff !important;
-    border-radius: 30px !important;
-    font-size: 1.4rem !important;
-    padding: 0 !important;
-    font-weight: 400 !important;">
-                                <span>Register</span> </button>
-                        </div>
+                    <div class="col-md-4 col-sm-4 col-xs-12   mt-3 mb-3">
+                        <label for="email">EMail Id: <b style="color: #c56969">*</b></label>
+                        <input type="email" required id="mail" class="form-control" name="mail"
+                            pattern="^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$" formControlName="mail" placeholder="EMail Id">
+                        <span style="color: green;" *ngIf="isOTPVerified">EMail is verified</span>
 
 
                     </div>
+                    <div class="col-md-4 col-sm-4 col-xs-12  mt-3 mb-3">
+                        <label for="name">Mobile Number:<b style="color: #c56969">*</b></label>
+                        <div class="mobile-box">
+                            <span style="color: #344054;">IND +91</span>
+                            <input type="text" (keypress)="numberOnly($event)" maxlength="10" minlength="10" id="adress"
+                                class="form-control" name="organizationPhonenumber"
+                                formControlName="organizationPhonenumber" placeholder="Mobile Number"
+                                style="margin-bottom:0" />
+                        </div>
+                        <span style="color: green;" *ngIf="isOTPVerified">MobileNumber is verified</span>
+
+                        <div style="font-size: 12px;color:rgb(17, 17, 17)">( You can
+                            access on WhatsApp with same Number)</div>
+
+
+                    </div>
+                    <div class="col-md-4 col-xs-12 mt-3 mb-3 mobile-box">
+
+                        <span class="send-otp-button" (click)="sendOTPs()" type="button" style=" "
+                            *ngIf="!isOTPVerified">{{isOTPSent? 'Resend OTPs': 'Send OTPs'}}</span>
+                    </div>
+
+                    <div class="col-md-4 col-xs-12 mt-3 mb-3">
+                          <label for="mobileOtp">Email OTP <b style="color: #fb9898;">*</b></label>
+                        <input class="form-control" type="text" formControlName="emailOtp" name="emailOtp"
+                            (keypress)="numberOnly($event)" placeholder="Enter Email OTP" maxlength="6" minlength="6" />
+                    </div>
+                    <div class="col-md-4 col-xs-12 mt-3 mb-3">
+                         <label for="mobileOtp">Mobile OTP <b style="color: #fb9898;">*</b></label>
+                        <div class="emailOTP-box">
+                             
+                            <input class="form-control" type="text" formControlName="mobileOtp" name="mobileOtp"
+                                (keypress)="numberOnly($event)" placeholder="Enter Mobile OTP" maxlength="6"
+                                minlength="6" />
+
+                        </div>
+
+                    </div>
+                    <div class="col-md-4 col-xs-12 emailOTP-box ">
+                        <span class="btn btn-primary mt-4" (click)="verifyOtps()" type="button"
+                            *ngIf="!isOTPVerified">Validate
+                            OTPs</span>
+                    </div> 
+
+                    <div class="col-md-12  col-xs-12 btn-blocks text-center mt-3 ">
+                        <button class="btn  submitBtn" type="submit" [disabled]="!isOTPVerified"
+                                (click)='registerVendor(vendorRegistrationForm)' >
+                             Submit
+                        </button>
+                        <div class="col-md-12  col-xs-12 mt-3" style="color:#7393C2">
+                            <b>Note :</b> If Already Registered! Click here for <a routerLink="/login"
+                                style="margin-left: 5px;font-weight: 600;border-bottom: 2px solid;color: #7393C2">Login</a>
+                        </div>
+                        <button class="btn btn-red resetBtn mt-2" type="button" (click)="resetVendorForm()">
+                            Reset
+                        </button>
+
+
+                    </div>
+                     
 
                 </form>
             </div>
@@ -189,15 +158,15 @@
 </div>
 <p-overlayPanel #op>
     <div class="confirmation-content">
-        <ul id="error-list" >
+        <ul id="error-list">
 
             <li style="color: #9b2727;"
                 *ngIf="(vendorRegistrationForm?.controls?.companyName) && vendorRegistrationForm?.controls?.companyName.errors?.required">
-                <div  >Company Name is required</div>
+                <div>Company Name is required</div>
             </li>
-            <li style="color: #9b2727;"*ngIf="(vendorRegistrationForm.controls.companyName.touched )
+            <li style="color: #9b2727;" *ngIf="(vendorRegistrationForm.controls.companyName.touched )
                                 && vendorRegistrationForm.controls.companyName.errors?.numericOnly ">
-                <div >Company Name must not be numeric only</div>
+                <div>Company Name must not be numeric only</div>
             </li>
             <li
                 *ngIf="(vendorRegistrationForm?.controls?.name) && vendorRegistrationForm?.controls?.name.errors?.required">
@@ -231,11 +200,11 @@
             <li *ngIf="!isOTPVerified">
                 <div style="color: #9b2727" *ngIf="!isOTPVerified">Please verify OTPs to proceed</div>
             </li>
-            
+
             <li *ngIf="!isValidPincode" style="color: #fb9898;">Invalid Pincode </li>
 
         </ul>
     </div>
-</p-overlayPanel> 
+</p-overlayPanel>
 <!-- <p-confirmdialog />
 <p-confirmdialog id="dialog" [visible]="visible" (onHide)="visible = false" message="Are you sure you want to proceed?" header="Confirmation" icon="pi pi-exclamation-triangle" /> -->

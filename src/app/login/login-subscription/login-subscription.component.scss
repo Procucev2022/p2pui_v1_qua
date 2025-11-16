@@ -465,6 +465,13 @@ a.btn.btn-primary {
         border: 3px solid #FFF;
         align-items: center;
         margin-top: 100px;
+        border: 4px solid #2c4090;
+        /* Light gray border */
+        border-radius: 16px;
+        /* Rounded corners */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        /* Soft shadow */
+
 
         ul {
             li {
@@ -498,7 +505,7 @@ a.btn.btn-primary {
             border-radius: 20px !important;
             border: 4px !important;
             min-width: 100%;
-            margin-top: 2rem; 
+            margin-top: 2rem;
             font-weight: 800 !important;
         }
 
@@ -509,7 +516,7 @@ a.btn.btn-primary {
             width: 167px;
             height: 167px;
             border-radius: 52% 52% 0 0 !important;
-            border: 3px solid #ffffff;
+            border-top: 4px solid #2c4090;
         }
     }
 
