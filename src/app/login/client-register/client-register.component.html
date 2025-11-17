@@ -27,19 +27,17 @@
 
     </div> -->
     <div class="col-12 right-section p-5">
-        <img class="reg-page-logo-1" src="assets/images/new/qua-procucev.png" width="240" height="60"/>
-        <img class="reg-page-logo-2" src="assets/images/new/qua-ai-reg.png" width="107" height="107"/>
-        <img class="reg-page-logo-3" src="assets/images/new/gmt-reg.png" width="140" height="140"/>
-        <img class="reg-page-logo-4" src="assets/images/new/bfs-reg.png" width="140" height="140"/>
+        <img class="reg-page-logo-1" src="assets/images/new/qua-procucev.png" width="240" height="60" />
+        <img class="reg-page-logo-2" src="assets/images/new/qua-ai-reg.png" width="107" height="107" />
+        <img class="reg-page-logo-3" src="assets/images/new/gmt-reg.png" width="140" height="140" />
+        <img class="reg-page-logo-4" src="assets/images/new/bfs-reg.png" width="140" height="140" />
 
         <h4 class="title" style="font-size: 2rem;margin-top: 2rem;
     font-variant: all-small-caps;">Buyer Registration </h4>
         <div class="alert  mt-3" *ngIf="hasAnyErrors()"
-            style="display: flex; align-items: center; color:#e9795d;align-self: center;">
+            style="display: flex; align-items: center; color:#e9795d;align-self: center; margin-top: 2rem;">
             <span (click)="op.toggle($event)" style="cursor: pointer; "><i class="fa fa-exclamation-triangle"
-                    style="font-size: 2rem;color: #e6b968 !important;" aria-hidden="true"></i> Pls fill all
-                required
-                fields & clear all errors. Click here to view errors!
+                    style="font-size: 2rem;color: #e6b968 !important;" aria-hidden="true"></i> Registration Suggestions
             </span>
         </div>
 
@@ -61,9 +59,10 @@
 
                     </div>
                     <div class="col-md-4  mt-4">
-                        <app-pincode-control [inputFormControlName]="'pinCode'" [className]="'pincode-control  registrationScreen '"
+                        <app-pincode-control [inputFormControlName]="'pinCode'"
+                            [className]="'pincode-control  registrationScreen '"
                             [buttonClassName]="'btn btn-orange border-radius-30'" [parentFormGroup]="clientRegForm"
-                            [labelClassName]="'form-label required whiteStar'" [label]="'PinCode'"
+                            [labelClassName]="'form-label required font-weight-600'" [label]="'PinCode'"
                             (updatePincodeValidationStatus)="onupdatePincodeValidationStatus($event)"></app-pincode-control>
                     </div>
                     <div class="col-md-12 mt-4" style="">
@@ -71,14 +70,15 @@
                             <div class="col-md-4 col-xs-12 mb-1">
                                 <label for="name">Mobile Number: <b style="color: #fb9898;">*</b></label>
                                 <div class="mobile-box">
-                                    <span  >IND +91</span>
+                                    <span>IND +91</span>
                                     <input type="text" maxlength="10" minlength="10" id="adress" class="form-control"
                                         name="organizationPhonenumber" formControlName="organizationPhonenumber"
                                         placeholder="Mobile Number" (keypress)="numberOnly($event)" maxlength="10"
                                         minlength="10" [disabled]="isOTPVerified || isOTPSent">
+                                    <div style="font-size: 12px;color: #727272;">( you can access on
+                                        WhatsApp with this number)</div>
                                 </div>
-                                <div style="font-size: 12px;color: #727272;">( you can access on
-                                    WhatsApp with this number)</div>
+
                                 <span style="color: green;" *ngIf="isOTPVerified">Mobile Number Verified</span>
 
                             </div>
@@ -105,35 +105,38 @@
                                         Secs.)</span>
                                 </span>
                             </div>
+                       
+ 
+                        <div class="col-md-4">
+                            <label for="mobileOtp">Mobile OTP <b style="color: #fb9898;">*</b></label>
+                            <input class="form-control" type="text" formControlName="mobileOtp" name="mobileOtp"
+                                (keypress)="numberOnly($event)" placeholder="Enter Mobile OTP" maxlength="6"
+                                minlength="6" />
                         </div>
-
-                        <div class="col-12 mt-4">
-                            <div class="row">
-                                <div class="col-md-4"><input class="form-control" type="text"
-                                        formControlName="mobileOtp" name="mobileOtp" (keypress)="numberOnly($event)"
-                                        placeholder="Enter Mobile OTP" maxlength="6" minlength="6" /></div>
                                 <div class="col-md-4">
+                                    <label for="emailOtp">Email OTP <b style="color: #fb9898;">*</b></label>
                                     <div class="emailOTP-box">
+
                                         <input class="form-control" type="text" formControlName="emailOtp"
                                             name="emailOtp" (keypress)="numberOnly($event)"
                                             placeholder="Enter EMail OTP" maxlength="6" minlength="6" />
 
-                                      
-                                    </div> 
-                                </div>
-                                <div class="col-md-4 col-xs-12 emailOTP-box ">  <span class="btn btn-primary" (click)="verifyOtps()" type="button"
-                                            *ngIf="!isOTPVerified" [disabled]="!isOTPSent">Validate OTPs</span></div>
-                            </div>
 
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-xs-12 emailOTP-box mt-4"> <span class="btn btn-primary"
+                                        (click)="verifyOtps()" type="button" *ngIf="!isOTPVerified"
+                                        [disabled]="!isOTPSent">Validate OTPs</span></div>
+                   
                             <div class="col-md-12 mt-4"
                                 *ngIf="(clientRegForm.controls?.organizationPhonenumber?.touched ) && clientRegForm.controls?.organizationPhonenumber?.errors">
 
-                            </div>
-                        </div>
+                            </div> 
+                             </div>
                     </div>
                     <div class="col-md-12  col-xs-12 btn-blocks text-center mt-3 ">
                         <button class="btn  submitBtn" type="submit" [disabled]="isEmailExists || !isOTPVerified">
-                             Submit
+                            Submit
                         </button>
                         <div class="col-md-12  col-xs-12 mt-3" style="color:#7393C2">
                             <b>Note :</b> If Already Registered! Click here for <a routerLink="/login"

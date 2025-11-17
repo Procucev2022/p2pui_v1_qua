@@ -133,10 +133,9 @@ form label {
 
 
 
-.reg-page-container {
-    min-height: 118vh;
+.reg-page-container { 
     background: #2e4491;
-    height: 117.6vh;
+    height:116.4vh;
     overflow: hidden !important;
     padding: 2rem 3rem;
 
@@ -277,6 +276,7 @@ form label {
 
     input {
         width: 83% !important;
+        margin-bottom: 0 !important;
     }
 }
 
@@ -301,15 +301,7 @@ form label {
 
 @media (min-width: 1080px) and (max-width: 1280px) {
 
-    .emailOTP-box {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-
-        input {
-            width: 60% !important;
-        }
-    }
+  
 
     .sub-imgs {
         img {

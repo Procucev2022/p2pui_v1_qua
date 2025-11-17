@@ -39,9 +39,16 @@
     line-height: 0.5 !important;
 }
 
-::ng-deep input.registrationScreen  {
+::ng-deep input.registrationScreen {
     border-radius: 12px !important;
     border: none !important;
     font-size: 1.2rem;
     background-color: #E6E6E6;
+}
+
+.font-weight-600 {
+    font-weight: 600;
+    width: 100%;
+    font-size: 1.2rem !important;
+    color: #030303 !important;
 }

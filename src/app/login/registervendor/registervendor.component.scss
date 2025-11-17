@@ -40,7 +40,7 @@
 
 .bg-container {
     // background: linear-gradient(177deg, rgba(143 207 238 / 87%,1) 30%, rgba(110 181 216,1) 70%);
-    background: linear-gradient(179deg, #ffe8df 1.88%, #ffe8df 99.65%); 
+    background: linear-gradient(179deg, #ffe8df 1.88%, #ffe8df 99.65%);
     max-height: 100%;
 }
 
@@ -136,89 +136,45 @@ form label {
 
 
 .reg-page-container {
-    min-height: 118vh;
-    background: #FFF;
-    height: 117.6vh; 
+    min-height: 113.4vh;
+    background: #dd483d;
+    overflow: hidden !important;
+    padding: 1rem 2rem;
 
 
-    .left-section {
-        border-right: 5px solid black;
 
-        .logo {
-            text-align: center;
-
-            img {
-                width: 70%;
-                margin-top: 2rem;
-            }
-        }
-
-        .sub-imgs {
-            text-align: center;
-
-            img {
-                width: 186px;
-                height: 150px;
-                margin: 21px 10px;
-            }
-        }
-
-        .content-box {
-            margin-top: 2rem;
-            background-color: #f0f0f0;
-            min-height: 300px;
-            border-radius: 14px;
-            /* border: 2px solid grey; */
-            width: 90%;
-            margin-left: 5%;
-
-            h4 {
-                text-align: center;
-                padding: 8px;
-                margin-top: 1rem;
-                text-decoration: underline;
-                font-weight: bold;
-            }
-
-            .title-gmt {
-                margin-top: 1rem;
-            }
-
-            ul.gmt-list {
-                margin-bottom: 2rem;
-            }
-
-            ul li {
-                font-size: 1.2rem;
-                margin-left: 4rem;
-                font-weight: 600;
-            }
-        }
-
-    }
 
     .right-section {
-        background-color: #de7f52; 
-        overflow-x: hidden;
-        min-height: 100vh;
+        background-color: #fdfdfd;
+        color: #000000 !important;
+        padding-top: 0 !important;
 
         .title {
             text-align: center;
-            text-decoration: underline;
             font-weight: 600;
+            font-variant: all-small-caps;
         }
 
         input {
-            border-radius: 30px !important;
-            border: 3px solid black !important;
+            border-radius: 12px !important;
+            border: none !important;
             font-size: 1.2rem;
+            background-color: #E6E6E6;
         }
 
         form label {
             font-weight: 600;
-            text-align: center !important;
             width: 100%;
             font-size: 1.2rem !important;
+            color: #030303 !important;
+        }
+
+        .btn-blocks .btn {
+            margin-top: 2rem;
+            ;
+            border-radius: 30px !important;
+
+            line-height: normal;
         }
     }
 }
@@ -237,55 +193,23 @@ form label {
     align-items: center;
 }
 
-.mobile-box {
-    display: flex;
-    align-items: center;
-
-    input {
-        width: 60% !important;
-    }
-
-    span {
-        color: #826f6f;
-        font-size: 12px;
-        font-weight: 600;
-        /* border: 2px solid #80808026; */
-        padding: 8px 10px !important;
-        display: flex;
-        align-items: center;
-    }
-
-    .send-otp-button {
-        background: #3c60a4 !important;
-        color: #fff !important;
-        border-radius: 30px !important;
-        font-weight: 400 !important;
-        border: none !important;
-        padding: 8px 10px !important;
-        margin-left: 4px;
-    }
-}
 
 .emailOTP-box {
     display: flex;
+    gap: 10px;
     align-items: center;
 
-    input {
-        width: 72.5% !important;
-    }
 
     span {
-        background: #0a461e !important;
-        color: #fff !important;
+        background: #73CB00 !important;
+        color: #000000 !important;
         border-radius: 30px !important;
         font-size: 1.1rem !important;
         padding: 0 !important;
-        font-weight: 400 !important;
+        font-weight: 600 !important;
         border: none !important;
-        padding: 5px;
-        display: flex;
-        align-items: center;
-        padding: 8px 10px !important;
+        padding: 5px 10px !important;
+        min-width: 39%;
     }
 }
 
@@ -325,24 +249,7 @@ form label {
         font-size: 12px !important;
     }
 
-    .mobile-box {
-        display: inline-flex;
-        align-items: center;
-        width: 100% ;
 
-        .send-otp-button {
-            color: #826f6f;
-            font-size: 12px;
-            font-weight: 600;
-            /* border: 2px solid #80808026; */
-            padding: 6px;
-        }
-        input{
-            width: 60% !important;
-        }
-
-
-    }
 
     .btn-primary {
         font-size: 12px !important;
@@ -354,26 +261,91 @@ form label {
         margin: 21px 10px;
     }
 
-    .emailOTP-box {
-        span {
-            font-size: 12px !important;
-            padding: 0 !important;
-            font-weight: 400 !important;
-            border: none !important;
-            padding: 5px;
-            display: flex;
-            align-items: center;
-            padding: 8px !important;
-        }
+
+
+}
+
+
+.submitBtn {
+    width: 30%;
+    background: #8BC34A !important;
+    color: #000000 !important;
+    border-radius: 25px !important;
+    font-size: 2rem !important;
+    padding: 0 !important;
+    font-weight: 600 !important;
+    font-variant: all-small-caps;
+}
+
+.resetBtn {
+    width: 200px;
+    background: #FE660F !important;
+    color: #000000 !important;
+    border-radius: 25px !important;
+    font-size: 1.2rem !important;
+    padding: 0 !important;
+    font-weight: 600 !important;
+
+}
+
+.right-section {
+    border-radius: 30px;
+    position: relative;
+
+    .reg-page-logo-1 {
+        left: 2rem;
+        top: 0.5rem;
     }
 
-    .mobile-box {
-        display: inline-flex;
-        align-items: center;
-
-        .send-otp-button {
-            font-size: 1rem !important;
-            padding: 6px !important;
-        }
+    .reg-page-logo-2 {
+        right: 2rem;
+        top: 0.5rem;
     }
+
+    .reg-page-logo-3 {
+        left: 2rem;
+        bottom: 2rem;
+    }
+
+    .reg-page-logo-4 {
+        right: 2rem;
+        bottom: 2rem;
+    }
+
+    img {
+        position: absolute;
+    }
+}
+
+.mobile-box {
+    align-items: center;
+
+    input {
+        width: 83% !important;
+        margin-bottom: 0 !important;
+    }
+}
+
+.send-otp-button {
+    background: #FD660E !important;
+    color: #000000 !important;
+    border-radius: 30px !important;
+    font-size: 1.1rem !important;
+    padding: 8px 10px !important;
+    font-weight: 600 !important;
+    border: none !important;
+    display: flex;
+    width: 39%;
+    text-align: center;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.border-radius-30 {
+    background-color: #73CB00 !important;
+    color: rgb(0, 0, 0) !important;
+    letter-spacing: 1px !important;
+    border-radius: 50px !important;
+    border: none !important;
+    font-weight: 500;
 }
