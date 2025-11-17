@@ -18,6 +18,8 @@ export class VendorProfileSubscriptionsComponent {
   loggedUserDetails: any;
   vendorRegObj: any;
   currentPlan: any;
+  subcriptionMethods = [
+  ];
 
   constructor(private vendorRegSer: VendorRegistrationService, private encryDecryService: EncryDecryService,
     private rfqservice: RfqService,
@@ -37,8 +39,8 @@ export class VendorProfileSubscriptionsComponent {
   }
 
   getClassName(subData: any) {
-    return subData.analyticsLevel.toLowerCase() == 'basic' ?
-      'yellowClass' : subData.analyticsLevel.toLowerCase() == 'regular' ? 'blueClass' : 'purpleClass';
+    return subData.planName.toLowerCase() == 'basic' ?
+      'yellowClass' : subData.planName.toLowerCase() == 'regular' ? 'blueClass' : 'purpleClass';
 
   }
 
@@ -53,7 +55,7 @@ export class VendorProfileSubscriptionsComponent {
       console.log('response', response)
       this.selectedSubscription = this.vendorRegObj.subscriptionPlan;
 
-      this.currentPlan = this.vendorRegObj.subscriptionPlan.analyticsLevel;
+      this.currentPlan = this.vendorRegObj.subscriptionPlan.planName;
     }, (error) => {
 
     });
