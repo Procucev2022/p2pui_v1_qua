@@ -6,6 +6,10 @@
     height: 40px !important;
 }
 
+::ng-deep .card{
+    border-color: #000000 !important;
+    border-radius: 25px;
+}
 ::ng-deep .p-auto-cls {
     width: 100%;
     margin: 0;
@@ -22,18 +26,27 @@
         padding-left: 0;
     }
 
-    li::before {
-        content: "» ";
+    .param-sectionli::before {
+        content: "•";
         /* Unicode double arrow */
-        color: #cad1d7;
+        color: #000000;
         /* Optional: style the arrow */
         font-weight: bold;
+        padding-right: 16px;
+    }
+    li:nth-child(odd) {
+        background-color: #ffffff;
+    }
+    li:nth-child(even) {
+        background-color: #F3F4F3;
     }
 
     li {
-        font-size: 1.2rem;
+        font-size: 14px;
         padding: 4px;
-
+        color: #000000;
+        font-weight: 600;
+        letter-spacing: 0.5px;
         span.label-vakue {
             float: right;
 
@@ -61,21 +74,21 @@ h5.card-title {
     color: #2b418d;
 }
 
-.yellowClass .card-body {
-    background: #b4771c !important;
-}
+// .yellowClass .card-body {
+//     background: #b4771c !important;
+// }
 
-.blueClass .card-body {
-    background: #4f66cc !important;
-}
+// .blueClass .card-body {
+//     background: #4f66cc !important;
+// }
 
-.purpleClass .card-body {
-    background: #774ae2 !important;
-}
+// .purpleClass .card-body {
+//     background: #774ae2 !important;
+// }
 
-.card-body {
-    color: #fff !important;
+.card-body { 
     position: relative;
+    padding: 0 !important;
 
     .active-title {
         position: absolute;
@@ -92,14 +105,12 @@ h5.card-title {
     }
 }
 
-.card-title {
-    color: #fff !important;
-}
+ 
 
-.card {
-    border-left: 5px solid #FFEB3B;
+// .card {
+//     border-left: 5px solid #FFEB3B;
 
-}
+// }
 
 .fade-in {
     opacity: 1;
@@ -133,4 +144,37 @@ h5.card-title {
   padding: 0.5rem;
   box-sizing: border-box;
   
+}
+
+ul.price-section {
+    border: 2px solid;
+    margin: 4px;
+
+    li {
+        list-style: none;
+    }
+}
+
+.connect-plan{
+    h5.card-title{
+        color: #7156CF;
+    }
+
+
+}
+.elect-plan{
+    h5.card-title{
+        color: #2355A0;
+    }
+
+}
+.select-plan{
+    h5.card-title{
+        color: #FF5615;
+    }
+
+}
+
+.strike-off {
+    text-decoration: line-through;
 }
