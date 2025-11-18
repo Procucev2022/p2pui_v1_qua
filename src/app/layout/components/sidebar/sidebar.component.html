@@ -596,8 +596,7 @@
                             <i class="fa fa-user"></i> &nbsp;
                             <span>My Profile</span>
                         </a>
-                        </li>
-                       <!--
+                        </li> 
                            <li *ngIf="loggedUserDetails?.role.roleName ==    'Vendor' ||  loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor'">
                             <a class="list-group-item"  
                             class="list-group-item" (click)="toggleAccordian($event, 'GMT', 'GMT-CATLOGUE')" data-toggle="collapse"
@@ -631,8 +630,7 @@
                             [routerLinkActive]="['router-link-active']">
                             <i class="fa fa-user"></i> &nbsp;
                             <span>My Subscripion Plan</span>
-                        </a>
-                        </li> -->
+                        </a> 
                         
                         <li *ngIf="loggedUserDetails?.role.roleName ==    'Vendor' || loggedUserDetails?.role.roleName ==    'ClientInitiator' || loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor'">
                             <a class="list-group-item" [routerLink]="['/categorymgr/gmt-rfq-faqs']"

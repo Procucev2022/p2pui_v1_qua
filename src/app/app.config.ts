@@ -42,12 +42,12 @@ export const GMT_SYSTEM_SCREENS_LIST ={
    'ClientInitiator':['/categorymgr/create-rfq', '/categorymgr/gmt-rfq-support','/categorymgr/gmt-rfq-faqs', '/categorymgr/my-profile'], // 3 Screens
 
  
-   'Registration': [ '/categorymgr/vendor-profile',  '/categorymgr/gmt-rfq-faqs', '/categorymgr/my-profile' ], // 2 Screens
-   'PartialVendor':['/categorymgr/vendor-profile' , '/categorymgr/gmt-rfq-faqs', '/categorymgr/my-profile' ],// 2 Screens
-   'Vendor': [  '/categorymgr/gmt-rfq-faqs', '/categorymgr/gmt-rfq-faqs', '/categorymgr/vendor-profile' , '/categorymgr/my-profile' ] // 2 Screens
- // 'Registration': ['/categorymgr/gmt-rqfs','/categorymgr/gmt-rfq-faqs', '/categorymgr/vendor-profile', '/categorymgr/vendor-profile-subscriptions', '/categorymgr/my-profile','/categorymgr/vendor-catalogue', '/categorymgr/vendor-catalogue-terms-condts'],  // 2 Screens
-  // 'PartialVendor':['/categorymgr/gmt-rqfs','/categorymgr/gmt-rfq-faqs', '/categorymgr/vendor-profile', '/categorymgr/vendor-profile-subscriptions', '/categorymgr/my-profile','/categorymgr/vendor-catalogue', '/categorymgr/vendor-catalogue-terms-condts'], // 2 Screens
-  // 'Vendor': ['/categorymgr/gmt-rqfs','/categorymgr/gmt-rfq-faqs', '/categorymgr/vendor-profile', '/categorymgr/vendor-profile-subscriptions', '/categorymgr/my-profile', '/categorymgr/vendor-catalogue', '/categorymgr/vendor-catalogue-terms-condts'], // 2 Screens
+//    'Registration': [ '/categorymgr/vendor-profile',  '/categorymgr/gmt-rfq-faqs', '/categorymgr/my-profile' ], // 2 Screens
+//    'PartialVendor':['/categorymgr/vendor-profile' , '/categorymgr/gmt-rfq-faqs', '/categorymgr/my-profile' ],// 2 Screens
+//    'Vendor': [  '/categorymgr/gmt-rfq-faqs', '/categorymgr/gmt-rfq-faqs', '/categorymgr/vendor-profile' , '/categorymgr/my-profile' ] // 2 Screens
+ 'Registration': ['/categorymgr/gmt-rqfs','/categorymgr/gmt-rfq-faqs', '/categorymgr/vendor-profile', '/categorymgr/vendor-profile-subscriptions', '/categorymgr/my-profile','/categorymgr/vendor-catalogue', '/categorymgr/vendor-catalogue-terms-condts'],  // 2 Screens
+  'PartialVendor':['/categorymgr/gmt-rqfs','/categorymgr/gmt-rfq-faqs', '/categorymgr/vendor-profile', '/categorymgr/vendor-profile-subscriptions', '/categorymgr/my-profile','/categorymgr/vendor-catalogue', '/categorymgr/vendor-catalogue-terms-condts'], // 2 Screens
+  'Vendor': ['/categorymgr/gmt-rqfs','/categorymgr/gmt-rfq-faqs', '/categorymgr/vendor-profile', '/categorymgr/vendor-profile-subscriptions', '/categorymgr/my-profile', '/categorymgr/vendor-catalogue', '/categorymgr/vendor-catalogue-terms-condts'], // 2 Screens
 
 }
 
