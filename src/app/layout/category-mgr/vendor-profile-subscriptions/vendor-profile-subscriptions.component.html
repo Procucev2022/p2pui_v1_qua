@@ -7,98 +7,116 @@
     color: #fff;">Current Plan :
     <span style="color:#ff9b96">{{currentPlan}}</span> </h2>
     </div>
-    <div class="col-12 mt-5 mb-5">
+    <div class="col-12 mt-5 ">
         <div class="row">
             <div class="col-md-4" *ngFor="let card of subscriptionPlansList; let i = index"
-                [ngClass]="getClassName(card)">
+              >
                 <div class="card mb-4 shadow-sm">
-                    <div class="card-body">
+                    <div class="card-body {{card.planName.toLowerCase() +'-plan'}}">
                         <div class="active-title" [ngClass]="isMatchedPlan(card.id) ? 'fade-in' : 'fade-out'">
                             <i class="fa fa-check-circle-o "></i> Selected
                         </div>
-                        <h5 class="card-title">{{ card.analyticsLevel }}</h5>
+                        <h5 class="card-title ">{{ card.planName }}</h5>
                         <div class="list">
-                            <ul>
+                            <ul class="param-section"> 
                                 <li>
                                     <span>
-                                        <span class="label-text">Buyer Visibility </span>
-                                        <span class="label-vakue">{{card.buyerVisibility}}
-                                        </span>
+                                        <span class="label-text">RFQ Notification</span>
+                                        <span class="label-vakue">{{card.rfqNotification}}</span>
                                     </span>
                                 </li>
                                 <li>
                                     <span>
-                                        <span class="label-text">RFQ Clarification</span>
-                                        <span class="label-vakue">{{card.rfqClarification ? 'Yes': 'No'}}
-                                            <i class="fa"
-                                                [ngClass]=" card.rfqClarification ? 'fa-check-circle-o': ' fa-times-circle'"></i></span>
+                                        <span class="label-text">View all RFQs</span>
+                                        <span class="label-vakue">{{card.categoryWiseRfqStatus}}</span>
+                                    </span>
+                                </li>  
+                                 <li>
+                                    <span>
+                                        <span class="label-text">Whatsapp AI Assistant</span>
+                                        <span class="label-vakue">{{card.whatsappAiAssistant}}</span>
                                     </span>
                                 </li>
-                                <li>
+                                 <li>
                                     <span>
-                                        <span class="label-text">RFQ Expiry Alert</span>
-                                        <span class="label-vakue">{{card.rfqExpiryAlert? 'Yes': 'No'}}
-                                            <i class="fa"
-                                                [ngClass]="card.rfqExpiryAlert ? 'fa-check-circle-o': ' fa-times-circle'"></i>
-                                        </span>
+                                        <span class="label-text">Automated Al Quotation</span>
+                                        <span class="label-vakue">{{card.automatedAiQuotation}}</span>
                                     </span>
                                 </li>
-                                <li>
+                                 <li>
                                     <span>
-                                        <span class="label-text">Accumulated RFQ Status</span>
-                                        <span class="label-vakue">{{card.accumulatedRfqStatus? 'Yes': 'No'}}
-                                            <i class="fa"
-                                                [ngClass]=" card.accumulatedRfqStatus ? 'fa-check-circle-o': ' fa-times-circle'"></i>
-                                        </span>
+                                        <span class="label-text">Product Listing with Price</span>
+                                        <span class="label-vakue">{{card.productListingWithPrice}}</span>
                                     </span>
                                 </li>
-                                <li>
+                                 <li>
                                     <span>
-                                        <span class="label-text">Automated Quotation</span>
-                                        <span class="label-vakue">{{card.automatedQuotation? 'Yes': 'No'}}
-                                            <i class="fa"
-                                                [ngClass]=" card.automatedQuotation ? 'fa-check-circle-o': ' fa-times-circle'"></i>
-                                        </span>
+                                        <span class="label-text">Catalogue Listing</span>
+                                        <span class="label-vakue">{{card.catalogueListing}}</span>
                                     </span>
                                 </li>
-                                <li>
+                                 <li>
                                     <span>
-                                        <span class="label-text">Catalogue Creation</span>
-                                        <span class="label-vakue">{{card.catalogueCreation? 'Yes': 'No'}}
-                                            <i class="fa"
-                                                [ngClass]=" card.catalogueCreation ? 'fa-check-circle-o': ' fa-times-circle'"></i>
-                                        </span>
+                                        <span class="label-text">No. of Products for Catalogue listing</span>
+                                        <span class="label-vakue">{{card.productListingWithQuantity}}</span>
                                     </span>
                                 </li>
-                                <li>
+                                 <li>
                                     <span>
-                                        <span class="label-text">Dedicated Support</span>
-                                        <span class="label-vakue">{{card.dedicatedSupport? 'Yes': 'No'}}
-                                            <i class="fa"
-                                                [ngClass]=" card.dedicatedSupport ? 'fa-check-circle-o': ' fa-times-circle'"></i>
-                                        </span>
+                                        <span class="label-text">Real time negotiation with Buyer</span>
+                                        <span class="label-vakue">{{card.realTimeNegotiation}}</span>
                                     </span>
                                 </li>
-                                <li>
+                                 <li>
                                     <span>
-                                        <span class="label-text">Industry Insights</span>
-                                        <span class="label-vakue">{{card.industryInsights? 'Yes': 'No'}}
-                                            <i class="fa"
-                                                [ngClass]=" card.industryInsights ? 'fa-check-circle-o': ' fa-times-circle'"></i>
-                                        </span>
+                                        <span class="label-text">Dedicated Account Manager</span>
+                                        <span class="label-vakue">{{card.dedicatedAccountManager}}</span>
                                     </span>
                                 </li>
-                                <li>
+                                 <li>
                                     <span>
-                                        <span class="label-text">Per RFQ Price</span>
-                                        <span class="label-vakue">{{card.perRfqPrice | currency: 'INR'}}</span>
+                                        <span class="label-text">Category wise RFQs Status</span>
+                                        <span class="label-vakue">{{card.categoryWiseRfqStatus}}</span>
+                                    </span>
+                                </li>
+                                 <li>
+                                    <span>
+                                        <span class="label-text">Buyer Contact Details</span>
+                                        <span class="label-vakue">{{card.buyerContactDetailsTime}}</span>
+                                    </span>
+                                </li>
+                                <li  >
+                                    <span>
+                                        <span class="label-text">RFQ Bundle Size</span>
+                                        <span class="label-vakue">{{card?.rfqBundleSize}}</span>
+                                    </span>
+                                </li>
+                                <li  >
+                                    <span>
+                                        <span class="label-text">Period of Subscription**</span>
+                                        <span class="label-vakue">{{card?.subscriptionPeriodMonths}} Months</span>
+                                    </span>
+                                </li>
+                            </ul>
+                            <ul class="price-section"> 
+                                <li  >
+                                    <span>
+                                        <span class="label-text">Subscription Price</span>
+                                        <span class="label-vakue strike-off">{{card?.subscriptionPrice.toString() | currency: 'INR'}}</span>
+                                    </span>
+                                </li>
+                                <li  >
+                                    <span>
+                                        <span class="label-text">Launch Offer Price**</span>
+                                        <span class="label-vakue">{{card?.launchOfferPrice.toString() | currency: 'INR'}}</span>
                                     </span>
                                 </li>
                             </ul>
                         </div>
 
                         <div class="col-12">
-                            <button class="btn btn-primary" style="width: 100%;border-color:#fff !important;"
+                            <button class="btn btn-primary" style="width: 100%;border-color:#fff !important; background-color: #0D4497 !important;
+                            border-radius: 24px !important;    margin: 10px 0;"
                                 (click)="updateSubscription(card)" type="button"> {{isMatchedPlan(card.id) ?'Selected':
                                 'Subscribe'}}</button>
                         </div>
@@ -107,6 +125,9 @@
 
             </div>
         </div>
+    </div>
+    <div class="col-12">
+        <h5 style="color: #FF5959;font-weight: 600;">T&C- If you do not receive the number of RFQs mentioned in your plan, your subscription will be extended**</h5>
     </div>
     <div class="col-12" style="display: flex; direction: rtl;">
 
