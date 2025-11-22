@@ -36,16 +36,16 @@
           </ng-template>
          <ng-template pTemplate="header" let-columns>
                         <tr>
-                             
+
                             <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
                                 {{col.header}}
-                            </th> 
+                            </th>
                             <th style="width: 3rem;"> Acitons</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
                         <tr [pSelectableRow]="rowData">
-                            
+
                             <td [style.width]="col.width" *ngFor="let col of columns"
                                 [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }"
                                 [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"
@@ -59,18 +59,20 @@
                                 <span class="blink" *ngIf="col.field=='companyId' && (rowData.newClientStatus && rowData.newClientStatus == true)">
                                     <i class="fa fa-bell" aria-hidden="true"></i>
                                 </span>
-                            </td> 
+                            </td>
                             <td>
                              <span  >
                         <button type="button" class="btn-skelton"
                             >
-                            <img src="/assets/images/new/view-doc.png" (click)="onViewCatalogue(rowData)"  alt="View catalogue Details"
-                                title="View catalogue Details">
+                            <img src="/assets/images/new/view-doc.png" (click)="onViewCatalogue(rowData, false)"  alt="View catalogue Details"
+                                title="View catalogue Details" style="margin-right: 8px;">
+                                <img class="cursor-pointer" src="/assets/images/new/edit-data.png"  width="28" style="width:28px;margin-right: 10px;" title="Edit Catalogue"  (click)="onViewCatalogue(rowData, true)">
+
                         </button>
                     </span>
                             </td>
                         </tr>
-                    </ng-template> 
+                    </ng-template>
                     <ng-template pTemplate="emptymessage" let-columns>
                         <tr>
                             <td [attr.colspan]="clientTableHeaders.length" style="text-align:center;">
@@ -89,7 +91,7 @@
 
 
 <ng-template #onAddCatlogTemplateRef>
-    <div class="modal-header"> 
+    <div class="modal-header">
         <!-- validations yet to write -->
         <h5>{{isViewMode? 'View': 'Add'}} Catalogue Details</h5>
         <button class="btn-skelton modal-close-btn" mat-dialog-close>✖</button>
@@ -146,15 +148,15 @@
                     class="form-control" />
                 <p class="error-message" *ngIf="catalogueForm.get('leadTimeForMoq').hasError('required') && catalogueForm.get('leadTimeForMoq').touched">Lead Time for MOQ cannot be empty</p>
             </div>
-           
-          
 
-            <div class="input-group mt-4 " style="justify-content: right;" *ngIf="!isViewMode">
-                <button class="btn btn-blue" [disabled]="!catalogueForm.valid ">Save</button>
+
+
+            <div class="input-group mt-4 " style="justify-content: right;" *ngIf="!isViewMode || isEditCatalogue">
+                <button class="btn btn-blue" [disabled]="!catalogueForm.valid ">{{isEditCatalogue? 'Update': 'Save'}}</button>
                 <button class="btn btn-red" (click)="resetForm()">Reset</button>
             </div>
-            <div class="input-group mt-4 " style="justify-content: right;" *ngIf="isViewMode">
-                <button class="btn btn-blue"    mat-dialog-close>Close</button> 
+            <div class="input-group mt-4 " style="justify-content: right;" *ngIf="isViewMod && !isEditCatalogue">
+                <button class="btn btn-blue"    mat-dialog-close>Close</button>
             </div>
         </form>
     </div>
