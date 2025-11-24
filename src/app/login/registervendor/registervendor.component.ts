@@ -202,7 +202,8 @@ export class RegistervendorComponent implements OnInit {
             'details': formValue.products,
             'india': formValue.india,
             'zipCode': formValue.pinCode,
-            'isWebApp': true
+            'isWebApp': true,
+            'name': formValue.name
 
         };
 
@@ -376,7 +377,7 @@ export class RegistervendorComponent implements OnInit {
         const hasErrors=  Object.keys(controls).some(key => {
             const control = controls[key];
             return control && control.invalid;
-        }); 
+        });
         return hasErrors;
     }
 

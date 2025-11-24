@@ -164,6 +164,7 @@ export class CatMgrVendorCatalogueComponent implements OnInit {
 
           if(this.isEditCatalogue){
             reqPayload = {...this.selectedData , ...this.catalogueForm.getRawValue()}
+            reqPayload['org'] ={ id: this.loggedUserDetails.org.id };
           }else{
                 reqPayload = {
                 org: { id: this.loggedUserDetails.org.id },
