@@ -116,6 +116,7 @@ export class CatMgrVendorCatalogueComponent implements OnInit {
                 this.isLoaded = true;
             }
         })
+        this.isLoaded = true;
     }
 
     onGridAction(event: any) {
