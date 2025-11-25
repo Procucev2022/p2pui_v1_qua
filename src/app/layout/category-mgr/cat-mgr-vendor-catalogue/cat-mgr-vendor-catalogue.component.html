@@ -35,12 +35,11 @@
             </div>
           </ng-template>
          <ng-template pTemplate="header" let-columns>
-                        <tr>
-
+                        <tr> 
                             <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
                                 {{col.header}}
                             </th>
-                            <th style="width: 3rem;"> Acitons</th>
+                            <th style="width: 5rem;"> Actions </th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
@@ -60,16 +59,12 @@
                                     <i class="fa fa-bell" aria-hidden="true"></i>
                                 </span>
                             </td>
-                            <td>
-                             <span  >
-                        <button type="button" class="btn-skelton"
-                            >
+                            <td style="width: 5rem;">
+                             <span   class="btn-skelton" >  
                             <img src="/assets/images/new/view-doc.png" (click)="onViewCatalogue(rowData, false)"  alt="View catalogue Details"
-                                title="View catalogue Details" style="margin-right: 8px;">
-                                <img class="cursor-pointer" src="/assets/images/new/edit-data.png"  width="28" style="width:28px;margin-right: 10px;" title="Edit Catalogue"  (click)="onViewCatalogue(rowData, true)">
-
-                        </button>
-                    </span>
+                                title="View catalogue Details" style="margin-right: 8px; cursor: pointer;" width="28"/>
+                                <img class="cursor-pointer" src="/assets/images/new/edit-data.png"  width="28" style="width:28px;margin-right: 10px;cursor: pointer;" title="Edit Catalogue"  (click)="onViewCatalogue(rowData, true)">
+                            </span>
                             </td>
                         </tr>
                     </ng-template>

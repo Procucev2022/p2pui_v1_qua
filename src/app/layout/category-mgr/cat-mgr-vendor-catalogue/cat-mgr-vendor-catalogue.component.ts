@@ -132,7 +132,7 @@ export class CatMgrVendorCatalogueComponent implements OnInit {
         } else {
             this.isViewMode = false;
             this.selectedData = null;
-            this.catalogueForm.enable();
+            this.catalogueForm.disable();
 
         }
         this.catalogueForm.patchValue(this.selectedData);
@@ -241,7 +241,7 @@ export class CatMgrVendorCatalogueComponent implements OnInit {
     onViewCatalogue(rowData: any, isEdit: boolean) {
         this.isViewMode = true;
         this.selectedData = rowData;
-        this.onAddCatlogue(true);
+        this.onAddCatlogue(isEdit);
     }
 
     hasAnyErrors(): boolean {
