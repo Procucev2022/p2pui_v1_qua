@@ -6,7 +6,7 @@
       </div>
       <div class="col-sm-6">
         <div class="add-new-btn">
-          <button class="btn btn-blue" (click)="onAddCatlogue()"><i class="fa fa-plus" aria-hidden="true"></i> Add New Catalogue</button>
+          <button class="btn btn-blue" (click)="onAddCatlogueForm()"><i class="fa fa-plus" aria-hidden="true"></i> Add New Catalogue</button>
       </div>
     </div>
   </div>
@@ -61,9 +61,9 @@
                             </td>
                             <td style="width: 5rem;">
                              <span   class="btn-skelton" >  
-                            <img src="/assets/images/new/view-doc.png" (click)="onViewCatalogue(rowData, false)"  alt="View catalogue Details"
+                            <img src="/assets/images/new/view-doc.png" (click)="onViewCatalogue(rowData, false, true)"  alt="View catalogue Details"
                                 title="View catalogue Details" style="margin-right: 8px; cursor: pointer;" width="28"/>
-                                <img class="cursor-pointer" src="/assets/images/new/edit-data.png"  width="28" style="width:28px;margin-right: 10px;cursor: pointer;" title="Edit Catalogue"  (click)="onViewCatalogue(rowData, true)">
+                                <img class="cursor-pointer" src="/assets/images/new/edit-data.png"  width="28" style="width:28px;margin-right: 10px;cursor: pointer;" title="Edit Catalogue"  (click)="onViewCatalogue(rowData, true, false)">
                             </span>
                             </td>
                         </tr>
@@ -147,10 +147,10 @@
 
 
             <div class="input-group mt-4 " style="justify-content: right;" *ngIf="!isViewMode || isEditCatalogue">
-                <button class="btn btn-blue" [disabled]="!catalogueForm.valid ">{{isEditCatalogue? 'Update': 'Save'}}</button>
-                <button class="btn btn-red" (click)="resetForm()">Reset</button>
+                <button class="btn btn-blue" [disabled]="!catalogueForm.valid ">{{isEditCatalogue && !isAddCatalogue ? 'Update': 'Save'}}</button>
+                <button class="btn btn-red" (click)="resetForm()" *ngIf="!isViewMode || isEditCatalogue">Reset</button>
             </div>
-            <div class="input-group mt-4 " style="justify-content: right;" *ngIf="isViewMod && !isEditCatalogue">
+            <div class="input-group mt-4 " style="justify-content: right;" *ngIf="isViewMode && !isEditCatalogue">
                 <button class="btn btn-blue"    mat-dialog-close>Close</button>
             </div>
         </form>
