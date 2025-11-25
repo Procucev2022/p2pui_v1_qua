@@ -50,6 +50,7 @@ export class CatMgrVendorCatalogueComponent implements OnInit {
     ];
     selectedUserData: any;
     isViewMode: boolean;
+  isEditCatalogue: boolean;
     constructor(private createRfqService: CreateRfqService, private encryDecryService: EncryDecryService,
         private catProcService: CatProcuRequestsService, private toaster: ToastrService,
         private dialog: MatDialog, private formValidationService: FormValidatationsService
@@ -115,6 +116,7 @@ export class CatMgrVendorCatalogueComponent implements OnInit {
                 this.isLoaded = true;
             }
         })
+        this.isLoaded = true;
     }
 
     onGridAction(event: any) {
@@ -122,10 +124,11 @@ export class CatMgrVendorCatalogueComponent implements OnInit {
     }
 
     onAddCatlogue(isEdit?: boolean) {
+      this.isEditCatalogue = false;
         this.resetForm();
         if (isEdit) {
-            this.catalogueForm.disable();
-            this.catalogueForm.patchValue(this.selectedData);
+            this.catalogueForm.enable();
+            this.isEditCatalogue = true;
         } else {
             this.isViewMode = false;
             this.selectedData = null;
@@ -157,20 +160,33 @@ export class CatMgrVendorCatalogueComponent implements OnInit {
             this.toaster.warning("Material Description cannot have special characters", "Warning");
             return;
         }
-
+        let reqPayload = {};
         if (this.catalogueForm.valid) {
-            const obj: any = {
+
+          if(this.isEditCatalogue){
+            reqPayload = {...this.selectedData , ...this.catalogueForm.getRawValue()}
+            reqPayload['org'] ={ id: this.loggedUserDetails.org.id };
+          }else{
+                reqPayload = {
                 org: { id: this.loggedUserDetails.org.id },
                 user: this.loggedUserDetails.id,
                 ...this.catalogueForm.value,
             };
+          }
 
-            this.createRfqService.addVendorCatalogue(obj).subscribe((res: any) => {
-                if (res.status == 'Success') {
+
+            this.createRfqService.addVendorCatalogue(reqPayload).subscribe((res: any) => {
+                if (res.status == 'Success' && !this.isEditCatalogue) {
                     this.toaster.success(res.message, 'Success');
                     this.dialog.closeAll();
                     this.getVendorCatalogues();
-                } else {
+                }else if(res.status == 'Success' && this.isEditCatalogue){
+                  this.toaster.success('Catalogue details updated successfully!', 'Success');
+                  this.dialog.closeAll();
+                  this.getVendorCatalogues();
+                }
+
+                else {
                     this.toaster.error(res.message, 'Failed')
                 }
             });
@@ -222,11 +238,10 @@ export class CatMgrVendorCatalogueComponent implements OnInit {
 
     //For View RFQ Details - ReadOnly
 
-    onViewCatalogue(rowData: any) {
+    onViewCatalogue(rowData: any, isEdit: boolean) {
         this.isViewMode = true;
         this.selectedData = rowData;
         this.onAddCatlogue(true);
-
     }
 
     hasAnyErrors(): boolean {
@@ -238,7 +253,7 @@ export class CatMgrVendorCatalogueComponent implements OnInit {
         return hasErrors;
     }
 
-    
+
     numberOnly(event): boolean {
         const charCode = event.which ? event.which : event.keyCode;
         if (charCode > 31 && (charCode < 48 || charCode > 57)) {
