@@ -42,4 +42,4 @@ testem.log
 Thumbs.db
 
 #code Files
-./src/app/app.config.ts
+src/app/app.config.ts 
