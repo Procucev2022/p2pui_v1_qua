@@ -45,6 +45,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
     rfqsTableHeadersForGMTVendor: any = [
         { field: 'rfqId', header: 'RFQ ID', isLink: false, width: '170px', fieldType: 'text', isExceedContent: false },
         { field: 'desc', header: 'Description', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
+        { field: 'category', header: 'Category', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
         { field: 'createdTS', header: 'RFQ Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
         { field: 'deliveryDate', header: 'Delivery Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
         { field: 'deliveryLocation', header: 'Location', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
@@ -153,6 +154,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
             this.rfqTableHeaders = this.rfqsTableHeadersForGMTVendor;
             this.getRFQListByGMTVendor();
         }
+        this.getAllCategories();
     }
     getRfqsByCategoryManager() {
         this.selectedData = [];
@@ -223,8 +225,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
             //     "closureDate": null,
             //     "status":{"id": "6", "createdBy": "venu", "lastModifiedBy": null, "createdTS": null, uiDisplay: 'New'},
             //     "deliveryLocation": null
-            //     }]
-            this.categoryList = [];
+            //     }] 
             if (Array.isArray(data)) {
                 this.rfqDataList = data.map((ele: any) => {
                     const desc = ele.query ? ele.query.split('|').join(" ") : '';
@@ -243,59 +244,40 @@ export class CatMgrVendorRfqsComponent implements OnInit {
 
     }
 
-    filterRFQsBYDivision() {
-        if (this.selectedDivision) {
-            this.onChangeDivision();
-        } else {
-            this.rfqDataList = [...this.cache_rfqDataList]
-        }
-    }
+  
 
-    onChangeDivision() {
-        const obj = { "division": this.selectedDivision };
-        this.createRfqService.getGMTCategoriesByDivision(obj).subscribe((res: any) => {
+   
+    getAllCategories() {
+        this.createRfqService.getGMTCategories().subscribe((res: any) => {
             this.categoryList = res || [];
         });
-
-        this.selectedCategory = '';
-        this.getRFQsByDivisionOnly();
     }
-
-    getRFQsByDivisionOnly() {
-        this.selectedStatus = '';
-        this.rfqDataList = this.cache_rfqDataList.filter((ele: any) => {
-            return ele.division == this.selectedDivision;
-        });
-    }
-
+ 
 
 
     filterRFQsBYCategory() {
         this.selectedStatus = ''
-        if (this.selectedCategory && this.selectedDivision) {
+        if (this.selectedCategory  ) {
             this.rfqDataList = this.cache_rfqDataList.filter((ele: any) => {
-                return ele.category == this.selectedCategory && ele.division == this.selectedDivision;
-            });
-        } else {
-            this.getRFQsByDivisionOnly();
-        }
-    }
-
-    filterRFQsBYStatus() {
-        if (this.selectedStatus) {
-            this.rfqDataList = this.cache_rfqDataList.filter((ele: any) => {
-                if (this.selectedDivision && this.selectedCategory) {
-                    return ele.status_ui_display == this.selectedStatus && ele.division == this.selectedDivision && ele.category == this.selectedCategory;
-                } else if (this.selectedDivision && !this.selectedCategory) {
-                    return ele.status_ui_display == this.selectedStatus && ele.division == this.selectedDivision;
-                }
-                else {
-                    return ele.status_ui_display == this.selectedStatus;
-                }
+                return ele.category == this.selectedCategory ;
             });
         } else {
             this.rfqDataList = [...this.cache_rfqDataList];
         }
+    }
+
+    filterRFQsBYStatus() { 
+            this.rfqDataList = this.cache_rfqDataList.filter((ele: any) => {
+                if (  this.selectedCategory && this.selectedStatus) {
+                    return ele.status_ui_display == this.selectedStatus &&   ele.category == this.selectedCategory;
+                } else if ( this.selectedCategory && !this.selectedStatus) {
+                    return   ele.category == this.selectedCategory;
+                } else if ( this.selectedStatus) {
+                    return ele.status_ui_display == this.selectedStatus;
+                } else {
+                    return true;
+                }
+            }); 
     }
 
     onResetFilters() {
