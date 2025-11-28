@@ -177,8 +177,8 @@
                             <span *ngIf="col.fieldType != 'date'" [ngClass]="{'blueCls': col.field == 'rfqId' && rowData.byClient == true}">
                                 <span *ngIf="col.fieldType != 'date'">
                                     <span *ngIf="col.field == 'quotationReceived'" title="Work In Progress"> {{  rowData[col.field]}}</span>
-                                    <span *ngIf="col.field != 'quotationReceived'" > 
-                                        <span *ngIf="col.field == 'sourceType'">
+                                    <span *ngIf="col.field != 'quotationReceived'"  [ngClass]="{'app-icon': col.field == 'sourceType' }"> 
+                                        <span *ngIf="col.field == 'sourceType'" >
                                             <img width="30" height="30" src="/assets/images/new/{{rowData[col.field] == 'Web App' ? 'web.png' : 'wapp.png'}}" />
                                         </span>
                                         {{rowData[col.field]}}</span>
