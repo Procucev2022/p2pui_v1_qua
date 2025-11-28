@@ -60,7 +60,7 @@
               </ng-template>
               <ng-template pTemplate="emptymessage" let-columns>
               <tr>
-                  <td [attr.colspan]="6" style="text-align:center;">
+                  <td [attr.colspan]="10" style="text-align:center;">
                   No Records Found.
                   </td>
               </tr>
@@ -147,7 +147,7 @@
       </ng-template>
       <ng-template  pTemplate="rowexpansion" let-rowData>
           <tr class="child-grid" *ngIf=" selectedData && selectedData?.length ==1">
-              <td colspan="9">
+              <td colspan="10">
                   <p #h1> <label>RFQ Id:</label> {{rfqId}}</p>
                    <div class="p-p-4" *ngIf="isChildGridShow">
                   <mat-tab-group class="" (selectedTabChange)="getLineItems($event)">
@@ -164,7 +164,7 @@
       </ng-template>
       <ng-template pTemplate="emptymessage" let-columns>
           <tr>
-          <td [attr.colspan]="5" style="text-align:center;">
+          <td [attr.colspan]="10" style="text-align:center;">
               No Records Found.
           </td>
           </tr>
@@ -227,7 +227,7 @@
         </ng-template>
         <ng-template pTemplate="emptymessage" let-columns>
         <tr>
-            <td [attr.colspan]="5" style="text-align:center;">
+            <td [attr.colspan]="3" style="text-align:center;">
             No Records Found.
             </td>
         </tr>
@@ -293,7 +293,7 @@
             </ng-template>
             <ng-template pTemplate="emptymessage" let-columns>
             <tr>
-                <td [attr.colspan]="5" style="text-align:center;">
+                <td [attr.colspan]="6" style="text-align:center;">
                 No Records Found.
                 </td>
             </tr>

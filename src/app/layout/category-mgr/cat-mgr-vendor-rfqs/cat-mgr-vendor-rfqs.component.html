@@ -242,12 +242,16 @@
         [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData"  [scrollable]="true" [scrollHeight]="'30vh'">
         <ng-template pTemplate="caption">
           <div class="table-search">
-            <div class="row">
+            <div class="row" style="display: flex;align-items: center;">
               <div class="col-sm-6">
                 <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
                   (input)="vendorTable.filterGlobal($event.target.value, 'contains')" />
               </div>
               <div class="col-sm-6">
+                <div class="float-right" style="display: -webkit-inline-box;">
+                  <span class="text-success"> <i class="fa fa-check-circle-o" aria-hidden="true"></i> - Approve &nbsp;&nbsp;</span>
+                   <span class="text-danger"> <i class="fa fa-times-circle-o" aria-hidden="true"></i> - Reject</span>
+                </div>
               </div>
             </div>
           </div>
@@ -281,8 +285,8 @@
               <td style="width: 11rem;" *ngIf="currentRole == 'CategoryManager'">
 
                 <span >
-                    <button (click)="onAcceptOrRejectVendor(rowData, true)" class="btn btn-blue pr-l" [disabled]="rowData.status_ui_display == 'New' || rowData.status_ui_display == 'Approved'" >Approve</button>
-                        <button (click)="onAcceptOrRejectVendor(rowData, false)" class="btn btn-orange"  [disabled]="rowData.status_ui_display == 'New' || rowData.status_ui_display == 'Rejected' "  >Reject</button>
+                  <i class="fa fa-check-circle-o" title="Approve"   [ngClass]="{'disabledBtn': rowData.status_ui_display == 'New' || rowData.status_ui_display == 'Approved'}"  (click)="onAcceptOrRejectVendor(rowData, true)"  aria-hidden="true"></i>
+                   <i class="fa fa-times-circle-o" title="Reject"   [ngClass]="{'disabledBtn': rowData.status_ui_display == 'New' || rowData.status_ui_display == 'Rejected'}"   (click)="onAcceptOrRejectVendor(rowData, false)"   aria-hidden="true"></i>
                 </span>
               </td>
           </tr>

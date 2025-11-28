@@ -560,6 +560,14 @@ export class CatMgrVendorRfqsComponent implements OnInit {
                 "id": this.selectedRfqData.id
             },
         }
+        if(isAccepted && (rowData.status_ui_display == 'New' || rowData.status_ui_display == 'Approved')){
+            this.toastrService.error("You can't approve a vendor!", 'Warning');
+            return;
+        }
+        if(!isAccepted && (rowData.status_ui_display == 'New' || rowData.status_ui_display == 'Rejected')){
+            this.toastrService.error("You can't reject a vendor!", 'Warning');
+            return;
+        }
         if (isAccepted) {
             this.rfqservice.acceptVendorByCM(obj).subscribe((res: any) => {
                 if (res && res.status == 'Success') {
