@@ -45,7 +45,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
     rfqsTableHeadersForClientInitiator: any = [
         { field: 'rfqId', header: 'RFQ Id', isLink: false, width: '190px', fieldType: 'text', isExceedContent: false },
         { field: 'projectDesc', header: 'Description', isLink: false, width: '240px', fieldType: 'text', isExceedContent: true },
-        { field: 'division', header: 'Division ', isLink: false, width: '240px', fieldType: 'text', isExceedContent: false },
+        // { field: 'division', header: 'Division ', isLink: false, width: '240px', fieldType: 'text', isExceedContent: false },
         { field: 'quoteCount', header: 'Quote Count', isLink: false, fieldType: 'text', width: '180px', isExceedContent: false },
         // { field: 'noOfQuotes', header: 'Quotes', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
         { field: 'createdTS', header: 'Created Date', isLink: false, fieldType: 'date', width: '195px', isExceedContent: false },
@@ -60,7 +60,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
         { field: 'specification', header: 'Specification', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
         { field: 'unitofMeasures', header: 'UOM', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
         { field: 'quantity', header: 'Quantity', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
-        { field: 'remarks', header: 'Remarks', isLink: false, width: '120px', fieldType: 'text', isExceedContent: true },
+        { field: 'remarks', header: 'Remarks', isLink: false, width: '120px', fieldType: 'text', isExceedContent: true }
     ];
 
     vendorCartList = [];
@@ -68,9 +68,8 @@ export class CatMgrCreateRfqListComponent implements OnInit {
         { field: 'companyName', header: 'Vendor Name', isLink: false, width: '220px', fieldType: 'text', isExceedContent: true },
         { field: 'email', header: 'Email', isLink: false, width: '120px', fieldType: 'text', isExceedContent: true },
         { field: 'city', header: 'City', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
-        { field: 'mobileNo', header: 'Mobile Number', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
-        { field: 'otherEmails', header: 'other Email', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
-    ];
+        { field: 'mobileNo', header: 'Mobile Number', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true }
+          ];
 
     deilveryCartTableHeaders = [
         { field: 'date', header: 'Delivery Date', isLink: false, width: '220px', fieldType: 'text', isExceedContent: true },
@@ -282,7 +281,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
             this.vendorForm.setValidators([]);
             this.isAutoPopulated = true;
             Object.keys(this.vendorForm.controls).forEach((ctrl: any) => {
-                if (!(ctrl == 'companyName' || ctrl == 'otherEmails')) {
+                if (!(ctrl == 'companyName' )) {
                     this.vendorForm.controls[ctrl].disable();
                 }
             })
@@ -292,8 +291,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
                 companyName: new FormControl(event.value, Validators.required),
                 city: new FormControl('', Validators.required),
                 mobileNo: new FormControl('', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]),
-                email: new FormControl('', [Validators.required, Validators.email]),
-                otherEmails: new FormControl('')
+                email: new FormControl('', [Validators.required, Validators.email]) 
             });
             this.isAutoPopulated = false;
         }
@@ -571,8 +569,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
             companyName: new FormControl('', Validators.required),
             city: new FormControl('', Validators.required),
             mobileNo: new FormControl('', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]),
-            email: new FormControl('', [Validators.required, Validators.email]),
-            otherEmails: new FormControl('')
+            email: new FormControl('', [Validators.required, Validators.email]) 
         });
         this.deliveryForm = this.fb.group({
             id: new FormControl('MANUALENTRYID_' + Math.random()),
@@ -752,7 +749,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
             })
         } else {
             Object.keys(this.vendorForm.controls).forEach((ctrl: any) => {
-                if (!(ctrl == 'companyName' || ctrl == 'otherEmails')) {
+                if (!(ctrl == 'companyName'  )) {
                     this.vendorForm.controls[ctrl].disable();
                 }
             })
@@ -960,8 +957,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
                     "city": item.city,
                     "companyName": item.companyName,
                     "organizationPhonenumber": item.mobileNo,
-                    "email": item.email,
-                    "otherEmails": item.otherEmails,
+                    "email": item.email ,
                     "vendorcategory": null,
                     "subCategory": null,
                      "requestType": this.isForwardRFQ ? 'Forward' : 'Invite'
@@ -969,8 +965,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
                 }
             } else {
                 vendor = {
-                    "id": item.id,
-                    "otherEmails": item.otherEmails,
+                    "id": item.id, 
                     "email": item.email,
                     "requestType": this.isForwardRFQ ? 'Forward' : 'Invite'
                 }

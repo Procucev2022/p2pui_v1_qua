@@ -594,6 +594,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
             this.toastrService.warning("You're Not allowed at this moment!", 'Warning')
             return false;
         }
+        this.selectedRfqData = rowData;
         if (isIgnored == true) {
             const obj = [{
                 id: this.loggedUserDetails.id,
@@ -601,7 +602,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
                     "id": this.loggedUserDetails.org.id
                 },
                 "rfq": {
-                    "id": rowData.id
+                    "id": this.selectedRfqData.id
                 }
             }]
 

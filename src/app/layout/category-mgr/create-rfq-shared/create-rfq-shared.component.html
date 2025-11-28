@@ -73,11 +73,7 @@
                                         <input class="form-control" formControlName="email" placeholder="Email Id" [disabled]="isAutoPopulated"  />
                                         <span style="color:red" *ngIf="vendorCtrls.email.invalid && vendorCtrls.email.touched">Enter Valid Email Id</span>
                                     </div>
-                                    <div class="col-4 mb-1">
-                                        <label class="form-label">Other Email</label>
-                                        <input class="form-control" formControlName="otherEmails" placeholder="Other Email Id"  />
-                                        <span style="color:red" *ngIf="vendorCtrls.otherEmails.invalid && vendorCtrls.otherEmails.touched">Enter Valid Email Id</span>
-                                    </div>
+                                   
                                     <div class="col-4 mt-3 btn-block btn-group" style="display: flex;align-items: end; ">
                                         <button class="btn btn-red" type="reset">Reset</button>
                                         <button class="btn btn-blue ml-3" type="submit" [disabled]="!vendorForm.valid" >   {{ isEditForm ? 'Update':'Add'}} Vendor</button>

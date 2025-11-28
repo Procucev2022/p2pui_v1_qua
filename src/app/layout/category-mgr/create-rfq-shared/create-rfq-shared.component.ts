@@ -64,9 +64,8 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
         { field: 'companyName', header: 'Vendor Name', isLink: false, width: '220px', fieldType: 'text', isExceedContent: true },
         { field: 'email', header: 'Email', isLink: false, width: '120px', fieldType: 'text', isExceedContent: true },
         { field: 'city', header: 'City', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
-        { field: 'mobileNo', header: 'Mobile Number', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
-        { field: 'otherEmails', header: 'other Email', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
-    ];
+        { field: 'mobileNo', header: 'Mobile Number', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true }
+       ];
 
     deilveryCartTableHeaders = [
         { field: 'date', header: 'Delivery Date', isLink: false, width: '220px', fieldType: 'text', isExceedContent: true },
@@ -263,7 +262,7 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
             this.vendorForm.setValidators([]);
             this.isAutoPopulated = true;
             Object.keys(this.vendorForm.controls).forEach((ctrl: any) => {
-                if (!(ctrl == 'companyName' || ctrl == 'otherEmails')) {
+                if (!(ctrl == 'companyName' )) {
                     this.vendorForm.controls[ctrl].disable();
                 }
             })
@@ -273,8 +272,7 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
                 companyName: new FormControl(event, Validators.required),
                 city: new FormControl('', Validators.required),
                 mobileNo: new FormControl('', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]),
-                email: new FormControl('', [Validators.required, Validators.email]),
-                otherEmails: new FormControl('')
+                email: new FormControl('', [Validators.required, Validators.email]) 
             });
             this.isAutoPopulated = false;
         }
@@ -464,9 +462,8 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
             companyName: new FormControl('', Validators.required),
             city: new FormControl('', Validators.required),
             mobileNo: new FormControl('', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]),
-            email: new FormControl('', [Validators.required, Validators.email]),
-            otherEmails: new FormControl('')
-        });
+            email: new FormControl('', [Validators.required, Validators.email]) 
+        }); 
         this.deliveryForm = this.fb.group({
             id: new FormControl('MANUALENTRYID_' + Math.random()),
             date: new FormControl('', Validators.required),
@@ -624,7 +621,7 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
             })
         } else {
             Object.keys(this.vendorForm.controls).forEach((ctrl: any) => {
-                if (!(ctrl == 'companyName' || ctrl == 'otherEmails')) {
+                if (!(ctrl == 'companyName'  )) {
                     this.vendorForm.controls[ctrl].disable();
                 }
             })
@@ -735,8 +732,7 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
                     "city": item.city,
                     "companyName": item.companyName,
                     "organizationPhonenumber": item.mobileNo,
-                    "email": item.email,
-                    "otherEmails": item.otherEmails,
+                    "email": item.email, 
                     "vendorcategory": null,
                     "subCategory": null,
                     "requestType": this.isRFQFORWARD ? 'Forward' : 'Invite'
@@ -745,8 +741,7 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
                 }
             } else {
                 vendor = {
-                    "id": item.id,
-                    "otherEmails": item.otherEmails,
+                    "id": item.id, 
                     "email": item.email,
                     "requestType": this.isRFQFORWARD ? 'Forward' : 'Invite'
                 }
