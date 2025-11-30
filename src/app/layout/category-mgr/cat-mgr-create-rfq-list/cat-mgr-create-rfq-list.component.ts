@@ -48,6 +48,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
         // { field: 'division', header: 'Division ', isLink: false, width: '240px', fieldType: 'text', isExceedContent: false },
         { field: 'quoteCount', header: 'Quote Count', isLink: false, fieldType: 'text', width: '180px', isExceedContent: false },
         // { field: 'noOfQuotes', header: 'Quotes', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
+        { field: 'quoteSubmittedDate', header: 'Quote Submitted Date', isLink: false, fieldType: 'date', width: '255px', isExceedContent: false },
         { field: 'createdTS', header: 'Created Date', isLink: false, fieldType: 'date', width: '195px', isExceedContent: false },
         // { field: 'createdBy', header: 'Created By', isLink: false, width: '195px', fieldType: 'text', isExceedContent: true },
         { field: 'quotationReceived', header: 'Quotes', isLink: false, width: '205px', fieldType: 'text', isExceedContent: false },
