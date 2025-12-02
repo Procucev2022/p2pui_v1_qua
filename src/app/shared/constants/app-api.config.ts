@@ -70,6 +70,8 @@ export class AppApiConfig {
   public static GET_VENDOR_CATALOGUE_TERMS_CONDITIONS = '/rest/catalogue/getSellerTC';
   public static GET_PINCODE_VALIDATION = '/partialvendor/getCityPincode';
 
+  public static FETCH_GMT_VENDOR_SUMMARY ='/rest/users/vendorSummary'
+
 
 
 
@@ -661,6 +663,7 @@ export class AppApiConfig {
     public static FETCH_ALL_RFQS_BY_ID = '/rest/rfq/fetchAllRfqs';
     public static GET_VENDORS_INFO_BY_ID_GMT = '/rest/gmt/getVendorInfo';
     public static GET_CLIENT_INFO_BY_ID_GMT = '/rest/client/getUserById';
+    public static GET_CLIENT_INFO_BY_RFQ_ID_GMT = '/rest/gmt/getBuyerDataByRFQ';
     public static PAN_VALIDATION ='/partialvendor/validateClientDetails';
     public static OTP_VALIDATION ='/partialvendor/validateOtp';
     public static GET_CLIENT_DETAILS_BY_PAN ="/partialvendor/getClientByPan";

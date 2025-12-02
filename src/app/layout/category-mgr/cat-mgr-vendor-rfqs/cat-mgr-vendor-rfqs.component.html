@@ -41,6 +41,9 @@
                        <span class="request-rfq">  <i class="fa fa-hand-pointer-o" aria-hidden="true"></i> - Request RFQ</span>
                        <span class="raise-query">  <i class="fa fa-question-circle" aria-hidden="true"></i> - Raise Query</span>
                        <span class="ignore-rfq">  <i class="fa fa-low-vision" aria-hidden="true"></i> -  Ignore RFQ</span>
+                       <span class="vendor-info">
+                           <img class="vendor-info-reveal"  title="Vendor Info" src="assets/images/new/vendor-info-reveal.png" alt="Vendor Info" width="30" height="30"> - Vendor Info
+                       </span>
                     </div>
                     <!-- <p>Want to purchase immediately ? <span class="linkCls" (click)="onSelectSystem('bfsName')" style="font-size: 18px; border-bottom: 2px solid;"> Click here</span>  to purchase directly at your preferred price from "Buy From Stock(BFS)"</p> -->
                 </div>
@@ -71,7 +74,7 @@
                             {{rowData[col.field]}}  <i class="fa fa-info-circle" (click)="getClientInfo(rowData)" *ngIf="col.field == 'rfqId' && rowData.status_ui_display == 'Approved' && showClientInfoIcon(rowData) && currentRole == 'GMT Professional'"></i>
                         </span>
                         <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
-                          {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
+                          {{rowData[col.field] ? (rowData[col.field] | date: 'dd-MMM-yyyy') : ''}}
                         </span>
 
                 </span>
@@ -113,6 +116,7 @@
                             </ul>
 
                         </p-overlayPanel> -->
+                  <img class="vendor-info-reveal"  *ngIf="showVendorInfoIconAfter48Hrs(rowData)" (click)="getClientInfoByRFQId(rowData)" title="Vendor Info" src="assets/images/new/vendor-info-reveal.png" alt="Vendor Info" width="30" height="30">
 
                     </span>
                 </td>
@@ -270,7 +274,7 @@
               <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
               <span *ngIf="!col.isLink">
                       <span *ngIf="col.fieldType != 'date'" style=" margin-right: 4px;">
-                        <i class="fa fa-info-circle" style="font-size: 1.2rem;cursor: pointer;color:rgb(255, 106, 0)" *ngIf="col.field =='vendorName' " (click)="getVendorInfo(rowData)"></i> {{rowData[col.field]}}
+                        <i class="fa fa-info-circle" style="font-size: 1.2rem;cursor: pointer;color:rgb(255, 106, 0)" *ngIf="col.field =='vendorName' " (click)="getVendorInfo(rowData, 'vendorUuid')"></i> {{rowData[col.field]}}
 
                       </span>
                       <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
@@ -287,7 +291,7 @@
                 <span >
                   <i class="fa fa-check-circle-o" title="Approve"   [ngClass]="{'disabledBtn': rowData.status_ui_display == 'New' || rowData.status_ui_display == 'Approved'}"  (click)="onAcceptOrRejectVendor(rowData, true)"  aria-hidden="true"></i>
                    <i class="fa fa-times-circle-o" title="Reject"   [ngClass]="{'disabledBtn': rowData.status_ui_display == 'New' || rowData.status_ui_display == 'Rejected'}"   (click)="onAcceptOrRejectVendor(rowData, false)"   aria-hidden="true"></i>
-                </span>
+                  </span>
               </td>
           </tr>
         </ng-template>
@@ -420,9 +424,61 @@
     <app-gmt-vendor-info-modal [selectedVendor]="selectedVendor" [vendorInfo]="vendorInfo"></app-gmt-vendor-info-modal>
 </ng-template>
 
+  <!-- client Info Template -->
+
+
 <ng-template #clientInfoTemplate>
     <div class="modal-header">
-        <h4>Client Info</h4>
+        <h4>Buyer Info</h4>
+        <button class="btn-skelton modal-close-btn" mat-dialog-close>✖</button>
+    </div>
+    <div class="modal-body" *ngIf="clientInfo">
+        <div class="form-group">
+            <label><b>RFQ Id</b></label>
+            <label>{{selectedRfqData?.rfqId}}</label>
+        </div>
+        <div class="form-group">
+            <label><b>Client Name</b></label>
+            <label>{{clientInfo.companyName}}</label>
+        </div>
+         <div class="form-group">
+            <label><b>Contact Name</b></label>
+            <label>{{clientInfo.fullName}}</label>
+        </div>
+        <div class="form-group">
+            <label><b>EmailId</b></label>
+            <label>{{clientInfo.username}}</label>
+        </div>
+        <div class="form-group">
+            <label><b>Phone Number</b></label>
+            <label>{{clientInfo.phone}}</label>
+        </div>
+        <!-- <div class="form-group">
+            <label><b>Bussiness Age</b></label>
+            <label>{{vendorInfo.bussinessAge ? vendorInfo.bussinessAge: '-'}}</label>
+        </div>
+        <div class="form-group">
+            <label><b> Phone Number</b></label>
+            <label>{{vendorInfo.organizationPhonenumber}}</label>
+        </div>
+
+        <div class="form-group">
+            <label><b>Vendor Class</b></label>
+            <label>{{vendorInfo.vendorClass}}</label>
+        </div> -->
+    </div>
+    <div *ngIf="!clientInfo">
+        No Details Found
+    </div>
+
+</ng-template>
+
+
+
+
+<ng-template #clientInfoTemplateByRFQBases>
+    <div class="modal-header">
+        <h4>Buyer Info</h4>
         <button class="btn-skelton modal-close-btn" mat-dialog-close>✖</button>
     </div>
     <div class="modal-body" *ngIf="clientInfo">

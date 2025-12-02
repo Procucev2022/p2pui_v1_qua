@@ -19,6 +19,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
     @ViewChild('raiseQueryRef') raiseQueryRef: any;
     @ViewChild('vendorInfoTemplate') vendorInfoTemplate: any;
     @ViewChild('clientInfoTemplate') clientInfoTemplate: any;
+    @ViewChild('clientInfoTemplateByRFQBases') clientInfoTemplateByRFQBases: any;
 
     rfqDataList: any = [];
     selectedData: any = [];
@@ -47,6 +48,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         { field: 'desc', header: 'Description', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
         { field: 'category', header: 'Category', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
         { field: 'createdTS', header: 'RFQ Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
+        { field: 'quoteSubmittedDate', header: 'Quote Submitted Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
         { field: 'deliveryDate', header: 'Delivery Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
         { field: 'deliveryLocation', header: 'Location', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
         // { field: 'category', header: 'Category', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
@@ -433,9 +435,9 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         // ]
     }
 
-    getVendorInfo(rowData: any) {
+    getVendorInfo(rowData: any, key: string) {
         this.selectedVendor = rowData;
-        this.rfqservice.getVendorInfoById({ id: rowData.vendorUuid }).subscribe((res: any) => {
+        this.rfqservice.getVendorInfoById({ id: rowData[key] }).subscribe((res: any) => {
             if (res) {
                 this.dialog.closeAll();
                 this.vendorInfo = res;
@@ -465,7 +467,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         return diffInHours > 0 && diffInHours <= 48;
     }
 
-    getClientInfo(rowData: any) {
+    getClientInfo(rowData: any ) {
         this.selectedRfqData = rowData;
         this.rfqservice.getClientInfoById({ id: rowData.userId }).subscribe((res: any) => {
             if (res) {
@@ -481,6 +483,32 @@ export class CatMgrVendorRfqsComponent implements OnInit {
                 })
             }
         })
+    }
+
+      getClientInfoByRFQId(rowData: any ) {
+        this.selectedRfqData = rowData;
+        this.rfqservice.getClientInfoByRFQId({ id: rowData['id'] }).subscribe((res: any) => {
+            if (res) {
+                this.dialog.closeAll();
+                this.clientInfo = res;
+                this.dialog.open(this.clientInfoTemplateByRFQBases, {
+                    width: "30%",
+                    minHeight: "250px",
+                    data: "Su",
+                }).afterClosed().subscribe((res: any) => {
+                    this.clientInfo = null;
+                    this.selectedVendor = null;
+                })
+            }
+        })
+    }
+
+
+    showVendorInfoIconAfter48Hrs(rowData: any) {
+        if(!rowData.quoteSubmittedDate){
+            return false;
+        } 
+        return  !this.getDifferenceInHours( new Date(rowData?.quoteSubmittedDate), new Date());
     }
     getLineItemsByRFQ() {
 
