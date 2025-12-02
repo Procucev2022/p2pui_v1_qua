@@ -43,17 +43,12 @@
                                     </div> -->
                                     <div class="col-4 mb-1">
                                         <label class="form-label required">Vendor Name</label>
-                                        <p-autoComplete  formControlName="companyName" showEmptyMessage="true"
+                                        <p-autoComplete  formControlName="companyName" showEmptyMessage="true"  field="companyName" 
                                                 [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
                                                 [suggestions]="filtered_vendorList" panelInputClass="p-auto-panel-cls" [minLength]="1"
                                                 [dropdown]="true"
                                                 (completeMethod)="filterAutoCompleteData($event, 'vendorList','filtered_vendorList',   true)" (onSelect)="onSelectedVendor($event)"
-                                                >
-                                                        <ng-template let-segment pTemplate="item">
-                                                            <div class="segment-item">
-                                                                <div>{{segment}}</div>
-                                                            </div>
-                                                        </ng-template>
+                                                > 
                                             </p-autoComplete>
                                     </div>
 

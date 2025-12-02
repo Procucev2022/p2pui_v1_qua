@@ -228,7 +228,7 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
             this.createRFQService.getAllVendorsList().subscribe((res: any) => {
                 if (Array.isArray(res)) {
                     this.vendorListObjs = res;
-                    this.vendorList = res.map(ele => ele.companyName);
+                    this.vendorList = res //res.map(ele => ele.companyName);
                 }
             })
         }
@@ -241,7 +241,7 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
         this[outputArrayName] = [];
         const query = isStringType ? event.query.toLowerCase() : event.query;
 
-        this[outputArrayName] = this[inputArrayName].filter(ele => ele != null && (ele.toLowerCase().includes(query)));
+        this[outputArrayName] = this[inputArrayName].filter(ele => ele != null && (ele.companyName.toLowerCase().includes(query)));
 
         console.log('x', this[outputArrayName])
         if (inputArrayName == 'vendorList') {
@@ -257,7 +257,7 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
 
     onSelectedVendor(event:any) {
         console.log('event', event);
-        const findIndex = this.vendorListObjs.findIndex(ele => ele.companyName === event.value)
+        const findIndex = this.vendorListObjs.findIndex(ele => ele.companyName === event.value.companyName && ele.id === event.value.id);
         if (findIndex > -1) {
             this.vendorForm.setValidators([]);
             this.isAutoPopulated = true;
