@@ -582,6 +582,13 @@
                             <span>Client RFQs</span>
                         </a>
                         </li>
+                         <li *ngIf="  loggedUserDetails?.role.roleName == 'CategoryManager2'">
+                            <a class="list-group-item" [routerLink]="['/categorymgr/gmt-vendors']"
+                            [routerLinkActive]="['router-link-active']">
+                            <i class="fa fa-user"></i> &nbsp;
+                            <span>GMT Vendors</span>
+                        </a>
+                        </li>
                         <li *ngIf="loggedUserDetails?.role.roleName ==    'ClientInitiator' ">
                             <a class="list-group-item" [routerLink]="['/categorymgr/gmt-rfq-support']"
                             [routerLinkActive]="['router-link-active']">

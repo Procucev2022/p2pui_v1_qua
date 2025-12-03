@@ -221,3 +221,12 @@ span.acc-title {
     margin: 0px 19px;
     font-weight: 700;
 }
+
+
+::ng-deep p-autocomplete button.p-autocomplete-dropdown {
+    height: 49px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 17px;
+}

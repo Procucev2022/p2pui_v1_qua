@@ -28,8 +28,7 @@ import { VendorClientComponent } from './vendor-evolution/vendor-client/vendor-c
 import { ViewVendorEvaluationComponent } from './view-vendor-evaluation/view-vendor-evaluation.component';
 import { ForwardedVendorsTabComponent } from './components/forwarded-vendors-tab/forwarded-vendors-tab.component';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
-import { DynamicPricingItemsComponent } from './dynamic-pricing-items/dynamic-pricing-items.component';
-import { GmtVendorsListComponent } from './components/gmt-vendors-list/gmt-vendors-list.component';
+import { DynamicPricingItemsComponent } from './dynamic-pricing-items/dynamic-pricing-items.component'; 
 import { VendorInfoComponent } from './vendor-evolution/vendor-info/vendor-info.component';
 
 import { CommonShareModule } from "./../../shared/modules/common-share/common-share.module"
@@ -55,7 +54,7 @@ import { CommonShareModule } from "./../../shared/modules/common-share/common-sh
     ForwardedVendorsTabComponent,
     DynamicPricingItemsComponent,
     // VendorActiveTimesComponent,
-    GmtVendorsListComponent],
+    ],
   // entryComponents: [VendorApprovalModalComponent, VendorTabViewModelComponent, VendorAssignRankModelComponent, ViewPreVendorDetailsComponent, VendorEvolutionComponent, ViewVendorEvaluationComponent]
 })
 export class VendorMgrModule { }

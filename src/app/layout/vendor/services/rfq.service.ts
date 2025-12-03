@@ -54,6 +54,11 @@ export class RfqService {
         return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.REQUEST_RFQ_BY_GMT_VENDOR, req, {})
 
     }
+    fetchGMTSummary( ) {
+        return this.http.get(AppApiConfig.apiEndpoint + AppApiConfig.FETCH_GMT_VENDOR_SUMMARY, {})
+
+    }
+    //FETCH_GMT_VENDOR_SUMMARY
 
     getAllRFQsByGMTCategory() {
         return this.http.get(AppApiConfig.apiEndpoint + AppApiConfig.FETCH_ALL_RFQS_BY_GMT_CATEGORYMANAGER, {})
@@ -100,13 +105,18 @@ export class RfqService {
         return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.QUERY_SUPPORT_MAIL, body, {})
     }
 
-    getVendorInfoById(data:any){
+    getVendorInfoById(data: any) {
         return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.GET_VENDORS_INFO_BY_ID_GMT, data, {})
 
     }
 
-    getClientInfoById(data:any){
+    getClientInfoById(data: any) {
         return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.GET_CLIENT_INFO_BY_ID_GMT, data, {})
+
+    }
+ 
+    getClientInfoByRFQId(data: any) {
+        return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.GET_CLIENT_INFO_BY_RFQ_ID_GMT, data, {})
 
     }
 }

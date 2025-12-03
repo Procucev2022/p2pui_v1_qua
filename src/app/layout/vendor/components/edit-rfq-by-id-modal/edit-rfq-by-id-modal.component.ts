@@ -269,10 +269,10 @@ export class EditRfqByIdModalComponent implements OnInit {
             this.toaster.warning("Please Enter Project Description/Reference", 'Warning')
             return false;
         }
-        if (!this.viewRFQbyIDdetails.division) {
-            this.toaster.warning("Please assign Division to RFQ", 'Warning')
-            return false;
-        }
+        // if (!this.viewRFQbyIDdetails.division) {
+        //     this.toaster.warning("Please assign Division to RFQ", 'Warning')
+        //     return false;
+        // }
         //viewRFQbyIDdetails.rfqItem
         for (const item of this.viewRFQbyIDdetails.rfqItem) {
             if (!item.description || !item.brand || !item.quantity || !item.unitofMeasures) {

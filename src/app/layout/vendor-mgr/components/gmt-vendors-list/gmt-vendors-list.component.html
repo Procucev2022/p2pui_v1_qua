@@ -2,8 +2,10 @@
     <div class=" page-body-content">
       <div class="">
 
-        <p-table #vendorRegPendingTable [columns]="vendorRegPendingHeaders" [value]="vendorRegPendingList" sortMode="multiple" [paginator]="true" [rows]="pageRecordSize"  id="vendorRegPendingTable"
-            [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}" exportFilename="vendorRegistrationPending"  [(selection)]="selectedData" [scrollable]="true"  [scrollHeight]="'calc(100vh - 242px)'">
+        <p-table #vendorRegPendingTable [columns]="vendorRegPendingHeaders" [value]="vendorRegPendingList" sortMode="multiple" 
+        [paginator]="true" [rows]="pageRecordSize"  id="vendorRegPendingTable"
+            [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}" exportFilename="vendorRegistrationPending"
+              [(selection)]="selectedData" [scrollable]="true"  [scrollHeight]="'calc(100vh - 140px)'">
             <ng-template pTemplate="caption">
               <div class="table-search">
                 <div class="row">
@@ -42,7 +44,7 @@
                 <i class="fa fa-info-circle" style="font-size: 1.2rem;cursor: pointer;color:rgb(255, 106, 0);padding-right: 10px;" *ngIf="col.field =='companyName' " (click)="getVendorInfo(rowData)"></i>
 
 
-                <img *ngIf="rowData['status']== 'Completed' && col.field =='vendorName'" width="20" src="assets/images/insta-verified.png"/>
+                <!-- <img *ngIf="rowData['status']== 'Completed' && col.field =='vendorName'" width="20" src="assets/images/insta-verified.png"/> -->
                 <span [title]="rowData[col.field]">{{rowData[col.field]}} </span>
               </span>
                 </td>
@@ -86,18 +88,7 @@
           <div class="form-group">
               <label>OTP</label>
               <input type="number" class="form-control" minlength="6" maxlength="6" placeholder="Enter OTP here.."  [(ngModel)]="otp"/>
-          </div>
-          <div class="form-group mt-3">
-            <label>
-                Subscription For {{subscriptionDays}}
-            </label>
-            <div class="form-inline">
-                <input class="form-check-input" type="radio" name="prCorrespond" id="Product" [(ngModel)]="subscriptionDays" [value]="180">180 Days &nbsp;&nbsp;
-                <input class="form-check-input" type="radio" name="prCorrespond" id="Product" [(ngModel)]="subscriptionDays" [value]="365">365 Days &nbsp;&nbsp;
-
-            </div>
-
-          </div>
+          </div> 
           <div class="input-group mt-4 " style="justify-content: right;">
               <button class="btn btn-blue" [disabled]="!otp" type="button" (click)="onVerifyAndUpdate()">Verify & Update</button>
               <button class="btn btn-red" (click)="resetForm()">Reset</button>

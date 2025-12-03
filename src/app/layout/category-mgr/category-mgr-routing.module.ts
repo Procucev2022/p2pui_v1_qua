@@ -28,6 +28,7 @@ import { VendorProfileSubscriptionsComponent } from './vendor-profile-subscripti
 import { CategoryMgrVendorSummaryComponent } from './category-mgr-vendor-summary/category-mgr-vendor-summary.component';
 import { CatMgrVendorCatalogueComponent } from './cat-mgr-vendor-catalogue/cat-mgr-vendor-catalogue.component';
 import { CatMgrVendorTermsCondtsComponent } from './cat-mgr-vendor-terms-condts/cat-mgr-vendor-terms-condts.component';
+import { GmtVendorsListComponent } from '../vendor-mgr/components/gmt-vendors-list/gmt-vendors-list.component';
 const routes: Routes = [
     { path: '', redirectTo: 'procurequests', pathMatch: 'prefix' },
     { path: 'dashboard', component: CatMgrDashboardComponent },
@@ -58,7 +59,8 @@ const routes: Routes = [
     {path: 'vendor-profile-subscriptions', component: VendorProfileSubscriptionsComponent},
     {path: 'vendor-summary', component: CategoryMgrVendorSummaryComponent},
     {path: 'vendor-catalogue', component: CatMgrVendorCatalogueComponent},
-    {path:'vendor-catalogue-terms-condts', component: CatMgrVendorTermsCondtsComponent}
+    {path:'vendor-catalogue-terms-condts', component: CatMgrVendorTermsCondtsComponent},
+    {   path: 'gmt-vendors', component: GmtVendorsListComponent}
 ];
 @NgModule({
     imports: [RouterModule.forChild(routes)],

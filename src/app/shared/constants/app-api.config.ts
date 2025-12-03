@@ -70,6 +70,8 @@ public static apiEndpoint = 'https://quaservicesp.procucev.com';
   public static GET_VENDOR_CATALOGUE_TERMS_CONDITIONS = '/rest/catalogue/getSellerTC';
   public static GET_PINCODE_VALIDATION = '/partialvendor/getCityPincode';
 
+  public static FETCH_GMT_VENDOR_SUMMARY ='/rest/users/vendorSummary'
+
 
 
 
@@ -661,6 +663,7 @@ public static apiEndpoint = 'https://quaservicesp.procucev.com';
     public static FETCH_ALL_RFQS_BY_ID = '/rest/rfq/fetchAllRfqs';
     public static GET_VENDORS_INFO_BY_ID_GMT = '/rest/gmt/getVendorInfo';
     public static GET_CLIENT_INFO_BY_ID_GMT = '/rest/client/getUserById';
+    public static GET_CLIENT_INFO_BY_RFQ_ID_GMT = '/rest/gmt/getBuyerDataByRFQ';
     public static PAN_VALIDATION ='/partialvendor/validateClientDetails';
     public static OTP_VALIDATION ='/partialvendor/validateOtp';
     public static GET_CLIENT_DETAILS_BY_PAN ="/partialvendor/getClientByPan";
@@ -747,8 +750,11 @@ public static apiEndpoint = 'https://quaservicesp.procucev.com';
     public static VENDOER_EXC_DOWNLOAD_NOTIFICATION = '/rest/preVendor/getVendorExcDownloadNotification';
     public static VENDOR_ENABLE = '/rest/vendor/enableVendor';
     public static SEND_OTP_FOR_GMT_VENDOR = '/rest/vendorManager/sendVmOtp';
+    public static SEND_OTP_FOR_GMT_VENDOR_UPGRADE = '/rest/gmt/sendVmOtp';
     public static VERIFY_OTP_FOR_GMT_VENDOR = '/rest/vendorManager/validateVmOtp';
+    public static UPGRADE_OTP_FOR_GMT_VENDOR = '/rest/gmt/validateVmOtp';
     public static UPGRADE_GMT_VENDOR = '/rest/vendor/upgradeGmtVendor';
+    public static UPGRADE_GMT_VENDOR_AFTER_OTP = '/rest/gmt/upgradeGmtVendor';
 
 
     /* Raise Issue */

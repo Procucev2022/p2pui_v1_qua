@@ -38,7 +38,7 @@ export const SystemViewConfig = {
 
 export const GMT_SYSTEM_SCREENS_LIST ={
    'CategoryManager' :['/categorymgr/create-rfq', '/categorymgr/gmt-rqfs', '/categorymgr/client-gmt-rqfs', '/categorymgr/vendor-summary'], // 3 Screens
-   'CategoryManager2':['/categorymgr/gmt-rqfs', '/categorymgr/gmt-summary','/categorymgr/gmt-reg-clients','/categorymgr/client-gmt-rqfs'], // 4 Screens
+    'CategoryManager2':['/categorymgr/gmt-rqfs', '/categorymgr/gmt-summary','/categorymgr/gmt-reg-clients','/categorymgr/client-gmt-rqfs', '/categorymgr/gmt-vendors'], // 4 Screens
    'ClientInitiator':['/categorymgr/create-rfq', '/categorymgr/gmt-rfq-support','/categorymgr/gmt-rfq-faqs', '/categorymgr/my-profile'], // 3 Screens
    'Registration': [ '/categorymgr/vendor-profile',  '/categorymgr/gmt-rfq-faqs', '/categorymgr/my-profile' ], // 2 Screens
    'PartialVendor':['/categorymgr/vendor-profile' , '/categorymgr/gmt-rfq-faqs', '/categorymgr/my-profile' ],// 2 Screens

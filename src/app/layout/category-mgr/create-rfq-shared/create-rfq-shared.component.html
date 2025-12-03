@@ -43,17 +43,12 @@
                                     </div> -->
                                     <div class="col-4 mb-1">
                                         <label class="form-label required">Vendor Name</label>
-                                        <p-autoComplete  formControlName="companyName" showEmptyMessage="true"
+                                        <p-autoComplete  formControlName="companyName" showEmptyMessage="true"  field="companyName" 
                                                 [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
                                                 [suggestions]="filtered_vendorList" panelInputClass="p-auto-panel-cls" [minLength]="1"
                                                 [dropdown]="true"
                                                 (completeMethod)="filterAutoCompleteData($event, 'vendorList','filtered_vendorList',   true)" (onSelect)="onSelectedVendor($event)"
-                                                >
-                                                        <ng-template let-segment pTemplate="item">
-                                                            <div class="segment-item">
-                                                                <div>{{segment}}</div>
-                                                            </div>
-                                                        </ng-template>
+                                                > 
                                             </p-autoComplete>
                                     </div>
 
@@ -73,11 +68,7 @@
                                         <input class="form-control" formControlName="email" placeholder="Email Id" [disabled]="isAutoPopulated"  />
                                         <span style="color:red" *ngIf="vendorCtrls.email.invalid && vendorCtrls.email.touched">Enter Valid Email Id</span>
                                     </div>
-                                    <div class="col-4 mb-1">
-                                        <label class="form-label">Other Email</label>
-                                        <input class="form-control" formControlName="otherEmails" placeholder="Other Email Id"  />
-                                        <span style="color:red" *ngIf="vendorCtrls.otherEmails.invalid && vendorCtrls.otherEmails.touched">Enter Valid Email Id</span>
-                                    </div>
+                                   
                                     <div class="col-4 mt-3 btn-block btn-group" style="display: flex;align-items: end; ">
                                         <button class="btn btn-red" type="reset">Reset</button>
                                         <button class="btn btn-blue ml-3" type="submit" [disabled]="!vendorForm.valid" >   {{ isEditForm ? 'Update':'Add'}} Vendor</button>
