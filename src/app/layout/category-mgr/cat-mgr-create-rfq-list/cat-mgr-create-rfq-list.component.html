@@ -156,7 +156,30 @@
 <p-sidebar [(visible)]="isCreateRFQView" position="right"
     styleClass="ui-sidebar-lg" [style]="{width:'100vw'}">
     <div class="row">
+        <div class="col-12">
+   <div class="alert  "  
+                    style="display: flex; align-items: center; color:#e9795d;align-self: center;  position: absolute; right: 0;top: -10px;z-index: 999;">
+                    <span (click)="op.toggle($event)" style="cursor: pointer; "><i class="fa fa-exclamation-triangle"
+                            style="font-size: 2rem;color: #e6b968 !important;" aria-hidden="true"></i> RFQ Creation Suggestions
+                    </span>
+                    <p-overlayPanel #op>
+                <div class="confirmation-content">
+                    <ul id="error-list" *ngIf="isClientInitiatory()">
+
+
+                        <li style="color: #fb9898;" *ngIf="projectForm.controls?.projectDesc.errors?.required">Project Description is
+                            required</li>
+                       <li style="color: #fb9898;" *ngIf="itemGridData.gridValue.length<=0">Item details should be required</li>
+                       <li style="color: #fb9898;" *ngIf="deliveryForm.invalid">Delivery details should be required</li>
+
+                    </ul>
+                    
+                </div>
+            </p-overlayPanel>
+                </div>
+        </div>
         <div class="col-12 table-title pb-0"><h2>{{ isSendRFQToVendorScreen ? 'Send': 'Create' }} RFQ</h2></div>
+        
         <div class="col-12" *ngIf="!isSendRFQToVendorScreen">
             <p-steps [model]="stepsList" styleClass="steps-custom" [activeIndex]="currentStep-1"></p-steps>
         </div>
@@ -513,8 +536,11 @@
 
 
         <ng-container *ngIf=" currentStep == 1 ">
-            <button class="btn btn-orange ml-3" type="button"   (click)="onSaveAndExit()" [disabled]="(itemGridData.gridValue.length<=0 || projectForm.invalid || deliveryForm.invalid )">{{ isClientInitiatory() ? 'Submit': 'Save & Exit'}}  </button>
+             
+            <button class="btn btn-orange ml-3" type="button"   (click)="onSaveAndExit()"  >{{ isClientInitiatory() ? 'Submit': 'Save & Exit'}}  </button>
             <button class="btn btn-blue ml-3" type="button" *ngIf="!isClientInitiatory()"   (click)="navigateTo(false)" [disabled]="(itemGridData.gridValue.length<=0 || projectForm.invalid || deliveryForm.invalid )">{{ 'Next'}} </button>
+            
+
         </ng-container>
 
         <ng-container *ngIf=" currentStep >1 ">

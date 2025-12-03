@@ -325,10 +325,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
             if(Array.isArray(data)){
                 this.rfqDataList = data.map((ele:any) => {
                     const statusDisplay =  ele.clientStatus ?  ele.clientStatus.uiDisplay: '-';
-                    let status_display = statusDisplay;
-                    if(statusDisplay){
-                        status_display = statusDisplay =='New'? 'In Progress': (statusDisplay =='Accepted'? 'Published': statusDisplay)
-                    }
+                    let status_display = statusDisplay; 
                    const obj ={...ele, 'status_display':status_display,quotationReceived: ele.quotationReceived == true? 'YES': 'WIP'}
                    return obj;
                 });
@@ -341,6 +338,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
         this.currentStep =1;
         this.isSendRFQToVendorScreen = false;
         this.isValidPincode = false;
+        this.isEditForm = false;
         this.resetScreen();
         this.showPincodeControl();
     }
@@ -828,6 +826,10 @@ export class CatMgrCreateRfqListComponent implements OnInit {
     }
 
     onSaveAndExit(){
+        if((this.itemGridData.gridValue.length<=0 || this.projectForm.invalid || this.deliveryForm.invalid )){
+            this.toaster.warning('Please fill all required fields', 'Warning');
+            return;
+        }
         this.createRFQ();
     }
 
