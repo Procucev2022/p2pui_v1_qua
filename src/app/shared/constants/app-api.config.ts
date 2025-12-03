@@ -750,8 +750,11 @@ export class AppApiConfig {
     public static VENDOER_EXC_DOWNLOAD_NOTIFICATION = '/rest/preVendor/getVendorExcDownloadNotification';
     public static VENDOR_ENABLE = '/rest/vendor/enableVendor';
     public static SEND_OTP_FOR_GMT_VENDOR = '/rest/vendorManager/sendVmOtp';
+    public static SEND_OTP_FOR_GMT_VENDOR_UPGRADE = '/rest/gmt/sendVmOtp';
     public static VERIFY_OTP_FOR_GMT_VENDOR = '/rest/vendorManager/validateVmOtp';
+    public static UPGRADE_OTP_FOR_GMT_VENDOR = '/rest/gmt/validateVmOtp';
     public static UPGRADE_GMT_VENDOR = '/rest/vendor/upgradeGmtVendor';
+    public static UPGRADE_GMT_VENDOR_AFTER_OTP = '/rest/gmt/upgradeGmtVendor';
 
 
     /* Raise Issue */

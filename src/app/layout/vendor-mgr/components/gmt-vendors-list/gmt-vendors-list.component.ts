@@ -51,21 +51,10 @@ export class GmtVendorsListComponent implements OnInit {
     getVendorPendingRegistrationData() {
         this.vendorRegPendingList = [];
         this.rfqservice.fetchGMTSummary().subscribe((res: any) => {
-            if (res && Array.isArray(res.data)) {
-                // res.data.forEach(element => {
-                //     element['status'] = element['status']['uiDisplay'];
-                //     element['vendorStatus'] = element['vendorStatus']['uiDisplay'];
-                //     // element['upgradeEndDate'] = '2024-06-24T00:00:00.000+0000'
-                //     let Difference_In_Days = element['upgradeStartDate'] && element['upgradeEndDate'] ? this.getDaysCount(element) : 'NA'
-                //     if(Difference_In_Days != 'NA'){
-                //         element['upgradeDaysExpires'] = Difference_In_Days.toString() + '/' +element['upgradeDays'].toString();
-                //     }else{
-                //         element['upgradeDaysExpires'] = 'NA'
-                //     }
-                // });
+            if (res && Array.isArray(res.data)) { 
                 this.vendorRegPendingList = res.data || [];
             } else {
-                //this.toaster.error(res.message, 'Failure')
+                this.toaster.error(res.message, 'Failure')
             }
         })
     }
@@ -78,7 +67,7 @@ export class GmtVendorsListComponent implements OnInit {
     onChangeCheckBoxValue(rowData: any) {
         this.otp = '';
         this.subscriptionDays = 180;
-        this.vendMgrSer.sendOtpForGMTVendor({ "email": "wesource@procucev.com" }).subscribe((res: any) => {
+        this.vendMgrSer.sendOtpForGMTVendorUpgrade({ id: rowData.id }).subscribe((res: any) => {
             if (res && res.status == 'Success') {
                 this.toaster.success(res.message, 'Success');
                 this.selectedData = rowData;
@@ -99,7 +88,11 @@ export class GmtVendorsListComponent implements OnInit {
     }
 
     onVerifyAndUpdate() {
-        this.vendMgrSer.sendOtpForGMTVendor({ "email": "wesource@procucev.com", userOtp: this.otp }).subscribe((res: any) => {
+        if(!this.otp || this.otp.toString().trim() == '' || this.otp.toString().length !=6){
+            this.toaster.error('Please enter valid OTP','Error');
+            return;
+        }
+        this.vendMgrSer.validateVmOtp({ "id":  this.selectedData.id, userOtp: this.otp }).subscribe((res: any) => {
             if (res && res.status == 'Success') {
                 this.toaster.success(res.message, 'Success');
                 this.upgradeVendor();
@@ -110,9 +103,8 @@ export class GmtVendorsListComponent implements OnInit {
     }
 
     upgradeVendor() {
-        this.vendMgrSer.upgradeForGMTVendor({
-            "id": this.selectedData.id,
-            "upgradeDays": this.subscriptionDays
+        this.vendMgrSer.upgradeGmtVendor({
+            "id": this.selectedData.id 
 
         }).subscribe((res: any) => {
             if (res && res.status == 'Success') {

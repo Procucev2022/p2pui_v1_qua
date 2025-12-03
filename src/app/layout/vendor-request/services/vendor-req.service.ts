@@ -124,12 +124,24 @@ export class VendorReqService {
     sendOtpForGMTVendor(body) {
         return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.SEND_OTP_FOR_GMT_VENDOR, body, {});
     }
+
+    sendOtpForGMTVendorUpgrade(body) {
+        return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.SEND_OTP_FOR_GMT_VENDOR_UPGRADE, body, {});
+    }
     verifyOtpForGMTVendor(body) {
         return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.VERIFY_OTP_FOR_GMT_VENDOR, body, {});
     }
 
     upgradeForGMTVendor(body) {
         return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.UPGRADE_GMT_VENDOR, body, {});
+    }
+
+    validateVmOtp(body) {
+        return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.UPGRADE_OTP_FOR_GMT_VENDOR, body, {});
+    }
+
+    upgradeGmtVendor(body) {
+        return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.UPGRADE_GMT_VENDOR_AFTER_OTP, body, {});
     }
 
 
