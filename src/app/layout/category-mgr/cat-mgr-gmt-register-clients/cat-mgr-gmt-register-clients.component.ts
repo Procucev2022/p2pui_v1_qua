@@ -16,6 +16,10 @@ import swal from 'sweetalert2';
 })
 export class CatMgrGmtRegisterClientsComponent implements OnInit {
     isLoaded: boolean = false;
+    sourceList = [
+        { label: 'Web App', value: 'Web App' },
+        { label: 'WhatsApp', value: 'WhatsApp' }
+    ];
     clientTableHeaders: any = [
 
 
@@ -39,6 +43,7 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
     ];
     usersList =[];
     clientsList = [];
+    cached_clientList = [];
     selectedClientData: any;
     pageRecordSize: number;
     pageOptions: number[];
@@ -89,6 +94,15 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
             phone: new FormControl('', Validators.required),
             fullName: new FormControl('', Validators.required)
         })
+    }
+
+
+    onSourceTypeChange(value){
+        if(value){
+            this.clientsList = this.cached_clientList.filter(ele => ele.sourceType == value);
+        }else{
+           this.clientsList = this.cached_clientList;
+        }
     }
 
     onAcceptUserByClient(rowData: any, isAceept:boolean) {
@@ -149,9 +163,11 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
     getRegClients() {
         this.createRfqService.getGMTRegisteredClientsWithUser().subscribe((res: any) => {
             if (res) {
-                this.clientsList =  Array.isArray(res)? res.map(ele =>{ return {...ele, status: ele.clientStatus ?ele.clientStatus.uiDisplay: '-',
+                const clientsList =  Array.isArray(res)? res.map(ele =>{ return {...ele, status: ele.clientStatus ?ele.clientStatus.uiDisplay: '-',
                      sourceType: ele.sourceType ? ele.sourceType == 'T' ? 'Web App': 'WhatsApp' : 'Web App'
                 }}): [];
+                this.clientsList = clientsList;
+                this.cached_clientList = clientsList;
                 this.isLoaded = true;
             }
         })
