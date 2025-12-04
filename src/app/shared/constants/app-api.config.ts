@@ -1,6 +1,6 @@
 export class AppApiConfig {
-  public static apiEndpoint = 'https://p2pv1servicesdev-etfrcte5fhdvfrd4.centralindia-01.azurewebsites.net';
-// public static apiEndpoint = 'https://quaservicesp.procucev.com';
+//   public static apiEndpoint = 'https://p2pv1servicesdev-etfrcte5fhdvfrd4.centralindia-01.azurewebsites.net';
+public static apiEndpoint = 'https://quaservicesp.procucev.com';
   public static LOGGED_USER_PATH = '/rest/users/user/loggedUser';
   public static ACCESS_TOKEN_PATH = '/authenticate';
   public static GET_RFQS_FOR_NOPR_FOR_CLIENT_INITIATOR = "/rest/gmt/getNoPrRfqByClient";
