@@ -78,6 +78,7 @@ export class GmtVendorsListComponent implements OnInit {
                     data: "Su",
                 }).afterClosed().subscribe((res: any) => {
                     this.otp = ''
+                       this.getVendorPendingRegistrationData();
                 })
             } else {
 

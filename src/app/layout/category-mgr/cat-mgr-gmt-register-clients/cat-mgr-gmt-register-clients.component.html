@@ -5,6 +5,14 @@
         <p><span class="dot"></span>{{clientsList.length}} Total</p>
       </div>
       <div class="col-sm-6">
+        <div class="form-group" style="display: flex;float: right; align-items: center; gap: 10px;">
+           <label   >Source Type:</label>
+            <select   class="form-control"style="width: 300px;" (change)="onSourceTypeChange($event.target.value)">
+                <option value="">All</option>
+                <option *ngFor="let source of sourceList" [value]="source.value">{{source.label}}</option>
+            </select>
+             
+        </div>
       </div>
     </div>
   </div>

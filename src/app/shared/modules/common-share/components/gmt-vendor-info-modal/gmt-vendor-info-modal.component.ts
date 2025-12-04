@@ -9,6 +9,7 @@ export class GmtVendorInfoModalComponent implements OnInit {
 
     @Input('vendorInfo') vendorInfo: any;
     @Input('selectedVendor') selectedVendor: any;
+    @Input('isVendor') isVendor: boolean = true;
 
     constructor() { }
 
