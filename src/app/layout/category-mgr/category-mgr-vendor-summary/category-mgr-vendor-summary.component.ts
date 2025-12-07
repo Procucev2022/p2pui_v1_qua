@@ -21,6 +21,10 @@ export class CategoryMgrVendorSummaryComponent {
     @ViewChild('raiseQueryRef') raiseQueryRef: any;
     @ViewChild('vendorInfoTemplate') vendorInfoTemplate: any;
     @ViewChild('clientInfoTemplate') clientInfoTemplate: any;
+     sourceList = [
+        { label: 'Web App', value: 'Web App' },
+        { label: 'WhatsApp', value: 'WhatsApp' }
+    ];
 
     rfqDataList: any = [];
     selectedData: any = [];
@@ -58,7 +62,7 @@ export class CategoryMgrVendorSummaryComponent {
         
         { field: 'quotesSubmitted', header: 'Quotes Submitted', isLink: false, fieldType: 'text', width: '130px', isExceedContent: false, alignCenter: true },
         { field: 'subscriptionExpiry', header: 'Expiry On', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false , alignCenter: true},
-        { field: 'sourceType', header: 'Source Type', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false , alignCenter: true}
+        { field: 'sourceType', header: 'Source Type', isLink: false, width: '148px', fieldType: 'text', isExceedContent: false , alignCenter: true}
         // { field: 'vendorClass', header: 'Class', isLink: false, width: '120px', fieldType: 'text', isExceedContent: true },
         // { field: 'lastLogin', header: 'Last Logged In', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
         
@@ -128,6 +132,15 @@ export class CategoryMgrVendorSummaryComponent {
 
     }
 
+
+    
+    onSourceTypeChange(value){
+        if(value){
+            this.rfqDataList = this.cache_rfqDataList.filter(ele => ele.sourceType == value);
+        }else{
+           this.rfqDataList = this.cache_rfqDataList;
+        }
+    }
     intialCall() {
         this.selectedCategory = '';
         // if (this.currentRole == "CategoryManager2" || this.currentRole == "CategoryManager") {
