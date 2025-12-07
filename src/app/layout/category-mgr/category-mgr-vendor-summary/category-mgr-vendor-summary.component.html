@@ -145,6 +145,14 @@
                     (input)="prqTable.filterGlobal($event.target.value, 'contains')" />
                 </div>
                 <div class="col-sm-6">
+                     <div class="form-group" style="display: flex;float: right; align-items: center; gap: 10px;">
+                        <label   >Source Type:</label>
+                            <select   class="form-control"style="width: 300px;" (change)="onSourceTypeChange($event.target.value)">
+                                <option value="">All</option>
+                                <option *ngFor="let source of sourceList" [value]="source.value">{{source.label}}</option>
+                            </select>
+                            
+                </div>
                 <!-- <img  (click)="exportAsXLSX()" class="export-excel-icon" src="assets/images/export-excel.png" width="40" height="40" data-toggle="tooltip" title=" Export As Excel"  /> -->
                 </div>
             </div>
