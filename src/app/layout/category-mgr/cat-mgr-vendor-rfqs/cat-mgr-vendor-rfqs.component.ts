@@ -86,8 +86,8 @@ export class CatMgrVendorRfqsComponent implements OnInit {
     ];
 
     vendorTableHeaders: any = [
-        { field: 'vendorId', header: 'Company Id', isLink: false, width: '140px', fieldType: 'text', isExceedContent: false },
-        // { field: 'vendorName', header: 'Name', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
+        // { field: 'vendorId', header: 'Company Id', isLink: false, width: '140px', fieldType: 'text', isExceedContent: false },
+        { field: 'vendorName', header: 'Name', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
         { field: 'query', header: 'Query', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
         { field: 'status_ui_display', header: 'Status', isLink: false, width: '100px', fieldType: 'text', isExceedContent: false },
         { field: 'createdTS', header: 'Submitted Date', isLink: false, fieldType: 'date', width: '140px', isExceedContent: false },
