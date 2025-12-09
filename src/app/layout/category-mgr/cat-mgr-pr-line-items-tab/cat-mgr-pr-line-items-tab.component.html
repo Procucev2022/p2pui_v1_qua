@@ -1,20 +1,6 @@
 <p-table dataKey="id" #prTable [columns]="prLineItemsTableHeaders" [value]="prLineItemsList"  sortMode="multiple" [paginator]="true" [rows]="pageRecordSize"  id="prTable"
   [rowsPerPageOptions]="pageOptions"  [style]="{width:'100%'}" exportFilename="roles details" [(selection)]="selectedData">
-  <!-- <ng-template pTemplate="caption">
-    <div class="searchPanel">
-      <input type="text" pInputText size="50" placeholder="Search.."
-        (input)="prTable.filterGlobal($event.target.value, 'contains')" style="width:auto; float: right;" />
-        <div class="col-md-9 row" style="padding: 0px;">
-            <div class="col-md-3">
-            <select class="form-control" name="linkendFilter" [(ngModel)]="linkendFilterValue" #linkendFilter="ngModel" (change)="filterPrList()">
-                <option [value]="undefined" selected disable>Select</option>
-                <option *ngFor="let vertical of linkedPrValues; let j = index" [value]="vertical">{{vertical}}</option>
-            </select>
-            </div>
-            <button [disabled]="selectedData?.length <= 0 || linkendFilterValue == 'Non-catalogue items'" type="button" class="btn btn-primary" (click)="createPpo()">Create PPO</button>
-        </div>
-    </div>
-  </ng-template> -->
+ 
   <ng-template pTemplate="caption">
     <div class="table-search">
       <div class="row">

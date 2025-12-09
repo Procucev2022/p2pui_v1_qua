@@ -156,7 +156,7 @@
 <p-sidebar [(visible)]="isCreateRFQView" position="right"
     styleClass="ui-sidebar-lg" [style]="{width:'100vw'}">
     <div class="row">
-        <div class="col-12">
+        <div class="col-12" *ngIf="!isSendRFQToVendorScreen">
    <div class="alert  "  
                     style="display: flex; align-items: center; color:#e9795d;align-self: center;  position: absolute; right: 0;top: -10px;z-index: 999;">
                     <span (click)="op.toggle($event)" style="cursor: pointer; "><i class="fa fa-exclamation-triangle"
@@ -425,7 +425,7 @@
                         </div>
                         <div class="col-12">
                             <fieldset class="row col-12  mt-3 fieldSec">
-                                <legend>For New Vendor Entry</legend>
+                                <legend>For New Vendor Entrydd</legend>
                                 <form class="row" [formGroup]="vendorForm" novalidate (ngSubmit)="onAddVendorsToCart()">
                                         <!-- <div class="col-3 mb-1">
                                                 <label class="form-label required">Category</label>

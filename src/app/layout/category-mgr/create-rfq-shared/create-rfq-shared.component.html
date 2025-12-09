@@ -35,47 +35,12 @@
                     </div> -->
                     <div class="col-12">
                         <fieldset class="row col-12  mt-3 fieldSec">
-                            <legend>For New Vendor Entry</legend>
-                            <form class="row" [formGroup]="vendorForm" novalidate (ngSubmit)="onAddVendorsToCart()">
-                                    <!-- <div class="col-3 mb-1">
-                                            <label class="form-label required">Category</label>
-                                            <input class="form-control" formControlName="category" placeholder="Item Category" />
-                                    </div> -->
-                                    <div class="col-4 mb-1">
-                                        <label class="form-label required">Vendor Name</label>
-                                        <p-autoComplete  formControlName="companyName" showEmptyMessage="true"  field="companyName" 
-                                                [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
-                                                [suggestions]="filtered_vendorList" panelInputClass="p-auto-panel-cls" [minLength]="1"
-                                                [dropdown]="true"
-                                                (completeMethod)="filterAutoCompleteData($event, 'vendorList','filtered_vendorList',   true)" (onSelect)="onSelectedVendor($event)"
-                                                > 
-                                            </p-autoComplete>
-                                    </div>
+                            <legend>For New Vendor Entryss</legend>
+                            
+                            <div class="col-8">
+                                        <button class="btn btn-blue form-control-range" type="button" (click)="onAddExistingVendor()"> Add / Assign Existing Vendor Here..</button>
 
-                                    <div class="col-4 mb-1">
-                                        <label class="form-label required">Mobile Number </label>
-                                        <input class="form-control" formControlName="mobileNo" placeholder="Mobile Number" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                         maxlength = "10" minlength="10" [disabled]="isAutoPopulated" />
-                                        <span style="color:red" *ngIf="vendorCtrls.mobileNo.invalid && vendorCtrls.mobileNo.touched">Enter Valid 10 Digit Mobile Number</span>
-                                    </div>
-                                    <div class="col-4 mb-1 col-offset-3">
-                                        <label class="form-label required">City</label>
-                                        <input class="form-control" formControlName="city" placeholder="City" [disabled]="isAutoPopulated"
-                                       />
-                                    </div>
-                                    <div class="col-4 mb-1">
-                                        <label class="form-label required">Email Id</label>
-                                        <input class="form-control" formControlName="email" placeholder="Email Id" [disabled]="isAutoPopulated"  />
-                                        <span style="color:red" *ngIf="vendorCtrls.email.invalid && vendorCtrls.email.touched">Enter Valid Email Id</span>
-                                    </div>
-                                   
-                                    <div class="col-4 mt-3 btn-block btn-group" style="display: flex;align-items: end; ">
-                                        <button class="btn btn-red" type="reset">Reset</button>
-                                        <button class="btn btn-blue ml-3" type="submit" [disabled]="!vendorForm.valid" >   {{ isEditForm ? 'Update':'Add'}} Vendor</button>
-
-                                    </div>
-
-                        </form>
+                            </div>
                         </fieldset>
                     </div>
 
@@ -138,4 +103,31 @@
     bottom: 16px;right: 16px;"  >
     <button class="btn btn-orange ml-3" type="button"   (click)="onForwardRFQ()" [disabled]="(vendorGridData.gridValue.length<=0 )">{{ this.isRFQFORWARD == true ? 'Send RFQ' : 'Invite RFQ' }} </button>
    </div>
+    <ng-template #otpTemplate>
+        <div class="modal-header">
+            <h5 class="modal-title">Choose Vendors</h5>
+            <button type="button" class="close" aria-label="Close" (click)="dialog.closeAll()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Please choose vendors from the list below:</p>
+            <div class=" " *ngIf="vendorList && vendorList.length > 0">
+            <app-vendor-choose-modal-popup  [parentData]="vendorChoosePopupData" [vendorList]="vendorList"
+                        [parentData]="{
+                            companyId: companyId,
+                            rfqId: rfqId,
+                            vendorList: vendorList,
+                            vendorHeaders: vendorSearchTableHeaders
+                        }"
+            (onClosePopup)="onCloseVendorChoosePopup($event)"
+            (onAddNewVendor)="onAddNewVendor($event)"
+            ></app-vendor-choose-modal-popup>
+            </div>
+          
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="dialog.closeAll()">Close</button>
+        </div>
+    </ng-template>
 </div>

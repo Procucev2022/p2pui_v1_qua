@@ -1,0 +1,68 @@
+<p-table dataKey="id" #prTable [columns]="vendorCartTableHeaders" [value]="vendorsList"  sortMode="multiple" [paginator]="true" 
+[rows]="pageRecordSize"  id="prTable"
+  [rowsPerPageOptions]="pageOptions"  [style]="{width:'100%'}" exportFilename="roles details" [(selection)]="selectedData">
+ 
+  <ng-template pTemplate="caption">
+    <div class="table-search">
+      <div class="row">
+        <div  ngClass="{vendorsList.length === 0? 'col-sm-4' : 'col-sm-3'}">
+          <input class="form-control" type="text"    placeholder="Search / Enter Vendor Name" [(ngModel)]="searchVendorName"
+            (keyup)="onSearchCriteriaChange('vendorName', $event.target.value)" />
+        </div>
+        <div  ngClass="{vendorsList.length === 0? 'col-sm-4' : 'col-sm-3'}">
+            <input class="form-control" type="text" [disabled]="!searchVendorName" [(ngModel)]="searchEmailId" (keyup)="onSearchCriteriaChange('emailId', $event.target.value)"  placeholder="Search by / Enter Email ID" 
+            />
+        </div>
+        <div   ngClass="{vendorsList.length === 0 ? 'col-sm-4' : 'col-sm-3'}">
+            <input class="form-control" type="text" [disabled]="!searchVendorName || !searchEmailId" [(ngModel)]="searchMobileNo" (keyup)="onSearchCriteriaChange('mobile', $event.target.value)" placeholder="Search by / Enter Mobile Number" />
+        </div>
+         <div  *ngIf="vendorsList.length === 0"  ngClass="{vendorsList.length === 0? 'col-sm-4' : 'col-sm-3'}">
+            <input class="form-control" type="text" [disabled]="!searchVendorName || !searchEmailId" [(ngModel)]="searchCity"   placeholder="Enter   City" />
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th *ngFor="let col of columns" [pSortableColumn]="col.field"
+      [style.width]="col.width">
+        {{col.header}}
+        <p-sortIcon [field]="col.field"></p-sortIcon>
+      </th>
+      <th style="width: 4em;">Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-columns="columns" let-rowData>
+    <tr [pSelectableRow]="rowData" >
+      
+      <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
+        <span *ngIf="!col.isLink && col.field != 'description'"> {{rowData[col.field]}}</span>
+        <span *ngIf ="col.field == 'description'" > {{rowData[col.field]}}</span>
+        <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);" > {{rowData[col.field]}} </a></span>
+      </td>
+      <td style="width: 3em;">
+          <button  type="button" class="btn btn-blue" (click)="onAddVendor(rowData)" *ngIf="!rowData.isAddedAlready">Add Vendor</button>
+            <button *ngIf="rowData.isAddedAlready" type="button" class="btn btn-success" disabled>Added into Cart</button>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage" let-columns>
+    <tr>
+      <td [attr.colspan]="9" style="text-align:center;">
+        No Records Found.
+        <div class="alert alert-danger">No matching vendors found.
+            <span>You want to create new vendor with given search criteria details? <button type="button" (click)="openCreateVendorWithSearchDetails()" class="btn btn-orange">Click Here</button></span>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="paginatorleft">
+    <div  *ngIf="prTable._totalRecords > 0">
+
+      <b>Showing {{prTable.first+1}} to {{prTable.first+prTable.rows > prTable.totalRecords?prTable.totalRecords: prTable.first+prTable.rows}} of {{prTable.totalRecords}}</b>
+
+      <!-- <app-page-info [totalRecords]="prLineItemsList.length" [pageData]="paginatoryDetails"></app-page-info> -->
+    </div>
+  </ng-template>
+</p-table>
+
