@@ -59,6 +59,8 @@ export class VendorChooseModalPopupComponent {
       case 'vendorName':
         this.searchEmailId = '';
         this.searchMobileNo = '';
+        this.selectedData = [];
+
         this.vendorsList = this.cached_vendorList.filter(vendor => vendor.companyName.toLowerCase().includes(criteriaValue.toLowerCase()));
         break;
       case 'emailId':
@@ -89,10 +91,25 @@ export class VendorChooseModalPopupComponent {
     // Implement your filtering logic here based on criteriaType and criteriaValue
   }
 
+
+  // for selected Vendor if its one by one
   onAddVendor(rowData: any) {
-    this.dialogRef.close({ action: 'addVendor', data: rowData });
-    this.onAddNewVendor.emit(rowData);
+    this.dialogRef.close({ action: 'addVendor', data: [rowData] });
+    this.onAddNewVendor.emit([rowData]);
   }
+
+  // for selected multiple vendors
+  addToCart(){
+    if(this.selectedData.length === 0){
+      this.toaster.error('Please select at least one vendor to add to cart.');
+      return;
+    }
+    // Proceed with adding selected vendors to cart
+    this.dialogRef.close({ action: 'addToCart', data: this.selectedData });
+    this.onAddNewVendor.emit(this.selectedData);
+  }
+
+  // open create vendor modal with search details
   openCreateVendorWithSearchDetails(){
     if(this.searchVendorName.trim() === ''){
       this.toaster.error('Vendor Name is required to create new vendor.');
@@ -140,10 +157,11 @@ export class VendorChooseModalPopupComponent {
       companyName: this.searchVendorName,
       email: this.searchEmailId,
       mobileNo: this.searchMobileNo,
-      city: this.searchCity
+      city: this.searchCity,
+      id:  'ven_' + Math.random().toString(36).substr(2, 9)
     };
-    this.dialogRef.close({ action: 'createVendor', data: newVendorData });
-    this.onAddNewVendor.emit(newVendorData);
+    this.dialogRef.close({ action: 'createVendor', data: [newVendorData] });
+    this.onAddNewVendor.emit([newVendorData]);
   }
   validateEmail(email: string): boolean {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;

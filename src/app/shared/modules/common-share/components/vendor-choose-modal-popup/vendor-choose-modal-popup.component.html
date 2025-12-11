@@ -5,25 +5,53 @@
   <ng-template pTemplate="caption">
     <div class="table-search">
       <div class="row">
-        <div  ngClass="{vendorsList.length === 0? 'col-sm-4' : 'col-sm-3'}">
-          <input class="form-control" type="text"    placeholder="Search / Enter Vendor Name" [(ngModel)]="searchVendorName"
-            (keyup)="onSearchCriteriaChange('vendorName', $event.target.value)" />
+        <div class="col-5" style="border: 3px solid #f1f1f1; padding: 10px; border-radius: 5px;">
+            <div  ngClass="{vendorsList.length === 0? 'col-sm-4' : 'col-sm-3'}">
+            <input class="form-control" type="text"    placeholder="Search / Enter Vendor Name" [(ngModel)]="searchVendorName"
+                (keyup)="onSearchCriteriaChange('vendorName', $event.target.value)" />
+            </div>
+            <div  ngClass="{vendorsList.length === 0? 'col-sm-4' : 'col-sm-3'}" class="mb-1">
+                <input class="form-control" type="text" [disabled]="!searchVendorName" [(ngModel)]="searchEmailId" (keyup)="onSearchCriteriaChange('emailId', $event.target.value)"  placeholder="Search by / Enter Email ID" 
+                />
+            </div>
+            <div   ngClass="{vendorsList.length === 0 ? 'col-sm-4' : 'col-sm-3'}" class="mb-1">
+                <input class="form-control" type="text" [disabled]="!searchVendorName || !searchEmailId" [(ngModel)]="searchMobileNo" (keyup)="onSearchCriteriaChange('mobile', $event.target.value)" placeholder="Search by / Enter Mobile Number" />
+            </div>
+            <div  *ngIf="vendorsList.length === 0"  ngClass="{vendorsList.length === 0? 'col-sm-4' : 'col-sm-3'}" class="mb-1">
+                <input class="form-control" type="text" [disabled]="!searchVendorName || !searchEmailId" [(ngModel)]="searchCity"   placeholder="Enter   City" />
+            </div>
+            <div class="" *ngIf="vendorsList.length === 0" style="margin-top:10px; text-align:center;">
+                <button type="button" (click)="openCreateVendorWithSearchDetails()" class="btn btn-orange">Click Here</button>
+            </div>
+        </div> 
+        <div class="col-2" style="display: flex;
+    align-items: center; 
+    justify-content: center;
+    font-size: 2rem;
+    color: grey;">
+            <div>OR</div>
         </div>
-        <div  ngClass="{vendorsList.length === 0? 'col-sm-4' : 'col-sm-3'}">
-            <input class="form-control" type="text" [disabled]="!searchVendorName" [(ngModel)]="searchEmailId" (keyup)="onSearchCriteriaChange('emailId', $event.target.value)"  placeholder="Search by / Enter Email ID" 
-            />
+      <div class="col-5" style="border: 3px solid #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    display: flex;
+    align-items: center;">
+        <div class="text-right mt-2" *ngIf="vendorsList.length > 0" style="    text-align: center !important;width: 100%;">
+            <span>You want to add selected vendors to Cart?<br /> <button style="width: 100%;" type="button" (click)="addToCart()" class="btn btn-orange">Click Here</button></span>
         </div>
-        <div   ngClass="{vendorsList.length === 0 ? 'col-sm-4' : 'col-sm-3'}">
-            <input class="form-control" type="text" [disabled]="!searchVendorName || !searchEmailId" [(ngModel)]="searchMobileNo" (keyup)="onSearchCriteriaChange('mobile', $event.target.value)" placeholder="Search by / Enter Mobile Number" />
-        </div>
-         <div  *ngIf="vendorsList.length === 0"  ngClass="{vendorsList.length === 0? 'col-sm-4' : 'col-sm-3'}">
-            <input class="form-control" type="text" [disabled]="!searchVendorName || !searchEmailId" [(ngModel)]="searchCity"   placeholder="Enter   City" />
-        </div>
+      </div>
+      <div class="col-12">
+        <b><em style="color:orange">Note:</em> If you trying to use search filters, already selected vendors will be cleared.</b>
+      </div>
       </div>
     </div>
   </ng-template>
   <ng-template pTemplate="header" let-columns>
     <tr>
+        <th style="width: 3em">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+      </th>
       <th *ngFor="let col of columns" [pSortableColumn]="col.field"
       [style.width]="col.width">
         {{col.header}}
@@ -34,7 +62,9 @@
   </ng-template>
   <ng-template pTemplate="body" let-columns="columns" let-rowData>
     <tr [pSelectableRow]="rowData" >
-      
+       <td style="width: 3em">
+        <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+      </td>
       <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
         <span *ngIf="!col.isLink && col.field != 'description'"> {{rowData[col.field]}}</span>
         <span *ngIf ="col.field == 'description'" > {{rowData[col.field]}}</span>

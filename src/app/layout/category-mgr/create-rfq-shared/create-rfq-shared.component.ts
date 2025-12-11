@@ -834,13 +834,36 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
 
     onAddNewVendor(event:any){
         this.dialog.closeAll();
-        const findIndex = this.vendorListObjs.findIndex(ele => ele.companyName === event.companyName && ele.id === event.id);
-        if (findIndex > -1) {
-           this.vendorList[findIndex].isAddedAlready = true;
+        if(event.length>1){
+            event.forEach((ele:any) => {
+                const findIndex = this.vendorListObjs.findIndex(vend => vend.companyName === ele.companyName && vend.id === ele.id);
+                if (findIndex > -1) {
+                   this.vendorList[findIndex].isAddedAlready = true;
+                } 
+                const vendorFormData = {companyName: ele.companyName, email: ele.email, mobileNo: ele.mobileNo, city: ele.city, id:  ele.id}; 
+                 this.vendorGridData.gridValue.push(vendorFormData); 
+              
+            });
+        }else{ 
+            if(event.length == 1){
+                const findIndex = this.vendorListObjs.findIndex(ele => ele.companyName === event[0].companyName && ele.id === event[0].id);
+                if (findIndex > -1) {
+                this.vendorList[findIndex].isAddedAlready = true;
+                }else{
+                   if(this.vendorGridData.gridValue.findIndex(ele => ele.companyName == event[0].companyName) == -1){
+                       this.vendorGridData.gridValue.push({companyName: event[0].companyName, email: event[0].email, mobileNo: event[0].mobileNo, city: event[0].city, id: event[0].id});
+                   }else{
+                        this.toaster.warning("Already this vendor added to Cart, Pls Check!", 'Warning');
+                        return;
+                   }
+                } 
+                this.vendorGridData.gridValue = [...this.vendorGridData.gridValue];
+            }else{
+                this.toaster.warning("No Vendor selected to add", 'Warning');
+                return;
+            }
         }
-        const vendorFormData = {companyName: event.companyName, email: event.email, mobileNo: event.mobileNo, city: event.city};
-        this.vendorGridData.gridValue.push(vendorFormData);
-        this.vendorGridData.gridValue = [...this.vendorGridData.gridValue];
+       
         this.toaster.success('Vendor added to Cart!', 'Success');
         this.reloadGridComponent();
     }
