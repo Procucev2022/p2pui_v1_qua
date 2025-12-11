@@ -14,9 +14,8 @@ export class VendorChooseModalPopupComponent {
   roleName: any;
   loggedUserPermissions: any;
   @Input('parentData') parentData: any;
-  @Input('vendorsList') vendorList: any = [];
-  @Output() onAddNewVendor: EventEmitter<any> = new EventEmitter();
-  vendorsList: any = [];
+  @Input('vendorList') vendorList: any = [];
+  @Output() onAddNewVendor: EventEmitter<any> = new EventEmitter(); 
   vendorCartTableHeaders: any = [];
   selectedData: any = [];
   pageRecordSize: number = 10;
@@ -32,8 +31,7 @@ export class VendorChooseModalPopupComponent {
     private encryDecryService: EncryDecryService,
     private toaster: ToastrService) { }
 
-  ngOnInit() {
-    console.log('Parent Data in Modal Popup:', this.vendorList); 
+    ngOnInit() { 
     this.defaultPermissions = AppApiConfig.DEFAULT_PERMISSIONS;
     const temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
     this.loggedUserDetails = temp.details;
@@ -46,11 +44,11 @@ export class VendorChooseModalPopupComponent {
     //Add '${implements OnChanges}' to the class.
     console.log('Changes in Modal Popup:', changes);
     this.vendorCartTableHeaders = changes['parentData'].currentValue.vendorHeaders || [];
-    if (changes['parentData']) {
-      this.vendorsList = changes['parentData'].currentValue.vendorList || [];
-      this.cached_vendorList = [...this.vendorsList]; // Cache the original vendor list 
-      console.log('Vendors List in Modal Popup:', this.vendorsList);
-    }
+    // if (changes['parentData']) {
+    //   this.vendorList = changes['parentData'].currentValue.vendorList || [];
+      this.cached_vendorList = [...this.vendorList]; // Cache the original vendor list 
+      console.log('Vendors List in Modal Popup:', this.vendorList);
+    // }
   }
 
   onSearchCriteriaChange(criteriaType: string, criteriaValue: string) {
@@ -61,32 +59,32 @@ export class VendorChooseModalPopupComponent {
         this.searchMobileNo = '';
         this.selectedData = [];
 
-        this.vendorsList = this.cached_vendorList.filter(vendor => vendor.companyName.toLowerCase().includes(criteriaValue.toLowerCase()));
+        this.vendorList = this.cached_vendorList.filter(vendor => vendor.companyName.toLowerCase().includes(criteriaValue.toLowerCase()));
         break;
       case 'emailId':
         this.searchMobileNo = '';
         if (criteriaValue.trim() === '') {
-          this.vendorsList = this.cached_vendorList.filter(vendor => vendor.companyName.toLowerCase().includes(this.searchVendorName.toLowerCase()));
+          this.vendorList = this.cached_vendorList.filter(vendor => vendor.companyName.toLowerCase().includes(this.searchVendorName.toLowerCase()));
           return;
         }
-        this.vendorsList = this.cached_vendorList.filter(vendor => vendor.email.toLowerCase().includes(criteriaValue.toLowerCase())
+        this.vendorList = this.cached_vendorList.filter(vendor => vendor.email.toLowerCase().includes(criteriaValue.toLowerCase())
           && vendor.companyName.toLowerCase().includes(this.searchVendorName.toLowerCase()) );
 
         break;
       case 'mobile':
         if (criteriaValue.trim() === '') {
-          this.vendorsList = this.cached_vendorList.filter(vendor =>
+          this.vendorList = this.cached_vendorList.filter(vendor =>
             vendor.companyName.toLowerCase().includes(this.searchVendorName.toLowerCase()) &&
             vendor.email.toLowerCase().includes(this.searchEmailId.toLowerCase())
           );
           return;
         }
-        this.vendorsList = this.cached_vendorList.filter(vendor => vendor.email.toLowerCase().includes(criteriaValue.toLowerCase())
+        this.vendorList = this.cached_vendorList.filter(vendor => vendor.email.toLowerCase().includes(criteriaValue.toLowerCase())
           && vendor.companyName.toLowerCase().includes(this.searchVendorName.toLowerCase())
           && vendor.mobileNo.includes(this.searchMobileNo));
         break;
       default:
-        this.vendorsList = [...this.cached_vendorList]; // Reset to original list if no criteria matches
+        this.vendorList = [...this.cached_vendorList]; // Reset to original list if no criteria matches
     }
     // Implement your filtering logic here based on criteriaType and criteriaValue
   }

@@ -600,8 +600,9 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
 
     onDeleteVendor(rowData: any) {
         this.vendorGridData.gridValue = this.vendorGridData.gridValue.filter(ele => ele.id != rowData.id);
-        const vendorIndex = this.vendorList.findIndex(ele => ele.companyName == rowData.companyName);
-      this.vendorList[vendorIndex]['isAddedToCart'] = false;
+        const vendorIndex = this.vendorList.findIndex(ele => ele.id == rowData.id);
+        this.vendorList[vendorIndex]['isAddedToCart'] = false;
+        this.vendorList[vendorIndex]['isAddedAlready'] = false;
         this.reloadGridComponent();
     }
     onDeleteDelivery(rowData: any) {
@@ -848,7 +849,8 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
             if(event.length == 1){
                 const findIndex = this.vendorListObjs.findIndex(ele => ele.companyName === event[0].companyName && ele.id === event[0].id);
                 if (findIndex > -1) {
-                this.vendorList[findIndex].isAddedAlready = true;
+                    this.vendorList[findIndex].isAddedAlready = true;
+                    this.vendorGridData.gridValue.push({companyName: event[0].companyName, email: event[0].email, mobileNo: event[0].mobileNo, city: event[0].city, id: event[0].id});
                 }else{
                    if(this.vendorGridData.gridValue.findIndex(ele => ele.companyName == event[0].companyName) == -1){
                        this.vendorGridData.gridValue.push({companyName: event[0].companyName, email: event[0].email, mobileNo: event[0].mobileNo, city: event[0].city, id: event[0].id});
