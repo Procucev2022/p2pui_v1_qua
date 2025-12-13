@@ -18,6 +18,7 @@ export class VendorProfileComponent {
     division: '',
     category: ''
   }
+  activeTabIndex: number = 0;
   cards = [
     {
       title: 'Card 1', text: 'This is the first card.', img: 'https://via.placeholder.com/150',
@@ -136,9 +137,9 @@ export class VendorProfileComponent {
     if (this.loggedUserDetails) {
       if (this.isBuyer) {
         this.getBuyerDataById(this.loggedUserDetails.id)
-      }else{
+      } else {
         this.getVendorById(this.loggedUserDetails.org.id)
-      } 
+      }
     }
     this.buildVendorForm();
 
@@ -242,8 +243,8 @@ export class VendorProfileComponent {
 
     });
 
-    if(!this.isBuyer){
-      this.vendorForm.addControl('branches', this.fb.array([this.createBranch()]) );
+    if (!this.isBuyer) {
+      this.vendorForm.addControl('branches', this.fb.array([this.createBranch()]));
     }
 
 
@@ -351,15 +352,15 @@ export class VendorProfileComponent {
 
   onChangeDivision() {
 
-    
+
   }
 
   getBuyerDataById(id) {
     this.vendorRegObj = null;
     this.createRfqService.getBuyerDataById({ id: id }).subscribe((response) => {
       this.vendorRegObj = response;
-      console.log('response', response) 
-      this.bindData() 
+      console.log('response', response)
+      this.bindData()
     }, (error) => {
 
     });
@@ -378,7 +379,7 @@ export class VendorProfileComponent {
     }, (error) => {
 
     });
-  
+
   }
 
   bindData() {
@@ -398,7 +399,7 @@ export class VendorProfileComponent {
           })
         );
       });
-      
+
       this.vendorForm.get('city')?.disable();
 
     }
@@ -454,8 +455,8 @@ export class VendorProfileComponent {
       this.isShowDivisions = true;
     }, 500);
 
-      if(!this.isBuyer){
-         this.addBranch();
+    if (!this.isBuyer) {
+      this.addBranch();
     }
     // this.bindGeneralModelData();
   }
@@ -520,9 +521,10 @@ export class VendorProfileComponent {
   }
 
   filterCategoryListByDivision(event, index) {
+    
     const value = event.target.value;
     const divisionArray = this.vendorForm.get('divisionCategories') as FormArray;
-    if(value && this.divisionFormList.filter(ele => ele.selectedDivision === value).length > 0){
+    if (value && this.divisionFormList.filter(ele => ele.selectedDivision === value).length > 0) {
       this.toastrService.error('This division is already selected. Please choose a different division.', 'Error');
       divisionArray.at(index).get('division')?.setValue('');
       this.divisionFormList[index].selectedDivision = '';
@@ -531,17 +533,19 @@ export class VendorProfileComponent {
       this.divisionFormList[index].filtered_categoryList = [];
       return;
     }
-      const obj = { "division": event.target.value };
-      this.divisionFormList[index].selectedDivision =event.target.value;
-      this.createRfqService.getGMTCategoriesByDivision(obj).subscribe((res: any) => {
-        this.categoryList = res || [];
-        if (this.categoryList.length > 0) {
+     this.activeTabIndex = -1;
+    const obj = { "division": event.target.value };
+    this.divisionFormList[index].selectedDivision = event.target.value;
+    this.createRfqService.getGMTCategoriesByDivision(obj).subscribe((res: any) => {
+      this.categoryList = res || [];
+      if (this.categoryList.length > 0) {
         this.filtered_categoryList = this.categoryList;
         this.divisionFormList[index].filtered_categoryList = this.categoryList;
         this.divisionFormList[index].selectedDivision = event.target.value;
         this.divisionFormList[index].selectedCategory = [];
-        this.divisionFormList[index].categoryList = this.categoryList;
+        this.divisionFormList[index].categoryList = this.categoryList; 
       }
+         this.activeTabIndex = index;
     });
   }
 
@@ -602,15 +606,15 @@ export class VendorProfileComponent {
 
   updateVendorForm() {
     // if (this.vendorForm.valid) { 
-    if(this.vendorForm.controls.zipCode?.errors){
+    if (this.vendorForm.controls.zipCode?.errors) {
       this.toastrService.error('Please enter valid Pincode', 'Error');
       return;
     }
-    if(this.vendorForm?.controls?.gstin?.errors?.invalidGstin){
+    if (this.vendorForm?.controls?.gstin?.errors?.invalidGstin) {
       this.toastrService.error('Please enter valid GSTIN', 'Error');
       return;
     }
-    if(!this.isValidPincode && this.vendorForm.controls.zipCode?.value != this.vendorRegObj.zipCode){
+    if (!this.isValidPincode && this.vendorForm.controls.zipCode?.value != this.vendorRegObj.zipCode) {
       this.toastrService.error('Please Validate Pincode', 'Error');
       return;
     }
@@ -619,26 +623,26 @@ export class VendorProfileComponent {
     obj.id = this.vendorRegObj.id;
     obj.subscriptionPlan = this.selectedSubscription ? { id: this.selectedSubscription.id } : '';
     console.log('obj', obj)
-    if(!this.isBuyer){
+    if (!this.isBuyer) {
       obj.branches = obj.branches.filter(ele => ele.branchName && ele.contactPerson && ele.email && ele.address);
-      
+
     }
-    let divisionCategoriesList= [];
-    if(this.divisionFormList.length>0){
+    let divisionCategoriesList = [];
+    if (this.divisionFormList.length > 0) {
       this.divisionFormList.forEach((element, index) => {
-        if(element.selectedDivision && element.selectedCategory && element.selectedCategory.length>0){
+        if (element.selectedDivision && element.selectedCategory && element.selectedCategory.length > 0) {
           element.selectedCategory.forEach(catEle => {
-            divisionCategoriesList.push({division: element.selectedDivision, category: catEle})
+            divisionCategoriesList.push({ division: element.selectedDivision, category: catEle })
           });
         }
-        if( element.selectedCategory.length < 1){
+        if (element.selectedCategory.length < 1) {
           this.divisionFormList[index].selectedDivision = '';
           this.divisionFormList[index].categoryList = [];
         }
       });
     }
     obj.divisionCategories = divisionCategoriesList;
-    if( obj.divisionCategories.length < 1){
+    if (obj.divisionCategories.length < 1) {
       this.toastrService.error('Please select at least one division and category', 'Error');
       return;
     }
@@ -655,82 +659,86 @@ export class VendorProfileComponent {
         this.toastrService.error('Error while updating buyer', 'Error');
       });
     } else {
-     
+
       obj.subscriptionPlan = this.selectedSubscription ? this.selectedSubscription : null;
-    // obj.branches = obj.branches.filter(ele => ele.branch
-    this.createRfqService.updateSellerData(obj).subscribe((res: any) => {
-      this.toastrService.success('Vendor Updated Successfully', 'Success');
-      this.getVendorById(this.loggedUserDetails.org.id)
-      this.isEdit = false;
-      this.isFirstScreen = true;
-    }, (error) => {
-      this.toastrService.error('Error while updating vendor', 'Error');
-    })
-    // } else {
-    //   this.toastrService.error('Please fill all required fields', 'Error');
-    // }
-  }
-}
-
-isCategorySelected(i, val){
-  return false //this.divisionFormList[i].selectedCategory && this.divisionFormList[i].selectedCategory.indexOf(val) > -1;
-}
-
- onupdatePincodeValidationStatus(event:any){
-  console.log('Pincode validation status event:', event);
-        if(event && event.pincodeIsValid){ 
-            this.isValidPincode = true; 
-            if(event.city){
-              this.vendorForm.get('city')?.setValue(event.city);
-            }
-            if(event.state){
-              this.vendorForm.get('state')?.setValue(event.state);
-            }
-        } else {
-            this.isValidPincode = false;
-        }
+      // obj.branches = obj.branches.filter(ele => ele.branch
+      this.createRfqService.updateSellerData(obj).subscribe((res: any) => {
+        this.toastrService.success('Vendor Updated Successfully', 'Success');
+        this.getVendorById(this.loggedUserDetails.org.id)
+        this.isEdit = false;
+        this.isFirstScreen = true;
+      }, (error) => {
+        this.toastrService.error('Error while updating vendor', 'Error');
+      })
+      // } else {
+      //   this.toastrService.error('Please fill all required fields', 'Error');
+      // }
     }
-
-onCategoryChange(event, divisionIndex, categoryIndex){
-  const value = event.target.value;
-  const categoryList = this.divisionFormList[divisionIndex].categoryList;
-  this.divisionFormList[divisionIndex].categoryList = []
-  if (event.target.checked) {
-    const allSelectedCategories = this.divisionFormList.flatMap(item => item.selectedCategory);
-  console.log("All selected categories:", allSelectedCategories);
-  console.log("Total count:", allSelectedCategories.length);
-  if ((allSelectedCategories.length >=10 && this.roleName == 'ClientInitiator')) { // For Buyer, max 10 categories
-    this.toastrService.warning('You can select a maximum of 10 categories across all divisions.', 'Warning');
-    // Revert the checkbox state
-    event.target.checked = false;
-    this.divisionFormList[divisionIndex].categoryList = categoryList;
-    return;
-  }
-  if(allSelectedCategories.length >=5 && this.roleName != 'ClientInitiator'){ // Seller /vendor  max 5 categories
-     this.toastrService.warning('You can select a maximum of 5 categories across all divisions.', 'Warning');
-    // Revert the checkbox state
-    event.target.checked = false;
-    this.divisionFormList[divisionIndex].categoryList = categoryList;
-     return;
   }
 
+  isCategorySelected(i, val) {
+    return false //this.divisionFormList[i].selectedCategory && this.divisionFormList[i].selectedCategory.indexOf(val) > -1;
+  }
 
-    const index = this.divisionFormList[divisionIndex].selectedCategory ? this.divisionFormList[divisionIndex].selectedCategory.indexOf(value) : -1;
-    if (index > -1) {
-      this.divisionFormList[divisionIndex].selectedCategory.splice(index, 1);
+  onupdatePincodeValidationStatus(event: any) {
+    console.log('Pincode validation status event:', event);
+    if (event && event.pincodeIsValid) {
+      this.isValidPincode = true;
+      if (event.city) {
+        this.vendorForm.get('city')?.setValue(event.city);
+      }
+      if (event.state) {
+        this.vendorForm.get('state')?.setValue(event.state);
+      }
     } else {
-      this.divisionFormList[divisionIndex].selectedCategory.push(value);
-    }
-  } else {
-    const index = this.divisionFormList[divisionIndex].selectedCategory ? this.divisionFormList[divisionIndex].selectedCategory.indexOf(value) : -1;
-    if (index > -1) {
-      this.divisionFormList[divisionIndex].selectedCategory.splice(index, 1);
+      this.isValidPincode = false;
     }
   }
-  setTimeout(() => {
-    this.divisionFormList[divisionIndex].categoryList = categoryList;
-  }, 10);
-}
+
+  handleTabChange(event: any) {
+    this.activeTabIndex = event.index;
+  }
+
+  onCategoryChange(event, divisionIndex, categoryIndex) {
+    const value = event.target.value;
+    const categoryList = this.divisionFormList[divisionIndex].categoryList;
+    this.divisionFormList[divisionIndex].categoryList = []
+    if (event.target.checked) {
+      const allSelectedCategories = this.divisionFormList.flatMap(item => item.selectedCategory);
+      console.log("All selected categories:", allSelectedCategories);
+      console.log("Total count:", allSelectedCategories.length);
+      if ((allSelectedCategories.length >= 10 && this.roleName == 'ClientInitiator')) { // For Buyer, max 10 categories
+        this.toastrService.warning('You can select a maximum of 10 categories across all divisions.', 'Warning');
+        // Revert the checkbox state
+        event.target.checked = false;
+        this.divisionFormList[divisionIndex].categoryList = categoryList;
+        return;
+      }
+      if (allSelectedCategories.length >= 5 && this.roleName != 'ClientInitiator') { // Seller /vendor  max 5 categories
+        this.toastrService.warning('You can select a maximum of 5 categories across all divisions.', 'Warning');
+        // Revert the checkbox state
+        event.target.checked = false;
+        this.divisionFormList[divisionIndex].categoryList = categoryList;
+        return;
+      }
+
+
+      const index = this.divisionFormList[divisionIndex].selectedCategory ? this.divisionFormList[divisionIndex].selectedCategory.indexOf(value) : -1;
+      if (index > -1) {
+        this.divisionFormList[divisionIndex].selectedCategory.splice(index, 1);
+      } else {
+        this.divisionFormList[divisionIndex].selectedCategory.push(value);
+      }
+    } else {
+      const index = this.divisionFormList[divisionIndex].selectedCategory ? this.divisionFormList[divisionIndex].selectedCategory.indexOf(value) : -1;
+      if (index > -1) {
+        this.divisionFormList[divisionIndex].selectedCategory.splice(index, 1);
+      }
+    }
+    setTimeout(() => {
+      this.divisionFormList[divisionIndex].categoryList = categoryList;
+    }, 10);
+  }
 }
 
 export function gstinValidator(): ValidatorFn {
@@ -743,4 +751,5 @@ export function gstinValidator(): ValidatorFn {
     }
     return GSTIN_REGEX.test(value.toUpperCase()) ? null : { invalidGstin: true };
   };
+
 }

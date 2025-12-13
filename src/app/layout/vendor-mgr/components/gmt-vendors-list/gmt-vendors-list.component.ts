@@ -65,6 +65,7 @@ export class GmtVendorsListComponent implements OnInit {
     }
 
     onChangeCheckBoxValue(rowData: any) {
+       
         this.otp = '';
         this.subscriptionDays = 180;
         this.vendMgrSer.sendOtpForGMTVendorUpgrade({ id: rowData.id }).subscribe((res: any) => {
@@ -86,6 +87,15 @@ export class GmtVendorsListComponent implements OnInit {
 
         })
 
+    }
+    onSubscribedToggle(rowData: any, checked: boolean) {
+         if(rowData.subscribed == 'Yes'){
+            this.toaster.info('Already subscribed','Info'); 
+           return;
+        } 
+        rowData.subscribed = checked ? 'Yes' : 'No';
+        // preserve existing behavior if needed
+        this.onChangeCheckBoxValue(rowData);
     }
 
     onVerifyAndUpdate() {

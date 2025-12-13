@@ -21,7 +21,7 @@ import { CreateRfqService } from '../services/create-rfq.service';
   styleUrls: ['./create-rfq-shared.component.scss']
 })
 export class CreateRFQSharedComponent implements OnInit , OnChanges {
-
+     @ViewChild('otpTemplate') termsTemplate:any;
     rfqDataList: any = [];
     isCreateRFQView: boolean = false;
     selectedData: any = [];
@@ -65,6 +65,12 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
         { field: 'email', header: 'Email', isLink: false, width: '120px', fieldType: 'text', isExceedContent: true },
         { field: 'city', header: 'City', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
         { field: 'mobileNo', header: 'Mobile Number', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true }
+       ];
+
+       vendorSearchTableHeaders = [
+        { field: 'companyName', header: 'Vendor Name', isLink: false, width: '220px', fieldType: 'text', isExceedContent: true },
+        { field: 'email', header: 'Email', isLink: false, width: '220px', fieldType: 'text', isExceedContent: true },
+         { field: 'mobileNo', header: 'Mobile Number', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true }
        ];
 
     deilveryCartTableHeaders = [
@@ -479,6 +485,7 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
         }else{
             this.projectForm.addControl('category', this.fb.control('', Validators.required));
         }
+         this.vendorForm.disable();
     }
 
     //from Prevendor Grid - adding vendor to cart
@@ -593,6 +600,9 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
 
     onDeleteVendor(rowData: any) {
         this.vendorGridData.gridValue = this.vendorGridData.gridValue.filter(ele => ele.id != rowData.id);
+        const vendorIndex = this.vendorList.findIndex(ele => ele.id == rowData.id);
+        this.vendorList[vendorIndex]['isAddedToCart'] = false;
+        this.vendorList[vendorIndex]['isAddedAlready'] = false;
         this.reloadGridComponent();
     }
     onDeleteDelivery(rowData: any) {
@@ -808,6 +818,58 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
     isClientInitiatory(){
         return this.loggedUserDetails.role.roleName && this.loggedUserDetails.role.roleName == 'ClientInitiator'? true: false;
     }
+
+
+        onAddExistingVendor(){
+        this.dialog.open(this.termsTemplate, {
+            width: "70%",
+            minHeight: "35vh",
+            data: "Su",
+            panelClass: 'terms-condt-cls',
+            disableClose: true,
+        }).afterClosed().subscribe((res: any) => {
+
+        })
+    }
+
+
+    onAddNewVendor(event:any){
+        this.dialog.closeAll();
+        if(event.length>1){
+            event.forEach((ele:any) => {
+                const findIndex = this.vendorListObjs.findIndex(vend => vend.companyName === ele.companyName && vend.id === ele.id);
+                if (findIndex > -1) {
+                   this.vendorList[findIndex].isAddedAlready = true;
+                } 
+                const vendorFormData = {companyName: ele.companyName, email: ele.email, mobileNo: ele.mobileNo, city: ele.city, id:  ele.id}; 
+                 this.vendorGridData.gridValue.push(vendorFormData); 
+              
+            });
+        }else{ 
+            if(event.length == 1){
+                const findIndex = this.vendorListObjs.findIndex(ele => ele.companyName === event[0].companyName && ele.id === event[0].id);
+                if (findIndex > -1) {
+                    this.vendorList[findIndex].isAddedAlready = true;
+                    this.vendorGridData.gridValue.push({companyName: event[0].companyName, email: event[0].email, mobileNo: event[0].mobileNo, city: event[0].city, id: event[0].id});
+                }else{
+                   if(this.vendorGridData.gridValue.findIndex(ele => ele.companyName == event[0].companyName) == -1){
+                       this.vendorGridData.gridValue.push({companyName: event[0].companyName, email: event[0].email, mobileNo: event[0].mobileNo, city: event[0].city, id: event[0].id});
+                   }else{
+                        this.toaster.warning("Already this vendor added to Cart, Pls Check!", 'Warning');
+                        return;
+                   }
+                } 
+                this.vendorGridData.gridValue = [...this.vendorGridData.gridValue];
+            }else{
+                this.toaster.warning("No Vendor selected to add", 'Warning');
+                return;
+            }
+        }
+       
+        this.toaster.success('Vendor added to Cart!', 'Success');
+        this.reloadGridComponent();
+    }
+
 
 }
 

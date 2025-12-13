@@ -91,6 +91,7 @@ import { VendorViewModelComponent } from './components/vendor-view-model/vendor-
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TreeTableModule } from 'primeng/treetable';
 import { PincodeControlComponent } from './components/pincode-control/pincode-control.component';
+import { VendorChooseModalPopupComponent } from './components/vendor-choose-modal-popup/vendor-choose-modal-popup.component';
 
 // import { AgGridAngular } from 'ag-grid-angular';
 @NgModule({
@@ -146,7 +147,7 @@ import { PincodeControlComponent } from './components/pincode-control/pincode-co
         GmtVendorInfoModalComponent,
         DownloadAttachmentsComponent, QuotCompareViewComponent,
         CapexCatMgrQuoteComparComponent,
-        ProCpxVendorSummaryComponent,ProCpxVendorPPOsComponent, ProCpxVendorSummaryClientsComponent, ProCpxVendorSummaryLayoutComponent, VendorViewModelComponent, PincodeControlComponent],
+        ProCpxVendorSummaryComponent,ProCpxVendorPPOsComponent, ProCpxVendorSummaryClientsComponent, ProCpxVendorSummaryLayoutComponent, VendorViewModelComponent, PincodeControlComponent, VendorChooseModalPopupComponent],
     exports: [
         DialogModule,
         CommonModule,
@@ -213,7 +214,8 @@ import { PincodeControlComponent } from './components/pincode-control/pincode-co
         ReactiveFormsModule,
         VendorViewModelComponent,
         TreeTableModule,
-        PincodeControlComponent
+        PincodeControlComponent,
+        VendorChooseModalPopupComponent
 
     ],
     providers: [
