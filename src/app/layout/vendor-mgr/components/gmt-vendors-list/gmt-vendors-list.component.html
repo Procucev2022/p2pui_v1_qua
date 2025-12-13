@@ -52,10 +52,15 @@
                   <div class="custom-control custom-switch" >
 
                       <!-- <label class="custom-control-label" for="customSwitch1"> </label> -->
-                      <label class="switch">
-                        <input type="checkbox" [disabled]="rowData.upgradeVendor == true" (click)="onChangeCheckBoxValue(rowData)"  [id]="rowData.id" [name]="rowData.id" [(ngModel)]="rowData.upgradeVendor">
-                        <span class="slider round"></span>
-                      </label>
+                     <label class="switch" >
+                    <input type="checkbox"
+                          [disabled]="rowData.subscribed === 'Yes'"
+                          [id]="rowData.id"
+                          [name]="rowData.id"
+                          [checked]="rowData.subscribed === 'Yes'"
+                          (change)="onSubscribedToggle(rowData, $event.target.checked)" />
+                    <span class="slider round"></span>
+                  </label>
                   </div>
                 </td>
               </tr>
