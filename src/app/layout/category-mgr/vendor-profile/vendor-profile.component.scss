@@ -134,3 +134,17 @@ h5.card-title {
   box-sizing: border-box;
   
 }
+
+span.category-badge {
+    border: 1px solid #01b5de;
+    padding: 3px;
+    margin: 4px;
+    background: #01b5de;
+    border-radius: 4px;
+    color: #fff;
+}
+
+.categories-section {
+    max-height: 300px;
+    overflow-y: auto;
+}

@@ -64,6 +64,7 @@
                  <div formArrayName="divisionCategories" style="    border: 2px solid #8080804a;
     margin-top: 1rem;">
                     <label style="font-weight: bold;" class="mt-3">Select Divisions & Categories:</label>
+                      <p-accordion [activeIndex]="activeTabIndex"  (onTabChange)="handleTabChange($event)" >
                     <div *ngFor="let group of items.controls; let i = index" [formGroupName]="i" class="row border p-1 m-3 pb-3" style="background: #6a9adf2b;
     border-radius: 4px;">
                             <div class="col-6"  >
@@ -87,8 +88,37 @@
                                     <option *ngFor="let val of divisionFormList[i].divisionList" value="{{val}}">{{val}}</option>
                                 </select>
                             </div>
+                            <div class="col-6" *ngIf="divisionFormList[i].selectedCategory?.length > 0">
+                                <span class="acc-title"> <b>Selected Categories:: </b></span>
+                                
+                                <div class="selected-categories">
+                                    <span class="category-badge" *ngFor="let cat of divisionFormList[i].selectedCategory">{{cat}}</span>
+                                </div>
+                            </div>
                             <div class="col-12"  >
-                                <label class="form-label  " style="display: block;font-weight: bold;">Choose Category :</label>
+                                  
+                                        <ng-container  >
+                                        <p-accordionTab>
+                                            <p-header>
+                                               Choose Category 
+                                            </p-header>
+                                            <div class="categories-section">
+                                             <ul class="five-column-list" *ngIf="divisionFormList[i].categoryList?.length > 0">
+                                                <li *ngFor="let val of divisionFormList[i].categoryList; let j = index;" style="margin-right: 10px;" class="form-check form-check-inline">
+                                                    <input type="checkbox" style="width: 20px;height: 20px;;" [value]="val"  id="d1_cat_{{j}}_{{val}}"  
+                                                    (click)="onCategoryChange($event, i, j)" [checked]="isMatchedCategory(i, val)"  />
+                                                    <label style="margin-right: 5px;" for="d1_cat_{{j}}_{{val}}">{{val}}</label>
+
+                                                </li>
+                                            </ul>
+                                           
+                                            <p *ngIf="!divisionFormList[i].selectedDivision" style="color: orange;font-style: italic;">Please Select Division</p>
+                                            <p *ngIf="!!divisionFormList[i].selectedDivision && divisionFormList[i].categoryList.length == 0 "> No Categories found with division <b>{{ divisionFormList[i].selectedDivision }}</b></p>
+                                          </div>
+                                        </p-accordionTab>
+                                        </ng-container>
+ 
+                                <!-- <label class="form-label  " style="display: block;font-weight: bold;">Choose Category :</label>
                                   <ul class="five-column-list" *ngIf="divisionFormList[i].categoryList?.length > 0">
                                     <li *ngFor="let val of divisionFormList[i].categoryList; let j = index;" style="margin-right: 10px;" class="form-check form-check-inline">
                                         <input type="checkbox" style="width: 20px;height: 20px;;" [value]="val"  id="d1_cat_{{j}}_{{val}}"  
@@ -96,13 +126,14 @@
                                          <label style="margin-right: 5px;" for="d1_cat_{{j}}_{{val}}">{{val}}</label>
 
                                     </li>
-                                </ul>
+                                </ul> -->
                                  <!-- <select class="form-control" name="se1" formControlName="category">
                                     <option     value="">--Select--</option>
                                     <option *ngFor="let val of divisionFormList[i].categoryList" value="{{val}}">{{val}}</option>
                                 </select>  -->
                             </div>
                     </div>
+                    </p-accordion>
                 </div>
 
             </div>
