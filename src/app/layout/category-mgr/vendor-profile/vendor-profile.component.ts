@@ -534,6 +534,10 @@ export class VendorProfileComponent {
       return;
     }
      this.activeTabIndex = -1;
+     // reset category search query for 5 indexes
+     for (let i = 0; i < 5; i++) {
+       this.divisionFormList[i].categorySearchQuery = '';
+     }
     const obj = { "division": event.target.value };
     this.divisionFormList[index].selectedDivision = event.target.value;
     this.createRfqService.getGMTCategoriesByDivision(obj).subscribe((res: any) => {
@@ -558,8 +562,20 @@ export class VendorProfileComponent {
         this.divisionFormList[index].filtered_categoryList = this.categoryList;
         this.divisionFormList[index].categoryList = this.categoryList;
         this.divisionFormList[index].selectedCategory = category;
+        this.divisionFormList[index].categorySearchQuery = '';
       }
     });
+  }
+
+  onCategorySearch(event, index) {
+    const query = event.target.value.toLowerCase();
+    this.divisionFormList[index].categorySearchQuery = event.target.value;
+    const filtered_categoryList = this.divisionFormList[index].filtered_categoryList.filter(ele => ele != null && (ele.toLowerCase().includes(query)));
+    // this.divisionFormList[index].categoryList = [];
+    // setTimeout(() => {
+      this.divisionFormList[index].categoryList = filtered_categoryList;
+    // }, 10);
+    
   }
 
   getClassName(subData: any) {

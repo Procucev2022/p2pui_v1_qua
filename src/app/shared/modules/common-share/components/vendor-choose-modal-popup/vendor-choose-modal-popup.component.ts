@@ -156,7 +156,7 @@ export class VendorChooseModalPopupComponent {
       email: this.searchEmailId,
       mobileNo: this.searchMobileNo,
       city: this.searchCity,
-      id:  'ven_' + Math.random().toString(36).substr(2, 9)
+      id:  'MANUALENTRYID_' + Math.random().toString(36).substr(2, 9)
     };
     this.dialogRef.close({ action: 'createVendor', data: [newVendorData] });
     this.onAddNewVendor.emit([newVendorData]);

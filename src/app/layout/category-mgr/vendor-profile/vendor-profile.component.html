@@ -102,15 +102,21 @@
                                             <p-header>
                                                Choose Category 
                                             </p-header>
-                                            <div class="categories-section">
-                                             <ul class="five-column-list" *ngIf="divisionFormList[i].categoryList?.length > 0">
-                                                <li *ngFor="let val of divisionFormList[i].categoryList; let j = index;" style="margin-right: 10px;" class="form-check form-check-inline">
-                                                    <input type="checkbox" style="width: 20px;height: 20px;;" [value]="val"  id="d1_cat_{{j}}_{{val}}"  
-                                                    (click)="onCategoryChange($event, i, j)" [checked]="isMatchedCategory(i, val)"  />
-                                                    <label style="margin-right: 5px;" for="d1_cat_{{j}}_{{val}}">{{val}}</label>
+                                           
+                                            <div class="form-group" style="width: 600px;" *ngIf="divisionFormList[i].selectedDivision ">
+                                                {{divisionFormList[i].categorySearchQuery}}
+                                                <input type="text" name="categorySearchQuery_{{i}}" class="form-control" style="border:2px solid blue !important;" placeholder="Search  Category here..."
+                                                 (input)="onCategorySearch($event, i)" [(ngModel)]="divisionFormList[i].categorySearchQuery" />
+                                            </div>
+                                             <div class="categories-section">
+                                                <ul class="five-column-list" *ngIf="divisionFormList[i].categoryList?.length > 0">
+                                                    <li *ngFor="let val of divisionFormList[i].categoryList; let j = index;" style="margin-right: 10px;" class="form-check form-check-inline">
+                                                        <input type="checkbox" style="width: 20px;height: 20px;;" [value]="val"  id="d1_cat_{{j}}_{{val}}"  
+                                                        (click)="onCategoryChange($event, i, j)" [checked]="isMatchedCategory(i, val)"  />
+                                                        <label style="margin-right: 5px;" for="d1_cat_{{j}}_{{val}}">{{val}}</label>
 
-                                                </li>
-                                            </ul>
+                                                    </li>
+                                                </ul>
                                            
                                             <p *ngIf="!divisionFormList[i].selectedDivision" style="color: orange;font-style: italic;">Please Select Division</p>
                                             <p *ngIf="!!divisionFormList[i].selectedDivision && divisionFormList[i].categoryList.length == 0 "> No Categories found with division <b>{{ divisionFormList[i].selectedDivision }}</b></p>
