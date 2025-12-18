@@ -104,7 +104,6 @@
                                             </p-header>
                                            
                                             <div class="form-group" style="width: 600px;" *ngIf="divisionFormList[i].selectedDivision ">
-                                                {{divisionFormList[i].categorySearchQuery}}
                                                 <input type="text" name="categorySearchQuery_{{i}}" class="form-control" style="border:2px solid blue !important;" placeholder="Search  Category here..."
                                                  (input)="onCategorySearch($event, i)" [(ngModel)]="divisionFormList[i].categorySearchQuery" />
                                             </div>
