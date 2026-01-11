@@ -25,7 +25,7 @@
                 (input)="itemCatalogueTable.filterGlobal($event.target.value, 'contains')" />
             </div>
             <div class="col-sm-8">
-               <h5 style="text-align: left;">Not finding items you want? You can raise <span class="link-cls" (click)="navigateToGMT('gmtName')"><b>RFQ here</b></span>  to get quotes directly on email</h5>
+               <h5 style="text-align: left;    font-size: 1.2rem;">Not finding items you want? You can raise <span class="link-cls" (click)="navigateToGMT('gmtName')"><b>RFQ here</b></span>  to get quotes directly on email</h5>
                <span> *QYP : Quote Your Price</span>
             </div>
           </div>
@@ -136,7 +136,7 @@
     </ng-template>
       <ng-template pTemplate="emptymessage" let-columns>
         <tr>
-          <td [attr.colspan]="5" style="text-align:center;">
+          <td [attr.colspan]="8" style="text-align:center;">
             No Records Found.
           </td>
         </tr>

@@ -468,7 +468,7 @@
         <div class="list-group"  >
             <div class="nested-menu" *ngIf="(loggedUserDetails?.role.roleName == 'ClientInitiator' || loggedUserDetails?.role.roleName == 'PRApprover' ||loggedUserDetails?.role.roleName == 'CategoryManager2' ||
              loggedUserDetails?.role.roleName == 'CategoryManager' || loggedUserDetails?.role.roleName == 'Vendor'|| loggedUserDetails?.role.roleName == 'Registration'||
-             loggedUserDetails?.role.roleName == 'PartialVendor') && !isGMTView ">
+             loggedUserDetails?.role.roleName == 'PartialVendor') && !isGMTView && !isBFSView ">
                 <ul style="padding: 0px; margin: 0px;">
                     <li style="display: block;">
                         <a class="list-group-item" (click)="toggleAccordian($event, 'CAPEX')" data-toggle="collapse"
