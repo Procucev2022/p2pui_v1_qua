@@ -2,7 +2,7 @@ import { NumbersOnlyDirective } from './numbers-only.directive';
 
 describe('NumbersOnlyDirective', () => {
   it('should create an instance', () => {
-    const directive = new NumbersOnlyDirective();
+    const directive = new NumbersOnlyDirective(123 as any);
     expect(directive).toBeTruthy();
   });
 });
