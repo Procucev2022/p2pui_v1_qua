@@ -24,9 +24,17 @@
               <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
                 (input)="itemCatalogueTable.filterGlobal($event.target.value, 'contains')" />
             </div>
-            <div class="col-sm-8">
-               <h5 style="text-align: left;    font-size: 1.2rem;">Not finding items you want? You can raise <span class="link-cls" (click)="navigateToGMT('gmtName')"><b>RFQ here</b></span>  to get quotes directly on email</h5>
-               <span> *QYP : Quote Your Price</span>
+            <div class="col-sm-8" 
+            style=" text-align: right;">
+               <h5 style="text-align: right;    font-size: 1.2rem;">Not finding items you want? You can raise <span class="link-cls" (click)="navigateToGMT('gmtName')"><b>RFQ here</b></span>  to get quotes directly on email</h5> 
+               <span class="info-icon-desc"> *QYP : Quote Your Price   </span>
+               <span class="info-icon-desc"> 
+                <img src="/assets/images/new/bid-request-wb.png" width="30" height="30" title="Request Bid"  *ngIf="!['CategoryManager','CategoryManager2'].includes(roleName)">  - Request Bid  </span>  
+                <span class="info-icon-desc"> 
+                   
+              <img src="/assets/images/new/bid-requrested-wb.png" width="30" height="30" title="Bid Requested"    *ngIf="!['CategoryManager','CategoryManager2'].includes(roleName)"  >
+              -  Requested Bid 
+              </span>
             </div>
           </div>
         </div>
@@ -41,7 +49,7 @@
               <p-sortIcon [field]="col.field"></p-sortIcon>
             </th>
           </ng-container>
-          <th   style="width:18rem">Actions</th>
+          <th   style="width:23rem">Actions</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
@@ -80,25 +88,21 @@
             </span>
 
           </td>
-          <td   style="width:18rem">
-            <button type="button" class="btn-skelton" >
-                <img src="/assets/images/new/view-doc.png" (click)="onViewItemDetails(rowData, false)"
-                    title="View Item Details"> &nbsp;&nbsp;
-                    <img src="/assets/images/new/edit-data.png" *ngIf="roleName == 'CategoryManager2'" (click)="onEditBFSItemDetails(rowData)"
-                    title="Edit BFS Item Details"> &nbsp;&nbsp;
-                    <span class="blink" *ngIf="  (rowData.commentsFlag && rowData.commentsFlag  == true)">
-                        <i class="fa fa-bell" aria-hidden="true"></i>
-                    </span>
-                    <img src="/assets/images/new/comments-write.png"  (click)="openCreateCommentsByBuyer(rowData)" />
+          <td   style="width:23rem">
+            <div class="action-icons" style="display: flex;align-items: center;">
+                <img src="/assets/images/new/view-doc.png" width="40" height="40" (click)="onViewItemDetails(rowData, false)"
+                    title="View Item Details">
+                <img src="/assets/images/new/edit-data.png" width="40" height="40" *ngIf="roleName == 'CategoryManager2'" (click)="onEditBFSItemDetails(rowData)"
+                title="Edit BFS Item Details"> 
+                <span class="blink" *ngIf="  (rowData.commentsFlag && rowData.commentsFlag  == true)">
+                    <i class="fa fa-bell" aria-hidden="true"></i>
+                </span>
+                <img src="/assets/images/new/comments-write.png" width="40" height="40" (click)="openCreateCommentsByBuyer(rowData)" /> 
 
-            </button>
+            <img src="/assets/images/new/bid-request-wb.png" width="40" height="40" title="Request Bid"  *ngIf="!['CategoryManager','CategoryManager2'].includes(roleName)    && (rowData.status.status == 'BFS_NEW')" (click)="onBidReqest(rowData)" style="cursor: pointer;">
 
-            <!-- <button type="button" class="btn-skelton" *ngIf="roleName == 'CategoryManager'" (click)="editDescription(rowData, editItem)">
-            <img src="/assets/images/new/edit-data.png" title="Edit Item Description">
-          </button> -->
-
-            <button type="button" class="btn btn-blue" *ngIf="!['CategoryManager','CategoryManager2'].includes(roleName)    && (rowData.status.status == 'BFS_NEW')" (click)="onBidReqest(rowData)">Bid Request</button>
-            <button type="button" class="btn btn-orange" *ngIf="!['CategoryManager','CategoryManager2'].includes(roleName)  && (rowData.status && rowData.status.status == 'BID_REQUESTED')" disabled>Requested</button>
+            <img src="/assets/images/new/bid-requrested-wb.png" width="40" height="40" title="Bid Requested"   style="cursor: not-allowed;"   *ngIf="!['CategoryManager','CategoryManager2'].includes(roleName)  && (rowData.status && rowData.status.status == 'BID_REQUESTED')" >
+            </div>
 
         </td>
         </tr>
