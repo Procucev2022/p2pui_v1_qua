@@ -143,6 +143,8 @@ export class BfsItemsListComponent implements OnInit {
     commentFileTypeImg: any;
     commentFilesDataListImg: any = [];
     selecteEditItemRowData: any;
+    searchedEmail: any;
+    searchedPhone: any;
 
     constructor(private encryDecryService: EncryDecryService, private converSer: ConvertToBase64Service,
         private bfsItemService: BfsItemsService, private toaster: ToastrService, private loaderService: LoaderService, private bfsItemsService: BfsItemsService,
@@ -230,15 +232,15 @@ export class BfsItemsListComponent implements OnInit {
             itemNumber: new FormControl(''),
             availableQuantity: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]+(\.?[0-9]+)?$/)]),
             ageOfAsset: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]+(\.?[0-9]+)?$/)]),
-            sellPrice: new FormControl('', [Validators.required ]),
-            discount: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]+(\.?[0-9]+)?$/)]),
+            sellPrice: new FormControl('' ),
+            discount: new FormControl('' ),
             askPrice: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]+(\.?[0-9]+)?$/)]),
             category: new FormControl('', Validators.required),
             bfsGroup: new FormControl('', Validators.required),
             location: new FormControl('', Validators.required),
             user: new FormControl('', Validators.required),
             remarks: new FormControl(''),
-            buyPriceDisclosure: new FormControl('true', Validators.required)
+            buyPriceDisclosure: new FormControl('true')
         });
         this.itemForm.patchValue({
             buyPriceDisclosure: true,
@@ -258,8 +260,7 @@ export class BfsItemsListComponent implements OnInit {
                 this.itemForm.controls['sellPrice'].setValue('');
                 this.itemForm.controls['discount'].setValue(0);
             }
-
-            this.itemForm.controls['sellPrice'].setValidators([Validators.required, Validators.pattern(/^[0-9]+(\.?[0-9]+)?$/)]);
+ 
 
         }else{
             this.itemForm.controls['askPrice'].setValidators([Validators.required]);
@@ -315,16 +316,33 @@ export class BfsItemsListComponent implements OnInit {
 
     }
     searchForOrgs() {
+        this.filtered_organizationList = [];
+        // write condition for email and phone number 10 digit validation check
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phonePattern = /^\d{10}$/;
 
+        if (!emailPattern.test(this.searchedEmail)) {
+            this.toaster.warning('Please enter a valid Email / User ID');
+            return;
+        }
 
-        if (this.searchedOrgString) {
-            this.bfsItemService.getOrgSearch({ 'companyName': this.searchedOrgString }).subscribe((res: any) => {
-                if (Array.isArray(res)) {
-                    this.filtered_organizationList = res;
+        if (!phonePattern.test(this.searchedPhone)) {
+            this.toaster.warning('Please enter a valid Mobile Number');
+            return;
+        }
+
+        if (this.searchedEmail && this.searchedPhone) {
+            this.bfsItemService.getOrgSearchByEmailPhone({ 'username': this.searchedEmail, 'phone': this.searchedPhone }).subscribe((res: any) => {
+                if (res &&  
+                    res.id) {
+                    this.filtered_organizationList = [res];
+                }else{
+                    this.filtered_organizationList = [];
+                    this.toaster.warning('No Organizations found for the provided Email / User ID and Mobile Number');
                 }
             })
         } else {
-            this.toaster.warning('Please Enter Organization name');
+            this.toaster.warning('Please Enter Email / User ID and Mobile Number to search Organization');
             return;
         }
     }

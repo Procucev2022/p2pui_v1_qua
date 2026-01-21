@@ -364,6 +364,7 @@ export class AppApiConfig {
     public static BFS_CREATE_ITEMS = "/rest/bfs/createBfsItems";
     public static BFS_GET_USERS_BY_ORG = "/rest/bfs/getUsersByOrg";
     public static BFS_GET_ORG_SEARCH = "/rest/bfs/orgSearch";
+    public static BFS_GET_ORG_SEARCH_BY_EMAIL = "/rest/users/getSellerByEmail";
     public static BFS_GET_ALL_BFS_ITEMS = "/rest/bfs/getAllBfsItems";
     public static BFS_GET_REQUESTED_USERS_BY_BFS_FOR_CM ="/rest/bfs/getRequestedUserByBFS";
     public static BFS_GET_MY_ITEMS ="/rest/bfs/getItemsByOrgAndUser"

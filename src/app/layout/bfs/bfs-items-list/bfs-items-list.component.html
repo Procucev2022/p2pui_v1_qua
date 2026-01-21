@@ -234,27 +234,8 @@
                                                             <p class="error"  *ngIf="(itemForm.controls?.availableQuantity?.touched && itemForm.controls.availableQuantity.errors) && (itemForm.controls.availableQuantity.errors.invalid || itemForm.controls.availableQuantity.errors.required)">Quantity is a mandatory field & should be number</p>
                                                     </div>
 
-                                                <div class="col-2 mb-1">
-                                                    <label class="form-label required">Do you know Buy Price?</label>
-                                                    <div style="    display: flex;
-                                                    align-items: center;
-                                                    padding: 4px;">
-                                                        <input type="radio" name="r2" [value]="true" formControlName="buyPriceDisclosure" (click)="onChangePriceDisclosure(true)" />&nbsp;&nbsp;Yes &nbsp;&nbsp;&nbsp;
-                                                        <input type="radio" name="r2" [value]="false" formControlName="buyPriceDisclosure" (click)="onChangePriceDisclosure(false)" />&nbsp;&nbsp;No
-                                                    </div>
-                                                </div>
-                                                <div class="col-2 mb-1" *ngIf="itemForm.controls.buyPriceDisclosure.value && itemForm.controls.buyPriceDisclosure.value == true">
-                                                    <label class="form-label required">Buy Price(Per Unit)</label>
-                                                    <input class="form-control" formControlName="sellPrice" type="number" placeholder="Buy Price" (change)="onPriceDiscountChange()" />
-                                                    <p class="error"  *ngIf="(itemForm.controls?.sellPrice?.touched && itemForm.controls.sellPrice.errors) && (itemForm.controls.sellPrice.errors.invalid || itemForm.controls.sellPrice.errors.required)">Buy Price is a mandatory field & should be number</p>
-                                                </div>
-                                                <div class="col-2 mb-1" *ngIf="itemForm.controls.buyPriceDisclosure.value && itemForm.controls.buyPriceDisclosure.value == true">
-                                                    <label class="form-label required">Discount(%)</label>
-
-                                                    <input class="form-control" formControlName="discount" type="number" placeholder="Discount" (change)="onPriceDiscountChange()"/>
-                                                    <p class="error"  *ngIf="(itemForm.controls?.discount?.touched && itemForm.controls.discount.errors) && (itemForm.controls.discount.errors.invalid || itemForm.controls.discount.errors.required)">Discount is a mandatory field & should be number</p>
-                                                </div>
-                                                <div class="col-2 mb-1" *ngIf="itemForm.controls.buyPriceDisclosure.value == true ||  itemForm.controls.buyPriceDisclosure.value == false">
+                                                
+                                                <div class="col-2 mb-1" >
                                                     <label class="form-label" [ngClass]="{'required':  itemForm.controls.buyPriceDisclosure.value == false}">Sale Price(Per Unit)</label>
                                                     <input class="form-control" formControlName="askPrice"  type="number" placeholder="Sale Price"  />
                                                 </div>
@@ -412,11 +393,15 @@
         </div>
         <div class="modal-body">
             <div class="row">
-                <div class="col-6 mb-1">
-                    <input type="text" class="form-control" [(ngModel)]="searchedOrgString"
-                        placeholder="Enter Organization Name" />
-                </div>
-                <div class="col-5"><button class="btn btn-blue" (click)="searchForOrgs()">Search</button></div>
+                 <div class="col-4 mb-1">
+                <input type="text" class="form-control" [(ngModel)]="searchedEmail"
+                    placeholder="Enter Email / User ID" />
+            </div>
+            <div class="col-4 mb-1">
+                <input type="text" class="form-control" [(ngModel)]="searchedPhone"
+                    placeholder="Enter  Mobile Number" />
+            </div>
+            <div class="col-4"><button class="btn btn-blue" (click)="searchForOrgs()">Search</button></div>
 
                 <div class="col-12 orgList">
                     <ul style="list-style:  none;">
@@ -760,11 +745,15 @@ bottom: 16px;right: 16px;" >
     </div>
     <div class="modal-body">
         <div class="row">
-            <div class="col-6 mb-1">
-                <input type="text" class="form-control" [(ngModel)]="searchedOrgString"
-                    placeholder="Enter Organization Name" />
+            <div class="col-4 mb-1">
+                <input type="text" class="form-control" [(ngModel)]="searchedEmail"
+                    placeholder="Enter Email / User ID" />
             </div>
-            <div class="col-5"><button class="btn btn-blue" (click)="searchForOrgs()">Search</button></div>
+            <div class="col-4 mb-1">
+                <input type="text" class="form-control" [(ngModel)]="searchedPhone"
+                    placeholder="Enter  Mobile Number" />
+            </div>
+            <div class="col-2"><button class="btn btn-blue" (click)="searchForOrgs()">Search</button></div>
 
             <div class="col-12 orgList">
                 <ul style="list-style:  none;">
