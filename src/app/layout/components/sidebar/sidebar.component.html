@@ -655,7 +655,7 @@
 
         <div class="list-group" *ngIf="!!currentView && ( currentView == SystemViewConfig.BFS_PRO)">
             <div class="nested-menu" *ngIf="loggedUserDetails?.role.roleName == 'ClientInitiator' || loggedUserDetails?.role.roleName == 'CategoryManager2' || loggedUserDetails?.role.roleName == 'CategoryManager' || loggedUserDetails?.role.roleName == 'Vendor'|| loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor'">
-                <a class="list-group-item"
+                <a class="list-group-item" *ngIf="!( loggedUserDetails?.role.roleName == 'Vendor'|| loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor')"
                     [routerLink]="['/bfs/items']" [routerLinkActive]="['router-link-active']">
                     <img src="/assets/images/menu/PR.svg">
                     <span>Item Stock</span>
@@ -670,7 +670,7 @@
                     <img src="/assets/images/menu/PR.svg">
                     <span>My Items</span>
                 </a>
-                <a class="list-group-item"  *ngIf="!['CategoryManager','CategoryManager2'].includes(loggedUserDetails?.role.roleName) "
+                <a class="list-group-item"  *ngIf="!['CategoryManager','CategoryManager2'].includes(loggedUserDetails?.role.roleName) &&  !( loggedUserDetails?.role.roleName == 'Vendor'|| loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor') "
                     [routerLink]="['/bfs/my-bids']" [routerLinkActive]="['router-link-active']">
                     <img src="/assets/images/menu/PR.svg">
                     <span>My Bids</span>

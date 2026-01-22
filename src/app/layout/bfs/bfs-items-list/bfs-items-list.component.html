@@ -170,7 +170,7 @@
                                   <div class="rfqContainer ">
                                         <div class="col-12">
                                             <form class="row" [formGroup]="itemForm" novalidate (ngSubmit)="onAddItemsToCart()">
-                                                <div class="col-4 mb-1 form-group">
+                                                <div class="col-5 mb-1 form-group">
                                                     <label class="form-label required">Organization</label>
                                                     <div class="input-group">
                                                         <input *ngIf="selectedOrgData" class="form-control" placeholder="Search Organization" disabled [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedOrgData.companyName" />
@@ -179,19 +179,19 @@
                                                     </div>
 
                                                 </div>
-                                                    <div class="col-2 mb-1">
+                                                    <div class="col-3 mb-1">
                                                     <label class="form-label required">User</label>
                                                     <select class="form-control" formControlName="user">
                                                         <option value="">--Select--</option>
                                                         <option *ngFor="let user of userList" [ngValue]="user">{{user.username}}</option>
                                                     </select>
                                                 </div>
-                                                    <div class="col-2 mb-1">
+                                                    <div class="col-4 mb-1">
                                                         <label class="form-label required">Item Description</label>
                                                         <input type="text" class="form-control"  formControlName="description" placeholder="Item Description" />
 
                                                     </div>
-                                                    <div class="col-2 mb-1">
+                                                    <div class="col-5 mb-1">
                                                         <label class="form-label required">Category</label>
                                                         <p-autoComplete  formControlName="category" showEmptyMessage="true"
                                                         [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
@@ -206,7 +206,7 @@
                                                                     </ng-template>
                                                         </p-autoComplete>
                                                     </div>
-                                                    <div class="col-2 mb-1">
+                                                    <div class="col-3 mb-1">
                                                         <label class="form-label required">Item Specification</label>
                                                         <input class="form-control" formControlName="specification" placeholder="Item Specification" />
                                                     </div>
@@ -214,14 +214,7 @@
                                                         <label class="form-label required">Item Number</label>
                                                         <input class="form-control" formControlName="itemNumber" placeholder="Item Number" />
                                                     </div> -->
-                                                    <div class="col-2 mb-1">
-                                                        <label class="form-label required">UOM</label>
-                                                        <input class="form-control" formControlName="unitofMeasures" placeholder="Item UOM" />
-                                                        <div class="error" *ngIf="itemForm.controls.unitofMeasures.errors && (itemForm.controls.unitofMeasures.errors.invalid || itemForm.controls.unitofMeasures.errors.pattern)">
-                                                        Only Alphabets allowed and  No Special Characters not allowed.
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-2 mb-1">
+                                                    <div class="col-4 mb-1">
                                                     <label class="form-label required">Age Of Asset <small>(In Months)</small></label>
                                                     <input class="form-control" formControlName="ageOfAsset" type="text" placeholder="Age of asset" />
                                                     <p class="error"  *ngIf="(itemForm.controls?.ageOfAsset?.touched && itemForm.controls.ageOfAsset.errors) && (itemForm.controls.ageOfAsset.errors.invalid )">Aseet Age should be Number</p>
@@ -229,22 +222,30 @@
 
                                                 </div>
                                                     <div class="col-2 mb-1">
+                                                        <label class="form-label required">UOM</label>
+                                                        <input class="form-control" formControlName="unitofMeasures" placeholder="Item UOM" />
+                                                        <div class="error" *ngIf="itemForm.controls.unitofMeasures.errors && (itemForm.controls.unitofMeasures.errors.invalid || itemForm.controls.unitofMeasures.errors.pattern)">
+                                                        Only Alphabets allowed and  No Special Characters not allowed.
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="col-3 mb-1">
                                                             <label class="form-label required">Available Quantity</label>
                                                             <input class="form-control" formControlName="availableQuantity" type="number" placeholder="Available Quantity" />
                                                             <p class="error"  *ngIf="(itemForm.controls?.availableQuantity?.touched && itemForm.controls.availableQuantity.errors) && (itemForm.controls.availableQuantity.errors.invalid || itemForm.controls.availableQuantity.errors.required)">Quantity is a mandatory field & should be number</p>
                                                     </div>
 
                                                 
-                                                <div class="col-2 mb-1" >
+                                                <div class="col-3 mb-1" >
                                                     <label class="form-label" [ngClass]="{'required':  itemForm.controls.buyPriceDisclosure.value == false}">Sale Price(Per Unit)</label>
                                                     <input class="form-control" formControlName="askPrice"  type="number" placeholder="Sale Price"  />
                                                 </div>
-                                                <div class="col-2 mb-1">
+                                                <div class="col-4 mb-1">
                                                     <label class="form-label required">Location</label>
                                                     <input class="form-control" formControlName="location"  type="text" placeholder="Location"  />
                                                 </div>
 
-                                                <div class="col-2 mb-1">
+                                                <div class="col-3 mb-1">
                                                     <label class="form-label required" >BFS Group</label>
                                                     <p-autoComplete  formControlName="bfsGroup" showEmptyMessage="true"
                                                     [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
@@ -259,7 +260,7 @@
                                                                 </ng-template>
                                                     </p-autoComplete>
                                                 </div>
-                                                <div class="col-4 mb-1">
+                                                <div class="col-5 mb-1">
                                                     <label class="form-label">Remarks</label>
                                                     <input class="form-control" formControlName="remarks"  type="text" placeholder="Remarks.."  />
                                                 </div>
@@ -729,8 +730,16 @@ styleClass="ui-sidebar-lg" [style]="{width:'100vw'}">
 
     </div>
 </div>
-<div class="col-12" style="display: flex;align-items: center;flex-direction: row-reverse;    position: fixed;
-bottom: 16px;right: 16px;" >
+<div class="col-12" style="    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    position: fixed;
+    bottom: 0;
+    right: 16px;
+    width: 84%;
+    background: #ffffff;
+    height: 61px;
+    margin-top: 4rem;" >
    <button class="btn btn-green" (click)="updateBFSItemData()">Update</button>
    <button class="btn btn-red" (click)="onCloseEditForm()">Close</button>
 

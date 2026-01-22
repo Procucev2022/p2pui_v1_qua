@@ -30,8 +30,8 @@ export class BfsItemsListComponent implements OnInit {
         { field: 'itemNumber', header: 'Item Number', isLink: false, width: '190px', fieldType: 'text', isExceedContent: false },
         { field: 'availableQuantity', header: 'Available Qty.', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false },
         { field: 'ageOfAsset', header: 'Age Of Asset', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
-        { field: 'sellPrice', header: 'Buy Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false },
-        { field: 'discount', header: 'Discount(%)', isLink: false, width: '100px', fieldType: 'text', isExceedContent: false },
+        // { field: 'sellPrice', header: 'Buy Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false },
+        // { field: 'discount', header: 'Discount(%)', isLink: false, width: '100px', fieldType: 'text', isExceedContent: false },
         { field: 'askPrice', header: 'Sale Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false },
         { field: 'category', header: 'Category', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
     ];
@@ -56,8 +56,8 @@ export class BfsItemsListComponent implements OnInit {
         { field: 'description', header: 'Description', isLink: false, width: '200px', fieldType: 'text', isExceedContent: true },
         { field: 'specification', header: 'Specification', isLink: false, width: '230px', fieldType: 'text', isExceedContent: true },
         { field: 'availableQuantity', header: 'Available Qty.', isLink: false, width: '190px', fieldType: 'text', isExceedContent: false },
-        { field: 'sellPrice', header: 'Buy Price(Per Unit)', isLink: false, width: '200px', fieldType: 'text', isExceedContent: false },
-        { field: 'discount', header: 'Discount(%)', isLink: false, width: '170px', fieldType: 'text', isExceedContent: false },
+        // { field: 'sellPrice', header: 'Buy Price(Per Unit)', isLink: false, width: '200px', fieldType: 'text', isExceedContent: false },
+        // { field: 'discount', header: 'Discount(%)', isLink: false, width: '170px', fieldType: 'text', isExceedContent: false },
         { field: 'askPrice', header: 'Sale Price(Per Unit)', isLink: false, width: '220px', fieldType: 'text', isExceedContent: false }
     ];
 
@@ -102,10 +102,10 @@ export class BfsItemsListComponent implements OnInit {
     };
     userHeaders: any = [
         { field: 'companyName', header: 'Buyer Name', isLink: false, width: '120px', fieldType: 'text', isExceedContent: true },
-        { field: 'buyPrice', header: 'Buyer Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false },
+        { field: 'askPrice', header: 'Buyer Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false },
         { field: 'quantity', header: 'Quantity', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false },
-        { field: 'askPrice', header: 'Sale Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false },
-        { field: 'discount', header: 'Discount(%)', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
+        { field: 'buyPrice', header: 'Sale Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false },
+        // { field: 'discount', header: 'Discount(%)', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
         { field: 'city', header: 'City', isLink: false, width: '120px', fieldType: 'text', isExceedContent: true },
         { field: 'status', header: 'Status', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false }
     ];
