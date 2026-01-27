@@ -57,7 +57,7 @@ export const BFS_SYSTEM_SCREEN_LIST ={
     'Registration': ['/bfs',   '/bfs/my-items' ],
     'PartialVendor': ['/bfs', '/bfs/my-items' ],
     'Vendor': ['/bfs',  '/bfs/my-items' ],
-    'ClientInitiator': ['/bfs', '/bfs/items', '/bfs/my-items', '/bfs/my-bids'],
+    'ClientInitiator': ['/bfs', '/bfs/items',   '/bfs/my-bids'],
 
 }
 

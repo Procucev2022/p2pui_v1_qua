@@ -8,29 +8,29 @@
                     <img src="/assets/images/file.svg" style="    padding-right: 6px;">
                     <span style="    padding-right: 6px;">{{ file?.fileName }}</span>
                     <!-- For xlsx xls and csv -->
-                    <!-- <a *ngIf="file['fileName'].split('.').splice(-1) == 'xlsx' || file['fileName'].split('.').splice(-1) == 'xls' || file['fileName'].split('.').splice(-1) == 'csv'"
+                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'xlsx' || file['fileName'].split('.').splice(-1) == 'xls' || file['fileName'].split('.').splice(-1) == 'csv'"
                         [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe"
                         download="{{file['fileName']}}" data-toggle="tooltip"
                         [title]="'Download '+ file['fileName']"><i class="fa fa-download"
-                            aria-hidden="true"></i></a> -->
+                            aria-hidden="true"></i></a>
                     <!-- For PDF doucment download -->
-                    <!-- <a *ngIf="file['fileName'].split('.').splice(-1) == 'pdf'||file['fileName'].split('.').splice(-1) == 'pdf'"
+                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'pdf'||file['fileName'].split('.').splice(-1) == 'pdf'"
                         [href]="'data:application/pdf;base64,' + file['file'] | filePipe"
                         download="{{file['fileName']}}" data-toggle="tooltip"
                         [title]="'Download '+ file['fileName']" data-toggle="tooltip"
                         [title]="'Download '+ file['fileName']"><i class="fa fa-download"
-                            aria-hidden="true"></i></a> -->
+                            aria-hidden="true"></i></a>
                     <!-- For jpeg/jpg & png download -->
-                    <!-- <a *ngIf="file['fileName'].split('.').splice(-1) == 'png'|| file['fileName'].split('.').splice(-1) == 'jpeg' || file['fileName'].split('.').splice(-1) == 'jpg'"
+                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'png'|| file['fileName'].split('.').splice(-1) == 'jpeg' || file['fileName'].split('.').splice(-1) == 'jpg'"
                         [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe"
                         download="{{file['fileName']}}"><i class="fa fa-download" aria-hidden="true"
-                            data-toggle="tooltip" [title]="'Download '+ file['fileName']"></i></a> -->
+                            data-toggle="tooltip" [title]="'Download '+ file['fileName']"></i></a>
                     <!-- For PPT & document download -->
-                    <!-- <a *ngIf="file['fileName'].split('.').splice(-1) == 'txt'  ||file['fileName'].split('.').splice(-1) == 'pptx'|| file['fileName'].split('.').splice(-1) == 'docx'|| file['fileName'].split('.').splice(-1) == 'rtf' ||  file['fileName'].split('.').splice(-1) == 'doc' || file['fileName'].split('.').splice(-1) == 'ppt'"
+                    <a *ngIf="file['fileName'].split('.').splice(-1) == 'txt'  ||file['fileName'].split('.').splice(-1) == 'pptx'|| file['fileName'].split('.').splice(-1) == 'docx'|| file['fileName'].split('.').splice(-1) == 'rtf' ||  file['fileName'].split('.').splice(-1) == 'doc' || file['fileName'].split('.').splice(-1) == 'ppt'"
                         [href]="'data:application/octet-stream;base64,' + file['file'] | filePipe"
                         download="{{file['fileName']}}" data-toggle="tooltip"
                         [title]="'Download '+ file['fileName']"><i class="fa fa-download"
-                            aria-hidden="true"></i></a> -->
+                            aria-hidden="true"></i></a>
 
             </div>
             <!-- <p style="margin-bottom: 0px;">{{ file?.fileName }}

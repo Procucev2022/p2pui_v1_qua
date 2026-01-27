@@ -18,9 +18,9 @@ export class BfsMyBidsComponent implements OnInit {
 
     itemHeaders: any = [
         { field: 'description', header: 'Description', isLink: false, width: '120px', fieldType: 'text', isExceedContent: true },
-        { field: 'sellPrice', header: 'Buy Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false },
-        { field: 'discount', header: 'Discount', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
-        { field: 'askPrice', header: 'Bid Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false },
+        { field: 'sellPrice', header: 'Sale Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false },
+        // { field: 'discount', header: 'Discount', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
+        { field: 'askPrice', header: 'Buyer Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false },
         { field: 'status', header: 'Status', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false }
     ];
     buyersHeaders: any = [

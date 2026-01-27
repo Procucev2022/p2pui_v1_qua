@@ -690,6 +690,11 @@ export class BfsItemsListComponent implements OnInit {
             this.toaster.warning('Please Enter All Mandatory Fields', 'Warning');
             return;
         }
+        if(this.bidItemObj.quantity > this.selectedRowData.availableQuantity) {
+            this.toaster.warning('Bid Quantity should  be less than Available Quantity', 'Warning');
+            return;
+        }
+
         const obj = {
             "buyPrice": this.bidItemObj.price,
             "discount": Number(this.bidItemObj.discount).toFixed(2),

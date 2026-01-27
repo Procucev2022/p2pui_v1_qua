@@ -665,7 +665,8 @@
                     <img src="/assets/images/menu/PR.svg">
                     <span>Bid Items</span>
                 </a>
-                <a class="list-group-item"  *ngIf="!['CategoryManager','CategoryManager2'].includes(loggedUserDetails?.role.roleName)   "
+                <a class="list-group-item"  *ngIf="!['CategoryManager','CategoryManager2'].includes(loggedUserDetails?.role.roleName)
+                && !(['ClientInitiator'].includes(loggedUserDetails?.role.roleName))   "
                     [routerLink]="['/bfs/my-items']" [routerLinkActive]="['router-link-active']">
                     <img src="/assets/images/menu/PR.svg">
                     <span>My Items</span>

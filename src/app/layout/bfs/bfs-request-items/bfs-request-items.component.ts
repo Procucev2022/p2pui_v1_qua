@@ -31,9 +31,9 @@ export class BfsRequestItemsComponent implements OnInit {
     ];
     buyersHeaders: any = [
         { field: 'companyName', header: 'Company Name', isLink: false, width: '120px', fieldType: 'text', isExceedContent: true },
-        { field: 'askPrice', header: 'Seller Price(Per Unit)', isLink: false, width: '190px', fieldType: 'text', isExceedContent: true },
         // { field: 'itemNumber', header: 'Item Number', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
-        { field: 'buyPrice', header: 'Buyer Price(Per Unit)', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false },
+        { field: 'buyPrice', header: 'Seller Price(Per Unit)', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false },
+        { field: 'askPrice', header: 'Buyer Price(Per Unit)', isLink: false, width: '190px', fieldType: 'text', isExceedContent: true },
         // { field: 'sellerCompanyName', header: 'Seller Org.', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false },
         { field: 'quantity', header: 'Quantity', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false },
         { field: 'status', header: 'Status', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
