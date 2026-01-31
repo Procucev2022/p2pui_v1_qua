@@ -13,7 +13,8 @@
 
     <p-table dataKey="id"  [ngClass]="{  'bfs-container': isBFSView}"  #itemCatalogueTable [columns]="itemHeaders" [value]="itemList" sortMode="multiple" [paginator]="true"
       [rows]="pageRecordSize" id="prqTable" [rowsPerPageOptions]="pageOptions"  [tableStyle]="{ minWidth: '100%'}"
-      exportFilename="items details" [(selection)]="selectedData" [scrollable]="true" [scrollHeight]="'calc(100vh - 218px)'"  >
+      exportFilename="items details" [(selection)]="selectedData" [scrollable]="true" [scrollHeight]="'calc(100vh - 218px)'"
+      [expandedRowKeys]="expandedRowKeys" >
       <!-- [expandedRowKeys]="expandedRows" -->
       <ng-template pTemplate="caption">
         <div class="table-search">

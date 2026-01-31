@@ -177,7 +177,7 @@ export class BfsItemsListComponent implements OnInit {
         }
         const reqObj = await this.itemGridData.gridValue.map((ele: any) => {
             delete ele['id'];
-            let finalItemObj = { ...ele, totalQuantity: ele.availableQuantity, userId: ele.user.id, org: { id: ele.org.id } };
+            let finalItemObj = { ...ele, totalQuantity: ele.availableQuantity, userId: ele.user.id, org: { id: ele.org.id }, ageOfAsset: ele.ageOfAsset+ ' Months' };
             delete finalItemObj['user'];
             return finalItemObj;
         })
@@ -568,19 +568,29 @@ export class BfsItemsListComponent implements OnInit {
         this.expandedRows = {};
         const thisRef = this;
         thisRef.expandedRows[rowData.id] = 1;
+         this.expandedRows = this.expandedRows?.id === rowData.id ? null : rowData;
         this.getBuyerByBFS(rowData);
     }
 
+        get expandedRowKeys() {
+        return this.expandedRows ? { [this.expandedRows.id]: true } : {};
+    }
     getBuyerByBFS(rowData: any) {
+        this.requestedUsers = [];
         this.bfsItemService.getRequestedUsersByBFSForCM({ id: rowData.id }).subscribe((res: any) => {
             if (res && Array.isArray(res)) {
                 this.requestedUsers = res.map((ele: any) => {
                     return { ...ele, status: ele.status.uiDisplay }
                 })
-                this.requestUserGridData.gridValue = [...this.requestedUsers]
-                this.reloadGridComponent();
+                
+             
+            }else{
+                this.requestUserGridData.gridValue = []
             }
+             this.requestUserGridData.gridValue = [...this.requestedUsers]
         })
+       
+           this.reloadGridComponent();
     }
 
     //onUpdateBFSItem
