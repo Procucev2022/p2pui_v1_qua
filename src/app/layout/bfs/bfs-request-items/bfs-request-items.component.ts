@@ -16,14 +16,14 @@ import { BfsItemsService } from '../bfs-items.service';
 export class BfsRequestItemsComponent implements OnInit {
 
     @ViewChild('viewItemDetailsTemplate') viewItemDetailsTemplate: any;
-
+    
 
     itemHeaders: any = [
         { field: 'description', header: 'Description', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
         // { field: 'itemNumber', header: 'Item Number', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
         { field: 'specification', header: 'Specification', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false },
         // { field: 'sellerCompanyName', header: 'Seller Org.', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false },
-        { field: 'sellPrice', header: 'Seller Price(Per Unit)', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
+        { field: 'askPrice', header: 'Seller Price(Per Unit)', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
         // { field: 'discount', header: 'Seller Discount', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false },
         // { field: 'buyerCompanyName', header: 'Buyer Org.', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
         // { field: 'askPrice', header: 'Buyer Price(Per Unit)', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
@@ -38,6 +38,15 @@ export class BfsRequestItemsComponent implements OnInit {
         { field: 'quantity', header: 'Requested Quantity', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
         { field: 'status', header: 'Status', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
         // { field: 'buyerDiscount', header: 'Buyer Discount', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false }
+    ];
+
+    cmbuyersHeaders: any = [
+        { field: 'companyName', header: 'Company Name', isLink: false, width: '120px', fieldType: 'text', isExceedContent: true }, 
+        { field: 'askPrice', header: 'Seller Price(Per Unit)', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false },
+        { field: 'buyPrice', header: 'Buyer Price(Per Unit)', isLink: false, width: '190px', fieldType: 'text', isExceedContent: true }, 
+        { field: 'quantity', header: 'Requested Quantity', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
+        { field: 'status', header: 'Status', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false }
+    
     ];
     paginatoryDetails: any;
     pageRecordSize: any;
@@ -68,6 +77,9 @@ export class BfsRequestItemsComponent implements OnInit {
 
 
     ngOnInit() {
+        if(this.roleName == 'CategoryManager'){
+            this.buyersHeaders = this.cmbuyersHeaders;
+        }
         this.getItemsList();
         this.currentView = !localStorage.getItem('system-view') ? JSON.parse(localStorage.getItem('system-view')) : localStorage.getItem('system-view');
         this.isBFSView = [SystemViewConfig.BFS_PRO].includes(this.currentView) ? true : false;

@@ -65,8 +65,8 @@
                         <span *ngIf="rowData?.itemNumber == null || rowData?.itemNumber  == ''" class="cellLinkCls" (click)=" getVendorAndClientListByItemId(rowData,$event, true)">Assign Category</span>
                     </span>
                     <span *ngIf="col.field != 'itemNumber'">
-                        <span *ngIf=" col.field == 'sellPrice'">{{ (rowData?.buyPriceDisclosure == true ||  rowData[col.field] >0) ? (rowData[col.field]) : 'QYP' }}</span>
-                        <span *ngIf=" col.field != 'sellPrice'">  {{rowData[col.field]}}</span>
+                        <span *ngIf=" col.field == 'askPrice'">{{ (rowData?.buyPriceDisclosure == true ||  rowData[col.field] >= 0) ? (rowData[col.field]) : 'QYP' }}</span>
+                        <span *ngIf=" col.field != 'askPrice'">  {{rowData[col.field]}}</span>
                         <span *ngIf="col.field == 'discount' || col.field == 'buyerDiscount'">% </span> </span>
                 </span>
             </span>

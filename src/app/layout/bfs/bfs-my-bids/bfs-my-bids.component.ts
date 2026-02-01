@@ -16,6 +16,13 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class BfsMyBidsComponent implements OnInit {
 
+    clientInitiatoreItemHeaders: any = [
+         { field: 'description', header: 'Description', isLink: false, width: '120px', fieldType: 'text', isExceedContent: true },
+        { field: 'askPrice', header: 'Sale Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false },
+        // { field: 'discount', header: 'Discount', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
+        // { field: 'askPrice', header: 'Buyer Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false },
+        { field: 'status', header: 'Status', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false }
+        ];
     itemHeaders: any = [
         { field: 'description', header: 'Description', isLink: false, width: '120px', fieldType: 'text', isExceedContent: true },
         { field: 'sellPrice', header: 'Sale Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false },
@@ -26,12 +33,12 @@ export class BfsMyBidsComponent implements OnInit {
     buyersHeaders: any = [
         { field: 'specification', header: 'Specification ', isLink: false, width: '220px', fieldType: 'text', isExceedContent: true },
         // { field: 'buyerCompanyName', header: 'Buyer Company Name', isLink: false, width: '120px', fieldType: 'text', isExceedContent: true },
-        { field: 'sellPrice', header: 'Seller Price(Per Unit)', isLink: false, width: '190px', fieldType: 'text', isExceedContent: true },
-        { field: 'buyPrice', header: 'Buyer Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false },
+        { field: 'sellPrice', header: 'Sale Price(Per Unit)', isLink: false, width: '190px', fieldType: 'text', isExceedContent: true },
+        // { field: 'buyPrice', header: 'Buyer Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false },
         { field: 'unitofMeasures', header: 'UOM', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false },
         { field: 'status', header: 'Status', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
         // { field: 'buyerDiscount', header: 'Buyer Discount', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false }
-    ];
+    ]; 
     paginatoryDetails: any;
     pageRecordSize: any;
     pageOptions: any;
@@ -72,6 +79,9 @@ export class BfsMyBidsComponent implements OnInit {
     }
 
     ngOnInit() {
+        if(this.roleName === 'ClientInitiator'){
+            this.itemHeaders = this.clientInitiatoreItemHeaders;
+        }
         this.getItemsList();
         this.currentView = !localStorage.getItem('system-view') ? JSON.parse(localStorage.getItem('system-view')): localStorage.getItem('system-view');
         this.isBFSView = [SystemViewConfig.BFS_PRO].includes(this.currentView)? true: false;
@@ -134,7 +144,11 @@ export class BfsMyBidsComponent implements OnInit {
         this.expandedRows = {};
         const thisRef = this;
         thisRef.expandedRows[rowData.id] = 1;
+        this.expandedRows = this.expandedRows?.id === rowData.id ? null : rowData;
         this.getBuyerByBFS(rowData);
+    }
+    get expandedRowKeys() {
+        return this.expandedRows ? { [this.expandedRows.id]: true } : {};
     }
     reloadGridComponent() {
         this.isShowGrid = false;
