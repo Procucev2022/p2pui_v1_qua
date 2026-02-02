@@ -137,9 +137,10 @@ export class BfsRequestItemsComponent implements OnInit {
         this.expandedRows = {};
         const thisRef = this;
         thisRef.expandedRows[rowData.id] = 1;
-          this.expandedRows = this.expandedRows?.id === rowData.id ? null : rowData;
+     
 
         this.getBuyerByBFS(rowData);
+           this.expandedRows = this.expandedRows?.id === rowData.id ? null : rowData;
     }
     get expandedRowKeys() {
         return this.expandedRows ? { [this.expandedRows.id]: true } : {};
@@ -150,21 +151,22 @@ export class BfsRequestItemsComponent implements OnInit {
         this.isShowGrid = false;
         setTimeout(() => {
             this.isShowGrid = true;
-        }, 100)
+        }, 150)
     }
     getBuyerByBFS(rowData) {
             this.bfsBuyersList  = [];
             this.bfsItemService.getRequestedUsersByBFSForCM({ id: rowData.id }).subscribe((res: any) => {
                 if (res && Array.isArray(res)) {
-                    this.bfsBuyersList = res.map((ele: any) => {
+                    this.bfsBuyersList = [...res.map((ele: any) => {
                         return { ...ele, status: ele.status.uiDisplay }
-                    })
+                    })];
                    
+                }else{
+                    this.bfsBuyersList = [];
                 }
+                  this.reloadGridComponent();
             })
-        this.reloadGridComponent();
-
-    }
+           }
 
     onAcceptOrRejectVendor(rowData:any, isAccepted){
 
