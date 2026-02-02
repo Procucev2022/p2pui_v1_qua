@@ -27,6 +27,12 @@ export class BfsItemsService {
         return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.BFS_GET_ORG_SEARCH, requestBody, {})
     }
 
+      //BFS_GET_ORG_SEARCH
+    getOrgSearchByEmailPhone(requestBody: any): Observable<any> {
+        return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.BFS_GET_ORG_SEARCH_BY_EMAIL, requestBody, {})
+    }
+
+
     //BFS_GET_USERS_BY_ORG
     getUsersByOrg(requestBody: any): Observable<any> {
         return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.BFS_GET_USERS_BY_ORG, requestBody, {})

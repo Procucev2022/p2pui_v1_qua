@@ -16,28 +16,37 @@ import { BfsItemsService } from '../bfs-items.service';
 export class BfsRequestItemsComponent implements OnInit {
 
     @ViewChild('viewItemDetailsTemplate') viewItemDetailsTemplate: any;
-
+    
 
     itemHeaders: any = [
-        { field: 'description', header: 'Description', isLink: false, width: '190px', fieldType: 'text', isExceedContent: true },
+        { field: 'description', header: 'Description', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
         // { field: 'itemNumber', header: 'Item Number', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
         { field: 'specification', header: 'Specification', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false },
         // { field: 'sellerCompanyName', header: 'Seller Org.', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false },
-        { field: 'sellPrice', header: 'Seller Price(Per Unit)', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
+        { field: 'askPrice', header: 'Seller Price(Per Unit)', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
         // { field: 'discount', header: 'Seller Discount', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false },
         // { field: 'buyerCompanyName', header: 'Buyer Org.', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
-        { field: 'askPrice', header: 'Buyer Price(Per Unit)', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
-        // { field: 'buyerDiscount', header: 'Buyer Discount', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false }
+        // { field: 'askPrice', header: 'Buyer Price(Per Unit)', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
+        { field: 'latestBidDate', header: 'Latest Bid Date', isLink: false, width: '140px', fieldType: 'date', isExceedContent: false }
     ];
     buyersHeaders: any = [
         { field: 'companyName', header: 'Company Name', isLink: false, width: '120px', fieldType: 'text', isExceedContent: true },
-        { field: 'askPrice', header: 'Seller Price(Per Unit)', isLink: false, width: '190px', fieldType: 'text', isExceedContent: true },
         // { field: 'itemNumber', header: 'Item Number', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
-        { field: 'buyPrice', header: 'Buyer Price(Per Unit)', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false },
+        { field: 'buyPrice', header: 'Seller Price(Per Unit)', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false },
+        { field: 'askPrice', header: 'Buyer Price(Per Unit)', isLink: false, width: '190px', fieldType: 'text', isExceedContent: true },
         // { field: 'sellerCompanyName', header: 'Seller Org.', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false },
-        { field: 'quantity', header: 'Quantity', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false },
+        { field: 'quantity', header: 'Requested Quantity', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
         { field: 'status', header: 'Status', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
         // { field: 'buyerDiscount', header: 'Buyer Discount', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false }
+    ];
+
+    cmbuyersHeaders: any = [
+        { field: 'companyName', header: 'Company Name', isLink: false, width: '120px', fieldType: 'text', isExceedContent: true }, 
+        { field: 'askPrice', header: 'Seller Price(Per Unit)', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false },
+        { field: 'buyPrice', header: 'Buyer Price(Per Unit)', isLink: false, width: '190px', fieldType: 'text', isExceedContent: true }, 
+        { field: 'quantity', header: 'Requested Quantity', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
+        { field: 'status', header: 'Status', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false }
+    
     ];
     paginatoryDetails: any;
     pageRecordSize: any;
@@ -68,6 +77,9 @@ export class BfsRequestItemsComponent implements OnInit {
 
 
     ngOnInit() {
+        if(this.roleName == 'CategoryManager'){
+            this.buyersHeaders = this.cmbuyersHeaders;
+        }
         this.getItemsList();
         this.currentView = !localStorage.getItem('system-view') ? JSON.parse(localStorage.getItem('system-view')) : localStorage.getItem('system-view');
         this.isBFSView = [SystemViewConfig.BFS_PRO].includes(this.currentView) ? true : false;
@@ -125,27 +137,36 @@ export class BfsRequestItemsComponent implements OnInit {
         this.expandedRows = {};
         const thisRef = this;
         thisRef.expandedRows[rowData.id] = 1;
+     
+
         this.getBuyerByBFS(rowData);
+           this.expandedRows = this.expandedRows?.id === rowData.id ? null : rowData;
     }
+    get expandedRowKeys() {
+        return this.expandedRows ? { [this.expandedRows.id]: true } : {};
+    }
+    
+
     reloadGridComponent() {
         this.isShowGrid = false;
         setTimeout(() => {
             this.isShowGrid = true;
-        }, 100)
+        }, 150)
     }
     getBuyerByBFS(rowData) {
-
+            this.bfsBuyersList  = [];
             this.bfsItemService.getRequestedUsersByBFSForCM({ id: rowData.id }).subscribe((res: any) => {
                 if (res && Array.isArray(res)) {
-                    this.bfsBuyersList = res.map((ele: any) => {
+                    this.bfsBuyersList = [...res.map((ele: any) => {
                         return { ...ele, status: ele.status.uiDisplay }
-                    })
-                    this.reloadGridComponent();
+                    })];
+                   
+                }else{
+                    this.bfsBuyersList = [];
                 }
+                  this.reloadGridComponent();
             })
-
-
-    }
+           }
 
     onAcceptOrRejectVendor(rowData:any, isAccepted){
 

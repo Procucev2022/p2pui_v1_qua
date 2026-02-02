@@ -48,3 +48,20 @@ span.link-cls {
     color: #03a9f4;
     cursor: pointer;
 }
+.action-icons{
+    img{
+        margin-right: 10px;
+        cursor: pointer;
+    }
+}
+
+::ng-deep button.p-element.p-ripple.p-autocomplete-dropdown.p-button-icon-only.p-button.p-component {
+    position: absolute !important;
+    right: 0 !important;
+    top: 0 !important;
+    height: 40px !important;
+}
+
+::ng-deep input.p-element.p-auto-cls.p-autocomplete-input.p-inputtext.p-component.p-autocomplete-dd-input.ng-star-inserted {
+    height: 40px !important;
+}

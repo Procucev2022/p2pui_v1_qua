@@ -13,7 +13,8 @@
 
     <p-table dataKey="id"  [ngClass]="{  'bfs-container': isBFSView}"  #itemCatalogueTable [columns]="itemHeaders" [value]="itemList" sortMode="multiple" [paginator]="true"
       [rows]="pageRecordSize" id="prqTable" [rowsPerPageOptions]="pageOptions"  [tableStyle]="{ minWidth: '100%'}"
-      exportFilename="items details" [(selection)]="selectedData" [scrollable]="true" [expandedRowKeys]="expandedRows"  [scrollHeight]="'calc(100vh - 218px)'"  >
+      exportFilename="items details" [(selection)]="selectedData" [scrollable]="true" [scrollHeight]="'calc(100vh - 218px)'"
+      [expandedRowKeys]="expandedRowKeys" >
       <!-- [expandedRowKeys]="expandedRows" -->
       <ng-template pTemplate="caption">
         <div class="table-search">
@@ -64,8 +65,8 @@
                         <span *ngIf="rowData?.itemNumber == null || rowData?.itemNumber  == ''" class="cellLinkCls" (click)=" getVendorAndClientListByItemId(rowData,$event, true)">Assign Category</span>
                     </span>
                     <span *ngIf="col.field != 'itemNumber'">
-                        <span *ngIf=" col.field == 'sellPrice'">{{ (rowData?.buyPriceDisclosure == true ||  rowData[col.field] >0) ? (rowData[col.field]) : 'QYP' }}</span>
-                        <span *ngIf=" col.field != 'sellPrice'">  {{rowData[col.field]}}</span>
+                        <span *ngIf=" col.field == 'askPrice'">{{ (rowData?.buyPriceDisclosure == true ||  rowData[col.field] >= 0) ? (rowData[col.field]) : 'QYP' }}</span>
+                        <span *ngIf=" col.field != 'askPrice'">  {{rowData[col.field]}}</span>
                         <span *ngIf="col.field == 'discount' || col.field == 'buyerDiscount'">% </span> </span>
                 </span>
             </span>
@@ -111,7 +112,76 @@
                                 </div>
                               </div>
 
-                              <ng-container *ngTemplateOutlet="buyersListGridTemplate"></ng-container>
+                              <ng-container *ngIf="isShowGrid" >
+                                   <div class="">
+    <p-table  #vendorTable [columns]="buyersHeaders" [value]="bfsBuyersList" sortMode="multiple"
+    [paginator]="true" [rows]="pageRecordSize" id="vendorTable" [rowsPerPageOptions]="pageOptions"
+        [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData"  [scrollable]="true" [scrollHeight]="'calc(100vh - 200px)'">
+        <ng-template pTemplate="caption">
+          <div class="table-search">
+            <div class="row">
+              <div class="col-sm-6">
+                <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                  (input)="vendorTable.filterGlobal($event.target.value, 'contains')" />
+              </div>
+              <div class="col-sm-6">
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
+            {{col.header}}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+            </th>
+            <th style="width: 11em;"  >Actions</th>
+        </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+          <tr [pSelectableRow]="rowData">
+              <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
+              <span *ngIf="!col.isLink">
+                      <span *ngIf="col.fieldType != 'date'">
+                        <i class="fa fa-info-circle" style="font-size: 1.2rem;cursor: pointer;color:rgb(255, 106, 0)" *ngIf="col.field =='vendorName' " (click)="getVendorInfo(rowData)"></i>
+                        <app-bfs-user-info-details *ngIf="col.field == 'companyName'" [selectedId]="rowData?.userId" [labelName]="'Buyer'"></app-bfs-user-info-details>
+                        {{rowData[col.field]}}
+
+                      </span>
+                      <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
+                        {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
+                      </span>
+
+              </span>
+
+              <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);"
+                  (click)="getRFQLineItems(rowData, $event)"> {{rowData[col.field]}} </a></span>
+
+              </td>
+              <td style="width: 11em;"  >
+
+                <span *ngIf="['CategoryManager'].includes(roleName)">
+                    <button type="button"   class="btn btn-primary btn-blue" (click)="approveOrReject(rowData, true)">Approve</button>
+                    <button  type="button"  class="btn btn-red btn-red"  (click)="approveOrReject(rowData, false)">Reject</button>
+                </span>
+              </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+            <td [attr.colspan]="5" style="text-align:center;">
+            No Records Found.
+            </td>
+        </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorleft">
+        <div *ngIf="vendorTable?._totalRecords > 0">
+          <b>Showing {{vendorTable.first+1}} to {{vendorTable.first+vendorTable.rows > vendorTable.totalRecords?vendorTable.totalRecords: vendorTable.first+vendorTable.rows}} of {{vendorTable.totalRecords}}</b>
+        </div>
+        </ng-template>
+  </p-table>
+</div>
+                              </ng-container>
                         </div>
                     </mat-tab>
                   </mat-tab-group>
@@ -121,7 +191,7 @@
     </ng-template>
       <ng-template pTemplate="emptymessage" let-columns>
         <tr>
-          <td [attr.colspan]="5" style="text-align:center;">
+          <td [attr.colspan]="6" style="text-align:center;">
             No Records Found.
           </td>
         </tr>
@@ -219,72 +289,5 @@
 
 
 <ng-template #buyersListGridTemplate>
-    <div class="">
-    <p-table  #vendorTable [columns]="buyersHeaders" [value]="bfsBuyersList" sortMode="multiple"
-    [paginator]="true" [rows]="pageRecordSize" id="vendorTable" [rowsPerPageOptions]="pageOptions"
-        [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData"  [scrollable]="true" [scrollHeight]="'calc(100vh - 200px)'">
-        <ng-template pTemplate="caption">
-          <div class="table-search">
-            <div class="row">
-              <div class="col-sm-6">
-                <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
-                  (input)="vendorTable.filterGlobal($event.target.value, 'contains')" />
-              </div>
-              <div class="col-sm-6">
-              </div>
-            </div>
-          </div>
-        </ng-template>
-        <ng-template pTemplate="header" let-columns>
-        <tr>
-            <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
-            {{col.header}}
-            <p-sortIcon [field]="col.field"></p-sortIcon>
-            </th>
-            <th style="width: 11em;"  >Actions</th>
-        </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-rowData let-columns="columns">
-          <tr [pSelectableRow]="rowData">
-              <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
-              <span *ngIf="!col.isLink">
-                      <span *ngIf="col.fieldType != 'date'">
-                        <i class="fa fa-info-circle" style="font-size: 1.2rem;cursor: pointer;color:rgb(255, 106, 0)" *ngIf="col.field =='vendorName' " (click)="getVendorInfo(rowData)"></i>
-                        <app-bfs-user-info-details *ngIf="col.field == 'companyName'" [selectedId]="rowData?.userId" [labelName]="'Buyer'"></app-bfs-user-info-details>
-                        {{rowData[col.field]}}
-
-                      </span>
-                      <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
-                        {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
-                      </span>
-
-              </span>
-
-              <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);"
-                  (click)="getRFQLineItems(rowData, $event)"> {{rowData[col.field]}} </a></span>
-
-              </td>
-              <td style="width: 11em;"  >
-
-                <span *ngIf="['CategoryManager'].includes(roleName)">
-                    <button type="button"   class="btn btn-primary btn-blue" (click)="approveOrReject(rowData, true)">Approve</button>
-                    <button  type="button"  class="btn btn-red btn-red"  (click)="approveOrReject(rowData, false)">Reject</button>
-                </span>
-              </td>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage" let-columns>
-        <tr>
-            <td [attr.colspan]="5" style="text-align:center;">
-            No Records Found.
-            </td>
-        </tr>
-        </ng-template>
-        <ng-template pTemplate="paginatorleft">
-        <div *ngIf="vendorTable?._totalRecords > 0">
-          <b>Showing {{vendorTable.first+1}} to {{vendorTable.first+vendorTable.rows > vendorTable.totalRecords?vendorTable.totalRecords: vendorTable.first+vendorTable.rows}} of {{vendorTable.totalRecords}}</b>
-        </div>
-        </ng-template>
-  </p-table>
-</div>
+ 
 </ng-template>

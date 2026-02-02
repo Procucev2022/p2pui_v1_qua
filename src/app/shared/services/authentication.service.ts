@@ -201,7 +201,7 @@ export class AuthenticationService {
                         window.location.reload();
                     });
                 }else if([this.SYSTEM_VIEW_CONFIG.BFS_PRO].includes(systemView)){ // For BFS Vendors
-                    this.router.navigate(['/bfs/items']).then(() => {
+                    this.router.navigate(['/bfs/my-items']).then(() => {
                         window.location.reload();
                     });
                 }

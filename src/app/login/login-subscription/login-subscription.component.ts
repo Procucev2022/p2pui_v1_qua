@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { Router } from '@angular/router';
-import { EncryDecryService } from '../../../app/shared/services';
-import { SystemViewConfig } from 'src/app/app.config';
+import { EncryDecryService } from '../../../app/shared/services'; 
 import { LoaderService } from '../../shared/modules/common-share/services/loader.service';
+import { SystemViewConfig } from 'src/app/app.config';
 
 @Component({
   selector: 'app-login-subscription',

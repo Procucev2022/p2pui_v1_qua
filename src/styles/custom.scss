@@ -1218,3 +1218,23 @@ input[type='radio'] {
     font-size: 12px;
     font-weight: 500; 
 }
+
+.fa-chevron-right::before{
+    color:#673AB7 !important;
+}
+
+.fa-chevron-down::before{
+    color:#ff5d5d !important;
+}
+.info-icon-desc{
+    display: inline-flex;
+    align-items: center;
+    font-size: 13px;
+    color: #0C2146;
+    justify-content: space-evenly;
+    margin-right: 18px;
+    img{
+        margin-right: 6px;
+        font-size: 16px; 
+    }
+}
