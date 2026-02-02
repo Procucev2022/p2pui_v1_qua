@@ -55,7 +55,7 @@ export class HeaderComponent implements OnInit {
         console.log('user data', this.loggedUserDetails);
         this.loggedUserName = this.loggedUserDetails.username;
         this.roleName = (this.loggedUserDetails.role.roleName === 'Registration') || (this.loggedUserDetails.role.roleName === 'PartialVendor') || (this.loggedUserDetails.role.roleName === 'Vendor') ? 'Seller' : this.loggedUserDetails.role.roleName;
-        this.roleName = this.roleName == 'ClientInitiator' &&  (this.currentView && this.currentView.split(' ').includes('GMT')) ? 'Buyer': this.roleName;
+        this.roleName = this.roleName == 'ClientInitiator' &&  (this.currentView && this.currentView.split(' ').includes('GMT') || this.currentView.split(' ').includes('BFS')) ? 'Buyer': this.roleName;
         this.orgName = this.loggedUserDetails.org.companyName || null;
         const is_Authenticated = this.loggedUserDetails.auth ? this.loggedUserDetails.auth : false;
         this.authenticateData = {

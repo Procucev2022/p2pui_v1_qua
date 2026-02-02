@@ -36,6 +36,7 @@ export class BfsMyBidsComponent implements OnInit {
         // { field: 'sellPrice', header: 'Sale Price(Per Unit)', isLink: false, width: '190px', fieldType: 'text', isExceedContent: true },
         { field: 'buyPrice', header: 'Buyer Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false },
         { field: 'unitofMeasures', header: 'UOM', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false },
+        { field: 'quantity', header: 'Quantity', isLink: false, width: '190px', fieldType: 'text', isExceedContent: true },
         { field: 'status', header: 'Status', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
         // { field: 'buyerDiscount', header: 'Buyer Discount', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false }
     ]; 
