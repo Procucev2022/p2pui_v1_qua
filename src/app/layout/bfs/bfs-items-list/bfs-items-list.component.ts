@@ -177,7 +177,7 @@ export class BfsItemsListComponent implements OnInit {
         }
         const reqObj = await this.itemGridData.gridValue.map((ele: any) => {
             delete ele['id'];
-            let finalItemObj = { ...ele, totalQuantity: ele.availableQuantity, userId: ele.user.id, org: { id: ele.org.id }, ageOfAsset: ele.ageOfAsset+ ' Months' };
+            let finalItemObj = { ...ele, totalQuantity: ele.availableQuantity, userId: ele.user.id, org: { id: ele.org.id }, ageOfAsset: ele.ageOfAsset> 0 ? ele.ageOfAsset+ ' Months' : 'New Stock', sellPrice: ele.askPrice};
             delete finalItemObj['user'];
             return finalItemObj;
         })
@@ -706,10 +706,10 @@ export class BfsItemsListComponent implements OnInit {
         }
 
         const obj = {
-            "buyPrice": this.bidItemObj.price,
+            "buyPrice": this.selectedRowData.askPrice,
             "discount": Number(this.bidItemObj.discount).toFixed(2),
             "quantity": this.bidItemObj.quantity,
-            "askPrice": this.selectedRowData.askPrice,
+            "askPrice":  this.bidItemObj.price,
             "remarks": this.selectedRowData.remarks,
             "org": {
                 "id": this.loggedUserDetails.org.id
