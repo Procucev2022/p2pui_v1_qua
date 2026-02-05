@@ -427,6 +427,12 @@ export class BfsItemsListComponent implements OnInit {
             });
             this.toaster.success('Item added to Cart!', 'Success');
 
+            this.commentFilesDataList = [];
+            this.commentFileData = null;
+            this.commentFileType = '';
+            this.commentFilesDataListImg = [];
+            this.commentFileDataImg = null;
+            this.commentFileTypeImg = '';
             this.reloadGridComponent();
             const userValue = this.itemForm.value.user;
             this.itemForm.reset();
@@ -458,9 +464,12 @@ export class BfsItemsListComponent implements OnInit {
             this.itemForm.patchValue(rowData);
             this.selectedOrgData = rowData.org;
             this.commentFilesDataList = rowData.bfsDocuments;
+            this.commentFilesDataListImg = rowData.bfsImages;
+            this.commentFileDataImg = null;
+            this.commentFileTypeImg = '';
             this.commentFileData = null;
             this.commentFileType = '';
-            if(rowData.id.includes('MANUALENTRYID_')){
+            if(rowData && rowData.id && rowData.id.includes('MANUALENTRYID_')){
                 this.tabGrp.selectedIndex =0;
             }
 
@@ -616,6 +625,9 @@ export class BfsItemsListComponent implements OnInit {
                 this.selectedOrgData = { ...res.org };
                 this.itemForm.patchValue({ user: { id: res.userId } });
                 this.itemForm.patchValue(this.editBFSItemData);
+                // remove Months form age of asset
+                const ageOfAssetValue = this.editBFSItemData.ageOfAsset ? this.editBFSItemData.ageOfAsset.toString().replace(' Months', '') : '';
+                this.itemForm.patchValue({ ageOfAsset: ageOfAssetValue });
                 this.itemForm.controls['user'].clearValidators();
                 this.itemForm.controls['user'].updateValueAndValidity();
                    this.onChangePriceDisclosure(rowData.buyPriceDisclosure)
@@ -641,7 +653,10 @@ export class BfsItemsListComponent implements OnInit {
           this.editBFSItemData.bfsImages.forEach(ele =>{
             delete ele['id']
         })
-        const requestedData = { ... this.editBFSItemData, ...modifiedData, askPrice: Number(modifiedData.askPrice).toFixed(2), sellPrice: modifiedData.buyPriceDisclosure == true? Number(modifiedData.sellPrice).toFixed(2): 0 , discount: Number(modifiedData.discount).toFixed(2)}
+
+        // add space Months to age of asset
+        const ageOfAssetValue = modifiedData.ageOfAsset ? modifiedData.ageOfAsset.toString() + ' Months' : '';
+        const requestedData = { ... this.editBFSItemData, ...modifiedData, askPrice: Number(modifiedData.askPrice).toFixed(2), sellPrice: modifiedData.buyPriceDisclosure == true? Number(modifiedData.sellPrice).toFixed(2): 0 , discount: Number(modifiedData.discount).toFixed(2), ageOfAsset: ageOfAssetValue }
         console.log('update', requestedData);
 
         this.bfsItemService.editBFSItemDetails(requestedData).subscribe((res) => {
