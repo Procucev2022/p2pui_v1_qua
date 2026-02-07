@@ -11,11 +11,12 @@ import { BfsRequestItemsComponent } from './bfs-request-items/bfs-request-items.
 import { SellerBuyerDetailsByUniqueIdComponent } from './seller-buyer-details-by-unique-id/seller-buyer-details-by-unique-id.component';
 import { BfsUserInfoDetailsComponent } from './bfs-user-info-details/bfs-user-info-details.component';
 import { BfsImagesViewComponent } from './bfs-images-view/bfs-images-view.component';
+import { VendorBfsMyItemBidsComponent } from './vendor-bfs-my-item-bids/vendor-bfs-my-item-bids.component';
 
 @NgModule({
   imports: [
     CommonModule, BfsRoutingModule ,   CommonShareModule
   ],
-  declarations: [BfsItemsListComponent, BfsMyBidsComponent, BfsMyItemsComponent, BfsCreateItemComponent, BFSCommonGridComponent, BfsRequestItemsComponent, SellerBuyerDetailsByUniqueIdComponent, BfsUserInfoDetailsComponent, BfsImagesViewComponent]
+  declarations: [BfsItemsListComponent, BfsMyBidsComponent, BfsMyItemsComponent, BfsCreateItemComponent, BFSCommonGridComponent, BfsRequestItemsComponent, SellerBuyerDetailsByUniqueIdComponent, BfsUserInfoDetailsComponent, BfsImagesViewComponent, VendorBfsMyItemBidsComponent]
 })
 export class BfsModule { }

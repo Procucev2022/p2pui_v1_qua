@@ -25,6 +25,7 @@ export class AppApiConfig {
   public static GET_VENDORS_BY_RFQ_ID_FOR_GMT = '/rest/gmt/getVendorsByGmtRFQ';
   public static ACCEPT_GMT_VENDOR_BY_CM = "/rest/gmt/approveVendor";
   public static REJECT_GMT_VENDOR_BY_CM ='/rest/gmt/rejectRfqForVendorByCM2';
+  public static SELLER_BID_MY_ITEMS ='/rest/bfs/getBidsBySeller';
 
 
 
@@ -377,6 +378,7 @@ export class AppApiConfig {
     public static BFS_GET_REQUESTED_USERS_BY_BFS_FOR_SELLER= '/rest/bfs/getRequestedUserByBFSAndStatus';
     public static BFS_GET_ITEMS_BY_BOQ_FILE ='/rest/bfs/getBfsItemsByBOQ';
     public static BFS_GET_DOCUMENTS_BY_BFS_ID = '/rest/bfs/getDocumentsByBfs';
+    public static BFS_GET_ITEM_DETAILS = '/rest/bfs/getBfsById';
     public static BFS_GET_BFS_ITEMDETAILS_BY_ID ="/rest/bfs/getBfsById"
     public static BFS_EDIT_BFS_ITEM_DATA ='/rest/bfs/editBfsItems';
     public static BFS_CREATE_COMMENT_BY_BUYER = "/rest/bfs/createBFSCommentByBuyer";

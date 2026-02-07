@@ -56,7 +56,7 @@ export const BFS_SYSTEM_SCREEN_LIST ={
     'CategoryManager2': ['/bfs', '/bfs/items', '/bfs/my-items', '/bfs/my-bids', '/bfs/requested-items','/bfs/buyer-seller-details'],
     'Registration': ['/bfs',   '/bfs/my-items' ],
     'PartialVendor': ['/bfs', '/bfs/my-items' ],
-    'Vendor': ['/bfs',  '/bfs/my-items' ],
+    'Vendor': ['/bfs',  '/bfs/my-items', '/bfs/seller-bid-items' ],
     'ClientInitiator': ['/bfs', '/bfs/items',   '/bfs/my-bids'],
 
 }

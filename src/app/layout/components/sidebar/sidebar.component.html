@@ -671,6 +671,11 @@
                     <img src="/assets/images/menu/PR.svg">
                     <span>My Items</span>
                 </a>
+                <a class="list-group-item"  *ngIf=" loggedUserDetails?.role.roleName == 'Vendor' "
+                    [routerLink]="['/bfs/seller-bid-items']" [routerLinkActive]="['router-link-active']">
+                    <img src="/assets/images/menu/PR.svg">
+                    <span>My Item Bids</span>
+                </a>
                 <a class="list-group-item"  *ngIf="!['CategoryManager','CategoryManager2'].includes(loggedUserDetails?.role.roleName) &&  !( loggedUserDetails?.role.roleName == 'Vendor'|| loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor') "
                     [routerLink]="['/bfs/my-bids']" [routerLinkActive]="['router-link-active']">
                     <img src="/assets/images/menu/PR.svg">

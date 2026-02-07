@@ -96,8 +96,15 @@ export class BfsRequestItemsComponent implements OnInit {
     }
     onViewItemDetails(rowData: any) {
         const dialogConfig = new MatDialogConfig();
-        this.selectedRowData = rowData;
-        this.selectedRowData['bfsDocuments'] = [];
+        this.selectedRowData = rowData; 
+         this.selectedRowData ={'bfsDocuments' :[]}
+         this.bfsItemService.getItemDetails({ id: rowData.id }).subscribe((res: any) => {
+            if (res && res.id) {
+                this.selectedRowData = { ...this.selectedRowData, ...res }
+            }else{
+                this.selectedRowData = { ...this.selectedRowData, ...rowData }
+            }
+        })
         this.bfsItemService.getDocsByBFSId({ id: rowData.id }).subscribe((res: any) => {
             if (Array.isArray(res)) {
                 this.selectedRowData['bfsDocuments'] = [...res]

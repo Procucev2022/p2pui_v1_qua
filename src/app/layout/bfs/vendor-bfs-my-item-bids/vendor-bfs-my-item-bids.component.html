@@ -14,26 +14,32 @@
 
       <p-table dataKey="id"  [ngClass]="{  'bfs-container': isBFSView}"  #itemCatalogueTable [columns]="itemHeaders" [value]="itemList" sortMode="multiple" [paginator]="true"
       [rows]="pageRecordSize" id="prqTable" [rowsPerPageOptions]="pageOptions"  [tableStyle]="{ minWidth: '100%'}"
-      exportFilename="items details" [(selection)]="selectedData" [scrollable]="true" [scrollHeight]="'calc(100vh - 218px)'" [expandedRowKeys]="expandedRowKeys" >
-      <!-- [expandedRowKeys]="expandedRows" -->
+      exportFilename="items details" [(selection)]="selectedData" [scrollable]="true" [scrollHeight]="'calc(100vh - 218px)'" > 
       <ng-template pTemplate="caption">
         <div class="table-search">
-          <div class="row">
-            <!-- <div class="col-sm-6 btns">
-                <button class="btn btn-blue" [ngClass]="{'activeButton': selectedView == 'Rejected'}" (click)="getAllBids('Rejected')">Accepted/Rejected Bids</button>
-                <button class="btn btn-blue" [ngClass]="{'activeButton': selectedView == 'All'}" (click)="getAllBids('All')">All Bids</button>
-            </div> -->
+          <div class="row"> 
             <div class="col-sm-6">
                 <input style=" " class="main-input" type="text" pInputText size="50" placeholder="Search.."
                   (input)="itemCatalogueTable.filterGlobal($event.target.value, 'contains')" />
+                 
               </div>
+                 <div class="col-sm-6 " style="display: flex; justify-content: flex-end;">
+                    <div class=" displayFlex-align" style="font-size: 18px !important; ">
+                        <span class="green  ">
+                         <i class="fa fa-check-circle green cursor-pointer" aria-hidden="true" style="font-size: 20px;" ></i> - <span style="margin-left: 8px;">Accept</span>
+                              
+                    </span>
+                    <span class="red ml-3   ">
+                          <i class="fa fa-times-circle-o red cursor-pointer" aria-hidden="true" style="font-size: 20px;" ></i> - <span style="  margin-left: 8px;">Reject</span>
+                    </span>
+                    </div>
+                    
+                </div>
           </div>
         </div>
       </ng-template>
       <ng-template pTemplate="header" let-columns>
-        <tr>
-          <th style="width: 3em">
-          </th>
+        <tr> 
           <ng-container *ngFor="let col of columns">
             <th [style.width]="col.width" [pSortableColumn]="col.field" [title]="col.fieldTitle">
               {{col.header}}
@@ -45,14 +51,7 @@
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
         <tr [pSelectableRow]="rowData">
-          <td style="width: 3em">
-            <button  type="button" pButton pRipple [pRowToggler]="rowData"
-            (click)="expanded ? getCloseRFQs(rowData,$event) : getRFQs(rowData,$event)"
-                class="grid-expand">
-                <i class="fa fa-chevron-down" [ngClass]="{'fa-chevron-down': expanded, 'fa-chevron-right': !expanded}"></i>
-            </button>
-
-        </td>
+           
           <td *ngFor="let col of columns" [style.width]="col.width"
           [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }"
           [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"
@@ -78,49 +77,17 @@
 
           </td>
           <td   style="width:6rem">
-            <button type="button" class="btn-skelton" >
-                <img src="/assets/images/new/view-doc.png" (click)="onViewItemDetails(rowData, false)"
+
+              <img src="/assets/images/new/view-doc.png" (click)="onViewItemDetails(rowData, false)" style="margin-right:8px;margin-top: -10px; width: 28px; height: 28px;"
                     title="View Item Details">
-            </button>
-
-
-            <button *ngIf="rowData.status == 'New'" type="button" mat-raised-button color="secondary" cdkFocusInitial
-              color="primary" (click)="approve(rowData)">Approve</button>
-            <button *ngIf="rowData.status == 'New'" type="button" mat-raised-button color="primary" cdkFocusInitial
-              color="primary" (click)="reject(rowData)">Reject</button>
+              <span *ngIf="!(rowData.status == 'Accepted' || rowData.status =='Ignored')" style="font-size: 2rem;">
+                <i class="fa fa-check-circle green cursor-pointer mr-2" title="Accept" aria-hidden="true" (click)="onAcceptBid(rowData)"></i>
+                <i class="fa fa-times-circle-o red cursor-pointer" title="Reject" aria-hidden="true" (click)="onRejectBid(rowData)"></i>
+            </span>
+            
           </td>
         </tr>
-      </ng-template>
-      <ng-template pTemplate="rowexpansion" let-rowData>
-        <tr class="child-grid" *ngIf="selectedRowData">
-            <td colspan="8">
-                <div class="p-p-3">
-                  <mat-tab-group>
-                    <mat-tab label="Requested Buyers " *ngIf="selectedRowData">
-                        <div class="rfqContainer ">
-                            <div class="table-title">
-                                <div class="row">
-                                  <div class="col-sm-6 mt-2">
-                                    <h2 style="margin: 10px 0 0;
-                                    font-size: 18px;
-                                    float: left;
-                                    font-weight: 500;
-                                    color: #1a6895;">Requested Buyers</h2>
-                                    <p><span class="dot"></span>{{requestUserGridData.gridValue?.length}} Total</p>
-                                  </div>
-                                  <div class="col-sm-6">
-                                  </div>
-                                </div>
-                              </div>
-                            <app-bfs-common-grid *ngIf="isShowGrid" [gridData]="requestUserGridData" (onGridAction)="onGridAction($event)"></app-bfs-common-grid>
-
-                        </div>
-                    </mat-tab>
-                  </mat-tab-group>
-                </div>
-            </td>
-        </tr>
-    </ng-template>
+      </ng-template> 
       <ng-template pTemplate="emptymessage" let-columns>
         <tr>
           <td [attr.colspan]="8" style="text-align:center;">
@@ -179,15 +146,15 @@
           <div class="col-6">
             <label>Total Quantity</label>
             <label>{{selectedRowData.totalQuantity}}</label>
+          </div>
+          <div class="col-6">
+            <label>Buy Price(Per Unit)</label>
+            <label>{{selectedRowData.sellPrice}}</label>
           </div> 
           <div class="col-6">
             <label>Sale Price(Per Unit)</label>
             <label>{{selectedRowData.askPrice}}</label>
-          </div>
-          <div class="col-6">
-            <label>BFS Group</label>
-            <label>{{selectedRowData.bfsGroup}}</label>
-          </div>
+          </div> 
           <div class="col-6">
             <label>Location</label>
             <label>{{selectedRowData.location}}</label>
