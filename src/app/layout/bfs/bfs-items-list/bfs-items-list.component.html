@@ -216,7 +216,7 @@
                                                     </div> -->
                                                     <div class="col-4 mb-1">
                                                     <label class="form-label required">Age Of Asset <small>(In Months)</small></label>
-                                                    <input class="form-control" formControlName="ageOfAsset" type="text" placeholder="Age of asset" />
+                                                    <input class="form-control" formControlName="ageOfAsset" type="number" placeholder="Age of asset" />
                                                     <p class="error"  *ngIf="(itemForm.controls?.ageOfAsset?.touched && itemForm.controls.ageOfAsset.errors) && (itemForm.controls.ageOfAsset.errors.invalid )">Aseet Age should be Number</p>
 
 
