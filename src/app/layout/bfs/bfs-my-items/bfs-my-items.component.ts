@@ -20,8 +20,8 @@ export class BfsMyItemsComponent implements OnInit {
         { field: 'description', header: 'Description', isLink: false, width: '120px', fieldType: 'text', isExceedContent: true },
         { field: 'itemNumber', header: 'Item Number', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
         { field: 'availableQuantity', header: 'Available Qty.', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false },
-        { field: 'sellPrice', header: 'Buy Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false },
-        { field: 'discount', header: 'Discount(%)', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
+        // { field: 'sellPrice', header: 'Buy Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false },
+        // { field: 'discount', header: 'Discount(%)', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
         { field: 'askPrice', header: 'Sale Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false }
     ]
     userHeaders: any = [
@@ -111,6 +111,8 @@ export class BfsMyItemsComponent implements OnInit {
         this.expandedRows = {};
         const thisRef = this;
         thisRef.expandedRows[rowData.id] = 1;
+           this.expandedRows = this.expandedRows?.id === rowData.id ? null : rowData;
+        this.requestedUsers  =[];
         this.bfsItemService.getRequestedUsersByBFSForSeller({ id: rowData.id }).subscribe((res: any) => {
             if (res && Array.isArray(res)) {
                 this.requestedUsers = res.map((ele: any) => {
@@ -118,8 +120,16 @@ export class BfsMyItemsComponent implements OnInit {
                 })
                 this.requestUserGridData.gridValue = [...this.requestedUsers]
                 this.reloadGridComponent();
+            }else{
+                this.requestedUsers = [];
+                this.requestUserGridData.gridValue = [...this.requestedUsers]
+                this.reloadGridComponent();
             }
-        })
+        });
+           
+    }
+      get expandedRowKeys() {
+        return this.expandedRows ? { [this.expandedRows.id]: true } : {};
     }
 
     reloadGridComponent() {

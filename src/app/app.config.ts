@@ -50,12 +50,14 @@ export const GMT_SYSTEM_SCREENS_LIST ={
 }
 
 export const BFS_SYSTEM_SCREEN_LIST ={
-    'CategoryManager' : ['/bfs', '/bfs/items', '/bfs/my-items', '/bfs/my-bids', '/bfs/requested-items' ],
+    'CategoryManager' : ['/bfs', '/bfs/items', '/bfs/my-items', '/bfs/my-bids', '/bfs/requested-items', '/categorymgr/capex-quoteCompare', '/categorymgr/capex-auctions' , '/categorymgr/capex-post-auctions-comp',
+    '/client/pr-capex', '/client/cient-summary'
+    ],
     'CategoryManager2': ['/bfs', '/bfs/items', '/bfs/my-items', '/bfs/my-bids', '/bfs/requested-items','/bfs/buyer-seller-details'],
-    'Registration': ['/bfs', '/bfs/items', '/bfs/my-items', '/bfs/my-bids'],
-    'PartialVendor': ['/bfs', '/bfs/items', '/bfs/my-items', '/bfs/my-bids'],
-    'Vendor': ['/bfs', '/bfs/items', '/bfs/my-items', '/bfs/my-bids'],
-    'ClientInitiator': ['/bfs', '/bfs/items', '/bfs/my-items', '/bfs/my-bids'],
+    'Registration': ['/bfs',   '/bfs/my-items' ],
+    'PartialVendor': ['/bfs', '/bfs/my-items' ],
+    'Vendor': ['/bfs',  '/bfs/my-items' ],
+    'ClientInitiator': ['/bfs', '/bfs/items',   '/bfs/my-bids'],
 
 }
 

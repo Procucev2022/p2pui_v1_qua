@@ -28,7 +28,6 @@ jobs:
           npm install --legacy-peer-deps
           npm run build --if-present
 
-
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
@@ -51,9 +50,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_5EC1FB4222AA43A48BAEFA67A4B604A7 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_64FF644444234A338AC0DDB5D56A1297 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_1D7954D8C5B24168BCB518E7A3DDA6CD }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_180536A5717B4ACE8BDFF8D433B9519F }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_75DABA1CCAF8430DBA8ADB87B7C987A2 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C39826CF8C4441F3B0032276D96FCEEF }}
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
@@ -62,4 +61,5 @@ jobs:
           app-name: 'p2pv1dev'
           slot-name: 'Production'
           package: .
+
           
