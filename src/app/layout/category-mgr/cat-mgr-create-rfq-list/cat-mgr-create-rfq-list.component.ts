@@ -848,6 +848,8 @@ export class CatMgrCreateRfqListComponent implements OnInit {
         });
     }
 
+    // 534280 pincode value for testing 
+
     createRFQ() {
 
         if(this.deliveryForm.invalid) {
@@ -915,7 +917,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
             "sourceType":"T"
         };
         if(this.roleName == 'ClientInitiator'){
-            if(this.isEditForm){
+            if(this.isEditForm && !itemsList.some((item:any) => !!item.id)) {
                 if(this.divisionsList.find(ele => ele == projectFormData.division)   ){
                     obj['division']= projectFormData.division;
                 }else{
