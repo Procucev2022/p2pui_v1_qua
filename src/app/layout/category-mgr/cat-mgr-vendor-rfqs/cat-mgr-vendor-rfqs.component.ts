@@ -82,6 +82,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         { field: 'noOfVendors', header: 'No. Of Vendors', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
         { field: 'noOfQuotes', header: 'No. Of Quotes', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
         { field: 'createdTs', header: 'Creation Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
+        { field: 'quoteSubmittedDate', header: 'Quote Submitted Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
         { field: 'status_ui_display', header: 'Status', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false }
     ];
 
@@ -164,7 +165,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         this.rfqservice.getAllRFQsByGMTCategory().subscribe(data => {
             if (Array.isArray(data)) {
                 this.rfqDataList = data.map((ele: any) => {
-                    const status_display = ele['status'] && ele['status']['uiDisplay'] ? ele.status.uiDisplay : ele.uiDisplay;
+                    const status_display = ele['clientStatus'] && ele['clientStatus']['uiDisplay'] ? ele.clientStatus.uiDisplay : ele.uiDisplay;
 
                     return { ...ele, status_ui_display: status_display, quotationReceived: ele.quotationReceived == true ? 'YES' : 'WIP' }
                 }) || [];
