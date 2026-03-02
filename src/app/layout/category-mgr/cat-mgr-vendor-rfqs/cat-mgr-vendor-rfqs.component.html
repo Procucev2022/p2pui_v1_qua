@@ -41,6 +41,7 @@
                        <span class="request-rfq">  <i class="fa fa-hand-pointer-o" aria-hidden="true"></i> - Request RFQ</span>
                        <span class="raise-query">  <i class="fa fa-question-circle" aria-hidden="true"></i> - Raise Query</span>
                        <span class="ignore-rfq">  <i class="fa fa-low-vision" aria-hidden="true"></i> -  Ignore RFQ</span>
+                       <span class="buyer-info">  <i class="fa fa-info-circle" aria-hidden="true"></i> - Buyer Info</span>
                        <span class="vendor-info">
                            <img class="vendor-info-reveal"  title="Vendor Info" src="assets/images/new/vendor-info-reveal.png" alt="Vendor Info" width="30" height="30"> - Vendor Info
                        </span>
@@ -100,7 +101,9 @@
                           <i class="fa fa-question-circle" aria-hidden="true"></i> </button>
                         <button (click)="onRiaseQueryOrIgnoreRFQ(rowData, true)" class="  btn-danger" title="Ignore RFQ" [ngClass]="{'disabledBtn btn-secondary': !ignoreEnability(rowData) }">
                           <i class="fa fa-low-vision" aria-hidden="true"></i> </button>
-
+                         <button (click)="onViewBuyerInfo(rowData, true)" *ngIf="isBuyerInfoAllowToSee(rowData)" class="btn-danger btn-buyer-info" title="View Buyer Info" >
+                             <i class="fa fa-info-circle" aria-hidden="true"></i> 
+                        </button>
                          <!-- <i  (click)="op.toggle($event)" #t1 class="fa fa-ellipsis-v" aria-hidden="true" data-toggle="tooltip" title="Actions" ></i>
                         <p-overlayPanel #op [showTransitionOptions]="'0ms'"  [dismissable]="'true'"  [hideTransitionOptions]="'0ms'" appendTo="body">
                             <ul class="menu-dot-cls" style="list-style: none;">

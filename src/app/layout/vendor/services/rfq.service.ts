@@ -110,6 +110,12 @@ export class RfqService {
 
     }
 
+      getBuyerInfoByRFQId(data: any) {
+        return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.GET_BUYER_INFO_BY_RFQ_ID, data, {})
+
+    }
+
+
     getClientInfoById(data: any) {
         return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.GET_CLIENT_INFO_BY_ID_GMT, data, {})
 

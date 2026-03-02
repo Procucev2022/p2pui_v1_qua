@@ -758,6 +758,7 @@ export class AppApiConfig {
     public static UPGRADE_OTP_FOR_GMT_VENDOR = '/rest/gmt/validateVmOtp';
     public static UPGRADE_GMT_VENDOR = '/rest/vendor/upgradeGmtVendor';
     public static UPGRADE_GMT_VENDOR_AFTER_OTP = '/rest/gmt/upgradeGmtVendor';
+    public static GET_BUYER_INFO_BY_RFQ_ID = '/rest/gmt/getBuyerByRFQ';
 
 
     /* Raise Issue */

@@ -301,9 +301,49 @@ export class CatMgrVendorRfqsComponent implements OnInit {
     ignoreEnability(rowData: any) {
         return (['New'].includes(rowData.status_ui_display))
     }
+
+    
+    isBuyerInfoAllowToSee(rowData: any) {
+        // Start counting from the next date after quoteSubmittedDate.
+        // If that next date falls on Saturday/Sunday, shift start to Monday.
+        // Allow access when current time is between start and start + 48 hours.
+
+        // vendor or partial vendor role can see
+        
+         if (!['Vendor', 'PartialVendor', 'Seller'].includes(this.currentRole)) {
+            return false;
+         }  
+        if (!rowData || !rowData.quoteSubmittedDate) {
+            return false;
+        }
+        const quoteDate = new Date(rowData.quoteSubmittedDate);
+        if (isNaN(quoteDate.getTime())) {
+            return false;
+        }
+
+        // Start from next date
+        let start = new Date(quoteDate);
+        start.setDate(start.getDate() + 1);
+
+        // If next date is Saturday (6) or Sunday (0), move to Monday
+        const day = start.getDay();
+        if (day === 6) {
+            // Saturday -> add 2 days to Monday
+            start.setDate(start.getDate() + 2);
+        } else if (day === 0) {
+            // Sunday -> add 1 day to Monday
+            start.setDate(start.getDate() + 1);
+        }
+
+        const now = new Date();
+        const diffHours = (now.getTime() - start.getTime()) / (1000 * 60 * 60);
+        return diffHours >= 0 && diffHours <= 48;
+    }
+
     onSelectSystem(sysValue) {
         this.authService.onSelectedSubscriptions(sysValue, this.loggedUserDetails, true)
     }
+  
 
     onRequestForRFQ(rowData: any) {
         if (!this.requestEnability(rowData)) {
@@ -475,6 +515,25 @@ export class CatMgrVendorRfqsComponent implements OnInit {
                 this.dialog.closeAll();
                 this.clientInfo = res;
                 this.dialog.open(this.clientInfoTemplate, {
+                    width: "30%",
+                    minHeight: "250px",
+                    data: "Su",
+                }).afterClosed().subscribe((res: any) => {
+                    this.clientInfo = null;
+                    this.selectedVendor = null;
+                })
+            }
+        })
+    }
+
+      onViewBuyerInfo(rowData: any) {
+        
+        this.selectedRfqData = rowData;
+        this.rfqservice.getBuyerInfoByRFQId({ id: rowData['id'] }).subscribe((res: any) => {
+            if (res) {
+                this.dialog.closeAll();
+                this.clientInfo = res;
+                this.dialog.open(this.clientInfoTemplateByRFQBases, {
                     width: "30%",
                     minHeight: "250px",
                     data: "Su",
