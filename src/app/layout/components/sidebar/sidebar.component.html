@@ -1,4 +1,4 @@
-<div [ngClass]="{  'gmt-container': isGMTView, 'bfs-container': isBFSView}">
+<div [ngClass]="{  'gmt-container': isGMTView, 'bfs-container': isBFSView}"  >
     <div class="showMobileMenu" (click)="onShowMobileMenu()"> <i class="fa fa-th-list" aria-hidden="true" [ngClass]="{'fa-th-list': !showMenuNav, 'fa-times' : showMenuNav}"></i>{{ showMenuNav ? 'Hide ': 'Show '}}  Menu</div>
     <nav [ngClass]="{sidebarPushRight: isActive, collapsed: collapsed }" class="sidebar" *ngIf="showMenuNav">
         <div class="list-group" *ngIf="!currentView || currentView == 'null' || currentView == SystemViewConfig.DPS_BASIC || currentView == SystemViewConfig.DPS_BASIC_PLUS">
@@ -700,6 +700,39 @@
         </div>
         <h4 class="expiry-text" style="position: fixed;  padding: 10px;  color: #fff;      width: 266px;bottom: -8px;font-size: 12px;">{{expiredTimeInSeconds}}</h4>
     </nav>
+    <div class="userinfo-content">
+        <div class="user-data">
+            <span class="label">Company Name:</span>
+            <span class="value">{{loggedUserDetails?.org?.companyName || '-'}}</span>
+        </div>
+        <ng-container *ngIf="loggedUserRoleType == 'Vendor' || loggedUserRoleType == 'Registration' || loggedUserRoleType == 'PartialVendor'">
+             <div class="user-data">
+            <span class="label">RFQ Credits:</span>
+            <span class="value">{{loggedUserDetails?.org?.rfqCredits.toString() || '-'}}</span>
+        </div>
+          <div class="user-data">
+            <span class="label">RFQ Credits Consumed:</span>
+            <span class="value">{{loggedUserDetails?.org?.rfqUsedCount.toString() || '-'}}</span>
+        </div>
+         <div class="user-data">
+            <span class="label">Subscription End Date:</span>
+            <span class="value">{{loggedUserDetails?.org?.subscriptionExpiry || '-'}}</span>
+        </div>
+        </ng-container>
+        <ng-container *ngIf="loggedUserRoleType == 'ClientInitiator'">
+             <div class="user-data">
+            <span class="label"> RFQs Raised</span>
+            <span class="value">{{loggedUserDetails?.org?.rfqRaised  .toString() || '-'}}</span>
+        </div>
+        </ng-container>
+         <div class="user-data">
+            <span class="label">Categories:</span>
+            <div class="categorieslist">
+                <span class="category" *ngFor="let division of loggedUserDetails?.org?.divisionCategories">{{division.category}}</span>
+                <span class="category" *ngIf="loggedUserDetails?.org?.divisionCategories.length === 0" style="color:rgb(219, 125, 125)">No Categories Available</span>
+            </div>
+        </div>
+    </div>
 
 
 </div>
