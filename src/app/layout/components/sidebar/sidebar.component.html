@@ -708,11 +708,11 @@
         <ng-container *ngIf="loggedUserRoleType == 'Vendor' || loggedUserRoleType == 'Registration' || loggedUserRoleType == 'PartialVendor'">
              <div class="user-data">
             <span class="label">RFQ Credits:</span>
-            <span class="value">{{loggedUserDetails?.org?.rfqCredits.toString() || '-'}}</span>
+            <span class="value">{{loggedUserDetails?.org?.rfqCredits?.toString() || '-'}}</span>
         </div>
           <div class="user-data">
             <span class="label">RFQ Credits Consumed:</span>
-            <span class="value">{{loggedUserDetails?.org?.rfqUsedCount.toString() || '-'}}</span>
+            <span class="value">{{loggedUserDetails?.org?.rfqUsedCount?.toString() || '-'}}</span>
         </div>
          <div class="user-data">
             <span class="label">Subscription End Date:</span>
@@ -722,7 +722,7 @@
         <ng-container *ngIf="loggedUserRoleType == 'ClientInitiator'">
              <div class="user-data">
             <span class="label"> RFQs Raised</span>
-            <span class="value">{{loggedUserDetails?.org?.rfqRaised  .toString() || '-'}}</span>
+            <span class="value">{{loggedUserDetails?.org?.rfqRaised?.toString() || '-'}}</span>
         </div>
         </ng-container>
          <div class="user-data">
