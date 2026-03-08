@@ -29,6 +29,7 @@ import { CategoryMgrVendorSummaryComponent } from './category-mgr-vendor-summary
 import { CatMgrVendorCatalogueComponent } from './cat-mgr-vendor-catalogue/cat-mgr-vendor-catalogue.component';
 import { CatMgrVendorTermsCondtsComponent } from './cat-mgr-vendor-terms-condts/cat-mgr-vendor-terms-condts.component';
 import { GmtVendorsListComponent } from '../vendor-mgr/components/gmt-vendors-list/gmt-vendors-list.component';
+import { MyCategoryListComponent } from './my-category-list/my-category-list.component';
 const routes: Routes = [
     { path: '', redirectTo: 'procurequests', pathMatch: 'prefix' },
     { path: 'dashboard', component: CatMgrDashboardComponent },
@@ -55,6 +56,7 @@ const routes: Routes = [
     {path: 'gmt-reg-clients', component: CatMgrGmtRegisterClientsComponent},
     {path: 'gmt-rfq-support', component: RfqSupportQueryComponent},
     {path: 'my-profile', component: VendorProfileComponent},
+    {path: 'my-category-list', component: MyCategoryListComponent},
     {path: 'gmt-rfq-faqs', component: FaqsDocumentComponent},
     {path: 'vendor-profile-subscriptions', component: VendorProfileSubscriptionsComponent},
     {path: 'vendor-summary', component: CategoryMgrVendorSummaryComponent},

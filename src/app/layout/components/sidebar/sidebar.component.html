@@ -700,39 +700,55 @@
         </div>
         <h4 class="expiry-text" style="position: fixed;  padding: 10px;  color: #fff;      width: 266px;bottom: -8px;font-size: 12px;">{{expiredTimeInSeconds}}</h4>
     </nav>
-    <div class="userinfo-content">
+    <div class="userinfo-content" *ngIf="loggedUserRoleType == 'Vendor' || loggedUserRoleType == 'Registration' || loggedUserRoleType == 'PartialVendor' ||
+     loggedUserRoleType == 'ClientInitiator' ">
+      <div>
+        <label style="font-size: 1.5rem !important;
+    color: orange;">My Info </label>
+        <label style="display: flex;align-items: center;color: #ffffff99;">
+         <span class="di "> Fetched By {{getTimeAgo() }}</span>
+          <span class="" style="cursor: pointer; font-size: 1.5rem; padding-left: 5px; color: yellow;" (click)="getUserInfo()"> <i class="fa fa-refresh"></i> </span>
+        </label>
+           
+
+      </div>
         <div class="user-data">
             <span class="label">Company Name:</span>
-            <span class="value">{{loggedUserDetails?.org?.companyName || '-'}}</span>
+            <span class="value">{{loggedUserInfo?.org?.companyName || '-'}}</span>
         </div>
         <ng-container *ngIf="loggedUserRoleType == 'Vendor' || loggedUserRoleType == 'Registration' || loggedUserRoleType == 'PartialVendor'">
              <div class="user-data">
             <span class="label">RFQ Credits:</span>
-            <span class="value">{{loggedUserDetails?.org?.rfqCredits?.toString() || '-'}}</span>
+            <span class="value">{{loggedUserInfo?.org?.rfqCredits?.toString() || '-'}}</span>
         </div>
           <div class="user-data">
             <span class="label">RFQ Credits Consumed:</span>
-            <span class="value">{{loggedUserDetails?.org?.rfqUsedCount?.toString() || '-'}}</span>
+            <span class="value">{{loggedUserInfo?.org?.rfqUsedCount?.toString() || '-'}}</span>
         </div>
          <div class="user-data">
             <span class="label">Subscription End Date:</span>
-            <span class="value">{{loggedUserDetails?.org?.subscriptionExpiry || '-'}}</span>
+            <span class="value">{{loggedUserInfo?.org?.subscriptionExpiry || '-'}}</span>
         </div>
         </ng-container>
         <ng-container *ngIf="loggedUserRoleType == 'ClientInitiator'">
              <div class="user-data">
             <span class="label"> RFQs Raised</span>
-            <span class="value">{{loggedUserDetails?.org?.rfqRaised?.toString() || '-'}}</span>
+            <span class="value">{{loggedUserInfo?.org?.rfqRaised?.toString() || '-'}}</span>
         </div>
         </ng-container>
          <div class="user-data">
             <span class="label">Categories:</span>
             <div class="categorieslist">
-                <span class="category" *ngFor="let division of loggedUserDetails?.org?.divisionCategories">{{division.category}}</span>
-                <span class="category" *ngIf="loggedUserDetails?.org?.divisionCategories.length === 0" style="color:rgb(219, 125, 125)">No Categories Available</span>
+               <span class="categories"> {{loggedUserInfo?.org?.divisionCategories.length+ '  Categories Available' || 'No Categories Available'}} </span>
+               <span class="value">
+                 <a   [routerLink]="['/categorymgr/my-category-list']" [routerLinkActive]="['router-link-active']"
+                 style="color: #b4d871;
+    text-decoration: underline;    cursor: pointer; padding-right: 6px;"
+
+                 >Click here </a> to View
+               </span>
             </div>
         </div>
-    </div>
 
 
 </div>

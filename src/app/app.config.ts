@@ -39,13 +39,13 @@ export const SystemViewConfig = {
 export const GMT_SYSTEM_SCREENS_LIST ={
     'CategoryManager' :['/categorymgr/create-rfq', '/categorymgr/gmt-rqfs', '/categorymgr/client-gmt-rqfs', '/categorymgr/vendor-summary'], // 3 Screens
     'CategoryManager2':['/categorymgr/gmt-rqfs', '/categorymgr/gmt-summary','/categorymgr/gmt-reg-clients','/categorymgr/client-gmt-rqfs', '/categorymgr/gmt-vendors'], // 4 Screens
-   'ClientInitiator':['/categorymgr/create-rfq', '/categorymgr/gmt-rfq-support','/categorymgr/gmt-rfq-faqs', '/categorymgr/my-profile'], // 3 Screens
+   'ClientInitiator':['/categorymgr/create-rfq', '/categorymgr/gmt-rfq-support','/categorymgr/gmt-rfq-faqs', '/categorymgr/my-profile', '/categorymgr/my-category-list'], // 3 Screens
 //    'Registration': [ '/categorymgr/vendor-profile',  '/categorymgr/gmt-rfq-faqs', '/categorymgr/my-profile' ], // 2 Screens
 //    'PartialVendor':['/categorymgr/vendor-profile' , '/categorymgr/gmt-rfq-faqs', '/categorymgr/my-profile' ],// 2 Screens
 //    'Vendor': [  '/categorymgr/gmt-rfq-faqs', '/categorymgr/gmt-rfq-faqs', '/categorymgr/vendor-profile' , '/categorymgr/my-profile' ] // 2 Screens
- 'Registration': ['/categorymgr/gmt-rqfs','/categorymgr/gmt-rfq-faqs', '/categorymgr/vendor-profile', '/categorymgr/vendor-profile-subscriptions', '/categorymgr/my-profile','/categorymgr/vendor-catalogue', '/categorymgr/vendor-catalogue-terms-condts'],  // 2 Screens
-  'PartialVendor':['/categorymgr/gmt-rqfs','/categorymgr/gmt-rfq-faqs', '/categorymgr/vendor-profile', '/categorymgr/vendor-profile-subscriptions', '/categorymgr/my-profile','/categorymgr/vendor-catalogue', '/categorymgr/vendor-catalogue-terms-condts'], // 2 Screens
-  'Vendor': ['/categorymgr/gmt-rqfs','/categorymgr/gmt-rfq-faqs', '/categorymgr/vendor-profile', '/categorymgr/vendor-profile-subscriptions', '/categorymgr/my-profile', '/categorymgr/vendor-catalogue', '/categorymgr/vendor-catalogue-terms-condts'], // 2 Screens
+ 'Registration': ['/categorymgr/gmt-rqfs','/categorymgr/gmt-rfq-faqs', '/categorymgr/vendor-profile', '/categorymgr/vendor-profile-subscriptions', '/categorymgr/my-profile','/categorymgr/vendor-catalogue', '/categorymgr/vendor-catalogue-terms-condts', '/categorymgr/my-category-list'],  // 2 Screens
+  'PartialVendor':['/categorymgr/gmt-rqfs','/categorymgr/gmt-rfq-faqs', '/categorymgr/vendor-profile', '/categorymgr/vendor-profile-subscriptions', '/categorymgr/my-profile','/categorymgr/vendor-catalogue', '/categorymgr/vendor-catalogue-terms-condts', '/categorymgr/my-category-list'], // 2 Screens
+  'Vendor': ['/categorymgr/gmt-rqfs','/categorymgr/gmt-rfq-faqs', '/categorymgr/vendor-profile', '/categorymgr/vendor-profile-subscriptions', '/categorymgr/my-profile', '/categorymgr/vendor-catalogue', '/categorymgr/vendor-catalogue-terms-condts', '/categorymgr/my-category-list'], // 2 Screens
 
 }
 
@@ -54,10 +54,10 @@ export const BFS_SYSTEM_SCREEN_LIST ={
     '/client/pr-capex', '/client/cient-summary'
     ],
     'CategoryManager2': ['/bfs', '/bfs/items', '/bfs/my-items', '/bfs/my-bids', '/bfs/requested-items','/bfs/buyer-seller-details'],
-    'Registration': ['/bfs',   '/bfs/my-items' ],
-    'PartialVendor': ['/bfs', '/bfs/my-items' ],
-    'Vendor': ['/bfs',  '/bfs/my-items', '/bfs/seller-bid-items' ],
-    'ClientInitiator': ['/bfs', '/bfs/items',   '/bfs/my-bids'],
+    'Registration': ['/bfs',   '/bfs/my-items' , '/categorymgr/my-category-list'],
+    'PartialVendor': ['/bfs', '/bfs/my-items', '/categorymgr/my-category-list' ],
+    'Vendor': ['/bfs',  '/bfs/my-items', '/bfs/seller-bid-items', '/categorymgr/my-category-list' ],
+    'ClientInitiator': ['/bfs', '/bfs/items',   '/bfs/my-bids', '/categorymgr/my-category-list'],
 
 }
 

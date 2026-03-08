@@ -20,6 +20,8 @@ export class SidebarComponent implements OnInit {
     loggedUserRole: string;
     userRoles: string[];
     showMenuNav :boolean = true;
+    updatedTimeAgo:number =0;
+    updatedTimeAgoInterval: any;
 
     @Output() collapsedEvent = new EventEmitter<boolean>();
     loggedUserPermissions: any;
@@ -37,6 +39,7 @@ export class SidebarComponent implements OnInit {
     expiredTimeInSeconds: any =  '';
     childRepCollapsed: boolean;
     childRep: string;
+    loggedUserInfo: any;
 
      constructor(private translate: TranslateService, public router: Router, @Inject(APP_CONFIG) private config: IAppConfig,
       private encryDecryService: EncryDecryService, private authService: AuthenticationService, private route: ActivatedRoute) {
@@ -72,6 +75,30 @@ export class SidebarComponent implements OnInit {
         this.authService.$expiresTime.subscribe((res:number)=>{
             this.expiredTimeInSeconds = 'Session Expires In :' + this.formatSessionTime(res);
         })
+    }
+
+    getUserInfo(){
+        this.authService.getLoggedUserData({
+              "username": this.loggedUserDetails.username,
+                "phone":  this.loggedUserDetails.phone
+        }).subscribe((res:any)=>{
+            if(res){
+                this.loggedUserInfo = res;
+                this.updatedTimeAgo = Date.now();
+                    if(this.updatedTimeAgoInterval){
+                        clearInterval(this.updatedTimeAgoInterval);
+                    }
+            }
+        })
+    }
+
+    getTimeAgo(){
+        const currentTime = Date.now();
+        const timeDiffInSeconds = Math.floor((currentTime - this.updatedTimeAgo) / 1000); 
+        return timeDiffInSeconds < 60 ? `${timeDiffInSeconds} Sec(s) ago` :(
+            timeDiffInSeconds < 3600 ? `${Math.floor(timeDiffInSeconds / 60)} Min(s) ago` :
+                `${Math.floor(timeDiffInSeconds / 3600)} Hour(s) ago`);
+
     }
 
     formatSessionTime(time:any){
@@ -127,6 +154,8 @@ export class SidebarComponent implements OnInit {
             this.repCollapsed = true
             this.rep = "BFS";
         }
+        
+        this.getUserInfo();
     }
 
 

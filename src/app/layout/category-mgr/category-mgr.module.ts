@@ -48,6 +48,7 @@ import { CategoryMgrVendorSummaryComponent } from './category-mgr-vendor-summary
 import { CatMgrVendorCatalogueComponent } from './cat-mgr-vendor-catalogue/cat-mgr-vendor-catalogue.component';
 import { CatMgrVendorTermsCondtsComponent } from './cat-mgr-vendor-terms-condts/cat-mgr-vendor-terms-condts.component';
 import { GmtVendorsListComponent } from '../vendor-mgr/components/gmt-vendors-list/gmt-vendors-list.component';
+import { MyCategoryListComponent } from './my-category-list/my-category-list.component';
 
 
 
@@ -101,7 +102,8 @@ import { GmtVendorsListComponent } from '../vendor-mgr/components/gmt-vendors-li
         CategoryMgrVendorSummaryComponent,
         CatMgrVendorCatalogueComponent,
         CatMgrVendorTermsCondtsComponent,
-        GmtVendorsListComponent
+        GmtVendorsListComponent,
+        MyCategoryListComponent
     ],
     exports:[ ],
     // entryComponents: [CatMgrVendorSearchComponent]

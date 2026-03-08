@@ -88,7 +88,7 @@
                                     <option *ngFor="let val of divisionFormList[i].divisionList" value="{{val}}">{{val}}</option>
                                 </select>
                             </div>
-                            <div class="col-6" *ngIf="divisionFormList[i].selectedCategory?.length > 0">
+                            <div class="col-6" *ngIf="divisionFormList[i].selectedCategory?.length > 0" style="overflow-y: auto;">
                                 <span class="acc-title"> <b>Selected Categories:: </b></span>
                                 
                                 <div class="selected-categories">

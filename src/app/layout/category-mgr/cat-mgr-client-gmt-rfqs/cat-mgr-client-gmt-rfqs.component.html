@@ -177,15 +177,19 @@
     <div class="">
     <p-table  #vendorTable [columns]="vendorTableHeaders" [value]="vendorsList" sortMode="multiple"
     [paginator]="true" [rows]="pageRecordSize" id="vendorTable" [rowsPerPageOptions]="pageOptions"
-        [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData"  [scrollable]="true" [scrollHeight]="'calc(100vh - 200px)'">
+        [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData"  [scrollable]="true" [scrollHeight]="'30vh'">
         <ng-template pTemplate="caption">
           <div class="table-search">
-            <div class="row">
+            <div class="row" style="display: flex;align-items: center;">
               <div class="col-sm-6">
                 <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
                   (input)="vendorTable.filterGlobal($event.target.value, 'contains')" />
               </div>
               <div class="col-sm-6">
+                <div class="float-right" style="display: -webkit-inline-box;">
+                  <span class="text-success"> <i class="fa fa-check-circle-o" aria-hidden="true"></i> - Approve &nbsp;&nbsp;</span>
+                   <span class="text-danger"> <i class="fa fa-times-circle-o" aria-hidden="true"></i> - Reject</span>
+                </div>
               </div>
             </div>
           </div>
@@ -196,15 +200,15 @@
             {{col.header}}
             <p-sortIcon [field]="col.field"></p-sortIcon>
             </th>
-            <!-- <th style="width: 11em;" *ngIf="currentRole == 'CategoryManager'">Actions</th> -->
+            <th style="width: 11rem;" *ngIf="currentRole == 'CategoryManager'">Actions</th>
         </tr>
         </ng-template>
         <ng-template pTemplate="body" let-rowData let-columns="columns">
           <tr [pSelectableRow]="rowData">
               <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
               <span *ngIf="!col.isLink">
-                      <span *ngIf="col.fieldType != 'date'">
-                        <i class="fa fa-info-circle" style="font-size: 1.2rem;cursor: pointer;color:rgb(255, 106, 0)" *ngIf="col.field =='vendorName' " (click)="getVendorInfo(rowData, false)"></i> {{rowData[col.field]}}
+                      <span *ngIf="col.fieldType != 'date'" style=" margin-right: 4px;">
+                        <i class="fa fa-info-circle" style="font-size: 1.2rem;cursor: pointer;color:rgb(255, 106, 0)" *ngIf="col.field =='vendorName' " (click)="getVendorInfo(rowData, 'vendorUuid')"></i> {{rowData[col.field]}}
 
                       </span>
                       <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
@@ -216,18 +220,18 @@
                   (click)="getRFQLineItems(rowData, $event)"> {{rowData[col.field]}} </a></span>
 
               </td>
-              <!-- <td style="width: 11em;" *ngIf="currentRole == 'CategoryManager'">
+              <td style="width: 11rem;" *ngIf="currentRole == 'CategoryManager'">
 
                 <span >
-                    <button (click)="onAcceptOrRejectVendor(rowData, true)" class="btn btn-blue pr-l" >Approve</button>
-                        <button (click)="onAcceptOrRejectVendor(rowData, false)" class="btn btn-orange" >Reject</button>
-                </span>
-              </td> -->
+                  <i class="fa fa-check-circle-o" title="Approve"   [ngClass]="{'disabledBtn': rowData.status_ui_display == 'New' || rowData.status_ui_display == 'Approved'}"  (click)="onAcceptOrRejectVendor(rowData, true)"  aria-hidden="true"></i>
+                   <i class="fa fa-times-circle-o" title="Reject"   [ngClass]="{'disabledBtn': rowData.status_ui_display == 'New' || rowData.status_ui_display == 'Rejected'}"   (click)="onAcceptOrRejectVendor(rowData, false)"   aria-hidden="true"></i>
+                  </span>
+              </td>
           </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage" let-columns>
         <tr>
-            <td [attr.colspan]="3" style="text-align:center;">
+            <td [attr.colspan]="6" style="text-align:center;">
             No Records Found.
             </td>
         </tr>
@@ -357,5 +361,5 @@
 
 
 <ng-template #vendorInfoTemplate>
-    <app-gmt-vendor-info-modal [selectedVendor]="selectedVendor" [vendorInfo]="vendorInfo" [isVendor]="false"></app-gmt-vendor-info-modal>
+    <app-gmt-vendor-info-modal [selectedVendor]="selectedVendor" [vendorInfo]="vendorInfo" [isVendor]="true"></app-gmt-vendor-info-modal>
 </ng-template>

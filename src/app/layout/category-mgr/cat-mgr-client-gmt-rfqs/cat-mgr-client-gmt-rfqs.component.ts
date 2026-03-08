@@ -502,7 +502,7 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
   getVendorInfo(rowData:any, isFromInfoIcon: boolean = false){
     
       this.selectedVendor = rowData;
-      this.rfqservice.getVendorInfoById({id: rowData.companyId}).subscribe((res:any)=>{
+      this.rfqservice.getVendorInfoById({id: rowData.vendorUuid}).subscribe((res:any)=>{
           if(res ){
               this.dialog.closeAll();
               this.vendorInfo = res;
