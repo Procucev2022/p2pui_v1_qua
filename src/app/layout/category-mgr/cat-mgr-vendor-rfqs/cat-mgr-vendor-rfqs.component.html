@@ -42,7 +42,7 @@
                        <span class="raise-query">  <i class="fa fa-question-circle" aria-hidden="true"></i> - Raise Query</span>
                        <span class="ignore-rfq">  <i class="fa fa-low-vision" aria-hidden="true"></i> -  Ignore RFQ</span>
                        <span class="buyer-info" *ngIf="currentRole == 'Vendor'  || currentRole == 'Registration' || currentRole == 'PartialVendor'">  <i class="fa fa-info-circle" aria-hidden="true"></i> - Buyer Info</span>
-                       <span class="vendor-info">
+                       <span class="vendor-info"  *ngIf="!(currentRole == 'Vendor'  || currentRole == 'Registration' || currentRole == 'PartialVendor')">
                            <img class="vendor-info-reveal"  title="Vendor Info" src="assets/images/new/vendor-info-reveal.png" alt="Vendor Info" width="30" height="30"> - Vendor Info
                        </span>
                     </div>
@@ -119,7 +119,7 @@
                             </ul>
 
                         </p-overlayPanel> -->
-                  <img class="vendor-info-reveal"  *ngIf="showVendorInfoIconAfter48Hrs(rowData)" (click)="getClientInfoByRFQId(rowData)" title="Vendor Info" src="assets/images/new/vendor-info-reveal.png" alt="Vendor Info" width="30" height="30">
+                  <img class="vendor-info-reveal"  *ngIf="showVendorInfoIconAfter48Hrs(rowData)" (click)="getClientInfoByRFQId(rowData)" title="Buyer Info" src="assets/images/new/vendor-info-reveal.png" alt="Buyer Info" width="30" height="30">
 
                     </span>
                 </td>

@@ -504,8 +504,8 @@ export class CatMgrVendorRfqsComponent implements OnInit {
 
         // Convert milliseconds to hours
         const diffInHours = diffInMilliseconds / (1000 * 60 * 60);
-        // console.log('diffInHours', diffInHours)
-        return diffInHours > 0 && diffInHours <= 48;
+        // console.log('diffInHours', diffInHours) 
+        return diffInHours > 0 && diffInHours <= 48 && !['Vendor', 'PartialVendor', 'Seller'].includes(this.currentRole);
     }
 
     getClientInfo(rowData: any ) {
@@ -568,7 +568,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         if(!rowData.quoteSubmittedDate){
             return false;
         } 
-        return  !this.getDifferenceInHours( new Date(rowData?.quoteSubmittedDate), new Date());
+        return  this.getDifferenceInHours( new Date(rowData?.quoteSubmittedDate), new Date());
     }
     getLineItemsByRFQ() {
 

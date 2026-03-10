@@ -63,8 +63,7 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
       { field: 'description', header: 'Item Description', isLink: false, width: '190px', fieldType: 'text', isExceedContent: true },
       { field: 'brand', header: 'Specification', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
       { field: 'unitofMeasures', header: 'UOM', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
-      { field: 'quantity', header: 'Quantity', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
-      { field: 'unitprice', header: 'Unit Price', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
+      { field: 'quantity', header: 'Quantity', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false }, 
       { field: 'createdTS', header: 'Creation Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false }
   ];
   loggedUserDetails: any;
