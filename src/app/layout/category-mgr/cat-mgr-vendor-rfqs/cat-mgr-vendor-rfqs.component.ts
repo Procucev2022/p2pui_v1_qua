@@ -36,11 +36,10 @@ export class CatMgrVendorRfqsComponent implements OnInit {
     selectedStatus: string = '';
     statusList: any = [
         "New",
-        "Requested",
-        "In Progress",
-        "Approved",
-        "Quotation Received",
-        "Ignored"
+        "Downloaded",
+        "Submitted",
+        "Queried",
+        "Rejected"
 
     ];
     rfqsTableHeadersForGMTVendor: any = [
