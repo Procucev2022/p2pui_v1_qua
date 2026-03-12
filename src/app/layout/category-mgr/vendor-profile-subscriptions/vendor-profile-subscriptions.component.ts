@@ -18,6 +18,7 @@ export class VendorProfileSubscriptionsComponent {
   loggedUserDetails: any;
   vendorRegObj: any;
   currentPlan: any;
+  isLoading = false;  
   subcriptionMethods = [
   ];
 
@@ -69,7 +70,16 @@ export class VendorProfileSubscriptionsComponent {
       return;
     }
     const obj = this.vendorRegObj;
+    this.isLoading = true;
     obj.subscriptionPlan = this.selectedSubscription ? { id: this.selectedSubscription.id } : null;
+    this.createRfqService.updatePaymentForSubscription({ planId: this.selectedSubscription.id, userEmail: this.loggedUserDetails.username,
+      userPhone: this.loggedUserDetails.phone
+     }).subscribe((res: any) => {
+      // window.location.href = res.data && res.data.paymentLink ? res.data.paymentLink : '';
+      console.log('res', res)
+    }, (error) => {
+      this.toastrService.error('Error while updating subscription', 'Error');
+    });
     this.createRfqService.updateSellerData(obj).subscribe((res: any) => {
       this.toastrService.success('Vendor Updated Successfully', 'Success');
       this.getVendorById(this.loggedUserDetails.org.id)

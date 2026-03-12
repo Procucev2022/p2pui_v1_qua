@@ -128,6 +128,11 @@ export class CreateRfqService {
         return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.UPDATE_SELLER_DATA, data, {});
     }
 
+    
+    updatePaymentForSubscription(data: any) {
+        return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.UPDATE_PAYMENT_FOR_SUBSCRIPTION, data, {})
+    }
+
     updateBuyerData(data: any) {
         // return this.http.post('http://104.154.48.179:8080/authprocucev/rest1/vendor/submitVendorRegistration',data)
         return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.UPDATE_BUYER_DATA, data, {});
