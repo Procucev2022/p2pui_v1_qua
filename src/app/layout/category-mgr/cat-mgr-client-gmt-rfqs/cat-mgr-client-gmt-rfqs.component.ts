@@ -54,18 +54,20 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
       { field: 'status_ui_display', header: 'Status', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false }
   ];
 
-  vendorTableHeaders: any = [ 
-      { field: 'vendorName', header: 'Name', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
-      { field: 'status_ui_display', header: 'Status', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
-      { field: 'createdTS', header: 'Creation Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false }
-  ];
+   vendorTableHeaders: any = [
+        // { field: 'vendorId', header: 'Company Id', isLink: false, width: '140px', fieldType: 'text', isExceedContent: false },
+        { field: 'vendorName', header: 'Name', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
+        { field: 'query', header: 'Query', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
+        { field: 'status_ui_display', header: 'Status', isLink: false, width: '100px', fieldType: 'text', isExceedContent: false },
+        { field: 'createdTS', header: 'Submitted Date', isLink: false, fieldType: 'date', width: '140px', isExceedContent: false },
+    ];
   itemsTableHeaders: any = [
-      { field: 'description', header: 'Item Description', isLink: false, width: '190px', fieldType: 'text', isExceedContent: true },
-      { field: 'brand', header: 'Specification', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
-      { field: 'unitofMeasures', header: 'UOM', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
-      { field: 'quantity', header: 'Quantity', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false }, 
-      { field: 'createdTS', header: 'Creation Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false }
-  ];
+        { field: 'description', header: 'Item Description', isLink: false, width: '190px', fieldType: 'text', isExceedContent: true },
+        { field: 'brand', header: 'Specifications', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
+        { field: 'unitofMeasures', header: 'UOM', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
+        { field: 'quantity', header: 'Quantity', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false }, 
+        { field: 'createdTS', header: 'Creation Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
+    ];
   loggedUserDetails: any;
   currentRole: any = '';
   selectedRfqData: any;
@@ -498,10 +500,10 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
       this.isSendRFQ = false;
   }
 
-  getVendorInfo(rowData:any, isFromInfoIcon: boolean = false){
+  getVendorInfo(rowData:any, key:string){
     
       this.selectedVendor = rowData;
-      this.rfqservice.getVendorInfoById({id: rowData.vendorUuid}).subscribe((res:any)=>{
+      this.rfqservice.getVendorInfoById({id: rowData[key]}).subscribe((res:any)=>{
           if(res ){
               this.dialog.closeAll();
               this.vendorInfo = res;

@@ -39,7 +39,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         "Downloaded",
         "Submitted",
         "Queried",
-        "Rejected"
+        "Ignored"
 
     ];
     rfqsTableHeadersForGMTVendor: any = [

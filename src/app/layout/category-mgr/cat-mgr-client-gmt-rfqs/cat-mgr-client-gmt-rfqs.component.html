@@ -124,7 +124,7 @@
           <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}" 
            [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
                   <span *ngIf="!col.isLink">
-                        <i class="fa fa-info-circle" style="font-size: 1.2rem;cursor: pointer;color:rgb(255, 106, 0)" *ngIf="col.field =='companyName' " (click)="getVendorInfo(rowData, true)"></i>  
+                        <i class="fa fa-info-circle" style="font-size: 1.2rem;cursor: pointer;color:rgb(255, 106, 0)" *ngIf="col.field =='companyName' " (click)="getVendorInfo(rowData, 'companyId')"></i>  
 
                           <span *ngIf="col.fieldType != 'date'" [ngClass]="{'blueCls': col.field == 'rfqId' && rowData.byClient == true}">
                               {{rowData[col.field]}} 
@@ -248,7 +248,7 @@
     <div class="">
         <p-table  #itemTable [columns]="itemsTableHeaders" [value]="itemsList" sortMode="multiple"
         [paginator]="true" [rows]="pageRecordSize" id="itemTable" [rowsPerPageOptions]="pageOptions"
-            [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData"  [scrollable]="true" [scrollHeight]="'calc(100vh - 200px)'">
+            [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData"  [scrollable]="true" [scrollHeight]="'30vh'">
             <ng-template pTemplate="caption">
               <div class="table-search">
                 <div class="row">
@@ -297,7 +297,7 @@
             </ng-template>
             <ng-template pTemplate="emptymessage" let-columns>
             <tr>
-                <td [attr.colspan]="6" style="text-align:center;">
+                <td [attr.colspan]="5" style="text-align:center;">
                 No Records Found.
                 </td>
             </tr>
@@ -310,6 +310,7 @@
       </p-table>
     </div>
 </ng-template>
+
 
 <ng-template #raiseQueryRef>
     <form (ngSubmit)="onRaiseQuery(editSubCatForm)" name="editSubCatForm" #editSubCatForm="ngForm" novalidate>
