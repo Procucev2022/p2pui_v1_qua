@@ -96,12 +96,12 @@
       </ng-template>
       <ng-template pTemplate="header" let-columns>
           <tr>
-          <th style="width: 3em"></th>
+          <th style="width: 5em"></th>
           <th [style.width]="col.width" *ngFor="let col of columns" [pSortableColumn]="col.field">
               {{col.header}}
               <p-sortIcon [field]="col.field"></p-sortIcon>
           </th>
-          <th style="width: 13em;">Actions</th>
+          <th style="width: 21em;">Actions</th>
           </tr>
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
@@ -113,7 +113,7 @@
                   <span *ngIf="!expanded"><i class="fa fa-chevron-right"></i></span>
               </button>
           </td> -->
-          <td style="width: 3em">
+          <td style="width: 5em">
             <button type="button" pButton pRipple [pRowToggler]="rowData"
                   class="grid-expand"  >
                   <span *ngIf="expanded"><i class="fa fa-chevron-down"></i></span>
@@ -130,12 +130,12 @@
                               {{rowData[col.field]}} 
                           </span>
                           <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
-                            {{rowData['createdTs'] | date: 'dd-MMM-yyyy'}}
+                            {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
                           </span>
 
                   </span>
           </td>
-          <td style="width: 13em;">
+          <td style="width: 21em;">
               <img class="cursor-pointer" src="/assets/images/new/edit-data.png"  width="28" style="width:28px;margin-right: 10px;" title="Edit RFQ"  (click)="onViewRFQDetails(rowData, true, false)">
 
               <img src="/assets/images/new/forward.png" class="forward cursor-pointer"  (click)="onForwardRFQ(rowData, true)"width="44" height="34"

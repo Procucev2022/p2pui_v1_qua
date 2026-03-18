@@ -290,7 +290,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
     }
 
     requestEnability(rowData: any) {
-        return ['New', 'Ignored'].includes(rowData.status_ui_display)
+        return ['Downloaded'].includes(rowData.status_ui_display)
     }
 
     queryEnability(rowData: any) {
@@ -691,8 +691,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         }
         this.selectedRfqData = rowData;
         if (isIgnored == true) {
-            const obj = [{
-                id: this.loggedUserDetails.id,
+            const obj = [{ 
                 "vendor": {
                     "id": this.loggedUserDetails.org.id
                 },
@@ -731,8 +730,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         const queryData: string = "Hello|HI|How|Are|You!"
         const newQueryCont = this.selectedRfqData.query ? this.selectedRfqData.query.concat("|").concat(this.queryDescContent) : this.queryDescContent;
         const newQueryCont1 = queryData ? (queryData + '|') + (this.queryDescContent) : queryData;
-        const obj = {
-            id: this.loggedUserDetails.id,
+        const obj = { 
             "vendor": {
                 "id": this.loggedUserDetails.org.id
             },

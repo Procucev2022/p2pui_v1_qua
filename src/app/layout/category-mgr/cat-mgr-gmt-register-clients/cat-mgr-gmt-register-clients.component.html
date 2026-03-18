@@ -67,7 +67,7 @@
                                 [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"
                                 [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
                                   <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
-                                    {{rowData[col.field] | date: 'dd-MMM-yyyy hh:mm:ss a'}}
+                                    {{rowData[col.field] | date: 'dd-MMM-yyyy' }}
                                 </span>
                                 <span *ngIf="col.fieldType != 'date'">
                                     <span *ngIf="col.field == 'sourceType'">

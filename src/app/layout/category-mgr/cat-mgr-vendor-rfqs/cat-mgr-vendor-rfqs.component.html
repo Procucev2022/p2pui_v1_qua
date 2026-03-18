@@ -94,7 +94,7 @@
                             <img src="/assets/images/new/view-doc.png" (click)="onViewRFQDetails(rowData)"
                             title="View RFQ Details">
                         </button>
-                        <button (click)="onRequestForRFQ(rowData)" class="  btn-primary" title="Request RFQ " [ngClass]="{'disabledBtn btn-secondary': !(requestEnability(rowData)) }" >
+                        <button (click)="onRequestForRFQ(rowData)" class="  btn-primary" title="Request RFQ " [ngClass]="{'disabledBtn btn-secondary': (requestEnability(rowData)) }" >
                          <i class="fa fa-hand-pointer-o" aria-hidden="true"></i>
                          </button>
                         <button (click)="onRiaseQueryOrIgnoreRFQ(rowData, false)"  class="  btn-info" title="Raise Query"  [ngClass]="{'disabledBtn btn-secondary': !(queryEnability(rowData)) }">
