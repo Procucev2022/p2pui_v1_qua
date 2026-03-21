@@ -30,6 +30,8 @@ import { CatMgrVendorCatalogueComponent } from './cat-mgr-vendor-catalogue/cat-m
 import { CatMgrVendorTermsCondtsComponent } from './cat-mgr-vendor-terms-condts/cat-mgr-vendor-terms-condts.component';
 import { GmtVendorsListComponent } from '../vendor-mgr/components/gmt-vendors-list/gmt-vendors-list.component';
 import { MyCategoryListComponent } from './my-category-list/my-category-list.component';
+import { SubscriptionPaymentSuccessComponent } from './subscription-payment-success/subscription-payment-success.component';
+import { SubscriptionPaymentFailureComponent } from './subscription-payment-failure/subscription-payment-failure.component';
 const routes: Routes = [
     { path: '', redirectTo: 'procurequests', pathMatch: 'prefix' },
     { path: 'dashboard', component: CatMgrDashboardComponent },
@@ -62,7 +64,9 @@ const routes: Routes = [
     {path: 'vendor-summary', component: CategoryMgrVendorSummaryComponent},
     {path: 'vendor-catalogue', component: CatMgrVendorCatalogueComponent},
     {path:'vendor-catalogue-terms-condts', component: CatMgrVendorTermsCondtsComponent},
-    {   path: 'gmt-vendors', component: GmtVendorsListComponent}
+    {   path: 'gmt-vendors', component: GmtVendorsListComponent},
+    {path: 'payment-success', component: SubscriptionPaymentSuccessComponent},
+    {path: 'payment-failure', component: SubscriptionPaymentFailureComponent}
 ];
 @NgModule({
     imports: [RouterModule.forChild(routes)],
