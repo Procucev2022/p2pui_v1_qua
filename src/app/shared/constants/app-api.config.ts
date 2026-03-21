@@ -72,7 +72,7 @@ export class AppApiConfig {
   public static GET_PINCODE_VALIDATION = '/partialvendor/getCityPincode';
 
   public static FETCH_GMT_VENDOR_SUMMARY ='/rest/users/vendorSummary';
-  public static UPDATE_PAYMENT_FOR_SUBSCRIPTION = '/rest/api/payments/link/generateHTTP/1.1';
+  public static UPDATE_PAYMENT_FOR_SUBSCRIPTION = '/rest/api/payments/link/generate';
 
 
 
