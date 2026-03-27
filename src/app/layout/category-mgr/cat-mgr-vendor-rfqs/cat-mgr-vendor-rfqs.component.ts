@@ -345,10 +345,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
   
 
     onRequestForRFQ(rowData: any) {
-        if (!this.requestEnability(rowData)) {
-            this.toastrService.warning("Sorry, You're not allowed at this moment!", 'Warning')
-            return false;
-        }
+        
         const currentDateTimeStamp = new Date();
         const currentMonth = currentDateTimeStamp.getMonth();
 

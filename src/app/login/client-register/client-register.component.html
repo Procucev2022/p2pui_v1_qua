@@ -193,8 +193,8 @@
             </li>
             <li *ngIf="clientRegForm?.controls?.mail?.touched && clientRegForm?.controls?.mail?.errors?.pattern ">
                 Invalid Email Details</li>
-            <li *ngIf="  !isOTPVerified" style="color: #fb9898;">OTP is not verified</li>
-            <li *ngIf="!isValidPincode" style="color: #fb9898;">Invalid Pincode </li>
+            <li *ngIf="  !isOTPVerified" style="color: #fb9898;">OTP is verified</li>
+            <li *ngIf="!isValidPincode" style="color: #fb9898;">Valid Pincode </li>
 
 
         </ul>
