@@ -139,8 +139,9 @@ import { VendorChooseModalPopupComponent } from './components/vendor-choose-moda
         FormsModule,
         ReactiveFormsModule,
         TableModule,
-        TreeTableModule
+        TreeTableModule,
         // AgGridAngular
+        OverlayPanelModule 
     ],
 
     declarations: [PageInfoComponent, DragDirective, CorrespondenceComponent,  CommentAlertBellBlinkComponent, QuotCompareComponent, FilePipe, QuotViewDetailsComponent, DocGridComponent, PpoCreateComponent, PpoViewModalComponent, PpoItemsComponent, PrDetailsViewComponent, PpoQuotCompareViewComponent, CreateAuctionModalComponent, NumbersOnlyDirective, CreateRarAuctionComponent, CreateRaiAuctionComponent, CreateSealedBidAuctionComponent, PostAuctionCompareComponent, PpoTermsConditionsComponent, PpoDocumentsComponent, PoCreateComponent, CommonGridComponent, CommonAttachmentsComponent, FormControlErrorsMessagesDisplayComponent, VendorSearchForLinkingComponent, ClientSearchForLinkingComponent, LinkedPrPpoCreateComponent, AddOrEditVendorModalComponent, PpoReportsComponent,  VendorInfoIconDialogComponent, PpoRfqVendorsComponent, SubCategoryDropdownComponent, PriceAnalyticsGraphModalComponent, PriceTrendChartComponent, AuthenticateLoggedUserComponent, BlockCopyPasteDirective,
@@ -215,7 +216,8 @@ import { VendorChooseModalPopupComponent } from './components/vendor-choose-moda
         VendorViewModelComponent,
         TreeTableModule,
         PincodeControlComponent,
-        VendorChooseModalPopupComponent
+        VendorChooseModalPopupComponent,
+        OverlayPanelModule 
 
     ],
     providers: [

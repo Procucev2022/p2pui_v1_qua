@@ -28,6 +28,9 @@ export class HeaderComponent implements OnInit {
     currentView: string = "GMT_BASIC";
     SystemViewConfig = SystemViewConfig
     visitorsCount: number;
+    loggedUserInfo: any;
+    updatedTimeAgo: number;
+    updatedTimeAgoInterval: any;
 
 
     constructor(private translate: TranslateService, public router: Router, public encryDecryService: EncryDecryService, private modalDialog: MatDialog,
@@ -45,6 +48,20 @@ export class HeaderComponent implements OnInit {
 
 
 
+    }
+     getUserInfo(){
+        this.authService.getLoggedUserData({
+              "username": this.loggedUserDetails.username,
+                "phone":  this.loggedUserDetails.phone
+        }).subscribe((res:any)=>{
+            if(res){
+                this.loggedUserInfo = res;
+                this.updatedTimeAgo = Date.now();
+                    // if(this.updatedTimeAgoInterval){
+                    //     clearInterval(this.updatedTimeAgoInterval);
+                    // }
+            }
+        })
     }
 
     ngOnInit() {
@@ -65,6 +82,8 @@ export class HeaderComponent implements OnInit {
         }
         localStorage.setItem('userFullName', this.loggedUserDetails.fullName);
         // this.getVisitorCount();
+        
+        this.getUserInfo();
     }
 
     getVisitorCount(){
