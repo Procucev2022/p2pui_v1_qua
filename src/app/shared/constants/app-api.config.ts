@@ -36,7 +36,7 @@ export class AppApiConfig {
   public static GET_ITEMS_BY_RFQ_ID = '/rest/gmt/getItemsbyrfqid';
   public static FETCH_ALL_CLIENT_RFQS_BY_GMT_CATEGORYMANAGER= '/rest/gmt/fetchAllClientGMTRfqsForCM';
   public static GET_VENDORS_BY_RFQ = '/rest/gmt/getVendorbyRFQ';
-
+  public static UPDATE_COMMENTS_AS_READ_BY_CM = '/rest/gmt/updateQueryFlag';
 
   public static GET_ALL_ITEM_MASTER_FOR_RFQ = "/rest/itemcode/getAllItemMasterForRFQ"; //NEED TO DICSUSS
 

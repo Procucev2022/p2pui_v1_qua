@@ -302,6 +302,17 @@ export class CatMgrVendorRfqsComponent implements OnInit {
     }
 
     
+    updateCommentsAsReadByCM() {
+        const obj = { "id": this.selectedRfqData.id }
+        this.rfqservice.updateCommentsAsReadByCM(obj).subscribe((res: any) => {
+            if (res && res.status == 'Success') {
+                
+            }
+
+        });
+    }
+
+    
     isBuyerInfoAllowToSee(rowData: any) {
         // Start counting from the next date after quoteSubmittedDate.
         // If that next date falls on Saturday/Sunday, shift start to Monday.
@@ -418,6 +429,10 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         this.rfqId = event.data.rfqId;
         this.getVendorsByRfq();
         this.getLineItemsByRFQ();
+        if(event.data.newCommentAvailableVendor){
+            this.updateCommentsAsReadByCM();
+            this.selectedData[0].newCommentAvailableVendor = false;
+        }
         //   this.h1.nativeElement.scrollIntoView({behavior: 'smooth'});
     }
 

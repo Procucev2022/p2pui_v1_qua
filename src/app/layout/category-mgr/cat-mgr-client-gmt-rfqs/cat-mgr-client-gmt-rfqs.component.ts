@@ -287,8 +287,21 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
       this.rfqId = event.data.rfqId;
       this.getVendorsByRfq();
       this.getLineItemsByRFQ();
+         if(event.data.newCommentAvailableVendor){
+            this.updateCommentsAsReadByCM();
+            this.selectedData[0].newCommentAvailableVendor = false;
+        }
   }
 
+    updateCommentsAsReadByCM() {
+        const obj = { "id": this.selectedRfqData.id }
+        this.rfqservice.updateCommentsAsReadByCM(obj).subscribe((res: any) => {
+            if (res && res.status == 'Success') {
+
+            }
+
+        });
+    }
   getCloseRFQs(event:any) {
       this.expandedRows[event.data.id] = false;
       this.expandedRows = {};

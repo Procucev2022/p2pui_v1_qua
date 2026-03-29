@@ -129,6 +129,9 @@
                           <span *ngIf="col.fieldType != 'date'" [ngClass]="{'blueCls': col.field == 'rfqId' && rowData.byClient == true}">
                               {{rowData[col.field]}} 
                           </span>
+                          <span class="blink" *ngIf="col.field=='rfqId' && (rowData.newCommentAvailableVendor == true)">
+                                    <i class="fa fa-bell" aria-hidden="true"></i>
+                                </span>
                           <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
                             {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
                           </span>

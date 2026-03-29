@@ -81,6 +81,10 @@ export class RfqService {
         return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.GET_ITEMS_BY_RFQ_ID, req)
     }
 
+    updateCommentsAsReadByCM(req: any) {
+        return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.UPDATE_COMMENTS_AS_READ_BY_CM, req)
+    }
+
     ignoreRFQByGTMVendor(req: any) {
         return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.IGNORE_RFQ_BY_GMT_VENDOR, req)
     }

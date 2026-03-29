@@ -189,7 +189,7 @@
                                     <span *ngIf="col.field == 'quotationReceived'" title="Work In Progress"> {{  rowData[col.field]}}</span>
                                     <span *ngIf="col.field != 'quotationReceived'" >    {{rowData[col.field]}}</span>
                                 </span>
-                                <span class="blink" *ngIf="col.field=='rfqId' && (rowData.count && rowData.count>0)">
+                                <span class="blink" *ngIf="col.field=='rfqId' && (rowData.newCommentAvailableVendor == true)">
                                     <i class="fa fa-bell" aria-hidden="true"></i>
                                 </span>
                             </span>
