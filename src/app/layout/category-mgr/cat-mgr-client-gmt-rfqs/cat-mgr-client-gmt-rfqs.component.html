@@ -147,7 +147,7 @@
       </ng-template>
       <ng-template  pTemplate="rowexpansion" let-rowData>
           <tr class="child-grid" *ngIf=" selectedData && selectedData?.length ==1">
-              <td colspan="10">
+              <td colspan="11">
                   <p #h1> <label>RFQ Id:</label> {{rfqId}}</p>
                    <div class="p-p-4" *ngIf="isChildGridShow">
                   <mat-tab-group class="" (selectedTabChange)="getLineItems($event)">

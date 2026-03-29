@@ -312,7 +312,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
          if (!['Vendor', 'PartialVendor', 'Seller'].includes(this.currentRole)) {
             return false;
          }  
-        if (!rowData || !rowData.quoteSubmittedDate) {
+        if (!rowData || !rowData.quoteSubmittedDate ||    ['New'].includes(rowData.status_ui_display)) {
             return false;
         }
         const quoteDate = new Date(rowData.quoteSubmittedDate);
