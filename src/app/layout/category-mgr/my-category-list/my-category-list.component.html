@@ -1,0 +1,21 @@
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 title">
+            <h2> Categories 
+                <a   [routerLink]="['/categorymgr/my-profile']" style="font-size: 1rem;"
+                            [routerLinkActive]="['router-link-active']">  &nbsp;
+                            <span>Click here</span>
+                        </a><span style="font-size: 1rem;"> To Edit Your Profile and Add/Remove Categories</span>
+            </h2>
+        </div>
+        <div class="col-12">
+            <div class="category-list">
+                <div class="category-item" *ngFor="let cat of loggedUserInfo?.org?.divisionCategories">
+                    <span class="category-name"
+                     >{{ cat.category }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

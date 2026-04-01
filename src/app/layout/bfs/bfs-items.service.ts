@@ -59,6 +59,14 @@ export class BfsItemsService {
         return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.BFS_GET_MY_ITEMS, requestBody, {})
     }
 
+    //get seller item bids
+
+    getSellerBidMyItems(): Observable<any> {
+        const requestBody = { org: { id: this.loggedUserDetails.org.id }, id: this.loggedUserDetails.id }
+        return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.SELLER_BID_MY_ITEMS, requestBody, {})
+    }
+
+
     // BFS_GET_REQUESTED_ITEMS
     getRequestedItemstoCM(): Observable<any> {
         return this.httpService.get(AppApiConfig.apiEndpoint + AppApiConfig.BFS_GET_REQUESTED_ITEMS_BY_CM, {})
@@ -93,6 +101,10 @@ export class BfsItemsService {
         return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.BFS_GET_DOCUMENTS_BY_BFS_ID, requestBody, {})
     }
 
+      // BFS_GET_DOCUMENTS_BY_BFS_ID
+    getItemDetails(requestBody: any): Observable<any> {
+        return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.BFS_GET_ITEM_DETAILS, requestBody, {})
+    }
     //BFS_GET_BFS_ITEMDETAILS_BY_ID
     getBFSItemDetailsById(requestBody: any): Observable<any> {
         return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.BFS_GET_BFS_ITEMDETAILS_BY_ID, requestBody, {})

@@ -42,8 +42,8 @@ export class BfsRequestItemsComponent implements OnInit {
 
     cmbuyersHeaders: any = [
         { field: 'companyName', header: 'Company Name', isLink: false, width: '120px', fieldType: 'text', isExceedContent: true }, 
-        { field: 'askPrice', header: 'Seller Price(Per Unit)', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false },
-        { field: 'buyPrice', header: 'Buyer Price(Per Unit)', isLink: false, width: '190px', fieldType: 'text', isExceedContent: true }, 
+        { field: 'buyPrice', header: 'Seller Price(Per Unit)', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false },
+        { field: 'askPrice', header: 'Buyer Price(Per Unit)', isLink: false, width: '190px', fieldType: 'text', isExceedContent: true }, 
         { field: 'quantity', header: 'Requested Quantity', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
         { field: 'status', header: 'Status', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false }
     
@@ -96,8 +96,15 @@ export class BfsRequestItemsComponent implements OnInit {
     }
     onViewItemDetails(rowData: any) {
         const dialogConfig = new MatDialogConfig();
-        this.selectedRowData = rowData;
-        this.selectedRowData['bfsDocuments'] = [];
+        this.selectedRowData = rowData; 
+         this.selectedRowData ={'bfsDocuments' :[]}
+         this.bfsItemService.getItemDetails({ id: rowData.id }).subscribe((res: any) => {
+            if (res && res.id) {
+                this.selectedRowData = { ...this.selectedRowData, ...res }
+            }else{
+                this.selectedRowData = { ...this.selectedRowData, ...rowData }
+            }
+        })
         this.bfsItemService.getDocsByBFSId({ id: rowData.id }).subscribe((res: any) => {
             if (Array.isArray(res)) {
                 this.selectedRowData['bfsDocuments'] = [...res]

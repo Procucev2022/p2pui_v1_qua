@@ -67,34 +67,27 @@
                       <p-accordion [activeIndex]="activeTabIndex"  (onTabChange)="handleTabChange($event)" >
                     <div *ngFor="let group of items.controls; let i = index" [formGroupName]="i" class="row border p-1 m-3 pb-3" style="background: #6a9adf2b;
     border-radius: 4px;">
-                            <div class="col-6"  >
-                                <label class="form-label " style="display: block;font-weight: bold;">Division : </label>
-                                <!-- <p-autoComplete  formControlName="division" showEmptyMessage="true"
-                                [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
-                                    [suggestions]="divisionFormList[index].filtered_divisionList" panelInputClass="p-auto-panel-cls" [minLength]="1"
-                                    [dropdown]="true"
-                                    (completeMethod)="filterAutoCompleteData($event, 'divisionsList' ,  true, index)"
-                                      (onSelect)="onItemSelected($event, i)" placeholder="Select Division"
-                                    >
-                                            <ng-template let-segment pTemplate="item">
-                                                <div class="segment-item">
-                                                    <div>{{segment}}</div>
-                                                </div>
-                                            </ng-template>
-                                </p-autoComplete> --> 
-                                <select class="form-control" name="se1" formControlName="division"
-                                  (change)="filterCategoryListByDivision($event, i)">
-                                    <option     value="">--Select--</option>
-                                    <option *ngFor="let val of divisionFormList[i].divisionList" value="{{val}}">{{val}}</option>
-                                </select>
-                            </div>
-                            <div class="col-6" *ngIf="divisionFormList[i].selectedCategory?.length > 0">
-                                <span class="acc-title"> <b>Selected Categories:: </b></span>
-                                
-                                <div class="selected-categories">
-                                    <span class="category-badge" *ngFor="let cat of divisionFormList[i].selectedCategory">{{cat}}</span>
+                            <div class="col-12 mt-1 mb-1">
+                                <div class="row">
+                                     <div class="col-6"  >
+                                        <label class="form-label " style="display: block;font-weight: bold;">Division : </label> 
+                                        <select class="form-control" name="se1" formControlName="division"
+                                        (change)="filterCategoryListByDivision($event, i)">
+                                            <option     value="">--Select--</option>
+                                            <option *ngFor="let val of divisionFormList[i].divisionList" value="{{val}}">{{val}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6" *ngIf="divisionFormList[i].selectedCategory?.length > 0" style="overflow-y: auto;">
+                                        <span class="acc-title"> <b>Selected Categories:: </b></span>
+                                        
+                                        <div class="selected-categories">
+                                            <span class="category-badge" *ngFor="let cat of divisionFormList[i].selectedCategory">{{cat}}</span>
+                                        </div>
+                                    </div>
                                 </div>
+
                             </div>
+                           
                             <div class="col-12"  >
                                   
                                         <ng-container  >

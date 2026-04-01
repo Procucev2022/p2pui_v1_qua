@@ -18,6 +18,7 @@ export class VendorProfileSubscriptionsComponent {
   loggedUserDetails: any;
   vendorRegObj: any;
   currentPlan: any;
+  isLoading = false;
   subcriptionMethods = [
   ];
 
@@ -69,13 +70,27 @@ export class VendorProfileSubscriptionsComponent {
       return;
     }
     const obj = this.vendorRegObj;
+    this.isLoading = true;
     obj.subscriptionPlan = this.selectedSubscription ? { id: this.selectedSubscription.id } : null;
-    this.createRfqService.updateSellerData(obj).subscribe((res: any) => {
-      this.toastrService.success('Vendor Updated Successfully', 'Success');
-      this.getVendorById(this.loggedUserDetails.org.id)
+    this.createRfqService.updatePaymentForSubscription({
+      planId: this.selectedSubscription.id, userEmail: this.loggedUserDetails.username,
+      userPhone: this.loggedUserDetails.phone
+    }).subscribe((res: any) => {
+      if (!!res && !!res.id) {
+            window.open(res.paymentUrl, "_self");
+        console.log("res", res)
+      }
+
+      console.log('res', res)
     }, (error) => {
-      this.toastrService.error('Error while updating vendor', 'Error');
-    })
+      this.toastrService.error('Error while updating subscription', 'Error');
+    });
+    // this.createRfqService.updateSellerData(obj).subscribe((res: any) => {
+    //   this.toastrService.success('Vendor Updated Successfully', 'Success');
+    //   this.getVendorById(this.loggedUserDetails.org.id)
+    // }, (error) => {
+    //   this.toastrService.error('Error while updating vendor', 'Error');
+    // })
 
   }
 

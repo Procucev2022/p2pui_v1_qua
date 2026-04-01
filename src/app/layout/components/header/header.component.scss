@@ -193,6 +193,8 @@ $topnav-background-color: #0C2146;
     display: flex;
     align-items: center;
     padding: 5px 15px;
+    position: absolute;
+    left: 50%;
 
     label {
         font-weight: 600;
@@ -225,5 +227,24 @@ $topnav-background-color: #0C2146;
     }
     span:nth-child(2){
         min-width: 300px
+    }
+}
+
+.userinfo-content {
+    font-weight: 600;
+    font-family: sans-serif;
+    color: #FF9800;
+    .user-data{
+        padding: 4px;
+        span.label{
+            color: #715f11;
+            font-weight: 600;
+        }
+        span.value{
+            color: #344992;
+            font-family: math;
+            letter-spacing: 0.5px;
+            font-weight: 600;   
+        }
     }
 }

@@ -25,6 +25,7 @@ public static apiEndpoint = 'https://quaservicesp.procucev.com';
   public static GET_VENDORS_BY_RFQ_ID_FOR_GMT = '/rest/gmt/getVendorsByGmtRFQ';
   public static ACCEPT_GMT_VENDOR_BY_CM = "/rest/gmt/approveVendor";
   public static REJECT_GMT_VENDOR_BY_CM ='/rest/gmt/rejectRfqForVendorByCM2';
+  public static SELLER_BID_MY_ITEMS ='/rest/bfs/getBidsBySeller';
 
 
 
@@ -35,7 +36,7 @@ public static apiEndpoint = 'https://quaservicesp.procucev.com';
   public static GET_ITEMS_BY_RFQ_ID = '/rest/gmt/getItemsbyrfqid';
   public static FETCH_ALL_CLIENT_RFQS_BY_GMT_CATEGORYMANAGER= '/rest/gmt/fetchAllClientGMTRfqsForCM';
   public static GET_VENDORS_BY_RFQ = '/rest/gmt/getVendorbyRFQ';
-
+  public static UPDATE_COMMENTS_AS_READ_BY_CM = '/rest/gmt/updateQueryFlag';
 
   public static GET_ALL_ITEM_MASTER_FOR_RFQ = "/rest/itemcode/getAllItemMasterForRFQ"; //NEED TO DICSUSS
 
@@ -70,7 +71,8 @@ public static apiEndpoint = 'https://quaservicesp.procucev.com';
   public static GET_VENDOR_CATALOGUE_TERMS_CONDITIONS = '/rest/catalogue/getSellerTC';
   public static GET_PINCODE_VALIDATION = '/partialvendor/getCityPincode';
 
-  public static FETCH_GMT_VENDOR_SUMMARY ='/rest/users/vendorSummary'
+  public static FETCH_GMT_VENDOR_SUMMARY ='/rest/users/vendorSummary';
+  public static UPDATE_PAYMENT_FOR_SUBSCRIPTION = '/rest/api/payments/link/generate';
 
 
 
@@ -377,6 +379,7 @@ public static apiEndpoint = 'https://quaservicesp.procucev.com';
     public static BFS_GET_REQUESTED_USERS_BY_BFS_FOR_SELLER= '/rest/bfs/getRequestedUserByBFSAndStatus';
     public static BFS_GET_ITEMS_BY_BOQ_FILE ='/rest/bfs/getBfsItemsByBOQ';
     public static BFS_GET_DOCUMENTS_BY_BFS_ID = '/rest/bfs/getDocumentsByBfs';
+    public static BFS_GET_ITEM_DETAILS = '/rest/bfs/getBfsById';
     public static BFS_GET_BFS_ITEMDETAILS_BY_ID ="/rest/bfs/getBfsById"
     public static BFS_EDIT_BFS_ITEM_DATA ='/rest/bfs/editBfsItems';
     public static BFS_CREATE_COMMENT_BY_BUYER = "/rest/bfs/createBFSCommentByBuyer";
@@ -756,6 +759,7 @@ public static apiEndpoint = 'https://quaservicesp.procucev.com';
     public static UPGRADE_OTP_FOR_GMT_VENDOR = '/rest/gmt/validateVmOtp';
     public static UPGRADE_GMT_VENDOR = '/rest/vendor/upgradeGmtVendor';
     public static UPGRADE_GMT_VENDOR_AFTER_OTP = '/rest/gmt/upgradeGmtVendor';
+    public static GET_BUYER_INFO_BY_RFQ_ID = '/rest/gmt/getBuyerByRFQ';
 
 
     /* Raise Issue */

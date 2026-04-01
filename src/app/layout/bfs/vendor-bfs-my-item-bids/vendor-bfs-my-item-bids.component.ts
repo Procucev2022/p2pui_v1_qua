@@ -1,48 +1,40 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ToastrService } from 'ngx-toastr';
+import { SystemViewConfig } from 'src/app/app.config';
+import { AppApiConfig } from 'src/app/shared/constants/app-api.config';
 import { ConvertToBase64Service } from 'src/app/shared/modules/common-share/services/convert-to-base64.service';
 import { EncryDecryService } from 'src/app/shared/services';
-import { BfsItemsService } from '../bfs-items.service';
-import { ToastrService } from 'ngx-toastr';
 import { LoaderService } from 'src/app/shared/services/loader.service';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { AppApiConfig } from 'src/app/shared/constants/app-api.config';
-import { SystemViewConfig } from 'src/app/app.config';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { BfsItemsService } from '../bfs-items.service';
 
 @Component({
-    selector: 'app-bfs-my-items',
-    templateUrl: './bfs-my-items.component.html',
-    styleUrls: ['./bfs-my-items.component.scss', '../bfs-custom.scss']
+  selector: 'app-vendor-bfs-my-item-bids',
+  templateUrl: './vendor-bfs-my-item-bids.component.html',
+  styleUrls: ['./vendor-bfs-my-item-bids.component.scss']
 })
-export class BfsMyItemsComponent implements OnInit {
+export class VendorBfsMyItemBidsComponent implements OnInit{ 
 
     itemHeaders: any = [
         { field: 'description', header: 'Description', isLink: false, width: '120px', fieldType: 'text', isExceedContent: true },
         { field: 'itemNumber', header: 'Item Number', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
         { field: 'availableQuantity', header: 'Available Qty.', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false },
-        // { field: 'sellPrice', header: 'Buy Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false },
+        { field: 'buyPrice', header: 'Buy Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false },
         // { field: 'discount', header: 'Discount(%)', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
-        { field: 'askPrice', header: 'Sale Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false }
+        { field: 'askPrice', header: 'Sale Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false },
+          { field: 'status', header: 'Status', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
     ]
     userHeaders: any = [
         // { field: 'companyName', header: 'Buyer Name', isLink: false, width: '120px', fieldType: 'text', isExceedContent: true },
         { field: 'askPrice', header: 'Buyer Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false },
         { field: 'buyPrice', header: 'Sale Price(Per Unit)', isLink: false, width: '180px', fieldType: 'text', isExceedContent: false },
         { field: 'quantity', header: 'Quantity', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false },
-        // { field: 'discount', header: 'Discount(%)', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
+        { field: 'discount', header: 'Discount(%)', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
         { field: 'city', header: 'City', isLink: false, width: '120px', fieldType: 'text', isExceedContent: true },
         { field: 'status', header: 'Status', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false }
     ];
-    requestUserGridData: { gridHeaders: Array<any>, gridValue: Array<any>, actionsList: Array<any>, isMultiSelectAllows: boolean, gridEmptyMsg: string } = {
-        gridHeaders: this.userHeaders,
-        gridValue: [],
-        actionsList: [
-            { 'eventName': 'onEditBFSBuyerItem', 'eventImg': 'edit-data', 'eventDesc': 'Edit BFS Item ', eventType: 'img', eventText: '', className: '' },
-            { 'eventName': 'onAcceptBid', 'eventImg': 'edit-data', 'eventDesc': 'Accept', eventType: 'button', eventText: 'Accept', className: 'btn btn-blue' },
-            { 'eventName': 'onRejectBid', 'eventImg': 'delete', 'eventDesc': 'Delete Vendor', eventType: 'button', eventText: 'Reject', className: 'btn btn-red' }
-        ],
-        isMultiSelectAllows: false, gridEmptyMsg: 'No Items Avaliable in Cart'
-    }
+    
     paginatoryDetails: any;
     pageRecordSize: any;
     pageOptions: any;
@@ -92,78 +84,17 @@ export class BfsMyItemsComponent implements OnInit {
     getItemsList() {
         this.itemList = [];
 
-        this.bfsItemService.getMyItems().subscribe((res: any) => {
+        this.bfsItemService.getSellerBidMyItems().subscribe((res: any) => {
             this.itemList = Array.isArray(res) ? [...res] : [];
-        })
+            this.itemList = this.itemList.map((ele: any) => {
+                return { ...ele, status: ele.status.uiDisplay}
+            })
+          });
 
 
 
     }
 
-
-    getCloseRFQs(rowData, $event) {
-        console.log('closed')
-        this.expandedRows = {};
-    }
-    getRFQs(rowData, $event) {
-        console.log('closed1')
-        this.selectedRowData = rowData;
-        this.expandedRows = {};
-        const thisRef = this;
-        thisRef.expandedRows[rowData.id] = 1;
-           this.expandedRows = this.expandedRows?.id === rowData.id ? null : rowData;
-        this.requestedUsers  =[];
-        this.bfsItemService.getRequestedUsersByBFSForSeller({ id: rowData.id }).subscribe((res: any) => {
-            if (res && Array.isArray(res)) {
-                this.requestedUsers = res.map((ele: any) => {
-                    return { ...ele, status: ele.status.uiDisplay, companyName: ele.status.uiDisplay == 'Bid Accepted'? ele.companyName: 'XXXXXXXXXXX' }
-                })
-                this.requestUserGridData.gridValue = [...this.requestedUsers]
-                this.reloadGridComponent();
-            }else{
-                this.requestedUsers = [];
-                this.requestUserGridData.gridValue = [...this.requestedUsers]
-                this.reloadGridComponent();
-            }
-        });
-           
-    }
-      get expandedRowKeys() {
-        return this.expandedRows ? { [this.expandedRows.id]: true } : {};
-    }
-
-    reloadGridComponent() {
-        this.isShowGrid = false;
-        setTimeout(() => {
-            this.isShowGrid = true;
-        }, 100)
-    }
-
-    onViewItemDetails(rowData: any) {
-        const dialogConfig = new MatDialogConfig();
-        this.selectedRowData = rowData;
-        this.selectedRowData['bfsDocuments'] = [];
-        this.bfsItemService.getItemDetails({ id: rowData.id }).subscribe((res: any) => {
-            if (res && res.id) {
-                this.selectedRowData = { ...this.selectedRowData, ...res }
-            }
-        })
-        this.bfsItemService.getDocsByBFSId({ id: rowData.id }).subscribe((res: any) => {
-            if (Array.isArray(res)) {
-                this.selectedRowData['bfsDocuments'] = [...res]
-            }
-        })
-        // dialogConfig.disableClose = true;
-        dialogConfig.autoFocus = true;
-        dialogConfig.data = null;
-        dialogConfig.minWidth = 400;
-        dialogConfig.minHeight = 500;
-        dialogConfig.maxWidth = 'none';
-        dialogConfig.width = '35%';
-        const dialogRef = this.dialog.open(this.viewItemDetailsTemplate, dialogConfig).afterClosed().subscribe(result => {
-
-        });
-    }
 
     onAcceptBid(rowData: any) {
         if (['Bid Accepted', 'Bid Rejected'].includes(rowData.status)) {
@@ -200,6 +131,68 @@ export class BfsMyItemsComponent implements OnInit {
         })
     }
 
+    getCloseRFQs(rowData, $event) {
+        console.log('closed')
+        this.expandedRows = {};
+    }
+    getRFQs(rowData, $event) {
+        console.log('closed1')
+        this.selectedRowData = rowData;
+        this.expandedRows = {};
+        const thisRef = this;
+        thisRef.expandedRows[rowData.id] = 1;
+           this.expandedRows = this.expandedRows?.id === rowData.id ? null : rowData;
+        this.requestedUsers  =[];
+        this.bfsItemService.getRequestedUsersByBFSForSeller({ id: rowData.id }).subscribe((res: any) => {
+            if (res && Array.isArray(res)) {
+                this.requestedUsers = res.map((ele: any) => {
+                    return { ...ele, status: ele.status.uiDisplay, companyName: ele.status.uiDisplay == 'Bid Accepted'? ele.companyName: 'XXXXXXXXXXX' }
+                }) 
+                this.reloadGridComponent();
+            }else{
+                this.requestedUsers = []; 
+                this.reloadGridComponent();
+            }
+        });
+           
+    }
+      get expandedRowKeys() {
+        return this.expandedRows ? { [this.expandedRows.id]: true } : {};
+    }
+
+    reloadGridComponent() {
+        this.isShowGrid = false;
+        setTimeout(() => {
+            this.isShowGrid = true;
+        }, 100)
+    }
+
+    onViewItemDetails(rowData: any) {
+        const dialogConfig = new MatDialogConfig(); 
+        this.selectedRowData ={'bfsDocuments' :[]}
+         this.bfsItemService.getItemDetails({ id: rowData.id }).subscribe((res: any) => {
+            if (res && res.id) {
+                this.selectedRowData = { ...this.selectedRowData, ...res }
+            }else{
+                this.selectedRowData = { ...this.selectedRowData, ...rowData }
+            }
+        })
+        this.bfsItemService.getDocsByBFSId({ id: rowData.id }).subscribe((res: any) => {
+            if (Array.isArray(res)) {
+                this.selectedRowData['bfsDocuments'] = [...res]
+            }
+        })
+        // dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = null;
+        dialogConfig.minWidth = 400;
+        dialogConfig.minHeight = 500;
+        dialogConfig.maxWidth = 'none';
+        dialogConfig.width = '35%';
+        const dialogRef = this.dialog.open(this.viewItemDetailsTemplate, dialogConfig).afterClosed().subscribe(result => {
+
+        });
+    } 
 
     onGridAction(event: any) {
         this[event.eventData['eventName']](event.rowData);

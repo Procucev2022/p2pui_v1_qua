@@ -178,3 +178,28 @@ ul.price-section {
 .strike-off {
     text-decoration: line-through;
 }
+
+.spinner-container {
+   width: 100%;
+    position: absolute; 
+    height: 106vh;
+    background: #302e2e9e !important;
+    top: 0;
+    bottom: 0;
+    /* left: 25%; */
+    display: flex;
+    align-items: center;
+    vertical-align: middle;
+    text-align: center;
+    z-index: 9999;
+    .loading-spinner {
+       width: 100%;
+    }
+    .payment-label{
+        color: #fff;
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+}

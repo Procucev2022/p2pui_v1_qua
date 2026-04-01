@@ -54,10 +54,10 @@ export const BFS_SYSTEM_SCREEN_LIST ={
     '/client/pr-capex', '/client/cient-summary'
     ],
     'CategoryManager2': ['/bfs', '/bfs/items', '/bfs/my-items', '/bfs/my-bids', '/bfs/requested-items','/bfs/buyer-seller-details'],
-    'Registration': ['/bfs',   '/bfs/my-items' ],
-    'PartialVendor': ['/bfs', '/bfs/my-items' ],
-    'Vendor': ['/bfs',  '/bfs/my-items' ],
-    'ClientInitiator': ['/bfs', '/bfs/items',   '/bfs/my-bids'],
+    'Registration': ['/bfs',   '/bfs/my-items' , '/categorymgr/my-category-list'],
+    'PartialVendor': ['/bfs', '/bfs/my-items', '/categorymgr/my-category-list' ],
+    'Vendor': ['/bfs',  '/bfs/my-items', '/bfs/seller-bid-items', '/categorymgr/my-category-list' ],
+    'ClientInitiator': ['/bfs', '/bfs/items',   '/bfs/my-bids', '/categorymgr/my-category-list'],
 
 }
 

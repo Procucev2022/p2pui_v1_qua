@@ -25,10 +25,9 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
 
         { field: 'fullName', header: 'User Name', isLink: true, isExceedContent: false, width: '155px' },
         { field: 'companyName', header: 'Company Name', isLink: false, isExceedContent: true, width: '165px' }, 
-        { field: 'zipCode', header: 'PinCode', isLink: false, isExceedContent: true, width: '125px' },
         { field: 'phone', header: 'Phone Number', isLink: false, isExceedContent: true, width: '125px' },
-        { field: 'username', header: 'user Email', isLink: false, isExceedContent: true, width: '165px' },
-        { field: 'createdTS', header: 'Reg. Date & Time', isLink: false, fieldType: 'date',isExceedContent: true, width: '215px' },
+        { field: 'username', header: 'User Email', isLink: false, isExceedContent: true, width: '165px' },
+        { field: 'createdTS', header: 'Reg. Date', isLink: false, fieldType: 'date',isExceedContent: true, width: '215px' },
         { field: 'status', header: 'Status', isLink: false, isExceedContent: true, width: '135px' },
         { field: 'sourceType', header: 'Source Type', isLink: false, isExceedContent: false, width: '165px' },
     ];

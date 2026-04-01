@@ -123,8 +123,7 @@ ul.menu-dot-cls {
 
 .fa-info-circle {
     color: orangered;
-    font-size: 1.1rem;
-    padding-left: 4px;
+    font-size: 1.1rem; 
 }
 
 
@@ -240,4 +239,19 @@ ul.menu-dot-cls {
 }
 span.vendor-info {
     color: #3c93de;
+}
+span.buyer-info {
+    color: #297e0f !important;
+    .fa-info-circle{
+        color: #297e0f !important;
+    }
+}
+
+.btn-buyer-info{
+    background-color: #297e0f !important;
+    color: #fff !important  ;
+    .fa-info-circle{
+        color: #dae0d7 !important;
+    }
+    border-color: #297e0f;
 }

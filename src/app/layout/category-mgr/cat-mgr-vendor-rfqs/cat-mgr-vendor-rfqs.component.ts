@@ -36,10 +36,9 @@ export class CatMgrVendorRfqsComponent implements OnInit {
     selectedStatus: string = '';
     statusList: any = [
         "New",
-        "Requested",
-        "In Progress",
-        "Approved",
-        "Quotation Received",
+        "Downloaded",
+        "Submitted",
+        "Queried",
         "Ignored"
 
     ];
@@ -82,6 +81,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         { field: 'noOfVendors', header: 'No. Of Vendors', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
         { field: 'noOfQuotes', header: 'No. Of Quotes', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
         { field: 'createdTs', header: 'Creation Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
+        { field: 'quoteSubmittedDate', header: 'Quote Submitted Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
         { field: 'status_ui_display', header: 'Status', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false }
     ];
 
@@ -164,7 +164,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         this.rfqservice.getAllRFQsByGMTCategory().subscribe(data => {
             if (Array.isArray(data)) {
                 this.rfqDataList = data.map((ele: any) => {
-                    const status_display = ele['status'] && ele['status']['uiDisplay'] ? ele.status.uiDisplay : ele.uiDisplay;
+                    const status_display = ele['clientStatus'] && ele['clientStatus']['uiDisplay'] ? ele.clientStatus.uiDisplay : ele.uiDisplay;
 
                     return { ...ele, status_ui_display: status_display, quotationReceived: ele.quotationReceived == true ? 'YES' : 'WIP' }
                 }) || [];
@@ -290,7 +290,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
     }
 
     requestEnability(rowData: any) {
-        return ['New', 'Ignored'].includes(rowData.status_ui_display)
+        return ['Downloaded'].includes(rowData.status_ui_display)
     }
 
     queryEnability(rowData: any) {
@@ -300,15 +300,63 @@ export class CatMgrVendorRfqsComponent implements OnInit {
     ignoreEnability(rowData: any) {
         return (['New'].includes(rowData.status_ui_display))
     }
+
+    
+    updateCommentsAsReadByCM() {
+        const obj = { "id": this.selectedRfqData.id }
+        this.rfqservice.updateCommentsAsReadByCM(obj).subscribe((res: any) => {
+            if (res && res.status == 'Success') {
+                
+            }
+
+        });
+    }
+
+    
+    isBuyerInfoAllowToSee(rowData: any) {
+        // Start counting from the next date after quoteSubmittedDate.
+        // If that next date falls on Saturday/Sunday, shift start to Monday.
+        // Allow access when current time is between start and start + 48 hours.
+
+        // vendor or partial vendor role can see
+        
+         if (!['Vendor', 'PartialVendor', 'Seller'].includes(this.currentRole)) {
+            return false;
+         }  
+        if (!rowData || !rowData.quoteSubmittedDate ||    ['New'].includes(rowData.status_ui_display)) {
+            return false;
+        }
+        const quoteDate = new Date(rowData.quoteSubmittedDate);
+        if (isNaN(quoteDate.getTime())) {
+            return false;
+        }
+
+        // Start from next date
+        let start = new Date(quoteDate);
+        start.setDate(start.getDate() + 1);
+
+        // If next date is Saturday (6) or Sunday (0), move to Monday
+        const day = start.getDay();
+        if (day === 6) {
+            // Saturday -> add 2 days to Monday
+            start.setDate(start.getDate() + 2);
+        } else if (day === 0) {
+            // Sunday -> add 1 day to Monday
+            start.setDate(start.getDate() + 1);
+        }
+
+        const now = new Date();
+        const diffHours = (now.getTime() - start.getTime()) / (1000 * 60 * 60);
+        return diffHours >= 0 && diffHours <= 48;
+    }
+
     onSelectSystem(sysValue) {
         this.authService.onSelectedSubscriptions(sysValue, this.loggedUserDetails, true)
     }
+  
 
     onRequestForRFQ(rowData: any) {
-        if (!this.requestEnability(rowData)) {
-            this.toastrService.warning("Sorry, You're not allowed at this moment!", 'Warning')
-            return false;
-        }
+        
         const currentDateTimeStamp = new Date();
         const currentMonth = currentDateTimeStamp.getMonth();
 
@@ -381,6 +429,10 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         this.rfqId = event.data.rfqId;
         this.getVendorsByRfq();
         this.getLineItemsByRFQ();
+        if(event.data.newCommentAvailableVendor){
+            this.updateCommentsAsReadByCM();
+            this.selectedData[0].newCommentAvailableVendor = false;
+        }
         //   this.h1.nativeElement.scrollIntoView({behavior: 'smooth'});
     }
 
@@ -463,8 +515,8 @@ export class CatMgrVendorRfqsComponent implements OnInit {
 
         // Convert milliseconds to hours
         const diffInHours = diffInMilliseconds / (1000 * 60 * 60);
-        // console.log('diffInHours', diffInHours)
-        return diffInHours > 0 && diffInHours <= 48;
+        // console.log('diffInHours', diffInHours) 
+        return diffInHours > 0 && diffInHours <= 48 && !['Vendor', 'PartialVendor', 'Seller'].includes(this.currentRole);
     }
 
     getClientInfo(rowData: any ) {
@@ -474,6 +526,25 @@ export class CatMgrVendorRfqsComponent implements OnInit {
                 this.dialog.closeAll();
                 this.clientInfo = res;
                 this.dialog.open(this.clientInfoTemplate, {
+                    width: "30%",
+                    minHeight: "250px",
+                    data: "Su",
+                }).afterClosed().subscribe((res: any) => {
+                    this.clientInfo = null;
+                    this.selectedVendor = null;
+                })
+            }
+        })
+    }
+
+      onViewBuyerInfo(rowData: any) {
+        
+        this.selectedRfqData = rowData;
+        this.rfqservice.getBuyerInfoByRFQId({ id: rowData['id'] }).subscribe((res: any) => {
+            if (res) {
+                this.dialog.closeAll();
+                this.clientInfo = res;
+                this.dialog.open(this.clientInfoTemplateByRFQBases, {
                     width: "30%",
                     minHeight: "250px",
                     data: "Su",
@@ -508,7 +579,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         if(!rowData.quoteSubmittedDate){
             return false;
         } 
-        return  !this.getDifferenceInHours( new Date(rowData?.quoteSubmittedDate), new Date());
+        return  this.getDifferenceInHours( new Date(rowData?.quoteSubmittedDate), new Date());
     }
     getLineItemsByRFQ() {
 
@@ -632,8 +703,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         }
         this.selectedRfqData = rowData;
         if (isIgnored == true) {
-            const obj = [{
-                id: this.loggedUserDetails.id,
+            const obj = [{ 
                 "vendor": {
                     "id": this.loggedUserDetails.org.id
                 },
@@ -672,8 +742,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         const queryData: string = "Hello|HI|How|Are|You!"
         const newQueryCont = this.selectedRfqData.query ? this.selectedRfqData.query.concat("|").concat(this.queryDescContent) : this.queryDescContent;
         const newQueryCont1 = queryData ? (queryData + '|') + (this.queryDescContent) : queryData;
-        const obj = {
-            id: this.loggedUserDetails.id,
+        const obj = { 
             "vendor": {
                 "id": this.loggedUserDetails.org.id
             },

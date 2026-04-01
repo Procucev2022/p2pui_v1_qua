@@ -1,4 +1,4 @@
-<div [ngClass]="{  'gmt-container': isGMTView, 'bfs-container': isBFSView}">
+<div [ngClass]="{  'gmt-container': isGMTView, 'bfs-container': isBFSView}"  >
     <div class="showMobileMenu" (click)="onShowMobileMenu()"> <i class="fa fa-th-list" aria-hidden="true" [ngClass]="{'fa-th-list': !showMenuNav, 'fa-times' : showMenuNav}"></i>{{ showMenuNav ? 'Hide ': 'Show '}}  Menu</div>
     <nav [ngClass]="{sidebarPushRight: isActive, collapsed: collapsed }" class="sidebar" *ngIf="showMenuNav">
         <div class="list-group" *ngIf="!currentView || currentView == 'null' || currentView == SystemViewConfig.DPS_BASIC || currentView == SystemViewConfig.DPS_BASIC_PLUS">
@@ -672,6 +672,11 @@
                     <img src="/assets/images/menu/PR.svg">
                     <span>My Items</span>
                 </a>
+                <a class="list-group-item"  *ngIf=" loggedUserDetails?.role.roleName == 'Vendor' "
+                    [routerLink]="['/bfs/seller-bid-items']" [routerLinkActive]="['router-link-active']">
+                    <img src="/assets/images/menu/PR.svg">
+                    <span>My Item Bids</span>
+                </a>
                 <a class="list-group-item"  *ngIf="!['CategoryManager','CategoryManager2'].includes(loggedUserDetails?.role.roleName) &&  !( loggedUserDetails?.role.roleName == 'Vendor'|| loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor') "
                     [routerLink]="['/bfs/my-bids']" [routerLinkActive]="['router-link-active']">
                     <img src="/assets/images/menu/PR.svg">
@@ -696,6 +701,3 @@
         </div>
         <h4 class="expiry-text" style="position: fixed;  padding: 10px;  color: #fff;      width: 266px;bottom: -8px;font-size: 12px;">{{expiredTimeInSeconds}}</h4>
     </nav>
-
-
-</div>

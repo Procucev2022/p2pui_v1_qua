@@ -44,29 +44,31 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
       // { field: 'rfqClosingDate', header: 'Closure Date', isLink: false, width: '160px', fieldType: 'date', isExceedContent: false },
       // { field: 'createdTS', header: 'Creation Date', isLink: false, fieldType: 'date',  width: '180px', isExceedContent: false},
       // { field: 'status_ui_display', header: 'Status', isLink: false, width: '150px', fieldType: 'text', isExceedContent: false }
-      { field: 'rfqId', header: 'RFQ Id', isLink: false, width: '190px', fieldType: 'text', isExceedContent: false },
+      { field: 'rfqId', header: 'RFQ Id', isLink: false, width: '210px', fieldType: 'text', isExceedContent: false },
       { field: 'projectDesc', header: 'Description', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
-      { field: 'companyName', header: 'Company Name', isLink: false, width: '180px', fieldType: 'text', isExceedContent: true },
+      { field: 'companyName', header: 'Company Name', isLink: false, width: '210px', fieldType: 'text', isExceedContent: true },
       { field: 'phoneNumber', header: 'Contact', isLink: false, width: '180px', fieldType: 'text', isExceedContent: true },
        { field: 'noOfVendors', header: 'No. Of Vendors', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
        { field: 'noOfQuotes', header: 'No. Of Quotes', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
-      { field: 'createdTs', header: 'Creation Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
+      { field: 'createdTs', header: 'Creation Date', isLink: false, fieldType: 'date', width: '210px', isExceedContent: false },
+       { field: 'quoteSubmittedDate', header: 'Quote Submitted Date', isLink: false, width: '210px', fieldType: 'date', isExceedContent: true },
       { field: 'status_ui_display', header: 'Status', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false }
   ];
 
-  vendorTableHeaders: any = [ 
-      { field: 'vendorName', header: 'Name', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
-      { field: 'status_ui_display', header: 'Status', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
-      { field: 'createdTS', header: 'Creation Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false }
-  ];
+   vendorTableHeaders: any = [
+        // { field: 'vendorId', header: 'Company Id', isLink: false, width: '140px', fieldType: 'text', isExceedContent: false },
+        { field: 'vendorName', header: 'Name', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
+        { field: 'query', header: 'Query', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
+        { field: 'status_ui_display', header: 'Status', isLink: false, width: '100px', fieldType: 'text', isExceedContent: false },
+        { field: 'createdTS', header: 'Submitted Date', isLink: false, fieldType: 'date', width: '140px', isExceedContent: false },
+    ];
   itemsTableHeaders: any = [
-      { field: 'description', header: 'Item Description', isLink: false, width: '190px', fieldType: 'text', isExceedContent: true },
-      { field: 'brand', header: 'Specification', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
-      { field: 'unitofMeasures', header: 'UOM', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
-      { field: 'quantity', header: 'Quantity', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
-      { field: 'unitprice', header: 'Unit Price', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
-      { field: 'createdTS', header: 'Creation Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false }
-  ];
+        { field: 'description', header: 'Item Description', isLink: false, width: '190px', fieldType: 'text', isExceedContent: true },
+        { field: 'brand', header: 'Specifications', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
+        { field: 'unitofMeasures', header: 'UOM', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
+        { field: 'quantity', header: 'Quantity', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false }, 
+        { field: 'createdTS', header: 'Creation Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
+    ];
   loggedUserDetails: any;
   currentRole: any = '';
   selectedRfqData: any;
@@ -285,8 +287,21 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
       this.rfqId = event.data.rfqId;
       this.getVendorsByRfq();
       this.getLineItemsByRFQ();
+         if(event.data.newCommentAvailableVendor){
+            this.updateCommentsAsReadByCM();
+            this.selectedData[0].newCommentAvailableVendor = false;
+        }
   }
 
+    updateCommentsAsReadByCM() {
+        const obj = { "id": this.selectedRfqData.id }
+        this.rfqservice.updateCommentsAsReadByCM(obj).subscribe((res: any) => {
+            if (res && res.status == 'Success') {
+
+            }
+
+        });
+    }
   getCloseRFQs(event:any) {
       this.expandedRows[event.data.id] = false;
       this.expandedRows = {};
@@ -480,10 +495,10 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
   }
 
   onForwardRFQ(rowData:any, isRFQFORWARD: boolean){
-    if(rowData.status_ui_display != 'Accepted'){
-          this.toastrService.warning("Sorry, Only Accepted RFQs allowed for Forward to Vendors", 'Warning');
-        return;
-    }
+    // if(rowData.status_ui_display != 'Accepted'){
+    //       this.toastrService.warning("Sorry, Only Accepted RFQs allowed for Forward to Vendors", 'Warning');
+    //     return;
+    // }
       this.selectedRfqData = null;
       this.isSendRFQ =true;
       this.isRFQFORWARD = isRFQFORWARD;
@@ -499,10 +514,10 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
       this.isSendRFQ = false;
   }
 
-  getVendorInfo(rowData:any, isFromInfoIcon: boolean = false){
+  getVendorInfo(rowData:any, key:string){
     
       this.selectedVendor = rowData;
-      this.rfqservice.getVendorInfoById({id: rowData.companyId}).subscribe((res:any)=>{
+      this.rfqservice.getVendorInfoById({id: rowData[key]}).subscribe((res:any)=>{
           if(res ){
               this.dialog.closeAll();
               this.vendorInfo = res;

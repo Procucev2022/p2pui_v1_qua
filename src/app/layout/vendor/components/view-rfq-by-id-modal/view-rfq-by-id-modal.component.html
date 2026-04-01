@@ -45,13 +45,13 @@
                                 {{viewRFQbyIDdetails.specialInstruction ? viewRFQbyIDdetails.specialInstruction: '-'}}
                             </div>
                         </div> -->
-                        <div class="form-group row" style="margin-top: 15px"  [hidden]="viewRFQbyIDdetails.hideSpecialRFQClosingDate">
+                        <!-- <div class="form-group row" style="margin-top: 15px"  [hidden]="viewRFQbyIDdetails.hideSpecialRFQClosingDate">
                             <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
                                 class="col-sm-5 col-form-label">RFQ Closing Date</label>
                             <div class="col-sm-5 content-value" style="padding: 7px 16px">
                                 {{viewRFQbyIDdetails.rfqClosingDate ? (viewRFQbyIDdetails.rfqClosingDate | date: 'dd-MMM-yyyy hh:mm a'): '-' }}
                             </div>
-                        </div>
+                        </div> -->
                         <div class="form-group row" style="margin-top: 15px" *ngIf="viewRFQbyIDdetails.quoteCount">
                             <label for="prCorrespondend" style="font-size: medium; font-weight: bolder;"
                                 class="col-sm-5 col-form-label">Quote Count</label>

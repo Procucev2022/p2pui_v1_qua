@@ -13,12 +13,64 @@
     <div class="collapse navbar-collapse">
 
         <div class="navbar-nav ml-auto">
-            <!-- <li *ngIf="roleName =='CategoryManager' || roleName =='CategoryManager2'">
+            <li *ngIf="!(roleName =='CategoryManager' || roleName =='CategoryManager2')">
                 <div class="visitor-count">
-                    <label>Login Visitor's Count :</label>
-                    <span>{{visitorsCount}}</span>
+                    <button class="btn" (click)="getUserInfo(); op.toggle($event)" 
+ icon="pi pi-share-alt" label="Share" style="background: #F44336 !important;
+    color: #fff8f8 !important;
+    letter-spacing: 1px;" >My Info</button>
+                     <p-overlayPanel #op>
+                        <div class="flex flex-column gap-3 w-25rem"> 
+    
+    <div class="userinfo-content"  >
+      
+        <div class="user-data">
+            <span class="label">Company Name:</span>
+            <span class="value">{{loggedUserInfo?.org?.companyName || '-'}}</span>
+        </div>
+        <ng-container *ngIf="roleName == 'Seller' ">
+        <div class="user-data">
+            <span class="label">RFQ  Consumed   :</span>
+            <span class="value">
+                {{loggedUserInfo?.org?.rfqUsedCount?.toString() || '-'}}  
+            </span>
+        </div>
+          <div class="user-data">
+            <span class="label">RFQ Credits Consumed:</span>
+            <span class="value"> {{loggedUserInfo?.org?.rfqCredits?.toString() || '-'}}</span>
+        </div>
+         <div class="user-data">
+            <span class="label">Subscription End Date:</span>
+            <span class="value">{{loggedUserInfo?.org?.subscriptionExpiry | date: 'dd-MMM-YYYY hh:mm:ss a' || '-'}}</span>
+        </div>
+        </ng-container>
+        <ng-container *ngIf="roleName == 'ClientInitiator'">
+             <div class="user-data">
+            <span class="label"> RFQs Raised</span>
+            <span class="value">{{loggedUserInfo?.rfqRaised?.toString() || '-'}}</span>
+        </div>
+        </ng-container>
+         <div class="user-data">
+            <span class="label">Categories:</span>
+            <div class="categorieslist">
+               <span class="categories"> {{loggedUserInfo?.org?.divisionCategories.length+ '  Categories Available' || 'No Categories Available'}} </span>
+               <span class="value">
+                 <a   [routerLink]="['/categorymgr/my-category-list']" [routerLinkActive]="['router-link-active']"
+                 style="color: #b4d871;
+    text-decoration: underline;    cursor: pointer; padding-right: 6px;" (click)="op.hide()">
+
+                 >Click here </a> to View
+               </span>
+            </div>
+        </div>
+
+
+</div> 
+                            </div>
+                     </p-overlayPanel>
+                   
                 </div>
-            </li> -->
+            </li>
               <div class="">
                 <div class="userValue1"><span>Organization</span> <span> {{orgName}}</span></div>
                    
@@ -87,3 +139,5 @@
         </div>
     </div>
 </ng-template>
+
+

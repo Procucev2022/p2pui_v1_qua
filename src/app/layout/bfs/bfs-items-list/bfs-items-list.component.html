@@ -73,8 +73,10 @@
                         <span *ngIf="rowData?.itemNumber == null || rowData?.itemNumber  == ''" class="cellLinkCls" (click)=" getVendorAndClientListByItemId(rowData,$event, true)">Assign Category</span>
                     </span>
                     <span *ngIf="col.field != 'itemNumber'">
-                        <span *ngIf=" col.field == 'sellPrice'">{{ (rowData?.buyPriceDisclosure == true ||  rowData[col.field] >0) ? (rowData[col.field]) : 'QYP' }}</span>
-                        <span *ngIf=" col.field != 'sellPrice'">  {{rowData[col.field]}}</span>
+                        <span *ngIf=" col.field == 'askPrice'">{{ (rowData?.buyPriceDisclosure == true ||  rowData[col.field] >0) ? (rowData[col.field]) : 'QYP' }}</span>
+                        <span *ngIf=" col.field != 'askPrice'">  {{rowData[col.field]}}
+
+                        </span>
                     </span>
                 </span>
             </span>
@@ -216,7 +218,7 @@
                                                     </div> -->
                                                     <div class="col-4 mb-1">
                                                     <label class="form-label required">Age Of Asset <small>(In Months)</small></label>
-                                                    <input class="form-control" formControlName="ageOfAsset" type="text" placeholder="Age of asset" />
+                                                    <input class="form-control" formControlName="ageOfAsset" type="number" placeholder="Age of asset" />
                                                     <p class="error"  *ngIf="(itemForm.controls?.ageOfAsset?.touched && itemForm.controls.ageOfAsset.errors) && (itemForm.controls.ageOfAsset.errors.invalid )">Aseet Age should be Number</p>
 
 
@@ -465,10 +467,6 @@
           <div class="col-6" [ngClass]="{'col-4': isBidRequest}">
             <label>Buy Price(Per Unit)</label>
             <label>{{selectedRowData.sellPrice >0 ? selectedRowData.sellPrice: 'QYP'}}</label>
-          </div>
-          <div class="col-6" [ngClass]="{'col-4': isBidRequest}">
-            <label>Discount(%)</label>
-            <label>{{selectedRowData.discount}}</label>
           </div>
           <div class="col-6" [ngClass]="{'col-4': isBidRequest}">
             <label>Sale Price(Per Unit)</label>

@@ -37,3 +37,34 @@
 .blueCls{
     color: #1212e9;
 }
+
+
+
+.btn-sec {
+    gap: 10px;
+}
+
+.fa-check-circle-o,
+.fa-times-circle-o {
+    font-size: 1.8rem;
+    padding-right: 10px;
+    cursor: pointer;
+}
+
+.fa-check-circle-o,
+.text-success {
+    color: #28a745 !important;
+}
+
+.fa-times-circle-o,
+.text-danger {
+    color: #dc3545 !important;
+}
+
+.text-danger,
+.text-success {
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+}

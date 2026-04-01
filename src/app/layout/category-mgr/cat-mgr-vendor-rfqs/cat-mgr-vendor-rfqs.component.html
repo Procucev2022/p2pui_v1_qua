@@ -41,7 +41,8 @@
                        <span class="request-rfq">  <i class="fa fa-hand-pointer-o" aria-hidden="true"></i> - Request RFQ</span>
                        <span class="raise-query">  <i class="fa fa-question-circle" aria-hidden="true"></i> - Raise Query</span>
                        <span class="ignore-rfq">  <i class="fa fa-low-vision" aria-hidden="true"></i> -  Ignore RFQ</span>
-                       <span class="vendor-info">
+                       <span class="buyer-info" *ngIf="currentRole == 'Vendor'  || currentRole == 'Registration' || currentRole == 'PartialVendor'">  <i class="fa fa-info-circle" aria-hidden="true"></i> - Buyer Info</span>
+                       <span class="vendor-info"  *ngIf="!(currentRole == 'Vendor'  || currentRole == 'Registration' || currentRole == 'PartialVendor')">
                            <img class="vendor-info-reveal"  title="Vendor Info" src="assets/images/new/vendor-info-reveal.png" alt="Vendor Info" width="30" height="30"> - Vendor Info
                        </span>
                     </div>
@@ -93,14 +94,16 @@
                             <img src="/assets/images/new/view-doc.png" (click)="onViewRFQDetails(rowData)"
                             title="View RFQ Details">
                         </button>
-                        <button (click)="onRequestForRFQ(rowData)" class="  btn-primary" title="Request RFQ " [ngClass]="{'disabledBtn btn-secondary': !(requestEnability(rowData)) }" >
+                        <button (click)="onRequestForRFQ(rowData)" class="  btn-primary" title="Request RFQ " [ngClass]="{'disabledBtn btn-secondary': (requestEnability(rowData)) }" >
                          <i class="fa fa-hand-pointer-o" aria-hidden="true"></i>
                          </button>
                         <button (click)="onRiaseQueryOrIgnoreRFQ(rowData, false)"  class="  btn-info" title="Raise Query"  [ngClass]="{'disabledBtn btn-secondary': !(queryEnability(rowData)) }">
                           <i class="fa fa-question-circle" aria-hidden="true"></i> </button>
                         <button (click)="onRiaseQueryOrIgnoreRFQ(rowData, true)" class="  btn-danger" title="Ignore RFQ" [ngClass]="{'disabledBtn btn-secondary': !ignoreEnability(rowData) }">
                           <i class="fa fa-low-vision" aria-hidden="true"></i> </button>
-
+                         <button (click)="onViewBuyerInfo(rowData, true)" *ngIf="isBuyerInfoAllowToSee(rowData)" class="btn-danger btn-buyer-info" title="View Buyer Info" >
+                             <i class="fa fa-info-circle" aria-hidden="true"></i> 
+                        </button>
                          <!-- <i  (click)="op.toggle($event)" #t1 class="fa fa-ellipsis-v" aria-hidden="true" data-toggle="tooltip" title="Actions" ></i>
                         <p-overlayPanel #op [showTransitionOptions]="'0ms'"  [dismissable]="'true'"  [hideTransitionOptions]="'0ms'" appendTo="body">
                             <ul class="menu-dot-cls" style="list-style: none;">
@@ -116,7 +119,7 @@
                             </ul>
 
                         </p-overlayPanel> -->
-                  <img class="vendor-info-reveal"  *ngIf="showVendorInfoIconAfter48Hrs(rowData)" (click)="getClientInfoByRFQId(rowData)" title="Vendor Info" src="assets/images/new/vendor-info-reveal.png" alt="Vendor Info" width="30" height="30">
+                  <img class="vendor-info-reveal"  *ngIf="showVendorInfoIconAfter48Hrs(rowData)" (click)="getClientInfoByRFQId(rowData)" title="Buyer Info" src="assets/images/new/vendor-info-reveal.png" alt="Buyer Info" width="30" height="30">
 
                     </span>
                 </td>
@@ -186,7 +189,7 @@
                                     <span *ngIf="col.field == 'quotationReceived'" title="Work In Progress"> {{  rowData[col.field]}}</span>
                                     <span *ngIf="col.field != 'quotationReceived'" >    {{rowData[col.field]}}</span>
                                 </span>
-                                <span class="blink" *ngIf="col.field=='rfqId' && (rowData.count && rowData.count>0)">
+                                <span class="blink" *ngIf="col.field=='rfqId' && (rowData.newCommentAvailableVendor == true)">
                                     <i class="fa fa-bell" aria-hidden="true"></i>
                                 </span>
                             </span>
@@ -213,7 +216,7 @@
         </ng-template>
         <ng-template pTemplate="rowexpansion" let-rowData>
             <tr class="child-grid" *ngIf="selectedData.length ==1">
-                <td colspan="9">
+                <td colspan="11">
                     <p> <label>RFQ Id:</label> {{rfqId}}</p>
                      <div class="p-p-4" *ngIf="isChildGridShow">
                     <mat-tab-group class="" (selectedTabChange)="getLineItems($event)">
@@ -253,7 +256,7 @@
               </div>
               <div class="col-sm-6">
                 <div class="float-right" style="display: -webkit-inline-box;">
-                  <span class="text-success"> <i class="fa fa-check-circle-o" aria-hidden="true"></i> - Approve &nbsp;&nbsp;</span>
+                  <!-- <span class="text-success"> <i class="fa fa-check-circle-o" aria-hidden="true"></i> - Approve &nbsp;&nbsp;</span> -->
                    <span class="text-danger"> <i class="fa fa-times-circle-o" aria-hidden="true"></i> - Reject</span>
                 </div>
               </div>
@@ -289,7 +292,7 @@
               <td style="width: 11rem;" *ngIf="currentRole == 'CategoryManager'">
 
                 <span >
-                  <i class="fa fa-check-circle-o" title="Approve"   [ngClass]="{'disabledBtn': rowData.status_ui_display == 'New' || rowData.status_ui_display == 'Approved'}"  (click)="onAcceptOrRejectVendor(rowData, true)"  aria-hidden="true"></i>
+                  <!-- <i class="fa fa-check-circle-o" title="Approve"   [ngClass]="{'disabledBtn': rowData.status_ui_display == 'New' || rowData.status_ui_display == 'Approved'}"  (click)="onAcceptOrRejectVendor(rowData, true)"  aria-hidden="true"></i> -->
                    <i class="fa fa-times-circle-o" title="Reject"   [ngClass]="{'disabledBtn': rowData.status_ui_display == 'New' || rowData.status_ui_display == 'Rejected'}"   (click)="onAcceptOrRejectVendor(rowData, false)"   aria-hidden="true"></i>
                   </span>
               </td>

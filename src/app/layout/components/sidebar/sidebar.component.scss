@@ -363,3 +363,35 @@ $topnav-background-color: #fff;
         background: none;
     }
 }
+
+
+.userinfo-content {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 4%;
+    padding: 10px;
+    border-radius: 4px;
+    width: 273px;
+    z-index: 1000;
+    color: #fff;
+
+    .user-data {
+        border-left: 5px solid #FFEB3B;
+        margin: 4px;
+        padding: 4px;
+        background: linear-gradient(45deg, #245b92, #256198, #42aff5);
+
+        span {
+            display: flex;
+        }
+
+        span.label {
+            font-size: 12px;
+            padding: 1px;
+            color: #FFEB3B;
+            letter-spacing: 1px;
+            /* border-left: 3px solid grey; */
+        }
+    }
+}
