@@ -100,5 +100,6 @@ export class VendorProfileSubscriptionsComponent {
       return;
     }
     this.selectedSubscription = selectedPlan;
+    this.updateVendorForm();
   }
 }
