@@ -60,7 +60,7 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
         { field: 'vendorName', header: 'Name', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
         { field: 'query', header: 'Query', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
         { field: 'status_ui_display', header: 'Status', isLink: false, width: '100px', fieldType: 'text', isExceedContent: false },
-        { field: 'createdTS', header: 'Submitted Date', isLink: false, fieldType: 'date', width: '140px', isExceedContent: false },
+        { field: 'quoteSubmittedDate', header: 'Submitted Date', isLink: false, fieldType: 'date', width: '140px', isExceedContent: false },
     ];
   itemsTableHeaders: any = [
         { field: 'description', header: 'Item Description', isLink: false, width: '190px', fieldType: 'text', isExceedContent: true },

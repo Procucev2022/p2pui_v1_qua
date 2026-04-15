@@ -5,7 +5,7 @@
     font-weight: 600;
     border-left: 5px solid #d9e866;
     color: #fff;">Current Plan :
-    <span style="color:#ff9b96">{{currentPlan}}</span> </h2>
+    <span style="color:#ff9b96">{{!!currentPlan?currentPlan:'Basic'}}</span> </h2>
     </div>
     <div class="col-12 mt-5 ">
         <div class="row">
@@ -13,88 +13,88 @@
               >
                 <div class="card mb-4 shadow-sm">
                     <div class="card-body {{card.planName.toLowerCase() +'-plan'}}">
-                        <div class="active-title" [ngClass]="isMatchedPlan(card.id) ? 'fade-in' : 'fade-out'">
+                        <!-- <div class="active-title" [ngClass]="isMatchedPlan(card.id) ? 'fade-in' : 'fade-out'">
                             <i class="fa fa-check-circle-o "></i> Selected
-                        </div>
+                        </div> -->
                         <h5 class="card-title ">{{ card.planName }}</h5>
                         <div class="list">
                             <ul class="param-section"> 
                                 <li>
                                     <span>
                                         <span class="label-text">RFQ Notification</span>
-                                        <span class="label-vakue">{{card.rfqNotification}}</span>
+                                        <span class="label-vakue">{{card.planName.includes('CONNECT')? card.rfqNotification : 'XX'}}</span>
                                     </span>
                                 </li>
                                 <li>
                                     <span>
                                         <span class="label-text">View all RFQs</span>
-                                        <span class="label-vakue">{{card.categoryWiseRfqStatus}}</span>
+                                        <span class="label-vakue">{{card.planName.includes('CONNECT')? card.categoryWiseRfqStatus : 'XX'}}</span>
                                     </span>
                                 </li>  
                                  <li>
                                     <span>
                                         <span class="label-text">Whatsapp AI Assistant</span>
-                                        <span class="label-vakue">{{card.whatsappAiAssistant}}</span>
+                                        <span class="label-vakue">{{card.planName.includes('CONNECT')? card.whatsappAiAssistant : 'XX'}}</span>
                                     </span>
                                 </li>
                                  <li>
                                     <span>
                                         <span class="label-text">Automated Al Quotation</span>
-                                        <span class="label-vakue">{{card.automatedAiQuotation}}</span>
+                                        <span class="label-vakue">{{card.planName.includes('CONNECT')? card.automatedAiQuotation : 'XX'}}</span>
                                     </span>
                                 </li>
                                  <li>
                                     <span>
                                         <span class="label-text">Product Listing with Price</span>
-                                        <span class="label-vakue">{{card.productListingWithPrice}}</span>
+                                        <span class="label-vakue">{{card.planName.includes('CONNECT')? card.productListingWithPrice : 'XX'}}</span>
                                     </span>
                                 </li>
                                  <li>
                                     <span>
                                         <span class="label-text">Catalogue Listing</span>
-                                        <span class="label-vakue">{{card.catalogueListing}}</span>
+                                        <span class="label-vakue">{{card.planName.includes('CONNECT')? card.catalogueListing : 'XX'}}</span>
                                     </span>
                                 </li>
                                  <li>
                                     <span>
                                         <span class="label-text">No. of Products for Catalogue listing</span>
-                                        <span class="label-vakue">{{card.productListingWithQuantity}}</span>
+                                        <span class="label-vakue">{{card.planName.includes('CONNECT')? card.productListingWithQuantity : 'XX'}}</span>
                                     </span>
                                 </li>
                                  <li>
                                     <span>
                                         <span class="label-text">Real time negotiation with Buyer</span>
-                                        <span class="label-vakue">{{card.realTimeNegotiation}}</span>
+                                        <span class="label-vakue">{{card.planName.includes('CONNECT')? card.realTimeNegotiation : 'XX'}}</span>
                                     </span>
                                 </li>
                                  <li>
                                     <span>
                                         <span class="label-text">Dedicated Account Manager</span>
-                                        <span class="label-vakue">{{card.dedicatedAccountManager}}</span>
+                                        <span class="label-vakue">{{card.planName.includes('CONNECT')? card.dedicatedAccountManager : 'XX'}}</span>
                                     </span>
                                 </li>
                                  <li>
                                     <span>
                                         <span class="label-text">Category wise RFQs Status</span>
-                                        <span class="label-vakue">{{card.categoryWiseRfqStatus}}</span>
+                                        <span class="label-vakue">{{card.planName.includes('CONNECT')? card.categoryWiseRfqStatus : 'XX'}}</span>
                                     </span>
                                 </li>
                                  <li>
                                     <span>
                                         <span class="label-text">Buyer Contact Details</span>
-                                        <span class="label-vakue">{{card.buyerContactDetailsTime}}</span>
+                                        <span class="label-vakue">{{card.planName.includes('CONNECT')? card.buyerContactDetailsTime : 'XX'}}</span>
                                     </span>
                                 </li>
                                 <li  >
                                     <span>
                                         <span class="label-text">RFQ Bundle Size</span>
-                                        <span class="label-vakue">{{card?.rfqBundleSize}}</span>
+                                        <span class="label-vakue">{{card.planName.includes('CONNECT')? card.rfqBundleSize : 'XX'}}</span>
                                     </span>
                                 </li>
                                 <li  >
                                     <span>
                                         <span class="label-text">Period of Subscription**</span>
-                                        <span class="label-vakue">{{card?.subscriptionPeriodMonths}} Months</span>
+                                        <span class="label-vakue">{{card.planName.includes('CONNECT')? card?.subscriptionPeriodMonths : 'XX'}} Months</span>
                                     </span>
                                 </li>
                             </ul>
@@ -102,23 +102,28 @@
                                 <li  >
                                     <span>
                                         <span class="label-text">Subscription Price</span>
-                                        <span class="label-vakue strike-off">{{card?.subscriptionPrice.toString() | currency: 'INR'}}</span>
+                                        <span class="label-vakue strike-off">{{card.planName.includes('CONNECT')? (card?.subscriptionPrice.toString() | currency: 'INR') : 'XX'}}</span>
                                     </span>
                                 </li>
                                 <li  >
                                     <span>
                                         <span class="label-text">Launch Offer Price**</span>
-                                        <span class="label-vakue">{{card?.launchOfferPrice.toString() | currency: 'INR'}}</span>
+                                        <span class="label-vakue">{{card.planName.includes('CONNECT')? (card?.launchOfferPrice.toString() | currency: 'INR') : 'XX'}}<sup style="color:green ;padding:3px;font-size: 14px !important;">#</sup></span>
                                     </span>
                                 </li>
                             </ul>
+                            <div style="color:green;padding:2px 4px"># - Taxes & Other charges extra</div>
                         </div>
 
                         <div class="col-12">
-                            <button class="btn btn-primary" style="width: 100%;border-color:#fff !important; background-color: #0D4497 !important;
-                            border-radius: 24px !important;    margin: 10px 0;"
-                                (click)="updateSubscription(card)" type="button"> {{isMatchedPlan(card.id) ?'Selected':
+                            <button class="btn btn-subscription"  *ngIf="card.planName.includes('CONNECT')"
+                                (click)="updateSubscription(card)" type="button"> {{isMatchedPlan(card.id)  ? 'Selected':
                                 'Subscribe'}}</button>
+
+                                   <button class="btn btn-subscription" style="opacity: 0.6; cursor: not-allowed; pointer-events: none;"  *ngIf="!card.planName.includes('CONNECT')"
+                                  type="button"> {{isMatchedPlan(card.id) && card.planName.includes('CONNECT') ? 'Selected':
+                                'Coming Soon'}}</button>
+                            
                         </div>
                     </div>
                 </div>
@@ -129,10 +134,10 @@
     <div class="col-12">
         <h5 style="color: #FF5959;font-weight: 600;">T&C- If you do not receive the number of RFQs mentioned in your plan, your subscription will be extended**</h5>
     </div>
-    <div class="col-12" style="display: flex; direction: rtl;">
+    <!-- <div class="col-12" style="display: flex; direction: rtl;">
 
         <button type="button" class="btn btn-blue" (click)="updateVendorForm()">Update My Plan </button>
-    </div>
+    </div> -->
     <div class="spinner-container"  *ngIf="isLoading">
 
                 <span class="payment-label">Payment is in progress...</span>
