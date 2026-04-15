@@ -152,9 +152,17 @@
                             </div>
                             <div class="form-group row" *ngIf="roleName == 'CategoryManager'">
                                 <label for="pincode" style="font-size: medium; font-weight: bolder;"
-                                    class="col-sm-5 col-form-label required">Pincode / Zipcode</label>
-                                <div class="col-sm-5 col-form-label">
+                                        class="col-sm-5 col-form-label required">Pincode / Zipcode</label>
+                                    <div class="col-sm-5 col-form-label">
                                     <input class="form-control" type="text" [(ngModel)] ="location.pincode" name="pincode" disabled/>
+                                </div>
+                            </div>
+                             <div class="form-group row" *ngIf="roleName == 'CategoryManager' || roleName == 'CategoryManager2'">
+                                <label for="pincode" style="font-size: medium; font-weight: bolder;"
+                                    class="col-sm-5 col-form-label required">Delivery Date</label>
+                                <div class="col-sm-5 col-form-label">
+                                    <input class="form-control" type="text" [(ngModel)] ="viewRFQbyIDdetails.deliverDate1" name="deliverDate1" disabled
+                                    value="{{ viewRFQbyIDdetails.deliverDate1 | date:'dd/MM/yyyy' }}"/>
                                 </div>
                             </div>
                         </mat-card>

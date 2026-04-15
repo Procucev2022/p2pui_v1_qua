@@ -45,6 +45,8 @@ export class EditRfqByIdModalComponent implements OnInit {
 
     ) {
         this.viewRFQbyIDdetails = data;
+        const deliveryDate = this.viewRFQbyIDdetails.deliveryDate ? new Date(this.viewRFQbyIDdetails.deliveryDate) : null;
+        this.viewRFQbyIDdetails.deliverDate1 = deliveryDate ? deliveryDate.toLocaleDateString("en-GB") : '';
         this.viewRFQbyIDdetails.clientdeliverylocationrfq = this.viewRFQbyIDdetails.clientdeliverylocationrfq.map(loc => ({ ...loc, isValidPincode: true }));
         console.log(this.viewRFQbyIDdetails);
     }

@@ -103,19 +103,19 @@
                                 </span>
                             </div>
                         </div>
-                        <!-- <div class="col-12 alg" *ngIf="roleName=='Registration' || roleName=='PartialVendor' || roleName=='Vendor' || roleName == 'CategoryManager2'|| roleName == 'CategoryManager'">
+                        <div class="col-12 alg" *ngIf=" roleName=='ClientInitiator' || roleName=='Buyer' || roleName == 'CategoryManager2'|| roleName == 'CategoryManager'">
                             <div class="userValue" style="cursor:pointer;">
                                 <div class="btn-container">
                                     <label>Current View <i class="fa fa-window-restore" aria-hidden="true"></i></label>
                                     <div class="" role="group" aria-label="Basic example">
                                         <button   type="button" class="btn btn-primary" (click)="onSelectSystem('gmtName')" [ngClass]="{'enable-btn': currentView == SystemViewConfig.GMT_BASIC || currentView == SystemViewConfig.GMT_BASIC_PLUS}">{{ loggedUserDetails.org.gmtName}}</button>
-                                        <button   type="button" class="btn btn-primary" (click)="onSelectSystem('dpsName')"  [ngClass]="{'enable-btn': currentView == SystemViewConfig.DPS_BASIC || currentView == SystemViewConfig.DPS_BASIC_PLUS}" >{{loggedUserDetails.org.dpsName}}</button> 
+                                        <!-- <button   type="button" class="btn btn-primary" (click)="onSelectSystem('dpsName')"  [ngClass]="{'enable-btn': currentView == SystemViewConfig.DPS_BASIC || currentView == SystemViewConfig.DPS_BASIC_PLUS}" >{{loggedUserDetails.org.dpsName}}</button>  -->
                                       <button   type="button" class="btn btn-primary" (click)="onSelectSystem('bfsName')"  [ngClass]="{'enable-btn': currentView ==   SystemViewConfig.BFS_PRO}" >{{loggedUserDetails.org.bfsName}}</button>  
                                       </div>
                                 </div>
 
                             </div>
-                        </div> -->
+                        </div>
                         <div class="col-12 alg">
                             <div class="userValue" style="cursor: pointer;"  (click)="onLoggedout()">Logout<img src="/assets/images/menu/log-out.svg"></div>
                         </div>
