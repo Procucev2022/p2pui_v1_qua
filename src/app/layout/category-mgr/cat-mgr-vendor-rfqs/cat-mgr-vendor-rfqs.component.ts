@@ -43,7 +43,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
 
     ];
     rfqsTableHeadersForGMTVendor: any = [
-        { field: 'rfqId', header: 'RFQ ID', isLink: false, width: '170px', fieldType: 'text', isExceedContent: false },
+        { field: 'rfqId', header: 'RFQ ID', isLink: false, width: '260px', fieldType: 'text', isExceedContent: false },
         { field: 'desc', header: 'Description', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
         { field: 'category', header: 'Category', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
         { field: 'createdTS', header: 'RFQ Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
@@ -74,7 +74,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
         // { field: 'createdTs', header: 'Creation Date', isLink: false, fieldType: 'date', width: '180px', isExceedContent: false },
 
 
-        { field: 'rfqId', header: 'RFQ Id', isLink: false, width: '190px', fieldType: 'text', isExceedContent: false },
+        { field: 'rfqId', header: 'RFQ Id', isLink: false, width: '260px', fieldType: 'text', isExceedContent: false },
         { field: 'projectDesc', header: 'Description', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
         { field: 'companyName', header: 'Company Name', isLink: false, width: '180px', fieldType: 'text', isExceedContent: true },
         { field: 'phoneNumber', header: 'Contact', isLink: false, width: '180px', fieldType: 'text', isExceedContent: true },
