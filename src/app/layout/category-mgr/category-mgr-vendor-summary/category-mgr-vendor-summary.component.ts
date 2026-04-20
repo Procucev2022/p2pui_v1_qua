@@ -61,7 +61,8 @@ export class CategoryMgrVendorSummaryComponent {
         { field: 'rfqsConsumed', header: 'RFQs Consumed', isLink: false, width: '130px', fieldType: 'text', isExceedContent: false, alignCenter: true },
         
         { field: 'quotesSubmitted', header: 'Quotes Submitted', isLink: false, fieldType: 'text', width: '130px', isExceedContent: false, alignCenter: true },
-        { field: 'subscriptionExpiry', header: 'Expiry On', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false , alignCenter: true},
+        { field: 'subscriptionExpiry', header: 'Expiry On', isLink: false, width: '120px', fieldType: 'date', isExceedContent: false , alignCenter: true},
+        { field: 'createdTS', header: 'Reg. Date', isLink: false, fieldType: 'date',  width: '180px', isExceedContent: false},
         { field: 'sourceType', header: 'Source Type', isLink: false, width: '148px', fieldType: 'text', isExceedContent: false , alignCenter: true}
         // { field: 'vendorClass', header: 'Class', isLink: false, width: '120px', fieldType: 'text', isExceedContent: true },
         // { field: 'lastLogin', header: 'Last Logged In', isLink: false, width: '160px', fieldType: 'text', isExceedContent: false },
@@ -161,7 +162,7 @@ export class CategoryMgrVendorSummaryComponent {
                     const status_display = ele['status'] && ele['status']['uiDisplay'] ? ele.status.uiDisplay : ele.uiDisplay;
 
                     return { ...ele, status_ui_display: status_display, quotationReceived: ele.quotationReceived == true? 'YES': 'WIP' ,
-                        sourceType: ele.sourceType ? ele.sourceType == 'T' ? 'Web App': 'WhatsApp' : 'Web App'
+                        sourceType: ele.sourceType ? ele.sourceType == 'T' ? 'Web App': 'WhatsApp' : 'Web App',
                     }
                 }) || [];
             } else {
@@ -169,6 +170,7 @@ export class CategoryMgrVendorSummaryComponent {
             }
             this.cache_rfqDataList = [...this.rfqDataList];
         });
+        console.log('rfqDataList', this.rfqDataList)
     }
 
     onViewRFQDetails(rowData) {
