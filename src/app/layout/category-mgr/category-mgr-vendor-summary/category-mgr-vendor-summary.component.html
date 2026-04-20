@@ -196,7 +196,7 @@
                                 </span>
                             </span>
                             <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
-                              {{rowData['createdTs'] | date: 'dd-MMM-yyyy'}}
+                              {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
                             </span>
 
                     </span>
