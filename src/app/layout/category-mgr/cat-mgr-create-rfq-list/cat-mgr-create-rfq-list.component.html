@@ -64,9 +64,11 @@
                     [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"
                     [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
                     <span *ngIf="!col.isLink">
+                        
                         <span
                             *ngIf="col.field == 'status'">{{rowData[col.field]?.uiDisplay}}</span>
                         <span *ngIf="col.field != 'status'">
+                              <span *ngIf="col.field == 'rfqId'" class="row_{{rowData.sourceType.toUpperCase()}}"></span>
                             <span *ngIf="col.fieldType != 'date'">
                                 {{rowData[col.field]}}
                             </span>
