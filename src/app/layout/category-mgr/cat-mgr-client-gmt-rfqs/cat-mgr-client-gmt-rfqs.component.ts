@@ -30,7 +30,7 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
   @ViewChild('vendorInfoTemplate') vendorInfoTemplate: any;
   queryList: any = [];
   rfqsTableHeadersForGMTVendor: any = [
-      { field: 'rfqId', header: 'RFQ Id', isLink: false, width: '120px', fieldType: 'text', isExceedContent: false },
+      { field: 'rfqId', header: 'RFQ Id', isLink: false, width: '240px', fieldType: 'text', isExceedContent: false },
       { field: 'desc', header: 'Description', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
       { field: 'queryContent', header: 'Query', isLink: false, width: '160px', fieldType: 'text', isExceedContent: true },
       // { field: 'closureDate', header: 'Closure Date', isLink: false, width: '160px', fieldType: 'date', isExceedContent: false },
@@ -44,7 +44,7 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
       // { field: 'rfqClosingDate', header: 'Closure Date', isLink: false, width: '160px', fieldType: 'date', isExceedContent: false },
       // { field: 'createdTS', header: 'Creation Date', isLink: false, fieldType: 'date',  width: '180px', isExceedContent: false},
       // { field: 'status_ui_display', header: 'Status', isLink: false, width: '150px', fieldType: 'text', isExceedContent: false }
-      { field: 'rfqId', header: 'RFQ Id', isLink: false, width: '210px', fieldType: 'text', isExceedContent: false },
+      { field: 'rfqId', header: 'RFQ Id', isLink: false, width: '260px', fieldType: 'text', isExceedContent: false },
       { field: 'projectDesc', header: 'Description', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
       { field: 'companyName', header: 'Company Name', isLink: false, width: '210px', fieldType: 'text', isExceedContent: true },
       { field: 'phoneNumber', header: 'Contact', isLink: false, width: '180px', fieldType: 'text', isExceedContent: true },

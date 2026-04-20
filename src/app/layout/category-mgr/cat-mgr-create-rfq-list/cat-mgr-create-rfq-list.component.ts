@@ -33,7 +33,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
     loggedUserPermissions: any;
     stepsList = [ ];
     rfqsTableHeadersForCM: any = [
-        { field: 'rfqId', header: 'RFQ Id', isLink: false, width: '190px', fieldType: 'text', isExceedContent: false },
+        { field: 'rfqId', header: 'RFQ Id', isLink: false, width: '260px', fieldType: 'text', isExceedContent: false },
         { field: 'projectDesc', header: 'Description', isLink: false, width: '240px', fieldType: 'text', isExceedContent: true },
         { field: 'category', header: 'Category', isLink: false, width: '240px', fieldType: 'text', isExceedContent: true },
         // { field: 'division', header: 'Division ', isLink: false, width: '190px', fieldType: 'text', isExceedContent: false },
