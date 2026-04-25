@@ -53,13 +53,13 @@
          <div class="user-data">
             <span class="label">Categories:</span>
             <div class="categorieslist">
-               <span class="categories"> {{loggedUserInfo?.org?.divisionCategories.length+ '  Categories Available' || 'No Categories Available'}} </span>
+               <span class="categories"> {{loggedUserInfo?.org?.divisionCategories.length > 0 ? loggedUserInfo?.org?.divisionCategories.length + '  Categories Available' : 'No Categories Available'}} </span>
                <span class="value">
                  <a   [routerLink]="['/categorymgr/my-category-list']" [routerLinkActive]="['router-link-active']"
                  style="color: #b4d871;
     text-decoration: underline;    cursor: pointer; padding-right: 6px;" (click)="op.hide()">
 
-                 >Click here </a> to View
+                 Click here </a> to View
                </span>
             </div>
         </div>
