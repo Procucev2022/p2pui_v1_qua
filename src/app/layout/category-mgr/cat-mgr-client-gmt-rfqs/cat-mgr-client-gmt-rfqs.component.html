@@ -44,7 +44,7 @@
                     </td> -->
                     <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
                     <span *ngIf="!col.isLink">
-                        <span *ngIf="col.field == 'rfqId'" class="row_{{rowData.sourceType.toUpperCase()}}"></span>
+                        <span *ngIf="col.field == 'rfqId'" class="row_{{rowData?.sourceType?.toUpperCase()}}"></span>
                             <span *ngIf="col.fieldType != 'date'">
                                 {{rowData[col.field]}}
                             </span>
@@ -125,7 +125,7 @@
           <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}" 
            [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
                   <span *ngIf="!col.isLink">
-                      <span *ngIf="col.field == 'rfqId'" class="row_{{rowData.sourceType.toUpperCase()}}"></span>
+                      <span *ngIf="col.field == 'rfqId'" class="row_{{rowData?.sourceType?.toUpperCase()}}"></span>
                         <i class="fa fa-info-circle" style="font-size: 1.2rem;cursor: pointer;color:rgb(255, 106, 0)" *ngIf="col.field =='companyName' " (click)="getVendorInfo(rowData, 'companyId')"></i>  
 
                           <span *ngIf="col.fieldType != 'date'" [ngClass]="{'blueCls': col.field == 'rfqId' && rowData.byClient == true}">
@@ -192,7 +192,7 @@
               </div>
               <div class="col-sm-6">
                 <div class="float-right" style="display: -webkit-inline-box;">
-                  <span class="text-success"> <i class="fa fa-check-circle-o" aria-hidden="true"></i> - Approve &nbsp;&nbsp;</span>
+                  <!-- <span class="text-success"> <i class="fa fa-check-circle-o" aria-hidden="true"></i> - Approve &nbsp;&nbsp;</span> -->
                    <span class="text-danger"> <i class="fa fa-times-circle-o" aria-hidden="true"></i> - Reject</span>
                 </div>
               </div>
@@ -367,5 +367,5 @@
 
 
 <ng-template #vendorInfoTemplate>
-    <app-gmt-vendor-info-modal [selectedVendor]="selectedVendor" [vendorInfo]="vendorInfo" [isVendor]="true"></app-gmt-vendor-info-modal>
+    <app-gmt-vendor-info-modal [selectedVendor]="selectedVendor" [vendorInfo]="vendorInfo" [isVendor]="false"></app-gmt-vendor-info-modal>
 </ng-template>

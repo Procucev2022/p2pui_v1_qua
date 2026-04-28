@@ -174,7 +174,7 @@
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
-            <tr [pSelectableRow]="rowData" class="row_{{rowData.sourceType.toUpperCase()}}">
+            <tr [pSelectableRow]="rowData" class="row_{{rowData?.sourceType?.toUpperCase()}}">
             <td style="width: 5rem">
                
                 <button type="button" pButton pRipple [pRowToggler]="rowData"
@@ -185,7 +185,7 @@
             </td>
             <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
                     <span *ngIf="!col.isLink">
-                      <span *ngIf="col.field == 'rfqId'" class="row_{{rowData.sourceType.toUpperCase()}}"></span>
+                      <span *ngIf="col.field == 'rfqId'" class="row_{{rowData?.sourceType?.toUpperCase()}}"></span>
                             <span *ngIf="col.fieldType != 'date'"  >
                                 <span *ngIf="col.fieldType != 'date'">
                                     <span *ngIf="col.field == 'quotationReceived'" title="Work In Progress"> {{  rowData[col.field]}}</span>
@@ -196,7 +196,7 @@
                                 </span>
                             </span>
                             <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
-                              {{rowData['createdTs'] | date: 'dd-MMM-yyyy'}}
+                              {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
                             </span>
 
                     </span>
