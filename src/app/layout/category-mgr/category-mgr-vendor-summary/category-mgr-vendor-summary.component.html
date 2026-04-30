@@ -27,7 +27,7 @@
       </div>
     <div *ngIf="currentRole == 'Vendor' || currentRole == 'Registration' || currentRole == 'PartialVendor'; else catMgrTemplate"    >
     <p-table [ngClass]="{'gmt-container': isGMTView}"  #rfqTable [columns]="rfqsTableHeadersForGMTVendor" [value]="rfqDataList" sortMode="multiple"
-      [paginator]="true" [rows]="pageRecordSize" id="rfqTable" [rowsPerPageOptions]="pageOptions"
+      [paginator]="true" [rows]="pageSize" id="rfqTable" [rowsPerPageOptions]="pageOptions"
           [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData"  [scrollable]="true" [scrollHeight]="'calc(100vh  - 205px)'">
           <ng-template pTemplate="caption">
             <div class="table-search">
@@ -133,21 +133,22 @@
     <!-- For CategoryManger or CategoryManger2 -->
     <ng-template #catMgrTemplate>
 
-        <p-table [ngClass]="{'gmt-container': isGMTView}" dataKey="id" #prqTable [columns]="rfqsTableHeadersForCategoryManger" [value]="rfqDataList" sortMode="multiple" [paginator]="true"
-        [rows]="pageRecordSize" id="prqTable" [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}"
+        <p-table [ngClass]="{'gmt-container': isGMTView}" dataKey="id" #prqTable [columns]="rfqsTableHeadersForCategoryManger" [value]="rfqDataList" sortMode="multiple" 
+          id="prqTable" [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}"
         exportFilename="roles details" [(selection)]="selectedData" [scrollable]="true"
-        [scrollable]="true" [scrollHeight]="'calc(100vh  - 205px)'">
+        [scrollable]="true" [scrollHeight]="'calc(100vh  - 205px)'"  [rows]="pageSize"[lazy]="true" [paginator]="true" (onPage)="onPageChange($event)" [totalRecords]="totalRecords">
         <ng-template pTemplate="caption">
             <div class="table-search">
             <div class="row">
                 <div class="col-sm-6">
                 <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
-                    (input)="prqTable.filterGlobal($event.target.value, 'contains')" />
+                    (input)="searchByText($event.target.value)" [(ngModel)]="searchText" />
                 </div>
                 <div class="col-sm-6">
                      <div class="form-group" style="display: flex;float: right; align-items: center; gap: 10px;">
                         <label   >Source Type:</label>
-                            <select   class="form-control"style="width: 300px;" (change)="onSourceTypeChange($event.target.value)">
+                            <select   class="form-control"style="width: 300px;" (change)="onSourceTypeChange($event.target.value)"
+                             [(ngModel)]="sourceType">
                                 <option value="">All</option>
                                 <option *ngFor="let source of sourceList" [value]="source.value">{{source.label}}</option>
                             </select>
@@ -240,6 +241,12 @@
             </td>
             </tr>
         </ng-template>
+          <ng-template pTemplate="paginatorleft">
+          <div *ngIf="prqTable._totalRecords > 0">
+            <b>Showing {{prqTable?.first+1}} to {{prqTable?.first+prqTable?.rows > totalRecords ? totalRecords: prqTable?.first+prqTable?.rows}} of {{totalRecords}}</b>
+              <!-- <app-page-info [totalRecords]="rfqDataList?.length" [pageData]="paginatoryDetails"></app-page-info> -->
+          </div>
+          </ng-template>
         </p-table>
     </ng-template>
 
