@@ -73,7 +73,8 @@ export class CategoryMgrVendorSummaryComponent {
     pageSize: number = 100; 
     searchText: string = '';
     sourceType: string = '';
-    totalRecords: number = 0;
+ 
+    totalRecords: number = 0; 
 
     vendorTableHeaders: any = [
         // { field: 'vendorId', header: 'Company Id', isLink: false, width: '140px', fieldType: 'text', isExceedContent: false },
@@ -139,11 +140,12 @@ export class CategoryMgrVendorSummaryComponent {
     }
 
     onPageChange(event) {
-        this.startPage = event.first > 0 ? event.first / event.rows + 1 : 0;
+        this.startPage = event.first > 0 ? event.first / event.rows + 1 : 0; 
         this.pageSize = event.rows ;
         const pageSize = event.rows * this.startPage <= this.totalRecords ? event.rows :
         ( this.startPage <=1? this.totalRecords - event.rows : this.totalRecords -(this.startPage-1) *event.rows );
         this.getRFQSummary(this.startPage, pageSize, this.searchText, this.sourceType);
+
     }
 
     searchByText(value) {
