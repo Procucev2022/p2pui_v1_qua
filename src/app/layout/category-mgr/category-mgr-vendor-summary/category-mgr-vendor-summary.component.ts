@@ -73,7 +73,8 @@ export class CategoryMgrVendorSummaryComponent {
     pageSize: number = 100; 
     searchText: string = '';
     sourceType: string = '';
-    totalRecords: number = 100000;
+ 
+    totalRecords: number = 0; 
 
     vendorTableHeaders: any = [
         // { field: 'vendorId', header: 'Company Id', isLink: false, width: '140px', fieldType: 'text', isExceedContent: false },
@@ -139,9 +140,12 @@ export class CategoryMgrVendorSummaryComponent {
     }
 
     onPageChange(event) {
-        this.startPage = event.first > 0 ? event.first / event.rows + 1 : 0;
-        this.pageSize = event.rows;
-        this.getRFQSummary(this.startPage, this.pageSize, this.searchText, this.sourceType);
+        this.startPage = event.first > 0 ? event.first / event.rows + 1 : 0; 
+        this.pageSize = event.rows ;
+        const pageSize = event.rows * this.startPage <= this.totalRecords ? event.rows :
+        ( this.startPage <=1? this.totalRecords - event.rows : this.totalRecords -(this.startPage-1) *event.rows );
+        this.getRFQSummary(this.startPage, pageSize, this.searchText, this.sourceType);
+
     }
 
     searchByText(value) {
@@ -164,6 +168,8 @@ export class CategoryMgrVendorSummaryComponent {
     }
     getRFQSummary(startPage,pageSize, searchText, sourceType ) {
         this.selectedData = [];
+        this.rfqDataList = [];
+        this.totalRecords = 0;
         const req = { "id": this.loggedUserDetails.org.id };
         this.rfqservice.getAllRFQsSummaryByCategory(startPage,pageSize, searchText, sourceType).subscribe((res:any) => {
             if (Array.isArray(res.data)) {
@@ -174,6 +180,7 @@ export class CategoryMgrVendorSummaryComponent {
                         sourceType: ele.sourceType ? ele.sourceType == 'T' ? 'Web App': 'WhatsApp' : 'Web App',
                     }
                 }) || [];
+                this.totalRecords = res.totalRecords || 0;
             } else {
                 this.rfqDataList = [];
             }

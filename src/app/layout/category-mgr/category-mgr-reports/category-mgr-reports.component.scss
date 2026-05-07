@@ -1,0 +1,259 @@
+// // ...existing code...
+// .reports-container {
+//   display: flex;
+//   justify-content: center; /* center the group horizontally */
+//   align-items: center;     /* center vertically */
+//   gap: 32px;               /* space between each radio+label */
+//   flex-wrap: wrap;
+//   padding: 12px 0;
+//   width: 100%;
+// }
+
+// .reports-container > div {
+//   display: inline-flex;
+//   align-items: center;
+//   gap: 8px; /* small gap between radio and its label */
+//   margin: 4px 0;
+// }
+
+// .reports-container input[type="radio"] {
+//   width: 16px;
+//   height: 16px;
+//   margin: 0;
+//   cursor: pointer;
+//   accent-color: #305EFF;
+// }
+
+// @media (max-width: 480px) {
+//   .reports-container {
+//     gap: 12px;
+//   }
+// } 
+// .reports-container {
+//   display: flex;
+//   justify-content: center; /* center the group horizontally */
+//   align-items: center;     /* center vertically */
+//   gap: 32px;               /* space between each radio+label */
+//   flex-wrap: wrap;
+//   padding: 12px 0;
+//   width: 100%;
+// }
+
+// .reports-container > div {
+//   display: inline-flex;
+//   align-items: center;
+//   gap: 8px; /* small gap between radio and its label */
+//   margin: 4px 0;
+//   font-size: 2rem !important;
+//   .report-label {
+//     font-size: 2rem !important;
+//     cursor: pointer;
+//   }
+// }
+
+
+// .reports-container input[type="radio"] {
+//   width: 2rem;
+//   height: 2rem;
+//   margin: 0;
+//   cursor: pointer;
+//   accent-color: #305EFF;
+// }
+
+// @media (max-width: 480px) {
+//   .reports-container {
+//     gap: 12px;
+//   }
+// }
+
+// .subreports-container{
+//     display: flex;
+//     justify-content: center; /* center the group horizontally */
+//     align-items: center;     /* center vertically */
+//     gap: 32px;               /* space between each radio+label */
+//     flex-wrap: wrap;
+//     padding: 12px 0;
+//     width: 100%;
+//     .sub-report-item{
+//         display: inline-flex;
+//         align-items: center;
+//         gap: 8px; /* small gap between radio and its label */
+//         margin: 15px ;
+//         font-size: 1.5rem !important;
+//         .sub-report-label {
+//             font-size: 1.5rem !important;
+//             cursor: pointer;
+//         }
+//     }
+// }
+
+
+/* Overall container */
+h1 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 0.5rem;
+}
+
+/* Reports container */
+.reports-container {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+/* Radio buttons styled as pills */
+.reports-container input[type="radio"], .sub-report-item input[type="radio"] {
+  display: none;
+}
+
+.report-label {
+  background: #f0f3f7;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #444;
+  transition: all 0.3s ease;
+min-width: 151px;
+text-align: center;
+font-size: 1.5rem !important;
+}
+
+.reports-container input[type="radio"]:checked + .report-label {
+  background: #007bff;
+  color: #fff;
+  box-shadow: 0 3px 8px rgba(0,123,255,0.3);
+}
+
+/* Subreports container */
+.subreports-container {
+  margin-bottom: 1.5rem;
+}
+
+.sub-report-item {
+  display: inline-block;
+  margin-right: 1rem;
+}
+
+.sub-report-label {
+  background: #f0f3f7;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #444;
+  transition: all 0.3s ease;    min-width: 151px;
+    text-align: center;
+    font-size: 1.5rem !important;
+}
+
+.sub-report input[type="radio"]:checked + .sub-report-label {
+  background: #007bff;
+  color: #fff;
+  box-shadow: 0 3px 8px rgba(0,123,255,0.3);
+}
+
+/* Date input section */
+.input-container {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+p-calendar {
+  width: 100%;
+}
+
+::ng-deep .p-calendar input {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  transition: border-color 0.2s;
+}
+
+::ng-deep .p-calendar input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Generate Report button */
+.buttonCls button {
+  width: 100%;
+  padding: 0.8rem 1.6rem;
+  background: linear-gradient(135deg, #007bff, #00c6ff);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+
+.buttonCls button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,123,255,0.3);
+}
+
+
+/* Base message style */
+.error-message,
+.success-message {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.5rem;
+  padding: 0.8rem 1rem;
+  border-radius: 6px;
+  margin: 1rem 0;
+  display: inline-block;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+/* Error message */
+.error-message {
+  background: #ffe5e5;
+  color: #b71c1c;
+  border: 1px solid #f44336;
+  box-shadow: 0 2px 6px rgba(244,67,54,0.2);
+}
+
+/* Success message */
+.success-message {
+  background: #e6f7e6;
+  color: #1b5e20;
+  border: 1px solid #4caf50;
+  box-shadow: 0 2px 6px rgba(76,175,80,0.2);
+}
+
+/* Subtle fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+.report-selection-title{
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #f18f1f;
+    margin-bottom: 0.5rem;
+    display: block;
+}
