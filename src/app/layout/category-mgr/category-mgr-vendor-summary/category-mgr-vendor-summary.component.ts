@@ -22,8 +22,8 @@ export class CategoryMgrVendorSummaryComponent {
     @ViewChild('vendorInfoTemplate') vendorInfoTemplate: any;
     @ViewChild('clientInfoTemplate') clientInfoTemplate: any;
      sourceList = [
-        { label: 'Web App', value: 'Web App' },
-        { label: 'WhatsApp', value: 'WhatsApp' }
+        { label: 'Web App', value: 'T' },
+        { label: 'WhatsApp', value: 'W' }
     ];
 
     rfqDataList: any = [];
@@ -69,6 +69,11 @@ export class CategoryMgrVendorSummaryComponent {
         
 
     ];
+    startPage: number = 0;
+    pageSize: number = 100; 
+    searchText: string = '';
+    sourceType: string = '';
+    totalRecords: number = 0;
 
     vendorTableHeaders: any = [
         // { field: 'vendorId', header: 'Company Id', isLink: false, width: '140px', fieldType: 'text', isExceedContent: false },
@@ -121,8 +126,8 @@ export class CategoryMgrVendorSummaryComponent {
     //     }
     // }
     ngOnInit() {
-        this.pageRecordSize = AppApiConfig.GRID_PAGE_INFO.initpageSize;
-        this.pageOptions = AppApiConfig.GRID_PAGE_INFO.pageOptions;
+        this.pageRecordSize = this.pageSize; //AppApiConfig.GRID_PAGE_INFO.initpageSize;
+        this.pageOptions = AppApiConfig.GRID_PAGE_INFO.pageOptions; //[10, 25,50,100, 500, 1000]
         this.defaultPermissions = AppApiConfig.DEFAULT_PERMISSIONS;
         const temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
         this.loggedUserDetails = temp.details;
@@ -133,30 +138,38 @@ export class CategoryMgrVendorSummaryComponent {
 
     }
 
+    onPageChange(event) {
+        this.startPage = event.first > 0 ? event.first / event.rows + 1 : 0;
+        this.pageSize = event.rows ;
+        const pageSize = event.rows * this.startPage <= this.totalRecords ? event.rows :
+        ( this.startPage <=1? this.totalRecords - event.rows : this.totalRecords -(this.startPage-1) *event.rows );
+        this.getRFQSummary(this.startPage, pageSize, this.searchText, this.sourceType);
+    }
 
+    searchByText(value) {
+        this.getRFQSummary(this.startPage, this.pageSize, value, this.sourceType);
+    }
     
     onSourceTypeChange(value){
-        if(value){
-            this.rfqDataList = this.cache_rfqDataList.filter(ele => ele.sourceType == value);
-        }else{
-           this.rfqDataList = this.cache_rfqDataList;
-        }
+      this.getRFQSummary(this.startPage, this.pageSize, this.searchText, value);
     }
     intialCall() {
         this.selectedCategory = '';
         // if (this.currentRole == "CategoryManager2" || this.currentRole == "CategoryManager") {
             this.rfqTableHeaders = this.rfqsTableHeadersForCategoryManger;
-            this.getRFQSummary();
+            this.getRFQSummary(this.startPage, this.pageSize, '', this.sourceType);
         // }
         //  else {
         //     this.rfqTableHeaders = this.rfqsTableHeadersForGMTVendor;
         //     this.getRFQListByGMTVendor();
         // }
     }
-    getRFQSummary() {
+    getRFQSummary(startPage,pageSize, searchText, sourceType ) {
         this.selectedData = [];
+        this.rfqDataList = [];
+        this.totalRecords = 0;
         const req = { "id": this.loggedUserDetails.org.id };
-        this.rfqservice.getAllRFQsSummaryByCategory().subscribe((res:any) => {
+        this.rfqservice.getAllRFQsSummaryByCategory(startPage,pageSize, searchText, sourceType).subscribe((res:any) => {
             if (Array.isArray(res.data)) {
                 this.rfqDataList = res.data.map((ele: any) => {
                     const status_display = ele['status'] && ele['status']['uiDisplay'] ? ele.status.uiDisplay : ele.uiDisplay;
@@ -165,6 +178,7 @@ export class CategoryMgrVendorSummaryComponent {
                         sourceType: ele.sourceType ? ele.sourceType == 'T' ? 'Web App': 'WhatsApp' : 'Web App',
                     }
                 }) || [];
+                this.totalRecords = res.totalRecords || 0;
             } else {
                 this.rfqDataList = [];
             }

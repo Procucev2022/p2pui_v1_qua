@@ -172,6 +172,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
                 this.rfqDataList = [];
             }
             this.cache_rfqDataList = [...this.rfqDataList];
+            console.log(this.cache_rfqDataList);
         });
     }
 

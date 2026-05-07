@@ -162,4 +162,15 @@ export class CreateRfqService {
         return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.DELETE_USER_FOR_REG_CLIENT, data, {})
 
     }
+
+      getReportData(data: any) {
+        // add path query parameter for report type and date range
+        const params = {
+            requestType: data.reportId,
+            startDate: data.startDate,
+            endDate: data.endDate
+        };
+        return this.httpService.get(AppApiConfig.apiEndpoint + AppApiConfig.GET_REPORT_DATA_FOR_GMT, { params })
+
+    }
 }

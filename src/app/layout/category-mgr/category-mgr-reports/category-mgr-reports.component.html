@@ -1,0 +1,39 @@
+<h1>  Reports</h1>
+<p class="report-selection-title">Select a report:</p>
+<div class="reports-container">
+    
+    <div *ngFor="let report of reports">
+        <input type="radio" [value]="report.id" name="report" (click)="onReportSelect(report)" id="report-{{ report.id }}"> 
+        <label class="report-label" for="report-{{ report.id }}">{{ report.title }}</label>
+        
+    </div>
+    
+</div>
+<div class="subreports-container">
+    <div class="sub-report" *ngIf="selectedReport && subReports.length > 0">
+        <div class="sub-report-item" *ngFor="let subReport of subReports">
+            <input type="radio" [value]="subReport.id" name="subReport" (change)="onSubReportSelect(subReport.id)" id="subreport-{{ subReport.id }}"> 
+            <label class="sub-report-label" for="subreport-{{ subReport.id }}">{{ subReport.title }}</label>
+        </div>
+    </div>
+</div>
+<div class="input-container row"  >
+    <div class="col-4 form-group">
+        <label>Start Date</label>
+            <p-calendar [(ngModel)]="startDate" [maxDate]="todayDate" placeholder="DD-MM-YYYY" dateFormat="dd-mm-yy" showIcon="true" ></p-calendar>
+
+    </div>
+    <div class="col-4 form-group">
+        <label>End Date</label>
+            <p-calendar [(ngModel)]="endDate" placeholder="DD-MM-YYYY" dateFormat="dd-mm-yy" showIcon="true" 
+            [minDate]="startDate" [maxDate]="todayDate"></p-calendar>
+    </div>
+    <div class="col-4 form-group buttonCls">
+        <button pButton [disabled]="!selectedSubReportId || !startDate || !endDate" type="button" label="Generate Report" (click)="generateReport()"></button>
+    </div>
+</div>
+<div class="report-generated-message m-5" *ngIf="isReportGenerated || isReportExported"> 
+    <p *ngIf="isReportGenerated && reportDataList?.length <= 0" class="error-message">No data found for the selected report and date range. Please try again with different criteria.</p>
+    <p *ngIf="reportDataList?.length > 0 && isReportGenerated && !isReportExported" class="success-message">Report generated successfully. Now its time to export it to Excel.</p>
+    <p *ngIf="reportDataList?.length > 0 && isReportExported" class="success-message">Report exported to Excel successfully.</p>
+</div>

@@ -568,6 +568,8 @@
                             <span>Vendor Summary</span>
                         </a>
                         </li>
+                        
+                        
                         <li *ngIf=" loggedUserDetails?.role.roleName == 'CategoryManager2'">
                             <a class="list-group-item" [routerLink]="['/categorymgr/gmt-reg-clients']"
                             [routerLinkActive]="['router-link-active']">
@@ -580,6 +582,13 @@
                             [routerLinkActive]="['router-link-active']">
                             <i class="fa fa-user"></i> &nbsp;
                             <span>Client RFQs</span>
+                        </a>
+                        </li>
+                         <li *ngIf="  loggedUserDetails?.role.roleName == 'CategoryManager'">
+                            <a class="list-group-item" [routerLink]="['/categorymgr/cat-mgr-reports']"
+                            [routerLinkActive]="['router-link-active']">
+                            <i class="fa fa-user"></i> &nbsp;
+                            <span>Reports</span>
                         </a>
                         </li>
                          <li *ngIf="  loggedUserDetails?.role.roleName == 'CategoryManager2'">

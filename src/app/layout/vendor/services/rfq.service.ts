@@ -64,10 +64,32 @@ export class RfqService {
         return this.http.get(AppApiConfig.apiEndpoint + AppApiConfig.FETCH_ALL_RFQS_BY_GMT_CATEGORYMANAGER, {})
     }
 
-    getAllRFQsSummaryByCategory() {
-        return this.http.get(AppApiConfig.apiEndpoint + AppApiConfig.CAT_MGR_VENDOR_SUMMARY, {})
-    } 
-    
+    getAllRFQsSummaryByCategory(startPage,pageSize, searchText, sourceType) {
+        if(searchText){
+            searchText = encodeURIComponent(searchText);
+        }
+        if(sourceType){
+            sourceType = encodeURIComponent(sourceType);
+        }
+        if (!searchText) {
+            searchText = '';
+        }
+        if (!sourceType) {
+            sourceType = '';
+        }
+      
+        // add params only when they are present
+        const params: any = {};
+        if (searchText) {
+            params.searchText = searchText;
+        }
+        if (sourceType) {
+            params.sourceType = sourceType;
+        }
+
+        return this.http.get(AppApiConfig.apiEndpoint + AppApiConfig.CAT_MGR_VENDOR_SUMMARY + `?page=${startPage}&size=${pageSize}`, { params })
+    }
+
     getAllClientRFQsByGMTForCMandCM2() {
         return this.http.get(AppApiConfig.apiEndpoint + AppApiConfig.FETCH_ALL_CLIENT_RFQS_BY_GMT_CATEGORYMANAGER, {})
     }
