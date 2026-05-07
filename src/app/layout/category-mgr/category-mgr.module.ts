@@ -51,6 +51,7 @@ import { GmtVendorsListComponent } from '../vendor-mgr/components/gmt-vendors-li
 import { MyCategoryListComponent } from './my-category-list/my-category-list.component';
 import { SubscriptionPaymentSuccessComponent } from './subscription-payment-success/subscription-payment-success.component';
 import { SubscriptionPaymentFailureComponent } from './subscription-payment-failure/subscription-payment-failure.component';
+import { CategoryMgrReportsComponent } from './category-mgr-reports/category-mgr-reports.component';
 
 
 
@@ -107,7 +108,8 @@ import { SubscriptionPaymentFailureComponent } from './subscription-payment-fail
         GmtVendorsListComponent,
         MyCategoryListComponent,
         SubscriptionPaymentSuccessComponent,
-        SubscriptionPaymentFailureComponent
+        SubscriptionPaymentFailureComponent,
+        CategoryMgrReportsComponent
     ],
     exports:[ ],
     // entryComponents: [CatMgrVendorSearchComponent]
