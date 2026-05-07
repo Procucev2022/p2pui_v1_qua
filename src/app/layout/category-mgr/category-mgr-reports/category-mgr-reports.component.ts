@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ExcelService } from 'src/app/shared/modules/common-share/services/excel.service';
 import { CreateRfqService } from '../services/create-rfq.service';
 import { DatePipe } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-category-mgr-reports',
@@ -13,7 +14,8 @@ export class CategoryMgrReportsComponent {
   reportDataList: any;
   constructor(private excelService: ExcelService,
     private createRfqService: CreateRfqService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private toastService: ToastrService
   ) { }
   isReportGenerated: boolean = false;
   isReportExported: boolean = false;
@@ -25,7 +27,8 @@ export class CategoryMgrReportsComponent {
       id: 1, title: 'Seller', description: 'Description for Seller Reports',
       subReports: [
         { id: 'sellerReport', title: 'Seller Report', description: 'Description for Seller Performance' },
-        { id: 'sellerSummary', title: 'Summary Report', description: 'Description for Seller Activity' }
+        { id: 'sellerSummary', title: 'Summary Report', description: 'Description for Seller Activity' },
+        { id: 'sellerCategoryReport', title: 'Category Report', description: 'Description for Seller Category Activity' }
       ]
     },
     {
@@ -64,23 +67,29 @@ export class CategoryMgrReportsComponent {
     this.selectedReport = report;
     this.subReports = report.subReports || [];
     this.selectedSubReportId = null; // Reset sub-report selection when a new report is selected
-      this.isReportExported = false; // Reset export status when a new sub-report is selected
+    this.isReportExported = false; // Reset export status when a new sub-report is selected
     this.isReportGenerated = false; // Reset report generation status when a new sub-report is selected
   }
   generateReport() {
 
-// https://p2pv1servicesdev-etfrcte5fhdvfrd4.centralindia-01.azurewebsites.net/rest/reports/seller-report?reportType=sellerReport&startDate=2026-04-01&endDate=2026-05-14
+    // https://p2pv1servicesdev-etfrcte5fhdvfrd4.centralindia-01.azurewebsites.net/rest/reports/seller-report?reportType=sellerReport&startDate=2026-04-01&endDate=2026-05-14
 
-// /procucev/rest/reports/seller-report?startDate=2026-01-01&endDate=2026-05-01&requestType=sellerReport
+    // /procucev/rest/reports/seller-report?startDate=2026-01-01&endDate=2026-05-01&requestType=sellerReport
 
-    if(!(this.selectedSubReportId && this.startDate && this.endDate)){
-      alert('Please select a sub-report and date range to generate the report.');
+    if (!(this.selectedSubReportId && this.startDate && this.endDate)) {
+      this.toastService.warning('Please select a sub-report and date range to generate the report.');
+      return;
+    }
+    if (!(this.selectedSubReportId == 'sellerReport' || this.selectedSubReportId == 'sellerSummary'
+      || this.selectedSubReportId == 'sellerCategoryReport')) {
+
+      this.toastService.warning('This report is not yet implemented.');
       return;
     }
     const reportData = {
       reportId: this.selectedSubReportId,
-      startDate:  this.datePipe.transform(new Date(this.startDate), 'yyyy-MM-dd'),
-      endDate:  this.datePipe.transform(new Date(this.endDate), 'yyyy-MM-dd'),
+      startDate: this.datePipe.transform(new Date(this.startDate), 'yyyy-MM-dd'),
+      endDate: this.datePipe.transform(new Date(this.endDate), 'yyyy-MM-dd'),
     };
     // Logic to generate the report based on selected report and date range
     console.log('Generating report with data:', reportData);
@@ -88,7 +97,7 @@ export class CategoryMgrReportsComponent {
       this.reportDataList = response || [];
       this.isReportGenerated = true;
       this.isReportExported = false;
-      if(this.reportDataList && this.reportDataList.length > 0){
+      if (this.reportDataList && this.reportDataList.length > 0) {
         const excelColumnHeaders = Object.keys(this.reportDataList[0]);
         this.exportAsXLSX(excelColumnHeaders);
       }
@@ -103,16 +112,15 @@ export class CategoryMgrReportsComponent {
       excelColumnHeaders.forEach((header) => {
         if (!data.hasOwnProperty(header)) {
           data[header] = ''; // Add missing property with empty value
-        }else if (data[header] === null || data[header] === undefined) {
+        } else if (data[header] === null || data[header] === undefined) {
           data[header] = ''; // Replace null or undefined values with empty string
-        }else
-        {
+        } else {
           data[header] = data[header].toString(); // Convert value to string for Excel export
         }
       });
       this.excelData.push(data);
     });
-    this.excelService.exportAsExcelFile(this.excelData,  this.selectedSubReportId + '_report'  );
+    this.excelService.exportAsExcelFile(this.excelData, this.selectedSubReportId + '_report');
     this.isReportExported = true;
   }
 }

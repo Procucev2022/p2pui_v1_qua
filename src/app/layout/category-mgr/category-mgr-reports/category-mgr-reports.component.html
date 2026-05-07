@@ -17,7 +17,7 @@
         </div>
     </div>
 </div>
-<div class="input-container row" *ngIf="selectedSubReportId == 'sellerReport'|| selectedSubReportId == 'sellerSummary'">
+<div class="input-container row"  >
     <div class="col-4 form-group">
         <label>Start Date</label>
             <p-calendar [(ngModel)]="startDate" [maxDate]="todayDate" placeholder="DD-MM-YYYY" dateFormat="dd-mm-yy" showIcon="true" ></p-calendar>
@@ -29,7 +29,7 @@
             [minDate]="startDate" [maxDate]="todayDate"></p-calendar>
     </div>
     <div class="col-4 form-group buttonCls">
-        <button pButton type="button" label="Generate Report" (click)="generateReport()"></button>
+        <button pButton [disabled]="!selectedSubReportId || !startDate || !endDate" type="button" label="Generate Report" (click)="generateReport()"></button>
     </div>
 </div>
 <div class="report-generated-message m-5" *ngIf="isReportGenerated || isReportExported"> 
