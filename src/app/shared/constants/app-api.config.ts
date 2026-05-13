@@ -46,6 +46,8 @@ export class AppApiConfig {
   public static ACCEPT_GMT_FOR_REG_CLIENTS = '/rest/gmt/acceptSelfRegisterClient';
   public static DELETE_USER_FOR_REG_CLIENT = '/rest/gmt/disableUser';
   public static GET_REPORT_DATA_FOR_GMT = '/rest/reports/seller-report';
+  public static GET_REPORT_DATA_FOR_RFQREPORT = '/rest/reports/rfq-report';
+  public static GET_REPORT_DATA_FOR_BUYERREPORT = '/rest/reports/buyer-report';
   public static GET_CLIENT_USER_BY_CLIENT = '/rest/gmt/getclientusersByclient';
   public static REJECT_GMT_FOR_REG_CLIENTS =   '/rest/gmt/ignoreSelfRegisterClient';
   public static ACCEPT_AND_SAVE_RFQ_BY_CM = '/rest/gmt/editAndResendRfqByCM';
