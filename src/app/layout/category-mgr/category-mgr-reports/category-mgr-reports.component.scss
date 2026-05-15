@@ -225,6 +225,7 @@ p-calendar {
   margin: 1rem 0;
   display: inline-block;
   animation: fadeIn 0.4s ease-in-out;
+  width: 100%;
 }
 
 /* Error message */
@@ -256,4 +257,87 @@ p-calendar {
     color: #f18f1f;
     margin-bottom: 0.5rem;
     display: block;
+}
+ 
+.arrow {
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  animation: drawArrow 1.5s infinite;
+}
+@keyframes drawArrow {
+  to { stroke-dashoffset: 0; }
+} 
+
+// ...existing code...
+.download-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;    /* horizontally center children */
+  justify-content: center;/* vertically center children */
+  text-align: center;
+  gap: 12px;
+  padding: 24px 0;
+  width: 100%;
+  min-height: 140px;      /* adjust as needed */
+}
+
+.download-section p {
+  margin: 0;
+  font-weight: 600;
+  color: #333;
+}
+
+/* make SVG responsive and centered */
+.download-section svg {
+  width: 200px;
+  max-width: 90%;
+  height: auto;
+  display: block;
+}
+
+/* small screen tweak */
+@media (max-width: 480px) {
+  .download-section {
+    padding: 16px 0;
+    min-height: 120px;
+  }
+  .download-section svg {
+    width: 140px;
+  }
+} 
+.download-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;    /* horizontally center children */
+  justify-content: center;/* vertically center children */
+  text-align: center;
+  gap: 12px;
+  padding: 24px 0;
+  width: 100%;
+  min-height: 140px;      /* adjust as needed */
+}
+
+.download-section p {
+  margin: 0;
+  font-weight: 600;
+  color: #333;
+}
+
+/* make SVG responsive and centered */
+.download-section svg {
+  width: 200px;
+  max-width: 90%;
+  height: auto;
+  display: block;
+}
+
+/* small screen tweak */
+@media (max-width: 480px) {
+  .download-section {
+    padding: 16px 0;
+    min-height: 120px;
+  }
+  .download-section svg {
+    width: 140px;
+  }
 }
