@@ -42,7 +42,8 @@ export class CategoryMgrReportsComponent {
       id: 3, title: 'Buyer', description: 'Description for Buyer Reports',
       subReports: [
         { id: 'buyerReport', title: 'Buyer Report', description: 'Description for Buyer Performance' },
-        { id: 'buyerCategoryReport', title: 'Summary Report', description: 'Description for Buyer Activity' }
+        { id: 'buyerSummary', title: 'Buyer Summary Report', description: 'Description for Buyer Activity' },
+        { id: 'buyerCategoryReport', title: 'Buyer Category Report', description: 'Description for Buyer Activity' }
       ]
     }
   ];
@@ -100,6 +101,7 @@ export class CategoryMgrReportsComponent {
         break;
       case 'buyerReport':
       case 'buyerCategoryReport':
+      case 'buyerSummary':
         reportType = 'GET_REPORT_DATA_FOR_BUYERREPORT';
         break;
      
