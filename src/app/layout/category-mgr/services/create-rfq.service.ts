@@ -163,14 +163,14 @@ export class CreateRfqService {
 
     }
 
-      getReportData(data: any) {
+      getReportData(data: any, reportType: string) {
         // add path query parameter for report type and date range
         const params = {
             requestType: data.reportId,
             startDate: data.startDate,
             endDate: data.endDate
         };
-        return this.httpService.get(AppApiConfig.apiEndpoint + AppApiConfig.GET_REPORT_DATA_FOR_GMT, { params })
+        return this.httpService.get(AppApiConfig.apiEndpoint + AppApiConfig[reportType], { params })
 
     }
 }

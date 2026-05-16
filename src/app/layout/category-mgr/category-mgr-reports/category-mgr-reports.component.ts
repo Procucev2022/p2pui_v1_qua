@@ -19,6 +19,7 @@ export class CategoryMgrReportsComponent {
   ) { }
   isReportGenerated: boolean = false;
   isReportExported: boolean = false;
+  isReportGenrateInProgress: boolean = false;
   startDate: string = '';
   endDate: string = '';
   todayDate: Date = new Date();
@@ -34,28 +35,30 @@ export class CategoryMgrReportsComponent {
     {
       id: 2, title: 'RFQ', description: 'Description for RFQ Reports',
       subReports: [
-        { id: 'rfq', title: 'RFQ Report', description: 'Description for RFQ Performance' },
-        { id: 'rfq-summary', title: 'Summary Report', description: 'Description for RFQ Activity' }
+        { id: 'rfqReport', title: 'RFQ Report', description: 'Description for RFQ Performance' },
+        { id: 'rfqSummaryReport', title: 'Summary Report', description: 'Description for RFQ Activity' }
       ]
     },
     {
       id: 3, title: 'Buyer', description: 'Description for Buyer Reports',
       subReports: [
-        { id: 'buyer', title: 'Buyer Report', description: 'Description for Buyer Performance' },
-        { id: 'buyer-summary', title: 'Summary Report', description: 'Description for Buyer Activity' }
+        { id: 'buyerReport', title: 'Buyer Report', description: 'Description for Buyer Performance' },
+        { id: 'buyerSummary', title: 'Buyer Summary Report', description: 'Description for Buyer Activity' },
+        { id: 'buyerCategoryReport', title: 'Buyer Category Report', description: 'Description for Buyer Activity' }
       ]
     }
   ];
 
   subReports: any[] = [];
   selectedReport: any;
-  selectedSubReportId: string;
+  selectedSubReportId: string = '';
 
   onSubReportSelect(subReportId: string) {
     // Logic to handle sub-report selection
     this.selectedSubReportId = subReportId;
     this.isReportExported = false; // Reset export status when a new sub-report is selected
     this.isReportGenerated = false; // Reset report generation status when a new sub-report is selected
+    this.isReportGenrateInProgress = false; // Reset report generation started status when a new sub-report is selected
   }
 
   viewReport(reportId: number) {
@@ -69,6 +72,7 @@ export class CategoryMgrReportsComponent {
     this.selectedSubReportId = null; // Reset sub-report selection when a new report is selected
     this.isReportExported = false; // Reset export status when a new sub-report is selected
     this.isReportGenerated = false; // Reset report generation status when a new sub-report is selected
+    this.isReportGenrateInProgress = false; // Reset report generation started status when a new sub-report is selected
   }
   generateReport() {
 
@@ -80,27 +84,55 @@ export class CategoryMgrReportsComponent {
       this.toastService.warning('Please select a sub-report and date range to generate the report.');
       return;
     }
-    if (!(this.selectedSubReportId == 'sellerReport' || this.selectedSubReportId == 'sellerSummary'
-      || this.selectedSubReportId == 'sellerCategoryReport')) {
 
-      this.toastService.warning('This report is not yet implemented.');
-      return;
-    }
     const reportData = {
       reportId: this.selectedSubReportId,
       startDate: this.datePipe.transform(new Date(this.startDate), 'yyyy-MM-dd'),
       endDate: this.datePipe.transform(new Date(this.endDate), 'yyyy-MM-dd'),
     };
+    let reportType: any = ''
+    switch (this.selectedSubReportId) {
+      case 'sellerReport':
+      case 'sellerSummary':
+      case 'sellerCategoryReport':
+        reportType = 'GET_REPORT_DATA_FOR_GMT';
+        break;
+
+      case 'rfqReport':
+      case 'rfqSummaryReport':
+        reportType = 'GET_REPORT_DATA_FOR_RFQREPORT';
+        break;
+      case 'buyerReport':
+      case 'buyerCategoryReport':
+      case 'buyerSummary':
+        reportType = 'GET_REPORT_DATA_FOR_BUYERREPORT';
+        break;
+
+      default:
+        this.toastService.warning('This report is not yet implemented.');
+        return;
+    }
     // Logic to generate the report based on selected report and date range
     console.log('Generating report with data:', reportData);
-    this.createRfqService.getReportData(reportData).subscribe((response) => {
+    this.createRfqService.getReportData(reportData, reportType).subscribe((response) => {
       this.reportDataList = response || [];
-      this.isReportGenerated = true;
-      this.isReportExported = false;
+      this.isReportGenrateInProgress = true;
+
       if (this.reportDataList && this.reportDataList.length > 0) {
-        const excelColumnHeaders = Object.keys(this.reportDataList[0]);
-        this.exportAsXLSX(excelColumnHeaders);
+        setTimeout(() => {
+          this.isReportGenerated = true;
+          this.isReportExported = false;
+          this.isReportGenrateInProgress = false;
+          const excelColumnHeaders = Object.keys(this.reportDataList[0]);
+          this.exportAsXLSX(excelColumnHeaders);
+        }, 3000);
+      } else {
+
+        this.isReportGenerated = true;
+        this.isReportExported = false;
+        this.isReportGenrateInProgress = false;
       }
+
       console.log('Report data received:', this.reportDataList);
     });
 
