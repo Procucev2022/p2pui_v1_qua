@@ -32,8 +32,19 @@
         <button pButton [disabled]="!selectedSubReportId || !startDate || !endDate" type="button" label="Generate Report" (click)="generateReport()"></button>
     </div>
 </div>
-<div class="report-generated-message m-5" *ngIf="isReportGenerated || isReportExported"> 
+<div class="report-generated-message m-5" *ngIf="(isReportGenerated || isReportExported) && !isReportGenrateInProgress"> 
     <p *ngIf="isReportGenerated && reportDataList?.length <= 0" class="error-message">No data found for the selected report and date range. Please try again with different criteria.</p>
     <p *ngIf="reportDataList?.length > 0 && isReportGenerated && !isReportExported" class="success-message">Report generated successfully. Now its time to export it to Excel.</p>
     <p *ngIf="reportDataList?.length > 0 && isReportExported" class="success-message">Report exported to Excel successfully.</p>
+</div>
+<div class="download-section"  *ngIf="isReportGenrateInProgress">
+    <p>Downloading  report...</p>
+    <svg width="300" height="300" viewBox="0 0 24 24">
+  <!-- Cloud -->
+  <path d="M6 18h13a4 4 0 0 0 0-8h-1.26A6 6 0 0 0 6 9a4 4 0 0 0 0 9z"
+        fill="#90caf9" stroke="#2196f3" stroke-width="2"/>
+  <!-- Arrow -->
+  <path class="arrow" d="M12 13v5m0 0l-3-3m3 3l3-3"
+        stroke="#2196f3" stroke-width="2" fill="none"/>
+</svg>
 </div>
