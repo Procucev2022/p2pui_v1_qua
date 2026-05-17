@@ -3,7 +3,7 @@ import { AppApiConfig } from 'src/app/shared/constants/app-api.config';
 import { RfqService } from '../../vendor/services/rfq.service';
 import { EncryDecryService } from './../../../shared/services/encry-decry.service';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ConvertToBase64Service } from 'src/app/shared/modules/common-share/services/convert-to-base64.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { CreateRfqService } from '../services/create-rfq.service';
@@ -15,7 +15,7 @@ import { AuthenticateLoggedUserComponent } from './../../../shared/modules/commo
 import { SystemViewConfig } from 'src/app/app.config';
 import { EditRfqByIdModalComponent } from '../../vendor/components/edit-rfq-by-id-modal/edit-rfq-by-id-modal.component';
 import { AuthenticationService } from 'src/app/shared/services/authentication.service';
-
+import { FormValidatationsService } from 'src/app/shared/services/form-validatations.service';
 @Component({
     selector: 'app-cat-mgr-create-rfq-list',
     templateUrl: './cat-mgr-create-rfq-list.component.html',
@@ -160,6 +160,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
     isValidPincode: boolean;
     isShowPincodeControl: boolean;
     isForwardRFQ: boolean;
+    isNewVendorEntry: boolean;
 
     constructor(
         private encryDecryService: EncryDecryService,
@@ -173,7 +174,9 @@ export class CatMgrCreateRfqListComponent implements OnInit {
         private dialog: MatDialog,
         private excelService: ExcelService,
         private loaderService: LoaderService,
-        private atuhService: AuthenticationService) {
+        private authService: AuthenticationService,
+        private formValidatorService: FormValidatationsService
+    ) {
 
     }
 
@@ -268,8 +271,17 @@ export class CatMgrCreateRfqListComponent implements OnInit {
             this.vendorForm.controls['city'].setValue('');
             this.vendorForm.controls['email'].setValue('');
             this.vendorForm.controls['id'].setValue('');
+            /// add name, GSTIN ,Product/Service Details:(Multiple products seperated by comma) * ,PinCode fields as mandatory fields in case of manual entry and remove disable state for those fields to vendorForm
+            // add new controls to vendor form
+
+            this.vendorForm.controls['name'].setValue('');
+            this.vendorForm.controls['gstin'].setValue('');
+            this.vendorForm.controls['products'].setValue('');
+            this.vendorForm.controls['pinCode'].setValue('');
             this.vendorForm.enable();
+
             this.isEditForm = false;
+            this.isNewVendorEntry = true;
         }
         this.isAutoPopulated = false;
     }
@@ -277,6 +289,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
     onSelectedVendor(event, item) {
         console.log('event', event, item);
         const findIndex = this.vendorListObjs.findIndex(ele => ele.companyName === event.value)
+         this.isNewVendorEntry = false;
         if (findIndex > -1) {
             this.vendorForm.setValidators([]);
             this.isAutoPopulated = true;
@@ -284,14 +297,35 @@ export class CatMgrCreateRfqListComponent implements OnInit {
                 if (!(ctrl == 'companyName' )) {
                     this.vendorForm.controls[ctrl].disable();
                 }
+                if(ctrl == 'name'){
+                    this.vendorForm.controls[ctrl].setValue('');
+                    this.vendorForm.controls[ctrl].clearValidators();
+                }
+                if(ctrl == 'gstin'){
+                    this.vendorForm.controls[ctrl].setValue('');
+                    this.vendorForm.controls[ctrl].clearValidators();
+                }
+                if(ctrl == 'products'){
+                    this.vendorForm.controls[ctrl].setValue('');
+                    this.vendorForm.controls[ctrl].clearValidators();
+                }
+                if(ctrl == 'pinCode'){
+                    this.vendorForm.controls[ctrl].setValue('');
+                    this.vendorForm.controls[ctrl].clearValidators();
+                }
             })
         } else {
+            this.isNewVendorEntry = true;
             this.fb.group({
                 id: new FormControl('MANUALENTRYID_' + Math.random()),
                 companyName: new FormControl(event.value, Validators.required),
                 city: new FormControl('', Validators.required),
                 mobileNo: new FormControl('', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]),
-                email: new FormControl('', [Validators.required, Validators.email]) 
+                email: new FormControl('', [Validators.required,strictEmailValidator()]),
+                name: new FormControl('', [Validators.required, this.formValidatorService.alphabetValidator]),
+                gstin: new FormControl('', [Validators.required]),
+                products: new FormControl('', [Validators.required]),
+                pinCode: new FormControl('', [Validators.required, this.formValidatorService.pincodeValidator])
             });
             this.isAutoPopulated = false;
         }
@@ -315,7 +349,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
         this.rfqservice.getAllRFQsForNoPR().subscribe(data => { this.rfqDataList = data || []; });
     }
     onSelectSystem(sysValue) {
-        this.atuhService.onSelectedSubscriptions(sysValue, this.loggedUserDetails, true)
+        this.authService.onSelectedSubscriptions(sysValue, this.loggedUserDetails, true)
     }
     getRFQsForClient(){
         this.selectedData = [];
@@ -567,7 +601,11 @@ export class CatMgrCreateRfqListComponent implements OnInit {
             companyName: new FormControl('', Validators.required),
             city: new FormControl('', Validators.required),
             mobileNo: new FormControl('', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]),
-            email: new FormControl('', [Validators.required, Validators.email]) 
+            email: new FormControl('', [Validators.required, Validators.email]) ,
+            name: new FormControl('', [Validators.required, this.formValidatorService.alphabetValidator]),
+            gstin: new FormControl('', [Validators.required]),
+            products: new FormControl('', [Validators.required]),
+            pinCode: new FormControl('', [Validators.required, this.formValidatorService.pincodeValidator])
         });
         this.deliveryForm = this.fb.group({
             id: new FormControl('MANUALENTRYID_' + Math.random()),
@@ -964,7 +1002,11 @@ export class CatMgrCreateRfqListComponent implements OnInit {
                     "email": item.email ,
                     "vendorcategory": null,
                     "subCategory": null,
-                     "requestType": this.isForwardRFQ ? 'Forward' : 'Invite'
+                     "requestType": this.isForwardRFQ ? 'Forward' : 'Invite',
+                     "products": item.products,
+                     "gstin": item.gstin,
+                     "name": item.name,
+                     "pinCode": item.pinCode
 
                 }
             } else {
@@ -1041,3 +1083,15 @@ export class CatMgrCreateRfqListComponent implements OnInit {
     }
 
 }
+export function strictEmailValidator(): ValidatorFn {
+    const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return (control: AbstractControl): ValidationErrors | null => {
+        const value = control.value;
+        if (!value) return null;
+        return EMAIL_REGEX.test(value) ? null : { invalidEmail: true };
+    };
+}
+
+
+
+ 

@@ -180,8 +180,8 @@
             </p-overlayPanel>
                 </div>
         </div>
-        <div class="col-12 table-title pb-0"><h2>{{ isSendRFQToVendorScreen ? 'Send': 'Create' }} RFQ</h2></div>
-        
+        <div class="col-12 table-title pb-0"><h2>{{ isSendRFQToVendorScreen  ? (isForwardRFQ? 'Send': 'Invite') : 'Create' }} RFQ</h2></div>
+
         <div class="col-12" *ngIf="!isSendRFQToVendorScreen">
             <p-steps [model]="stepsList" styleClass="steps-custom" [activeIndex]="currentStep-1"></p-steps>
         </div>
@@ -427,7 +427,7 @@
                         </div>
                         <div class="col-12">
                             <fieldset class="row col-12  mt-3 fieldSec">
-                                <legend>For New Vendor Entrydd</legend>
+                                <legend>For New Vendor Entry</legend>
                                 <form class="row" [formGroup]="vendorForm" novalidate (ngSubmit)="onAddVendorsToCart()">
                                         <!-- <div class="col-3 mb-1">
                                                 <label class="form-label required">Category</label>
@@ -465,7 +465,39 @@
                                             <input class="form-control" formControlName="email" placeholder="Email Id" [disabled]="isAutoPopulated"  />
                                             <span style="color:red" *ngIf="vendorCtrls.email.invalid && vendorCtrls.email.touched">Enter Valid Email Id</span>
                                         </div> 
-                                        <div class="col-4 mt-3 btn-block btn-group" style="display: flex;align-items: end; ">
+                                     
+                                        <!-- add new form controls -->
+                                         <ng-container *ngIf="isNewVendorEntry">
+
+                                      
+                                         
+                                         <div class="col-4 mb-1">
+                                                <label class="form-label required">name</label>
+                                            <input class="form-control" formControlName="name" placeholder="Name" [disabled]="isAutoPopulated" />
+                                            <span style="color:red" *ngIf="vendorCtrls.name.errors?.alphabetOnly && vendorCtrls.name.touched">Enter Valid Name</span>
+                                        </div>
+                                        <div class="col-4 mb-1">
+                                            <label class="form-label required">GSTIN<span><i>(Format: 88AAAAA8888A8AA)</i></span></label>
+                                            <input class="form-control" formControlName="gstin" placeholder="GSTIN" [disabled]="isAutoPopulated" />
+                                            <span style="color:red" *ngIf="vendorCtrls.gstin.errors?.required && vendorCtrls.gstin.touched">Enter Valid GSTIN</span>
+                                        </div>
+
+                                        
+
+                                        <div class="col-4 mb-1">
+                                            <label class="form-label required">Products</label>
+                                            <input class="form-control" formControlName="products" placeholder="Products" [disabled]="isAutoPopulated" />
+                                            <span style="color:red" *ngIf="vendorCtrls.products.invalid && vendorCtrls.products.touched">Enter Valid Products</span>
+                                        </div>
+
+                                        <div class="col-4 mb-1">
+                                            <label class="form-label required">Pin Code</label>
+                                            <input class="form-control" formControlName="pinCode" placeholder="Pin Code" [disabled]="isAutoPopulated" />
+                                            <span style="color:red" *ngIf="vendorCtrls.pinCode.invalid && vendorCtrls.pinCode.touched">Enter Valid Pin Code</span>
+                                        </div>
+                                        
+                                        </ng-container>
+                                           <div class="col-4 mt-3 btn-block btn-group" style="display: flex;align-items: end; ">
                                             <button class="btn btn-red" type="reset">Reset</button>
                                             <button class="btn btn-blue ml-3" type="submit" [disabled]="!vendorForm.valid" >   {{ isEditForm ? 'Update':'Add'}} Vendor</button>
 
@@ -555,7 +587,7 @@
         <div class="col-12 mt-3 mr-3" style="display: flex;align-items: center;flex-direction: row-reverse;    position: fixed;
         bottom: 16px;right: 16px;" *ngIf="isSendRFQToVendorScreen">
 
-            <button class="btn btn-green" type="button"  (click)="sendRFQToVendors()">Send RFQ</button>
+            <button class="btn btn-green" type="button"  (click)="sendRFQToVendors()">{{isForwardRFQ ? 'Send RFQ' : 'Invite RFQ'}}</button>
         </div>
 
     </div>
