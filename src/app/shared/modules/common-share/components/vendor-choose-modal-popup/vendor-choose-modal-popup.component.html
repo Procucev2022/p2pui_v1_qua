@@ -7,22 +7,26 @@
       <div class="row">
         <div class="col-5" style="border: 3px solid #f1f1f1; padding: 10px; border-radius: 5px;">
             <div  ngClass="{vendorList.length === 0? 'col-sm-4' : 'col-sm-3'}">
+                <label class="form-label " [ngClass]="{'required': isNoVendorFound}">Vendor Name</label>
             <input class="form-control" type="text"    placeholder="Search / Enter Vendor Name" [(ngModel)]="searchVendorName"
                 (keyup)="onSearchCriteriaChange('vendorName', $event.target.value)" />
             </div>
             <div  ngClass="{vendorList.length === 0? 'col-sm-4' : 'col-sm-3'}" class="mb-1">
+                <label class="form-label  " [ngClass]="{'required': isNoVendorFound}">Email ID</label>
                 <input class="form-control" type="text" [disabled]="!searchVendorName" [(ngModel)]="searchEmailId" (keyup)="onSearchCriteriaChange('emailId', $event.target.value)"  placeholder="Search by / Enter Email ID" 
                 />
             </div>
             <div   ngClass="{vendorList.length === 0 ? 'col-sm-4' : 'col-sm-3'}" class="mb-1">
+                <label class="form-label " [ngClass]="{'required': isNoVendorFound}">Mobile No</label>
                 <input class="form-control" type="text" [disabled]="!searchVendorName || !searchEmailId" [(ngModel)]="searchMobileNo" (keyup)="onSearchCriteriaChange('mobile', $event.target.value)" placeholder="Search by / Enter Mobile Number" />
             </div>
-            <div  *ngIf="vendorList.length === 0"  ngClass="{vendorList.length === 0? 'col-sm-4' : 'col-sm-3'}" class="mb-1">
-                <input class="form-control" type="text" [disabled]="!searchVendorName || !searchEmailId" [(ngModel)]="searchCity"   placeholder="Enter   City" />
+            <div     ngClass="{vendorList.length === 0? 'col-sm-4' : 'col-sm-3'}" class="mb-1">
+                <label class="form-label " [ngClass]="{'required': isNoVendorFound}">City</label>
+                <input class="form-control" type="text" [disabled]="!searchVendorName || !searchEmailId" [(ngModel)]="searchCity"   placeholder="Enter   City" (keyup)="onSearchCriteriaChange('city', $event.target.value)" />
             </div>
-            <div class="" *ngIf="vendorList.length === 0" style="margin-top:10px; text-align:center;">
+            <!-- <div class="" *ngIf="vendorList.length === 0" style="margin-top:10px; text-align:center;">
                 <button type="button" (click)="openCreateVendorWithSearchDetails()" class="btn btn-orange">Click Here</button>
-            </div>
+            </div> -->
         </div> 
         <div class="col-2" style="display: flex;
     align-items: center; 
@@ -81,9 +85,13 @@
       <td [attr.colspan]="9" style="text-align:center;">
         No Records Found.
         <div class="alert alert-danger">No matching vendors found.
-            <span>You want to create new vendor with given search criteria details? <button type="button" (click)="openCreateVendorWithSearchDetails()" class="btn btn-orange">Click Here</button></span>
-        </div>
-      </td>
+
+            <span>You want to create new vendor with given search criteria details? Please provide below  additional details to create new vendor
+            </span>
+              <ng-container *ngTemplateOutlet="vendorRegTemplate"></ng-container>
+
+          </div>
+        </td>
     </tr>
   </ng-template>
   <ng-template pTemplate="paginatorleft">
@@ -95,4 +103,37 @@
     </div>
   </ng-template>
 </p-table>
+
+   <ng-template #vendorRegTemplate>
+              <form  [formGroup]="vendorForm" novalidate (ngSubmit)="onAddVendorsToCart()">
+                <div class="row">
+                  <div class="col-4 mb-1">
+                          <label class="form-label required">name</label>
+                      <input class="form-control" formControlName="name" placeholder="Name"  />
+                      <span style="color:red" *ngIf="vendorCtrls.name.errors?.alphabetOnly && vendorCtrls.name.touched">Enter Valid Name</span>
+                  </div>
+                  <div class="col-4 mb-1">
+                      <label class="form-label required">GSTIN<span><i>(Format: 88AAAAA8888A8AA)</i></span></label>
+                      <input class="form-control" formControlName="gstin" placeholder="GSTIN"   />
+                      <span style="color:red" *ngIf="vendorCtrls.gstin.errors?.required && vendorCtrls.gstin.touched">Enter Valid GSTIN</span>
+                  </div> 
+                  <div class="col-4 mb-1">
+                      <label class="form-label required">Products</label>
+                      <input class="form-control" formControlName="products" placeholder="Products" />
+                      <span style="color:red" *ngIf="vendorCtrls.products.invalid && vendorCtrls.products.touched">Enter Valid Products</span>
+                  </div>
+
+                  <div class="col-4 mb-1">
+                      <label class="form-label required">Pin Code</label>
+                      <input class="form-control" formControlName="pinCode" placeholder="Pin Code"  />
+                      <span style="color:red" *ngIf="vendorCtrls.pinCode.invalid && vendorCtrls.pinCode.touched">Enter Valid Pin Code</span>
+                  </div>
+                  <div class="col-4 mt-3 btn-block btn-group" style="display: flex;align-items: end; ">
+                      <button class="btn btn-red" type="reset">Reset</button>
+                      <button class="btn btn-blue ml-3" type="submit" [disabled]="!vendorForm.valid" >  Add Vendor</button>
+
+                  </div>
+                </div>
+              </form>
+            </ng-template>
 

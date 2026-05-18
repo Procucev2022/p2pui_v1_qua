@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Inject, Input, Optional, Output, SimpleChanges } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { AppApiConfig } from 'src/app/shared/constants/app-api.config';
 import { EncryDecryService } from 'src/app/shared/services';
+import { FormValidatationsService } from 'src/app/shared/services/form-validatations.service';
 
 @Component({
   selector: 'app-vendor-choose-modal-popup',
@@ -26,10 +28,13 @@ export class VendorChooseModalPopupComponent {
   searchEmailId: string = '';
   searchMobileNo: string = '';
   searchCity: string = '';
+  vendorForm: FormGroup;
+  isNoVendorFound: boolean;
   constructor(public dialogRef: MatDialogRef<VendorChooseModalPopupComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data,
     private encryDecryService: EncryDecryService,
-    private toaster: ToastrService) { }
+    private toaster: ToastrService,
+    private formValidatorService: FormValidatationsService) { }
 
     ngOnInit() { 
     this.defaultPermissions = AppApiConfig.DEFAULT_PERMISSIONS;
@@ -37,7 +42,27 @@ export class VendorChooseModalPopupComponent {
     this.loggedUserDetails = temp.details;
     this.roleName = this.loggedUserDetails.role.roleName;
     this.loggedUserPermissions = this.loggedUserDetails.listofPermission;
+    this.buildVendorForm();
   }
+
+  buildVendorForm() {
+    // Initialize the vendor form here
+    this.vendorForm = new FormGroup({
+      companyName: new FormControl('', Validators.required),
+      city: new FormControl('', Validators.required),
+      mobileNo: new FormControl('', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]),
+      email: new FormControl('', [Validators.required, Validators.email]) ,
+      name: new FormControl('', [Validators.required, this.formValidatorService.alphabetValidator]),
+      gstin: new FormControl('', [Validators.required]),
+      products: new FormControl('', [Validators.required]),
+      pinCode: new FormControl('', [Validators.required, this.formValidatorService.pincodeValidator])
+    });
+  }
+  
+    get vendorCtrls() {
+        return this.vendorForm.controls;
+    }
+
 
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
@@ -58,11 +83,17 @@ export class VendorChooseModalPopupComponent {
         this.searchEmailId = '';
         this.searchMobileNo = '';
         this.selectedData = [];
+        this.vendorForm.patchValue({
+          companyName: criteriaValue
+        });
 
         this.vendorList = this.cached_vendorList.filter(vendor => vendor.companyName.toLowerCase().includes(criteriaValue.toLowerCase()));
         break;
       case 'emailId':
         this.searchMobileNo = '';
+        this.vendorForm.patchValue({
+          email: criteriaValue
+        });
         if (criteriaValue.trim() === '') {
           this.vendorList = this.cached_vendorList.filter(vendor => vendor.companyName.toLowerCase().includes(this.searchVendorName.toLowerCase()));
           return;
@@ -72,6 +103,9 @@ export class VendorChooseModalPopupComponent {
 
         break;
       case 'mobile':
+        this.vendorForm.patchValue({
+          mobileNo: criteriaValue
+        });
         if (criteriaValue.trim() === '') {
           this.vendorList = this.cached_vendorList.filter(vendor =>
             vendor.companyName.toLowerCase().includes(this.searchVendorName.toLowerCase()) &&
@@ -83,10 +117,34 @@ export class VendorChooseModalPopupComponent {
           && vendor.companyName.toLowerCase().includes(this.searchVendorName.toLowerCase())
           && vendor.mobileNo.includes(this.searchMobileNo));
         break;
+      case 'city':
+        this.vendorForm.patchValue({
+          city: criteriaValue
+        });
+        if (criteriaValue.trim() === '') {
+          this.vendorList = this.cached_vendorList.filter(vendor =>
+            vendor.companyName.toLowerCase().includes(this.searchVendorName.toLowerCase()) &&
+            vendor.email.toLowerCase().includes(this.searchEmailId.toLowerCase()) &&
+            vendor.mobileNo.includes(this.searchMobileNo)
+          );
+          return;
+        }
+        break;
       default:
         this.vendorList = [...this.cached_vendorList]; // Reset to original list if no criteria matches
     }
+    this.isNoVendorFound = this.vendorList.length === 0;
     // Implement your filtering logic here based on criteriaType and criteriaValue
+  }
+
+  onAddVendorsToCart() {
+     if (this.vendorForm.invalid) {
+            this.toaster.warning('Pls fill the required fields', 'Warning');
+            return;
+        }
+
+      this.dialogRef.close({ action: 'addVendor', data: [this.vendorForm.getRawValue()] });
+      this.onAddNewVendor.emit([this.vendorForm.getRawValue()]);
   }
 
 

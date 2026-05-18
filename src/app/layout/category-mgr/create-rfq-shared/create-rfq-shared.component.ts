@@ -346,6 +346,7 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
             const gridValue = Array.isArray(result) ? result : [];
             this.vendorGridData.gridValue = gridValue.map(ele => {return {...ele,isSendRFQToVendorScreen: this.isSendRFQToVendorScreen? true: false}})
         });
+        this.reloadGridComponent();
     }
 
 
@@ -745,7 +746,11 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
                     "email": item.email, 
                     "vendorcategory": null,
                     "subCategory": null,
-                    "requestType": this.isRFQFORWARD ? 'Forward' : 'Invite'
+                    "requestType": this.isRFQFORWARD ? 'Forward' : 'Invite',
+                    "gstin": item.gstin? item.gstin: null,
+                    "name": item.name? item.name: null,
+                    "pinCode": item.pinCode? item.pinCode: null,
+                    "products": item.products? item.products: null
 
 
                 }
@@ -853,7 +858,8 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
                     this.vendorGridData.gridValue.push({companyName: event[0].companyName, email: event[0].email, mobileNo: event[0].mobileNo, city: event[0].city, id: event[0].id});
                 }else{
                    if(this.vendorGridData.gridValue.findIndex(ele => ele.companyName == event[0].companyName) == -1){
-                       this.vendorGridData.gridValue.push({companyName: event[0].companyName, email: event[0].email, mobileNo: event[0].mobileNo, city: event[0].city, id: event[0].id});
+                       this.vendorGridData.gridValue.push({companyName: event[0].companyName, email: event[0].email, mobileNo: event[0].mobileNo, city: event[0].city,
+                        name: event[0].name, gstin: event[0].gstin, pinCode: event[0].pinCode, products: event[0].products, id: 'MANUALENTRYID_' + new Date().getTime()});
                    }else{
                         this.toaster.warning("Already this vendor added to Cart, Pls Check!", 'Warning');
                         return;
