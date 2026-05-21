@@ -74,6 +74,14 @@ export class CategoryMgrVendorSummaryComponent {
     searchText: string = '';
     sourceType: string = '';
     totalRecords: number = 0;
+    searchCriteria: string = 'Inline';
+    searchDropdownOptions = [
+        { label: 'By Seller Name', value: 'companyName' },
+        { label: 'By Email', value: 'email' },
+        { label: 'By Vendor Category', value: 'vendorcategory' },
+        { label: 'By Phone Number', value: 'organizationPhonenumber' },
+        { label: 'By City', value: 'city' }
+    ]
 
     vendorTableHeaders: any = [
         // { field: 'vendorId', header: 'Company Id', isLink: false, width: '140px', fieldType: 'text', isExceedContent: false },
@@ -111,6 +119,8 @@ export class CategoryMgrVendorSummaryComponent {
     vendorInfo: any ;
     selectedVendor: any;
     clientInfo: any;
+    searchTextValue: any;
+    searchBy: any = 'companyName';
     constructor(private dialog: MatDialog,
         private encryDecryService: EncryDecryService,
         private rfqservice: RfqService,
@@ -135,6 +145,37 @@ export class CategoryMgrVendorSummaryComponent {
         this.currentRole = this.loggedUserDetails.role.roleName;
         this.intialCall();
         this.isGMTView = localStorage.getItem('system-view') ? this.GMT_VIEWS.includes(localStorage.getItem('system-view')) : false;
+
+    }
+
+    onSearchMode(searchMode: string){
+        this.searchCriteria = searchMode;
+        if(this.searchCriteria == 'Inline'){
+            this.searchText = '';
+            this.getRFQSummary(this.startPage, this.pageSize, '', this.sourceType);
+        } else {
+            this.globalSearch();
+        }
+
+    }
+
+    globalSearch() {
+        if(this.searchTextValue) {
+           this.getVendorDataForGlobalSearch();
+        } else {
+            this.toastrService.warning('Please enter search text', 'Warning');
+        }
+    }
+
+    getVendorDataForGlobalSearch(){
+        this.rfqservice.getVendorSummaryForGlobalSearch(this.searchBy, this.searchTextValue).subscribe((res: any) => {
+            if (res) {
+                this.vendorsList = res || [];
+            } else {
+                this.toastrService.error('Failed to Fetch data', 'Failure');
+            }
+        });
+    
 
     }
 

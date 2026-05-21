@@ -90,6 +90,25 @@ export class RfqService {
         return this.http.get(AppApiConfig.apiEndpoint + AppApiConfig.CAT_MGR_VENDOR_SUMMARY + `?page=${startPage}&size=${pageSize}`, { params })
     }
 
+    getVendorSummaryForGlobalSearch(searchType, searchText) {
+        if(searchText){
+            searchText = encodeURIComponent(searchText);
+        }
+        if(searchType){
+            searchType = encodeURIComponent(searchType);
+        }
+       
+        // add params only when they are present
+        const params: any = {};
+        if (searchText) {
+            params.searchText = searchText;
+        }
+        if (searchType) {
+            params.searchType = searchType;
+        }
+        return this.http.get(AppApiConfig.apiEndpoint + AppApiConfig.CAT_MGR_VENDOR_SUMMARY_FOR_GLOBAL_SEARCH, { params })
+    }
+
     getAllClientRFQsByGMTForCMandCM2() {
         return this.http.get(AppApiConfig.apiEndpoint + AppApiConfig.FETCH_ALL_CLIENT_RFQS_BY_GMT_CATEGORYMANAGER, {})
     }
