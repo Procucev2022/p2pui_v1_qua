@@ -120,7 +120,7 @@ export class CategoryMgrVendorSummaryComponent {
     selectedVendor: any;
     clientInfo: any;
     searchTextValue: any;
-    searchBy: any = 'companyName';
+    searchBy: any = '';
     constructor(private dialog: MatDialog,
         private encryDecryService: EncryDecryService,
         private rfqservice: RfqService,
@@ -148,6 +148,12 @@ export class CategoryMgrVendorSummaryComponent {
 
     }
 
+    onSearchCriteriaChange(){
+        this.searchTextValue = '';
+        this.toastrService.warning('Search text cleared. Please enter new search text based on selected criteria.', 'Warning');
+    }
+        
+    
     onSearchMode(searchMode: string){
         this.searchCriteria = searchMode;
         if(this.searchCriteria == 'Inline'){
