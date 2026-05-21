@@ -175,8 +175,9 @@ export class CategoryMgrVendorSummaryComponent {
 
     getVendorDataForGlobalSearch(){
         this.rfqservice.getVendorSummaryForGlobalSearch(this.searchBy, this.searchTextValue).subscribe((res: any) => {
-            if (res) {
-                this.vendorsList = res || [];
+            if (res.status == 'Success') {
+                this.rfqDataList = res.data || [];
+                this.totalRecords = res.totalRecords || 0;
             } else {
                 this.toastrService.error('Failed to Fetch data', 'Failure');
             }

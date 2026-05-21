@@ -68,7 +68,7 @@ export class AppApiConfig {
   public static GET_BUYER_BY_ID = '/rest/gmt/getOrgByUserId';
 
   public static CAT_MGR_VENDOR_SUMMARY = '/rest/users/vendorSummary';
-  public static CAT_MGR_VENDOR_SUMMARY_FOR_GLOBAL_SEARCH = '/rest/reports/vendorSummarySearch';
+  public static CAT_MGR_VENDOR_SUMMARY_FOR_GLOBAL_SEARCH = '/rest/users/vendorSummarySearch';
   public static GET_VENDOR_CATALOGUES = '/rest/catalogue/getCataloguesBySeller';
   public static ADD_VENDOR_CATALOGUE = '/rest/catalogue/saveCatalogue';
   public static ADD_VENDOR_CATALOGUE_TERMS_CONDITIONS = '/rest/catalogue/saveSellerTC';
