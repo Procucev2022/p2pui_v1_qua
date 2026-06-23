@@ -197,6 +197,27 @@ export class CategoryMgrVendorSummaryComponent {
     searchByText(value) {
         this.getRFQSummary(this.startPage, this.pageSize, value, this.sourceType);
     }
+
+    onInlineSearch(searchValue: string): void {
+    if (!searchValue || searchValue.trim() === '') {
+        this.rfqDataList = [...this.cache_rfqDataList]; // Reset to original data if search is empty
+        return;
+    }
+
+    // Local filtering for current page
+    const searchLower = searchValue.toLowerCase();
+    const filtered = this.cache_rfqDataList.filter((item: any) => {
+        //contains for any of the fields in the item
+        return Object.values(item).some((val: any) => {
+            if (val && typeof val === 'string') {
+                return val.toLowerCase().includes(searchLower);
+            }
+        });
+    });
+
+    console.log('Inline search results:', filtered);
+    this.rfqDataList = [...filtered]
+    }
     
     onSourceTypeChange(value){
       this.getRFQSummary(this.startPage, this.pageSize, this.searchText, value);
