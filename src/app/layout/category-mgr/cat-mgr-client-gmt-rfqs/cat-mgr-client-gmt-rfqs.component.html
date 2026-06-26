@@ -1,12 +1,33 @@
 <div class="col-12 pad-nill" >
     <div class="table-title">
-        <div class="row">
-          <div class="col-sm-6">
+        <div class="row" style=" display: flex;
+        align-items: center;">
+          <div class="col-sm-4">
             <h2>Client RFQ's</h2>
             <p><span class="dot"></span>{{rfqDataList.length}} Total</p>
           </div>
-          <div class="col-sm-6">
-          </div>
+          <ng-container *ngIf="!(currentRole== 'Vendor' || currentRole== 'PartialVendor' || currentRole== 'Registration') ">
+            <div class="col-8 row" style="display: flex;align-items: center;">
+                <div class="form-group" style="display: inline-flex;align-items: center;">
+                    <label>Search Criteria</label>
+                    <!-- radio buttons for search criteria -->
+                    <div class="form-check1">
+                        <input class=" " type="radio" name="searchCriteria" id="searchByName" value="Inline" [(ngModel)]="searchCriteria"
+                        (click)="onSearchMode('Inline')">
+                        <label class=" " for="searchByName">
+                            With In Current Page
+                        </label>
+                    </div>
+                    <div class="form-check1">
+                        <input class=" " type="radio" name="searchCriteria" id="searchById" value="Global" [(ngModel)]="searchCriteria"
+                        (click)="onSearchMode('Global')">
+                        <label class=" " for="searchById">
+                            Global Search
+                        </label>
+                    </div>
+                </div>
+            </div>
+          </ng-container>
         </div>
       </div>
       <div *ngIf="currentRole == 'Vendor' || currentRole == 'Registration' || currentRole == 'PartialVendor'"  >
@@ -77,23 +98,34 @@
 
     <!-- For CategoryManger or CategoryManger2 -->
     <div *ngIf=" !(currentRole == 'Vendor' || currentRole == 'Registration' || currentRole == 'PartialVendor')"> 
-        <p-table [ngClass]="{'gmt-container': isGMTView}" dataKey="id" #prqTable [columns]="rfqsTableHeadersForCategoryManger" [value]="rfqDataList" sortMode="multiple" [paginator]="true"
-      [rows]="pageRecordSize" id="prqTable" [rowsPerPageOptions]="pageOptions" [style]="{'width': '100%'}"
-      exportFilename="roles details" [(selection)]="selectedData" [scrollable]="true" [expandedRowKeys]="expandedRows"
-       (onRowExpand)="getRFQs($event)" (onRowCollapse)="getCloseRFQs($event)"
+        <p-table [ngClass]="{'gmt-container': isGMTView}" dataKey="id" #prqTable [columns]="rfqsTableHeadersForCategoryManger" [value]="rfqDataList" sortMode="multiple" 
+       id="prqTable"  [style]="{'width': '100%'}"
+      exportFilename="roles details" [(selection)]="selectedData" [scrollable]="true" [expandedRowKeys]="expandedRows" [totalRecords]="totalRecords"
+       (onRowExpand)="getRFQs($event)" (onRowCollapse)="getCloseRFQs($event)" [rows]="pageSize" [lazy]="true" [paginator]="true" (onPage)="onPageChange($event)"
       [scrollable]="true" [scrollHeight]="'calc(100vh  - 205px)'">
+      
       <ng-template pTemplate="caption">
           <div class="table-search">
           <div class="row">
-              <div class="col-sm-6">
-              <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
-                  (input)="prqTable.filterGlobal($event.target.value, 'contains')" />
-              </div>
-              <div class="col-sm-6">
-              <!-- <img  (click)="exportAsXLSX()" class="export-excel-icon" src="assets/images/export-excel.png" width="40" height="40" data-toggle="tooltip" title=" Export As Excel"  /> -->
-              </div>
+              <div class="col-sm-6" style=" display: flex;  align-items: center; gap:10px;">
+                    <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                  (input)="onInlineSearch($event.target.value)" *ngIf="searchCriteria != 'Global'" />
+                    <ng-container *ngIf="searchCriteria == 'Global'">
+                        <label>Search By:</label>
+                        <select [(ngModel)]="searchBy" class="form-control" style="width: 200px; display: inline-block; margin-left: 10px;" (change)="onSearchCriteriaChange()">
+                            <option value="" disabled selected>Select Search Criteria</option>
+                            <option *ngFor="let option of searchDropdownOptions" [value]="option.value">{{option.label}}</option>
+                        </select>
+                        <input class="main-input" type="text" pInputText size="50" placeholder="Search Text.."
+                             [(ngModel)]="searchTextValue" />
+                        <button class="btn btn-blue" (click)="globalSearch($event)">Search</button>
+                    </ng-container>
+                </div>
+                <div class="col-sm-6">
+                    
+               </div>
           </div>
-          </div>
+        </div>
       </ng-template>
       <ng-template pTemplate="header" let-columns>
           <tr>
@@ -174,6 +206,12 @@
           </td>
           </tr>
       </ng-template>
+      <ng-template pTemplate="paginatorleft">
+          <div *ngIf="prqTable._totalRecords > 0">
+            <b>Showing {{prqTable?.first+1}} to {{prqTable?.first+prqTable?.rows > totalRecords ? totalRecords: prqTable?.first+prqTable?.rows}} of {{totalRecords}}</b>
+              <!-- <app-page-info [totalRecords]="rfqDataList?.length" [pageData]="paginatoryDetails"></app-page-info> -->
+          </div>
+          </ng-template>
       </p-table>
     </div>
 

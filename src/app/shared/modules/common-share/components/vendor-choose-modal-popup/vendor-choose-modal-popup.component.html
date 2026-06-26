@@ -1,11 +1,50 @@
 <p-table dataKey="id" #prTable [columns]="vendorCartTableHeaders" [value]="vendorList"  sortMode="multiple" [paginator]="true" 
 [rows]="pageRecordSize"  id="prTable"
-  [rowsPerPageOptions]="pageOptions"  [style]="{width:'100%'}" exportFilename="roles details" [(selection)]="selectedData">
+  [rowsPerPageOptions]="pageOptions"  [style]="{width:'100%'}" exportFilename="roles details" [(selection)]="selectedData"
+   [totalRecords]="totalRecords"   [rows]="pageSize" [lazy]="true" [paginator]="true" (onPage)="onPageChanges($event)">
  
   <ng-template pTemplate="caption">
     <div class="table-search">
       <div class="row">
-        <div class="col-5" style="border: 3px solid #f1f1f1; padding: 10px; border-radius: 5px;">
+          <ng-container *ngIf="!(roleName== 'Vendor' || roleName== 'PartialVendor' || roleName== 'Registration') ">
+            <div class="col-8 row" style="display: flex;align-items: center;">
+                <div class="form-group" style="display: inline-flex;align-items: center;">
+                    <label>Search Criteria</label>
+                    <!-- radio buttons for search criteria -->
+                    <div class="form-check1">
+                        <input class=" " type="radio" name="s1" id="searchByName" value="Inline" [(ngModel)]="searchCriteria"
+                        (click)="onSearchModes('Inline')">
+                        <label class=" " for="searchByName">
+                            With In Current Page
+                        </label>
+                    </div>
+                    <div class="form-check1">
+                        <input class=" " type="radio" name="s1" id="searchById" value="Global" [(ngModel)]="searchCriteria"
+                        (click)="onSearchModes('Global')">
+                        <label class=" " for="searchById">
+                            Global Search
+                        </label>
+                    </div>
+                </div>
+            </div>
+          </ng-container>
+               
+                <div class="col-5">
+                    <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                  (input)="onInlineSearch($event.target.value)" *ngIf="searchCriteria != 'Global'" />
+                  <ng-container *ngIf="searchCriteria == 'Global'"> 
+                  <label>Search By:</label>
+                  <select [(ngModel)]="searchBy" class="form-control" style="width: 200px; display: inline-block; margin-left: 10px;" (change)="onSearchCriteriaChanges()">
+                      <option value="" disabled selected>Select Search Criteria</option>
+                      <option *ngFor="let option of searchDropdownOptions" [value]="option.value">{{option.label}}</option>
+                  </select>
+                  <input class="main-input" type="text" pInputText size="50" placeholder="Search Text.."
+                        [(ngModel)]="searchTextValue" />
+                  <button class="btn btn-blue" (click)="globalSearchs($event)">Search</button>
+                  
+                    </ng-container>
+                  </div>
+        <!-- <div class="col-5" style="border: 3px solid #f1f1f1; padding: 10px; border-radius: 5px;">
             <div  ngClass="{vendorList.length === 0? 'col-sm-4' : 'col-sm-3'}">
                 <label class="form-label " [ngClass]="{'required': isNoVendorFound}">Vendor Name</label>
             <input class="form-control" type="text"    placeholder="Search / Enter Vendor Name" [(ngModel)]="searchVendorName"
@@ -24,10 +63,7 @@
                 <label class="form-label " [ngClass]="{'required': isNoVendorFound}">City</label>
                 <input class="form-control" type="text" [disabled]="!searchVendorName || !searchEmailId" [(ngModel)]="searchCity"   placeholder="Enter   City" (keyup)="onSearchCriteriaChange('city', $event.target.value)" />
             </div>
-            <!-- <div class="" *ngIf="vendorList.length === 0" style="margin-top:10px; text-align:center;">
-                <button type="button" (click)="openCreateVendorWithSearchDetails()" class="btn btn-orange">Click Here</button>
-            </div> -->
-        </div> 
+        </div>  -->
         <div class="col-2" style="display: flex;
     align-items: center; 
     justify-content: center;
@@ -84,7 +120,7 @@
     <tr>
       <td [attr.colspan]="9" style="text-align:center;">
         No Records Found.
-        <div class="alert alert-danger">No matching vendors found.
+        <div class="alert alert-danger"  *ngIf="searchCriteria == 'Inline'">No matching vendors found.
 
             <span>You want to create new vendor with given search criteria details? Please provide below  additional details to create new vendor
             </span>
@@ -94,19 +130,35 @@
         </td>
     </tr>
   </ng-template>
-  <ng-template pTemplate="paginatorleft">
-    <div  *ngIf="prTable._totalRecords > 0">
-
-      <b>Showing {{prTable.first+1}} to {{prTable.first+prTable.rows > prTable.totalRecords?prTable.totalRecords: prTable.first+prTable.rows}} of {{prTable.totalRecords}}</b>
-
-      <!-- <app-page-info [totalRecords]="prLineItemsList.length" [pageData]="paginatoryDetails"></app-page-info> -->
-    </div>
-  </ng-template>
+    <ng-template pTemplate="paginatorleft">
+      <div *ngIf="prTable._totalRecords > 0">
+        <b>Showing {{prTable?.first+1}} to {{prTable?.first+prTable?.rows > totalRecords ? totalRecords: prTable?.first+prTable?.rows}} of {{totalRecords}}</b>
+          <!-- <app-page-info [totalRecords]="rfqDataList?.length" [pageData]="paginatoryDetails"></app-page-info> -->
+      </div>
+    </ng-template>
 </p-table>
 
    <ng-template #vendorRegTemplate>
               <form  [formGroup]="vendorForm" novalidate (ngSubmit)="onAddVendorsToCart()">
                 <div class="row">
+                  <div  class="col-4 mb-1">
+                      <label class="form-label required" >Vendor Name</label>
+                  <input class="form-control" type="text"    placeholder="Search / Enter Vendor Name" [(ngModel)]="searchVendorName"
+                      (keyup)="onSearchCriteriaChange('vendorName', $event.target.value)" />
+                  </div>
+                  <div  class="col-4 mb-1"  >
+                      <label class="form-label" >Email ID</label>
+                      <input class="form-control" type="text" [disabled]="!searchVendorName" [(ngModel)]="searchEmailId" (keyup)="onSearchCriteriaChange('emailId', $event.target.value)"  placeholder="Search by / Enter Email ID" 
+                      />
+                  </div>
+                  <div   class="col-4 mb-1" >
+                      <label class="form-label " >Mobile No</label>
+                      <input class="form-control" type="text" [disabled]="!searchVendorName || !searchEmailId" [(ngModel)]="searchMobileNo" (keyup)="onSearchCriteriaChange('mobile', $event.target.value)" placeholder="Search by / Enter Mobile Number" />
+                  </div>
+                  <div     class="col-4 mb-1">
+                      <label class="form-label " >City</label>
+                      <input class="form-control" type="text" [disabled]="!searchVendorName || !searchEmailId" [(ngModel)]="searchCity"   placeholder="Enter   City" (keyup)="onSearchCriteriaChange('city', $event.target.value)" />
+                  </div>
                   <div class="col-4 mb-1">
                           <label class="form-label required">name</label>
                       <input class="form-control" formControlName="name" placeholder="Name"  />

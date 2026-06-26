@@ -109,10 +109,30 @@ export class RfqService {
         return this.http.get(AppApiConfig.apiEndpoint + AppApiConfig.CAT_MGR_VENDOR_SUMMARY_FOR_GLOBAL_SEARCH, { params })
     }
 
-    getAllClientRFQsByGMTForCMandCM2() {
-        return this.http.get(AppApiConfig.apiEndpoint + AppApiConfig.FETCH_ALL_CLIENT_RFQS_BY_GMT_CATEGORYMANAGER, {})
+    getAllClientRFQsByGMTForCMandCM2ByPagination(page, size) {
+
+        return this.http.get(AppApiConfig.apiEndpoint + AppApiConfig.FETCH_ALL_CLIENT_RFQS_BY_GMT_CATEGORYMANAGER+ `?page=${page}&size=${size}`)
     }
 
+    // FETCH_ALL_CLIENT_RFQS_BY_GMT_CATEGORYMANAGER_FOR_GLOBAL_SEARCH
+    getAllClientRFQsByGMTForCMandCM2ByGlobalSearch(searchType, searchValue) {
+    if(searchValue){
+                searchValue = encodeURIComponent(searchValue);
+            }
+            if(searchType){
+                searchType = encodeURIComponent(searchType);
+            }
+        
+            // add params only when they are present
+            const params: any = {};
+            if (searchValue) {
+                params.searchValue = searchValue;
+            }
+            if (searchType) {
+                params.searchType = searchType;
+            }
+        return this.http.get(AppApiConfig.apiEndpoint + AppApiConfig.FETCH_ALL_CLIENT_RFQS_BY_GMT_CATEGORYMANAGER_FOR_GLOBAL_SEARCH, {params})
+    }
 
     getVendorsByRFQIdForGMT(req: any) {
         return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.GET_VENDORS_BY_RFQ_ID_FOR_GMT, req)

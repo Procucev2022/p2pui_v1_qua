@@ -21,6 +21,8 @@ export class AppApiConfig {
   public static GET_ALL_CATEGORIES_GMT= '/rest/gmt/getAllCategories';
   public static GET_RFQS_FOR_NOPR = "/rest/gmt/getRFQsForNoPR";
   public static GET_ALL_VENDORS =  "/rest/gmt/getAllVendors";
+  public static GET_ALL_VENDORS_BY_PAGINATION = '/rest/gmt/getAllVendors';
+  public static GET_ALL_VENDORS_BY_SEARCH_CRITERIA= '/rest/gmt/getAllVendorsSearch';
   public static GET_All_VENDORS_BY_CATEGORY ="/rest/gmt/getAllVendorsByCategory";
   public static GET_VENDORS_BY_RFQ_ID_FOR_GMT = '/rest/gmt/getVendorsByGmtRFQ';
   public static ACCEPT_GMT_VENDOR_BY_CM = "/rest/gmt/approveVendor";
@@ -35,6 +37,7 @@ export class AppApiConfig {
   public static GET_LINE_ITEMS_BY_RFQ = '/rest/gmt/getVendorsByGmtRFQ';
   public static GET_ITEMS_BY_RFQ_ID = '/rest/gmt/getItemsbyrfqid';
   public static FETCH_ALL_CLIENT_RFQS_BY_GMT_CATEGORYMANAGER= '/rest/gmt/fetchAllClientGMTRfqsForCM';
+  public static FETCH_ALL_CLIENT_RFQS_BY_GMT_CATEGORYMANAGER_FOR_GLOBAL_SEARCH= '/rest/gmt/fetchAllClientGMTRfqsForCMSearch';
   public static GET_VENDORS_BY_RFQ = '/rest/gmt/getVendorbyRFQ';
   public static UPDATE_COMMENTS_AS_READ_BY_CM = '/rest/gmt/updateQueryFlag';
 

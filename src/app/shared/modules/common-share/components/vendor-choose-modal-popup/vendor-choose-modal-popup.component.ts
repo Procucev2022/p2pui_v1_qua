@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, Input, Optional, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnChanges, OnInit, Optional, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
@@ -11,13 +11,26 @@ import { FormValidatationsService } from 'src/app/shared/services/form-validatat
   templateUrl: './vendor-choose-modal-popup.component.html',
   styleUrls: ['./vendor-choose-modal-popup.component.scss']
 })
-export class VendorChooseModalPopupComponent {
+export class VendorChooseModalPopupComponent implements OnChanges, OnInit{
   loggedUserDetails: any;
   roleName: any;
   loggedUserPermissions: any;
   @Input('parentData') parentData: any;
   @Input('vendorList') vendorList: any = [];
+  @Input('totalRecords') totalRecords: number = 0;
+  @Input('pageSize') pageSize : number = 0;
+  @Input('searchTextValue') searchTextValue : string = '';
+  @Input('searchBy') searchBy : string = '';
+  @Input('searchDropdownOptions')searchDropdownOptions: any = [];
+  @Input('vendorGridData')vendorGridData: any = [];  
   @Output() onAddNewVendor: EventEmitter<any> = new EventEmitter(); 
+  @Output() onPageChange: EventEmitter<any> = new EventEmitter();
+  @Output() onSearchMode: EventEmitter<any> = new EventEmitter(); 
+  @Output() globalSearch: EventEmitter<any> = new EventEmitter(); 
+  @Output() closeDialogWithData: EventEmitter<any> = new EventEmitter();
+  @Output() onSearchCriteriaChange: EventEmitter<any> = new EventEmitter();
+  @Input('searchCriteria') searchCriteria: string;
+  cache_vendorList:any =[];
   vendorCartTableHeaders: any = [];
   selectedData: any = [];
   pageRecordSize: number = 10;
@@ -45,6 +58,29 @@ export class VendorChooseModalPopupComponent {
     this.buildVendorForm();
   }
 
+  
+    onInlineSearch(searchValue: string): void {
+        if (!searchValue || searchValue.trim() === '') {
+            this.vendorList = [...this.cache_vendorList]; // Reset to original data if search is empty
+            return;
+        }
+
+        // Local filtering for current page
+        const searchLower = searchValue.toLowerCase();
+        const filtered = this.cache_vendorList.filter((item: any) => {
+            //contains for any of the fields in the item
+            return Object.values(item).some((val: any) => {
+                if (val && typeof val === 'string') {
+                    return val.toLowerCase().includes(searchLower);
+                }
+            });
+        });
+
+        console.log('Inline search results:', filtered);
+        this.vendorList = [...filtered]
+    }
+ 
+
   buildVendorForm() {
     // Initialize the vendor form here
     this.vendorForm = new FormGroup({
@@ -68,15 +104,19 @@ export class VendorChooseModalPopupComponent {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
     console.log('Changes in Modal Popup:', changes);
-    this.vendorCartTableHeaders = changes['parentData'].currentValue.vendorHeaders || [];
+    this.vendorCartTableHeaders =this.parentData.vendorHeaders || [];
     // if (changes['parentData']) {
     //   this.vendorList = changes['parentData'].currentValue.vendorList || [];
-      this.cached_vendorList = [...this.vendorList]; // Cache the original vendor list 
+      this.cache_vendorList = [...this.vendorList]; // Cache the original vendor list 
       console.log('Vendors List in Modal Popup:', this.vendorList);
     // }
   }
+  onSearchCriteriaChanges(){
+    this.onSearchCriteriaChange.emit()
 
-  onSearchCriteriaChange(criteriaType: string, criteriaValue: string) {
+  }
+
+  onSearchCriteriaChange1(criteriaType: string, criteriaValue: string) {
     console.log(`Search Criteria Changed - Type: ${criteriaType}, Value: ${criteriaValue}`);
     switch (criteriaType) {
       case 'vendorName':
@@ -150,8 +190,35 @@ export class VendorChooseModalPopupComponent {
 
   // for selected Vendor if its one by one
   onAddVendor(rowData: any) {
-    this.dialogRef.close({ action: 'addVendor', data: [rowData] });
+
+    // write logic for vendorGridData.gridValue is content this rowData
+    const index =  this.vendorGridData.gridValue.findIndex((existedVendor:any) => existedVendor.id == rowData.id);
+    if(index > -1){
+      this.toaster.warning("Sorry, Selected Vendor Already added in Cart", "warning");
+      return;
+    }
+
     this.onAddNewVendor.emit([rowData]);
+     this.closeDialogWithData.emit({data: this.selectedData,  'searchTextValue': this.searchTextValue,
+       'searchBy': this.searchBy, 'searchCriteria': this.searchCriteria,
+      'pageSize': this.pageSize, 'totalRecords':this.totalRecords, 'parentData': this.parentData, 
+      'vendorList': this.vendorList, 'isPopAlreadyAccessed': true,
+      'searchDropdownOptions': this.searchDropdownOptions
+    });
+        this.dialogRef.close({ action: 'addVendor', data: [rowData] });
+  }
+
+  onPageChanges(event:any){
+    this.onPageChange.emit(event);
+  }
+
+  onSearchModes(searchMode: string){
+      this.onSearchMode.emit({'searchMode': searchMode, 'searchTextValue': this.searchTextValue, 'searchBy': this.searchBy})
+
+  }
+
+  globalSearchs(){
+    this.globalSearch.emit({'searchMode': this.searchBy,'searchTextValue': this.searchTextValue, 'searchBy': this.searchBy})
   }
 
   // for selected multiple vendors
@@ -160,9 +227,23 @@ export class VendorChooseModalPopupComponent {
       this.toaster.error('Please select at least one vendor to add to cart.');
       return;
     }
-    // Proceed with adding selected vendors to cart
-    this.dialogRef.close({ action: 'addToCart', data: this.selectedData });
+   
+    const cartVendorIds = this.vendorGridData.gridValue.map((cartVendor:any)=> cartVendor.id)
+    const selectedVendorsRemovingCartVendors = this.selectedData.filter((selectedVendor:any) => cartVendorIds.findIndex(id => id ==selectedVendor.id)<= -1);
+    
+     // Proceed with adding selected vendors to cart
+    if(selectedVendorsRemovingCartVendors.length == 0){
+      this.toaster.warning("Sorry, Selected Vendors Already added in Cart", "warning");
+      return;
+    }
     this.onAddNewVendor.emit(this.selectedData);
+    this.closeDialogWithData.emit({data: this.selectedData,  'searchTextValue': this.searchTextValue,
+       'searchBy': this.searchBy, 'searchCriteria': this.searchCriteria,
+      'pageSize': this.pageSize, 'totalRecords':this.totalRecords, 'parentData': this.parentData, 
+      'vendorList': this.vendorList, 'isPopAlreadyAccessed': true,
+      'searchDropdownOptions': this.searchDropdownOptions
+    });
+     this.dialogRef.close({ action: 'addToCart'});
   }
 
   // open create vendor modal with search details

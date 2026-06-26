@@ -33,6 +33,29 @@ export class CreateRfqService {
         return this.httpService.get(AppApiConfig.apiEndpoint + AppApiConfig.GET_ALL_VENDORS, {})
     }
 
+     getAllVendorsListByPagination(page:number, size:number): Observable<any> {
+        return this.httpService.get(AppApiConfig.apiEndpoint + AppApiConfig.GET_ALL_VENDORS_BY_PAGINATION+ `?page=${page}&size=${size}`);
+    }
+
+     getAllVendorsBySearchCriteria(searchType, searchValue) {
+    if(searchValue){
+                searchValue = encodeURIComponent(searchValue);
+            }
+            if(searchType){
+                searchType = encodeURIComponent(searchType);
+            }
+        
+            // add params only when they are present
+            const params: any = {};
+            if (searchValue) {
+                params.searchValue = searchValue;
+            }
+            if (searchType) {
+                params.searchType = searchType;
+            }
+        return this.httpService.get(AppApiConfig.apiEndpoint + AppApiConfig.GET_ALL_VENDORS_BY_SEARCH_CRITERIA, {params})
+    }
+
     sendRFQ(req: any): Observable<any> {
         return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.CREATE_RFQ_FOR_NOPR_WITH_ITEMS, req, {})
     }

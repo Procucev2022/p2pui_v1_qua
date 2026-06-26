@@ -31,6 +31,7 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
     defaultPermissions: any;
     loggedUserPermissions: any;
     stepsList = [ ];
+    isPopAlreadyAccessed: boolean = false;
     rfqsTableHeadersForCM: any = [
         { field: 'rfqId', header: 'RFQ Id', isLink: false, width: '190px', fieldType: 'text', isExceedContent: false },
         { field: 'projectDesc', header: 'Description', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
@@ -70,6 +71,7 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
        vendorSearchTableHeaders = [
         { field: 'companyName', header: 'Vendor Name', isLink: false, width: '220px', fieldType: 'text', isExceedContent: true },
         { field: 'email', header: 'Email', isLink: false, width: '220px', fieldType: 'text', isExceedContent: true },
+        { field: 'city', header: 'City', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true },
          { field: 'mobileNo', header: 'Mobile Number', isLink: false, width: '150px', fieldType: 'text', isExceedContent: true }
        ];
 
@@ -158,10 +160,27 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
     rfqsTableHeaders: { field: string; header: string; isLink: boolean; width: string; fieldType: string; isExceedContent: boolean; }[];
     divisionsList: any =[];
     filtered_divisionsList =[];
+    
+    startPage: number = 0;
+    pageSize: number = 100;
+    searchText: string = '';
+    sourceType: string = '';
+    totalRecords: number = 0;
+    searchCriteria: string = 'Inline';
+    searchDropdownOptions = [
+        { label: 'By Email', value: 'email' },
+        { label: 'By City', value: 'city' },
+        { label: 'By Vendor Name', value: 'sellerName' },
+        { label: 'By Phone Number', value: 'mobileNumber' }
+    ];
+    searchTextValue: string = '';
+    
+    searchBy: any = '';
 
     @Input() rfqDetails: any;
     @Output() onCloseRFQForwardScreen = new EventEmitter();
     @Input() isRFQFORWARD: boolean = true;
+    popCacheData: any;
     constructor(
         private encryDecryService: EncryDecryService,
         private rfqservice: RfqService,
@@ -218,7 +237,7 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
             ];
         }
 
-        this.initialCalls();
+        this.getVendorList();
 
     }
 
@@ -226,15 +245,16 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
 
 
 
-    initialCalls() {
+    getVendorList(startPage = 0, pageSize = 100) {
 
         if(this.roleName != 'ClientInitiator'){
-
-
-            this.createRFQService.getAllVendorsList().subscribe((res: any) => {
-                if (Array.isArray(res)) {
-                    this.vendorListObjs = res;
-                    this.vendorList = res //res.map(ele => ele.companyName);
+            this.vendorList =[];
+            this.totalRecords = 0;
+            this.createRFQService.getAllVendorsListByPagination(startPage, pageSize).subscribe((res: any) => {
+                if (Array.isArray(res.data)) {
+                    this.vendorListObjs = res.data;
+                    this.vendorList = res.data //res.map(ele => ele.companyName);
+                    this.totalRecords = res.totalRecords;
                 }
             })
         }
@@ -333,6 +353,51 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
     }
 
 
+    
+
+    onPageChange(event) {
+        this.startPage = event.first > 0 ? event.first / event.rows + 1 : 0;
+        this.pageSize = event.rows;
+        const pageSize = event.rows * this.startPage <= this.totalRecords ? event.rows :
+            (this.startPage <= 1 ? this.totalRecords - event.rows : this.totalRecords - (this.startPage - 1) * event.rows);
+        this.getVendorList(this.startPage, this.pageSize);
+    }
+
+    onSearchCriteriaChange() {
+        this.searchTextValue = '';
+        this.toaster.warning('Search text cleared. Please enter new search text based on selected criteria.', 'Warning');
+    }
+
+        
+    onSearchMode(event:any){
+        this.searchCriteria = event.searchMode;
+        if(this.searchCriteria == 'Inline'){
+            this.searchText = '';
+            this.getVendorList(this.startPage, this.pageSize);
+        } else {
+            this.globalSearch(event);
+        }
+
+    }
+
+    globalSearch(event:any) {
+        if(event.searchTextValue) {
+           this.getVendorsListBySearch(event);
+        } else {
+            this.toaster.warning('Please enter search text', 'Warning');
+        }
+    }
+
+    getVendorsListBySearch(event:any){
+        this.createRFQService.getAllVendorsBySearchCriteria(event.searchBy, event.searchTextValue).subscribe((res: any) => {
+            if (Array.isArray(res.data)) {
+                this.vendorListObjs = res.data;
+                this.vendorList = res.data //res.map(ele => ele.companyName);
+                this.totalRecords = res.totalRecords;
+            }
+        })
+    }
+
     onSendRFQ(rowData: any) {
 
         this.selectedRFQData = { ...rowData };
@@ -384,7 +449,7 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
         const dialogRef = this.dialog.open(EditRfqByIdModalComponent, dialogConfig).afterClosed().subscribe(result => {
             console.log(result);
             if(result.success){
-                // this.initialCalls(); //NTC
+                // this.getVendorList(); //NTC
                 // this.getRfqData();
             }
         });
@@ -826,17 +891,35 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
 
 
         onAddExistingVendor(){
-        this.dialog.open(this.termsTemplate, {
+        if(this.isPopAlreadyAccessed){
+            this.vendorList = this.popCacheData.vendorList;
+            this.totalRecords = this.popCacheData.totalRecords;
+            this.pageSize = this.popCacheData.pageSize;
+            this.searchCriteria = this.popCacheData.searchCriteria;
+            this.searchDropdownOptions = this.popCacheData.searchDropdownOptions;
+            this.searchTextValue = this.popCacheData.searchTextValue;
+            this.searchBy = this.popCacheData.searchBy;
+
+        }
+        setTimeout(() => {
+             this.dialog.open(this.termsTemplate, {
             width: "70%",
             minHeight: "35vh",
             data: "Su",
             panelClass: 'terms-condt-cls',
             disableClose: true,
         }).afterClosed().subscribe((res: any) => {
-
+            console.log('res', res)
         })
+        }, 100);
+       
     }
 
+    closeDialogWithData(event:any){
+        console.log("popup closed with ", event);
+        this.popCacheData = event;
+        this.isPopAlreadyAccessed = event.isPopAlreadyAccessed;
+    }
 
     onAddNewVendor(event:any){
         this.dialog.closeAll();

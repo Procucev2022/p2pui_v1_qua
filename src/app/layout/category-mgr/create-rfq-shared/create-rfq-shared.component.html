@@ -121,6 +121,18 @@
                         }"
             (onClosePopup)="onCloseVendorChoosePopup($event)"
             (onAddNewVendor)="onAddNewVendor($event)"
+            (onPageChange)="onPageChange($event)"
+            (onSearchMode)="onSearchMode($event)"
+            [totalRecords]="totalRecords"
+            [pageSize]="pageSize"
+            [searchCriteria]="searchCriteria"
+            [searchDropdownOptions]="searchDropdownOptions"
+            (onSearchCriteriaChange)="onSearchCriteriaChange($event)"
+            [searchTextValue]="searchTextValue"
+            [searchBy]="searchBy"
+            (globalSearch)="globalSearch($event)"
+            (closeDialogWithData)="closeDialogWithData($event)"
+            [vendorGridData]="vendorGridData"
             ></app-vendor-choose-modal-popup>
             </div>
           
