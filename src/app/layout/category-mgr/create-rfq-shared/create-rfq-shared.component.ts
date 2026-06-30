@@ -667,8 +667,10 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
     onDeleteVendor(rowData: any) {
         this.vendorGridData.gridValue = this.vendorGridData.gridValue.filter(ele => ele.id != rowData.id);
         const vendorIndex = this.vendorList.findIndex(ele => ele.id == rowData.id);
-        this.vendorList[vendorIndex]['isAddedToCart'] = false;
-        this.vendorList[vendorIndex]['isAddedAlready'] = false;
+        if(vendorIndex > -1){
+            this.vendorList[vendorIndex]['isAddedToCart'] = false;
+            this.vendorList[vendorIndex]['isAddedAlready'] = false;
+        }
         this.reloadGridComponent();
     }
     onDeleteDelivery(rowData: any) {

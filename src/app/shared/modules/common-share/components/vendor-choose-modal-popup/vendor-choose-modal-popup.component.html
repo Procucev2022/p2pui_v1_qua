@@ -143,21 +143,24 @@
                 <div class="row">
                   <div  class="col-4 mb-1">
                       <label class="form-label required" >Vendor Name</label>
-                  <input class="form-control" type="text"    placeholder="Search / Enter Vendor Name" [(ngModel)]="searchVendorName"
-                      (keyup)="onSearchCriteriaChange('vendorName', $event.target.value)" />
+                  <input class="form-control" type="text"    placeholder="Search / Enter Vendor Name" formControlName="companyName"
+                       />
                   </div>
                   <div  class="col-4 mb-1"  >
                       <label class="form-label" >Email ID</label>
-                      <input class="form-control" type="text" [disabled]="!searchVendorName" [(ngModel)]="searchEmailId" (keyup)="onSearchCriteriaChange('emailId', $event.target.value)"  placeholder="Search by / Enter Email ID" 
+                      <input class="form-control" type="text"   formControlName="email"    placeholder="Search by / Enter Email ID" 
                       />
+                       <span style="color:red" *ngIf="vendorCtrls.email.errors && vendorCtrls.email.touched">Enter Valid Email</span>
                   </div>
                   <div   class="col-4 mb-1" >
                       <label class="form-label " >Mobile No</label>
-                      <input class="form-control" type="text" [disabled]="!searchVendorName || !searchEmailId" [(ngModel)]="searchMobileNo" (keyup)="onSearchCriteriaChange('mobile', $event.target.value)" placeholder="Search by / Enter Mobile Number" />
+                      <input class="form-control" type="text"  formControlName="mobileNo"  placeholder="Search by / Enter Mobile Number" />
+                      
+                       <span style="color:red" *ngIf="vendorCtrls.mobileNo.errors && vendorCtrls.mobileNo.touched">Enter Valid Mobile Number</span>
                   </div>
                   <div     class="col-4 mb-1">
                       <label class="form-label " >City</label>
-                      <input class="form-control" type="text" [disabled]="!searchVendorName || !searchEmailId" [(ngModel)]="searchCity"   placeholder="Enter   City" (keyup)="onSearchCriteriaChange('city', $event.target.value)" />
+                      <input class="form-control" type="text"   formControlName="city"   placeholder="Enter   City"  />
                   </div>
                   <div class="col-4 mb-1">
                           <label class="form-label required">name</label>

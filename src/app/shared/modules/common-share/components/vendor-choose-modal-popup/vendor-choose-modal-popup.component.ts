@@ -86,7 +86,7 @@ export class VendorChooseModalPopupComponent implements OnChanges, OnInit{
     this.vendorForm = new FormGroup({
       companyName: new FormControl('', Validators.required),
       city: new FormControl('', Validators.required),
-      mobileNo: new FormControl('', [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]),
+      mobileNo: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]),
       email: new FormControl('', [Validators.required, Validators.email]) ,
       name: new FormControl('', [Validators.required, this.formValidatorService.alphabetValidator]),
       gstin: new FormControl('', [Validators.required]),
