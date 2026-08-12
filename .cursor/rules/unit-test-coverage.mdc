@@ -1,0 +1,13 @@
+---
+description: Enforce repository-wide Angular unit-test coverage
+alwaysApply: true
+---
+
+Follow `AGENTS.md`. For each TypeScript change under `src/`, add deterministic Jasmine tests and run:
+
+```bash
+npm run test:coverage
+npm run coverage:check
+```
+
+The scope is every application `src/**/*.ts` file (exclude `*.spec.ts`, `*.d.ts`, `test.ts`). Statements, branches, functions, and lines must each be at least 90% for every file and in aggregate. The global Jasmine timeout is 60 seconds. Mock HTTP and external services; do not hide application code with coverage exclusions.

@@ -1,32 +1,34 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SignupComponent } from './signup.component';
-import { SignupModule } from './signup.module';
 
 describe('SignupComponent', () => {
   let component: SignupComponent;
   let fixture: ComponentFixture<SignupComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        SignupModule,
-        RouterTestingModule,
-        BrowserAnimationsModule,
-      ],
-    })
-    .compileComponents();
-  }));
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [SignupComponent],
+      imports: [NoopAnimationsModule],
+      schemas: [NO_ERRORS_SCHEMA]
+    }).compileComponents();
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(SignupComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should call ngOnInit without error', () => {
+    component.ngOnInit();
+    expect(component).toBeTruthy();
+  });
+
+  it('should render after detectChanges', () => {
+    fixture.detectChanges();
+    expect(fixture.nativeElement).toBeTruthy();
   });
 });

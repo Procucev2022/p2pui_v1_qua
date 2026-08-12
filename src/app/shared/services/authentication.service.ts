@@ -8,6 +8,12 @@ import { EncryDecryService } from './encry-decry.service';
 import { SystemViewConfig } from 'src/app/app.config';
 import { ToastrService } from 'ngx-toastr';
 
+/** Overridable page reload seam for unit tests (Karma cannot stub location.reload in Edge/Chrome). */
+export const AuthPageReload = {
+  run: () => {
+    window.location.reload();
+  }
+};
 
 const httpOptions = {
     headers: new HttpHeaders({
@@ -104,17 +110,17 @@ export class AuthenticationService {
 
                 if ([this.SYSTEM_VIEW_CONFIG.GMT_BASIC, this.SYSTEM_VIEW_CONFIG.GMT_BASIC_PLUS, this.SYSTEM_VIEW_CONFIG.GMT_PROF].includes(systemView)) {
                     this.router.navigate(['/categorymgr/my-profile']).then(() => {
-                        window.location.reload();
+                        AuthPageReload.run();
                     });
 
                 } else {// For DPS vendors
                     if(data.role.roleName ==='Registration'|| data.role.roleName ==='PartialVendor'){
                         this.router.navigate(['/dashboard']).then(()=>{
-                            window.location.reload();
+                            AuthPageReload.run();
                         })
                     }else{
                         this.router.navigate(['/vendor/rfq']).then(() => {
-                            window.location.reload();
+                            AuthPageReload.run();
                         });
                     }
 
@@ -150,11 +156,11 @@ export class AuthenticationService {
         //         if(  (data.role.roleName === 'Vendor' || data.role.roleName ==='Registration'|| data.role.roleName ==='PartialVendor')){
         //             if([this.SYSTEM_VIEW_CONFIG.BFS_PRO].includes(systemView)){ // For BFS
         //                 this.router.navigate(['/bfs/items']).then(() => {
-        //                     window.location.reload();
+        //                     AuthPageReload.run();
         //                 });
         //             } else {// For DPS CategoryManger2
         //                 this.router.navigate(['/dashboard']).then(() => {
-        //                     window.location.reload();
+        //                     AuthPageReload.run();
         //                 });
         //             }
         //         }
@@ -162,11 +168,11 @@ export class AuthenticationService {
         //         else if(data.role.roleName === 'CategoryManager2' || data.role.roleName === 'CategoryManager'){
         //             if([this.SYSTEM_VIEW_CONFIG.BFS_PRO].includes(systemView)){ // For BFS Vendors
         //                 this.router.navigate(['/bfs/items']).then(() => {
-        //                     window.location.reload();
+        //                     AuthPageReload.run();
         //                 });
         //             }else{// For DPS CategoryManger2
         //                 this.router.navigate(['/dashboard']).then(() => {
-        //                     window.location.reload();
+        //                     AuthPageReload.run();
         //                 });
         //             }
         //         }else{
@@ -198,21 +204,21 @@ export class AuthenticationService {
                 // For GMT Vendors
                 if ([this.SYSTEM_VIEW_CONFIG.GMT_BASIC, this.SYSTEM_VIEW_CONFIG.GMT_BASIC_PLUS, this.SYSTEM_VIEW_CONFIG.GMT_PROF].includes(systemView)) {
                     this.router.navigate(['/categorymgr/gmt-rqfs']).then(() => {
-                        window.location.reload();
+                        AuthPageReload.run();
                     });
                 }else if([this.SYSTEM_VIEW_CONFIG.BFS_PRO].includes(systemView)){ // For BFS Vendors
                     this.router.navigate(['/bfs/my-items']).then(() => {
-                        window.location.reload();
+                        AuthPageReload.run();
                     });
                 }
                 else {// For DPS vendors
                     if(data.role.roleName ==='Registration'|| data.role.roleName ==='PartialVendor'){
                         this.router.navigate(['/dashboard']).then(()=>{
-                            window.location.reload();
+                            AuthPageReload.run();
                         })
                     }else{
                         this.router.navigate(['/vendor/rfq']).then(() => {
-                            window.location.reload();
+                            AuthPageReload.run();
                         });
                     }
 
@@ -223,22 +229,22 @@ export class AuthenticationService {
             } else if (data.role.roleName === "ClientInitiator") {//For GMT USEr
                 if(data.selfClient == true && [this.SYSTEM_VIEW_CONFIG.GMT_BASIC, this.SYSTEM_VIEW_CONFIG.GMT_BASIC_PLUS].includes(systemView)){
                     this.router.navigate(['/categorymgr/create-rfq']).then(() => {
-                        window.location.reload();
+                        AuthPageReload.run();
                     });
                 }else if(data.selfClient == false && [this.SYSTEM_VIEW_CONFIG.DPS_BASIC, this.SYSTEM_VIEW_CONFIG.DPS_BASIC_PLUS].includes(systemView)){
                     this.router.navigate(['/client/procurerequest']).then(() => {
-                        window.location.reload();
+                        AuthPageReload.run();
                     });
                 }else if([this.SYSTEM_VIEW_CONFIG.BFS_PRO].includes(systemView)){ // For BFS
                     this.router.navigate(['/bfs/items']).then(() => {
-                        window.location.reload();
+                        AuthPageReload.run();
                     });
                 }
                 else{
 
                 if([this.SYSTEM_VIEW_CONFIG.GMT_BASIC, this.SYSTEM_VIEW_CONFIG.GMT_BASIC_PLUS].includes(systemView)){
                     this.router.navigate(['/categorymgr/create-rfq']).then(() => {
-                        window.location.reload();
+                        AuthPageReload.run();
                     });
                 }else{
                     this.toaster.warning("Please contact adminstrator", "Warning")
@@ -249,21 +255,21 @@ export class AuthenticationService {
 
                 // if([this.SYSTEM_VIEW_CONFIG.GMT_BASIC, this.SYSTEM_VIEW_CONFIG.GMT_BASIC_PLUS].includes(systemView)){
                 //     this.router.navigate(['/categorymgr/create-rfq']).then(() => {
-                //         window.location.reload();
+                //         AuthPageReload.run();
                 //     });
                 // }else{//For DPS
                 //     this.router.navigate(['/client/procurerequest']).then(() => {
-                //         window.location.reload();
+                //         AuthPageReload.run();
                 //     });
                 // }
             } else if (data.role.roleName === 'CategoryManagerBasic') {
                 if ([this.SYSTEM_VIEW_CONFIG.GMT_BASIC, this.SYSTEM_VIEW_CONFIG.GMT_BASIC_PLUS].includes(systemView)) {
                     this.router.navigate(['/categorymgr/create-rfq']).then(() => {
-                        window.location.reload();
+                        AuthPageReload.run();
                     });
                 } else {// For DPS vendors
                     this.router.navigate(['/categorymgr/procurequests']).then(() => {
-                        window.location.reload();
+                        AuthPageReload.run();
                     });
                 }
 
@@ -273,21 +279,21 @@ export class AuthenticationService {
                 if ([this.SYSTEM_VIEW_CONFIG.GMT_BASIC, this.SYSTEM_VIEW_CONFIG.GMT_BASIC_PLUS].includes(systemView)) {
                     if (data.role.roleName === 'CategoryManager') {
                         this.router.navigate(['/categorymgr/create-rfq']).then(() => {
-                            window.location.reload();
+                            AuthPageReload.run();
                         });
                     } else {
                         this.router.navigate(['/categorymgr/gmt-rqfs']).then(() => {
-                            window.location.reload();
+                            AuthPageReload.run();
                         });
                     }
 
                 }else if([this.SYSTEM_VIEW_CONFIG.BFS_PRO].includes(systemView)){ // For BFS
                     this.router.navigate(['/bfs/items']).then(() => {
-                        window.location.reload();
+                        AuthPageReload.run();
                     });
                 } else {// For DPS CategoryManger2
                     this.router.navigate(['/dashboard']).then(() => {
-                        window.location.reload();
+                        AuthPageReload.run();
                     });
                 }
             } else {

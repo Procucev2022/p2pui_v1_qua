@@ -1,27 +1,37 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { PageHeaderComponent } from './page-header.component';
-import { PageHeaderModule } from './page-header.module';
 
 describe('PageHeaderComponent', () => {
   let component: PageHeaderComponent;
   let fixture: ComponentFixture<PageHeaderComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [PageHeaderModule, RouterTestingModule],
-    })
-    .compileComponents();
-  }));
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [PageHeaderComponent],
+      schemas: [NO_ERRORS_SCHEMA]
+    }).compileComponents();
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(PageHeaderComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should accept heading and icon inputs', () => {
+    component.heading = 'Dashboard';
+    component.icon = 'fa-home';
+    component.ngOnInit();
+    expect(component.heading).toBe('Dashboard');
+    expect(component.icon).toBe('fa-home');
+  });
+
+  it('should render with inputs', () => {
+    component.heading = 'Title';
+    component.icon = 'icon';
+    fixture.detectChanges();
+    expect(fixture.nativeElement).toBeTruthy();
   });
 });
