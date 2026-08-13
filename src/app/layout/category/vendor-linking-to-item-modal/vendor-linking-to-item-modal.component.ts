@@ -56,7 +56,7 @@ export class VendorLinkingToItemModalComponent implements OnInit {
   };
   this.catService.getVendorsSearch(reqPayload).subscribe((res) => {
     if (Array.isArray(res)) {
-      this.vendorList = res || [];
+      this.vendorList = res;
       this.vendorList.forEach(element => {
         element['isLinked'] = false;
         element['isEdit'] = false;

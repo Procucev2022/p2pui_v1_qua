@@ -1,13 +1,14 @@
 import { CommonShareRoutingModule } from './common-share-routing.module';
 
 describe('CommonShareRoutingModule', () => {
-  let module: CommonShareRoutingModule;
-
-  beforeEach(() => {
-    module = new CommonShareRoutingModule();
+  it('should create an instance', () => {
+    expect(new CommonShareRoutingModule()).toBeTruthy();
   });
 
-  it('should create an instance', () => {
-    expect(module).toBeTruthy();
+  it('should be constructible multiple times', () => {
+    const a = new CommonShareRoutingModule();
+    const b = new CommonShareRoutingModule();
+    expect(a).toBeTruthy();
+    expect(b).toBeTruthy();
   });
 });

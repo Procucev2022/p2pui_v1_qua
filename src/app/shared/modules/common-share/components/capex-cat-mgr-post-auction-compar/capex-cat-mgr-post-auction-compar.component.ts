@@ -77,7 +77,7 @@ export class CapexCatMgrPostAuctionComparComponent implements OnInit {
     getPrsListForAll() {
         this.procService.getCapexPRidsList().subscribe((res) => {
             if (Array.isArray(res)) {
-                this.prList_forAll = res || [];
+                this.prList_forAll = res;
             } else {
                 this.prList_forAll = [];
             }
@@ -114,14 +114,14 @@ export class CapexCatMgrPostAuctionComparComponent implements OnInit {
                     this.selectedAucType = element.auctionCategory;
 
                         this.clientService.getCapexExcelSummary(element).subscribe((res: any) => {
-                            this.itemData = res || {};
+                            this.itemData = res;
                         })
 
 
                 } else {
 
                     this.clientService.getCapexExcelSummary(element).subscribe((res: any) => {
-                        this.itemData = res || {};
+                        this.itemData = res;
                     })
 
                 }
@@ -146,7 +146,7 @@ export class CapexCatMgrPostAuctionComparComponent implements OnInit {
         this.clientService.getPrById(temp).subscribe((res: any) => {
 
             if (res) {
-                this.viewPrByData = res || {};
+                this.viewPrByData = res;
                 console.log('this.viewPrByData', this.viewPrByData);
                 const reqObj = {
                     'id': this.prId

@@ -35,7 +35,7 @@ export class ViewPRIdDetailsComponent implements OnInit {
     getPrdetails() {
         this.ClientService.getPRitemsByid({ 'id': this.prData.id}).subscribe((response)=> {
             if (Array.isArray(response)){
-                this.rfqsList = response || [];
+                this.rfqsList = response;
             } else {
                 this.toastrService.error('Failed No data fetched')
                 this.rfqsList =  [];

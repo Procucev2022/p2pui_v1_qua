@@ -3,7 +3,6 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { CatProcuQuotationsService } from './cat-procu-quotations.service';
 import { AppApiConfig } from 'src/app/shared/constants/app-api.config';
 
-
 describe('CatProcuQuotationsService', () => {
   let service: CatProcuQuotationsService;
   let httpMock: HttpTestingController;
@@ -11,9 +10,7 @@ describe('CatProcuQuotationsService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [
-        CatProcuQuotationsService
-      ]
+      providers: [CatProcuQuotationsService],
     });
     service = TestBed.inject(CatProcuQuotationsService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -27,11 +24,24 @@ describe('CatProcuQuotationsService', () => {
     expect(service).toBeTruthy();
   });
 
+  it('should call getQuotsList', () => {
+    service.getQuotsList().subscribe((res: any) => {
+      expect(res).toEqual({ ok: true });
+    });
+    const req = httpMock.expectOne(
+      AppApiConfig.apiEndpoint + AppApiConfig.GET_ALL_QUOTATIONS
+    );
+    expect(req.request.method).toBe('GET');
+    req.flush({ ok: true });
+  });
+
   it('should call getPRByQuotation', () => {
     service.getPRByQuotation({ id: 1 }).subscribe((res: any) => {
       expect(res).toEqual({ ok: true });
     });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_PRS_BY_QUOTATIONS);
+    const req = httpMock.expectOne(
+      AppApiConfig.apiEndpoint + AppApiConfig.GET_PRS_BY_QUOTATIONS
+    );
     expect(req.request.method).toBe('POST');
     req.flush({ ok: true });
   });
@@ -40,7 +50,9 @@ describe('CatProcuQuotationsService', () => {
     service.getVendorsByQuot({ id: 1 }).subscribe((res: any) => {
       expect(res).toEqual({ ok: true });
     });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_VENDORS_QUOTATIONS);
+    const req = httpMock.expectOne(
+      AppApiConfig.apiEndpoint + AppApiConfig.GET_VENDORS_QUOTATIONS
+    );
     expect(req.request.method).toBe('POST');
     req.flush({ ok: true });
   });
@@ -49,7 +61,9 @@ describe('CatProcuQuotationsService', () => {
     service.getRFQsByQuot({ id: 1 }).subscribe((res: any) => {
       expect(res).toEqual({ ok: true });
     });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_RFQ_BY_QUOTATIONS);
+    const req = httpMock.expectOne(
+      AppApiConfig.apiEndpoint + AppApiConfig.GET_RFQ_BY_QUOTATIONS
+    );
     expect(req.request.method).toBe('POST');
     req.flush({ ok: true });
   });
@@ -58,7 +72,9 @@ describe('CatProcuQuotationsService', () => {
     service.getLineItemsByQuot({ id: 1 }).subscribe((res: any) => {
       expect(res).toEqual({ ok: true });
     });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_LINE_ITEMS_BY_QUOTATIONS);
+    const req = httpMock.expectOne(
+      AppApiConfig.apiEndpoint + AppApiConfig.GET_LINE_ITEMS_BY_QUOTATIONS
+    );
     expect(req.request.method).toBe('POST');
     req.flush({ ok: true });
   });
@@ -67,8 +83,23 @@ describe('CatProcuQuotationsService', () => {
     service.getVendorsByClientId({ id: 1 }).subscribe((res: any) => {
       expect(res).toEqual({ ok: true });
     });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_VENDOR_LIST_BY_CLIENT_ID);
+    const req = httpMock.expectOne(
+      AppApiConfig.apiEndpoint + AppApiConfig.GET_VENDOR_LIST_BY_CLIENT_ID
+    );
     expect(req.request.method).toBe('POST');
     req.flush({ ok: true });
+  });
+
+  it('should surface HTTP errors from getQuotsList', () => {
+    let err: any;
+    service.getQuotsList().subscribe({
+      next: () => fail('expected error'),
+      error: (e) => (err = e),
+    });
+    const req = httpMock.expectOne(
+      AppApiConfig.apiEndpoint + AppApiConfig.GET_ALL_QUOTATIONS
+    );
+    req.flush('fail', { status: 500, statusText: 'Server Error' });
+    expect(err.status).toBe(500);
   });
 });

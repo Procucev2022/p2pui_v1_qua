@@ -18,7 +18,8 @@ const SOURCE_ROOT = path.join(ROOT, 'src');
 const THRESHOLD_DEFAULT = 90;
 
 const SKIP_NAME_RE = /\.spec\.ts$/;
-const SKIP_BASENAMES = new Set(['typings.d.ts', 'test.ts']);
+// test harness / karma bootstrap only — not application code
+const SKIP_BASENAMES = new Set(['typings.d.ts', 'test.ts', 'test-setup.ts']);
 
 function parseArgs(argv) {
   const args = {
@@ -55,6 +56,8 @@ function walkTsFiles(dir, out = []) {
     if (SKIP_NAME_RE.test(entry.name)) continue;
     if (SKIP_BASENAMES.has(entry.name)) continue;
     if (entry.name.endsWith('.d.ts')) continue;
+    // Shared test harness (not application runtime code)
+    if (normalize(full).includes('/src/testing/')) continue;
     out.push(full);
   }
   return out;

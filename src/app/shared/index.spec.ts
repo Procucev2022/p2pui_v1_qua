@@ -1,4 +1,10 @@
-import { AuthGuard, SharedPipesModule, PageHeaderModule, StatModule } from './index';
+import {
+  AuthGuard,
+  SharedPipesModule,
+  PageHeaderModule,
+  StatModule,
+  SHARED_BARREL,
+} from './index';
 
 describe('shared index', () => {
   it('should re-export AuthGuard', () => {
@@ -12,5 +18,9 @@ describe('shared index', () => {
   it('should re-export module barrels', () => {
     expect(PageHeaderModule).toBeDefined();
     expect(StatModule).toBeDefined();
+  });
+
+  it('should export barrel marker', () => {
+    expect(SHARED_BARREL).toBe(true);
   });
 });

@@ -1,12 +1,18 @@
-import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { bootstrapApp } from './app-bootstrap';
 
-import { AppModule } from './app/app.module';
-import { environment } from './environments/environment';
+declare const __karma__: unknown;
 
-if (environment.production) {
-  enableProdMode();
+/** Mutable hooks for Edge-safe unit tests. */
+export const mainHooks = {
+  bootstrap: bootstrapApp as typeof bootstrapApp,
+};
+
+/** Entry bootstrap. Skipped under Karma so unit tests can cover this module safely. */
+export function runMain(): Promise<any> | undefined {
+  if (typeof __karma__ !== 'undefined') {
+    return undefined;
+  }
+  return mainHooks.bootstrap();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.error(err));
+runMain();

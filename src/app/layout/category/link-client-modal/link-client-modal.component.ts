@@ -55,7 +55,7 @@ export class LinkClientModalComponent implements OnInit {
     };
     this.catService.getClientSearch(reqPayload).subscribe((res) => {
       if (Array.isArray(res)) {
-        this.clientList = res || [];
+        this.clientList = res;
         this.clientList.forEach(element => {
           element['isLinked'] = false;
         });

@@ -10,7 +10,7 @@ import { ConvertToBase64Service } from '../../../services/convert-to-base64.serv
 import { PoService } from '../../../services/po.service';
 import { PpoViewModalComponent } from '../../ppo-view-modal/ppo-view-modal.component';
 import { PO } from './po.model';
-import swal from 'sweetalert2';
+import { swalConfirm } from 'src/app/shared/helpers/swal-confirm';
 @Component({
   selector: 'app-po-create',
   templateUrl: './po-create.component.html',
@@ -115,7 +115,7 @@ model :any ={
   generateDynamicClientFields(vendor) {
     this.poService.getDynamicFieldsByClientId(vendor).subscribe((response) => {
       if (Array.isArray(response)) {
-        this.dynamicFields = response || [];
+        this.dynamicFields = response;
       } else {
         this.dynamicFields =  [];
       }
@@ -225,7 +225,7 @@ model :any ={
     const finalObj: any  = {...reqObj, ...poObj};
     finalObj['poValue'] = this.poValue
      console.log('final Obj', finalObj);
-     swal({
+     swalConfirm.open({
       title: `<h4>Are you sure?</h4>`,
       html: `<h5>You want to generate PO with below details</h5><h5>Selected ${this.selectedData.length} item(s) and PO Amount is Rs. ${this.poValue} <h5>`,
       type: 'warning',

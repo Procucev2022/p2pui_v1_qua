@@ -1,6 +1,6 @@
-import { FormControl } from '@angular/forms';
 import { CustomValidationsService } from './custom-validations.service';
 import { AppConfig } from 'src/app/app.config';
+import { FormControl } from '@angular/forms';
 
 describe('CustomValidationsService', () => {
   let service: CustomValidationsService;

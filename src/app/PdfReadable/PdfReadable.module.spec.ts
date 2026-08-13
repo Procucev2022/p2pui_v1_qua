@@ -2,7 +2,13 @@ import { PdfReadableModule } from './PdfReadable.module';
 
 describe('PdfReadableModule', () => {
   it('should create an instance', () => {
-    const module = new PdfReadableModule();
-    expect(module).toBeTruthy();
+    expect(new PdfReadableModule()).toBeTruthy();
+  });
+
+  it('should be constructible multiple times', () => {
+    const a = new PdfReadableModule();
+    const b = new PdfReadableModule();
+    expect(a).toBeTruthy();
+    expect(b).toBeTruthy();
   });
 });

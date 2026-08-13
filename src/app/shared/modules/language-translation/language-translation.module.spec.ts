@@ -1,39 +1,63 @@
 import { HttpClient } from '@angular/common/http';
-import { HttpLoaderFactory, LanguageTranslationModule } from './language-translation.module';
+import { TranslateService } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { of } from 'rxjs';
+import {
+  HttpLoaderFactory,
+  LanguageTranslationModule,
+} from './language-translation.module';
 
 describe('LanguageTranslationModule', () => {
-  it('should create HttpLoaderFactory instance', () => {
+  function mockTranslate(browserLang: string): TranslateService {
+    const translate = jasmine.createSpyObj(
+      'TranslateService',
+      [
+        'setDefaultLang',
+        'use',
+        'get',
+        'stream',
+        'instant',
+        'addLangs',
+        'getBrowserLang',
+      ],
+      {
+        onLangChange: of({}),
+        onTranslationChange: of({}),
+        onDefaultLangChange: of({}),
+      }
+    ) as any;
+    translate.getBrowserLang.and.returnValue(browserLang);
+    return translate;
+  }
+
+  it('should create an instance and configure languages for matching browser lang', () => {
+    const translate = mockTranslate('fr');
+    const mod = new LanguageTranslationModule(translate);
+    expect(mod).toBeTruthy();
+    expect(translate.addLangs).toHaveBeenCalledWith([
+      'en',
+      'fr',
+      'ur',
+      'es',
+      'it',
+      'fa',
+      'de',
+      'zh-CHS',
+    ]);
+    expect(translate.setDefaultLang).toHaveBeenCalledWith('en');
+    expect(translate.use).toHaveBeenCalledWith('fr');
+  });
+
+  it('should fall back to en when browser lang does not match', () => {
+    const translate = mockTranslate('pt');
+    const mod = new LanguageTranslationModule(translate);
+    expect(mod).toBeTruthy();
+    expect(translate.use).toHaveBeenCalledWith('en');
+  });
+
+  it('should create TranslateHttpLoader via HttpLoaderFactory', () => {
     const http = {} as HttpClient;
     const loader = HttpLoaderFactory(http);
-    expect(loader).toBeTruthy();
-  });
-
-  it('should construct module with TranslateService', () => {
-    const translate = jasmine.createSpyObj('TranslateService', [
-      'addLangs',
-      'setDefaultLang',
-      'getBrowserLang',
-      'use'
-    ]);
-    translate.getBrowserLang.and.returnValue('en');
-    const module = new LanguageTranslationModule(translate);
-    expect(module).toBeTruthy();
-    expect(translate.addLangs).toHaveBeenCalled();
-    expect(translate.setDefaultLang).toHaveBeenCalledWith('en');
-    expect(translate.use).toHaveBeenCalledWith('en');
-  });
-
-  it('should fall back to en for unsupported browser language', () => {
-    const translate = jasmine.createSpyObj('TranslateService', [
-      'addLangs',
-      'setDefaultLang',
-      'getBrowserLang',
-      'use'
-    ]);
-    translate.getBrowserLang.and.returnValue('xx');
-    // match on unsupported returns nullish path -> 'en'
-    // browserLang.match(...) is null for 'xx'
-    new LanguageTranslationModule(translate);
-    expect(translate.use).toHaveBeenCalledWith('en');
+    expect(loader instanceof TranslateHttpLoader).toBe(true);
   });
 });

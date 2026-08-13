@@ -3,7 +3,6 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { InvoicesService } from './invoices.service';
 import { AppApiConfig } from 'src/app/shared/constants/app-api.config';
 
-
 describe('InvoicesService', () => {
   let service: InvoicesService;
   let httpMock: HttpTestingController;
@@ -11,9 +10,7 @@ describe('InvoicesService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [
-        InvoicesService
-      ]
+      providers: [InvoicesService],
     });
     service = TestBed.inject(InvoicesService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -23,61 +20,98 @@ describe('InvoicesService', () => {
     httpMock.verify();
   });
 
+  function expectPost(method: keyof InvoicesService, urlSuffix: string) {
+    (service[method] as any)({ id: 1 }).subscribe((res: any) => {
+      expect(res).toEqual({ ok: true });
+    });
+    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + urlSuffix);
+    expect(req.request.method).toBe('POST');
+    req.flush({ ok: true });
+  }
+
+  function expectGet(method: keyof InvoicesService, urlSuffix: string) {
+    (service[method] as any)({ id: 1 }).subscribe((res: any) => {
+      expect(res).toEqual({ ok: true });
+    });
+    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + urlSuffix);
+    expect(req.request.method).toBe('GET');
+    req.flush({ ok: true });
+  }
+
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
   it('should call getAllInvoices', () => {
-    service.getAllInvoices({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.FETCH_ALL_INVOICES);
-    expect(req.request.method).toBe('GET');
-    req.flush({ ok: true });
+    expectGet('getAllInvoices', AppApiConfig.FETCH_ALL_INVOICES);
   });
 
   it('should call getAllInvoicesByClientId', () => {
-    service.getAllInvoicesByClientId({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_INVOICES_BY_CLIENT);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    expectPost('getAllInvoicesByClientId', AppApiConfig.GET_INVOICES_BY_CLIENT);
   });
 
   it('should call getAllInvoicesByVendor', () => {
-    service.getAllInvoicesByVendor({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_INVOICES_BY_VENDOR);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    expectPost('getAllInvoicesByVendor', AppApiConfig.GET_INVOICES_BY_VENDOR);
   });
 
   it('should call getItemsByASNId', () => {
-    service.getItemsByASNId({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_ITEMS_BY_ASN_ID);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    expectPost('getItemsByASNId', AppApiConfig.GET_ITEMS_BY_ASN_ID);
   });
 
   it('should call createInvoice', () => {
-    service.createInvoice({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.CREATE_INVOICE);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    expectPost('createInvoice', AppApiConfig.CREATE_INVOICE);
   });
 
   it('should call getInvoiceById', () => {
-    service.getInvoiceById({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.VIEW_INVOICE);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    expectPost('getInvoiceById', AppApiConfig.VIEW_INVOICE);
+  });
+
+  it('should call acceptInvoiceById', () => {
+    expectPost('acceptInvoiceById', AppApiConfig.ACCEPT_INVOICE);
+  });
+
+  it('should call getPOAdvanceById', () => {
+    expectPost('getPOAdvanceById', AppApiConfig.GET_PO_ADVANCE_BY_ID);
+  });
+
+  it('should call getPoAdvanceByPo', () => {
+    expectPost('getPoAdvanceByPo', AppApiConfig.GET_PO_ADVANCE_BY_PO);
+  });
+
+  it('should call createPOAdvancePayment', () => {
+    expectPost('createPOAdvancePayment', AppApiConfig.CREATE_PO_ADVANCE_PAYMENT);
+  });
+
+  it('should call editPOAdvancePayment', () => {
+    expectPost('editPOAdvancePayment', AppApiConfig.EDIT_PO_ADVANCE_PAYMENT);
+  });
+
+  it('should call getPosByClientAndAdvance', () => {
+    expectPost(
+      'getPosByClientAndAdvance',
+      AppApiConfig.GET_POS_BY_CLIEN_AND_ADVANCE
+    );
+  });
+
+  it('should call getPosByAdvance', () => {
+    expectGet('getPosByAdvance', AppApiConfig.GET_POS_BY_ADVANCE);
+  });
+
+  it('should call getPosByVendorAndAdvance', () => {
+    expectPost(
+      'getPosByVendorAndAdvance',
+      AppApiConfig.GET_POS_BY_VENDOR_AND_ADVANCE
+    );
+  });
+
+  it('should call acceptPOAdvancePayment', () => {
+    expectPost('acceptPOAdvancePayment', AppApiConfig.ACCEPT_PO_ADVANCE_PAYMENT);
+  });
+
+  it('should call getAdditionalItemsByInvoiceId', () => {
+    expectPost(
+      'getAdditionalItemsByInvoiceId',
+      AppApiConfig.GET_ADDITIONAL_ITEMS_BY_INVOICEID
+    );
   });
 });

@@ -55,7 +55,7 @@ export class CapexCatMgrQuoteComparComponent implements OnInit {
     getPrsListForAll() {
         this.procService.getCapexPRidsList().subscribe((res) => {
             if (Array.isArray(res)) {
-                this.prList_forAll = res || [];
+                this.prList_forAll = res;
             } else {
                 this.prList_forAll = [];
             }

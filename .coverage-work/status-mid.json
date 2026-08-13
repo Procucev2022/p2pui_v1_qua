@@ -1,0 +1,484 @@
+{
+  "ok": [
+    {
+      "f": "src/app/layout/bfs/bfs-request-items/bfs-request-items.component.ts",
+      "s": 100,
+      "b": 95.5,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/components/vendortab/vendortab.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/components/gmt-vendors-list/gmt-vendors-list.component.ts",
+      "s": 100,
+      "b": 96.2,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/vendor/vendor-registration/vendor-registration.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/components/sidebar/sidebar.component.ts",
+      "s": 100,
+      "b": 90.7,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-vendor-terms-condts/cat-mgr-vendor-terms-condts.component.ts",
+      "s": 100,
+      "b": 90.6,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/layout.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-vendor-catalogue/cat-mgr-vendor-catalogue.component.ts",
+      "s": 100,
+      "b": 92.2,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/category/category-list/category-list.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/category/link-client-modal/link-client-modal.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/create-auction-modal/create-auction-modal.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-item-catalogue/cat-mgr-item-catalogue.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/pro-cpx-vendor-summary/pro-cpx-vendor-ppos/pro-cpx-vendor-ppos.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/category/item-list/item-list.component.ts",
+      "s": 100,
+      "b": 97,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-gmt-register-clients/cat-mgr-gmt-register-clients.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/components/forwarded-vendors-tab/forwarded-vendors-tab.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/raise-issue/components/create-issue/create-issue.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/bfs/bfs-my-items/bfs-my-items.component.ts",
+      "s": 100,
+      "b": 94.4,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/components/approvalpending-tab/approvalpending-tab.component.ts",
+      "s": 100,
+      "b": 94.4,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/vendor-evolution/vendor-client/vendor-client.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/bfs/vendor-bfs-my-item-bids/vendor-bfs-my-item-bids.component.ts",
+      "s": 100,
+      "b": 94.6,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/vendor-view-model/vendor-view-model.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-pr-line-items-tab/cat-mgr-pr-line-items-tab.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/bfs/bfs-my-bids/bfs-my-bids.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/invoices/advance-payment-requests/advance-payment-requests.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/vendor/components/add-services/add-services.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/invoices/create-edit-advance-payment-requests/create-edit-advance-payment-requests.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/pos/po-view-delivery/po-view-delivery.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/PdfReadable/PdfReadable.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/vendor-request/components/vendor-request/vendor-request.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/configurations/uom/uom.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-procu-requests/cat-mgr-procu-requests.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/dynamic-pricing-items/dynamic-pricing-items.component.ts",
+      "s": 100,
+      "b": 93.3,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/category-mgr/subTab/cat-mgr-vendors-sub-tab/cat-mgr-vendors-sub-tab.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/client/price-trend-chart/price-trend-chart.component.ts",
+      "s": 98.2,
+      "b": 97,
+      "fn": 100,
+      "l": 98.1
+    },
+    {
+      "f": "src/app/layout/invoices/view-invoice-modal/view-invoice-modal.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/vendor/components/add-product/add-products.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/pos/view-pos/view-pos.component.ts",
+      "s": 100,
+      "b": 100,
+      "fn": 100,
+      "l": 100
+    }
+  ],
+  "fail": [
+    {
+      "f": "src/app/shared/modules/common-share/components/capex-cat-mgr-quote-compar/capex-cat-mgr-quote-compar.component.ts",
+      "s": 60,
+      "b": 22.7,
+      "fn": 64.7,
+      "l": 60.5
+    },
+    {
+      "f": "src/app/layout/category/vendor-linking-to-item-modal/vendor-linking-to-item-modal.component.ts",
+      "s": 74.1,
+      "b": 50,
+      "fn": 87,
+      "l": 73.6
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/capex-cat-mgr-post-auction-compar/capex-cat-mgr-post-auction-compar.component.ts",
+      "s": 63.8,
+      "b": 38.9,
+      "fn": 62.5,
+      "l": 62.2
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/ppo-reports/ppo-reports.component.ts",
+      "s": 58.8,
+      "b": 34.4,
+      "fn": 80,
+      "l": 55.7
+    },
+    {
+      "f": "src/app/layout/vendor/vendor-rfq/vendor-rfq.component.ts",
+      "s": 58.5,
+      "b": 18.2,
+      "fn": 73.1,
+      "l": 58.5
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/post-auction-compare/post-auction-compare.component.ts",
+      "s": 54.7,
+      "b": 10.5,
+      "fn": 50,
+      "l": 53.8
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/vendor-evolution/vendor-evolution.component.ts",
+      "s": 51.1,
+      "b": 25,
+      "fn": 92.8,
+      "l": 51.1
+    },
+    {
+      "f": "src/app/layout/category-mgr/pr-reports/pr-reports.component.ts",
+      "s": 51.9,
+      "b": 36.1,
+      "fn": 82.3,
+      "l": 50.5
+    },
+    {
+      "f": "src/app/layout/category/linked-vendor-list/linked-vendor-list.component.ts",
+      "s": 50.6,
+      "b": 38.1,
+      "fn": 76.2,
+      "l": 49.3
+    },
+    {
+      "f": "src/app/layout/category/item-list-by-vendor/item-list-by-vendor.component.ts",
+      "s": 61.9,
+      "b": 28,
+      "fn": 85.7,
+      "l": 61
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/linked-pr-ppo-create/linked-pr-ppo-create.component.ts",
+      "s": 49,
+      "b": 0,
+      "fn": 69.2,
+      "l": 49
+    },
+    {
+      "f": "src/app/layout/invoices/create-invoice/create-invoice.component.ts",
+      "s": 53.7,
+      "b": 27.3,
+      "fn": 64.3,
+      "l": 54.7
+    },
+    {
+      "f": "src/app/layout/pos/accept-pos/accept-pos.component.ts",
+      "s": 49.7,
+      "b": 39.4,
+      "fn": 77.8,
+      "l": 50.3
+    },
+    {
+      "f": "src/app/layout/category-mgr/auctions/auction-bid-details/auction-bid-details.component.ts",
+      "s": 46.5,
+      "b": 15.4,
+      "fn": 57.1,
+      "l": 47.4
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/po/po-create/po-create.component.ts",
+      "s": 48.8,
+      "b": 20.4,
+      "fn": 63.3,
+      "l": 49.4
+    },
+    {
+      "f": "src/app/layout/invoices/invoices-list/invoices-list.component.ts",
+      "s": 53.9,
+      "b": 18.2,
+      "fn": 61.9,
+      "l": 55.5
+    },
+    {
+      "f": "src/app/login/password-change/password-change.component.ts",
+      "s": 40.6,
+      "b": 15.6,
+      "fn": 77.3,
+      "l": 38.8
+    },
+    {
+      "f": "src/app/layout/pos/po-create-asn/po-create-asn.component.ts",
+      "s": 45.1,
+      "b": 8.3,
+      "fn": 56.3,
+      "l": 46.4
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/vendor-choose-modal-popup/vendor-choose-modal-popup.component.ts",
+      "s": 44.5,
+      "b": 21.1,
+      "fn": 53.6,
+      "l": 47.1
+    },
+    {
+      "f": "src/app/layout/category/new-create-sub-category/product-sub-category/product-sub-category.component.ts",
+      "s": 45.3,
+      "b": 27,
+      "fn": 62.5,
+      "l": 43.2
+    },
+    {
+      "f": "src/app/layout/category/new-create-sub-category/service-sub-category/service-sub-category.component.ts",
+      "s": 45.3,
+      "b": 27,
+      "fn": 62.5,
+      "l": 43.5
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/ppo-create/ppo-create.component.ts",
+      "s": 43.1,
+      "b": 20.8,
+      "fn": 50,
+      "l": 43.1
+    },
+    {
+      "f": "src/app/layout/category-mgr/category-mgr-reports/category-mgr-reports.component.ts",
+      "s": 42.2,
+      "b": 14.8,
+      "fn": 50,
+      "l": 42.2
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/add-or-edit-vendor-modal/add-or-edit-vendor-modal.component.ts",
+      "s": 40,
+      "b": 20.6,
+      "fn": 55.5,
+      "l": 40
+    },
+    {
+      "f": "src/app/layout/vendor/auctions/live-auction-for-itemwise/live-auction-for-itemwise.component.ts",
+      "s": 37.8,
+      "b": 17.5,
+      "fn": 56.5,
+      "l": 36.5
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/quot-view-details/quot-view-details.component.ts",
+      "s": 33.3,
+      "b": 16.7,
+      "fn": 64.3,
+      "l": 32
+    },
+    {
+      "f": "src/app/layout/vendor/vendor-quot-subm/vendor-quot-subm.component.ts",
+      "s": 100,
+      "b": 50,
+      "fn": 100,
+      "l": 100
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/forwarded-vendor/forwarded-vendor.component.ts",
+      "s": 98.1,
+      "b": 77.8,
+      "fn": 93.8,
+      "l": 98
+    },
+    {
+      "f": "src/app/layout/components/header/header.component.ts",
+      "s": 95.3,
+      "b": 60,
+      "fn": 100,
+      "l": 94.9
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/pr-details-view/pr-details-view.component.ts",
+      "s": 92.2,
+      "b": 55.2,
+      "fn": 95,
+      "l": 92.1
+    }
+  ],
+  "missing": [],
+  "errors": []
+}

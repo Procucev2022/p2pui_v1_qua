@@ -2,7 +2,13 @@ import { SharedPipesModule } from './shared-pipes.module';
 
 describe('SharedPipesModule', () => {
   it('should create an instance', () => {
-    const module = new SharedPipesModule();
-    expect(module).toBeTruthy();
+    expect(new SharedPipesModule()).toBeTruthy();
+  });
+
+  it('should be constructible multiple times', () => {
+    const a = new SharedPipesModule();
+    const b = new SharedPipesModule();
+    expect(a).toBeTruthy();
+    expect(b).toBeTruthy();
   });
 });

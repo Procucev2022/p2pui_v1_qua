@@ -1,13 +1,14 @@
 import { AppModule } from './app.module';
 
 describe('AppModule', () => {
-    let appModule: AppModule;
+  it('should create an instance', () => {
+    expect(new AppModule()).toBeTruthy();
+  });
 
-    beforeEach(() => {
-        appModule = new AppModule();
-    });
-
-    it('should create an instance', () => {
-        expect(appModule).toBeTruthy();
-    });
+  it('should be constructible multiple times', () => {
+    const a = new AppModule();
+    const b = new AppModule();
+    expect(a).toBeTruthy();
+    expect(b).toBeTruthy();
+  });
 });

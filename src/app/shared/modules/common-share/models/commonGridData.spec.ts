@@ -1,4 +1,7 @@
-import { CommonGridData } from './commonGridData';
+import {
+  CommonGridData,
+  createEmptyCommonGridData,
+} from './commonGridData';
 
 describe('CommonGridData', () => {
   it('should accept a conforming grid config object', () => {
@@ -14,10 +17,18 @@ describe('CommonGridData', () => {
       editableCells: [],
       gridSelectionCheckbox: {
         showSelction: true,
-        allowMultipleSelection: false
-      }
+        allowMultipleSelection: false,
+      },
     };
     expect(data.gridTitle).toBe('Title');
     expect(data.gridSelectionCheckbox.showSelction).toBe(true);
+  });
+
+  it('should create an empty grid data via factory', () => {
+    const empty = createEmptyCommonGridData();
+    expect(empty.actionEvents).toEqual([]);
+    expect(empty.gridSelectionCheckbox.showSelction).toBe(false);
+    expect(empty.gridSelectionCheckbox.allowMultipleSelection).toBe(false);
+    expect(empty.gridTitle).toBe('');
   });
 });

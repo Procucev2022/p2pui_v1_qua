@@ -1,13 +1,14 @@
 import { PageHeaderModule } from './page-header.module';
 
 describe('PageHeaderModule', () => {
-  let pageHeaderModule: PageHeaderModule;
-
-  beforeEach(() => {
-    pageHeaderModule = new PageHeaderModule();
+  it('should create an instance', () => {
+    expect(new PageHeaderModule()).toBeTruthy();
   });
 
-  it('should create an instance', () => {
-    expect(pageHeaderModule).toBeTruthy();
+  it('should be constructible multiple times', () => {
+    const a = new PageHeaderModule();
+    const b = new PageHeaderModule();
+    expect(a).toBeTruthy();
+    expect(b).toBeTruthy();
   });
 });

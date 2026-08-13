@@ -1,13 +1,14 @@
 import { VendorMgrModule } from './vendor-mgr.module';
 
 describe('VendorMgrModule', () => {
-  let vendorMgrModule: VendorMgrModule;
-
-  beforeEach(() => {
-    vendorMgrModule = new VendorMgrModule();
+  it('should create an instance', () => {
+    expect(new VendorMgrModule()).toBeTruthy();
   });
 
-  it('should create an instance', () => {
-    expect(vendorMgrModule).toBeTruthy();
+  it('should be constructible multiple times', () => {
+    const a = new VendorMgrModule();
+    const b = new VendorMgrModule();
+    expect(a).toBeTruthy();
+    expect(b).toBeTruthy();
   });
 });

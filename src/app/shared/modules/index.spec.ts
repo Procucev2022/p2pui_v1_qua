@@ -1,4 +1,4 @@
-import { PageHeaderModule, StatModule } from './index';
+import { PageHeaderModule, StatModule, SHARED_MODULES_BARREL } from './index';
 
 describe('shared/modules index', () => {
   it('should export PageHeaderModule', () => {
@@ -7,5 +7,9 @@ describe('shared/modules index', () => {
 
   it('should export StatModule', () => {
     expect(StatModule).toBeDefined();
+  });
+
+  it('should export barrel marker', () => {
+    expect(SHARED_MODULES_BARREL).toBe(true);
   });
 });

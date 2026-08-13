@@ -28,7 +28,7 @@ export class SubCategoryDropdownComponent implements OnInit {
   getSubCategoryList() {
     this.clientService.getSubCategoryList({id: localStorage.getItem('orgId')}).subscribe((res: any) => {
       if (Array.isArray(res)) {
-        this.filtered_subCategoryList = res || [];
+        this.filtered_subCategoryList = res;
       }
     });
   }

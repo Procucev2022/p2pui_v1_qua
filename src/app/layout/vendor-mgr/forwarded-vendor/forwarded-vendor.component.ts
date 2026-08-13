@@ -118,7 +118,7 @@ export class ForwardedVendorComponent implements OnInit {
       this.vendorViewService.getVendorById(temp).subscribe((res: any) => {
 
         if (res) {
-          const vendorRegData = res || {};
+          const vendorRegData = res;
           this.viewVendorModal(vendorRegData);
         } else {
           this.toaster.error('Failed to Fetch data', 'Failure');

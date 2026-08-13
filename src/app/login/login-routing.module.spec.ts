@@ -1,13 +1,14 @@
 import { LoginRoutingModule } from './login-routing.module';
 
 describe('LoginRoutingModule', () => {
-  let module: LoginRoutingModule;
-
-  beforeEach(() => {
-    module = new LoginRoutingModule();
+  it('should create an instance', () => {
+    expect(new LoginRoutingModule()).toBeTruthy();
   });
 
-  it('should create an instance', () => {
-    expect(module).toBeTruthy();
+  it('should be constructible multiple times', () => {
+    const a = new LoginRoutingModule();
+    const b = new LoginRoutingModule();
+    expect(a).toBeTruthy();
+    expect(b).toBeTruthy();
   });
 });

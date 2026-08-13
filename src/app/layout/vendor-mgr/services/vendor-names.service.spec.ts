@@ -3,7 +3,6 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { VendorNamesService } from './vendor-names.service';
 import { AppApiConfig } from 'src/app/shared/constants/app-api.config';
 
-
 describe('VendorNamesService', () => {
   let service: VendorNamesService;
   let httpMock: HttpTestingController;
@@ -11,9 +10,7 @@ describe('VendorNamesService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [
-        VendorNamesService
-      ]
+      providers: [VendorNamesService],
     });
     service = TestBed.inject(VendorNamesService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -27,20 +24,37 @@ describe('VendorNamesService', () => {
     expect(service).toBeTruthy();
   });
 
+  it('should call getVendorNames', () => {
+    service.getVendorNames().subscribe((res: any) => {
+      expect(res).toEqual({ ok: true });
+    });
+    const req = httpMock.expectOne(
+      AppApiConfig.apiEndpoint + AppApiConfig.GET_ALL_VENDORS_BY_VENDOR_APPROVED
+    );
+    expect(req.request.method).toBe('GET');
+    req.flush({ ok: true });
+  });
+
   it('should call getVendorClassificationData', () => {
     service.getVendorClassificationData({ id: 1 }).subscribe((res: any) => {
       expect(res).toEqual({ ok: true });
     });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_VENDORS_BY_CATEGORY);
+    const req = httpMock.expectOne(
+      AppApiConfig.apiEndpoint + AppApiConfig.GET_VENDORS_BY_CATEGORY
+    );
     expect(req.request.method).toBe('POST');
     req.flush({ ok: true });
   });
 
   it('should call getVendorClassificationDataForServices', () => {
-    service.getVendorClassificationDataForServices({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_VENDOR_BY_SAC);
+    service
+      .getVendorClassificationDataForServices({ id: 1 })
+      .subscribe((res: any) => {
+        expect(res).toEqual({ ok: true });
+      });
+    const req = httpMock.expectOne(
+      AppApiConfig.apiEndpoint + AppApiConfig.GET_VENDOR_BY_SAC
+    );
     expect(req.request.method).toBe('POST');
     req.flush({ ok: true });
   });
@@ -49,8 +63,28 @@ describe('VendorNamesService', () => {
     service.approveVendorRegistration({ id: 1 }).subscribe((res: any) => {
       expect(res).toEqual({ ok: true });
     });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.APPROVE_VENDOR_REGISTRATION);
+    const req = httpMock.expectOne(
+      AppApiConfig.apiEndpoint + AppApiConfig.APPROVE_VENDOR_REGISTRATION
+    );
     expect(req.request.method).toBe('POST');
+    req.flush({ ok: true });
+  });
+
+  it('should call getSearchData', () => {
+    service.getSearchData().subscribe((res: any) => {
+      expect(res).toEqual({ ok: true });
+    });
+    const req = httpMock.expectOne('/assets/jsons/vendor-search.json');
+    expect(req.request.method).toBe('GET');
+    req.flush({ ok: true });
+  });
+
+  it('should call getRfqsList', () => {
+    service.getRfqsList().subscribe((res: any) => {
+      expect(res).toEqual({ ok: true });
+    });
+    const req = httpMock.expectOne('../services/vendor-search.json');
+    expect(req.request.method).toBe('GET');
     req.flush({ ok: true });
   });
 
@@ -58,7 +92,9 @@ describe('VendorNamesService', () => {
     service.getVendorOrClientByType({ id: 1 }).subscribe((res: any) => {
       expect(res).toEqual({ ok: true });
     });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_VENDOR_OR_CLIENT_BY_TYPE);
+    const req = httpMock.expectOne(
+      AppApiConfig.apiEndpoint + AppApiConfig.GET_VENDOR_OR_CLIENT_BY_TYPE
+    );
     expect(req.request.method).toBe('POST');
     req.flush({ ok: true });
   });
@@ -67,7 +103,9 @@ describe('VendorNamesService', () => {
     service.getProductsByVendor({ id: 1 }).subscribe((res: any) => {
       expect(res).toEqual({ ok: true });
     });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_PRODUCT_BY_VENDOR);
+    const req = httpMock.expectOne(
+      AppApiConfig.apiEndpoint + AppApiConfig.GET_PRODUCT_BY_VENDOR
+    );
     expect(req.request.method).toBe('POST');
     req.flush({ ok: true });
   });
@@ -76,7 +114,9 @@ describe('VendorNamesService', () => {
     service.getServicesByVendor({ id: 1 }).subscribe((res: any) => {
       expect(res).toEqual({ ok: true });
     });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_SERVICES_BY_VENDOR);
+    const req = httpMock.expectOne(
+      AppApiConfig.apiEndpoint + AppApiConfig.GET_SERVICES_BY_VENDOR
+    );
     expect(req.request.method).toBe('POST');
     req.flush({ ok: true });
   });

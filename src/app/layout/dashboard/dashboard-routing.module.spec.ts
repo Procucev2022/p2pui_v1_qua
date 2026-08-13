@@ -1,13 +1,14 @@
 import { DashboardRoutingModule } from './dashboard-routing.module';
 
 describe('DashboardRoutingModule', () => {
-  let module: DashboardRoutingModule;
-
-  beforeEach(() => {
-    module = new DashboardRoutingModule();
+  it('should create an instance', () => {
+    expect(new DashboardRoutingModule()).toBeTruthy();
   });
 
-  it('should create an instance', () => {
-    expect(module).toBeTruthy();
+  it('should be constructible multiple times', () => {
+    const a = new DashboardRoutingModule();
+    const b = new DashboardRoutingModule();
+    expect(a).toBeTruthy();
+    expect(b).toBeTruthy();
   });
 });

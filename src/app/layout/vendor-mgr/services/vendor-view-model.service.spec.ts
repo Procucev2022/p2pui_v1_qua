@@ -3,7 +3,6 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { VendorViewModelService } from './vendor-view-model.service';
 import { AppApiConfig } from 'src/app/shared/constants/app-api.config';
 
-
 describe('VendorViewModelService', () => {
   let service: VendorViewModelService;
   let httpMock: HttpTestingController;
@@ -11,9 +10,7 @@ describe('VendorViewModelService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [
-        VendorViewModelService
-      ]
+      providers: [VendorViewModelService],
     });
     service = TestBed.inject(VendorViewModelService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -31,8 +28,55 @@ describe('VendorViewModelService', () => {
     service.getVendorById({ id: 1 }).subscribe((res: any) => {
       expect(res).toEqual({ ok: true });
     });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_VENDOR_BY_ID);
+    const req = httpMock.expectOne(
+      AppApiConfig.apiEndpoint + AppApiConfig.GET_VENDOR_BY_ID
+    );
     expect(req.request.method).toBe('POST');
+    req.flush({ ok: true });
+  });
+
+  it('should call getRfqData', () => {
+    service.getRfqData().subscribe((res: any) => {
+      expect(res).toEqual({ ok: true });
+    });
+    const req = httpMock.expectOne('/assets/jsons/vendorDashboardRfqs.json');
+    expect(req.request.method).toBe('GET');
+    req.flush({ ok: true });
+  });
+
+  it('should call getProductsData', () => {
+    service.getProductsData().subscribe((res: any) => {
+      expect(res).toEqual({ ok: true });
+    });
+    const req = httpMock.expectOne('/assets/jsons/vendorProductsData.json');
+    expect(req.request.method).toBe('GET');
+    req.flush({ ok: true });
+  });
+
+  it('should call getServicesData', () => {
+    service.getServicesData().subscribe((res: any) => {
+      expect(res).toEqual({ ok: true });
+    });
+    const req = httpMock.expectOne('/assets/jsons/vendorServicesData.json');
+    expect(req.request.method).toBe('GET');
+    req.flush({ ok: true });
+  });
+
+  it('should call getVendorContactsData', () => {
+    service.getVendorContactsData().subscribe((res: any) => {
+      expect(res).toEqual({ ok: true });
+    });
+    const req = httpMock.expectOne('/assets/jsons/vendorContactsData.json');
+    expect(req.request.method).toBe('GET');
+    req.flush({ ok: true });
+  });
+
+  it('should call getClientRefData', () => {
+    service.getClientRefData().subscribe((res: any) => {
+      expect(res).toEqual({ ok: true });
+    });
+    const req = httpMock.expectOne('/assets/jsons/vendorClientRefData.json');
+    expect(req.request.method).toBe('GET');
     req.flush({ ok: true });
   });
 });

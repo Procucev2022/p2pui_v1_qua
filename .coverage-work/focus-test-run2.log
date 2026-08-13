@@ -1,0 +1,406 @@
+Using browser: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+- Generating browser application bundles (phase: setup)...
+    TypeScript compiler options "target" and "useDefineForClassFields" are set to "ES2022" and "false" respectively by the Angular CLI. To control ECMA version and features use the Browerslist configuration. For more information, see https://angular.io/guide/build#configuring-browser-compatibility
+    NOTE: You can set the "target" to "ES2022" in the project's tsconfig to remove this warning.
+✔ Browser application bundle generation complete.
+13 08 2026 15:14:10.220:INFO [karma-server]: Karma v6.4.4 server started at http://localhost:9876/
+13 08 2026 15:14:10.223:INFO [launcher]: Launching browsers ChromeHeadlessNoSandbox with concurrency unlimited
+13 08 2026 15:14:10.231:INFO [launcher]: Starting browser ChromeHeadless
+13 08 2026 15:14:12.336:INFO [Edge 151.0.0.0 (Windows 10)]: Connected on socket wAbD3hoNPuhP0NsMAAAB with id 13973770
+Edge 151.0.0.0 (Windows 10): Executed 0 of 91 SUCCESS (0 secs / 0 secs)
+[1A[2KLOG: 'res', [Object{name: 'RFQ1', id: '1'}]
+Edge 151.0.0.0 (Windows 10): Executed 0 of 91 SUCCESS (0 secs / 0 secs)
+[1A[2KLOG: 'res', Object{id: 'x'}
+Edge 151.0.0.0 (Windows 10): Executed 0 of 91 SUCCESS (0 secs / 0 secs)
+[1A[2KLOG: 'res', [Object{name: 'RFQ1', id: '1'}]
+Edge 151.0.0.0 (Windows 10): Executed 0 of 91 SUCCESS (0 secs / 0 secs)
+[1A[2KLOG: [Object{id: 'd1'}]
+Edge 151.0.0.0 (Windows 10): Executed 0 of 91 SUCCESS (0 secs / 0 secs)
+[1A[2KLOG: Object{errorCode: 204}
+Edge 151.0.0.0 (Windows 10): Executed 0 of 91 SUCCESS (0 secs / 0 secs)
+[1A[2KLOG: Object{errorCode: 500}
+Edge 151.0.0.0 (Windows 10): Executed 0 of 91 SUCCESS (0 secs / 0 secs)
+[1A[2KLOG: [Object{id: '1'}]
+Edge 151.0.0.0 (Windows 10): Executed 0 of 91 SUCCESS (0 secs / 0 secs)
+[1A[2KLOG: Object{errorCode: 204}
+Edge 151.0.0.0 (Windows 10): Executed 0 of 91 SUCCESS (0 secs / 0 secs)
+[1A[2KLOG: Object{statusCode: 200, message: 'ok'}
+Edge 151.0.0.0 (Windows 10): Executed 0 of 91 SUCCESS (0 secs / 0 secs)
+[1A[2KLOG: Object{statusCode: 500, message: 'err'}
+Edge 151.0.0.0 (Windows 10): Executed 0 of 91 SUCCESS (0 secs / 0 secs)
+[1A[2KLOG: Object{errorCode: 500}
+Edge 151.0.0.0 (Windows 10): Executed 0 of 91 SUCCESS (0 secs / 0 secs)
+[1A[2KLOG: [Object{id: 'd1'}]
+Edge 151.0.0.0 (Windows 10): Executed 0 of 91 SUCCESS (0 secs / 0 secs)
+[1A[2KLOG: [Object{id: 'd1'}]
+Edge 151.0.0.0 (Windows 10): Executed 0 of 91 SUCCESS (0 secs / 0 secs)
+[1A[2KLOG: [Object{id: 'd1'}]
+Edge 151.0.0.0 (Windows 10): Executed 0 of 91 SUCCESS (0 secs / 0 secs)
+[1A[2KLOG: [Object{id: 'd1'}]
+Edge 151.0.0.0 (Windows 10): Executed 0 of 91 SUCCESS (0 secs / 0 secs)
+[1A[2KLOG: [Object{id: 'd1'}]
+Edge 151.0.0.0 (Windows 10): Executed 0 of 91 SUCCESS (0 secs / 0 secs)
+[1A[2KLOG: undefined
+Edge 151.0.0.0 (Windows 10): Executed 0 of 91 SUCCESS (0 secs / 0 secs)
+[1A[2KLOG: null
+Edge 151.0.0.0 (Windows 10): Executed 0 of 91 SUCCESS (0 secs / 0 secs)
+[1A[2KLOG: true
+Edge 151.0.0.0 (Windows 10): Executed 0 of 91 SUCCESS (0 secs / 0 secs)
+[1A[2KLOG: false
+Edge 151.0.0.0 (Windows 10): Executed 0 of 91 SUCCESS (0 secs / 0 secs)
+[1A[2KLOG: Object{id: '1', vendorId: 'v1', invalid: false, valid: true, value: Object{id: '1'}, status: 'Success', statusCode: 200, message: 'ok', target: Object{value: 'x', files: []}, preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }}
+Edge 151.0.0.0 (Windows 10): Executed 0 of 91 SUCCESS (0 secs / 0 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 1 of 91 SUCCESS (0 secs / 0.027 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 2 of 91 SUCCESS (0 secs / 0.031 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10) LoaderComponent should update isLoading when emits false without hiding again FAILED
+	Expected spy NgxSpinnerService.hide not to have been called.
+	    at <Jasmine>
+	    at UserContext.<anonymous> (src/app/shared/loader/loader.component.spec.ts:83:30)
+	    at Generator.next (<anonymous>)
+	    at asyncGeneratorStep (node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js:3:1)
+	    at _next (node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js:22:1)
+Edge 151.0.0.0 (Windows 10): Executed 3 of 91 (1 FAILED) (0 secs / 0.035 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 4 of 91 (1 FAILED) (0 secs / 0.039 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 5 of 91 (1 FAILED) (0 secs / 0.042 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 6 of 91 (1 FAILED) (0 secs / 0.047 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 7 of 91 (1 FAILED) (0 secs / 0.051 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 8 of 91 (1 FAILED) (0 secs / 0.054 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 9 of 91 (1 FAILED) (0 secs / 0.06 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 10 of 91 (1 FAILED) (0 secs / 0.064 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 11 of 91 (1 FAILED) (0 secs / 0.07 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 12 of 91 (1 FAILED) (0 secs / 0.073 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 13 of 91 (1 FAILED) (0 secs / 0.076 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 14 of 91 (1 FAILED) (0 secs / 0.083 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 15 of 91 (1 FAILED) (0 secs / 0.088 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 16 of 91 (1 FAILED) (0 secs / 0.091 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 17 of 91 (1 FAILED) (0 secs / 0.093 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 18 of 91 (1 FAILED) (0 secs / 0.096 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 19 of 91 (1 FAILED) (0 secs / 0.114 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 20 of 91 (1 FAILED) (0 secs / 0.122 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 21 of 91 (1 FAILED) (0 secs / 0.127 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 22 of 91 (1 FAILED) (0 secs / 0.131 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 23 of 91 (1 FAILED) (0 secs / 0.134 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 24 of 91 (1 FAILED) (0 secs / 0.14 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 25 of 91 (1 FAILED) (0 secs / 0.145 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 26 of 91 (1 FAILED) (0 secs / 0.15 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 27 of 91 (1 FAILED) (0 secs / 0.155 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 28 of 91 (1 FAILED) (0 secs / 0.159 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 29 of 91 (1 FAILED) (0 secs / 0.169 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 30 of 91 (1 FAILED) (0 secs / 0.176 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 31 of 91 (1 FAILED) (0 secs / 0.181 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 32 of 91 (1 FAILED) (0 secs / 0.184 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 33 of 91 (1 FAILED) (0 secs / 0.187 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 34 of 91 (1 FAILED) (0 secs / 0.19 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 35 of 91 (1 FAILED) (0 secs / 0.194 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 36 of 91 (1 FAILED) (0 secs / 0.198 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 37 of 91 (1 FAILED) (0 secs / 0.206 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 38 of 91 (1 FAILED) (0 secs / 0.212 secs)
+[1A[2KLOG: [Object{id: 'v1'}, Object{id: 'v2'}]
+Edge 151.0.0.0 (Windows 10): Executed 38 of 91 (1 FAILED) (0 secs / 0.212 secs)
+[1A[2KLOG: Object{statusCode: 200, message: 'ok'}
+Edge 151.0.0.0 (Windows 10): Executed 38 of 91 (1 FAILED) (0 secs / 0.212 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 39 of 91 (1 FAILED) (0 secs / 0.215 secs)
+[1A[2KLOG: [Object{id: 'v1'}, Object{id: 'v2'}]
+Edge 151.0.0.0 (Windows 10): Executed 39 of 91 (1 FAILED) (0 secs / 0.215 secs)
+[1A[2KLOG: Object{statusCode: 500, message: 'bad'}
+Edge 151.0.0.0 (Windows 10): Executed 39 of 91 (1 FAILED) (0 secs / 0.215 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 40 of 91 (1 FAILED) (0 secs / 0.218 secs)
+[1A[2KLOG: [Object{id: 'v1'}, Object{id: 'v2'}]
+Edge 151.0.0.0 (Windows 10): Executed 40 of 91 (1 FAILED) (0 secs / 0.218 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 41 of 91 (1 FAILED) (0 secs / 0.225 secs)
+[1A[2KLOG: [Object{id: 'v1'}, Object{id: 'v2'}]
+Edge 151.0.0.0 (Windows 10): Executed 41 of 91 (1 FAILED) (0 secs / 0.225 secs)
+[1A[2KLOG: [Object{id: '1'}]
+Edge 151.0.0.0 (Windows 10): Executed 41 of 91 (1 FAILED) (0 secs / 0.225 secs)
+[1A[2KLOG: Object{errorCode: 204}
+Edge 151.0.0.0 (Windows 10): Executed 41 of 91 (1 FAILED) (0 secs / 0.225 secs)
+[1A[2KLOG: Object{statusCode: 200, message: 'ok'}
+Edge 151.0.0.0 (Windows 10): Executed 41 of 91 (1 FAILED) (0 secs / 0.225 secs)
+[1A[2KLOG: Object{statusCode: 500, message: 'err'}
+Edge 151.0.0.0 (Windows 10): Executed 41 of 91 (1 FAILED) (0 secs / 0.225 secs)
+[1A[2KLOG: Object{errorCode: 500}
+Edge 151.0.0.0 (Windows 10): Executed 41 of 91 (1 FAILED) (0 secs / 0.225 secs)
+[1A[2KLOG: Object{statusCode: 200, message: 'ok'}
+Edge 151.0.0.0 (Windows 10): Executed 41 of 91 (1 FAILED) (0 secs / 0.225 secs)
+[1A[2KLOG: [Object{id: '1'}]
+Edge 151.0.0.0 (Windows 10): Executed 41 of 91 (1 FAILED) (0 secs / 0.225 secs)
+[1A[2KLOG: [Object{id: '1'}]
+Edge 151.0.0.0 (Windows 10): Executed 41 of 91 (1 FAILED) (0 secs / 0.225 secs)
+[1A[2KLOG: [Object{id: '1'}]
+Edge 151.0.0.0 (Windows 10): Executed 41 of 91 (1 FAILED) (0 secs / 0.225 secs)
+[1A[2KLOG: [Object{id: '1'}]
+Edge 151.0.0.0 (Windows 10): Executed 41 of 91 (1 FAILED) (0 secs / 0.225 secs)
+[1A[2KLOG: [Object{id: '1'}]
+Edge 151.0.0.0 (Windows 10): Executed 41 of 91 (1 FAILED) (0 secs / 0.225 secs)
+[1A[2KLOG: Object{statusCode: 200, message: 'ok'}
+Edge 151.0.0.0 (Windows 10): Executed 41 of 91 (1 FAILED) (0 secs / 0.225 secs)
+[1A[2KLOG: Object{statusCode: 200, message: 'ok'}
+Edge 151.0.0.0 (Windows 10): Executed 41 of 91 (1 FAILED) (0 secs / 0.225 secs)
+[1A[2KLOG: Object{statusCode: 200, message: 'ok'}
+Edge 151.0.0.0 (Windows 10): Executed 41 of 91 (1 FAILED) (0 secs / 0.225 secs)
+[1A[2KLOG: Object{statusCode: 200, message: 'ok'}
+Edge 151.0.0.0 (Windows 10): Executed 41 of 91 (1 FAILED) (0 secs / 0.225 secs)
+[1A[2KLOG: Object{statusCode: 200, message: 'ok'}
+Edge 151.0.0.0 (Windows 10): Executed 41 of 91 (1 FAILED) (0 secs / 0.225 secs)
+[1A[2KLOG: undefined
+Edge 151.0.0.0 (Windows 10): Executed 41 of 91 (1 FAILED) (0 secs / 0.225 secs)
+[1A[2KLOG: null
+Edge 151.0.0.0 (Windows 10): Executed 41 of 91 (1 FAILED) (0 secs / 0.225 secs)
+[1A[2KLOG: true
+Edge 151.0.0.0 (Windows 10): Executed 41 of 91 (1 FAILED) (0 secs / 0.225 secs)
+[1A[2KLOG: false
+Edge 151.0.0.0 (Windows 10): Executed 41 of 91 (1 FAILED) (0 secs / 0.225 secs)
+[1A[2KLOG: Object{id: '1', vendorId: 'v1', invalid: false, valid: true, value: Object{id: '1'}, status: 'Success', statusCode: 200, message: 'ok', target: Object{value: 'x', files: []}, preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }}
+Edge 151.0.0.0 (Windows 10): Executed 41 of 91 (1 FAILED) (0 secs / 0.225 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 42 of 91 (1 FAILED) (0 secs / 0.229 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 43 of 91 (1 FAILED) (0 secs / 0.233 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 44 of 91 (1 FAILED) (0 secs / 0.235 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 45 of 91 (1 FAILED) (0 secs / 0.237 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 46 of 91 (1 FAILED) (0 secs / 0.243 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 47 of 91 (1 FAILED) (0 secs / 0.248 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 48 of 91 (1 FAILED) (0 secs / 0.252 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 49 of 91 (1 FAILED) (0 secs / 0.255 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 50 of 91 (1 FAILED) (0 secs / 0.258 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 51 of 91 (1 FAILED) (0 secs / 0.261 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 52 of 91 (1 FAILED) (0 secs / 0.266 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 53 of 91 (1 FAILED) (0 secs / 0.27 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 54 of 91 (1 FAILED) (0 secs / 0.273 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 55 of 91 (1 FAILED) (0 secs / 0.276 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 56 of 91 (1 FAILED) (0 secs / 0.279 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 57 of 91 (1 FAILED) (0 secs / 0.281 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 58 of 91 (1 FAILED) (0 secs / 0.283 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 59 of 91 (1 FAILED) (0 secs / 0.285 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 60 of 91 (1 FAILED) (0 secs / 0.287 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 61 of 91 (1 FAILED) (0 secs / 0.297 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 62 of 91 (1 FAILED) (0 secs / 0.301 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 63 of 91 (1 FAILED) (0 secs / 0.304 secs)
+[1A[2KLOG: Object{action: 'Add', productName: 'P1'}
+Edge 151.0.0.0 (Windows 10): Executed 63 of 91 (1 FAILED) (0 secs / 0.304 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 64 of 91 (1 FAILED) (0 secs / 0.336 secs)
+[1A[2KLOG: Object{action: 'Add', productName: 'P1'}
+Edge 151.0.0.0 (Windows 10): Executed 64 of 91 (1 FAILED) (0 secs / 0.336 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 65 of 91 (1 FAILED) (0 secs / 0.34 secs)
+[1A[2KLOG: Object{action: 'Add', productName: 'P1'}
+Edge 151.0.0.0 (Windows 10): Executed 65 of 91 (1 FAILED) (0 secs / 0.34 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 66 of 91 (1 FAILED) (0 secs / 0.344 secs)
+[1A[2KLOG: Object{action: 'Add', productName: 'P1'}
+Edge 151.0.0.0 (Windows 10): Executed 66 of 91 (1 FAILED) (0 secs / 0.344 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 67 of 91 (1 FAILED) (0 secs / 0.348 secs)
+[1A[2KLOG: Object{action: 'Add', productName: 'P1'}
+Edge 151.0.0.0 (Windows 10): Executed 67 of 91 (1 FAILED) (0 secs / 0.348 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 68 of 91 (1 FAILED) (0 secs / 0.352 secs)
+[1A[2KLOG: Object{action: 'Add', productName: 'P1'}
+Edge 151.0.0.0 (Windows 10): Executed 68 of 91 (1 FAILED) (0 secs / 0.352 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 69 of 91 (1 FAILED) (0 secs / 0.357 secs)
+[1A[2KLOG: Object{action: 'Add', productName: 'P1'}
+Edge 151.0.0.0 (Windows 10): Executed 69 of 91 (1 FAILED) (0 secs / 0.357 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 70 of 91 (1 FAILED) (0 secs / 0.361 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 71 of 91 (1 FAILED) (0 secs / 0.364 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 72 of 91 (1 FAILED) (0 secs / 0.367 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 73 of 91 (1 FAILED) (0 secs / 0.369 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 74 of 91 (1 FAILED) (0 secs / 0.371 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 75 of 91 (1 FAILED) (0 secs / 0.373 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 76 of 91 (1 FAILED) (0 secs / 0.377 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 77 of 91 (1 FAILED) (0 secs / 0.381 secs)
+[1A[2KLOG: 'in interval'
+Edge 151.0.0.0 (Windows 10): Executed 77 of 91 (1 FAILED) (0 secs / 0.381 secs)
+[1A[2KLOG: 'in interval'
+Edge 151.0.0.0 (Windows 10): Executed 77 of 91 (1 FAILED) (0 secs / 0.381 secs)
+[1A[2KLOG: 'session ended'
+Edge 151.0.0.0 (Windows 10): Executed 77 of 91 (1 FAILED) (0 secs / 0.381 secs)
+[1A[2KLOG: 'destroy'
+Edge 151.0.0.0 (Windows 10): Executed 77 of 91 (1 FAILED) (0 secs / 0.381 secs)
+[1A[2KLOG: 'destroy'
+Edge 151.0.0.0 (Windows 10): Executed 77 of 91 (1 FAILED) (0 secs / 0.381 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 78 of 91 (1 FAILED) (0 secs / 0.387 secs)
+[1A[2KLOG: 'destroy'
+Edge 151.0.0.0 (Windows 10): Executed 78 of 91 (1 FAILED) (0 secs / 0.387 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 79 of 91 (1 FAILED) (0 secs / 0.39 secs)
+[1A[2KLOG: 'destroy'
+Edge 151.0.0.0 (Windows 10): Executed 79 of 91 (1 FAILED) (0 secs / 0.39 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 80 of 91 (1 FAILED) (0 secs / 0.392 secs)
+[1A[2KLOG: 'in interval'
+Edge 151.0.0.0 (Windows 10): Executed 80 of 91 (1 FAILED) (0 secs / 0.392 secs)
+[1A[2KLOG: 'destroy'
+Edge 151.0.0.0 (Windows 10): Executed 80 of 91 (1 FAILED) (0 secs / 0.392 secs)
+[1A[2KLOG: 'destroy'
+Edge 151.0.0.0 (Windows 10): Executed 80 of 91 (1 FAILED) (0 secs / 0.392 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 81 of 91 (1 FAILED) (0 secs / 0.394 secs)
+[1A[2KLOG: 'destroy'
+Edge 151.0.0.0 (Windows 10): Executed 81 of 91 (1 FAILED) (0 secs / 0.394 secs)
+[1A[2KLOG: 'destroy'
+Edge 151.0.0.0 (Windows 10): Executed 81 of 91 (1 FAILED) (0 secs / 0.394 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 82 of 91 (1 FAILED) (0 secs / 0.397 secs)
+[1A[2KLOG: 'session ended'
+Edge 151.0.0.0 (Windows 10): Executed 82 of 91 (1 FAILED) (0 secs / 0.397 secs)
+[1A[2KLOG: 'destroy'
+Edge 151.0.0.0 (Windows 10): Executed 82 of 91 (1 FAILED) (0 secs / 0.397 secs)
+[1A[2KLOG: 'session ended'
+Edge 151.0.0.0 (Windows 10): Executed 82 of 91 (1 FAILED) (0 secs / 0.397 secs)
+[1A[2KLOG: 'session ended'
+Edge 151.0.0.0 (Windows 10): Executed 82 of 91 (1 FAILED) (0 secs / 0.397 secs)
+[1A[2KLOG: 'session ended'
+Edge 151.0.0.0 (Windows 10): Executed 82 of 91 (1 FAILED) (0 secs / 0.397 secs)
+[1A[2KLOG: 'session ended'
+Edge 151.0.0.0 (Windows 10): Executed 82 of 91 (1 FAILED) (0 secs / 0.397 secs)
+[1A[2KLOG: 'session ended'
+Edge 151.0.0.0 (Windows 10): Executed 82 of 91 (1 FAILED) (0 secs / 0.397 secs)
+[1A[2KLOG: 'session ended'
+Edge 151.0.0.0 (Windows 10): Executed 82 of 91 (1 FAILED) (0 secs / 0.397 secs)
+[1A[2KLOG: 'destroy'
+Edge 151.0.0.0 (Windows 10): Executed 82 of 91 (1 FAILED) (0 secs / 0.397 secs)
+[1A[2KLOG: 'destroy'
+Edge 151.0.0.0 (Windows 10): Executed 82 of 91 (1 FAILED) (0 secs / 0.397 secs)
+[1A[2KLOG: 'destroy'
+Edge 151.0.0.0 (Windows 10): Executed 82 of 91 (1 FAILED) (0 secs / 0.397 secs)
+[1A[2KLOG: 'destroy'
+Edge 151.0.0.0 (Windows 10): Executed 82 of 91 (1 FAILED) (0 secs / 0.397 secs)
+[1A[2KLOG: 'destroy'
+Edge 151.0.0.0 (Windows 10): Executed 82 of 91 (1 FAILED) (0 secs / 0.397 secs)
+[1A[2KLOG: 'destroy'
+Edge 151.0.0.0 (Windows 10): Executed 82 of 91 (1 FAILED) (0 secs / 0.397 secs)
+[1A[2KLOG: 'destroy'
+Edge 151.0.0.0 (Windows 10): Executed 82 of 91 (1 FAILED) (0 secs / 0.397 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 83 of 91 (1 FAILED) (0 secs / 0.4 secs)
+[1A[2KLOG: 'destroy'
+Edge 151.0.0.0 (Windows 10): Executed 83 of 91 (1 FAILED) (0 secs / 0.4 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 84 of 91 (1 FAILED) (0 secs / 0.407 secs)
+[1A[2KLOG: 'session ended'
+Edge 151.0.0.0 (Windows 10): Executed 84 of 91 (1 FAILED) (0 secs / 0.407 secs)
+[1A[2KLOG: 'destroy'
+Edge 151.0.0.0 (Windows 10): Executed 84 of 91 (1 FAILED) (0 secs / 0.407 secs)
+[1A[2KLOG: 'destroy'
+Edge 151.0.0.0 (Windows 10): Executed 84 of 91 (1 FAILED) (0 secs / 0.407 secs)
+[1A[2KLOG: 'session ended'
+Edge 151.0.0.0 (Windows 10): Executed 84 of 91 (1 FAILED) (0 secs / 0.407 secs)
+[1A[2KLOG: 'session ended'
+Edge 151.0.0.0 (Windows 10): Executed 84 of 91 (1 FAILED) (0 secs / 0.407 secs)
+[1A[2KLOG: 'session ended'
+Edge 151.0.0.0 (Windows 10): Executed 84 of 91 (1 FAILED) (0 secs / 0.407 secs)
+[1A[2KLOG: 'session ended'
+Edge 151.0.0.0 (Windows 10): Executed 84 of 91 (1 FAILED) (0 secs / 0.407 secs)
+[1A[2KLOG: 'session ended'
+Edge 151.0.0.0 (Windows 10): Executed 84 of 91 (1 FAILED) (0 secs / 0.407 secs)
+[1A[2KLOG: 'destroy'
+Edge 151.0.0.0 (Windows 10): Executed 84 of 91 (1 FAILED) (0 secs / 0.407 secs)
+[1A[2KLOG: 'destroy'
+Edge 151.0.0.0 (Windows 10): Executed 84 of 91 (1 FAILED) (0 secs / 0.407 secs)
+[1A[2KLOG: 'destroy'
+Edge 151.0.0.0 (Windows 10): Executed 84 of 91 (1 FAILED) (0 secs / 0.407 secs)
+[1A[2KLOG: 'destroy'
+Edge 151.0.0.0 (Windows 10): Executed 84 of 91 (1 FAILED) (0 secs / 0.407 secs)
+[1A[2KLOG: 'destroy'
+Edge 151.0.0.0 (Windows 10): Executed 84 of 91 (1 FAILED) (0 secs / 0.407 secs)
+[1A[2KLOG: 'destroy'
+Edge 151.0.0.0 (Windows 10): Executed 84 of 91 (1 FAILED) (0 secs / 0.407 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 85 of 91 (1 FAILED) (0 secs / 0.412 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 86 of 91 (1 FAILED) (0 secs / 0.418 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 87 of 91 (1 FAILED) (0 secs / 0.422 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 88 of 91 (1 FAILED) (0 secs / 0.425 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 89 of 91 (1 FAILED) (0 secs / 0.429 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 90 of 91 (1 FAILED) (0 secs / 0.439 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 91 of 91 (1 FAILED) (0 secs / 0.446 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 91 of 91 (1 FAILED) (0.544 secs / 0.446 secs)
+TOTAL: 1 FAILED, 90 SUCCESS
+✔ Browser application bundle generation complete.
+13 08 2026 15:14:15.968:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for statements (66.9%) does not meet global threshold (90%)
+13 08 2026 15:14:15.968:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for branches (34.5%) does not meet global threshold (90%)
+13 08 2026 15:14:15.968:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for lines (67.01%) does not meet global threshold (90%)
+13 08 2026 15:14:15.968:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for functions (28.01%) does not meet global threshold (90%)
+13 08 2026 15:14:15.969:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for statements (50%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\services\loader.service.ts)  threshold (90%)
+13 08 2026 15:14:15.969:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for lines (50%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\services\loader.service.ts)  threshold (90%)
+13 08 2026 15:14:15.969:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for functions (0%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\services\loader.service.ts)  threshold (90%)
+13 08 2026 15:14:15.969:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for statements (2.43%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\layout\client\services\client-service.service.ts)  threshold (90%)
+13 08 2026 15:14:15.969:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for lines (2.56%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\layout\client\services\client-service.service.ts)  threshold (90%)
+13 08 2026 15:14:15.970:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for functions (0%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\layout\client\services\client-service.service.ts)  threshold (90%)
+13 08 2026 15:14:15.970:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for statements (3.44%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\modules\common-share\services\po.service.ts)  threshold (90%)
+13 08 2026 15:14:15.970:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for lines (3.44%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\modules\common-share\services\po.service.ts)  threshold (90%)
+13 08 2026 15:14:15.970:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for functions (0%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\modules\common-share\services\po.service.ts)  threshold (90%)
+13 08 2026 15:14:15.970:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for statements (11.11%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\services\encry-decry.service.ts)  threshold (90%)
+13 08 2026 15:14:15.970:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for lines (11.11%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\services\encry-decry.service.ts)  threshold (90%)
+13 08 2026 15:14:15.970:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for functions (0%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\services\encry-decry.service.ts)  threshold (90%)
+13 08 2026 15:14:15.970:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for statements (2.38%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\services\authentication.service.ts)  threshold (90%)
+13 08 2026 15:14:15.970:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for branches (0%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\services\authentication.service.ts)  threshold (90%)
+13 08 2026 15:14:15.970:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for lines (2.43%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\services\authentication.service.ts)  threshold (90%)
+13 08 2026 15:14:15.970:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for functions (0%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\services\authentication.service.ts)  threshold (90%)
+13 08 2026 15:14:15.970:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for statements (1.75%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\layout\category-mgr\services\cat-procu-requests.service.ts)  threshold (90%)
+13 08 2026 15:14:15.970:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for branches (0%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\layout\category-mgr\services\cat-procu-requests.service.ts)  threshold (90%)
+13 08 2026 15:14:15.970:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for lines (1.78%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\layout\category-mgr\services\cat-procu-requests.service.ts)  threshold (90%)
+13 08 2026 15:14:15.970:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for functions (0%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\layout\category-mgr\services\cat-procu-requests.service.ts)  threshold (90%)
+13 08 2026 15:14:15.971:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for statements (12.5%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\layout\category-mgr\services\cat-procu-quotations.service.ts)  threshold (90%)
+13 08 2026 15:14:15.971:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for lines (12.5%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\layout\category-mgr\services\cat-procu-quotations.service.ts)  threshold (90%)
+13 08 2026 15:14:15.971:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for functions (0%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\layout\category-mgr\services\cat-procu-quotations.service.ts)  threshold (90%)
+13 08 2026 15:14:15.971:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for statements (14.28%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\layout\vendor-mgr\services\vendor-search.service.ts)  threshold (90%)
+13 08 2026 15:14:15.971:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for lines (14.28%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\layout\vendor-mgr\services\vendor-search.service.ts)  threshold (90%)
+13 08 2026 15:14:15.971:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for functions (0%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\layout\vendor-mgr\services\vendor-search.service.ts)  threshold (90%)
+13 08 2026 15:14:15.971:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for statements (2.04%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\services\custom-validations.service.ts)  threshold (90%)
+13 08 2026 15:14:15.971:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for branches (0%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\services\custom-validations.service.ts)  threshold (90%)
+13 08 2026 15:14:15.971:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for lines (2.04%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\services\custom-validations.service.ts)  threshold (90%)
+13 08 2026 15:14:15.971:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for functions (0%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\services\custom-validations.service.ts)  threshold (90%)
+13 08 2026 15:14:15.971:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for statements (50%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\modules\common-share\services\loader.service.ts)  threshold (90%)
+13 08 2026 15:14:15.971:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for lines (50%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\modules\common-share\services\loader.service.ts)  threshold (90%)
+13 08 2026 15:14:15.971:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for functions (0%) does not meet per-file (C:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\modules\common-share\services\loader.service.ts)  threshold (90%)
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |    66.9 |     34.5 |   28.01 |   67.01 |                   
+ app               |     100 |      100 |     100 |     100 |                   
+  app.config.ts    |     100 |      100 |     100 |     100 |                   
+ ...fs-common-grid |     100 |      100 |     100 |     100 |                   
+  ....component.ts |     100 |      100 |     100 |     100 |                   
+ ...-category-list |     100 |      100 |     100 |     100 |                   
+  ....component.ts |     100 |      100 |     100 |     100 |                   
+ ...y-mgr/services |    4.54 |        0 |       0 |    4.61 |                   
+  ...ns.service.ts |    12.5 |      100 |       0 |    12.5 | 10-35             
+  ...ts.service.ts |    1.75 |        0 |       0 |    1.78 | 14-226            
+  index.ts         |     100 |      100 |     100 |     100 |                   
+ ...lient/services |    2.43 |      100 |       0 |    2.56 |                   
+  ...ce.service.ts |    2.43 |      100 |       0 |    2.56 | 12-146            
+ .../pos/cancel-po |     100 |      100 |     100 |     100 |                   
+  ....component.ts |     100 |      100 |     100 |     100 |                   
+ ...ign-rank-model |     100 |      100 |     100 |     100 |                   
+  ....component.ts |     100 |      100 |     100 |     100 |                   
+ ...r-mgr/services |   14.28 |      100 |       0 |   14.28 |                   
+  ...ch.service.ts |   14.28 |      100 |       0 |   14.28 | 12-34             
+ ...vendor-details |     100 |      100 |     100 |     100 |                   
+  ....component.ts |     100 |      100 |     100 |     100 |                   
+ ...endor-contacts |     100 |      100 |     100 |     100 |                   
+  ....component.ts |     100 |      100 |     100 |     100 |                   
+ ...n-subscription |     100 |      100 |     100 |     100 |                   
+  ....component.ts |     100 |      100 |     100 |     100 |                   
+ ...grid-page-info |     100 |      100 |     100 |     100 |                   
+  ....component.ts |     100 |      100 |     100 |     100 |                   
+ .../timeout-modal |     100 |      100 |     100 |     100 |                   
+  ....component.ts |     100 |      100 |     100 |     100 |                   
+ ...ared/constants |     100 |      100 |     100 |     100 |                   
+  ...api.config.ts |     100 |      100 |     100 |     100 |                   
+ app/shared/loader |     100 |      100 |     100 |     100 |                   
+  ....component.ts |     100 |      100 |     100 |     100 |                   
+ ...ents/page-info |     100 |      100 |     100 |     100 |                   
+  ....component.ts |     100 |      100 |     100 |     100 |                   
+ .../ppo-documents |     100 |      100 |     100 |     100 |                   
+  ....component.ts |     100 |      100 |     100 |     100 |                   
+ ...po-rfq-vendors |     100 |      100 |     100 |     100 |                   
+  ....component.ts |     100 |      100 |     100 |     100 |                   
+ ...egory-dropdown |     100 |      100 |     100 |     100 |                   
+  ....component.ts |     100 |      100 |     100 |     100 |                   
+ ...fo-icon-dialog |     100 |      100 |     100 |     100 |                   
+  ....component.ts |     100 |      100 |     100 |     100 |                   
+ ...share/services |    6.45 |      100 |       0 |    6.45 |                   
+  ...er.service.ts |      50 |      100 |       0 |      50 | 10                
+  po.service.ts    |    3.44 |      100 |       0 |    3.44 | 12-117            
+ ...hared/services |    3.74 |        0 |       0 |     3.8 |                   
+  ...on.service.ts |    2.38 |        0 |       0 |    2.43 | 15-18,34-348      
+  ...ns.service.ts |    2.04 |        0 |       0 |    2.04 | 14-100            
+  ...ry.service.ts |   11.11 |      100 |       0 |   11.11 | 12-36             
+  index.ts         |     100 |      100 |     100 |     100 |                   
+  ...er.service.ts |      50 |      100 |       0 |      50 | 10                
+-------------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 66.9% ( 643/961 )
+Branches     : 34.5% ( 59/171 )
+Functions    : 28.01% ( 65/232 )
+Lines        : 67.01% ( 634/946 )
+================================================================================
+✔ Browser application bundle generation complete.

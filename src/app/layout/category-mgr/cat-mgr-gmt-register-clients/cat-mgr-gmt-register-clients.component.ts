@@ -7,7 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { SystemViewConfig } from 'src/app/app.config';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import swal from 'sweetalert2';
+import * as Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-cat-mgr-gmt-register-clients',
@@ -192,7 +192,7 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
                 companyName: rowData.companyName,
                 address1: rowData.address1,
                 organizationPhonenumber: rowData.organizationPhonenumber,
-                clientSector: rowData.clientSector ? rowData.clientSector: '',
+                clientSector: rowData.clientSector || '',
                 pan: rowData.pan
             })
             const dialogRef = this.dialog.open(this.editClientTemplateRef, dialogConfig).afterClosed().subscribe(result => { console.log(result); });
@@ -263,9 +263,21 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
         }
     }
 
-    deleteUser(rowData:any){
-        const obj = {id: rowData.id}
-        swal({
+    confirmDeleteUser(rowData: any) {
+        const obj = { id: rowData.id };
+        this.createRfqService.deleteUser(obj).subscribe((res: any) => {
+            if (res.statusCode == 'Success') {
+                this.toaster.success('User Deleted Successfully!', 'Success');
+                this.dialog.closeAll();
+                this.getUsersByClient();
+            } else {
+                this.toaster.error('User Deletion failed', 'Failed');
+            }
+        });
+    }
+
+    promptDeleteUser(rowData: any): any {
+        return (Swal as any).default({
             title: '<h6>Please Confirm!!<h6>',
             html: `<h4>Are you sure you want to Delete User<br /> <b>${rowData.fullName}</b> ?</h4>`,
             confirmButtonText: 'Yes',
@@ -273,19 +285,17 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
             cancelButtonColor: '#d63636',
             showCancelButton: true,
             reverseButtons: true
-           }).then((result) => {
-            if (result.value) {
-                this.createRfqService.deleteUser(obj).subscribe((res:any)=>{
-                    if (res.statusCode == 'Success') {
-                        this.toaster.success('User Deleted Successfully!', 'Success');
-                        this.dialog.closeAll();
-                        this.getUsersByClient();
-                    } else {
-                        this.toaster.error('User Deletion failed', 'Failed')
-                    }
-                })
-            }
-          });
+        });
+    }
+
+    onDeleteUserDialogResult(result: any, rowData: any) {
+        if (result?.value) {
+            this.confirmDeleteUser(rowData);
+        }
+    }
+
+    deleteUser(rowData:any){
+        this.promptDeleteUser(rowData).then((result) => this.onDeleteUserDialogResult(result, rowData));
     }
 
 }

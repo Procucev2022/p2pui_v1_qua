@@ -1,0 +1,9 @@
+src/app/layout/vendor-mgr/components/vendor-registration-pending/vendor-registration-pending.component.spec.ts
+src/app/layout/vendor-mgr/components/vendor-rejected/vendor-rejected.component.spec.ts
+src/app/shared/modules/common-share/components/pro-cpx-vendor-summary-clients/pro-cpx-vendor-summary-clients.component.spec.ts
+src/app/layout/category/edit-client-linking-to-item-modal/edit-client-linking-to-item-modal.component.spec.ts
+src/app/layout/category/edit-vendor-linking-to-item-modal/edit-vendor-linking-to-item-modal.component.spec.ts
+src/app/layout/pos/view-asn-modal/view-asn-modal.component.spec.ts
+src/app/layout/client/components/view-pr-id-details/view-pr-id-details.component.spec.ts
+src/app/layout/vendor/components/view-rfq-by-id-modal/view-rfq-by-id-modal.component.spec.ts
+src/app/layout/category-mgr/subTab/cat-mgr-rfqs-line-items-sub-tab/cat-mgr-rfqs-line-items-sub-tab.component.spec.ts

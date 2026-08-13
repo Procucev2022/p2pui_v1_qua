@@ -1,13 +1,14 @@
 import { PosRoutingModule } from './pos-routing.module';
 
 describe('PosRoutingModule', () => {
-  let module: PosRoutingModule;
-
-  beforeEach(() => {
-    module = new PosRoutingModule();
+  it('should create an instance', () => {
+    expect(new PosRoutingModule()).toBeTruthy();
   });
 
-  it('should create an instance', () => {
-    expect(module).toBeTruthy();
+  it('should be constructible multiple times', () => {
+    const a = new PosRoutingModule();
+    const b = new PosRoutingModule();
+    expect(a).toBeTruthy();
+    expect(b).toBeTruthy();
   });
 });

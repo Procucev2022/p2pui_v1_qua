@@ -3,7 +3,6 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { PposService } from './ppos.service';
 import { AppApiConfig } from 'src/app/shared/constants/app-api.config';
 
-
 describe('PposService', () => {
   let service: PposService;
   let httpMock: HttpTestingController;
@@ -11,9 +10,7 @@ describe('PposService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [
-        PposService
-      ]
+      providers: [PposService],
     });
     service = TestBed.inject(PposService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -23,79 +20,65 @@ describe('PposService', () => {
     httpMock.verify();
   });
 
+  function expectPost(method: keyof PposService, urlSuffix: string) {
+    (service[method] as any)({ id: 1 }).subscribe((res: any) => {
+      expect(res).toEqual({ ok: true });
+    });
+    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + urlSuffix);
+    expect(req.request.method).toBe('POST');
+    req.flush({ ok: true });
+  }
+
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
   it('should call getAllPPOS', () => {
-    service.getAllPPOS({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.PPO_GET_ALL);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    expectPost('getAllPPOS', AppApiConfig.PPO_GET_ALL);
+  });
+
+  it('should call getClientPPOS', () => {
+    expectPost('getClientPPOS', AppApiConfig.GET_PPO_BY_CLIENT);
   });
 
   it('should call submitPPO', () => {
-    service.submitPPO({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.PPO_SUBMIT);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    expectPost('submitPPO', AppApiConfig.PPO_SUBMIT);
   });
 
   it('should call acceptPPO', () => {
-    service.acceptPPO({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.PPO_ACCEPT);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    expectPost('acceptPPO', AppApiConfig.PPO_ACCEPT);
   });
 
   it('should call rejectPPO', () => {
-    service.rejectPPO({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.PPO_REJECT);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    expectPost('rejectPPO', AppApiConfig.PPO_REJECT);
   });
 
   it('should call rejectPPOByCm', () => {
-    service.rejectPPOByCm({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.PPO_REJECT_P);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    expectPost('rejectPPOByCm', AppApiConfig.PPO_REJECT_P);
   });
 
   it('should call PPOByCm', () => {
-    service.PPOByCm({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.PPO_ITEMS_BY_PPO_ID);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    expectPost('PPOByCm', AppApiConfig.PPO_ITEMS_BY_PPO_ID);
   });
 
   it('should call getAllPPOsByVendorAndClient', () => {
-    service.getAllPPOsByVendorAndClient({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_ALL_PPOS_BY_VENDOR_AND_CLIENT);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    expectPost(
+      'getAllPPOsByVendorAndClient',
+      AppApiConfig.GET_ALL_PPOS_BY_VENDOR_AND_CLIENT
+    );
   });
 
   it('should call saveRatingForPPO', () => {
-    service.saveRatingForPPO({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
+    expectPost('saveRatingForPPO', AppApiConfig.SAVING_RATING_PPO);
+  });
+
+  it('should expose and update acceptPPOViaService subject', (done) => {
+    service.acceptPPOViaService().subscribe((val) => {
+      if (val === 'updated') {
+        expect(val).toBe('updated');
+        done();
+      }
     });
-    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.SAVING_RATING_PPO);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    service.updateAcceptPPOViaService('updated');
   });
 });

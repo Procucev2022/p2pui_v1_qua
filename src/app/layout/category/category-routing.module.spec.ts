@@ -1,13 +1,14 @@
 import { CategoryRoutingModule } from './category-routing.module';
 
 describe('CategoryRoutingModule', () => {
-  let module: CategoryRoutingModule;
-
-  beforeEach(() => {
-    module = new CategoryRoutingModule();
+  it('should create an instance', () => {
+    expect(new CategoryRoutingModule()).toBeTruthy();
   });
 
-  it('should create an instance', () => {
-    expect(module).toBeTruthy();
+  it('should be constructible multiple times', () => {
+    const a = new CategoryRoutingModule();
+    const b = new CategoryRoutingModule();
+    expect(a).toBeTruthy();
+    expect(b).toBeTruthy();
   });
 });

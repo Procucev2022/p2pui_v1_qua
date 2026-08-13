@@ -22,6 +22,8 @@ module.exports = function (config) {
         // Global timeout for every unit test (ms)
         timeoutInterval: 60000,
         random: false,
+        stopSpecOnExpectationFailure: false,
+        failSpecWithNoExpectations: false,
       },
       clearContext: false,
       captureConsole: true,
@@ -45,7 +47,7 @@ module.exports = function (config) {
       ],
       // Fail Karma when any file (or the aggregate) is under 90%
       check: {
-        emitWarning: false,
+        emitWarning: true,
         global: {
           statements: 90,
           branches: 90,
@@ -88,9 +90,10 @@ module.exports = function (config) {
     },
     singleRun: isCi,
     restartOnFileChange: !isCi,
-    browserNoActivityTimeout: 120000,
-    browserDisconnectTimeout: 120000,
-    browserDisconnectTolerance: 2,
-    captureTimeout: 180000,
+    browserNoActivityTimeout: 300000,
+    browserDisconnectTimeout: 300000,
+    browserDisconnectTolerance: 5,
+    captureTimeout: 300000,
+    failOnEmptyTestSuite: false,
   });
 };

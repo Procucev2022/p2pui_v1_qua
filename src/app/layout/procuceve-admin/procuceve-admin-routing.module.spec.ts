@@ -1,13 +1,14 @@
 import { ProcuceveAdminRoutingModule } from './procuceve-admin-routing.module';
 
 describe('ProcuceveAdminRoutingModule', () => {
-  let module: ProcuceveAdminRoutingModule;
-
-  beforeEach(() => {
-    module = new ProcuceveAdminRoutingModule();
+  it('should create an instance', () => {
+    expect(new ProcuceveAdminRoutingModule()).toBeTruthy();
   });
 
-  it('should create an instance', () => {
-    expect(module).toBeTruthy();
+  it('should be constructible multiple times', () => {
+    const a = new ProcuceveAdminRoutingModule();
+    const b = new ProcuceveAdminRoutingModule();
+    expect(a).toBeTruthy();
+    expect(b).toBeTruthy();
   });
 });

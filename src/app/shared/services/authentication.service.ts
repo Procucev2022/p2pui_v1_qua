@@ -11,6 +11,10 @@ import { ToastrService } from 'ngx-toastr';
 /** Overridable page reload seam for unit tests (Karma cannot stub location.reload in Edge/Chrome). */
 export const AuthPageReload = {
   run: () => {
+    // Avoid tearing down the Karma runner during unit tests.
+    if (typeof (window as any).__karma__ !== 'undefined') {
+      return;
+    }
     window.location.reload();
   }
 };

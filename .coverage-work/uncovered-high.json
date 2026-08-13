@@ -1,0 +1,50 @@
+[
+  {
+    "rel": "src/app/layout/bfs/bfs-request-items/bfs-request-items.component.ts",
+    "error": "not found"
+  },
+  {
+    "rel": "src/app/layout/vendor-mgr/components/vendortab/vendortab.component.ts",
+    "error": "not found"
+  },
+  {
+    "rel": "src/app/layout/vendor-mgr/components/gmt-vendors-list/gmt-vendors-list.component.ts",
+    "error": "not found"
+  },
+  {
+    "rel": "src/app/layout/vendor/vendor-registration/vendor-registration.component.ts",
+    "error": "not found"
+  },
+  {
+    "rel": "src/app/layout/components/sidebar/sidebar.component.ts",
+    "error": "not found"
+  },
+  {
+    "rel": "src/app/layout/category-mgr/cat-mgr-vendor-terms-condts/cat-mgr-vendor-terms-condts.component.ts",
+    "error": "not found"
+  },
+  {
+    "rel": "src/app/layout/layout.component.ts",
+    "error": "not found"
+  },
+  {
+    "rel": "src/app/layout/category-mgr/cat-mgr-vendor-catalogue/cat-mgr-vendor-catalogue.component.ts",
+    "error": "not found"
+  },
+  {
+    "rel": "src/app/layout/category/category-list/category-list.component.ts",
+    "error": "not found"
+  },
+  {
+    "rel": "src/app/layout/category/link-client-modal/link-client-modal.component.ts",
+    "error": "not found"
+  },
+  {
+    "rel": "src/app/shared/modules/common-share/components/create-auction-modal/create-auction-modal.component.ts",
+    "error": "not found"
+  },
+  {
+    "rel": "src/app/layout/category-mgr/cat-mgr-item-catalogue/cat-mgr-item-catalogue.component.ts",
+    "error": "not found"
+  }
+]

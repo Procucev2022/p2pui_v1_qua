@@ -97,12 +97,18 @@
           "options": {
             "polyfills": [
               "zone.js",
-              "zone.js/testing"
+              "zone.js/testing",
+              "src/test-setup.ts"
             ],
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "inlineStyleLanguage": "scss",
             "codeCoverage": true,
+            "codeCoverageExclude": [
+              "src/test-setup.ts",
+              "src/test.ts",
+              "src/testing/**"
+            ],
             "assets": [
               "src/favicon.ico",
               "src/assets"

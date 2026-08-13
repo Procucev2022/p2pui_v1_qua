@@ -1,13 +1,14 @@
 import { PposRoutingModule } from './ppos-routing.module';
 
 describe('PposRoutingModule', () => {
-  let module: PposRoutingModule;
-
-  beforeEach(() => {
-    module = new PposRoutingModule();
+  it('should create an instance', () => {
+    expect(new PposRoutingModule()).toBeTruthy();
   });
 
-  it('should create an instance', () => {
-    expect(module).toBeTruthy();
+  it('should be constructible multiple times', () => {
+    const a = new PposRoutingModule();
+    const b = new PposRoutingModule();
+    expect(a).toBeTruthy();
+    expect(b).toBeTruthy();
   });
 });

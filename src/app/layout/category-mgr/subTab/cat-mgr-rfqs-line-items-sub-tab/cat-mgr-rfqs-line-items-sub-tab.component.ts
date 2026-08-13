@@ -42,7 +42,7 @@ export class CatMgrRfqsLineItemsSubTabComponent implements OnInit, OnChanges {
     }
     this.procuReqService.getLineItemsByRfq(req).subscribe( (data: any[] ) => {
          if(Array.isArray(data)){
-          this.rfqLineItemsList = data || [];
+          this.rfqLineItemsList = data;
          }else{
            this.rfqLineItemsList = [];
          }

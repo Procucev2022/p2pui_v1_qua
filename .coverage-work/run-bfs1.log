@@ -1,0 +1,534 @@
+Using browser: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+- Generating browser application bundles (phase: setup)...
+    TypeScript compiler options "target" and "useDefineForClassFields" are set to "ES2022" and "false" respectively by the Angular CLI. To control ECMA version and features use the Browerslist configuration. For more information, see https://angular.io/guide/build#configuring-browser-compatibility
+    NOTE: You can set the "target" to "ES2022" in the project's tsconfig to remove this warning.
+✔ Browser application bundle generation complete.
+13 08 2026 16:39:38.292:INFO [karma-server]: Karma v6.4.4 server started at http://localhost:9877/
+13 08 2026 16:39:38.304:INFO [launcher]: Launching browsers ChromeHeadlessNoSandbox with concurrency unlimited
+13 08 2026 16:39:38.401:INFO [launcher]: Starting browser ChromeHeadless
+13 08 2026 16:39:40.655:INFO [Edge 151.0.0.0 (Windows 10)]: Connected on socket _AyQmkw-sSfZy_7lAAAB with id 53037613
+Edge 151.0.0.0 (Windows 10): Executed 0 of 7 SUCCESS (0 secs / 0 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 1 of 7 SUCCESS (0 secs / 0.069 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 're', undefined
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 're', null
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 're', Object{id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: Object{value: 'x', files: []}, preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }}
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 're', true
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 're', false
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: null
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: null
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: null
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: null
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: null
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'edit', undefined
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'edit', null
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'edit', Object{id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: Object{value: 'x', files: []}, preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }}
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'edit', true
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'edit', false
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'edit item', undefined
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'edit item', null
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'edit item', Object{id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: Object{value: 'x', files: []}, preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }}
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'edit item', true
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'edit item', false
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'event1', undefined
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'event1', null
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'event1', Object{id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: Object{value: 'x', files: []}, preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }}
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'event1', true
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'event1', false
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 're', undefined
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 're', null
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 're', Object{id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: Object{value: 'x', files: []}, preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }}
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 're', true
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 're', false
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: null
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: null
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: null
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: null
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: null
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'edit', undefined
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'edit', null
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'edit', Object{id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: Object{value: 'x', files: []}, preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }}
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'edit', true
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'edit', false
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'edit item', undefined
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'edit item', null
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'edit item', Object{id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: Object{value: 'x', files: []}, preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }}
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'edit item', true
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'edit item', false
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'event1', undefined
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'event1', null
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'event1', Object{id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: Object{value: 'x', files: []}, preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }}
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'event1', true
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KLOG: 'event1', false
+Edge 151.0.0.0 (Windows 10): Executed 2 of 7 SUCCESS (0 secs / 0.231 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'edit', undefined
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'edit', Object{id: '1', vendorId: 'v1', ID: '1', name: 'n', status: 'Open', uom: Object{description: 'KG'}, vendorData: ['v1'], action: null, org: Object{id: 'o1'}, certificates: [Object{fileName: ..., file: ...}]}
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'edit', Object{preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }, target: Object{files: [...], value: 'x', checked: true}, index: 0}
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'edit', 'add'
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'edit', Object{id: '1', vendorId: 'v1', ID: '1', name: 'n', status: 'Open', uom: Object{description: 'KG'}, vendorData: ['v1'], action: null, org: Object{id: 'o1'}, certificates: [Object{fileName: ..., file: ...}]}
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'edit', 0
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'edit', Object{preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }, target: Object{files: [...], value: 'x', checked: true}, index: 0}
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'edit', true
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'edit', 'x'
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'edit', Object{index: 0}
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'event1', undefined
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'event1', Object{id: '1', vendorId: 'v1', ID: '1', name: 'n', status: 'Open', uom: Object{description: 'KG'}, vendorData: ['v1'], action: null, org: Object{id: 'o1'}, certificates: [Object{fileName: ..., file: ...}]}
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'event1', Object{preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }, target: Object{files: [...], value: 'x', checked: true}, index: 0}
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'event1', 'add'
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'event1', Object{id: '1', vendorId: 'v1', ID: '1', name: 'n', status: 'Open', uom: Object{description: 'KG'}, vendorData: ['v1'], action: null, org: Object{id: 'o1'}, certificates: [Object{fileName: ..., file: ...}]}
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'event1', 0
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'event1', Object{preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }, target: Object{files: [...], value: 'x', checked: true}, index: 0}
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'event1', true
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'event1', 'x'
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'event1', Object{index: 0}
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'edit', Object{id: '1', vendorId: 'v1', ID: '1', name: 'n', status: 'Open', uom: Object{description: 'KG'}, vendorData: ['v1'], action: null, org: Object{id: 'o1'}, certificates: [Object{fileName: ..., file: ...}]}
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'edit', Object{preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }, target: Object{files: [...], value: 'x', checked: true}, index: 0}
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'edit', undefined
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'event1', Object{id: '1', vendorId: 'v1', ID: '1', name: 'n', status: 'Open', uom: Object{description: 'KG'}, vendorData: ['v1'], action: null, org: Object{id: 'o1'}, certificates: [Object{fileName: ..., file: ...}]}
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'event1', Object{preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }, target: Object{files: [...], value: 'x', checked: true}, index: 0}
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KLOG: 'event1', undefined
+Edge 151.0.0.0 (Windows 10): Executed 3 of 7 SUCCESS (0 secs / 0.274 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 4 of 7 SUCCESS (0 secs / 0.301 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 're', undefined
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 're', null
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 're', true
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 're', false
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 're', Object{id: '1', vendorId: 'v1', status: 'Success', statusCode: 200, message: 'ok', uiDisplay: 'Open', invalid: false, valid: true, value: Object{id: '1'}, form: Object{valid: true, invalid: false}, target: Object{value: 'x', files: [], checked: true}, preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }, index: 0}
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 're', Object{id: '1'}
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 're', [Object{id: '1', status: Object{uiDisplay: ...}, vendorStatus: Object{uiDisplay: ...}}]
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit', undefined
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit', null
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit', true
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit', false
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit', Object{id: '1', vendorId: 'v1', status: 'Success', statusCode: 200, message: 'ok', uiDisplay: 'Open', invalid: false, valid: true, value: Object{id: '1'}, form: Object{valid: true, invalid: false}, target: Object{value: 'x', files: [], checked: true}, preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }, index: 0}
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit', Object{id: '1'}
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit', [Object{id: '1', status: Object{uiDisplay: ...}, vendorStatus: Object{uiDisplay: ...}}]
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit item', undefined
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit item', null
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit item', true
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit item', false
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit item', Object{id: '1', vendorId: 'v1', status: 'Success', statusCode: 200, message: 'ok', uiDisplay: 'Open', invalid: false, valid: true, value: Object{id: '1'}, form: Object{valid: true, invalid: false}, target: Object{value: 'x', files: [], checked: true}, preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }, index: 0}
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit item', Object{id: '1'}
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit item', [Object{id: '1', status: Object{uiDisplay: ...}, vendorStatus: Object{uiDisplay: ...}}]
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event1', undefined
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event1', null
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event1', true
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event1', false
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event1', Object{id: '1', vendorId: 'v1', status: 'Success', statusCode: 200, message: 'ok', uiDisplay: 'Open', invalid: false, valid: true, value: Object{id: '1'}, form: Object{valid: true, invalid: false}, target: Object{value: 'x', files: [], checked: true}, preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }, index: 0}
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event1', Object{id: '1'}
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event1', [Object{id: '1', status: Object{uiDisplay: ...}, vendorStatus: Object{uiDisplay: ...}}]
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event', undefined
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event', null
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event', true
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event', false
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event', Object{id: '1', vendorId: 'v1', status: 'Success', statusCode: 200, message: 'ok', uiDisplay: 'Open', invalid: false, valid: true, value: Object{id: '1'}, form: Object{valid: true, invalid: false}, target: Object{value: 'x', files: [], checked: true}, preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }, index: 0}
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event', Object{id: '1'}
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event', [Object{id: '1', status: Object{uiDisplay: ...}, vendorStatus: Object{uiDisplay: ...}}]
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 're', undefined
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 're', null
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 're', true
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 're', false
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 're', Object{id: '1', vendorId: 'v1', status: 'Success', statusCode: 200, message: 'ok', uiDisplay: 'Open', invalid: false, valid: true, value: Object{id: '1'}, form: Object{valid: true, invalid: false}, target: Object{value: 'x', files: [], checked: true}, preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }, index: 0}
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 're', Object{id: '1'}
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 're', [Object{id: '1', status: Object{uiDisplay: ...}, vendorStatus: Object{uiDisplay: ...}}]
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit', undefined
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit', null
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit', true
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit', false
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit', Object{id: '1', vendorId: 'v1', status: 'Success', statusCode: 200, message: 'ok', uiDisplay: 'Open', invalid: false, valid: true, value: Object{id: '1'}, form: Object{valid: true, invalid: false}, target: Object{value: 'x', files: [], checked: true}, preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }, index: 0}
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit', Object{id: '1'}
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit', [Object{id: '1', status: Object{uiDisplay: ...}, vendorStatus: Object{uiDisplay: ...}}]
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit item', undefined
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit item', null
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit item', true
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit item', false
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit item', Object{id: '1', vendorId: 'v1', status: 'Success', statusCode: 200, message: 'ok', uiDisplay: 'Open', invalid: false, valid: true, value: Object{id: '1'}, form: Object{valid: true, invalid: false}, target: Object{value: 'x', files: [], checked: true}, preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }, index: 0}
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit item', Object{id: '1'}
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'edit item', [Object{id: '1', status: Object{uiDisplay: ...}, vendorStatus: Object{uiDisplay: ...}}]
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event1', undefined
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event1', null
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event1', true
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event1', false
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event1', Object{id: '1', vendorId: 'v1', status: 'Success', statusCode: 200, message: 'ok', uiDisplay: 'Open', invalid: false, valid: true, value: Object{id: '1'}, form: Object{valid: true, invalid: false}, target: Object{value: 'x', files: [], checked: true}, preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }, index: 0}
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event1', Object{id: '1'}
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event1', [Object{id: '1', status: Object{uiDisplay: ...}, vendorStatus: Object{uiDisplay: ...}}]
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event', undefined
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event', null
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event', true
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event', false
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event', Object{id: '1', vendorId: 'v1', status: 'Success', statusCode: 200, message: 'ok', uiDisplay: 'Open', invalid: false, valid: true, value: Object{id: '1'}, form: Object{valid: true, invalid: false}, target: Object{value: 'x', files: [], checked: true}, preventDefault: preventDefault() { ... }, stopPropagation: stopPropagation() { ... }, index: 0}
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event', Object{id: '1'}
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KLOG: 'event', [Object{id: '1', status: Object{uiDisplay: ...}, vendorStatus: Object{uiDisplay: ...}}]
+Edge 151.0.0.0 (Windows 10): Executed 5 of 7 SUCCESS (0 secs / 0.332 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 6 of 7 SUCCESS (0 secs / 0.769 secs)
+[1A[2KLOG: 're', Object{query: 'a'}
+Edge 151.0.0.0 (Windows 10): Executed 6 of 7 SUCCESS (0 secs / 0.769 secs)
+[1A[2KLOG: 'edit', Object{id: '1', vendorId: 'v1', description: 'Item A', price: 10, priceFlag: 'U', subCategoryId: 'sc1', companyId: 'XXXXXXXXXXXabc', linked: false, clientItemFlag: true, status: null, status_ui_display: 'New', quoteSubmittedDate: '2026-08-13T11:09:45.083Z', acceptedDate: '2026-08-13T11:09:45.083Z', vendorUuid: 'vu1', userId: 'u1', vendorName: 'V', pricePerUnit: 5, documents: [Object{fileName: ..., file: ...}], org: Object{id: 'o1'}, query: 'q1|q2', queryContent: 'q1|q2'}
+Edge 151.0.0.0 (Windows 10): Executed 6 of 7 SUCCESS (0 secs / 0.769 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 6 of 7 SUCCESS (0 secs / 0.769 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 6 of 7 SUCCESS (0 secs / 0.769 secs)
+[1A[2KLOG: 'edit item', Object{id: '1', vendorId: 'v1', description: 'Item A', price: 10, priceFlag: 'U', subCategoryId: 'sc1', companyId: 'XXXXXXXXXXXabc', linked: false, clientItemFlag: true, status: null, status_ui_display: 'New', quoteSubmittedDate: '2026-08-13T11:09:45.083Z', acceptedDate: '2026-08-13T11:09:45.083Z', vendorUuid: 'vu1', userId: 'u1', vendorName: 'V', pricePerUnit: 5, documents: [Object{fileName: ..., file: ...}], org: Object{id: 'o1'}, query: 'q1|q2', queryContent: 'q1|q2'}
+Edge 151.0.0.0 (Windows 10): Executed 6 of 7 SUCCESS (0 secs / 0.769 secs)
+[1A[2KLOG: 'event1', [Object{name: 'a.pdf', size: 10, type: 'application/pdf'}]
+Edge 151.0.0.0 (Windows 10): Executed 6 of 7 SUCCESS (0 secs / 0.769 secs)
+[1A[2KLOG: 'event', Object{index: 0}
+Edge 151.0.0.0 (Windows 10): Executed 6 of 7 SUCCESS (0 secs / 0.769 secs)
+[1A[2KLOG: 'event', Object{index: 1}
+Edge 151.0.0.0 (Windows 10): Executed 6 of 7 SUCCESS (0 secs / 0.769 secs)
+[1A[2KLOG: 're', Object{query: 'a'}
+Edge 151.0.0.0 (Windows 10): Executed 6 of 7 SUCCESS (0 secs / 0.769 secs)
+[1A[2KLOG: 'edit', Object{id: '1', vendorId: 'v1', description: 'Item A', price: 10, priceFlag: 'U', subCategoryId: 'sc1', companyId: 'XXXXXXXXXXXabc', linked: false, clientItemFlag: true, status: null, status_ui_display: 'New', quoteSubmittedDate: '2026-08-13T11:09:45.083Z', acceptedDate: '2026-08-13T11:09:45.083Z', vendorUuid: 'vu1', userId: 'u1', vendorName: 'V', pricePerUnit: 5, documents: [Object{fileName: ..., file: ...}], org: Object{id: 'o1'}, query: 'q1|q2', queryContent: 'q1|q2', bfsDocuments: []}
+Edge 151.0.0.0 (Windows 10): Executed 6 of 7 SUCCESS (0 secs / 0.769 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 6 of 7 SUCCESS (0 secs / 0.769 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 6 of 7 SUCCESS (0 secs / 0.769 secs)
+[1A[2KLOG: 'edit item', Object{id: '1', vendorId: 'v1', description: 'Item A', price: 10, priceFlag: 'U', subCategoryId: 'sc1', companyId: 'XXXXXXXXXXXabc', linked: false, clientItemFlag: true, status: null, status_ui_display: 'New', quoteSubmittedDate: '2026-08-13T11:09:45.083Z', acceptedDate: '2026-08-13T11:09:45.083Z', vendorUuid: 'vu1', userId: 'u1', vendorName: 'V', pricePerUnit: 5, documents: [Object{fileName: ..., file: ...}], org: Object{id: 'o1'}, query: 'q1|q2', queryContent: 'q1|q2', bfsDocuments: []}
+Edge 151.0.0.0 (Windows 10): Executed 6 of 7 SUCCESS (0 secs / 0.769 secs)
+[1A[2KLOG: 'event1', [Object{name: 'a.pdf', size: 10, type: 'application/pdf'}]
+Edge 151.0.0.0 (Windows 10): Executed 6 of 7 SUCCESS (0 secs / 0.769 secs)
+[1A[2KLOG: 'event', Object{index: 0}
+Edge 151.0.0.0 (Windows 10): Executed 6 of 7 SUCCESS (0 secs / 0.769 secs)
+[1A[2KLOG: 'event', Object{index: 1}
+Edge 151.0.0.0 (Windows 10): Executed 6 of 7 SUCCESS (0 secs / 0.769 secs)
+[1A[2KLOG: 're', Object{query: 'a'}
+Edge 151.0.0.0 (Windows 10): Executed 6 of 7 SUCCESS (0 secs / 0.769 secs)
+[1A[2KLOG: 'edit', Object{id: '1', vendorId: 'v1', description: 'Item A', price: 10, priceFlag: 'U', subCategoryId: 'sc1', companyId: 'XXXXXXXXXXXabc', linked: false, clientItemFlag: true, status: null, status_ui_display: 'New', quoteSubmittedDate: '2026-08-13T11:09:45.083Z', acceptedDate: '2026-08-13T11:09:45.083Z', vendorUuid: 'vu1', userId: 'u1', vendorName: 'V', pricePerUnit: 5, documents: [Object{fileName: ..., file: ...}], org: Object{id: 'o1'}, query: 'q1|q2', queryContent: 'q1|q2', bfsDocuments: []}
+Edge 151.0.0.0 (Windows 10): Executed 6 of 7 SUCCESS (0 secs / 0.769 secs)
+[1A[2KLOG: 'closed1'
+Edge 151.0.0.0 (Windows 10): Executed 6 of 7 SUCCESS (0 secs / 0.769 secs)
+[1A[2KLOG: 'closed'
+Edge 151.0.0.0 (Windows 10): Executed 6 of 7 SUCCESS (0 secs / 0.769 secs)
+[1A[2KLOG: 'edit item', Object{id: '1', vendorId: 'v1', description: 'Item A', price: 10, priceFlag: 'U', subCategoryId: 'sc1', companyId: 'XXXXXXXXXXXabc', linked: false, clientItemFlag: true, status: null, status_ui_display: 'New', quoteSubmittedDate: '2026-08-13T11:09:45.083Z', acceptedDate: '2026-08-13T11:09:45.083Z', vendorUuid: 'vu1', userId: 'u1', vendorName: 'V', pricePerUnit: 5, documents: [Object{fileName: ..., file: ...}], org: Object{id: 'o1'}, query: 'q1|q2', queryContent: 'q1|q2', bfsDocuments: []}
+Edge 151.0.0.0 (Windows 10): Executed 6 of 7 SUCCESS (0 secs / 0.769 secs)
+[1A[2KLOG: 'event1', [Object{name: 'a.pdf', size: 10, type: 'application/pdf'}]
+Edge 151.0.0.0 (Windows 10): Executed 6 of 7 SUCCESS (0 secs / 0.769 secs)
+[1A[2KLOG: 'event', Object{index: 0}
+Edge 151.0.0.0 (Windows 10): Executed 6 of 7 SUCCESS (0 secs / 0.769 secs)
+[1A[2KLOG: 'event', Object{index: 1}
+Edge 151.0.0.0 (Windows 10): Executed 6 of 7 SUCCESS (0 secs / 0.769 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 7 of 7 SUCCESS (0 secs / 0.938 secs)
+[1A[2KEdge 151.0.0.0 (Windows 10): Executed 7 of 7 SUCCESS (1.052 secs / 0.938 secs)
+TOTAL: 7 SUCCESS
+✔ Browser application bundle generation complete.
+13 08 2026 16:39:46.183:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for statements (71.61%) does not meet global threshold (90%)
+13 08 2026 16:39:46.184:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for branches (33.46%) does not meet global threshold (90%)
+13 08 2026 16:39:46.184:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for lines (71.96%) does not meet global threshold (90%)
+13 08 2026 16:39:46.185:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for functions (40.99%) does not meet global threshold (90%)
+13 08 2026 16:39:46.188:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for statements (11.11%) does not meet per-file (c:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\services\encry-decry.service.ts)  threshold (90%)
+13 08 2026 16:39:46.189:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for lines (11.11%) does not meet per-file (c:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\services\encry-decry.service.ts)  threshold (90%)
+13 08 2026 16:39:46.190:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for functions (0%) does not meet per-file (c:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\services\encry-decry.service.ts)  threshold (90%)
+13 08 2026 16:39:46.191:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for statements (2.5%) does not meet per-file (c:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\layout\bfs\bfs-items.service.ts)  threshold (90%)
+13 08 2026 16:39:46.191:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for lines (2.56%) does not meet per-file (c:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\layout\bfs\bfs-items.service.ts)  threshold (90%)
+13 08 2026 16:39:46.192:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for functions (0%) does not meet per-file (c:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\layout\bfs\bfs-items.service.ts)  threshold (90%)
+13 08 2026 16:39:46.192:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for statements (50%) does not meet per-file (c:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\services\loader.service.ts)  threshold (90%)
+13 08 2026 16:39:46.193:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for lines (50%) does not meet per-file (c:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\services\loader.service.ts)  threshold (90%)
+13 08 2026 16:39:46.193:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for functions (0%) does not meet per-file (c:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\services\loader.service.ts)  threshold (90%)
+13 08 2026 16:39:46.194:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for statements (12.5%) does not meet per-file (c:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\modules\common-share\services\convert-to-base64.service.ts)  threshold (90%)
+13 08 2026 16:39:46.195:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for lines (16.66%) does not meet per-file (c:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\modules\common-share\services\convert-to-base64.service.ts)  threshold (90%)
+13 08 2026 16:39:46.195:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for functions (0%) does not meet per-file (c:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\modules\common-share\services\convert-to-base64.service.ts)  threshold (90%)
+13 08 2026 16:39:46.196:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for statements (2.38%) does not meet per-file (c:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\services\authentication.service.ts)  threshold (90%)
+13 08 2026 16:39:46.196:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for branches (0%) does not meet per-file (c:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\services\authentication.service.ts)  threshold (90%)
+13 08 2026 16:39:46.196:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for lines (2.43%) does not meet per-file (c:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\services\authentication.service.ts)  threshold (90%)
+13 08 2026 16:39:46.197:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for functions (0%) does not meet per-file (c:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\shared\services\authentication.service.ts)  threshold (90%)
+13 08 2026 16:39:46.197:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for statements (71.29%) does not meet per-file (c:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\layout\bfs\bfs-items-list\bfs-items-list.component.ts)  threshold (90%)
+13 08 2026 16:39:46.197:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for branches (46.4%) does not meet per-file (c:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\layout\bfs\bfs-items-list\bfs-items-list.component.ts)  threshold (90%)
+13 08 2026 16:39:46.197:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for lines (71.12%) does not meet per-file (c:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\layout\bfs\bfs-items-list\bfs-items-list.component.ts)  threshold (90%)
+13 08 2026 16:39:46.198:WARN [coverage]: Edge 151.0.0.0 (Windows 10): Coverage for functions (76.74%) does not meet per-file (c:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\src\app\layout\bfs\bfs-items-list\bfs-items-list.component.ts)  threshold (90%)
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   71.61 |    33.46 |   40.99 |   71.96 |                   
+ app               |     100 |      100 |     100 |     100 |                   
+  app.config.ts    |     100 |      100 |     100 |     100 |                   
+ app/layout/bfs    |     2.5 |      100 |       0 |    2.56 |                   
+  ...ms.service.ts |     2.5 |      100 |       0 |    2.56 | 13-180            
+ ...bfs-items-list |   71.29 |     46.4 |   76.74 |   71.12 |                   
+  ....component.ts |   71.29 |     46.4 |   76.74 |   71.12 | ...85-898,919-924 
+ ...ared/constants |     100 |      100 |     100 |     100 |                   
+  ...api.config.ts |     100 |      100 |     100 |     100 |                   
+ ...share/services |    12.5 |      100 |       0 |   16.66 |                   
+  ...64.service.ts |    12.5 |      100 |       0 |   16.66 | 11-15             
+ ...hared/services |    4.34 |        0 |       0 |    4.44 |                   
+  ...on.service.ts |    2.38 |        0 |       0 |    2.43 | 15-18,34-348      
+  ...ry.service.ts |   11.11 |      100 |       0 |   11.11 | 12-36             
+  index.ts         |     100 |      100 |     100 |     100 |                   
+  ...er.service.ts |      50 |      100 |       0 |      50 | 10                
+-------------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 71.61% ( 757/1057 )
+Branches     : 33.46% ( 84/251 )
+Functions    : 40.99% ( 66/161 )
+Lines        : 71.96% ( 752/1045 )
+================================================================================
+✔ Browser application bundle generation complete.

@@ -1,0 +1,30 @@
+{
+  "updatedAt": "2026-08-13",
+  "mid": {
+    "total": 68,
+    "cleared90": 68,
+    "stillHard": 0,
+    "newlyClearedThisPass": [
+      "vendor-rfq",
+      "post-auction-compare",
+      "invoices-list",
+      "create-invoice",
+      "accept-pos",
+      "linked-pr-ppo-create",
+      "po-create",
+      "auction-bid-details",
+      "po-create-asn",
+      "ppo-create",
+      "add-or-edit-vendor-modal",
+      "live-auction-for-itemwise",
+      "quot-view-details"
+    ],
+    "stillHardHighestFirst": []
+  },
+  "big": {
+    "total": 47,
+    "cleared90": 5,
+    "stillHard": 42,
+    "note": "Unchanged this pass; focus was MID remaining hard list."
+  }
+}

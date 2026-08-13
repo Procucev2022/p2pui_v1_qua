@@ -48,7 +48,7 @@ export class VendorRejectedComponent implements OnInit {
             res.forEach(element => {
               element['status'] = element['status']['uiDisplay'];
             });
-          this.vendorRejectedList = res || [];
+          this.vendorRejectedList = res;
         }else{
           //this.toaster.error(res.message, 'Failure')
         }

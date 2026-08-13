@@ -5,7 +5,7 @@ import { AppConfig } from 'src/app/app.config';
 import { AppApiConfig } from 'src/app/shared/constants/app-api.config';
 import { ExcelService } from 'src/app/shared/modules/common-share/services/excel.service';
 import { EncryDecryService } from 'src/app/shared/services';
-import swal from 'sweetalert2';
+import * as Swal from 'sweetalert2';
 import { CatProcuQuotationsService, CatProcuRequestsService } from '../services';
 import { ClientService } from '../../client/services/client-service.service';
 
@@ -68,20 +68,30 @@ export class CatMgrItemCatalogueComponent implements OnInit {
             }
         })
     }
+    promptCloseRequest(): any {
+        return (Swal as any).default({
+            title: '<h6>Please Confirm!!<h6>',
+            html: '<h4>Are you sure you want to Close Request?</h4>',
+            confirmButtonText: 'Yes',
+            confirmButtonColor: '#006dd5',
+            cancelButtonColor: '#d63636',
+            showCancelButton: true,
+            reverseButtons: true
+        });
+    }
+
+    onCloseRequestDialogResult(result: any, data: any) {
+        if (result?.value) {
+            this.closeRequestFun(data);
+        }
+    }
+
     closeRequest(data){
-            swal({
-                title: '<h6>Please Confirm!!<h6>',
-                html: '<h4>Are you sure you want to Close Request?</h4>',
-                confirmButtonText: 'Yes',
-                confirmButtonColor: '#006dd5',
-                cancelButtonColor: '#d63636',
-                showCancelButton: true,
-                reverseButtons: true
-               }).then((result) => {
-                if (result.value) {
-                    this.closeRequestFun(data)
-                }
-              });
+        this.promptCloseRequest().then((result) => this.onCloseRequestDialogResult(result, data));
+    }
+    /** Invoked after close-request confirmation (also used directly by unit tests). */
+    confirmCloseRequest(data) {
+        this.closeRequestFun(data);
     }
     closeRequestFun(data){
         let obj = {

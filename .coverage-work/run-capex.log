@@ -1,0 +1,253 @@
+Using browser: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+- Generating browser application bundles (phase: setup)...
+    TypeScript compiler options "target" and "useDefineForClassFields" are set to "ES2022" and "false" respectively by the Angular CLI. To control ECMA version and features use the Browerslist configuration. For more information, see https://angular.io/guide/build#configuring-browser-compatibility
+    NOTE: You can set the "target" to "ES2022" in the project's tsconfig to remove this warning.
+✔ Browser application bundle generation complete.
+
+Error: src/app/layout/vendor/vendor-rfq/vendor-rfq.component.spec.ts:136:40 - error TS2345: Argument of type 'string' is not assignable to parameter of type 'never'.
+
+136     const swalSpy = spyOn(SwalConfirm, 'swalConfirm').and.callFake(() => ({
+                                           ~~~~~~~~~~~~~
+
+
+Error: src/app/layout/vendor/vendor-rfq/vendor-rfq.component.spec.ts:136:68 - error TS2345: Argument of type '() => any' is not assignable to parameter of type 'never'.
+
+136     const swalSpy = spyOn(SwalConfirm, 'swalConfirm').and.callFake(() => ({
+                                                                       ~~~~~~~~
+137       then: (cb: any) => {
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~
+... 
+140       },
+    ~~~~~~~~
+141     } as any));
+    ~~~~~~~~~~~~~
+
+
+Error: src/app/layout/vendor/vendor-rfq/vendor-rfq.component.spec.ts:160:26 - error TS2345: Argument of type '() => any' is not assignable to parameter of type 'never'.
+
+160     swalSpy.and.callFake(() => ({
+                             ~~~~~~~~
+161       then: (cb: any) => {
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~
+... 
+164       },
+    ~~~~~~~~
+165     } as any));
+    ~~~~~~~~~~~~~
+
+
+Error: src/app/layout/vendor/vendor-rfq/vendor-rfq.component.spec.ts:168:26 - error TS2345: Argument of type '() => any' is not assignable to parameter of type 'never'.
+
+168     swalSpy.and.callFake(() => ({
+                             ~~~~~~~~
+169       then: (cb: any) => {
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~
+... 
+172       },
+    ~~~~~~~~
+173     } as any));
+    ~~~~~~~~~~~~~
+
+
+Error: src/app/layout/vendor/vendor-rfq/vendor-rfq.component.ts:218:21 - error TS2349: This expression is not callable.
+  Type '{ open(options: any): Promise<any>; }' has no call signatures.
+
+218                     swalConfirm({
+                        ~~~~~~~~~~~
+
+
+Error: src/app/layout/vendor/vendor-rfq/vendor-rfq.component.ts:264:17 - error TS2349: This expression is not callable.
+  Type '{ open(options: any): Promise<any>; }' has no call signatures.
+
+264                 swalConfirm({
+                    ~~~~~~~~~~~
+
+
+Error: src/app/shared/modules/common-share/components/linked-pr-ppo-create/linked-pr-ppo-create.component.spec.ts:99:40 - error TS2345: Argument of type 'string' is not assignable to parameter of type 'never'.
+
+99     const swalSpy = spyOn(SwalConfirm, 'swalConfirm').and.callFake(() => ({
+                                          ~~~~~~~~~~~~~
+
+
+Error: src/app/shared/modules/common-share/components/linked-pr-ppo-create/linked-pr-ppo-create.component.spec.ts:99:68 - error TS2345: Argument of type '() => any' is not assignable to parameter of type 'never'.
+
+ 99     const swalSpy = spyOn(SwalConfirm, 'swalConfirm').and.callFake(() => ({
+                                                                       ~~~~~~~~
+100       then: (cb: any) => {
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~
+... 
+103       },
+    ~~~~~~~~
+104     } as any));
+    ~~~~~~~~~~~~~
+
+
+Error: src/app/shared/modules/common-share/components/linked-pr-ppo-create/linked-pr-ppo-create.component.spec.ts:118:26 - error TS2345: Argument of type '() => any' is not assignable to parameter of type 'never'.
+
+118     swalSpy.and.callFake(() => ({
+                             ~~~~~~~~
+119       then: (cb: any) => {
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~
+... 
+122       },
+    ~~~~~~~~
+123     } as any));
+    ~~~~~~~~~~~~~
+
+
+Error: src/app/shared/modules/common-share/components/po/po-create/po-create.component.spec.ts:162:40 - error TS2345: Argument of type 'string' is not assignable to parameter of type 'never'.
+
+162     const swalSpy = spyOn(SwalConfirm, 'swalConfirm').and.callFake(() => ({
+                                           ~~~~~~~~~~~~~
+
+
+Error: src/app/shared/modules/common-share/components/po/po-create/po-create.component.spec.ts:162:68 - error TS2345: Argument of type '() => any' is not assignable to parameter of type 'never'.
+
+162     const swalSpy = spyOn(SwalConfirm, 'swalConfirm').and.callFake(() => ({
+                                                                       ~~~~~~~~
+163       then: (cb: any) => {
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~
+... 
+166       },
+    ~~~~~~~~
+167     } as any));
+    ~~~~~~~~~~~~~
+
+
+Error: src/app/shared/modules/common-share/components/po/po-create/po-create.component.spec.ts:177:26 - error TS2345: Argument of type '() => any' is not assignable to parameter of type 'never'.
+
+177     swalSpy.and.callFake(() => ({
+                             ~~~~~~~~
+178       then: (cb: any) => {
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~
+... 
+181       },
+    ~~~~~~~~
+182     } as any));
+    ~~~~~~~~~~~~~
+
+
+Error: src/app/shared/modules/common-share/components/po/po-create/po-create.component.ts:228:6 - error TS2349: This expression is not callable.
+  Type '{ open(options: any): Promise<any>; }' has no call signatures.
+
+228      swalConfirm({
+         ~~~~~~~~~~~
+
+
+Error: src/app/shared/modules/common-share/components/ppo-create/ppo-create.component.spec.ts:115:40 - error TS2345: Argument of type 'string' is not assignable to parameter of type 'never'.
+
+115     const swalSpy = spyOn(SwalConfirm, 'swalConfirm').and.callFake(() => ({
+                                           ~~~~~~~~~~~~~
+
+
+Error: src/app/shared/modules/common-share/components/ppo-create/ppo-create.component.spec.ts:115:68 - error TS2345: Argument of type '() => any' is not assignable to parameter of type 'never'.
+
+115     const swalSpy = spyOn(SwalConfirm, 'swalConfirm').and.callFake(() => ({
+                                                                       ~~~~~~~~
+116       then: (cb: any) => {
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~
+... 
+119       },
+    ~~~~~~~~
+120     } as any));
+    ~~~~~~~~~~~~~
+
+
+Error: src/app/shared/modules/common-share/components/ppo-create/ppo-create.component.spec.ts:132:26 - error TS2345: Argument of type '() => any' is not assignable to parameter of type 'never'.
+
+132     swalSpy.and.callFake(() => ({
+                             ~~~~~~~~
+133       then: (cb: any) => {
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~
+... 
+136       },
+    ~~~~~~~~
+137     } as any));
+    ~~~~~~~~~~~~~
+
+
+Error: src/app/shared/modules/common-share/components/ppo-create/ppo-create.component.spec.ts:152:24 - error TS2345: Argument of type 'string' is not assignable to parameter of type 'never'.
+
+152     spyOn(SwalConfirm, 'swalConfirm').and.callFake(() => ({
+                           ~~~~~~~~~~~~~
+
+
+Error: src/app/shared/modules/common-share/components/ppo-create/ppo-create.component.spec.ts:152:52 - error TS2345: Argument of type '() => any' is not assignable to parameter of type 'never'.
+
+152     spyOn(SwalConfirm, 'swalConfirm').and.callFake(() => ({
+                                                       ~~~~~~~~
+153       then: (cb: any) => {
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~
+... 
+156       },
+    ~~~~~~~~
+157     } as any));
+    ~~~~~~~~~~~~~
+
+
+Error: src/app/shared/modules/common-share/components/ppo-create/ppo-create.component.ts:136:5 - error TS2349: This expression is not callable.
+  Type '{ open(options: any): Promise<any>; }' has no call signatures.
+
+136     swalConfirm({
+        ~~~~~~~~~~~
+
+
+Error: src/app/shared/modules/common-share/components/quot-view-details/quot-view-details.component.spec.ts:80:22 - error TS2345: Argument of type 'string' is not assignable to parameter of type 'never'.
+
+80     spyOn(PdfExport, 'createJsPdf').and.returnValue(docStub());
+                        ~~~~~~~~~~~~~
+
+
+Error: src/app/shared/modules/common-share/components/quot-view-details/quot-view-details.component.spec.ts:80:53 - error TS2345: Argument of type '{ internal: { pageSize: { height: number; }; }; autoTable: { previous: { finalY: number; }; }; setLineWidth: jasmine.Spy<jasmine.Func>; setTextColor: jasmine.Spy<jasmine.Func>; ... 4 more ...; save: jasmine.Spy<...>; }' is not assignable to parameter of type 'never'.
+
+80     spyOn(PdfExport, 'createJsPdf').and.returnValue(docStub());
+                                                       ~~~~~~~~~
+
+
+Error: src/app/shared/modules/common-share/components/quot-view-details/quot-view-details.component.spec.ts:81:22 - error TS2345: Argument of type 'string' is not assignable to parameter of type 'never'.
+
+81     spyOn(PdfExport, 'runAutoTable').and.stub();
+                        ~~~~~~~~~~~~~~
+
+
+Error: src/app/shared/modules/common-share/components/quot-view-details/quot-view-details.component.spec.ts:146:22 - error TS2339: Property 'createJsPdf' does not exist on type 'typeof import("c:/Users/navin/OneDrive/Desktop/procucev/p2pui_v1/src/app/shared/helpers/pdf-export")'.
+
+146     expect(PdfExport.createJsPdf).toHaveBeenCalled();
+                         ~~~~~~~~~~~
+
+
+Error: src/app/shared/modules/common-share/components/quot-view-details/quot-view-details.component.spec.ts:147:22 - error TS2339: Property 'runAutoTable' does not exist on type 'typeof import("c:/Users/navin/OneDrive/Desktop/procucev/p2pui_v1/src/app/shared/helpers/pdf-export")'.
+
+147     expect(PdfExport.runAutoTable).toHaveBeenCalled();
+                         ~~~~~~~~~~~~
+
+
+Error: src/app/shared/modules/common-share/components/quot-view-details/quot-view-details.component.spec.ts:150:16 - error TS2339: Property 'createJsPdf' does not exist on type 'typeof import("c:/Users/navin/OneDrive/Desktop/procucev/p2pui_v1/src/app/shared/helpers/pdf-export")'.
+
+150     (PdfExport.createJsPdf as jasmine.Spy).and.returnValue(docStub(false));
+                   ~~~~~~~~~~~
+
+
+Error: src/app/shared/modules/common-share/components/quot-view-details/quot-view-details.component.ts:7:10 - error TS2305: Module '"src/app/shared/helpers/pdf-export"' has no exported member 'createJsPdf'.
+
+7 import { createJsPdf, runAutoTable } from 'src/app/shared/helpers/pdf-export';
+           ~~~~~~~~~~~
+
+
+Error: src/app/shared/modules/common-share/components/quot-view-details/quot-view-details.component.ts:7:23 - error TS2305: Module '"src/app/shared/helpers/pdf-export"' has no exported member 'runAutoTable'.
+
+7 import { createJsPdf, runAutoTable } from 'src/app/shared/helpers/pdf-export';
+                        ~~~~~~~~~~~~
+
+
+
+13 08 2026 16:27:44.209:INFO [karma-server]: Karma v6.4.4 server started at http://localhost:9876/
+13 08 2026 16:27:44.215:INFO [launcher]: Launching browsers ChromeHeadlessNoSandbox with concurrency unlimited
+13 08 2026 16:27:44.218:ERROR [karma-server]: Error: Found 1 load error
+    at Server.<anonymous> (c:\Users\navin\OneDrive\Desktop\procucev\p2pui_v1\node_modules\karma\lib\server.js:243:26)
+    at Object.onceWrapper (node:events:638:28)
+    at Server.emit (node:events:536:35)
+    at emitListeningNT (node:net:1951:10)
+    at process.processTicksAndRejections (node:internal/process/task_queues:81:21)
+✔ Browser application bundle generation complete.
+✔ Browser application bundle generation complete.

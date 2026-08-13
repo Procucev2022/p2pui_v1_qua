@@ -1,13 +1,14 @@
 import { ServerErrorRoutingModule } from './server-error-routing.module';
 
 describe('ServerErrorRoutingModule', () => {
-  let module: ServerErrorRoutingModule;
-
-  beforeEach(() => {
-    module = new ServerErrorRoutingModule();
+  it('should create an instance', () => {
+    expect(new ServerErrorRoutingModule()).toBeTruthy();
   });
 
-  it('should create an instance', () => {
-    expect(module).toBeTruthy();
+  it('should be constructible multiple times', () => {
+    const a = new ServerErrorRoutingModule();
+    const b = new ServerErrorRoutingModule();
+    expect(a).toBeTruthy();
+    expect(b).toBeTruthy();
   });
 });

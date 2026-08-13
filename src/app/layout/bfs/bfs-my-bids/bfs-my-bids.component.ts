@@ -142,14 +142,11 @@ export class BfsMyBidsComponent implements OnInit {
     getRFQs(rowData, $event) {
         console.log('closed1')
         this.selectedRowData = rowData;
-        this.expandedRows = {};
-        const thisRef = this;
-        thisRef.expandedRows[rowData.id] = 1;
-        this.expandedRows = this.expandedRows?.id === rowData.id ? null : rowData;
+        this.expandedRows = rowData;
         this.getBuyerByBFS(rowData);
     }
     get expandedRowKeys() {
-        return this.expandedRows ? { [this.expandedRows.id]: true } : {};
+        return this.expandedRows?.id ? { [this.expandedRows.id]: true } : {};
     }
     reloadGridComponent() {
         this.isShowGrid = false;

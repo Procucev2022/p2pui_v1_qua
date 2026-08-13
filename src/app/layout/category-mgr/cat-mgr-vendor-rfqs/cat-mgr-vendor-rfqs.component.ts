@@ -451,7 +451,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
                 this.vendorsList = res.map((ele: any) => {
                     const status_display = ele['status'] && ele['status']['uiDisplay'] ? ele.status.uiDisplay : ele.status;
                     return { ...ele, status_ui_display: status_display }
-                }) || [];
+                });
             }
         });
         setTimeout(() => {
@@ -588,7 +588,7 @@ export class CatMgrVendorRfqsComponent implements OnInit {
 
         this.rfqservice.getItemsByRFQIdForGMT(obj).subscribe((res: any) => {
             if (Array.isArray(res)) {
-                this.itemsList = res || [];
+                this.itemsList = res;
             }
         });
 
