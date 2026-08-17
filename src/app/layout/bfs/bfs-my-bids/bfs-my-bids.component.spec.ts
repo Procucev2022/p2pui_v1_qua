@@ -80,6 +80,24 @@ describe('BfsMyBidsComponent', () => {
 
     fixture = TestBed.createComponent(BfsMyBidsComponent);
     component = fixture.componentInstance;
+    
+    const sampleRow: any = {
+      id: '1', vendorId: 'v1', ID: '1', name: 'n', status: 'Open', status_ui_display: 'Open',
+      description: 'desc1', projectCategory: 'cat1', projectSubCategory: 'subcat1', brand: 'b1',
+      quantity: 10, unitofMeasures: 'KG', unitprice: 100, excludetaxamount: 1000, gstValue: 180, totalamount: 1180,
+      uom: { description: 'KG', id: 'u1' }, vendorData: ['v1'], action: null, org: { id: 'o1', companyName: 'Org1' },
+      certificates: [{ fileName: 'c.pdf', file: 'AAA' }], clientStatus: { uiDisplay: 'Open' },
+      createdTS: new Date().toISOString(), query: 'a|b', pricePerUnit: 10, rank: 1, city: 'City1',
+      vendorName: 'Vendor1', companyId: 'comp1', lineItems: [], documents: [], items: [],
+      rfqData: { id: '1' }, vendorRequest: { id: '1' }, vendorDataObj: { id: '1' },
+    };
+        (component as any).ppoData = { ppoItems: [sampleRow], id: '1', ppoNumber: 'PPO1', ppoId: '1', prId: '1' };
+    (component as any).prDetails = { id: '1', lineItems: [sampleRow] };
+    (component as any).data = (component as any).data || { ppoId: '1', prId: '1', id: '1', status: 'Success', items: [sampleRow], lineItems: [sampleRow], vendorProduct: [sampleRow], vendorService: [sampleRow], rfqData: sampleRow, vendors: [sampleRow] };
+    (component as any).rfqDataList = [sampleRow];
+    (component as any).cache_rfqDataList = [sampleRow];
+    (component as any).clientList = [sampleRow];
+
     seedComponent(component as any);
   });
 

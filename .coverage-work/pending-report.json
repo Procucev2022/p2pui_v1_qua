@@ -1,0 +1,2924 @@
+{
+  "generatedAt": "2026-08-13T11:07:34.530Z",
+  "overall": {
+    "statements": {
+      "covered": 648,
+      "total": 1941,
+      "percent": 33.38485316846986
+    },
+    "branches": {
+      "covered": 90,
+      "total": 640,
+      "percent": 14.0625
+    },
+    "functions": {
+      "covered": 50,
+      "total": 696,
+      "percent": 7.183908045977011
+    },
+    "lines": {
+      "covered": 648,
+      "total": 1922,
+      "percent": 33.714880332986475
+    }
+  },
+  "failingFiles": 362,
+  "files": [
+    {
+      "f": "src/app-bootstrap.ts",
+      "lines": 51,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/PdfReadable/PdfReadable.component.ts",
+      "lines": 196,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/PdfReadable/PdfReadable.module.ts",
+      "lines": 18,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/PdfReadable/PdfReadable.routing.ts",
+      "lines": 15,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/app-route-loaders.ts",
+      "lines": 49,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/app-routing.module.ts",
+      "lines": 24,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/app.component.ts",
+      "lines": 53,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/app.module.ts",
+      "lines": 107,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/bfs/bfs-common-grid/bfs-common-grid.component.ts",
+      "lines": 43,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/bfs/bfs-create-item/bfs-create-item.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/bfs/bfs-images-view/bfs-images-view.component.ts",
+      "lines": 55,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/bfs/bfs-items-list/bfs-items-list.component.ts",
+      "lines": 942,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/bfs/bfs-items.service.ts",
+      "lines": 183,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/bfs/bfs-my-bids/bfs-my-bids.component.ts",
+      "lines": 231,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/bfs/bfs-my-items/bfs-my-items.component.ts",
+      "lines": 245,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/bfs/bfs-request-items/bfs-request-items.component.ts",
+      "lines": 183,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/bfs/bfs-routing.module.ts",
+      "lines": 25,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/bfs/bfs-user-info-details/bfs-user-info-details.component.ts",
+      "lines": 55,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/bfs/bfs.module.ts",
+      "lines": 23,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/bfs/seller-buyer-details-by-unique-id/seller-buyer-details-by-unique-id.component.ts",
+      "lines": 55,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/bfs/vendor-bfs-my-item-bids/vendor-bfs-my-item-bids.component.ts",
+      "lines": 237,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/auction-bid-items/auction-bid-items.component.ts",
+      "lines": 51,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/auction-bids/auction-bids.component.ts",
+      "lines": 98,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/auctions/auction-bid-details/auction-bid-details.component.ts",
+      "lines": 156,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/auctions/auctions.component.ts",
+      "lines": 1124,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/capex-auctions/capex-auctions.component.ts",
+      "lines": 1161,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-client-gmt-rfqs/cat-mgr-client-gmt-rfqs.component.ts",
+      "lines": 625,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-client-regstr/cat-mgr-client-regstr.component.ts",
+      "lines": 432,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-common-grid/cat-mgr-common-grid.component.ts",
+      "lines": 46,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-create-rfq-list/cat-mgr-create-rfq-list.component.ts",
+      "lines": 1097,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-create-rfq-vendor-details/cat-mgr-create-rfq-vendor-details.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-dashboard/cat-mgr-dashboard.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-gmt-register-clients/cat-mgr-gmt-register-clients.component.ts",
+      "lines": 302,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-gmt-summary/cat-mgr-gmt-summary.component.ts",
+      "lines": 47,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-item-catalogue/cat-mgr-item-catalogue.component.ts",
+      "lines": 148,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-pr-line-items-tab/cat-mgr-pr-line-items-tab.component.ts",
+      "lines": 155,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-procu-requests/cat-mgr-procu-requests.component.ts",
+      "lines": 236,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-quotations/cat-mgr-quot-sub-tab-line-items/cat-mgr-quot-sub-tab-line-items.component.ts",
+      "lines": 56,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-quotations/cat-mgr-quot-sub-tab-pr-details/cat-mgr-quot-sub-tab-pr-details.component.ts",
+      "lines": 52,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-quotations/cat-mgr-quot-sub-tab-rfqs/cat-mgr-quot-sub-tab-rfqs.component.ts",
+      "lines": 50,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-quotations/cat-mgr-quot-sub-tab-vendors/cat-mgr-quot-sub-tab-vendors.component.ts",
+      "lines": 51,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-quotations/cat-mgr-quotations.component.ts",
+      "lines": 106,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-rfq-tab/cat-mgr-rfq-tab.component.ts",
+      "lines": 509,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-rfqs/cat-mgr-rfqs.component.ts",
+      "lines": 93,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-vendor-catalogue/cat-mgr-vendor-catalogue.component.ts",
+      "lines": 277,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-vendor-requests/cat-mgr-vendor-requests.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-vendor-rfqs/cat-mgr-vendor-rfqs.component.ts",
+      "lines": 771,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-vendor-search/cat-mgr-vendor-search.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-vendor-terms-condts/cat-mgr-vendor-terms-condts.component.ts",
+      "lines": 203,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/cat-mgr-vendors/cat-mgr-vendors.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/category-mgr-reports/category-mgr-reports.component.ts",
+      "lines": 159,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/category-mgr-routing.module.ts",
+      "lines": 78,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/category-mgr-vendor-summary/category-mgr-vendor-summary.component.ts",
+      "lines": 744,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/category-mgr.module.ts",
+      "lines": 118,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/create-rfq-shared/create-rfq-shared.component.ts",
+      "lines": 967,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/faqs-document/faqs-document.component.ts",
+      "lines": 27,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/my-category-list/my-category-list.component.ts",
+      "lines": 41,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/pr-reports/pr-reports.component.ts",
+      "lines": 239,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/reports/reports.component.ts",
+      "lines": 104,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/rfq-support-query/rfq-support-query.component.ts",
+      "lines": 87,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/services/auction.service.ts",
+      "lines": 132,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/services/cat-procu-quotations.service.ts",
+      "lines": 40,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/services/cat-procu-requests.service.ts",
+      "lines": 231,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/services/create-rfq.service.ts",
+      "lines": 200,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/services/export-pdf.service.ts",
+      "lines": 425,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/services/index.ts",
+      "lines": 4,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/subTab/cat-mgr-quotations-sub-tab/cat-mgr-quotations-sub-tab.component.ts",
+      "lines": 111,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/subTab/cat-mgr-rfqs-line-items-sub-tab/cat-mgr-rfqs-line-items-sub-tab.component.ts",
+      "lines": 68,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/subTab/cat-mgr-vendors-sub-tab/cat-mgr-vendors-sub-tab.component.ts",
+      "lines": 153,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/subscription-payment-failure/subscription-payment-failure.component.ts",
+      "lines": 32,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/subscription-payment-success/subscription-payment-success.component.ts",
+      "lines": 32,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/vendor-profile-subscriptions/vendor-profile-subscriptions.component.ts",
+      "lines": 105,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category-mgr/vendor-profile/vendor-profile.component.ts",
+      "lines": 771,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category/category-list/category-list.component.ts",
+      "lines": 250,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category/category-routing.module.ts",
+      "lines": 18,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category/category.module.ts",
+      "lines": 41,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category/client-linking-to-item-modal/client-linking-to-item-modal.component.ts",
+      "lines": 114,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category/create-item-category/create-item-category.component.ts",
+      "lines": 829,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category/create-item/create-item.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category/create-sub-category/create-sub-category.component.ts",
+      "lines": 726,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category/edit-client-linking-to-item-modal/edit-client-linking-to-item-modal.component.ts",
+      "lines": 60,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category/edit-vendor-linking-to-item-modal/edit-vendor-linking-to-item-modal.component.ts",
+      "lines": 78,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category/item-list-by-vendor/item-list-by-vendor.component.ts",
+      "lines": 159,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category/item-list/item-list.component.ts",
+      "lines": 325,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category/item-price-approvals/item-price-approvals.component.ts",
+      "lines": 90,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category/link-client-modal/link-client-modal.component.ts",
+      "lines": 152,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category/linked-client-list/linked-client-list.component.ts",
+      "lines": 70,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category/linked-vendor-list/linked-vendor-list.component.ts",
+      "lines": 246,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category/new-create-sub-category/new-create-sub-category.component.ts",
+      "lines": 25,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category/new-create-sub-category/product-sub-category/product-sub-category.component.ts",
+      "lines": 320,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category/new-create-sub-category/service-sub-category/service-sub-category.component.ts",
+      "lines": 318,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category/services/category.service.ts",
+      "lines": 255,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/category/vendor-linking-to-item-modal/vendor-linking-to-item-modal.component.ts",
+      "lines": 146,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/client/auctions-chart/auctions-chart.component.ts",
+      "lines": 115,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/client/client-analytics-info/client-analytics-info.component.ts",
+      "lines": 97,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/client/client-dashboard/client-dashboard.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/client/client-ppos/client-ppos.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/client/client-procure-request-capex/client-procure-request-capex.component.ts",
+      "lines": 407,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/client/client-procure-request-opex/client-procure-request-opex.component.ts",
+      "lines": 405,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/client/client-procure-request/client-procure-request.component.ts",
+      "lines": 385,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/client/client-profile/client-profile.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/client/client-routing.module.ts",
+      "lines": 38,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/client/client.module.ts",
+      "lines": 62,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/client/components/accept-pr-view/accept-pr-view.component.ts",
+      "lines": 55,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/client/components/alphabet-only.directive.ts",
+      "lines": 17,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/client/components/create-pr-modal-new/create-pr-modal-new.component.ts",
+      "lines": 773,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/client/components/create-pr-modal/create-pr-modal.component.ts",
+      "lines": 743,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/client/components/pr-items-grid-panel-capex/pr-items-grid-panel-capex.component.ts",
+      "lines": 776,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/client/components/pr-items-grid-panel/pr-items-grid-panel.component.ts",
+      "lines": 626,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/client/components/pr-view-modal/pr-view-modal.component.ts",
+      "lines": 593,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/client/components/view-pr-id-details/view-pr-id-details.component.ts",
+      "lines": 79,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/client/components/view-pr-modal/view-pr-modal.component.ts",
+      "lines": 73,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/client/item-catalogue/item-catalogue.component.ts",
+      "lines": 416,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/client/pr-lead-time-chart/pr-lead-time-chart.component.ts",
+      "lines": 103,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/client/pr-ppo-chart/pr-ppo-chart.component.ts",
+      "lines": 93,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/client/price-trend-chart/price-trend-chart.component.ts",
+      "lines": 159,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/client/services/approve-pr.service.ts",
+      "lines": 27,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/client/services/client-service.service.ts",
+      "lines": 151,
+      "s": 2.44,
+      "b": 100,
+      "fn": 0,
+      "l": 2.56
+    },
+    {
+      "f": "src/app/layout/client/services/create-pr-model.service.ts",
+      "lines": 57,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/components/footer/footer.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/components/header/header.component.ts",
+      "lines": 163,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/components/sidebar/sidebar.component.ts",
+      "lines": 238,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/configurations/configurations-routing.module.ts",
+      "lines": 14,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/configurations/configurations.module.ts",
+      "lines": 17,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/configurations/uom/services/uom.service.ts",
+      "lines": 34,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/configurations/uom/uom.component.ts",
+      "lines": 146,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/dashboard/dashboard-routing.module.ts",
+      "lines": 17,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/dashboard/dashboard.component.ts",
+      "lines": 73,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/dashboard/dashboard.module.ts",
+      "lines": 20,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/invoices/advance-payment-requests/advance-payment-requests.component.ts",
+      "lines": 279,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/invoices/create-edit-advance-payment-requests/create-edit-advance-payment-requests.component.ts",
+      "lines": 158,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/invoices/create-invoice/create-invoice.component.ts",
+      "lines": 324,
+      "s": 0.83,
+      "b": 0,
+      "fn": 0,
+      "l": 0.85
+    },
+    {
+      "f": "src/app/layout/invoices/invoices-list/invoices-list.component.ts",
+      "lines": 168,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/invoices/invoices-routing.module.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/invoices/invoices.module.ts",
+      "lines": 26,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/invoices/invoices.service.ts",
+      "lines": 69,
+      "s": 5.56,
+      "b": 100,
+      "fn": 0,
+      "l": 5.56
+    },
+    {
+      "f": "src/app/layout/invoices/view-invoice-modal/view-invoice-modal.component.ts",
+      "lines": 186,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/layout-route-loaders.ts",
+      "lines": 53,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/layout-routing.module.ts",
+      "lines": 37,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/layout.component.ts",
+      "lines": 135,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/layout.module.ts",
+      "lines": 27,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/pos/accept-pos/accept-pos.component.ts",
+      "lines": 294,
+      "s": 0.61,
+      "b": 0,
+      "fn": 0,
+      "l": 0.63
+    },
+    {
+      "f": "src/app/layout/pos/cancel-po/cancel-po.component.ts",
+      "lines": 41,
+      "s": 6.25,
+      "b": 0,
+      "fn": 0,
+      "l": 6.25
+    },
+    {
+      "f": "src/app/layout/pos/po-create-asn/po-create-asn.component.ts",
+      "lines": 179,
+      "s": 1.41,
+      "b": 0,
+      "fn": 0,
+      "l": 1.45
+    },
+    {
+      "f": "src/app/layout/pos/po-delivery-items/po-delivery-items.component.ts",
+      "lines": 62,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/pos/po-items/po-items.component.ts",
+      "lines": 51,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/pos/po-view-delivery/po-view-delivery.component.ts",
+      "lines": 181,
+      "s": 2.17,
+      "b": 0,
+      "fn": 0,
+      "l": 2.17
+    },
+    {
+      "f": "src/app/layout/pos/pos-routing.module.ts",
+      "lines": 12,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/pos/pos.module.ts",
+      "lines": 29,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/pos/view-asn-modal/view-asn-modal.component.ts",
+      "lines": 79,
+      "s": 5.26,
+      "b": 0,
+      "fn": 0,
+      "l": 5.26
+    },
+    {
+      "f": "src/app/layout/pos/view-pos/view-pos.component.ts",
+      "lines": 159,
+      "s": 2.13,
+      "b": 0,
+      "fn": 0,
+      "l": 2.13
+    },
+    {
+      "f": "src/app/layout/ppos/components/generated-ppos/generated-ppos.component.ts",
+      "lines": 388,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/ppos/ppos-routing.module.ts",
+      "lines": 14,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/ppos/ppos.module.ts",
+      "lines": 17,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/ppos/services/ppos.service.ts",
+      "lines": 60,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/procuceve-admin/procu-clients/procu-clients.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/procuceve-admin/procu-dashboard/procu-dashboard.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/procuceve-admin/procu-procure-requests/procu-procure-requests.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/procuceve-admin/procu-qutotations/procu-qutotations.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/procuceve-admin/procu-rfqs/procu-rfqs.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/procuceve-admin/procu-vendor-search/procu-vendor-search.component.ts",
+      "lines": 44,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/procuceve-admin/procuceve-admin-routing.module.ts",
+      "lines": 26,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/procuceve-admin/procuceve-admin.module.ts",
+      "lines": 22,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/raise-issue/components/create-issue/create-issue.component.ts",
+      "lines": 131,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/raise-issue/components/raised-issues/raised-issues.component.ts",
+      "lines": 88,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/raise-issue/components/view-issue/view-issue.component.ts",
+      "lines": 79,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/raise-issue/raise-issue-routing.module.ts",
+      "lines": 14,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/raise-issue/raise-issue.module.ts",
+      "lines": 20,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/raise-issue/services/raise-issues.service.ts",
+      "lines": 34,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/components/approvalpending-tab/approvalpending-tab.component.ts",
+      "lines": 194,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/components/forwarded-vendors-tab/forwarded-vendors-tab.component.ts",
+      "lines": 130,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/components/gmt-vendors-list/gmt-vendors-list.component.ts",
+      "lines": 156,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/components/vendor-approval-modal/vendor-approval-modal.component.ts",
+      "lines": 768,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/components/vendor-assign-rank-model/vendor-assign-rank-model.component.ts",
+      "lines": 43,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/components/vendor-registration-pending/vendor-registration-pending.component.ts",
+      "lines": 59,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/components/vendor-rejected/vendor-rejected.component.ts",
+      "lines": 65,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/components/vendor-tab-view-model/vendor-tab-view-model.component.ts",
+      "lines": 103,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/components/vendortab/vendortab.component.ts",
+      "lines": 126,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/dynamic-pricing-items/dynamic-pricing-items.component.ts",
+      "lines": 164,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/forwarded-vendor/forwarded-vendor.component.ts",
+      "lines": 144,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/prevendor/prevendor.component.ts",
+      "lines": 416,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/services/vendor-invite.service.ts",
+      "lines": 29,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/services/vendor-mgr.service.ts",
+      "lines": 36,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/services/vendor-names.service.ts",
+      "lines": 54,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/services/vendor-search.service.ts",
+      "lines": 37,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/services/vendor-view-model.service.ts",
+      "lines": 39,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/vendor-active-time/vendor-active-time-routing.module.ts",
+      "lines": 15,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/vendor-active-time/vendor-active-time.module.ts",
+      "lines": 22,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/vendor-active-time/vendor-active-times/vendor-active-times.component.ts",
+      "lines": 353,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/vendor-evolution/vendor-capability/vendor-capability.component.ts",
+      "lines": 44,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/vendor-evolution/vendor-client/vendor-client.component.ts",
+      "lines": 174,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/vendor-evolution/vendor-commercial/vendor-commercial.component.ts",
+      "lines": 44,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/vendor-evolution/vendor-evolution.component.ts",
+      "lines": 151,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/vendor-evolution/vendor-info/vendor-info.component.ts",
+      "lines": 79,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/vendor-evolution/vendor-quality/vendor-quality.component.ts",
+      "lines": 50,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/vendor-mgr-routing.module.ts",
+      "lines": 31,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/vendor-mgr.module.ts",
+      "lines": 61,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/view-pre-vendor-details/view-pre-vendor-details.component.ts",
+      "lines": 24,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/view-vendor-evaluation/view-vendor-evaluation.component.ts",
+      "lines": 19,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/vmgr-dashboard/vmgr-dashboard.component.ts",
+      "lines": 50,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/vmgr-vendor-approvals/vmgr-vendor-approvals.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/vmgr-vendor-invitation/vmgr-vendor-invitation.component.ts",
+      "lines": 104,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/vmgr-vendor-requests/vmgr-vendor-requests.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-mgr/vmgr-vendor-search/vmgr-vendor-search.component.ts",
+      "lines": 581,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-request/components/req-completed-modal/req-completed-modal.component.ts",
+      "lines": 86,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-request/components/ven-req-view-modal/ven-req-view-modal.component.ts",
+      "lines": 97,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-request/components/vendor-req-modal/vendor-req-modal.component.ts",
+      "lines": 671,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-request/components/vendor-request/vendor-request.component.ts",
+      "lines": 146,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-request/services/vendor-req.service.ts",
+      "lines": 156,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-request/vendor-request-routing,module.ts",
+      "lines": 14,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor-request/vendor-request.module.ts",
+      "lines": 20,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/auctions/live-auction-for-itemwise/live-auction-for-itemwise.component.ts",
+      "lines": 328,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/auctions/live-auction-for-rfq-wise/live-auction-for-rfq-wise.component.ts",
+      "lines": 366,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/auctions/live-auction-modal/live-auction-modal.component.ts",
+      "lines": 104,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/auctions/live-auctions/live-auctions.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/auctions/scheduled-auctions/scheduled-auctions.component.ts",
+      "lines": 91,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/auctions/sealed-bid-auction-modal/sealed-bid-auction-modal.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/auctions/vendor-auctions/vendor-auctions.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/client-vendor/client-vendor.component.ts",
+      "lines": 109,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/components/add-client-ref/add-client-ref.component.ts",
+      "lines": 96,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/components/add-product/add-products.component.ts",
+      "lines": 152,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/components/add-services/add-services.component.ts",
+      "lines": 134,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/components/edit-client-ref/edit-client-ref.component.ts",
+      "lines": 56,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/components/edit-rfq-by-id-modal/edit-rfq-by-id-modal.component.ts",
+      "lines": 405,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/components/product-edit/product-edit.component.ts",
+      "lines": 57,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/components/quotLineItemsComponents/quot-by-id/quot-by-id.component.ts",
+      "lines": 109,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/components/rfqLinecomponents/quot-info/quot-info.component.ts",
+      "lines": 103,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/components/rfqLinecomponents/rfq-details/rfq-details.component.ts",
+      "lines": 107,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/components/rfqLinecomponents/rfq-documents/rfq-documents.component.ts",
+      "lines": 91,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/components/service-edit/service-edit.component.ts",
+      "lines": 51,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/components/vendor-client-ref/vendor-client-ref.component.ts",
+      "lines": 59,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/components/vendor-contacts/vendor-contacts.component.ts",
+      "lines": 47,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/components/vendor-quotation-modal/vendor-quotation-modal.component.ts",
+      "lines": 384,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/components/view-rfq-by-id-modal/view-rfq-by-id-modal.component.ts",
+      "lines": 78,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/services/rfq.service.ts",
+      "lines": 194,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/services/test-service.service.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/services/vendor-quot.service.ts",
+      "lines": 33,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/vendor-dashboard/vendor-dashboard.component.ts",
+      "lines": 77,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/vendor-profile/vendor-profile.component.ts",
+      "lines": 396,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/vendor-quot-subm/vendor-quot-subm.component.ts",
+      "lines": 143,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/vendor-reg/vendor-reg.component.ts",
+      "lines": 1284,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/vendor-registration/vendor-registration.component.ts",
+      "lines": 277,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/vendor-rfq/vendor-rfq.component.ts",
+      "lines": 338,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/vendor-routing.module.ts",
+      "lines": 34,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/layout/vendor/vendor.module.ts",
+      "lines": 127,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/login/client-register/client-register.component.ts",
+      "lines": 463,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/login/forgotpassword/forgotpassword.component.ts",
+      "lines": 90,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/login/login-routing.module.ts",
+      "lines": 53,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/login/login-subscription/login-subscription.component.ts",
+      "lines": 50,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/login/login.component.ts",
+      "lines": 379,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/login/login.module.ts",
+      "lines": 34,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/login/password-change/password-change.component.ts",
+      "lines": 285,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/login/reg-confirm-dialog/reg-confirm-dialog.component.ts",
+      "lines": 29,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/login/registervendor/registervendor.component.ts",
+      "lines": 419,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/login/un-authorized-access-screen/un-authorized-access-screen.component.ts",
+      "lines": 21,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/login/un-authorized/un-authorized.component.ts",
+      "lines": 19,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/not-found/not-found-routing.module.ts",
+      "lines": 17,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/not-found/not-found.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/not-found/not-found.module.ts",
+      "lines": 15,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/router.animations.ts",
+      "lines": 71,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/server-error/server-error-routing.module.ts",
+      "lines": 17,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/server-error/server-error.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/server-error/server-error.module.ts",
+      "lines": 15,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/commonComps/grid-page-info/grid-page-info.component.ts",
+      "lines": 53,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/components/timeout-modal/timeout-modal.component.ts",
+      "lines": 57,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/guard/auth.guard.ts",
+      "lines": 20,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/guard/index.ts",
+      "lines": 4,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/guard/screen-access-guard.guard.ts",
+      "lines": 97,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/helpers/pdf-export.ts",
+      "lines": 24,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/helpers/swal-confirm.ts",
+      "lines": 10,
+      "s": 33.33,
+      "b": 0,
+      "fn": 0,
+      "l": 33.33
+    },
+    {
+      "f": "src/app/shared/index.ts",
+      "lines": 6,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/loader/loader.component.ts",
+      "lines": 35,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/common-share-routing.module.ts",
+      "lines": 11,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/common-share.module.ts",
+      "lines": 247,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/add-or-edit-vendor-modal/add-or-edit-vendor-modal.component.ts",
+      "lines": 201,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/authenticate-logged-user/authenticate-logged-user.component.ts",
+      "lines": 65,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/capex-cat-mgr-post-auction-compar/capex-cat-mgr-post-auction-compar.component.ts",
+      "lines": 285,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/capex-cat-mgr-quote-compar/capex-cat-mgr-quote-compar.component.ts",
+      "lines": 216,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/client-search-for-linking/client-search-for-linking.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/comment-alert-bell-blink/comment-alert-bell-blink.component.ts",
+      "lines": 22,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/common-attachments/common-attachments.component.ts",
+      "lines": 86,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/common-grid/common-grid.component.ts",
+      "lines": 98,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/correspondence/correspondence.component.ts",
+      "lines": 532,
+      "s": 0.57,
+      "b": 0,
+      "fn": 0,
+      "l": 0.57
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/create-auction-modal/create-auction-modal.component.ts",
+      "lines": 154,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/create-auction-modal/create-rai-auction/create-rai-auction.component.ts",
+      "lines": 475,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/create-auction-modal/create-rar-auction/create-rar-auction.component.ts",
+      "lines": 556,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/create-auction-modal/create-sealed-bid-auction/create-sealed-bid-auction.component.ts",
+      "lines": 26,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/doc-grid/doc-grid.component.ts",
+      "lines": 34,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/download-attachments/download-attachments.component.ts",
+      "lines": 17,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/form-control-errors-messages-display/form-control-errors-messages-display.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/gmt-vendor-info-modal/gmt-vendor-info-modal.component.ts",
+      "lines": 20,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/linked-pr-ppo-create/linked-pr-ppo-create.component.ts",
+      "lines": 138,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/page-info/page-info.component.ts",
+      "lines": 47,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/pincode-control/pincode-control.component.ts",
+      "lines": 116,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/po/po-create/po-create.component.ts",
+      "lines": 329,
+      "s": 0.62,
+      "b": 0,
+      "fn": 0,
+      "l": 0.63
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/po/po-create/po.model.ts",
+      "lines": 33,
+      "s": 0,
+      "b": 100,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/post-auction-compare/post-auction-compare.component.ts",
+      "lines": 122,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/ppo-create/ppo-create.component.ts",
+      "lines": 195,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/ppo-documents/ppo-documents.component.ts",
+      "lines": 28,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/ppo-quot-compare-view/ppo-quot-compare-view.component.ts",
+      "lines": 503,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/ppo-reports/ppo-reports.component.ts",
+      "lines": 214,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/ppo-rfq-vendors/ppo-rfq-vendors.component.ts",
+      "lines": 27,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/ppo-terms-conditions/ppo-terms-conditions.component.ts",
+      "lines": 18,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/ppo-view-modal/ppo-view-modal.component.ts",
+      "lines": 657,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/ppos/ppo-items/ppo-items.component.ts",
+      "lines": 498,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/pr-details-view/pr-details-view.component.ts",
+      "lines": 246,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/pro-cpx-vendor-summary-clients/pro-cpx-vendor-summary-clients.component.ts",
+      "lines": 68,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/pro-cpx-vendor-summary-layout/pro-cpx-vendor-summary-layout.component.ts",
+      "lines": 35,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/pro-cpx-vendor-summary/pro-cpx-vendor-ppos/pro-cpx-vendor-ppos.component.ts",
+      "lines": 308,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/pro-cpx-vendor-summary/pro-cpx-vendor-summary.component.ts",
+      "lines": 115,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/quot-compare-view/quot-compare-view.component.ts",
+      "lines": 822,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/quot-compare/quot-compare.component.ts",
+      "lines": 943,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/quot-view-details/quot-view-details.component.ts",
+      "lines": 171,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/sub-category-dropdown/sub-category-dropdown.component.ts",
+      "lines": 44,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/vendor-choose-modal-popup/vendor-choose-modal-popup.component.ts",
+      "lines": 309,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/vendor-info-icon-dialog/vendor-info-icon-dialog.component.ts",
+      "lines": 44,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/vendor-search-for-linking/vendor-search-for-linking.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/vendor-search/vendor-search.component.ts",
+      "lines": 587,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/components/vendor-view-model/vendor-view-model.component.ts",
+      "lines": 288,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/directives/block-copy-paste.directive.ts",
+      "lines": 21,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/directives/dragAndDropDirective.ts",
+      "lines": 53,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/directives/numbers-only.directive.ts",
+      "lines": 19,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/models/commonGridData.ts",
+      "lines": 35,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/price-analytics-graph-modal/price-analytics-graph-modal.component.ts",
+      "lines": 96,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/services/comments.service.ts",
+      "lines": 91,
+      "s": 4.76,
+      "b": 100,
+      "fn": 0,
+      "l": 4.76
+    },
+    {
+      "f": "src/app/shared/modules/common-share/services/convert-to-base64.service.ts",
+      "lines": 20,
+      "s": 12.5,
+      "b": 100,
+      "fn": 0,
+      "l": 16.67
+    },
+    {
+      "f": "src/app/shared/modules/common-share/services/excel.service.ts",
+      "lines": 50,
+      "s": 21.43,
+      "b": 100,
+      "fn": 0,
+      "l": 21.43
+    },
+    {
+      "f": "src/app/shared/modules/common-share/services/file.pipe.ts",
+      "lines": 15,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/services/grid-pdf.service.ts",
+      "lines": 54,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/services/loader.interceptor.ts",
+      "lines": 143,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/services/loader.service.ts",
+      "lines": 12,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/common-share/services/po.service.ts",
+      "lines": 120,
+      "s": 3.45,
+      "b": 100,
+      "fn": 0,
+      "l": 3.45
+    },
+    {
+      "f": "src/app/shared/modules/index.ts",
+      "lines": 5,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/language-translation/language-translation.module.ts",
+      "lines": 48,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/page-header/page-header.component.ts",
+      "lines": 16,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/page-header/page-header.module.ts",
+      "lines": 13,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/stat/stat.component.ts",
+      "lines": 20,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/modules/stat/stat.module.ts",
+      "lines": 11,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/pipes/shared-pipes.module.ts",
+      "lines": 11,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/services/authentication.service.ts",
+      "lines": 353,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/services/custom-validations.service.ts",
+      "lines": 105,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/services/encry-decry.service.ts",
+      "lines": 39,
+      "s": 11.11,
+      "b": 100,
+      "fn": 0,
+      "l": 11.11
+    },
+    {
+      "f": "src/app/shared/services/form-validatations.service.ts",
+      "lines": 106,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/services/loader.interceptor.ts",
+      "lines": 77,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/services/loader.service.ts",
+      "lines": 12,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/shared/services/request.interceptor.ts",
+      "lines": 112,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/signup/signup-routing.module.ts",
+      "lines": 17,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/signup/signup.component.ts",
+      "lines": 15,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/signup/signup.module.ts",
+      "lines": 17,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/vendor-registration/components/add-product/add-products.component.ts",
+      "lines": 111,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/vendor-registration/components/add-services/add-services.component.ts",
+      "lines": 111,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/vendor-registration/components/vendor-client-ref/vendor-client-ref.component.ts",
+      "lines": 54,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/vendor-registration/services/countries.service.ts",
+      "lines": 18,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/vendor-registration/services/vendor-registration.service.ts",
+      "lines": 106,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/vendor-registration/services/vendor-service.service.ts",
+      "lines": 56,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/vendor-registration/vendor-registration-routing.module.ts",
+      "lines": 30,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/vendor-registration/vendor-registration.module.ts",
+      "lines": 37,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/app/vendor-registration/vendor-registration/vendor-registration.component.ts",
+      "lines": 586,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/environments/environment.prod.ts",
+      "lines": 4,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/environments/environment.ts",
+      "lines": 20,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/main.ts",
+      "lines": 19,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    },
+    {
+      "f": "src/polyfills.ts",
+      "lines": 26,
+      "s": 0,
+      "b": 0,
+      "fn": 0,
+      "l": 0
+    }
+  ]
+}
