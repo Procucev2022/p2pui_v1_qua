@@ -248,6 +248,9 @@ describe('LiveAuctionForItemwiseComponent', () => {
     component.onBidTimeInterval();
     component.onItemTimeoutRefresh();
 
+    if (component.intervalTime) { try { clearInterval(component.intervalTime); } catch (e) {} }
+    if (component.timer) { try { clearInterval(component.timer); } catch (e) {} }
+    if (component.itemtimeoutinteval) { try { clearTimeout(component.itemtimeoutinteval); } catch (e) {} }
     component.intervalTime = 1;
     component.timer = 2;
     component.itemtimeoutinteval = 3;
