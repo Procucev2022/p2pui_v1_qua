@@ -123,7 +123,47 @@ describe('ReportsComponent', () => {
     try { c.filterAuction(null); } catch (e) {}
     try { c.filterAuction(true); } catch (e) {}
     try { c.filterAuction(false); } catch (e) {}
+    try { exerciseComponent(c); } catch (e) {}
     expect(component).toBeTruthy();
+  });
+
+  it('should test prChange, auctionItemChange, getPrsList, filterPr, filterAuction, and exportToExcel', () => {
+    const clientSvc = TestBed.inject(ClientService) as any;
+    const procSvc = TestBed.inject(CatProcuRequestsService) as any;
+
+    component.selectedPr = { id: 'pr1' };
+    clientSvc.getRfqwiseAuctionIdsByPR.and.returnValue(of([{ auctionId: 'a1' }]));
+    component.prChange();
+    expect(component.auctionItemList.length).toBe(1);
+
+    clientSvc.getRfqwiseAuctionIdsByPR.and.returnValue(of(null));
+    component.prChange();
+    expect(component.auctionItemList).toEqual([]);
+
+    component.selectedAuction = { id: 'a1', auctionId: 'AUC-1' };
+    clientSvc.getItemWiseSummary.and.returnValue(of({ summary: 'ok' }));
+    component.auctionItemChange();
+    expect(component.auctionDetails).toEqual({ summary: 'ok' });
+
+    procSvc.getPRIdsList.and.returnValue(of([{ prId: 'PR-100' }]));
+    component.getPrsList();
+    expect(component.prList.length).toBe(1);
+
+    procSvc.getPRIdsList.and.returnValue(of(null));
+    component.getPrsList();
+    expect(component.prList).toEqual([]);
+
+    component.prList = [{ prId: 'PR-100' }, { prId: 'PR-200' }];
+    component.filterPr({ query: '100' });
+    expect(component.filteredprList.length).toBe(1);
+
+    component.auctionItemList = [{ auctionId: 'AUC-100' }, { auctionId: 'AUC-200' }];
+    component.filterAuction({ query: '200' });
+    expect(component.filteredauctionList.length).toBe(1);
+
+    component.selectedAuction = { auctionId: 'AUC-100' };
+    component.exportTable = { nativeElement: document.createElement('table') };
+    try { component.exportToExcel(); } catch (e) {}
   });
 
   it('exerciseComponent branch coverage', () => {

@@ -428,4 +428,38 @@ describe('AddClientRefComponent', () => {
 
     expect(c).toBeTruthy();
   });
+
+  it('should test onAddClient with invalid form, isNewVendor true/false, and response Success/Failure', () => {
+    const dialogRef = TestBed.inject(MatDialogRef) as any;
+    const vendorRegSvc = TestBed.inject(VendorRegistrationService) as any;
+    const toastr = TestBed.inject(ToastrService) as any;
+
+    component.onAddClient({ invalid: true } as any);
+
+    component.data = { isNewVendor: true };
+    component.selectedDocuments = [{ fileName: 'doc.pdf' }];
+    component.onAddClient({ invalid: false, value: { clientName: 'Acme' } } as any);
+    expect(dialogRef.close).toHaveBeenCalledWith({ event: 'submit', data: { clientName: 'Acme', files: [{ fileName: 'doc.pdf' }] } });
+
+    component.data = { isNewVendor: false, clientReference: [] };
+    component.imageUrl = 'data:image/png;base64,AAAA';
+    component.fileToUpload = { name: 'test.png' };
+    vendorRegSvc.submitVendorRegistration.and.returnValue(of({ status: 'Success', message: 'Added' }));
+    component.onAddClient({ invalid: false, value: { clientName: 'Acme' } } as any);
+    expect(toastr.success).toHaveBeenCalledWith('Added', 'Success');
+
+    component.data = { isNewVendor: false, clientReference: [] };
+    component.imageUrl = null;
+    vendorRegSvc.submitVendorRegistration.and.returnValue(of({ status: 'Failure' }));
+    component.onAddClient({ invalid: false, value: { clientName: 'Acme' } } as any);
+    expect(toastr.error).toHaveBeenCalledWith('Failed to update vendor details', 'Failed');
+
+    component.closeDialog();
+    expect(dialogRef.close).toHaveBeenCalledWith({ event: 'Cancel' });
+
+    const file = new File(['hello'], 'hello.png', { type: 'image/png' });
+    const fileList = { item: () => file, length: 1 } as any;
+    component.onFileUpload(fileList);
+    expect(component.fileToUpload).toBe(file);
+  });
 });

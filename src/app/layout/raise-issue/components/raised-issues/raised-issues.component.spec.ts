@@ -209,4 +209,34 @@ describe('RaisedIssuesComponent', () => {
     try { exerciseComponent(c); } catch (e) {}
     expect(component).toBeTruthy();
   });
+
+  it('should test getAllRaisedIssues, createIssue, viewIssue, and showToaster branches', () => {
+    const raiseIssueSvc = TestBed.inject(RaiseIssuesService) as any;
+    const toastr = TestBed.inject(ToastrService) as any;
+    const dialog = TestBed.inject(MatDialog) as any;
+
+    raiseIssueSvc.getRaisedIssues.and.returnValue(of([{ id: 'i1', clientId: 'c1', vendorId: 'v1', questions: 'q1' }]));
+    component.getAllRaisedIssues();
+    expect(component.raisedIssiesList.length).toBe(1);
+
+    raiseIssueSvc.getRaisedIssues.and.returnValue(of({ statusCode: 'Failure' }));
+    component.getAllRaisedIssues();
+    expect(toastr.error).toHaveBeenCalledWith('Failed to fetch data', 'Error');
+
+    dialog.open.and.returnValue({
+      afterClosed: () => of({ event: 'submit' })
+    });
+    component.createIssue();
+
+    dialog.open.and.returnValue({
+      afterClosed: () => of({ event: 'Cancel' })
+    });
+    component.viewIssue({ id: 'i1' });
+
+    component.showToaster({ statusCode: 'Success', errorMessage: 'Saved' });
+    expect(toastr.success).toHaveBeenCalledWith('Saved', 'Success');
+
+    component.showToaster({ statusCode: 'Failure', errorMessage: 'Error msg' });
+    expect(toastr.error).toHaveBeenCalledWith('Error msg', 'Failure');
+  });
 });

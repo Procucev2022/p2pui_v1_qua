@@ -142,8 +142,35 @@ describe('CatMgrQuotationsSubTabComponent', () => {
     try { c.viewQuotDetails(null); } catch (e) {}
     try { c.viewQuotDetails(true); } catch (e) {}
     try { c.viewQuotDetails(false); } catch (e) {}
-    try { c.ngOnChanges({}); } catch (e) {}
+    try { exerciseComponent(c); } catch (e) {}
     expect(component).toBeTruthy();
+  });
+
+  it('should test getQuotationsByRfq array/object responses, viewCorresspondance, and viewQuotDetails', () => {
+    const procuSvc = TestBed.inject(CatProcuRequestsService) as any;
+    const toastr = TestBed.inject(ToastrService) as any;
+    const dialog = TestBed.inject(MatDialog) as any;
+
+    component.rfqData = { id: 'rfq1' };
+
+    procuSvc.getQuotationsByRfq.and.returnValue(of([{ quotationId: 'q1', totalAmount: '100' }]));
+    component.getQuotationsByRfq();
+    expect(component.quotsList.length).toBe(1);
+
+    procuSvc.getQuotationsByRfq.and.returnValue(of({ errorMessage: 'No quots' }));
+    component.getQuotationsByRfq();
+    expect(toastr.warning).toHaveBeenCalledWith('No quots', 'Warning');
+
+    dialog.open.and.returnValue({
+      afterClosed: () => of(null)
+    });
+    component.viewCorresspondance({ id: 'q1' });
+
+    component.viewQuotDetails({ totalAmount: '500' });
+    expect(dialog.open).toHaveBeenCalled();
+
+    component.viewQuotDetails({ totalAmount: null });
+    expect(toastr.warning).toHaveBeenCalledWith('Not allowed at this moment ', 'Warning');
   });
 
   it('exerciseComponent branch coverage', () => {

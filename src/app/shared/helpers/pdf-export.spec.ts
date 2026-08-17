@@ -1,7 +1,7 @@
 import { pdfExport, createJsPdf, runAutoTable } from './pdf-export';
 
 describe('pdfExport helper', () => {
-  it('should create jsPDF instance and run autoTable', () => {
+  it('should create jsPDF instance and run autoTable via wrapper functions', () => {
     spyOn(pdfExport, 'createJsPdf').and.returnValue({ save: () => {} });
     spyOn(pdfExport, 'runAutoTable').and.returnValue({});
 
@@ -12,11 +12,11 @@ describe('pdfExport helper', () => {
     expect(table).toBeTruthy();
   });
 
-  it('should run default createJsPdf and runAutoTable methods', () => {
+  it('should run default createJsPdf and runAutoTable real implementations', () => {
     try {
       const doc = pdfExport.createJsPdf();
       expect(doc).toBeTruthy();
-      pdfExport.runAutoTable(doc, { head: [['A']], body: [['B']] });
+      pdfExport.runAutoTable(doc || {}, { head: [['A']], body: [['B']] });
     } catch (e) {
       expect(e).toBeTruthy();
     }

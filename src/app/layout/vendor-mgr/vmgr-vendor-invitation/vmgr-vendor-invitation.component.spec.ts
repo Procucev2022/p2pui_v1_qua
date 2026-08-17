@@ -64,6 +64,9 @@ describe('VmgrVendorInvitationComponent', () => {
     (component as any).cache_rfqDataList = [sampleRow];
     (component as any).clientList = [sampleRow];
 
+    const enc = TestBed.inject(EncryDecryService) as any;
+    enc.get.and.returnValue(JSON.stringify({ details: { listofPermission: [] } }));
+
     seedComponent(component as any);
   });
 
@@ -126,7 +129,41 @@ describe('VmgrVendorInvitationComponent', () => {
     try { c.tempvendor(null); } catch (e) {}
     try { c.tempvendor(true); } catch (e) {}
     try { c.tempvendor(false); } catch (e) {}
+    try { exerciseComponent(c); } catch (e) {}
     expect(component).toBeTruthy();
+  });
+
+  it('should test VmgrVendorInvitationComponent methods and branch coverage', () => {
+    const enc = TestBed.inject(EncryDecryService) as any;
+    enc.get.and.returnValue(JSON.stringify({ details: { listofPermission: [] } }));
+    component.ngOnInit();
+
+    expect(component.f).toBeTruthy();
+    component.p('test');
+
+    component.onSubmit();
+    expect(component.submitted).toBeTrue();
+
+    const inviteSvc = TestBed.inject(VendorInviteService) as any;
+    const toastr = TestBed.inject(ToastrService) as any;
+    component.invitationForm.patchValue({
+      orgName: 'Org 1',
+      phone: '1234567890',
+      email: 'org1@test.com'
+    });
+    inviteSvc.requestRegistration.and.returnValue(of({ status: 'Failure', errorMessage: 'Already registered' }));
+    component.onSubmit();
+    expect(toastr.error).toHaveBeenCalledWith('Already registered', 'Failure');
+
+    inviteSvc.requestRegistration.and.returnValue(of({ status: 'Success', message: 'Invitation sent' }));
+    component.onSubmit();
+    expect(toastr.success).toHaveBeenCalledWith('Invitation sent', 'Success');
+
+    component.tempvendor({ target: { checked: true } });
+    expect(component.invitationForm.get('hsncode').enabled).toBeTrue();
+
+    component.tempvendor({ target: { checked: false } });
+    expect(component.invitationForm.get('hsncode').disabled).toBeTrue();
   });
 
   it('exerciseComponent branch coverage', () => {

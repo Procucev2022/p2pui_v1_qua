@@ -213,4 +213,37 @@ describe('ReqCompletedModalComponent', () => {
     try { exerciseComponent(c); } catch (e) {}
     expect(component).toBeTruthy();
   });
+
+  it('should test addVendor, removeVendor, closeDialog, and onSubmit', () => {
+    const dialogRef = TestBed.inject(MatDialogRef) as any;
+    const toastr = TestBed.inject(ToastrService) as any;
+    const vendorReqSvc = TestBed.inject(VendorReqService) as any;
+
+    component.ngOnInit();
+    component.addVendor();
+    expect((component.vendorsFrom.get('vendors') as any).length).toBe(2);
+
+    component.removeVendor(0);
+    expect((component.vendorsFrom.get('vendors') as any).length).toBe(1);
+
+    component.closeDialog();
+    expect(dialogRef.close).toHaveBeenCalledWith({ event: 'Cancel' });
+
+    component.onSubmit();
+    expect(toastr.error).toHaveBeenCalledWith('Please file the required(*) fields', 'Failure');
+
+    component.vendorsFrom.patchValue({
+      vendors: [{ vendorId: 'v1', vendorName: 'Vendor 1' }]
+    });
+    component.data = [{ id: 'req1', requestVendorDetails: [] }];
+    vendorReqSvc.requestCompleted.and.returnValue(of({ statusCode: 'Success', errorMessage: 'Done' }));
+    component.onSubmit();
+    expect(toastr.success).toHaveBeenCalledWith('Done', 'Success');
+    expect(dialogRef.close).toHaveBeenCalledWith({ event: 'submit' });
+
+    component.data = [{ id: 'req1', requestVendorDetails: [] }];
+    vendorReqSvc.requestCompleted.and.returnValue(of({ statusCode: 'Failure', errorMessage: 'Err' }));
+    component.onSubmit();
+    expect(toastr.error).toHaveBeenCalledWith('Err', 'Failure');
+  });
 });

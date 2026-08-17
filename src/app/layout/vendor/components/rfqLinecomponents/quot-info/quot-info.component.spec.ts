@@ -152,5 +152,26 @@ describe('QuotInfoComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should test getQuotInfo array and non-array response, and ngOnChanges', () => {
+    const enc = TestBed.inject(EncryDecryService) as any;
+    enc.get.and.returnValue(JSON.stringify({ details: { listofPermission: [] } }));
+    component.ngOnInit();
 
+    const rfqSvc = TestBed.inject(RfqService) as any;
+    component.rfqData = { rfq: { id: 'rfq1' } };
+
+    rfqSvc.getLineitemsById.and.returnValue(of([{ id: 'li1', unitprice: 10, quantity: 2, unitofMeasures: 'KG', totalamount: 20 }]));
+    component.getQuotInfo();
+    expect(component.quotInfoList.length).toBe(1);
+
+    rfqSvc.getLineitemsById.and.returnValue(of(null));
+    component.getQuotInfo();
+    expect(component.quotInfoList).toEqual([]);
+
+    component.rfqId = 'rfq1';
+    component.ngOnChanges({ rfqId: { currentValue: 'rfq1' } } as any);
+
+    component.rfqId = null;
+    component.ngOnChanges({ rfqId: { currentValue: null } } as any);
+  });
 });

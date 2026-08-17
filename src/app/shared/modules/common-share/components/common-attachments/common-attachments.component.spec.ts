@@ -437,4 +437,22 @@ describe('CommonAttachmentsComponent', () => {
 
     expect(c).toBeTruthy();
   });
+
+  it('should test filesDropped and fileUploadEvent with invalid file formats', () => {
+    const convertSer = TestBed.inject(ConvertToBase64Service) as any;
+    const toastr = TestBed.inject(ToastrService) as any;
+    component.attachments = [];
+
+    component.filesDropped([{ name: 'invalid.exe' }]);
+    expect(toastr.warning).toHaveBeenCalled();
+    expect(component.attachments.length).toBe(0);
+
+    component.fileUploadEvent({ target: { files: [{ name: 'invalid.zip' }] } }, false);
+    expect(component.attachments.length).toBe(0);
+
+    expect(component.validateFileFormat(null)).toBeFalse();
+
+    convertSer.getBase64.and.returnValue(Promise.resolve('data:image/png;base64,AAA'));
+    component.filesDropped([{ name: 'valid.png' }]);
+  });
 });

@@ -431,4 +431,44 @@ describe('ClientLinkingToItemModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should test getters, searchclient, unLinkClient, linkUnLinkClientModal, and submitForm', () => {
+    const catSvc = TestBed.inject(CategoryService) as any;
+    const toastr = TestBed.inject(ToastrService) as any;
+    const dialog = TestBed.inject(MatDialog) as any;
+    const dialogRef = TestBed.inject(MatDialogRef) as any;
+
+    component.ngOnInit();
+    expect(component.city).toBeTruthy();
+    expect(component.companyName).toBeTruthy();
+
+    catSvc.getClientSearch.and.returnValue(of([{ id: 'c1', companyName: 'Client 1' }]));
+    component.searchclient();
+    expect(component.clientList[0].isLinked).toBeFalse();
+
+    component.clientList = [{ isLinked: true, isEdit: true, linkedClientItemDetails: {} }];
+    component.unLinkClient({}, 0);
+    expect(component.clientList[0].isLinked).toBeFalse();
+
+    dialog.open.and.returnValue({
+      afterClosed: () => of({ type: 'linked', data: { id: 'c1', isLinked: true } })
+    });
+    component.clientList = [{}];
+    component.linkUnLinkClientModal({}, 0);
+    expect(component.clientList[0].isLinked).toBeTrue();
+
+    component.selectedItemData = { id: 'item1' };
+    component.clientList = [{ id: 'c1', isLinked: true, linkedClientItemDetails: { minQty: 10 } }];
+    catSvc.LinkToClientWithItem.and.returnValue(of({ status: 'Success', message: 'Linked' }));
+    component.submitForm();
+    expect(toastr.success).toHaveBeenCalledWith('Linked', 'Success');
+    expect(dialogRef.close).toHaveBeenCalledWith({ event: 'linked' });
+
+    catSvc.LinkToClientWithItem.and.returnValue(of({ status: 'Error', errorMessage: 'Failed link' }));
+    component.submitForm();
+    expect(toastr.error).toHaveBeenCalledWith('Failed link', 'Error');
+
+    component.clientList = [{ id: 'c1', isLinked: false }];
+    component.submitForm();
+    expect(toastr.warning).toHaveBeenCalledWith('Please Link atleast one Client with Item', 'Warning');
+  });
 });

@@ -63,6 +63,9 @@ describe('RfqSupportQueryComponent', () => {
     (component as any).cache_rfqDataList = [sampleRow];
     (component as any).clientList = [sampleRow];
 
+    const enc = TestBed.inject(EncryDecryService) as any;
+    enc.get.and.returnValue(JSON.stringify({ details: { id: 'u1', username: 'user1', listofPermission: [] } }));
+
     seedComponent(component as any);
   });
 
@@ -181,5 +184,35 @@ describe('RfqSupportQueryComponent', () => {
     try { c.resetForm({ id: '1', vendorId: 'v1', invalid: false, valid: true, value: { id: '1' }, status: 'Success', statusCode: 200, message: 'ok', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) {}
     try { exerciseComponent(c); } catch (e) {}
     expect(component).toBeTruthy();
+  });
+
+  it('should test ngOnInit, filterAutoCompleteData, sendSupportRequest, and resetForm', () => {
+    const enc = TestBed.inject(EncryDecryService) as any;
+    enc.get.and.returnValue(JSON.stringify({ details: { id: 'u1', username: 'user1', listofPermission: [] } }));
+
+    const rfqSvc = TestBed.inject(RfqService) as any;
+    const toastr = TestBed.inject(ToastrService) as any;
+    rfqSvc.getAllRFQSByClientInitiatorGMT.and.returnValue(of(['rfq1', 'rfq2']));
+
+    component.ngOnInit();
+    expect(component.loggedUserName).toBe('user1');
+    expect(component.rfqList.length).toBe(2);
+
+    component.rfqList = ['RFQ-001', 'RFQ-002'];
+    component.filterAutoCompleteData({ query: '001' }, 'rfqList', 'filtered_rfqList', true);
+    expect(component.filtered_rfqList).toEqual(['RFQ-001']);
+
+    component.filterAutoCompleteData({ query: 'RFQ-002' }, 'rfqList', 'filtered_rfqList', false);
+    expect(component.filtered_rfqList).toEqual(['RFQ-002']);
+
+    component.messageObj = { rfqId: '', subject: '', message: '' };
+    expect(component.sendSupportRequest()).toBeFalse();
+    expect(toastr.warning).toHaveBeenCalledWith('Please Fill the all the required details', 'Warning');
+
+    component.messageObj = { rfqId: 'rfq1', subject: 'Help', message: 'Issue' };
+    rfqSvc.querySupportMailByClientIntiatory.and.returnValue(of({ status: 'Success', message: 'Sent' }));
+    component.sendSupportRequest();
+    expect(toastr.success).toHaveBeenCalledWith('Sent', 'Success');
+    expect(component.messageObj.rfqId).toBe('');
   });
 });

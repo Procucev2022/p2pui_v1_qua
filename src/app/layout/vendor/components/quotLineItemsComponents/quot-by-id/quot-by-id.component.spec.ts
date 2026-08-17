@@ -159,5 +159,26 @@ describe('QuotByIdComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should test getQuotInfo array and non-array response, and ngOnChanges', () => {
+    const enc = TestBed.inject(EncryDecryService) as any;
+    enc.get.and.returnValue(JSON.stringify({ details: { listofPermission: [] } }));
+    component.ngOnInit();
 
+    const vendorQuotSvc = TestBed.inject(VendorQuotService) as any;
+    component.quotData = { id: 'q1' };
+
+    vendorQuotSvc.getQuotDataByid.and.returnValue(of([{ id: 'qi1', description: 'Item 1' }]));
+    component.getQuotInfo();
+    expect(component.quotInfoList.length).toBe(1);
+
+    vendorQuotSvc.getQuotDataByid.and.returnValue(of(null));
+    component.getQuotInfo();
+    expect(component.quotInfoList).toEqual([]);
+
+    component.quotId = 'q1';
+    component.ngOnChanges({ quotId: { currentValue: 'q1' } } as any);
+
+    component.quotId = null;
+    component.ngOnChanges({ quotId: { currentValue: null } } as any);
+  });
 });

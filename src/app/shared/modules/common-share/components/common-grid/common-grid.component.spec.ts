@@ -427,4 +427,49 @@ describe('CommonGridComponent', () => {
 
     expect(c).toBeTruthy();
   });
+
+  it('should test onClickButton, buildGridData branches, onSelectedActionEvent, and ngOnChanges', () => {
+    spyOn(component.actionEvent, 'emit');
+
+    component.onClickButton({ btnEventName: 'btnClick' });
+    expect(component.actionEvent.emit).toHaveBeenCalledWith({
+      rowData: component.selectedData,
+      eventName: 'btnClick',
+      rowIndex: 0,
+      evenData: { btnEventName: 'btnClick' }
+    });
+
+    component.gridData = {
+      scrollHeight: '300px',
+      gridSelectionCheckbox: { showSelction: true, allowMultipleSelection: false },
+      gridColumnData: ['col1'],
+      gridHeaders: ['Header 1'],
+      gridTitle: 'Title 1',
+      displayParentId: 'p1',
+      displayParentLabel: 'PLabel',
+      actionEvents: ['act1'],
+      rowEventClickEventName: 'rowClick',
+      editableCells: ['cell1'],
+      gridTopButtonActions: ['top1']
+    };
+    component.buildGridData();
+    expect(component.allowRowMultipleSelction).toBe('single');
+    expect(component.showSelctionCheckBox).toBeTrue();
+
+    component.gridData = null;
+    component.buildGridData();
+    expect(component.gridTitle).toBe('');
+
+    component.onSelectedActionEvent({ id: 'r1' }, 'event1', 1);
+    expect(component.actionEvent.emit).toHaveBeenCalledWith({ rowData: { id: 'r1' }, eventName: 'event1', rowIndex: 1 });
+
+    component.onSelectedActionEvent({ id: 'r1' }, '', 1);
+
+    component.ngOnChanges({
+      gridData: {
+        previousValue: { gridColumnData: [1] },
+        currentValue: { gridColumnData: [1, 2] }
+      }
+    } as any);
+  });
 });

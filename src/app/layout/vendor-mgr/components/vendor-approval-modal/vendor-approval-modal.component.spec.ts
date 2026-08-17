@@ -554,6 +554,126 @@ describe('VendorApprovalModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should test onSubmit, onHsnCoded, onSacCoded, selectChangeHandler, and resetPanel', () => {
+    const vendorApprovalSer = TestBed.inject(VendorNamesService) as any;
+    const toastr = TestBed.inject(ToastrService) as any;
+    const dialogRef = TestBed.inject(MatDialogRef) as any;
+
+    component.local_data = { id: 'v1', pan: 'PAN123' };
+    component.classificationList = [
+      { typeName: 'Product', hsnCode: '1234', segmentName: 'Seg1', familyName: 'Fam1', className: 'Class1', commodityName: 'Com1' },
+      { typeName: 'Service', sacCode: '5678', section: 'Sec1', heading: 'Head1', groupdescription: 'Grp1', sac: 'Sac1' }
+    ];
+
+    vendorApprovalSer.approveVendorRegistration.and.returnValue(of({ status: 'Success', message: 'Approved' }));
+    component.onSubmit({} as any, null);
+    expect(toastr.success).toHaveBeenCalledWith('Approved', 'Success');
+    expect(dialogRef.close).toHaveBeenCalledWith({ event: 'submit' });
+
+    vendorApprovalSer.approveVendorRegistration.and.returnValue(of({ status: 'Failure', errorMessage: 'Failed approve' }));
+    component.onSubmit({} as any, null);
+    expect(toastr.error).toHaveBeenCalledWith('Failed approve', 'Failure');
+
+    component.classificationList = [{ typeName: null }];
+    component.onSubmit({} as any, null);
+    expect(toastr.error).toHaveBeenCalledWith('Please select the required field', 'Warning');
+
+    component.classificationList = [
+      { typeName: 'Product', hsnCode: '1234' },
+      { typeName: 'Service', sacCode: '5678' }
+    ];
+    vendorApprovalSer.getVendorClassificationData.and.returnValue(of(['Seg1', 'Fam1', 'Class1', 'Com1']));
+    vendorApprovalSer.getVendorClassificationDataForServices.and.returnValue(of(['Sec1', 'Head1', 'Grp1', 'Sac1']));
+
+    component.onHsnCoded();
+    expect(component.classificationList[0].segmentName).toBe('Seg1');
+
+    component.onSacCoded();
+    expect(component.classificationList[1].section).toBe('Sec1');
+
+    component.selectChangeHandler({ target: { value: 'Product' } }, 0, 'Product');
+    expect(component.selectedProductor_Service).toBe('Product');
+
+    component.selectChangeHandler({ target: { value: 'Service' } }, 0, 'Service');
+    expect(component.selectedProductor_Service).toBe('Service');
+
+    component.resetPanel();
+    expect(component.hsnCodeed).toBeFalse();
+  });
+
+  it('should test dropdown and change handlers for vendor approval modal', () => {
+    const vendorApprovalSer = TestBed.inject(VendorNamesService) as any;
+
+    vendorApprovalSer.getVendorClassificationDataForServices.and.returnValue(of(['Sec1', 'Head1', 'Grp1', 'Sac1']));
+    vendorApprovalSer.getVendorClassificationData.and.returnValue(of(['Seg1', 'Fam1', 'Class1', 'Com1']));
+    vendorApprovalSer.getVendorOrClientByType.and.returnValue(of(['Type1']));
+
+    component.getSections(0);
+    expect(component.approvalList[0].sections).toEqual(['Sec1', 'Head1', 'Grp1', 'Sac1']);
+
+    component.getVendorTypes();
+    expect(component.vendorTypes).toEqual(['Type1']);
+
+    component.getHeadings('Sec1', 0);
+    expect(component.approvalList[0].headings).toEqual(['Sec1', 'Head1', 'Grp1', 'Sac1']);
+
+    component.getGroupDescriptions('Head1', 'Sec1', 0);
+    expect(component.approvalList[0].groupdescriptions).toEqual(['Sec1', 'Head1', 'Grp1', 'Sac1']);
+
+    component.getSacs('Grp1', 'Sec1', 'Head1', 0);
+    expect(component.approvalList[0].sacs).toEqual(['Sec1', 'Head1', 'Grp1', 'Sac1']);
+
+    component.getSegments(0);
+    expect(component.approvalList[0].segmentNames).toEqual(['Seg1', 'Fam1', 'Class1', 'Com1']);
+
+    component.getFamilyNames('Seg1', 0);
+    expect(component.approvalList[0].familyNames).toEqual(['Seg1', 'Fam1', 'Class1', 'Com1']);
+
+    component.getClassNames('Fam1', 'Seg1', 0);
+    expect(component.approvalList[0].classNames).toEqual(['Seg1', 'Fam1', 'Class1', 'Com1']);
+
+    component.getCommodityNames('Class1', 'Seg1', 'Fam1', 0);
+    expect(component.approvalList[0].commodityNames).toEqual(['Seg1', 'Fam1', 'Class1', 'Com1']);
+
+    component.getHsnCode('Com1', 'Seg1', 'Fam1', 'Class1', 0);
+    expect(component.classificationList[0].hsnCode).toBe('Seg1');
+
+    component.getSacCode('Sac1', 'Sec1', 'Head1', 'Grp1', 0);
+    expect(component.classificationList[0].sacCode).toBe('Sec1');
+
+    component.onSegmentChange('Seg1', 0);
+    expect(component.hsnCodeed).toBeTrue();
+
+    component.onSegmentChange('', 0);
+    expect(component.hsnCodeed).toBeFalse();
+
+    component.onFamilyChange('Fam1', 'Seg1', 0);
+    component.onClassChange('Class1', 'Seg1', 'Fam1', 0);
+    component.onCommodityChange('Com1', 'Seg1', 'Fam1', 'Class1', 0);
+
+    component.onSectionChange('Sec1', 0);
+    expect(component.sacCodeed).toBeTrue();
+
+    component.onSectionChange('', 0);
+    expect(component.sacCodeed).toBeFalse();
+
+    component.onHeadingChange('Head1', 'Sec1', 0);
+    component.onGroupDescriptionChange('Grp1', 'Sec1', 'Head1', 0);
+    component.onSacChange('Sac1', 'Sec1', 'Head1', 'Grp1', 0);
+
+    component.adding(0);
+    expect(component.approvalListForServices.length).toBe(2);
+
+    component.removing(0);
+    expect(component.approvalListForServices.length).toBe(1);
+
+    component.add(0, 'Product');
+    expect(component.approvalList.length).toBe(2);
+
+    component.remove(0);
+    expect(component.approvalList.length).toBe(1);
+  });
+
   beforeEach(() => {
     const c: any = component;
     if (!c) return;

@@ -393,4 +393,28 @@ describe('PriceAnalyticsGraphModalComponent', () => {
 
     expect(c).toBeTruthy();
   });
+
+  it('should test generateChart with GT/LT/EQ priceFlags and long graphTitle and label callback', () => {
+    component.rowData = {
+      graphTitle: 'Price: ' + 'A'.repeat(160),
+      currentPrice: 100,
+      priceFlag: 'GT'
+    };
+    component.apiData = { dates: ['2025-01-01'], prices: [100] };
+
+    component.generateChart();
+    expect(component.chartData.datasets[0].borderColor).toBe('#ff5d5d');
+
+    component.rowData.priceFlag = 'LT';
+    component.generateChart();
+    expect(component.chartData.datasets[0].borderColor).toBe('#85d046');
+
+    component.rowData.priceFlag = 'EQ';
+    component.generateChart();
+    expect(component.chartData.datasets[0].borderColor).toBe('#6363de');
+
+    const labelFn = component.options.tooltips.callbacks.label;
+    const res = labelFn({ index: 0 }, { tooltips: ['val1#val2'] });
+    expect(res).toEqual(['val1', 'val2']);
+  });
 });

@@ -186,4 +186,33 @@ describe('RfqDocumentsComponent', () => {
     try { exerciseComponent(c); } catch (e) {}
     expect(component).toBeTruthy();
   });
+
+  it('should test getDocumentsByRfqId with vendorRFQ true/false and null response', () => {
+    const enc = TestBed.inject(EncryDecryService) as any;
+    enc.get.and.returnValue(JSON.stringify({ details: { listofPermission: [] } }));
+    component.ngOnInit();
+
+    const rfqSvc = TestBed.inject(RfqService) as any;
+    component.rfqData = { rfquuid: 'uuid1', id: 'id1' };
+
+    component.isVendorRFQ = true;
+    rfqSvc.getDocumentsByRfqId.and.returnValue(of({ rfqDocument: [{ fileName: 'doc1.pdf' }] }));
+    component.getDocumentsByRfqId();
+    expect(component.rfqdetailsList.length).toBe(1);
+
+    component.isVendorRFQ = false;
+    rfqSvc.getDocumentsByRfqId.and.returnValue(of({}));
+    component.getDocumentsByRfqId();
+    expect(component.rfqdetailsList).toEqual([]);
+
+    rfqSvc.getDocumentsByRfqId.and.returnValue(of(null));
+    component.getDocumentsByRfqId();
+    expect(component.rfqdetailsList).toEqual([]);
+
+    component.rfqId = 'rfq1';
+    component.ngOnChanges({ rfqId: { currentValue: 'rfq1' } } as any);
+
+    component.rfqId = null;
+    component.ngOnChanges({ rfqId: { currentValue: null } } as any);
+  });
 });

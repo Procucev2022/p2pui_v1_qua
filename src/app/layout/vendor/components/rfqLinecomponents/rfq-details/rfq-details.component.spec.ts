@@ -152,5 +152,26 @@ describe('RfqDetailsComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should test getRfqsList array and non-array response, and ngOnChanges', () => {
+    const enc = TestBed.inject(EncryDecryService) as any;
+    enc.get.and.returnValue(JSON.stringify({ details: { listofPermission: [] } }));
+    component.ngOnInit();
 
+    const rfqSvc = TestBed.inject(RfqService) as any;
+    component.rfqData = { rfquuid: 'uuid1' };
+
+    rfqSvc.getLineitemsById.and.returnValue(of([{ id: 'li1', description: 'Item 1' }]));
+    component.getRfqsList();
+    expect(component.rfqdetailsList.length).toBe(1);
+
+    rfqSvc.getLineitemsById.and.returnValue(of(null));
+    component.getRfqsList();
+    expect(component.rfqdetailsList).toEqual([]);
+
+    component.rfqId = 'rfq1';
+    component.ngOnChanges({ rfqId: { currentValue: 'rfq1' } } as any);
+
+    component.rfqId = null;
+    component.ngOnChanges({ rfqId: { currentValue: null } } as any);
+  });
 });

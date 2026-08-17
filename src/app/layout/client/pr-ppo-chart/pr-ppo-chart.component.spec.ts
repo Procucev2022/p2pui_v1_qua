@@ -62,6 +62,17 @@ describe('PrPpoChartComponent', () => {
     (component as any).cache_rfqDataList = [sampleRow];
     (component as any).clientList = [sampleRow];
 
+    if (!document.getElementById('pramountcanvas')) {
+      const canvas = document.createElement('canvas');
+      canvas.id = 'pramountcanvas';
+      canvas.width = 400;
+      canvas.height = 400;
+      document.body.appendChild(canvas);
+    }
+
+    const enc = TestBed.inject(EncryDecryService) as any;
+    enc.get.and.returnValue(JSON.stringify({ details: { id: 'u1', role: { roleName: 'ClientInitiator' } } }));
+
     seedComponent(component as any);
   });
 
@@ -171,5 +182,31 @@ describe('PrPpoChartComponent', () => {
     try { c.onSubmit({ id: '1', vendorId: 'v1', invalid: false, valid: true, value: { id: '1' }, status: 'Success', statusCode: 200, message: 'ok', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) {}
     try { exerciseComponent(c); } catch (e) {}
     expect(component).toBeTruthy();
+  });
+
+  it('should test getChartDetails roles and onSubmit date validations', () => {
+    const clientSvc = TestBed.inject(ClientService) as any;
+    clientSvc.prPpoChart.and.returnValue(of({ data: [100], header: ['Jan'] }));
+
+    component.loggedUserDetails = { id: 'u1', role: { roleName: 'ClientInitiator' } };
+    component.getChartDetails();
+
+    component.loggedUserDetails = { id: 'u2', role: { roleName: 'clientInitiator1.1' } };
+    component.getChartDetails();
+
+    component.loggedUserDetails = { id: 'u3', role: { roleName: 'PRApprover' }, department: { id: 'd1' } };
+    component.getChartDetails();
+
+    component.loggedUserDetails = { id: 'u4', role: { roleName: 'PRApprover2' } };
+    component.getChartDetails();
+
+    component.ppoFromDate = new Date();
+    component.ppoToDate = new Date();
+    component.onSubmit('test');
+
+    component.ppoFromDate = null;
+    component.onSubmit('test');
+    const toastr = TestBed.inject(ToastrService) as any;
+    expect(toastr.error).toHaveBeenCalledWith('Please enter all the required fields', 'Error');
   });
 });

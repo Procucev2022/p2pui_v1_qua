@@ -439,4 +439,33 @@ describe('ForgotpasswordComponent', () => {
 
     expect(c).toBeTruthy();
   });
+
+  it('should test onSubmit, resetCredentialsMsg, numberOnly and navigateToLoginPage', () => {
+    const authSvc = TestBed.inject(AuthenticationService) as any;
+    const toastr = TestBed.inject(ToastrService) as any;
+
+    component.userName = null;
+    expect(component.onSubmit({ value: {} } as any)).toBeFalse();
+    expect(component.isEmailEmpty).toBeTrue();
+
+    component.resetCredentialsMsg();
+    expect(component.isEmailEmpty).toBeFalse();
+
+    component.userName = 'testuser';
+    authSvc.forgotpassword.and.returnValue(of({ statusCode: 'Success', errorMessage: 'Reset link sent' }));
+    component.onSubmit({ value: { userName: 'testuser', phone: '1234567890' } } as any);
+    expect(toastr.success).toHaveBeenCalledWith('Reset link sent', 'Success');
+
+    authSvc.forgotpassword.and.returnValue(of({ statusCode: 'Error', errorMessage: 'User not found' }));
+    component.onSubmit({ value: { userName: 'testuser', phone: '1234567890' } } as any);
+    expect(toastr.error).toHaveBeenCalledWith('User not found', 'Failure');
+
+    expect(component.numberOnly({ which: 50 })).toBeTrue();
+    expect(component.numberOnly({ which: 65 })).toBeFalse();
+    expect(component.numberOnly({ keyCode: 13 })).toBeTrue();
+
+    component.redirectIn = 1;
+    component.navigateToLoginPage();
+    if (component.intervalTime) clearInterval(component.intervalTime);
+  });
 });

@@ -218,4 +218,45 @@ describe('VendorInfoComponent', () => {
     try { exerciseComponent(c); } catch (e) {}
     expect(component).toBeTruthy();
   });
+
+  it('should test vendor info component methods and branch coverage', () => {
+    component.selectedVendorData = {
+      id: 'v1',
+      vendorName: 'Vendor 1',
+      address: null,
+      location: 'Loc 1',
+      email: 'v1@test.com',
+      phone: '123',
+      pan: 'PAN1',
+      gst: 'GST1',
+      annualTurnOver: '100',
+      goodsType: 'Type 1',
+      client: [{ clientName: 'Client 1' }]
+    };
+    component.vendorInfoForm = { valid: true } as any;
+
+    component.ngOnInit();
+    expect(component.model.address).toBe('');
+
+    component.addInternalBtn = { nativeElement: { focus: jasmine.createSpy('focus') } } as any;
+    component.addOneMoreinternals();
+    expect(component.addInternalBtn.nativeElement.focus).toHaveBeenCalled();
+
+    component.removeinternals(0);
+
+    spyOn(component.vendoeDetails, 'emit');
+    spyOn(component.next, 'emit');
+
+    component.onVendorInfoSubmit();
+    expect(component.vendoeDetails.emit).toHaveBeenCalledWith({ data: component.model, isExit: false, vendorInfoFormValidatity: true });
+
+    component.onVendorInfoSaveAndExit();
+    expect(component.vendoeDetails.emit).toHaveBeenCalledWith({ data: component.model, isExit: true, vendorInfoFormValidatity: true });
+
+    component.onNext();
+    expect(component.next.emit).toHaveBeenCalled();
+
+    component.onReset();
+    expect(component.clientsList.length).toBe(1);
+  });
 });

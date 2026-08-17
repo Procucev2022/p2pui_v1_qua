@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { ClientVendorComponent } from './client-vendor.component';
 import { autoMock, defaultAppConfig, seedComponent, exerciseComponent } from '../../../../testing/test-helpers';
 import { APP_CONFIG } from 'src/app/app.config';
@@ -125,6 +125,48 @@ describe('ClientVendorComponent', () => {
     try { c.sort_by_key(true); } catch (e) {}
     try { c.sort_by_key(false); } catch (e) {}
     expect(component).toBeTruthy();
+  });
+
+  it('should test fetchClientVendors, addOrEditVendor, displayFormat, filterData, and sort_by_key', () => {
+    const vendorSvc = TestBed.inject(VendorQuotService) as any;
+    const toastr = TestBed.inject(ToastrService) as any;
+    const dialog = TestBed.inject(MatDialog) as any;
+
+    vendorSvc.getAllClientVendors.and.returnValue(of({ errorCode: 204, errorMessage: 'No content' }));
+    component.fetchClientVendors();
+    expect(toastr.error).toHaveBeenCalledWith('No content');
+
+    vendorSvc.getAllClientVendors.and.returnValue(of({ errorCode: 500, errorMessage: 'Server error' }));
+    component.fetchClientVendors();
+    expect(toastr.error).toHaveBeenCalledWith('Server error');
+
+    vendorSvc.getAllClientVendors.and.returnValue(throwError(() => new Error('Net error')));
+    component.fetchClientVendors();
+
+    vendorSvc.getAllClientVendors.and.returnValue(of([
+      { companyName: 'Vendor B' },
+      { companyName: 'Vendor A' },
+      { companyName: 'Vendor A' }
+    ]));
+    component.fetchClientVendors();
+    expect((component as any).clientVendorDataWithouDuplicates.length).toBe(2);
+
+    component.displayType = 'vendor';
+    component.displayFormat();
+    expect((component as any).displayData).toBe((component as any).clientVendorDataWithouDuplicates);
+
+    component.displayType = 'category';
+    component.displayFormat();
+    expect((component as any).displayData).toBe((component as any).clientVendorsData);
+
+    dialog.open.and.returnValue({
+      afterClosed: () => of({ event: 'close' })
+    });
+    component.addOrEditVendor(null);
+    component.addOrEditVendor({ companyName: 'V' });
+
+    const sorted = component.sort_by_key([{ k: 'b' }, { k: 'a' }, { k: 'a' }], 'k');
+    expect(sorted[0].k).toBe('a');
   });
 
   it('exerciseComponent branch coverage', () => {

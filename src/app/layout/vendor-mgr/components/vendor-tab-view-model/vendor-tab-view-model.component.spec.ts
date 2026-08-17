@@ -120,5 +120,10 @@ describe('VendorTabViewModelComponent', () => {
     expect(component).toBeTruthy();
   });
 
-
+  it('should test clientRefHeaders valueGetter', () => {
+    const fileHeader = component.clientRefHeaders.find((h: any) => h.field === 'file');
+    (component as any).getFileName = () => 'file.pdf';
+    const val = fileHeader.valueGetter.call(component, { data: {} });
+    expect(val).toBe('file.pdf');
+  });
 });
