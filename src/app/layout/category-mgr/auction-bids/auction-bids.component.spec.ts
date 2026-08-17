@@ -197,4 +197,43 @@ describe('AuctionBidsComponent', () => {
     try { exerciseComponent(c); } catch (e) {}
     expect(component).toBeTruthy();
   });
+
+  it('should cover all getBidsByAuctionId branches and ngOnChanges', () => {
+    const auctionService = TestBed.inject(AuctionService) as any;
+    component.auctionData = { id: 'auc1' };
+
+    component.loggedUserType = 'Vendor';
+    component.loggedUserDetails = { org: { id: 'org1' } };
+    auctionService.getBidsByAuctionId.and.returnValue(of([
+      { vendor: { id: 'org1' } },
+      { vendor: { id: 'org2' } }
+    ]));
+    component.getBidsByAuctionId();
+    expect(component.auctionBidsList.length).toBe(1);
+
+    auctionService.getBidsByAuctionId.and.returnValue(of([]));
+    component.getBidsByAuctionId();
+    expect(component.auctionBidsList).toEqual([]);
+
+    auctionService.getBidsByAuctionId.and.returnValue(of(null));
+    component.getBidsByAuctionId();
+    expect(component.auctionBidsList).toEqual([]);
+
+    component.loggedUserType = 'Admin';
+    auctionService.getBidsByAuctionId.and.returnValue(of([{ id: 'b1' }]));
+    component.getBidsByAuctionId();
+    expect(component.auctionBidsList.length).toBe(1);
+
+    component.auctionId = 'auc1';
+    component.ngOnChanges();
+
+    component.auctionId = null;
+    component.ngOnChanges();
+
+    component.getItems({ id: 'b1', bidItems: [{ id: 'bi1' }] }, {});
+    expect(component.bidId).toBe('b1');
+
+    component.getItems({ id: 'b2' }, {});
+    expect(component.bidItemsList).toEqual([]);
+  });
 });

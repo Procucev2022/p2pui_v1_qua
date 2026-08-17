@@ -62,6 +62,17 @@ describe('AuctionsChartComponent', () => {
     (component as any).cache_rfqDataList = [sampleRow];
     (component as any).clientList = [sampleRow];
 
+    const enc = TestBed.inject(EncryDecryService) as any;
+    enc.get.and.returnValue(JSON.stringify({ details: { id: 'u1', org: { id: 'o1' }, role: { roleName: 'ClientInitiator' } } }));
+
+    if (!document.getElementById('auctioncanvas')) {
+      const canvas = document.createElement('canvas');
+      canvas.id = 'auctioncanvas';
+      canvas.width = 400;
+      canvas.height = 400;
+      document.body.appendChild(canvas);
+    }
+
     seedComponent(component as any);
   });
 
@@ -145,5 +156,40 @@ describe('AuctionsChartComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should test getChartDetails roles, destroy auction chart, and onSubmit validation', () => {
+    if (!document.getElementById('auctioncanvas')) {
+      const canvas = document.createElement('canvas');
+      canvas.id = 'auctioncanvas';
+      document.body.appendChild(canvas);
+    }
+    const clientSvc = TestBed.inject(ClientService) as any;
+    clientSvc.auctionChart.and.returnValue(of({ data: [10, 20], header: ['Jan', 'Feb'] }));
+    component.auction = { destroy: jasmine.createSpy('destroy') };
 
+    component.loggedUserDetails = { id: 'u1', role: { roleName: 'ClientInitiator' } };
+    component.getChartDetails('2026-01-01', '2026-01-30');
+    expect(component.auction).toBeTruthy();
+
+    component.loggedUserDetails = { id: 'u2', role: { roleName: 'PRApprover' }, department: { id: 'd1' } };
+    component.getChartDetails();
+
+    component.loggedUserDetails = { id: 'u3', role: { roleName: 'PRApprover' } };
+    component.getChartDetails();
+
+    component.loggedUserDetails = { id: 'u4', role: { roleName: 'PRApprover2' }, department: { id: 'd2' } };
+    component.getChartDetails();
+
+    component.auctionFromDate = new Date();
+    component.auctionToDate = new Date();
+    component.onSubmit('test');
+
+    component.auctionFromDate = null;
+    component.onSubmit('test');
+
+    component.auctionFromDate = new Date();
+    component.auctionToDate = null;
+    component.onSubmit('test');
+    const toastr = TestBed.inject(ToastrService) as any;
+    expect(toastr.error).toHaveBeenCalledWith('Please enter all the required fields', 'Error');
+  });
 });

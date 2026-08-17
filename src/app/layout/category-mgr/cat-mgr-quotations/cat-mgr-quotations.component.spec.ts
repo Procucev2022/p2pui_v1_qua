@@ -169,4 +169,22 @@ describe('CatMgrQuotationsComponent', () => {
   });
 
 
+  it('should test getRFQs with h1 present and missing, and non-array getQuotsList data', () => {
+    const quotsService = TestBed.inject(CatProcuQuotationsService) as any;
+    quotsService.getQuotsList.and.returnValue(of(null));
+    component.getQuotsList();
+    expect(component.quotationsList).toEqual([]);
+
+    quotsService.getQuotsList.and.returnValue(of([{ id: '1' }]));
+    component.getQuotsList();
+    expect(component.quotationsList.length).toBe(1);
+
+    component.h1 = { nativeElement: { scrollIntoView: jasmine.createSpy('scrollIntoView') } } as any;
+    component.getRFQs({ id: 'q1' });
+    expect(component.h1.nativeElement.scrollIntoView).toHaveBeenCalled();
+
+    component.h1 = null as any;
+    component.getRFQs({ id: 'q2' });
+    expect(component.selectedQuots[0].id).toBe('q2');
+  });
 });

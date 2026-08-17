@@ -193,4 +193,12 @@ describe('CatMgrRfqsComponent', () => {
     try { exerciseComponent(c); } catch (e) {}
     expect(component).toBeTruthy();
   });
+
+  it('should test viewRFQDetails failure branch when fetchRfqById returns null', () => {
+    const rfqService = TestBed.inject(RfqService) as any;
+    rfqService.fetchRfqById.and.returnValue(of(null));
+    component.viewRFQDetails({ id: '123' });
+    const toastr = TestBed.inject(ToastrService) as any;
+    expect(toastr.error).toHaveBeenCalledWith('Failed to Fetch data', 'Failure');
+  });
 });

@@ -719,4 +719,19 @@ describe('CatMgrRfqTabComponent', () => {
     try { c.uploadDocuments([{ name: 'doc1.pdf' }]); } catch(e) {}
     expect(c).toBeTruthy();
   });
+
+  it('should test fileUploadEvent and filesDropped branches', () => {
+    const convertSer = TestBed.inject(ConvertToBase64Service) as any;
+    convertSer.getBase64.and.returnValue(Promise.resolve('data:application/vnd.ms-excel;base64,AAAA'));
+
+    component.filesDropped([{ name: 'test.xlsx' }]);
+
+    const evValid = { target: { files: [{ name: 'test.xls' }] } };
+    component.fileUploadEvent(evValid, false);
+
+    const evInvalid = { target: { files: [{ name: 'test.pdf' }] } };
+    component.fileUploadEvent(evInvalid, false);
+
+    expect(component.isFileFormatValid).toBeFalse();
+  });
 });

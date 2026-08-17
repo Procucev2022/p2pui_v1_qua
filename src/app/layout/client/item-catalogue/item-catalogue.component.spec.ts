@@ -1496,4 +1496,26 @@ describe('ItemCatalogueComponent', () => {
     } catch (e) { /* keep suite green */ }
   });
 
+  it('should test getVendorByItem for all role and linked branches', () => {
+    const client = TestBed.inject(ClientService) as any;
+    const vendorOpen = { id: 'v1', companyId: '12345678901abc', linked: false, vendorName: 'V', pricePerUnit: 5 };
+    const vendorLinked = { id: 'v2', companyId: '12345678901xyz', linked: true, vendorName: 'L', pricePerUnit: 7 };
+
+    component.loggedUserDetails = { org: { id: 'o1' }, role: { roleName: 'ClientInitiator' } };
+    client.getVendorsByItemForClientInitiator.and.returnValue(of([vendorOpen, vendorLinked]));
+    component.getVendorByItem({ id: '1' });
+    expect(component.vendorsList.length).toBe(2);
+
+    component.loggedUserDetails = { org: { id: 'o1' }, role: { roleName: 'VendorManager' } };
+    client.getVendorsByItem.and.returnValue(of([vendorOpen, vendorLinked]));
+    component.getVendorByItem({ id: '1' });
+    expect(component.vendorsList.length).toBe(2);
+
+    component.ngOnInit();
+    if (component.options && component.options.tooltips && component.options.tooltips.callbacks) {
+      const labelFn = component.options.tooltips.callbacks.label;
+      const res = labelFn({ index: 0 }, { tooltips: ['val1#val2'] });
+      expect(res).toEqual(['val1', 'val2']);
+    }
+  });
 });

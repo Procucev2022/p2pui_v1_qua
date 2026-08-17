@@ -62,6 +62,17 @@ describe('ClientAnalyticsInfoComponent', () => {
     (component as any).cache_rfqDataList = [sampleRow];
     (component as any).clientList = [sampleRow];
 
+    const enc = TestBed.inject(EncryDecryService) as any;
+    enc.get.and.returnValue(JSON.stringify({ details: { id: 'u1', org: { id: 'o1' }, role: { roleName: 'ClientInitiator' } } }));
+
+    if (!document.getElementById('prcanvas')) {
+      const canvas = document.createElement('canvas');
+      canvas.id = 'prcanvas';
+      canvas.width = 400;
+      canvas.height = 400;
+      document.body.appendChild(canvas);
+    }
+
     seedComponent(component as any);
   });
 
@@ -171,5 +182,45 @@ describe('ClientAnalyticsInfoComponent', () => {
     try { c.onSubmit({ id: '1', vendorId: 'v1', invalid: false, valid: true, value: { id: '1' }, status: 'Success', statusCode: 200, message: 'ok', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) {}
     try { exerciseComponent(c); } catch (e) {}
     expect(component).toBeTruthy();
+  });
+
+  it('should cover getChartDetails role branches and onSubmit validation', () => {
+    if (!document.getElementById('prcanvas')) {
+      const canvas = document.createElement('canvas');
+      canvas.id = 'prcanvas';
+      document.body.appendChild(canvas);
+    }
+    const clientSvc = TestBed.inject(ClientService) as any;
+    clientSvc.prChart.and.returnValue(of({ data: [5, 15], header: ['Open', 'Closed'] }));
+    component.prChart = { destroy: jasmine.createSpy('destroy') };
+
+    component.loggedUserDetails = { id: 'u1', role: { roleName: 'ClientInitiator' } };
+    component.getChartDetails('2026-01-01', '2026-01-30');
+    expect(component.prChart).toBeTruthy();
+
+    component.loggedUserDetails = { id: 'u2', role: { roleName: 'PRApprover' }, department: { id: 'd1' } };
+    component.getChartDetails();
+
+    component.loggedUserDetails = { id: 'u3', role: { roleName: 'PRApprover' } };
+    component.getChartDetails();
+
+    component.loggedUserDetails = { id: 'u4', role: { roleName: 'PRApprover2' }, department: { id: 'd2' } };
+    component.getChartDetails();
+
+    component.loggedUserDetails = { id: 'u5', role: { roleName: 'clientInitiator1.1' } };
+    component.getChartDetails();
+
+    component.prfDate = new Date();
+    component.prtDate = new Date();
+    component.onSubmit('test');
+
+    component.prfDate = null;
+    component.onSubmit('test');
+
+    component.prfDate = new Date();
+    component.prtDate = null;
+    component.onSubmit('test');
+    const toastr = TestBed.inject(ToastrService) as any;
+    expect(toastr.error).toHaveBeenCalledWith('Please enter all the required fields', 'Error');
   });
 });
