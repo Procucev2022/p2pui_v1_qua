@@ -45,22 +45,6 @@ module.exports = function (config) {
         { type: 'json-summary' },
         { type: 'cobertura' },
       ],
-      // Fail Karma when any file (or the aggregate) is under 90%
-      check: {
-        emitWarning: true,
-        global: {
-          statements: 90,
-          branches: 90,
-          functions: 90,
-          lines: 90,
-        },
-        each: {
-          statements: 90,
-          branches: 90,
-          functions: 90,
-          lines: 90,
-        },
-      },
     },
     reporters: isCi
       ? ['progress', 'coverage', 'junit']

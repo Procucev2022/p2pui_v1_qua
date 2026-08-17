@@ -21,6 +21,8 @@ jobs:
     name: Lint, typecheck, build, test & coverage
     runs-on: ubuntu-latest
     timeout-minutes: 90
+    env:
+      NODE_OPTIONS: '--max-old-space-size=8192'
 
     steps:
       - name: Checkout

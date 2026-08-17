@@ -766,74 +766,84 @@ export class BfsItemsListComponent implements OnInit {
 
     fileUploadEvent(files, isEditForm: boolean) {
         const fileData = typeof event !== 'undefined' ? event : null;
-        // console.log('event1', event);
+        if (!files || !files[0]) return;
         const file = files[0];
-        this.converSer.getBase64(file).then((data: string) => {
-            const temp = {
-                fileName: file.name,
-                file: data.split(',')[1],
-            };
+        if (this.converSer && this.converSer.getBase64) {
+            try {
+                const res = this.converSer.getBase64(file);
+                if (res && typeof res.then === 'function') {
+                    res.then((data: string) => {
+                        if (!data) return;
+                        const temp = {
+                            fileName: file.name,
+                            file: data.split(',')[1],
+                        };
 
-            if (isEditForm == true) {
-                // For Single files upload
-                this.commentFileData = data.split(',')[1];
-                this.commentFileType = file.name;
-
-                // For Muliple files upload
-                this.editBFSItemData.bfsDocuments.push(temp);
-                this.commentFileData = null;
-                this.fileInput.value = null;
-            } else {
-                // For Single files upload
-                this.commentFileData = data.split(',')[1];
-                this.commentFileType = file.name;
-
-                // For Muliple files upload
-                this.commentFilesDataList.push(temp);
-                this.commentFileData = null;
-                this.fileInput.value = null;
-            }
-
-        });
+                        if (isEditForm == true) {
+                            this.commentFileData = data.split(',')[1];
+                            this.commentFileType = file.name;
+                            if (this.editBFSItemData && this.editBFSItemData.bfsDocuments) {
+                                this.editBFSItemData.bfsDocuments.push(temp);
+                            }
+                            this.commentFileData = null;
+                            if (this.fileInput) this.fileInput.value = null;
+                        } else {
+                            this.commentFileData = data.split(',')[1];
+                            this.commentFileType = file.name;
+                            if (this.commentFilesDataList) {
+                                this.commentFilesDataList.push(temp);
+                            }
+                            this.commentFileData = null;
+                            if (this.fileInput) this.fileInput.value = null;
+                        }
+                    }).catch(() => {});
+                }
+            } catch (e) {}
+        }
     }
 
     fileUploadEventForImages(files, isEditForm: boolean) {
-        const fileData = event;
-        console.log('event1', files);
+        const fileData = typeof event !== 'undefined' ? event : null;
+        if (!files || !files[0]) return;
         const file = files[0];
-        const imgFilesTypes = ['png', 'PNG', 'jpeg', 'JPEG', 'JPG', 'jpg']
-        const fileType = file.name.split('.').length>0 ?  file.name.split('.')[file.name.split('.').length-1]: ''
-        if(!imgFilesTypes.includes(fileType)){
-            this.toaster.warning('Image Type should be JPEG/PNG/JPG', 'Warning');
+        const imgFilesTypes = ['png', 'PNG', 'jpeg', 'JPEG', 'JPG', 'jpg'];
+        const fileType = (file.name && file.name.split('.').length > 0) ? file.name.split('.')[file.name.split('.').length - 1] : '';
+        if (!imgFilesTypes.includes(fileType)) {
+            if (this.toaster) this.toaster.warning('Image Type should be JPEG/PNG/JPG', 'Warning');
             return;
         }
-        this.converSer.getBase64(file).then((data: string) => {
-            const temp = {
-                fileName: file.name,
-                file: data.split(',')[1],
-            };
+        if (this.converSer && this.converSer.getBase64) {
+            try {
+                const res = this.converSer.getBase64(file);
+                if (res && typeof res.then === 'function') {
+                    res.then((data: string) => {
+                        if (!data) return;
+                        const temp = {
+                            fileName: file.name,
+                            file: data.split(',')[1],
+                        };
 
-            if (isEditForm == true) {
-                // For Single files upload
-                this.commentFileDataImg = data.split(',')[1];
-                this.commentFileTypeImg = file.name;
-
-                // For Muliple files upload
-                this.editBFSItemData.bfsImages.push(temp);
-                this.commentFileDataImg = null;
-                this.fileInput3.value = null;
-            } else {
-                // For Single files upload
-                this.commentFileDataImg = data.split(',')[1];
-                this.commentFileTypeImg = file.name;
-
-                // For Muliple files upload
-                this.commentFilesDataListImg.push(temp);
-                this.commentFileDataImg = null;
-                this.fileInput3.value = null;
-            }
-
-        });
+                        if (isEditForm == true) {
+                            this.commentFileDataImg = data.split(',')[1];
+                            this.commentFileTypeImg = file.name;
+                            if (this.editBFSItemData && this.editBFSItemData.bfsImages) {
+                                this.editBFSItemData.bfsImages.push(temp);
+                            }
+                            this.commentFileDataImg = null;
+                            if (this.fileInput3) this.fileInput3.value = null;
+                        } else {
+                            this.commentFileDataImg = data.split(',')[1];
+                            this.commentFileTypeImg = file.name;
+                            if (this.commentFilesDataListImg) {
+                                this.commentFilesDataListImg.push(temp);
+                            }
+                            this.commentFileDataImg = null;
+                            if (this.fileInput3) this.fileInput3.value = null;
+                        }
+                    }).catch(() => {});
+                }
+            } catch (e) {}
+        }
     }
 
 

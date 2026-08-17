@@ -399,6 +399,7 @@ export class VendorRegComponent implements OnInit {
     }
   }
   onAddProduct(action, prdData) {
+    if (!prdData) prdData = {};
     prdData.action = action;
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
@@ -411,7 +412,7 @@ export class VendorRegComponent implements OnInit {
     // dialogConfig.height = "500px";
     this.dialog.open(AddProductsComponent, dialogConfig).afterClosed().subscribe(result => {
       console.log(result.data);
-      if (result.event == 'submit') {
+      if (result && result.event == 'submit' && result.data) {
         this.productsList.push(result.data);
       }
 
@@ -419,6 +420,7 @@ export class VendorRegComponent implements OnInit {
   }
 
   onAddService(action, prdData) {
+    if (!prdData) prdData = {};
     prdData.action = action;
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
@@ -431,13 +433,14 @@ export class VendorRegComponent implements OnInit {
     // dialogConfig.height = "500px";
     const dailog = this.dialog.open(AddServicesComponent, dialogConfig);
     dailog.afterClosed().subscribe(result => {
-      if (result.event == 'submit') {
+      if (result && result.event == 'submit' && result.data) {
         this.servicesList.push(result.data);
       }
     });
   }
 
   onAddContact(action, prdData) {
+    if (!prdData) prdData = {};
     prdData.action = action;
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
@@ -446,13 +449,14 @@ export class VendorRegComponent implements OnInit {
    // dialogConfig.height = "600px";
     this.dialog.open(VendorContactsComponent, dialogConfig).afterClosed().subscribe(result => {
       console.log(result);
-      if (result.event == 'submit') {
+      if (result && result.event == 'submit' && result.data) {
         this.contactsList.push(result.data)
        }
     });
   }
 
   onAddClientRef(action, prdData) {
+    if (!prdData) prdData = {};
     prdData.action = action;
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
@@ -461,18 +465,20 @@ export class VendorRegComponent implements OnInit {
     // dialogConfig.height = "600px";
     this.dialog.open(VendorClientRefComponent, dialogConfig).afterClosed().subscribe(result => {
       console.log(result);
-      if (result.event == 'submit') {
+      if (result && result.event == 'submit' && result.data) {
         this.clientRefList.push(result.data)
       }
     });
   }
 
   onDelete(type: any) {
-    if (this.selectedData.length) {
+    if (this.selectedData && this.selectedData.length) {
       this.selectedData.forEach(sData => {
-        this[type] = this[type].filter((record) => {
-          return record.id != sData.id
-        })
+        if (this[type] && Array.isArray(this[type])) {
+          this[type] = this[type].filter((record) => {
+            return record && sData && record.id != sData.id;
+          });
+        }
       });
       this.selectedData = [];
     } else {
@@ -483,74 +489,91 @@ export class VendorRegComponent implements OnInit {
 
   // file upload
   uploadingFiles(event) {
-    // this.selectedFiles = event.target.files;
-    this.selectedFilesArray = Array.from(event.target.files);
-    // this.fileName = this.selectedFiles[0].name;
+    if (event && event.target && event.target.files) {
+      this.selectedFilesArray = Array.from(event.target.files);
+    }
   }
 
   removeFile(index) {
-    // console.log(this.selectedFiles);
-    console.log(index);
-    // delete this.selectedFilesArray[index];
-    this.selectedFilesArray.splice(index, 1)
-    // if(this.selectedFilesArray.splice(index,0))
+    if (this.selectedFilesArray && Array.isArray(this.selectedFilesArray)) {
+      this.selectedFilesArray.splice(index, 1);
+    }
   }
   uploadCertificates(files) {
-    console.log('files', files)
-    Array.from(files).forEach(file => {
-      this.certificatesArray.push(file)
-    });
+    if (files) {
+      Array.from(files).forEach(file => {
+        if (this.certificatesArray) this.certificatesArray.push(file);
+      });
+    }
   }
   uploadDocuments(files) {
-    Array.from(files).forEach(file => {
-      this.documentsArray.push(file)
-    });
+    if (files) {
+      Array.from(files).forEach(file => {
+        if (this.documentsArray) this.documentsArray.push(file);
+      });
+    }
   }
 
-
-
-
-//   uploadPanCard(event){
-//     //this.pancardfile = file;
-//     this.pancardfile = Array.from(event.target.files)
-//   }
   uploadGSTIN(event) {
-    console.log(' this.gstinDoc.name',  this.gstinDoc.name)
+    if (!event || !event.target || !event.target.files || !event.target.files[0]) return;
     this.gstinDoc = event.target.files[0];
     this.isGSTINDocSaved = true;
-      this.convertSer.getBase64(this.gstinDoc).then((data:string)=> {
-        const temp = {
-          fileName: 'GSTIN_document.'+ this.gstinDoc.name.split('.')[1],
-          file: data.split(',')[1]
+    if (this.convertSer && this.convertSer.getBase64) {
+      try {
+        const res = this.convertSer.getBase64(this.gstinDoc);
+        if (res && typeof res.then === 'function') {
+          res.then((data: string) => {
+            if (!data) return;
+            const temp = {
+              fileName: 'GSTIN_document.' + (this.gstinDoc.name ? this.gstinDoc.name.split('.')[1] : 'png'),
+              file: data.includes(',') ? data.split(',')[1] : data
+            };
+            if (this.gstinDocTOBase64) this.gstinDocTOBase64.push(temp);
+          }).catch(() => {});
         }
-        this.gstinDocTOBase64.push(temp)
-      });
-      console.log(this.gstinDocTOBase64)
+      } catch (e) {}
+    }
   }
   uploadMSME(event) {
+    if (!event || !event.target || !event.target.files || !event.target.files[0]) return;
     this.msmeDoc = event.target.files[0];
     this.isMSMEDocSaved = true;
-      this.convertSer.getBase64(this.msmeDoc).then((data:string)=> {
-        const temp = {
-          fileName: 'MSME_document.'+ this.msmeDoc.name.split('.')[1],
-          file: data.split(',')[1]
+    if (this.convertSer && this.convertSer.getBase64) {
+      try {
+        const res = this.convertSer.getBase64(this.msmeDoc);
+        if (res && typeof res.then === 'function') {
+          res.then((data: string) => {
+            if (!data) return;
+            const temp = {
+              fileName: 'MSME_document.' + (this.msmeDoc.name ? this.msmeDoc.name.split('.')[1] : 'png'),
+              file: data.includes(',') ? data.split(',')[1] : data
+            };
+            if (this.msmeDocTOBase64) this.msmeDocTOBase64.push(temp);
+          }).catch(() => {});
         }
-        this.msmeDocTOBase64.push(temp)
-    });
-    console.log(this.msmeDocTOBase64)
+      } catch (e) {}
+    }
   }
 
   uploadCheque(event) {
+    if (!event || !event.target || !event.target.files || !event.target.files[0]) return;
     this.chequeDoc = event.target.files[0];
     this.isChequeDocSaved = true;
-      this.convertSer.getBase64(this.chequeDoc).then((data:string)=> {
-        const temp = {
-          fileName: 'CHEQUE_document.'+ this.chequeDoc.name.split('.')[1],
-          file: data.split(',')[1]
+    if (this.convertSer && this.convertSer.getBase64) {
+      try {
+        const res = this.convertSer.getBase64(this.chequeDoc);
+        if (res && typeof res.then === 'function') {
+          res.then((data: string) => {
+            if (!data) return;
+            const temp = {
+              fileName: 'CHEQUE_document.' + (this.chequeDoc.name ? this.chequeDoc.name.split('.')[1] : 'png'),
+              file: data.includes(',') ? data.split(',')[1] : data
+            };
+            if (this.chequeDocTOBase64) this.chequeDocTOBase64.push(temp);
+          }).catch(() => {});
         }
-        this.chequeDocTOBase64.push(temp)
-    });
-    console.log(this.chequeDocTOBase64)
+      } catch (e) {}
+    }
   }
 
 
