@@ -171,12 +171,18 @@ describe('AuctionsChartComponent', () => {
     expect(component.auction).toBeTruthy();
 
     component.loggedUserDetails = { id: 'u2', role: { roleName: 'PRApprover' }, department: { id: 'd1' } };
+    component.auctionFromDate = new Date();
+    component.auctionToDate = new Date();
     component.getChartDetails();
 
     component.loggedUserDetails = { id: 'u3', role: { roleName: 'PRApprover' } };
+    component.auctionFromDate = new Date();
+    component.auctionToDate = new Date();
     component.getChartDetails();
 
     component.loggedUserDetails = { id: 'u4', role: { roleName: 'PRApprover2' }, department: { id: 'd2' } };
+    component.auctionFromDate = new Date();
+    component.auctionToDate = new Date();
     component.getChartDetails();
 
     component.auctionFromDate = new Date();

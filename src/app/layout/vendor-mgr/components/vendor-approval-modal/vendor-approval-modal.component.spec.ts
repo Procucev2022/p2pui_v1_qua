@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flushMicrotasks } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { of } from 'rxjs';
@@ -554,10 +554,13 @@ describe('VendorApprovalModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should test onSubmit, onHsnCoded, onSacCoded, selectChangeHandler, and resetPanel', () => {
+  it('should test onSubmit, onHsnCoded, onSacCoded, selectChangeHandler, and resetPanel', fakeAsync(() => {
     const vendorApprovalSer = TestBed.inject(VendorNamesService) as any;
     const toastr = TestBed.inject(ToastrService) as any;
     const dialogRef = TestBed.inject(MatDialogRef) as any;
+
+    // Mock swal so its .then() callback fires synchronously via a resolved Promise
+    (window as any).swal = (opts: any) => Promise.resolve({ value: true });
 
     component.local_data = { id: 'v1', pan: 'PAN123' };
     component.classificationList = [
@@ -567,15 +570,18 @@ describe('VendorApprovalModalComponent', () => {
 
     vendorApprovalSer.approveVendorRegistration.and.returnValue(of({ status: 'Success', message: 'Approved' }));
     component.onSubmit({} as any, null);
+    flushMicrotasks();
     expect(toastr.success).toHaveBeenCalledWith('Approved', 'Success');
     expect(dialogRef.close).toHaveBeenCalledWith({ event: 'submit' });
 
     vendorApprovalSer.approveVendorRegistration.and.returnValue(of({ status: 'Failure', errorMessage: 'Failed approve' }));
     component.onSubmit({} as any, null);
+    flushMicrotasks();
     expect(toastr.error).toHaveBeenCalledWith('Failed approve', 'Failure');
 
     component.classificationList = [{ typeName: null }];
     component.onSubmit({} as any, null);
+    flushMicrotasks();
     expect(toastr.error).toHaveBeenCalledWith('Please select the required field', 'Warning');
 
     component.classificationList = [
@@ -599,7 +605,7 @@ describe('VendorApprovalModalComponent', () => {
 
     component.resetPanel();
     expect(component.hsnCodeed).toBeFalse();
-  });
+  }));
 
   it('should test dropdown and change handlers for vendor approval modal', () => {
     const vendorApprovalSer = TestBed.inject(VendorNamesService) as any;
@@ -672,6 +678,48 @@ describe('VendorApprovalModalComponent', () => {
 
     component.remove(0);
     expect(component.approvalList.length).toBe(1);
+  });
+
+  it('should test all onSubmit branch paths in vendor approval modal', () => {
+    const vendorApprovalSer = TestBed.inject(VendorNamesService) as any;
+    const toastr = TestBed.inject(ToastrService) as any;
+
+    component.local_data = { id: 'v1', pan: 'PAN123' };
+    component.vendorType = 'Others';
+    component.others = 'CustomVendor';
+    component.eagerNess = 'High';
+
+    component.classificationList = [
+      { typeName: 'Product', hsnCode: '1234', segmentName: '' }
+    ];
+    component.hsncodeList = { errorCode: 404 } as any;
+    vendorApprovalSer.approveVendorRegistration.and.returnValue(of({ status: 'Success', message: 'ok' }));
+
+    component.onSubmit({} as any, null);
+    expect(toastr.error).toHaveBeenCalledWith('No details found', 'Failure');
+
+    component.hsncodeList = ['Seg1', 'Fam1', 'Class1', 'Com1'] as any;
+    component.onSubmit({} as any, null);
+
+    component.classificationList = [
+      { typeName: 'Product', hsnCode: '1234', segmentName: 'Seg1', familyName: 'Fam1', className: 'Class1', commodityName: 'Com1' }
+    ];
+    component.onSubmit({} as any, null);
+
+    component.classificationList = [
+      { typeName: 'Service', sacCode: '5678', section: '' }
+    ];
+    component.saccodeList = { errorCode: 404 } as any;
+    component.onSubmit({} as any, null);
+    expect(toastr.error).toHaveBeenCalledWith('No details found', 'Failure');
+
+    component.saccodeList = ['Grp1', 'Head1', 'Sac1', 'Sec1'] as any;
+    component.onSubmit({} as any, null);
+
+    component.classificationList = [
+      { typeName: 'Service', sacCode: '5678', section: 'Sec1', heading: 'Head1', groupdescription: 'Grp1', sac: 'Sac1' }
+    ];
+    component.onSubmit({} as any, null);
   });
 
   beforeEach(() => {

@@ -473,7 +473,7 @@ export class VendorApprovalModalComponent implements OnInit {
   }
 
   onSegmentChange(segmentName, index) {
-    if (segmentName === undefined || '') {
+    if (segmentName === undefined || segmentName === '') {
       this.hsnCodeed = false;
     } else {
     this.hsnCodeed = true;
@@ -496,7 +496,7 @@ export class VendorApprovalModalComponent implements OnInit {
 
   // For Service  //For Service //For Service
   onSectionChange(section, index) {
-    if (section === undefined || '') {
+    if (section === undefined || section === '') {
       this.sacCodeed = false;
     } else {
     this.sacCodeed = true;

@@ -199,15 +199,23 @@ describe('ClientAnalyticsInfoComponent', () => {
     expect(component.prChart).toBeTruthy();
 
     component.loggedUserDetails = { id: 'u2', role: { roleName: 'PRApprover' }, department: { id: 'd1' } };
+    component.prfDate = new Date();
+    component.prtDate = new Date();
     component.getChartDetails();
 
     component.loggedUserDetails = { id: 'u3', role: { roleName: 'PRApprover' } };
+    component.prfDate = new Date();
+    component.prtDate = new Date();
     component.getChartDetails();
 
     component.loggedUserDetails = { id: 'u4', role: { roleName: 'PRApprover2' }, department: { id: 'd2' } };
+    component.prfDate = new Date();
+    component.prtDate = new Date();
     component.getChartDetails();
 
     component.loggedUserDetails = { id: 'u5', role: { roleName: 'clientInitiator1.1' } };
+    component.prfDate = new Date();
+    component.prtDate = new Date();
     component.getChartDetails();
 
     component.prfDate = new Date();

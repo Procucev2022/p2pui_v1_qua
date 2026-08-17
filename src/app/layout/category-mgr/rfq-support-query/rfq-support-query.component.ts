@@ -43,9 +43,8 @@ export class RfqSupportQueryComponent implements OnInit {
 
     filterAutoCompleteData(event, inputArrayName, outputArrayName, isStringType) {
 
-        let filtered: any[] = [];
         this[outputArrayName] = [];
-        const query = isStringType ? event.query.toLowerCase() : event.query;
+        const query = event.query ? event.query.toLowerCase() : '';
 
         this[outputArrayName] = this[inputArrayName].filter(ele => ele != null && (ele.toLowerCase().includes(query)));
 

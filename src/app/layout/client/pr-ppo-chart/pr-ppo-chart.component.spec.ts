@@ -189,15 +189,23 @@ describe('PrPpoChartComponent', () => {
     clientSvc.prPpoChart.and.returnValue(of({ data: [100], header: ['Jan'] }));
 
     component.loggedUserDetails = { id: 'u1', role: { roleName: 'ClientInitiator' } };
+    component.auctionFromDate = new Date();
+    component.auctionToDate = new Date();
     component.getChartDetails();
 
     component.loggedUserDetails = { id: 'u2', role: { roleName: 'clientInitiator1.1' } };
+    component.auctionFromDate = new Date();
+    component.auctionToDate = new Date();
     component.getChartDetails();
 
     component.loggedUserDetails = { id: 'u3', role: { roleName: 'PRApprover' }, department: { id: 'd1' } };
+    component.auctionFromDate = new Date();
+    component.auctionToDate = new Date();
     component.getChartDetails();
 
     component.loggedUserDetails = { id: 'u4', role: { roleName: 'PRApprover2' } };
+    component.auctionFromDate = new Date();
+    component.auctionToDate = new Date();
     component.getChartDetails();
 
     component.ppoFromDate = new Date();
