@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { LoginComponent } from './login.component';
 import {autoMock, defaultAppConfig, seedComponent, exerciseComponent, deepExerciseComponent} from '../../testing/test-helpers';
 import { APP_CONFIG } from 'src/app/app.config';
@@ -414,6 +414,292 @@ describe('LoginComponent', () => {
     c.searchTextValue = '';
     try { deepExerciseComponent(c); } catch { /* */ }
     expect(component).toBeTruthy();
+  });
+
+  describe('targeted real coverage', () => {
+    let auth: any;
+    let router: any;
+    let toast: any;
+    let encry: any;
+    let route: any;
+    let intervalCbs: Array<() => void>;
+    let timeoutCbs: Array<Function>;
+
+    const userPayload = (roleName: string, extra: any = {}) => ({
+      id: 'u1',
+      username: 'tester',
+      org: { id: 'o1' },
+      role: { roleName },
+      resetPassword: false,
+      ...extra
+    });
+
+    beforeEach(() => {
+      auth = TestBed.inject(AuthenticationService) as any;
+      router = TestBed.inject(Router) as any;
+      toast = TestBed.inject(ToastrService) as any;
+      encry = TestBed.inject(EncryDecryService) as any;
+      route = TestBed.inject(ActivatedRoute) as any;
+      encry.get.and.returnValue(JSON.stringify({
+        details: { org: { id: 'o1' }, role: { roleName: 'Vendor' }, listofPermission: [] }
+      }));
+      encry.set.and.returnValue('enc');
+      intervalCbs = [];
+      timeoutCbs = [];
+      spyOn(window, 'setInterval').and.callFake((cb: any) => {
+        intervalCbs.push(cb);
+        return 31 as any;
+      });
+      spyOn(window, 'setTimeout').and.callFake((cb: any) => {
+        timeoutCbs.push(cb);
+        return 32 as any;
+      });
+      spyOn(window, 'clearInterval').and.stub();
+      sessionStorage.removeItem('tempEMail');
+      sessionStorage.removeItem('tempPhone');
+    });
+
+    it('ngOnInit stores orgId from query params and still works without regId', () => {
+      localStorage.setItem('orgId', 'old');
+      route.snapshot.queryParams = { regId: 'org99' };
+      component.ngOnInit();
+      expect(localStorage.getItem('orgId')).toBe('org99');
+
+      route.snapshot.queryParams = {};
+      component.ngOnInit();
+      expect(component.routerParams).toEqual({});
+    });
+
+    it('onKeyDown handles digits, backspace, tab/delete and rejects letters', () => {
+      const wrap = document.createElement('div');
+      wrap.id = 'inputs';
+      const prev = document.createElement('input');
+      const cur = document.createElement('input');
+      const next = document.createElement('input');
+      wrap.appendChild(prev);
+      wrap.appendChild(cur);
+      wrap.appendChild(next);
+      document.body.appendChild(wrap);
+      spyOn(prev, 'focus');
+      spyOn(next, 'focus');
+
+      component.triggerOTP();
+      component.onKeyDown('otp1', { key: '5', target: cur });
+      expect(component.otp.otp1).toBe('5');
+      expect(next.focus).toHaveBeenCalled();
+
+      component.onKeyDown('otp2', { key: 'Tab', target: cur });
+      expect(next.focus).toHaveBeenCalledTimes(2);
+
+      component.onKeyDown('otp3', { key: 'Delete', target: cur });
+      component.onKeyDown('otp4', { key: 'Backspace', target: cur });
+      expect(component.otp.otp4).toBe('');
+      expect(prev.focus).toHaveBeenCalled();
+
+      component.onKeyDown('otp5', { key: 'a', target: cur });
+      expect(component.otp.otp5).toBe('');
+
+      const last = document.createElement('input');
+      wrap.appendChild(last);
+      component.onKeyDown('otp6', { key: '9', target: last });
+      expect(component.otp.otp6).toBe('9');
+      document.body.removeChild(wrap);
+    });
+
+    it('onLoginMethodChange validates mobile then toggles OTP mode', () => {
+      component.mobileNumber = null;
+      expect(component.onLoginMethodChange({})).toBeUndefined();
+      expect(toast.error).toHaveBeenCalled();
+
+      component.mobileNumber = 'abcd';
+      component.onLoginMethodChange({});
+      expect(toast.error).toHaveBeenCalledTimes(2);
+
+      component.mobileNumber = 9876543210 as any;
+      component.otpEnabled = false;
+      component.onLoginMethodChange({});
+      expect(component.otpEnabled).toBe(true);
+      expect(component.isOTPSent).toBe(false);
+      expect(component.isOTPVerified).toBe(false);
+    });
+
+    it('enableResentOTP counts down and clears the interval', () => {
+      component.enableResentOTP();
+      expect(component.isResendOTP).toBe(true);
+      expect(component.resendOTPTime).toBe(30);
+      component.resendOTPTime = 1;
+      intervalCbs.forEach((cb) => cb());
+      expect(component.resendOTPTime).toBe(0);
+      expect(window.clearInterval).toHaveBeenCalled();
+    });
+
+    it('isValidMobile and numberOnly cover true/false branches', () => {
+      expect(component.isValidMobile('9876543210')).toBe(true);
+      expect(component.isValidMobile('0876543210')).toBe(false);
+      expect(component.numberOnly({ which: 49 })).toBe(true);
+      expect(component.numberOnly({ keyCode: 8 })).toBe(true);
+      expect(component.numberOnly({ which: 65 })).toBe(false);
+    });
+
+    it('onLoggedin rejects empty credentials and incomplete password login', () => {
+      component.otpEnabled = false;
+      component.userName = null;
+      component.userPassword = null;
+      expect(component.onLoggedin()).toBe(false);
+      expect(component.isCreadentialsEmpty).toBe(true);
+
+      component.otpEnabled = true;
+      component.userName = null;
+      expect(component.onLoggedin()).toBe(false);
+
+      component.resetCredentialsMsg();
+      expect(component.isCreadentialsEmpty).toBe(false);
+
+      component.otpEnabled = false;
+      component.userName = 'u@x.com';
+      component.userPassword = 'p';
+      component.mobileNumber = null;
+      component.onLoggedin();
+      expect(toast.warning).toHaveBeenCalled();
+    });
+
+    it('onLoggedin OTP path warns on invalid mobile then sends/validates OTP', () => {
+      component.otpEnabled = true;
+      component.userName = 'u@x.com';
+      component.mobileNumber = '123';
+      component.onLoggedin();
+      expect(toast.warning).toHaveBeenCalled();
+
+      component.mobileNumber = '9876543210';
+      component.isOTPSent = false;
+      auth.getAccessToken.and.returnValue(of({ status: 'success', methodType: 'otp', message: 'sent' }));
+      component.onLoggedin();
+      expect(component.isOTPSent).toBe(true);
+      expect(toast.success).toHaveBeenCalled();
+
+      component.isOTPSent = true;
+      component.isOTPVerified = false;
+      auth.getAccessToken.and.returnValue(of({ status: 'success', methodType: 'otp', message: 'sent-again' }));
+      component.onLoggedin();
+
+      component.isOTPSent = true;
+      component.isOTPVerified = true;
+      sessionStorage.setItem('tempEMail', 't@x.com');
+      sessionStorage.setItem('tempPhone', '999');
+      auth.getAccessToken.and.returnValue(of({
+        status: 'success', methodType: 'validate', access_token: 'a', refresh_token: 'r', expires_in: 1, message: 'ok'
+      }));
+      auth.getLoggedUserData.and.returnValue(of(userPayload('VendorManager')));
+      auth.saveLoggedUserData.and.returnValue(of({}));
+      component.onLoggedin();
+      expect(router.navigate).toHaveBeenCalledWith(['/vendormgr/dashboard']);
+    });
+
+    it('onLoggedin covers authenticated login, error statuses and subscribe error', () => {
+      component.otpEnabled = false;
+      component.userName = 'u@x.com';
+      component.userPassword = 'secret';
+      component.mobileNumber = '9876543210';
+      auth.getLoggedUserData.and.returnValue(of(userPayload('Admin')));
+      auth.saveLoggedUserData.and.returnValue(of({}));
+      auth.getAccessToken.and.returnValue(of({
+        status: 'success', methodType: 'authenticated', access_token: 'a', refresh_token: 'r', expires_in: 9
+      }));
+      component.onLoggedin();
+      expect(router.navigate).toHaveBeenCalledWith(['/dashboard']);
+
+      auth.getAccessToken.and.returnValue(of({
+        status: 'success', methodType: 'authenticated'
+      }));
+      component.onLoggedin();
+
+      auth.getAccessToken.and.returnValue(of({ status: 'error', methodType: 'otp', message: 'otp-fail' }));
+      component.onLoggedin();
+      expect(component.isOTPSent).toBe(false);
+
+      auth.getAccessToken.and.returnValue(of({ status: 'error', methodType: 'validate', message: 'bad-otp' }));
+      component.onLoggedin();
+
+      auth.getAccessToken.and.returnValue(of({ status: 'error', methodType: 'other', message: 'nope' }));
+      component.onLoggedin();
+
+      auth.getAccessToken.and.returnValue(throwError(() => ({ error_description: 'network' })));
+      component.onLoggedin();
+      expect(toast.error).toHaveBeenCalledWith('network', 'Failed');
+    });
+
+    it('resendOTP, sendOrValidateOTP and validateEmailOTP cover success and failure', () => {
+      spyOn(component, 'onLoggedin').and.stub();
+      component.isOTPSent = false;
+      component.sendOrValidateOTP();
+      expect(component.onLoggedin).toHaveBeenCalled();
+
+      (component.onLoggedin as jasmine.Spy).and.callThrough();
+      component.otpNumber = '12';
+      component.isOTPSent = true;
+      component.sendOrValidateOTP();
+      expect(toast.warning).toHaveBeenCalled();
+
+      component.otpNumber = 123456;
+      component.userName = 'u@x.com';
+      component.mobileNumber = '9876543210';
+      sessionStorage.setItem('tempEMail', 't@x.com');
+      auth.validateEmailOTP.and.returnValue(of({ status: 'SUCCESS', message: 'ok' }));
+      auth.getAccessToken.and.returnValue(of({ status: 'success', methodType: 'otp', message: 'sent' }));
+      component.validateEmailOTP();
+      expect(component.isOTPVerified).toBe(true);
+
+      auth.validateEmailOTP.and.returnValue(of({ status: 'failed', message: 'bad' }));
+      component.validateEmailOTP();
+      expect(toast.error).toHaveBeenCalled();
+
+      component.resendOTP();
+      expect(component.otpEnabled).toBe(true);
+      expect(component.isOTPVerified).toBe(false);
+    });
+
+    it('getLoggerUserData redirects by role and resetPassword', () => {
+      auth.saveLoggedUserData.and.returnValue(of({}));
+      const cases: Array<[string, string[]]> = [
+        ['VendorManager', ['/vendormgr/dashboard']],
+        ['Vendor', ['/login/subscription-login']],
+        ['Registration', ['/login/subscription-login']],
+        ['PartialVendor', ['/login/subscription-login']],
+        ['PRApprover', ['/client/procurerequest']],
+        ['CategoryManagerBasic', ['/categorymgr/procurequests']],
+        ['VendorExecutive2', ['vendormgr/vendors']],
+        ['VendorExecutive', ['vendormgr/vendors']],
+        ['CategoryManager2', ['/login/subscription-login']],
+        ['CategoryManager', ['/login/subscription-login']],
+        ['ClientInitiator', ['/login/subscription-login']],
+        ['OtherRole', ['/dashboard']]
+      ];
+      cases.forEach(([role, path]) => {
+        auth.getLoggedUserData.and.returnValue(of(userPayload(role)));
+        component.getLoggerUserData();
+        expect(router.navigate).toHaveBeenCalledWith(path);
+      });
+
+      auth.getLoggedUserData.and.returnValue(of(userPayload('Vendor', { resetPassword: true })));
+      localStorage.setItem('orgId', 'o1');
+      component.getLoggerUserData();
+      expect(router.navigate).toHaveBeenCalledWith(['login/passwordChange']);
+
+      auth.getLoggedUserData.and.returnValue(of(null));
+      component.getLoggerUserData();
+    });
+
+    it('viewPassword, forgotpassword and registerVendor navigate or toggle', () => {
+      component.visiblePassword = false;
+      component.viewPassword();
+      expect(component.visiblePassword).toBe(true);
+      component.viewPassword();
+      expect(component.visiblePassword).toBe(false);
+      component.forgotpassword();
+      expect(router.navigate).toHaveBeenCalledWith(['login/forgotpassword']);
+      component.registerVendor();
+      expect(router.navigate).toHaveBeenCalledWith(['login/registervendor']);
+    });
   });
 
 });

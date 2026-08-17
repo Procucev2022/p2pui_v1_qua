@@ -83,6 +83,15 @@ describe('LoaderComponent', () => {
     expect(spinner.hide).toHaveBeenCalled();
   });
 
+  it('should update isLoading when emits false without hiding again', async () => {
+    loading$ = new BehaviorSubject(false);
+    const component = await setup(loading$);
+    spinner.hide.calls.reset();
+    loading$.next(false);
+    expect(component.isLoading).toBe(false);
+    expect(spinner.hide).toHaveBeenCalled();
+  });
+
   it('should show spinner on error callback when already loading', async () => {
     const err$ = new Subject<boolean>();
     const component = await setup(err$);

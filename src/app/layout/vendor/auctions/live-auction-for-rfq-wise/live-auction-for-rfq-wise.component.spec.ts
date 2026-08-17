@@ -406,4 +406,221 @@ describe('LiveAuctionForRfqWiseComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('targeted real coverage', () => {
+    let auctionService: any;
+    let toastr: any;
+    let modal: any;
+    let encry: any;
+    let intervalCbs: Array<() => void>;
+    let timeoutCbs: Array<Function>;
+
+    function bidData(extra: any = {}) {
+      const end = extra.ended
+        ? new Date(Date.now() - 60000).toISOString()
+        : new Date(Date.now() + 120000).toISOString();
+      return {
+        bidItems: extra.bidItems || [
+          { id: 'i1', quantity: 2, bidAmount: 10 },
+          { id: 'i2', quantity: 1, bidAmount: 0 }
+        ],
+        bidType: 'rfq',
+        currentRank: 2,
+        lastBidamount: 100,
+        remainingBid: 5,
+        auction: {
+          id: 'auc1',
+          pageRefrestInterval: 5,
+          rfqCurrentLeadingPrice: 90,
+          bidsLimitForVendor: true,
+          scrollingText: 'go',
+          auctionName: 'Lot A',
+          auctionStarttime: new Date(Date.now() - 10000).toISOString(),
+          auctionEndtime: extra.auctionEndtime || end,
+          minimumBidReduction: true,
+          minimumBidReductionPrice: 1,
+          startPrice: extra.startPrice === undefined ? true : extra.startPrice,
+          startpricevalue: extra.startpricevalue === undefined ? 200 : extra.startpricevalue,
+          conductAuctionForSingleOrWhole: false,
+          auctionType: extra.auctionType || 'Reverse Auction',
+          showLeadingPriceToVendor: true,
+          auctionCategory: 'rfq total wise',
+          rfq: extra.rfq === undefined ? { id: 'rfq1' } : extra.rfq
+        }
+      };
+    }
+
+    beforeEach(() => {
+      auctionService = TestBed.inject(AuctionService) as any;
+      toastr = TestBed.inject(ToastrService) as any;
+      modal = TestBed.inject(MatDialogRef) as any;
+      encry = TestBed.inject(EncryDecryService) as any;
+      encry.get.and.returnValue(JSON.stringify({
+        details: { id: 'u1', org: { id: 'o1' }, role: { roleName: 'Vendor' }, listofPermission: [] }
+      }));
+      intervalCbs = [];
+      timeoutCbs = [];
+      spyOn(window, 'setInterval').and.callFake((cb: any) => {
+        intervalCbs.push(cb);
+        return 51 as any;
+      });
+      spyOn(window, 'setTimeout').and.callFake((cb: any) => {
+        timeoutCbs.push(cb);
+        return 52 as any;
+      });
+      spyOn(window, 'clearInterval').and.stub();
+      spyOn(window, 'clearTimeout').and.stub();
+      component.data = {
+        selectData: { id: 'a1', acceptedTerms: false },
+        bidAuctionVendorData: bidData()
+      };
+      component.auctionExpired = false;
+      component.isEditBidAmount = false;
+      component.intervalTime = null;
+      component.timer = 0;
+      component.timeoutinteval = null;
+      component.dialog_width = 90;
+    });
+
+    afterEach(() => {
+      component.ngOnDestroy();
+    });
+
+    it('ngOnInit loads panel, items, headers and starts countdown when counter exists', () => {
+      component.counter = { begin: jasmine.createSpy('begin'), restart: jasmine.createSpy('restart') } as any;
+      component.ngOnInit();
+      timeoutCbs.forEach((cb) => cb.call(component));
+      expect(component.counter.begin).toHaveBeenCalled();
+      expect(component.auctionItemsHeaders.some((h: any) => h.field === 'bidAmount')).toBe(true);
+      expect(component.currentRank).toBe(2);
+      expect(component.roundTo(1.239, 2)).toBe(1.24);
+
+      component.counter = null;
+      component.data.bidAuctionVendorData = bidData();
+      component.ngOnInit();
+    });
+
+    it('autoRefreshPage, refresh and checkBidTime cover open vs expired', () => {
+      component.auctionBidAndVendorData = bidData();
+      component.loggedUserDetails = { org: { id: 'o1' } };
+      component.intervalTime = 99;
+      component.auctionExpired = false;
+      component.isEditBidAmount = false;
+      auctionService.getBidsByAuctionIdAndVendorId.and.returnValue(of({ id: 'auc1', ...bidData() }));
+      component.autoRefreshPage();
+      intervalCbs[intervalCbs.length - 1]();
+      expect(auctionService.getBidsByAuctionIdAndVendorId).toHaveBeenCalled();
+
+      auctionService.getBidsByAuctionIdAndVendorId.and.returnValue(of({}));
+      component.refresh();
+
+      component.isEditBidAmount = true;
+      component.refresh();
+      expect(component.isEditBidAmount).toBe(false);
+
+      component.auctionExpired = true;
+      component.autoRefreshPage();
+
+      component.timer = 77;
+      component.auctionBidAndVendorData = bidData({ ended: true });
+      component.checkBidTime();
+      expect(component.auctionExpired).toBe(true);
+
+      component.timer = 0;
+      component.intervalTime = 88;
+      component.auctionBidAndVendorData = bidData();
+      component.checkBidTime();
+      intervalCbs[intervalCbs.length - 1]();
+      component.auctionBidAndVendorData = bidData({ ended: true });
+      intervalCbs[intervalCbs.length - 1]();
+      timeoutCbs.forEach((cb) => cb.call(component));
+    });
+
+    it('onSubmitBid validates amount, start price, success and failure paths', () => {
+      component.loggedUserDetails = { org: { id: 'o1' } };
+      component.auctionItemsList = [{ id: 'i1', quantity: 1, bidAmount: 10 }];
+      component.auctionBidAndVendorData = bidData({ startPrice: true, startpricevalue: 50, auctionType: 'Reverse Auction' });
+      component.bidEnteredAmount = 0;
+      expect(component.onSubmitBid()).toBe(false);
+      component.bidEnteredAmount = null;
+      expect(component.onSubmitBid()).toBe(false);
+      component.bidEnteredAmount = '';
+      expect(component.onSubmitBid()).toBe(false);
+
+      component.bidEnteredAmount = 80;
+      expect(component.onSubmitBid()).toBe(false);
+
+      component.auctionBidAndVendorData = bidData({ startPrice: true, startpricevalue: 50, auctionType: 'Forward Auction' });
+      component.bidEnteredAmount = 10;
+      expect(component.onSubmitBid()).toBe(false);
+
+      component.auctionBidAndVendorData = bidData({ startPrice: false, rfq: { id: 'rfq1' } });
+      component.bidEnteredAmount = 40;
+      auctionService.submitBidByVendorForRFQwiseOrItemwise.and.returnValue(of({ status: 'Success', message: 'ok' }));
+      component.onSubmitBid();
+      expect(modal.close).toHaveBeenCalled();
+
+      component.auctionBidAndVendorData = bidData({ startPrice: false, rfq: null, auctionType: 'Reverse Auction' });
+      component.auctionItemsList = [{ id: 'i1', quantity: 1, bidAmount: 10 }];
+      auctionService.submitBidByVendorForRFQwiseOrItemwise.and.returnValue(of({ id: 'b1', ...bidData() }));
+      component.onSubmitBid();
+
+      auctionService.submitBidByVendorForRFQwiseOrItemwise.and.returnValue(of({ errorMessage: 'nope' }));
+      component.onSubmitBid();
+      expect(toastr.error).toHaveBeenCalled();
+
+      component.auctionBidAndVendorData = bidData({ startPrice: false, auctionType: 'sealed bid' });
+      component.auctionItemsList = [{ id: 'i1', quantity: 1, bidAmount: 10 }];
+      auctionService.submitBidByVendorForRFQwiseOrItemwise.and.returnValue(of({ errorMessage: 'sealed' }));
+      component.onSubmitBid();
+    });
+
+    it('ongetTotalBid, paging, terms submit, zoom and finishTest', () => {
+      component.timer = 12;
+      component.auctionItemsList = [
+        { quantity: 2, bidAmount: 5 },
+        { quantity: 1, bidAmount: null }
+      ];
+      component.ongetTotalBid({});
+      expect(component.bidEnteredAmount).toBe(10);
+      component.onPage({ first: 0, rows: 10 });
+      expect(component.paginatoryDetails.rows).toBe(10);
+
+      component.loggedUserDetails = { org: { id: 'o1' } };
+      auctionService.getAuctionAccept.and.returnValue(of({ statusCode: '200', message: 'ok' }));
+      component.onSubmit({} as any);
+      expect(component.selectedRow).toBe(true);
+      component.successCallBack({ statusCode: '500', message: 'bad' });
+      expect(toastr.error).toHaveBeenCalled();
+
+      component.dialog_width = 90;
+      component.zoomout();
+      expect(component.dialog_width).toBe(85);
+      component.dialog_width = 69;
+      component.zoomout();
+      expect(component.dialog_width).toBe(69);
+      component.dialog_width = 80;
+      component.zoomin();
+      expect(component.dialog_width).toBe(85);
+      component.dialog_width = 90;
+      component.zoomin();
+      expect(component.dialog_width).toBe(90);
+
+      component.counter = { restart: jasmine.createSpy('restart'), begin: jasmine.createSpy('begin') } as any;
+      component.finishTest();
+      timeoutCbs.forEach((cb) => cb.call(component));
+      expect(component.counter.restart).toHaveBeenCalled();
+      component.counter = null;
+      component.finishTest();
+
+      component.intervalTime = 1;
+      component.timer = 2;
+      component.timeoutinteval = 3;
+      component.ngOnDestroy();
+      component.intervalTime = null;
+      component.timer = 0;
+      component.timeoutinteval = null;
+      component.ngOnDestroy();
+    });
+  });
+
 });

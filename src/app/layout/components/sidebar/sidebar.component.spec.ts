@@ -194,11 +194,11 @@ describe('SidebarComponent', () => {
   });
 
   it('should react to NavigationEnd when narrow and toggled', () => {
-    try {
-      spyOnProperty(window, 'innerWidth', 'get').and.returnValue(800);
-    } catch {
-      /* ignore if window innerWidth is non-configurable */
-    }
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      writable: true,
+      value: 800,
+    });
     document.body.classList.add('push-right');
     component.pushRightClass = 'push-right';
     spyOn(component, 'isToggled').and.returnValue(true);

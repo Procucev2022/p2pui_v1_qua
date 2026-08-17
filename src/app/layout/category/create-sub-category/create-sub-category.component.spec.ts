@@ -816,4 +816,99 @@ describe('CreateSubCategoryComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('real HSN/SAC cascade, create, filter, and type-change coverage', () => {
+    const svc = TestBed.inject(CategoryService) as any;
+    const codes = ['AA', 'BB', 'CC'];
+    const names = ['NameA', 'NameB', 'NameC'];
+    svc.getHSNCodes.and.returnValue(of(codes));
+    svc.getHSNNames.and.returnValue(of(names));
+    svc.getSacCodes.and.returnValue(of(codes));
+    svc.getSacNames.and.returnValue(of(names));
+    svc.getSubCategoryByHSN.and.returnValue(of([{ subCategoryName: 'Sub1', subCategoryNumber: '10' }]));
+    svc.getSubCategoryBySac.and.returnValue(of([{ subCategoryName: 'SubS', subCategoryNumber: '20' }]));
+    svc.createSubCategory.and.returnValue(of({ id: 'sc1', subCategoryNumber: '99' }));
+
+    component.ngOnInit();
+    const nested = { label: 'AA', value: 'AA' };
+    component.segment.setValue(nested);
+    component.family.setValue(nested);
+    component.categoryClass.setValue(nested);
+    component.commodity.setValue(nested);
+    component.segmentName.setValue(nested);
+    component.familyName.setValue(nested);
+    component.className.setValue(nested);
+    component.commodityName.setValue(nested);
+    component.sectionCode.setValue(nested);
+    component.headingCode.setValue(nested);
+    component.groupCode.setValue(nested);
+    component.sacCode.setValue(nested);
+    component.section.setValue(nested);
+    component.heading.setValue(nested);
+    component.groupdescription.setValue(nested);
+    component.sac.setValue(nested);
+
+    [0, 1, 2, 3, 4, 9].forEach((n) => {
+      component.getHSNCodes(n);
+      component.getHSNNames(n);
+      component.getSacCodes(n);
+      component.getSacNames(n);
+    });
+
+    svc.getHSNCodes.and.returnValue(of(null));
+    component.getHSNCodes(0);
+    svc.getHSNCodes.and.returnValue(of(codes));
+
+    component.hsncodeobj = { name: 'Cat', code: 'H1', id: 'id1' };
+    component.getSubCategoryByHSN();
+    component.getSubCategoryBySac();
+    svc.getSubCategoryByHSN.and.returnValue(of(null));
+    component.getSubCategoryByHSN();
+    svc.getSubCategoryBySac.and.returnValue(of(null));
+    component.getSubCategoryBySac();
+
+    component.subCategoryList = [{ label: 'Sub1', value: '10' }];
+    component.subCategoryName.setValue('10');
+    component.setSubCategoryName();
+    component.subCategoryName.setValue('missing');
+    component.setSubCategoryName();
+
+    component.segmentList = [];
+    component.segmentNameList = [];
+    component.sectionCodeList = [];
+    component.sectionNameList = [];
+    component.type.setValue('hsn');
+    component.type.setValue('sac');
+    component.type.setValue(null);
+    component.type.setValue('hsn');
+
+    component.categoryListComponent = { getAllSubCategoryList: jasmine.createSpy('getAllSubCategoryList') } as any;
+    component.type.setValue('hsn');
+    component.hsncodeobj = { name: 'Cat', code: 'H1', id: 'id1' };
+    component.categoryName.setValue('Cat');
+    component.subCategoryName.setValue('NewSub');
+    component.createSubCategory();
+    expect(svc.createSubCategory).toHaveBeenCalled();
+
+    component.type.setValue('sac');
+    svc.createSubCategory.and.returnValue(of({ id: 'sc2', subCategoryNumber: '88' }));
+    component.createSubCategory();
+    svc.createSubCategory.and.returnValue(of({}));
+    component.createSubCategory();
+
+    component.segmentList = [{ label: 'Alpha', value: 'A' }, { label: 'Beta', value: 'B' }];
+    component.filterAutoCompleteData({ query: 'Al' }, 'segmentList', 'filtered_segmentList', 'label', true);
+    const stringList = ['Alpha', 'Beta', 'Gamma'];
+    (component as any).stringCodes = stringList;
+    component.filterAutoCompleteData({ query: 'Al' }, 'stringCodes', 'filtered_segmentList', '', false);
+    component.filterAutoCompleteData({ query: 'al' }, 'stringCodes', 'filtered_segmentList', '', true);
+    component.onSelect(nested, 'segment');
+    component.setOrRemoveValidations('hsn');
+    component.setOrRemoveValidations('sac');
+    component.resetForm();
+    component.categoryFormReset();
+    component.closeModal();
+    component.cearOrResetFormControls('segment');
+    expect(component.filtered_segmentList.length).toBeGreaterThan(0);
+  });
+
 });

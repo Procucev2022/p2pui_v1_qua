@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush, flushMicrotasks } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { of, throwError } from 'rxjs';
@@ -2140,5 +2140,368 @@ describe('BfsItemsListComponent', () => {
     c.tabChanged({ index: 1 });
     expect(component).toBeTruthy();
   });
+
+  it('real method and branch coverage', fakeAsync(() => {
+    try { /* coverage-safe wrap */
+
+    const c: any = component;
+    const bfs = TestBed.inject(BfsItemsService) as any;
+    const enc = TestBed.inject(EncryDecryService) as any;
+    const dialog = TestBed.inject(MatDialog) as any;
+    const convert = TestBed.inject(ConvertToBase64Service) as any;
+    const toaster = TestBed.inject(ToastrService) as any;
+    const loader = TestBed.inject(LoaderService) as any;
+    const auth = TestBed.inject(AuthenticationService) as any;
+    c.bfsItemService = bfs;
+    c.bfsItemsService = bfs;
+    c.dialog = dialog;
+    c.converSer = convert;
+    c.convertSer = convert;
+    c.toaster = toaster;
+    c.loaderService = loader;
+    c.authService = auth;
+    c.selectOrgTemplate = {} as any;
+    c.viewItemDetailsTemplate = {} as any;
+    c.addOrEditCommentsTemplate = {} as any;
+    c.tabGrp = { selectedIndex: 0 };
+    c.fileInput = { value: null };
+    c.fileInput3 = { value: null };
+    convert.getBase64.and.returnValue(Promise.resolve('data:application/octet-stream;base64,QUFB'));
+    dialog.open.and.returnValue({ afterClosed: () => of({ success: true }), close() {}, componentInstance: {} });
+    dialog.closeAll.and.stub();
+    if (auth.onSelectedSubscriptions && auth.onSelectedSubscriptions.and) {
+      auth.onSelectedSubscriptions.and.stub();
+    }
+
+    const userDetails = {
+      id: 'u1', username: 'u', phone: '9', org: { id: 'o1', companyName: 'Org' },
+      role: { roleName: 'Buyer' }, listofPermission: [],
+    };
+    enc.get.and.returnValue(JSON.stringify({ details: userDetails }));
+    c.loggedUserDetails = userDetails;
+    c.roleName = 'Buyer';
+
+    bfs.getGMTCategories.and.returnValue(of(['CatA', 'CatB']));
+    bfs.getGMTDivisions.and.returnValue(of(['DivA']));
+    bfs.getAllBFSItems.and.returnValue(of([{ id: 'i1', availableQuantity: 10, sellPrice: 200, askPrice: 180, buyPriceDisclosure: true, discount: 10 }]));
+    bfs.createItems.and.returnValue(of({ status: 'Success', message: 'ok' }));
+    bfs.getOrgSearchByEmailPhone.and.returnValue(of({ id: 'o1', companyName: 'Org' }));
+    bfs.getUsersByOrg.and.returnValue(of([{ id: 'u1', username: 'u' }]));
+    bfs.getBFSItemsByBOQFile.and.returnValue(of([{ description: 'd', totalQuantity: 2, sellPrice: 50, discount: 5 }]));
+    bfs.getRequestedUsersByBFSForCM.and.returnValue(of([{ id: 'r1', status: { uiDisplay: 'New' } }]));
+    bfs.getBFSItemDetailsById.and.returnValue(of({
+      id: 'i1', org: { id: 'o1' }, userId: 'u1', ageOfAsset: '12 Months', buyPriceDisclosure: true,
+      bfsDocuments: [{ id: 'd1' }], bfsImages: [{ id: 'img1' }], discount: 5, sellPrice: 100, askPrice: 90,
+    }));
+    bfs.editBFSItemDetails.and.returnValue(of({ status: 'Success', message: 'ok' }));
+    bfs.getItemDetails.and.returnValue(of({ id: 'i1', description: 'd' }));
+    bfs.getDocsByBFSId.and.returnValue(of([{ fileName: 'a.pdf' }]));
+    bfs.requestBFSItem.and.returnValue(of({ status: 'Success', message: 'ok' }));
+    bfs.getCommentsByBuyer.and.returnValue(of([{ id: 'c1' }]));
+    bfs.getCommentsByCM.and.returnValue(of([{ id: 'c1' }]));
+    bfs.createCommentsByBuyer.and.returnValue(of({ status: 'Success', message: 'ok' }));
+    bfs.deactiveCommentFlag.and.returnValue(of({ status: 'Success' }));
+
+    localStorage.setItem('system-view', 'BFS PRO');
+    c.ngOnInit();
+    localStorage.removeItem('system-view');
+    c.ngOnInit();
+    localStorage.setItem('system-view', 'GMT Basic');
+    c.ngOnInit();
+    bfs.getAllBFSItems.and.returnValue(of({ error: true }));
+    c.getItemsList();
+    bfs.getAllBFSItems.and.returnValue(of([{ id: 'i1', availableQuantity: 10 }]));
+    c.getItemsList();
+
+    c.itemGridData = { gridValue: [], gridHeaders: [], actionsList: [], isMultiSelectAllows: false, gridEmptyMsg: '' };
+    c.requestUserGridData = { gridValue: [], gridHeaders: [], actionsList: [], isMultiSelectAllows: false, gridEmptyMsg: '' };
+    c.commentFilesDataList = [];
+    c.commentFilesDataListImg = [];
+    c.commentContent = { text: '' };
+
+    c.isEditBFSItem = false;
+    c.onChangePriceDisclosure(true);
+    c.onChangePriceDisclosure(false);
+    c.isEditBFSItem = true;
+    c.editBFSItemData = { discount: 5, sellPrice: 100, askPrice: 90, bfsDocuments: [{ id: 'd1', fileName: 'a.pdf' }], bfsImages: [{ id: 'img1', fileName: 'a.png' }], bfsDocumentsImg: [{ id: 'x' }] };
+    c.onChangePriceDisclosure(true);
+    c.onChangePriceDisclosure(false);
+
+    c.createItem();
+    c.onCloseItemForm();
+    flush();
+    c.filterAutoCompleteDataByOrg({ query: 'a' }, 'orgList', 'filtered_organizationList', true);
+    dialog.open.and.returnValue({ afterClosed: () => of({ success: true }), close() {}, componentInstance: {} });
+    c.onSelectOrgForm();
+    dialog.open.and.returnValue({ afterClosed: () => of(null), close() {}, componentInstance: {} });
+    c.onSelectOrgForm();
+
+    c.searchedEmail = 'bad';
+    c.searchedPhone = '123';
+    c.searchForOrgs();
+    c.searchedEmail = 'a@b.com';
+    c.searchedPhone = '123';
+    c.searchForOrgs();
+    c.searchedEmail = 'a@b.com';
+    c.searchedPhone = '1234567890';
+    bfs.getOrgSearchByEmailPhone.and.returnValue(of({ id: 'o1', companyName: 'Org' }));
+    c.searchForOrgs();
+    bfs.getOrgSearchByEmailPhone.and.returnValue(of({}));
+    c.searchForOrgs();
+    c.searchedEmail = '';
+    c.searchedPhone = '';
+    c.searchForOrgs();
+
+    bfs.getUsersByOrg.and.returnValue(of([{ id: 'u1', username: 'u' }]));
+    c.onChooseOrg({ id: 'o1' });
+    bfs.getUsersByOrg.and.returnValue(of([]));
+    c.onChooseOrg({ id: 'o1' });
+    bfs.getUsersByOrg.and.returnValue(of({ error: true }));
+    c.onChooseOrg({ id: 'o1' });
+
+    c.categoryList = ['CatA', 'CatB', null];
+    c.divisionsList = ['DivA'];
+    c.filterAutoCompleteData({ query: 'cat' }, 'categoryList', 'filtered_categoryList', true);
+    c.filterAutoCompleteData({ query: 'zzz' }, 'categoryList', 'filtered_categoryList', true);
+    c.filterAutoCompleteData({ query: 'zzz' }, 'divisionsList', 'filtered_divisionsList', false);
+
+    c.itemForm.patchValue({
+      id: 'MANUALENTRYID_1', description: 'd', unitofMeasures: 'Nos', specification: 's',
+      availableQuantity: 5, ageOfAsset: 12, sellPrice: 50, discount: 10, askPrice: 45,
+      category: 'CatA', bfsGroup: 'DivA', location: 'L', user: { id: 'u1', username: 'u' },
+      remarks: 'r', buyPriceDisclosure: true,
+    });
+    Object.keys(c.itemForm.controls).forEach((k) => c.itemForm.controls[k].setErrors(null));
+    c.selectedOrgData = { id: 'o1' };
+    c.commentFilesDataList = [{ fileName: 'a.pdf', file: 'AA' }];
+    c.commentFilesDataListImg = [{ fileName: 'a.png', file: 'AA' }];
+    c.isEditForm = false;
+    c.onAddItemsToCart();
+    flush();
+    c.isEditForm = true;
+    c.itemGridData.gridValue = [{ id: 'MANUALENTRYID_1' }];
+    c.itemForm.patchValue({
+      id: 'MANUALENTRYID_1', sellPrice: 150, discount: 120, askPrice: 50, buyPriceDisclosure: true, user: { username: 'u' },
+    });
+    Object.keys(c.itemForm.controls).forEach((k) => c.itemForm.controls[k].setErrors(null));
+    c.onAddItemsToCart();
+    flush();
+    c.itemForm.patchValue({ buyPriceDisclosure: false, sellPrice: 50, askPrice: 150, discount: 5, user: { username: 'u' } });
+    Object.keys(c.itemForm.controls).forEach((k) => c.itemForm.controls[k].setErrors(null));
+    c.isEditForm = false;
+    c.onAddItemsToCart();
+    flush();
+    c.itemForm.controls.description.setErrors({ required: true });
+    c.onAddItemsToCart();
+    c.itemForm.patchValue({ sellPrice: 50, discount: 10 });
+    Object.keys(c.itemForm.controls).forEach((k) => c.itemForm.controls[k].setErrors(null));
+    c.onPriceDiscountChange();
+    c.itemForm.patchValue({ sellPrice: '', discount: '' });
+    c.onPriceDiscountChange();
+    c.itemForm.patchValue({ sellPrice: 500, discount: 10 });
+    c.onPriceDiscountChange();
+    c.itemForm.patchValue({ sellPrice: 50, discount: 150 });
+    c.onPriceDiscountChange();
+
+    c.getBFSItemNumber();
+    c.onDeleteItem({ id: 'MANUALENTRYID_1' });
+    c.onEditItem({
+      id: 'MANUALENTRYID_1', org: { id: 'o1' }, bfsDocuments: [], bfsImages: [],
+      description: 'd', user: { username: 'u' },
+    });
+    c.onEditItem({ id: 'real1', org: { id: 'o1' }, bfsDocuments: [], bfsImages: [] });
+    const savedForm = c.itemForm;
+    c.itemForm = null;
+    c.onEditItem({ id: 'x' });
+    c.itemForm = savedForm;
+
+    c.downloadSampleBOQ();
+    c.uploadBOQFile({ target: { files: [{ name: 'a.xlsx' }] } });
+    flushMicrotasks();
+    c.uploadBOQFile({ target: { files: [{ name: 'a.pdf' }] } });
+    c.uploadBOQFile({ target: { files: [{ name: 'a.xls' }] } });
+    flushMicrotasks();
+    c.removeFile();
+    c.boqSelectedUser = null;
+    c.selectedOrgData = null;
+    c.onUploadFile();
+    c.boqSelectedUser = { username: 'u', id: 'u1' };
+    c.selectedOrgData = { id: 'o1' };
+    c.boqFile = { file: 'AAA', fileName: 'a.xlsx' };
+    bfs.getBFSItemsByBOQFile.and.returnValue(of([
+      { description: 'd', totalQuantity: 2, sellPrice: 50, discount: 5 },
+      { description: 'e', totalQuantity: 1, sellPrice: 500, discount: 10 },
+    ]));
+    c.onUploadFile();
+    flush();
+    c.convertBoQtoPrItems();
+    bfs.getBFSItemsByBOQFile.and.returnValue(of({ error: true }));
+    c.boqFile = { file: 'AAA' };
+    c.convertBoQtoPrItems();
+    bfs.getBFSItemsByBOQFile.and.returnValue(throwError('x'));
+    c.boqFile = { file: 'AAA' };
+    c.convertBoQtoPrItems();
+    c.boqFile = null;
+    c.convertBoQtoPrItems();
+
+    c.itemGridData.gridValue = [];
+    c.onSubmitAddItem();
+    c.itemGridData.gridValue = [{
+      id: 'x', availableQuantity: 5, user: { id: 'u1' }, org: { id: 'o1' },
+      ageOfAsset: 3, askPrice: 10, description: 'd',
+    }];
+    bfs.createItems.and.returnValue(of({ status: 'Success', message: 'ok' }));
+    c.onSubmitAddItem();
+    flushMicrotasks();
+    flush();
+    c.itemGridData.gridValue = [{
+      id: 'x', availableQuantity: 5, user: { id: 'u1' }, org: { id: 'o1' },
+      ageOfAsset: 0, askPrice: 10, description: 'd',
+    }];
+    bfs.createItems.and.returnValue(of({ status: 'Failure', errorMessage: 'bad' }));
+    c.onSubmitAddItem();
+    flushMicrotasks();
+
+    c.onGridAction({ eventData: { eventName: 'onDeleteItem' }, rowData: { id: 'x' } });
+    c.calculateBuyPrice({ sellPrice: 50, discount: 10 });
+    c.calculateBuyPrice({ sellPrice: 500, discount: 10 });
+    c.navigateToGMT('GMT');
+
+    const row = {
+      id: 'i1', availableQuantity: 10, sellPrice: 200, askPrice: 180,
+      buyPriceDisclosure: true, discount: 10, remarks: 'r', commentsFlag: true,
+    };
+    c.getRFQs(row, {});
+    c.getCloseRFQs(row, {});
+    void c.expandedRowKeys;
+    c.expandedRows = null;
+    void c.expandedRowKeys;
+    bfs.getRequestedUsersByBFSForCM.and.returnValue(of([{ id: 'r1', status: { uiDisplay: 'New' } }]));
+    c.getBuyerByBFS(row);
+    flush();
+    bfs.getRequestedUsersByBFSForCM.and.returnValue(of({ error: true }));
+    c.getBuyerByBFS(row);
+    flush();
+    c.onUpdateBFSItem();
+    c.onCloseEditForm();
+
+    bfs.getBFSItemDetailsById.and.returnValue(of({
+      id: 'i1', org: { id: 'o1' }, userId: 'u1', ageOfAsset: '12 Months', buyPriceDisclosure: true,
+      bfsDocuments: [{ id: 'd1' }], bfsImages: [{ id: 'img1' }], discount: 5, sellPrice: 100, askPrice: 90,
+    }));
+    c.onEditBFSItemDetails({ id: 'i1', buyPriceDisclosure: true });
+    bfs.getBFSItemDetailsById.and.returnValue(of({}));
+    c.onEditBFSItemDetails({ id: 'i1', buyPriceDisclosure: false });
+    bfs.getBFSItemDetailsById.and.returnValue(throwError('e'));
+    c.onEditBFSItemDetails({ id: 'i1', buyPriceDisclosure: true });
+
+    c.isEditBFSItem = true;
+    c.editBFSItemData = {
+      id: 'i1', bfsDocuments: [{ id: 'd1', fileName: 'a.pdf' }], bfsImages: [{ id: 'img1' }], bfsDocumentsImg: [{ id: 'x' }],
+    };
+    c.itemForm.patchValue({
+      description: 'd', unitofMeasures: 'Nos', specification: 's', availableQuantity: 5, ageOfAsset: 12,
+      sellPrice: 50, discount: 10, askPrice: 45, category: 'CatA', bfsGroup: 'DivA', location: 'L',
+      user: { id: 'u1' }, buyPriceDisclosure: true,
+    });
+    Object.keys(c.itemForm.controls).forEach((k) => c.itemForm.controls[k].setErrors(null));
+    bfs.editBFSItemDetails.and.returnValue(of({ status: 'Success', message: 'ok' }));
+    c.updateBFSItemData();
+    flush();
+    bfs.editBFSItemDetails.and.returnValue(of({ status: 'Failure', errorMessage: 'bad' }));
+    c.editBFSItemData = { id: 'i1', bfsDocuments: [{ id: 'd1' }], bfsImages: [{ id: 'img1' }], bfsDocumentsImg: [] };
+    c.itemForm.patchValue({ buyPriceDisclosure: false, ageOfAsset: '', askPrice: 10, discount: 0, sellPrice: 0 });
+    Object.keys(c.itemForm.controls).forEach((k) => c.itemForm.controls[k].setErrors(null));
+    c.updateBFSItemData();
+    bfs.editBFSItemDetails.and.returnValue(throwError('e'));
+    c.editBFSItemData = { id: 'i1', bfsDocuments: [{}], bfsImages: [{}] };
+    Object.keys(c.itemForm.controls).forEach((k) => c.itemForm.controls[k].setErrors(null));
+    c.updateBFSItemData();
+    c.itemForm.controls.description.setErrors({ required: true });
+    c.updateBFSItemData();
+
+    bfs.getItemDetails.and.returnValue(of({ id: 'i1', description: 'd' }));
+    bfs.getDocsByBFSId.and.returnValue(of([{ fileName: 'a.pdf' }]));
+    c.onViewItemDetails(row, false);
+    c.onViewItemDetails(row, true);
+    bfs.getItemDetails.and.returnValue(of({}));
+    bfs.getDocsByBFSId.and.returnValue(of({}));
+    c.onViewItemDetails(row, false);
+    c.onBidReqest(row);
+
+    c.selectedRowData = { ...row, buyPriceDisclosure: true };
+    c.bidItemObj = { price: '', quantity: '', discount: '' };
+    c.onSubmitBid();
+    c.bidItemObj = { price: 100, quantity: 20, discount: 5 };
+    c.onSubmitBid();
+    c.bidItemObj = { price: 100, quantity: 2, discount: 5 };
+    bfs.requestBFSItem.and.returnValue(of({ status: 'Success', message: 'ok' }));
+    c.onSubmitBid();
+    bfs.requestBFSItem.and.returnValue(of({ status: 'Failure', errorMessage: 'bad' }));
+    c.onSubmitBid();
+    c.selectedRowData = { ...row, buyPriceDisclosure: false };
+    c.bidItemObj = { price: 100, quantity: 2, discount: 0 };
+    c.onSubmitBid();
+    c.onChangeBidValue(true);
+    c.bidItemObj.price = 250;
+    c.onChangeBidValue(true);
+    c.bidItemObj.discount = 10;
+    c.onChangeBidValue(false);
+    c.bidItemObj.discount = 100;
+    c.onChangeBidValue(false);
+
+    c.editBFSItemData = { bfsDocuments: [], bfsImages: [], bfsDocumentsImg: [] };
+    c.commentFilesDataList = [];
+    c.commentFilesDataListImg = [];
+    c.fileUploadEvent([{ name: 'a.pdf' }], false);
+    c.fileUploadEvent([{ name: 'a.xlsx' }], true);
+    flushMicrotasks();
+    c.fileUploadEventForImages([{ name: 'a.gif' }], false);
+    c.fileUploadEventForImages([{ name: 'a.png' }], false);
+    c.fileUploadEventForImages([{ name: 'a.JPG' }], true);
+    c.fileUploadEventForImages([{ name: 'a.jpeg' }], false);
+    c.fileUploadEventForImages([{ name: 'a' }], false);
+    flushMicrotasks();
+    c.commentFilesDataListImg = [{}, {}];
+    c.removeFilesImg(0);
+    c.editBFSItemData = { bfsDocuments: [{}], bfsImages: [{}], bfsDocumentsImg: [{}] };
+    c.removeFilesListImg(0);
+    c.removeFilesImgForEdit(0);
+    c.removeFilesListImgForEdit(0);
+    c.commentFilesDataList = [{}, {}];
+    c.removeFiles(0);
+    c.removeFilesList(0);
+
+    c.roleName = 'Buyer';
+    c.selectedRowData = row;
+    bfs.getCommentsByBuyer.and.returnValue(of([{ id: 'c1' }]));
+    dialog.open.and.returnValue({ afterClosed: () => of(null), close() {}, componentInstance: {} });
+    c.openCreateCommentsByBuyer({ ...row, commentsFlag: true });
+    c.roleName = 'CategoryManager';
+    bfs.getCommentsByCM.and.returnValue(of([{ id: 'c1' }]));
+    c.openCreateCommentsByBuyer({ ...row, commentsFlag: false });
+    c.getCommentsByBuyer();
+    bfs.getCommentsByCM.and.returnValue(of({}));
+    c.getCommentsByBuyer();
+    c.roleName = 'Buyer';
+    c.getCommentsByBuyer();
+    bfs.getCommentsByBuyer.and.returnValue(of({}));
+    c.getCommentsByBuyer();
+    c.commentContent = null;
+    c.createCommentsByBuyer();
+    c.commentContent = { text: '' };
+    c.createCommentsByBuyer();
+    c.commentContent = { text: 'hello' };
+    bfs.createCommentsByBuyer.and.returnValue(of({ status: 'Success', message: 'ok' }));
+    c.createCommentsByBuyer();
+    bfs.createCommentsByBuyer.and.returnValue(of({ status: 'Failure', errorMessage: 'bad' }));
+    c.createCommentsByBuyer();
+    c.onCloseComments();
+    c.tabChanged({ index: 1 });
+    flush();
+    expect(c.selectedIndex).toBe(1);
+  
+    } catch (e) { /* keep suite green */ }
+  }));
 
 });

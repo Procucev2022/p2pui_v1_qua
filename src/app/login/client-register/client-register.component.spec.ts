@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { of } from 'rxjs';
-import { ClientRegisterComponent } from './client-register.component';
+import { of, throwError } from 'rxjs';
+import { ClientRegisterComponent, tenDigitPhoneNumberValidator, strictEmailValidator } from './client-register.component';
+import { FormControl } from '@angular/forms';
 import {autoMock, defaultAppConfig, seedComponent, exerciseComponent, deepExerciseComponent} from '../../../testing/test-helpers';
 import { APP_CONFIG } from 'src/app/app.config';
 import { ToastrService } from 'ngx-toastr';
@@ -457,6 +458,260 @@ describe('ClientRegisterComponent', () => {
     c.searchTextValue = '';
     try { deepExerciseComponent(c); } catch { /* */ }
     expect(component).toBeTruthy();
+  });
+
+  describe('targeted real coverage', () => {
+    let toaster: any;
+    let vendorReg: any;
+    let modal: any;
+    let intervalCbs: Array<() => void>;
+    let timeoutCbs: Array<Function>;
+
+    const validators = {
+      alphabetValidator: (c: any) => {
+        if (c.value == null || c.value === '') { return null; }
+        return /^[A-Za-z\s]*$/.test(c.value) ? null : { alphabetOnly: true };
+      },
+      alphaNumericNotNumericOnly: (c: any) => {
+        if (!c.value) { return null; }
+        const hasLetters = /[A-Za-z]/.test(c.value);
+        const isNumericOnly = /^[0-9]+$/.test(c.value);
+        return hasLetters || !isNumericOnly ? null : { numericOnly: true };
+      },
+      pincodeValidator: (c: any) => {
+        if (!c.value) { return null; }
+        if (!/^[1-9][0-9]{5}$/.test(c.value)) { return { invalidPincode: true }; }
+        return /^(\d)\1{5}$/.test(c.value) ? { repeatedDigits: true } : null;
+      }
+    };
+
+    function fillValid(extra: any = {}) {
+      component.clientRegForm.patchValue({
+        name: extra.name !== undefined ? extra.name : 'Jane Doe',
+        companyName: extra.companyName !== undefined ? extra.companyName : 'Client Co',
+        organizationPhonenumber: extra.organizationPhonenumber !== undefined ? extra.organizationPhonenumber : '9876543210',
+        email: extra.email !== undefined ? extra.email : 'jane@client.com',
+        pinCode: extra.pinCode !== undefined ? extra.pinCode : '560001',
+        emailOtp: extra.emailOtp !== undefined ? extra.emailOtp : '123456',
+        mobileOtp: extra.mobileOtp !== undefined ? extra.mobileOtp : '654321',
+        india: 'true'
+      });
+    }
+
+    beforeEach(() => {
+      toaster = TestBed.inject(ToastrService) as any;
+      vendorReg = TestBed.inject(VendorRegistrationService) as any;
+      modal = TestBed.inject(MatDialog) as any;
+      (component as any).formValidatorService = validators;
+      component.generateClientForm();
+      component.clientRegForm.addControl('pan', new FormControl('22AAAAA0000A1Z5'));
+      component.isValidPincode = true;
+      component.isOTPVerified = true;
+      intervalCbs = [];
+      timeoutCbs = [];
+      spyOn(window, 'setInterval').and.callFake((cb: any) => {
+        intervalCbs.push(cb);
+        return 41 as any;
+      });
+      spyOn(window, 'setTimeout').and.callFake((cb: any) => {
+        timeoutCbs.push(cb);
+        return 42 as any;
+      });
+      spyOn(window, 'clearInterval').and.stub();
+    });
+
+    it('exported validators cover empty valid and invalid', () => {
+      expect(tenDigitPhoneNumberValidator()(new FormControl('9876543210'))).toBeNull();
+      expect(tenDigitPhoneNumberValidator()(new FormControl('abc'))).toEqual(jasmine.objectContaining({ invalidPhoneNumber: jasmine.anything() }));
+      expect(strictEmailValidator()(new FormControl(''))).toBeNull();
+      expect(strictEmailValidator()(new FormControl('a@b.com'))).toBeNull();
+      expect(strictEmailValidator()(new FormControl('x'))).toEqual({ invalidEmail: true });
+    });
+
+    it('sendOTP and sendOTPs cover email exists, success, fail and form errors', () => {
+      fillValid({ email: '' });
+      component.sendOTP();
+      fillValid();
+      component.isEmailExists = true;
+      expect(component.sendOTP()).toBe(false);
+      component.isEmailExists = false;
+      vendorReg.sendOTP.and.returnValue(of({ status: 'Success', message: 'ok' }));
+      component.sendOTP();
+      expect(component.showOtpBox).toBe(true);
+      vendorReg.sendOTP.and.returnValue(of({ status: 'Fail', message: 'no' }));
+      component.sendOTP();
+
+      fillValid({ name: '' });
+      component.sendOTPs();
+      fillValid({ companyName: '', email: '', organizationPhonenumber: '' });
+      spyOn(component, 'isValidFormControls').and.returnValue(true);
+      component.sendOTPs();
+      (component.isValidFormControls as jasmine.Spy).and.callThrough();
+
+      fillValid();
+      sessionStorage.setItem('tempEMail', 't@x.com');
+      sessionStorage.setItem('tempPhone', '1');
+      vendorReg.sendAllOTPs.and.returnValue(of({ otpSentToEmail: true, otpSentToMobile: true }));
+      component.sendOTPs();
+      timeoutCbs.forEach((cb) => cb());
+      expect(component.showOtpBox).toBe(true);
+      component.enableOTPInSecs = 1;
+      intervalCbs.forEach((cb) => cb());
+      expect(component.enableOTPButton).toBe(false);
+
+      vendorReg.sendAllOTPs.and.returnValue(of({ otpSentToEmail: false, otpSentToMobile: false, message: 'x' }));
+      fillValid();
+      component.clientRegForm.enable();
+      component.sendOTPs();
+    });
+
+    it('isValidFormControls warns for each invalid field', () => {
+      fillValid({ name: '  ' });
+      expect(component.isValidFormControls()).toBe(false);
+      fillValid({ name: 'Jane1' });
+      expect(component.isValidFormControls()).toBe(false);
+      fillValid({ companyName: '123' });
+      expect(component.isValidFormControls()).toBe(false);
+      fillValid({ companyName: '  ' });
+      expect(component.isValidFormControls()).toBe(false);
+      fillValid({ organizationPhonenumber: '1' });
+      expect(component.isValidFormControls()).toBe(false);
+      fillValid({ email: '' });
+      expect(component.isValidFormControls()).toBe(false);
+      fillValid({ email: 'bad' });
+      expect(component.isValidFormControls()).toBe(false);
+      fillValid();
+      expect(component.isValidFormControls()).toBe(true);
+    });
+
+    it('verifyOtps covers OTP length, success, failure and http error', () => {
+      fillValid({ name: '' });
+      component.verifyOtps();
+      fillValid({ emailOtp: '' });
+      component.verifyOtps();
+      fillValid({ emailOtp: '12' });
+      component.verifyOtps();
+      fillValid({ emailOtp: '123456', mobileOtp: '' });
+      component.verifyOtps();
+      fillValid({ emailOtp: '123456', mobileOtp: '99' });
+      component.verifyOtps();
+
+      sessionStorage.setItem('tempEMail', 't@x.com');
+      sessionStorage.setItem('tempPhone', '1');
+      fillValid();
+      vendorReg.validateAllOTPs.and.returnValue(of({ status: 'success', message: 'ok' }));
+      component.verifyOtps();
+      expect(component.isOTPVerified).toBe(true);
+
+      sessionStorage.removeItem('tempEMail');
+      sessionStorage.removeItem('tempPhone');
+      vendorReg.validateAllOTPs.and.returnValue(of({ status: 'fail', message: 'no' }));
+      fillValid();
+      component.clientRegForm.enable();
+      component.verifyOtps();
+      expect(toaster.error).toHaveBeenCalled();
+
+      vendorReg.validateAllOTPs.and.returnValue(throwError(() => ({ status: 500 })));
+      fillValid();
+      component.verifyOtps();
+      expect(toaster.error).toHaveBeenCalledWith('OTP Verification Failed', 'Failed');
+
+      spyOn(component, 'isValidFormControls').and.returnValue(true);
+      component.clientRegForm.patchValue({
+        companyName: '', email: '', organizationPhonenumber: '', emailOtp: '123456', mobileOtp: '123456'
+      });
+      component.verifyOtps();
+    });
+
+    it('registerVendor covers pending OTP, missing fields, invalid controls, success and fail', () => {
+      component.isOTPVerified = false;
+      expect(component.registerVendor(component.clientRegForm)).toBe(false);
+
+      component.isOTPVerified = true;
+      fillValid({ companyName: '' });
+      component.registerVendor(component.clientRegForm);
+      fillValid({ name: '' });
+      component.registerVendor(component.clientRegForm);
+      fillValid({ email: '' });
+      component.registerVendor(component.clientRegForm);
+      fillValid({ organizationPhonenumber: '' });
+      component.registerVendor(component.clientRegForm);
+      fillValid({ pinCode: '' });
+      component.registerVendor(component.clientRegForm);
+
+      fillValid({ email: 'bad' });
+      component.registerVendor(component.clientRegForm);
+      fillValid({ name: 'Jane1' });
+      component.registerVendor(component.clientRegForm);
+      fillValid({ organizationPhonenumber: '12' });
+      component.registerVendor(component.clientRegForm);
+      fillValid({ pinCode: '12' });
+      component.registerVendor(component.clientRegForm);
+      fillValid();
+      component.isValidPincode = false;
+      component.registerVendor(component.clientRegForm);
+
+      component.isValidPincode = true;
+      fillValid();
+      modal.open.and.returnValue({ afterClosed: () => of({ event: 'close' }) });
+      vendorReg.submitSelfClientRegistration.and.returnValue(of({ status: 'Success', message: 'ok' }));
+      component.registerVendor(component.clientRegForm);
+      expect(toaster.success).toHaveBeenCalled();
+
+      (component as any).formValidatorService = validators;
+      component.generateClientForm();
+      component.clientRegForm.addControl('pan', new FormControl('22AAAAA0000A1Z5'));
+      fillValid();
+      component.isOTPVerified = true;
+      component.isValidPincode = true;
+      vendorReg.submitSelfClientRegistration.and.returnValue(of({ status: 'success', message: 'ok' }));
+      modal.open.and.returnValue({ afterClosed: () => of({ event: 'other' }) });
+      component.registerVendor(component.clientRegForm);
+
+      vendorReg.submitSelfClientRegistration.and.returnValue(of({ status: 'Fail', message: 'no' }));
+      fillValid();
+      component.isOTPVerified = true;
+      component.registerVendor(component.clientRegForm);
+    });
+
+    it('pan, email check, reset helpers, pincode and numberOnly', () => {
+      component.clientRegForm.get('pan').setErrors({ pattern: true });
+      component.onValidatePan();
+      component.clientRegForm.get('pan').setErrors(null);
+      component.isPanExist = true;
+      component.onValidatePan();
+      component.isPanExist = false;
+      component.panVerificationIniatiated = false;
+      component.onValidatePan();
+      expect(component.transformPan()).toBeTruthy();
+      expect(component.isInvalidPAN()).toBe(false);
+      component.clientRegForm.get('pan').setValue('');
+      expect(component.isInvalidPAN()).toBe(true);
+
+      component.onlyPanEnable();
+      component.enableDisableFormCtrl();
+      component.resetOtherCtrlExceptPan();
+      component.clientRegFormReset();
+      component.resetWholeForm();
+
+      fillValid({ email: '' });
+      component.checkEmailValidity();
+      fillValid();
+      vendorReg.panOrEamilValidation.and.returnValue(of({ exists: true }));
+      component.checkEmailValidity();
+      expect(component.isEmailExists).toBe(true);
+      vendorReg.panOrEamilValidation.and.returnValue(of({ exists: false }));
+      component.checkEmailValidity();
+      expect(component.showOtpBox).toBe(false);
+
+      component.onupdatePincodeValidationStatus({ pincodeIsValid: true });
+      expect(component.isValidPincode).toBe(true);
+      component.onupdatePincodeValidationStatus(null);
+      expect(component.isValidPincode).toBe(false);
+      expect(component.numberOnly({ which: 48 })).toBe(true);
+      expect(component.numberOnly({ which: 40 })).toBe(false);
+      expect(component.hasAnyErrors()).toBeDefined();
+    });
   });
 
 });
