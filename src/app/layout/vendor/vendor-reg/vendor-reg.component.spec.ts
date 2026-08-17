@@ -2001,7 +2001,10 @@ describe('VendorRegComponent', () => {
     c.fb = c.fb || TestBed.inject(FormBuilder);
     dialog.open.and.returnValue({ afterClosed: () => of(true), close: () => undefined });
     dialog.closeAll.and.stub();
-    convert.getBase64.and.returnValue(Promise.resolve('data:application/octet-stream;base64,QUFB'));
+    if (convert && convert.getBase64) {
+      if (convert.getBase64.and) { convert.getBase64.and.returnValue(Promise.resolve('data:application/octet-stream;base64,QUFB')); }
+      else { spyOn(convert, 'getBase64').and.returnValue(Promise.resolve('data:application/octet-stream;base64,QUFB')); }
+    }
 
     enc.get.and.returnValue(JSON.stringify({
       details: { id: 'u1', org: { id: 'o1' }, role: { roleName: 'Vendor' }, listofPermission: [] },

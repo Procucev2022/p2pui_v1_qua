@@ -765,7 +765,7 @@ export class BfsItemsListComponent implements OnInit {
 
 
     fileUploadEvent(files, isEditForm: boolean) {
-        const fileData = event;
+        const fileData = typeof event !== 'undefined' ? event : null;
         // console.log('event1', event);
         const file = files[0];
         this.converSer.getBase64(file).then((data: string) => {

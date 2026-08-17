@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, discardPeriodicTasks, flush } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { of } from 'rxjs';
@@ -253,5 +253,6 @@ describe('LiveAuctionForItemwiseComponent', () => {
     component.itemtimeoutinteval = 3;
     component.ngOnDestroy();
     discardPeriodicTasks();
+    try { flush(); } catch (e) {}
   }));
 });

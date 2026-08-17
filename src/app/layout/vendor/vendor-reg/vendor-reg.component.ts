@@ -284,14 +284,18 @@ export class VendorRegComponent implements OnInit {
   }
 
   onChangeCountry(countryValue) {
-    this.stateInfo = this.countryInfo[countryValue].States;
-    this.cityInfo = this.stateInfo[0].Cities;
-    console.log(this.cityInfo);
+    if (this.countryInfo && this.countryInfo[countryValue] && this.countryInfo[countryValue].States) {
+      this.stateInfo = this.countryInfo[countryValue].States;
+      if (this.stateInfo && this.stateInfo[0]) {
+        this.cityInfo = this.stateInfo[0].Cities;
+      }
+    }
   }
 
   onChangeState(stateValue) {
-    this.cityInfo = this.stateInfo[stateValue].Cities;
-    // console.log(this.cityInfo);
+    if (this.stateInfo && this.stateInfo[stateValue]) {
+      this.cityInfo = this.stateInfo[stateValue].Cities;
+    }
   }
 
 

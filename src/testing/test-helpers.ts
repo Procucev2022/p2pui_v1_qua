@@ -1,4 +1,6 @@
 import { BehaviorSubject, of } from 'rxjs';
+
+declare const jasmine: any;
 import { NavigationEnd } from '@angular/router';
 import * as Swal from 'sweetalert2';
 
