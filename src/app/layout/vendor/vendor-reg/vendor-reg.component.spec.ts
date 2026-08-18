@@ -534,6 +534,9 @@ describe('VendorRegComponent', () => {
     countriesService.allCountries.and.returnValue(throwError(() => new Error('country error')));
     component.getCountries();
 
+    // Ensure loggedUserDetails is set before saveGeneral
+    component.loggedUserDetails = { org: { companyId: 'COMP-1' } };
+
     // saveGeneral with orgBranches[0] == undefined
     component.vendorRegObj = { orgBranches: [] };
     component.saveGeneral('Branches', { valid: true, value: {} } as NgForm);
@@ -558,6 +561,7 @@ describe('VendorRegComponent', () => {
     component.uploadMSME({ target: { files: [new File([''], 'test.png')] } });
     component.uploadCheque({ target: { files: [new File([''], 'test.png')] } });
     tick();
+    flush();
   }));
 
   it('should cover null service responses, regFormSubmit failure status, and turnover empty branches', fakeAsync(() => {

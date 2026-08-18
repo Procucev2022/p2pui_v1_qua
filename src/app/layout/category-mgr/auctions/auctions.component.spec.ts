@@ -756,6 +756,13 @@ describe('AuctionsComponent', () => {
   it('should test auction reports, export PDF, and chart refresh in depth', fakeAsync(() => {
     const c: any = component;
     const encrySvc = TestBed.inject(EncryDecryService) as any;
+
+    // Destroy any pre-existing chart from earlier tests
+    if (c.auction && typeof c.auction.destroy === 'function') {
+      try { c.auction.destroy(); } catch (e) {}
+    }
+    const existingCanvas = document.getElementById('ctx');
+    if (existingCanvas) { existingCanvas.remove(); }
     const auctionSvc = TestBed.inject(AuctionService) as any;
     const catprocSvc = TestBed.inject(CatProcuRequestsService) as any;
     encrySvc.get.and.returnValue(JSON.stringify({ details: { role: { roleName: 'CategoryManager' }, listofPermission: ['ALL'], org: { id: 'o1' } } }));
@@ -1262,7 +1269,7 @@ describe('AuctionsComponent', () => {
     c.qouteVendorData = [{ companyName: 'V1' }];
     c.qoutationByRfqData = [{ companyName: 'V1' }];
     c.quoteitemdata = [{ description: 'Desc', quote: [{ totalamount: 100 }] }];
-    c.itemwiseAuctionData = [{ description: 'Desc', quote: [{ totalamount: 100 }] }];
+    c.itemwiseAuctionData = [{ description: 'Desc', bids: [{ companyName: 'V1' }], startpricevalue: 100, minimumBidReductionPrice: 5, leadingPrice: 95, savings: 5 }];
     c.rfqwisedata = { leadingPrice: 100, savings: 10, bids: [{ companyName: 'V1' }] };
 
     // auctionbid for rfq-wise

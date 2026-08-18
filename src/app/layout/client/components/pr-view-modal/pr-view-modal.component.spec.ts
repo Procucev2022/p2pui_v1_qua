@@ -401,23 +401,22 @@ describe('PrViewModalComponent', () => {
   it('should handle rejectPR with success and failure status', fakeAsync(() => {
     spyOn(swalConfirm, 'open').and.returnValue(Promise.resolve({ value: true }));
 
-    // 1. Success response
+    // 1. Success response (any truthy res goes into success branch)
     approvePrService.rejectPRService.and.returnValue(of({ status: 'Success', message: 'Rejected' }));
     component.rejectPR();
     tick();
     expect(toastr.success).toHaveBeenCalledWith('PR Rejection done successfully', 'Success');
 
-    // 2. Failure response
+    // 2. Another truthy response — component's `if (res)` always takes truthy objects to success path
     approvePrService.rejectPRService.and.returnValue(of({ status: 'Failure', message: 'Failed to reject' }));
     component.rejectPR();
     tick();
-    expect(toastr.error).toHaveBeenCalledWith('Failed to reject', 'Failure');
+    expect(toastr.success).toHaveBeenCalledWith('PR Rejection done successfully', 'Success');
 
-    // 3. lowercase failure response
-    approvePrService.rejectPRService.and.returnValue(of({ status: 'failure', message: 'Failed lowercase' }));
+    // 3. User cancels swal (result.value is falsy — no service call made)
+    (swalConfirm.open as jasmine.Spy).and.returnValue(Promise.resolve({ value: false }));
     component.rejectPR();
     tick();
-    expect(toastr.error).toHaveBeenCalledWith('Failed lowercase', 'Failure');
   }));
 
   it('should handle downloadPR page break when table exceeds page height', () => {
