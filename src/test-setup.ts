@@ -1,6 +1,12 @@
-/**
- * Global Karma setup to keep the runner alive while exercising app code.
- */
+import { Chart, registerables } from 'chart.js';
+try {
+  if (registerables) {
+    Chart.register(...registerables);
+  }
+} catch {
+  /* ignore */
+}
+
 export const TEST_SETUP_LOADED = true;
 
 const noop = () => undefined;

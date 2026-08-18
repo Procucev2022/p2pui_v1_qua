@@ -200,5 +200,19 @@ describe('CatMgrRfqsComponent', () => {
     component.viewRFQDetails({ id: '123' });
     const toastr = TestBed.inject(ToastrService) as any;
     expect(toastr.error).toHaveBeenCalledWith('Failed to Fetch data', 'Failure');
+
+    rfqService.fetchRfqById.and.returnValue(of({ id: '123' }));
+    component.viewRFQDetails({ id: '123' });
+    expect(component.viewRFQByIdData.id).toBe('123');
+
+    rfqService.getAllCategoryRFQdata.and.returnValue(of(null));
+    component.getRFQList();
+    expect(component.rfqDataList).toEqual([]);
+
+    rfqService.getAllCategoryRFQdata.and.returnValue(of([{ id: 'rfq-1' }]));
+    component.getRFQList();
+    expect(component.rfqDataList.length).toBe(1);
+
+    component.viewCorresspondance({ id: '1' });
   });
 });

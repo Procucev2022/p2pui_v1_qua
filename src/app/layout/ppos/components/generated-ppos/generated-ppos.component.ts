@@ -5,7 +5,7 @@ import { AppApiConfig } from 'src/app/shared/constants/app-api.config';
 import { PposService } from '../../services/ppos.service';
 import { PpoViewModalComponent } from 'src/app/shared/modules/common-share/components/ppo-view-modal/ppo-view-modal.component';
 import { EncryDecryService } from 'src/app/shared/services';
-import swal from 'sweetalert2';
+import { swalConfirm } from 'src/app/shared/helpers/swal-confirm';
 import { CorrespondenceComponent } from 'src/app/shared/modules/common-share/components/correspondence/correspondence.component';
 import { ExcelService } from 'src/app/shared/modules/common-share/services/excel.service';
 import { DatePipe } from '@angular/common';
@@ -117,11 +117,11 @@ export class GeneratedPposComponent implements OnInit {
 
     getClientPPOS() {
         this.selectedData = [];
-        let reqObj;
-        console.log('logged---' + this.loggedUserDetails.org.id);
+        let reqObj: any = {};
+        console.log('logged---' + this.loggedUserDetails?.org?.id);
 
 
-        if (this.loggedUserDetails.role.roleName === 'ClientInitiator' || this.loggedUserDetails.role.roleName === 'clientInitiator1.1') {
+        if (this.loggedUserDetails && this.loggedUserDetails.role && (this.loggedUserDetails.role.roleName === 'ClientInitiator' || this.loggedUserDetails.role.roleName === 'clientInitiator1.1')) {
 
             reqObj = {
                 'client': this.loggedUserDetails.org.id,
@@ -133,7 +133,7 @@ export class GeneratedPposComponent implements OnInit {
             };
         }
 
-        if (this.loggedUserDetails.role.roleName === 'PRApprover') {
+        if (this.loggedUserDetails && this.loggedUserDetails.role && this.loggedUserDetails.role.roleName === 'PRApprover') {
             reqObj = {
                     'client': this.loggedUserDetails.org.id,
                     'masterStatus': ['PPO_SUBMIT', 'PPO_CLIENT_ACCEPT', 'PPO_CLIENT_REJECT'],
@@ -143,7 +143,7 @@ export class GeneratedPposComponent implements OnInit {
                     "department": this.loggedUserDetails.department.id,
                 };
             }
-        if (this.loggedUserDetails.role.roleName === 'PRApprover2') {
+        if (this.loggedUserDetails && this.loggedUserDetails.role && this.loggedUserDetails.role.roleName === 'PRApprover2') {
             reqObj = {
                 'client': this.loggedUserDetails.org.id,
                 'masterStatus': ['PPO_SUBMIT', 'PPO_CLIENT_ACCEPT', 'PPO_CLIENT_REJECT'],
@@ -153,7 +153,9 @@ export class GeneratedPposComponent implements OnInit {
                 "department": this.loggedUserDetails.department.id,
             };
         }
-        reqObj['approverId'] = this.loggedUserDetails.id;
+        if (this.loggedUserDetails) {
+            reqObj['approverId'] = this.loggedUserDetails.id;
+        }
 
         this.ppoSer.getClientPPOS(reqObj).subscribe((res: any) => {
             if (Array.isArray(res)) {
@@ -205,37 +207,41 @@ export class GeneratedPposComponent implements OnInit {
         let check = false;
         if (this.selectedData.length > 0) {
             this.selectedData.forEach((data) => {
-                if (data.procucevStatus.uiDisplay === 'Client Accepted' || data.procucevStatus.uiDisplay === 'Client Rejected') {
+                if (data?.procucevStatus?.uiDisplay === 'Client Accepted' || data?.procucevStatus?.uiDisplay === 'Client Rejected') {
                     this.toaster.error('The following request cant be process as it has already Selected or Rejected PRs. Please unselect selected or rejected PRs', 'Failed');
                     check = true;
                 }
             });
+
+            if (check) {
+                return;
+            }
+
             if (actionType === 'Submit' || actionType === 'Reject' || actionType === 'Reject_p') {
                 this.selectedData.forEach(element => {
-                    if (this.loggedUserDetails.role.roleName === 'CategoryManager2') {
-                    ppos.push({'id': element.id, 'submittedBy': localStorage.getItem('userFullName')});
+                    if (this.loggedUserDetails && this.loggedUserDetails.role && this.loggedUserDetails.role.roleName === 'CategoryManager2') {
+                        ppos.push({'id': element.id, 'submittedBy': localStorage.getItem('userFullName')});
                     } else {
-                    ppos.push({'id': element.id, approverId: this.loggedUserDetails.id});
+                        ppos.push({'id': element.id, approverId: this.loggedUserDetails ? this.loggedUserDetails.id : null});
                     }
                 });
             }
-           if (actionType === 'Accept') {
-               this.selectedData.forEach((data) => {
-                if (data.procucevStatus.uiDisplay === 'Submitted') {
-                    data.approvedBy = localStorage.getItem('userFullName');
-                    data.approverId =  this.loggedUserDetails.id
-                    ppos.push(data);
-                }
-               });
-            //    ppos = [...this.selectedData];
-           }
+            if (actionType === 'Accept') {
+                this.selectedData.forEach((data) => {
+                    if (data?.procucevStatus?.uiDisplay === 'Submitted') {
+                        data.approvedBy = localStorage.getItem('userFullName');
+                        data.approverId = this.loggedUserDetails ? this.loggedUserDetails.id : null;
+                        ppos.push(data);
+                    }
+                });
+            }
         }
 
         if (check) {
             return;
         }
         if (actionType === 'Submit') {
-            swal({
+            swalConfirm.open({
                 title: '<h6>Please Confirm!!<h6>',
                 html: '<h4>Are you sure you want to submit ppo?</h4>',
                 confirmButtonText: 'Yes',
@@ -254,17 +260,10 @@ export class GeneratedPposComponent implements OnInit {
                         }
                     });
                 }
-                // else if (result.dismiss === swal.DismissReason.cancel) {
-                //   swal(
-                //     'Cancelled',
-                //     'OK',
-                //     'error'
-                //   )
-                // }
             });
         }
         if (actionType === 'Accept') {
-            swal({
+            swalConfirm.open({
                 title: '<h6>Please Confirm!!<h6>',
                 html: '<h4>Are you sure you want to accept ppo?</h4>',
                 confirmButtonText: 'Yes',
@@ -274,7 +273,6 @@ export class GeneratedPposComponent implements OnInit {
                 reverseButtons: true
                }).then((result) => {
                 if (result.value) {
-
                     this.ppoSer.acceptPPO(ppos).subscribe((res) => {
                         if (res['status'] === 'Success' || res['statusCode'] === 'Success') {
                             this.toaster.success(res.message, 'Success');
@@ -283,21 +281,12 @@ export class GeneratedPposComponent implements OnInit {
                             this.toaster.error('PPO Acceptance failed', 'Failed');
                         }
                     });
-
                 }
-                // else if (result.dismiss === swal.DismissReason.cancel) {
-                //   swal(
-                //     'Cancelled',
-                //     'OK',
-                //     'error'
-                //   )
-                // }
               });
         }
 
         if (actionType === 'Reject') {
-
-            swal({
+            swalConfirm.open({
                 title: '<h6>Please Confirm!!<h6>',
                 html: '<h4>Are you sure you want to reject ppo?</h4>',
                 confirmButtonText: 'Yes',
@@ -316,19 +305,11 @@ export class GeneratedPposComponent implements OnInit {
                         }
                     });
                 }
-                // else if (result.dismiss === swal.DismissReason.cancel) {
-                //   swal(
-                //     'Cancelled',
-                //     'OK',
-                //     'error'
-                //   )
-                // }
               });
         }
 
         if (actionType === 'Reject_p') {
-
-            swal({
+            swalConfirm.open({
                 title: '<h6>Please Confirm!!<h6>',
                 html: '<h4>Are you sure you want to reject ppo?</h4>',
                 confirmButtonText: 'Yes',

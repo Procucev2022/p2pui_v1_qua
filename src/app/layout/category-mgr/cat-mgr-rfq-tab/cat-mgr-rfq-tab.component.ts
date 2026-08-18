@@ -10,7 +10,7 @@ import { AppApiConfig } from 'src/app/shared/constants/app-api.config';
 import { EncryDecryService } from 'src/app/shared/services';
 import { VendorSearchComponent } from 'src/app/shared/modules/common-share/components/vendor-search/vendor-search.component';
 import { ConvertToBase64Service } from 'src/app/shared/modules/common-share/services/convert-to-base64.service';
-import swal from 'sweetalert2';
+import { swalConfirm } from 'src/app/shared/helpers/swal-confirm';
 // import * as moment from 'moment';
 
 @Component({
@@ -281,9 +281,7 @@ getrfqDocuments() {
         this.selectedFileData = selectedFileData;
         console.log('excel file', this.selectedFileData);
 
-        const validFormatFile = this.selectedFileData.name
-            ? this.selectedFileData.name.split('.') || []
-            : [];
+        const validFormatFile = this.selectedFileData?.name ? this.selectedFileData.name.split('.') : [];
         if (
             validFormatFile.indexOf('xlsx') === -1 &&
             validFormatFile.indexOf('xls') === -1
@@ -293,12 +291,9 @@ getrfqDocuments() {
             this.selectedFileName = null;
         } else {
             if (dragAndDrop) {
-                this.selectedFileName = event[0].name ? event[0].name : null;
+                this.selectedFileName = event[0]?.name || null;
             } else {
-                this.selectedFileName =
-                    event.target.files.length > 0
-                        ? event.target.files[0].name
-                        : null;
+                this.selectedFileName = event.target?.files?.[0]?.name || null;
                 this.selectedFileData = event.target.files[0];
                 this.convertSer.getBase64(this.selectedFileData).then((data: string) => {
                     const temp = {
@@ -366,39 +361,32 @@ getrfqDocuments() {
     }
 
     getVendorsByCategory() {
-        const req = {
-
-        };
+        const req = {};
         this.procuReqService.getVendorsByCategory(req).subscribe((response) => {
             if (Array.isArray(response)) {
-                this['categoryList1'] = response || [];
+                this['categoryList1'] = response;
             }
         });
     }
 
-
     getAttachedPrDocs() {
-
         this.procuReqService.getPrAttachments({ 'id': this.prData.id }).subscribe((response) => {
             if (Array.isArray(response)) {
-                this.attachedPrDocsList = response || [];
+                this.attachedPrDocsList = response;
             }
         });
-
     }
 
     getPrAdresses() {
-
         this.procuReqService.getPrAdresses({ 'id': this.prData.id }).subscribe((response) => {
             if (Array.isArray(response)) {
-                this.prAdresses = response || [];
+                this.prAdresses = response;
             }
         });
-
     }
 
     createRfq() {
-            swal({
+            swalConfirm.open({
                 title: '<h5>Please Confirm!!</h5>',
                 html: '<h3>Are you sure you want to create RFQ?</h3>',
                 type: 'warning',

@@ -537,9 +537,7 @@ describe('CapexAuctionsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('real method and branch coverage', () => {
-    try { /* coverage-safe wrap */
-
+  it('real method and branch coverage', fakeAsync(() => {
     const enc = TestBed.inject(EncryDecryService) as any;
     const auctionSvc = TestBed.inject(AuctionService) as any;
     const proc = TestBed.inject(CatProcuRequestsService) as any;
@@ -849,11 +847,11 @@ describe('CapexAuctionsComponent', () => {
     expect(toaster.warning).toHaveBeenCalled();
     expect(dialog.open).toHaveBeenCalled();
     expect(component.getEndDate(future) instanceof Date).toBe(true);
-  
-    } catch (e) { /* keep suite green */ }
+
+    tick(10000);
     try { flush(); } catch (e) {}
     try { discardPeriodicTasks(); } catch (e) {}
-  });
+  }));
 
 });
 

@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { of } from 'rxjs';
@@ -547,4 +547,126 @@ describe('PpoItemsComponent', () => {
     try { c.exportPdf(); } catch(e) {}
     expect(c).toBeTruthy();
   });
+
+  it('should test PpoItemsComponent methods and branch paths', fakeAsync(() => {
+    const poSvc = TestBed.inject(PoService) as any;
+    const excelSvc = TestBed.inject(ExcelService) as any;
+    const exportPdfSvc = TestBed.inject(ExportPdfService) as any;
+
+    (component as any).exportPDFService = exportPdfSvc;
+    (component as any).exportPDFService.getDateForGivenDateTime = jasmine.createSpy().and.returnValue('18-08-2026');
+    (component as any).exportPDFService.utcToIst = jasmine.createSpy().and.returnValue('18-08-2026 10:00 AM');
+    (component as any).exportPDFService.addFooters = jasmine.createSpy();
+    (component as any).poService = poSvc;
+    (component as any).excelService = excelSvc;
+
+    excelSvc.getPPOAuditHistory.and.returnValue(of([{ email: 'u1@test.com', createdTS: '2026-08-18T00:00:00Z' }]));
+    excelSvc.getPRAuditHistory.and.returnValue(of([{ email: 'u2@test.com', createdTS: '2026-08-18T00:00:00Z' }]));
+
+    component.ppoItems = [
+      {
+        id: '1', description: 'Item 1', projectCategory: 'Cat1', projectSubCategory: 'Sub1',
+        brand: 'B1', quantity: 5, unitofMeasures: 'PCS', unitprice: 100, excludetaxamount: 500,
+        linkedItemId: 'l1',
+        org: { id: 'o1', companyName: 'Org 1', companyId: 'comp1' }
+      },
+      {
+        id: '2', description: 'Item 2', projectCategory: 'Cat2', projectSubCategory: 'Sub2',
+        brand: 'B2', quantity: 10, unitofMeasures: 'KG', unitprice: 50, excludetaxamount: 500,
+        linkedItemId: 'l2',
+        org: { id: 'o2', companyName: 'Org 2', companyId: 'comp2' }
+      }
+    ];
+
+    component.ppoData = {
+      id: 'p1', ppoId: 'PPO100', prId: 'PR100', ppoValue: 1000, prsid: 'pr1',
+      createdTS: '2026-08-18T00:00:00Z',
+      pr: { prId: 'PR100' },
+      clientdeliverylocation: [
+        { address: 'Addr 1', city: 'City 1', state: 'State 1' },
+        { address: 'Addr 2', city: 'City 2', state: 'State 2' }
+      ],
+      deliveryTerms: 'Immediate',
+      otherTerms: 'None',
+      paymentTerms: '30 days',
+      approvedBy: 'Approver 1',
+      submittedBy: 'Reviewer 1',
+      createdBy: 'Creator 1'
+    };
+
+    component.prDetails = { id: 'pr1', org: { id: 'org_client' } };
+
+    component.ngOnInit();
+    expect(component.vendorsList.length).toBe(2);
+
+    component.exportPdf();
+
+    // getLinkedVendorDetails
+    poSvc.getVendorsByClientAndItem.and.returnValue(of([
+      { uom: { description: 'PCS' }, status: { uiDisplay: 'Active' }, vendorName: 'V1' },
+      { uom: { description: 'KG' }, status: null, vendorName: 'V2' },
+      { uom: { description: 'M' }, status: { uiDisplay: 'Pending' }, vendorName: 'V3' },
+      { uom: { description: 'L' }, status: { uiDisplay: 'Active' }, vendorName: 'V4' },
+      { uom: { description: 'PCS' }, status: { uiDisplay: 'Active' }, vendorName: 'V5' },
+      { uom: { description: 'KG' }, status: { uiDisplay: 'Active' }, vendorName: 'V6' }
+    ]));
+    component.getLinkedVendorDetails({ linkedItemId: 'l1' }, {});
+    expect(component.linkedVendorListByItem.length).toBe(5);
+
+    poSvc.getVendorsByClientAndItem.and.returnValue(of([
+      { uom: { description: 'PCS' }, status: { uiDisplay: 'Active' }, vendorName: 'V1' }
+    ]));
+    component.getLinkedVendorDetails({ linkedItemId: 'l1' }, {});
+    expect(component.linkedVendorListByItem.length).toBe(1);
+
+    component.getLinkedVendorDetails({ linkedItemId: null }, {});
+
+    // onSelectedVendor
+    let emittedVendor: any = null;
+    component.onSelectVendorEvent.subscribe(v => emittedVendor = v);
+    component.onSelectedVendor('o1');
+    expect(emittedVendor).toBeTruthy();
+    expect(emittedVendor.vendorName).toBe('Org 1');
+
+    // downloadViewPPO
+    component.downloadViewPPO('o1');
+    component.downloadViewPPO('o2');
+    component.downloadViewPPO('other');
+    tick(2500);
+
+    // downloadViewPPO with null delivery terms, null audit history, and null linkedItemId
+    component.ppoData.deliveryTerms = null;
+    component.ppoData.otherTerms = null;
+    component.ppoData.paymentTerms = null;
+    component.ppoAuditHistory = null;
+    component.prAuditHistory = null;
+    component.ppoItems[0].linkedItemId = null;
+    component.downloadViewPPO('o1');
+    tick(2500);
+
+    // downloadViewPPO with 28 locations to hit curY2 + 40 > pageHeight - 20
+    component.ppoData.clientdeliverylocation = Array.from({ length: 28 }, (_, i) => ({
+      address: `Addr ${i}`, city: `City ${i}`, state: `State ${i}`
+    }));
+    component.ppoItems[0].linkedItemId = 'l1';
+    poSvc.getVendorsByClientAndItem.and.returnValue(of([
+      { uom: { description: 'PCS' }, status: { uiDisplay: 'Active' }, vendorName: 'V1' }
+    ]));
+    component.downloadViewPPO('o1');
+    tick(2500);
+
+    // downloadViewPPO with 35 locations to hit y > pageHeight - 20 early wrap
+    component.ppoData.clientdeliverylocation = Array.from({ length: 35 }, (_, i) => ({
+      address: `Addr ${i}`, city: `City ${i}`, state: `State ${i}`
+    }));
+    component.downloadViewPPO('o1');
+    tick(2500);
+
+    // getTopFiveElements
+    expect(component.getTopFiveElements([1, 2, 3]).length).toBe(3);
+    expect(component.getTopFiveElements([1, 2, 3, 4, 5, 6, 7]).length).toBe(5);
+    expect(component.getTopFiveElements(null).length).toBe(0);
+
+    flush();
+  }));
 });

@@ -112,6 +112,14 @@ describe('VendorProfileSubscriptionsComponent', () => {
 
     component.updateSubscription({ id: 'p2' });
     expect(component.selectedSubscription).toEqual({ id: 'p2' });
+
+    const vendorReg = TestBed.inject(VendorRegistrationService) as any;
+    vendorReg.getGMTSellerById.and.returnValue(throwError(() => new Error('err')));
+    component.getVendorById('o1');
+
+    vendorReg.getGMTSellerById.and.returnValue(of({ subscriptionPlan: { planName: 'Basic', id: 'p1' } }));
+    component.getVendorById('o1');
+    expect(component.currentPlan).toBe('Basic');
   });
 
   it('pattern-branch coverage', () => {

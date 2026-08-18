@@ -48,6 +48,7 @@ function arrayPayload() {
   return [
     {
       id: '1',
+      auctionId: 'AUC-001-1',
       name: 'n',
       status: { uiDisplay: 'Open' },
       org: { id: 'o1' },
@@ -219,15 +220,43 @@ export function seedComponent(c: any): void {
   });
   safeSet(c, 'loggedUserDetails', successPayload());
   safeSet(c, 'loggedUserPermissions', []);
-  safeSet(c, 'selectedData', [sampleRow]);
+  safeSet(c, 'selectedData', [{ ...sampleRow, auctionEndtime: new Date(Date.now() + 3600000).toISOString(), auctionStarttime: new Date(Date.now() - 3600000).toISOString(), auctionstatus: { status: 'AUCTION_LIVE' }, id_0: '1' }]);
   safeSet(c, 'selectedRows', [sampleRow]);
   safeSet(c, 'formData', {});
   safeSet(c, 'itemGridData', { gridValue: [sampleRow], columnDefs: [] });
   safeSet(c, 'bfsDocuments', []);
   safeSet(c, 'commentFilesDataList', []);
   safeSet(c, 'tabGrp', { selectedIndex: 0 });
+  const colDef = [{ title: 'Col', dataKey: 'd1' }, { title: 'Col2', dataKey: 'd2' }];
+  safeSet(c, 'exportColumnsOne', colDef);
+  safeSet(c, 'exportColumnsTwo', colDef);
+  safeSet(c, 'exportColumnsThree', colDef);
+  safeSet(c, 'exportColumnsFour', colDef);
+  safeSet(c, 'exportColumnsFive', colDef);
+  safeSet(c, 'exportColumnsSix', colDef);
+  safeSet(c, 'rfqwisedata', { description: 'D', startpricevalue: '100', minimumBidReductionPrice: '10', leadingPrice: '90', savings: '10', bids: [{ d1: 'v1', d2: 'v2', dataKey: '1' }] });
+  safeSet(c, 'itemwiseAuctionData', [{ description: 'D', startpricevalue: '100', minimumBidReductionPrice: '10', leadingPrice: '90', savings: '10', bids: [{ d1: 'v1', d2: 'v2', dataKey: '1' }] }]);
+  safeSet(c, 'aucvendorsdata', [{ d1: 'v1', d2: 'v2', dataKey: '1' }]);
+  safeSet(c, 'quoteitemdata', [{ description: 'D', quote: [{ d1: 'v1', d2: 'v2', dataKey: '1' }] }]);
+  safeSet(c, 'qoutationByRfqData', [{ d1: 'v1', d2: 'v2', dataKey: '1' }]);
+  safeSet(c, 'classificationList', [
+    { typeName: 'Product', hsnCode: '1234', segmentName: 'Seg1', familyName: 'Fam1', className: 'Class1', commodityName: 'Com1', organization: { id: 'o1' } },
+    { typeName: 'Service', sacCode: '5678', section: 'Sec1', heading: 'Head1', groupdescription: 'Grp1', sac: 'Sac1', organization: { id: 'o1' } }
+  ]);
+  safeSet(c, 'selectedAuctionData', { id: '1', auctionCategory: 'item wise' });
+  safeSet(c, 'viewPrByIdList', { id: '1', pritems: [{ serialNo: 1, description: 'Item 1', brand: 'B1', unitofMeasures: 'PCS', quantity: 5, price: 10 }], clientdeliverylocation: [{ address: 'A', city: 'C', state: 'S' }], org: { id: 'o1' } });
+  safeSet(c, 'prDetails', { id: '1', pritems: [{ serialNo: 1, description: 'Item 1', brand: 'B1', unitofMeasures: 'PCS', quantity: 5, price: 10 }], clientdeliverylocation: [{ address: 'A', city: 'C', state: 'S' }], org: { id: 'o1' } });
+  safeSet(c, 'ppoData', { id: '1', ppoitems: [{ serialNo: 1, description: 'Item 1', brand: 'B1', unitofMeasures: 'PCS', quantity: 5, price: 10, org: { id: 'o1' } }], clientdeliverylocation: [{ address: 'A', city: 'C', state: 'S' }], pr: { prId: 'PR1' }, org: { id: 'o1' } });
+  safeSet(c, 'rfqData', { id: '1', items: [{ id: 'i1', vendorId: 'v1' }], lineItems: [{ id: 'i1' }] });
+  safeSet(c, 'createPRformList', [{ description: 'Item 1', uom: 'PCS', price: '100', isBoqItem: false }]);
+  safeSet(c, 'singleVendorform', [{ companyName: 'V1', contactPerson: 'P1', email: 'v1@test.com', phone: '123' }]);
+  safeSet(c, 'rateCardDocToBase64', [{ file: 'A', fileName: 'rc.pdf' }]);
+  safeSet(c, 'BOQDocToBase64', [{ file: 'A', fileName: 'boq.xlsx' }]);
+  safeSet(c, 'selectedCostCentreItems', [{ id: 'cc1', name: 'CC1' }]);
+  safeSet(c, 'hsncodeList', ['Seg1', 'Fam1', 'Class1', 'Com1']);
+  safeSet(c, 'saccodeList', ['Grp1', 'Head1', 'Sac1', 'Sec1']);
   const fakeForm = {
-    value: { id: '1', name: 'n', itemCode: 'IC1', email: 'a@b.com', password: 'x' },
+    value: { id: '1', name: 'n', itemCode: 'IC1', email: 'a@b.com', password: 'x', prDescription: 'Desc', dueDate: '2025-12-31', prCorrespond: 'Capex', singleVendor: true, suggestNewVendor: true, rateCardAvailable: true, futureRequirement: 'Yes', priority: 'High', brand_0: 'B', quantity_0: '1', description_0: 'D', unitofMeasures_0: 'PCS', city_0: 'C', address_0: 'A', state_0: 'S' },
     valid: true,
     invalid: false,
     reset: () => undefined,

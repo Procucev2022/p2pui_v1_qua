@@ -35,10 +35,10 @@ export class RfqSupportQueryComponent implements OnInit {
         this.loggedUserName = this.loggedUserDetails.username;
         this.rfqservice.getAllRFQSByClientInitiatorGMT({ id: this.loggedUserDetails.id }).subscribe((res: any) => {
             if (Array.isArray(res)) {
-                this.rfqList = res || [];
+                this.rfqList = res;
                 this.filtered_rfqList = [];
             }
-        })
+        });
     }
 
     filterAutoCompleteData(event, inputArrayName, outputArrayName, isStringType) {

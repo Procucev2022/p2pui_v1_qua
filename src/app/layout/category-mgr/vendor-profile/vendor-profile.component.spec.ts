@@ -579,9 +579,7 @@ describe('VendorProfileComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('real method and branch coverage', () => {
-    try { /* coverage-safe wrap */
-
+  it('real method and branch coverage', fakeAsync(() => {
     const c: any = component;
     const encry = TestBed.inject(EncryDecryService) as any;
     const createRfq = TestBed.inject(CreateRfqService) as any;
@@ -917,11 +915,10 @@ describe('VendorProfileComponent', () => {
     tick(2000);
 
     expect(component).toBeTruthy();
-  
-    } catch (e) { /* keep suite green */ }
+    tick(10000);
     try { flush(); } catch (e) {}
     try { discardPeriodicTasks(); } catch (e) {}
-  });
+  }));
 
 });
 

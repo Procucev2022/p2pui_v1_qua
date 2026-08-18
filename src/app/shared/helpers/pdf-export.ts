@@ -1,15 +1,13 @@
-import * as jsPDFModule from 'jspdf';
-import * as autoTableModule from 'jspdf-autotable';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 /** Mutable API object so Jasmine can spy across ES module bindings. */
 export const pdfExport: any = {
   createJsPdf(): any {
-    const Ctor = (jsPDFModule as any).jsPDF || (jsPDFModule as any).default;
-    return new Ctor();
+    return new (jsPDF as any)();
   },
   runAutoTable(doc: any, opts: any) {
-    const fn = (autoTableModule as any).default || autoTableModule;
-    return fn(doc, opts);
+    return (autoTable as any)(doc, opts);
   },
 };
 

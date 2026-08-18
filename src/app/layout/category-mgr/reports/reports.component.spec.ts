@@ -145,6 +145,13 @@ describe('ReportsComponent', () => {
     component.auctionItemChange();
     expect(component.auctionDetails).toEqual({ summary: 'ok' });
 
+    clientSvc.getItemWiseSummary.and.returnValue(of(null));
+    component.auctionItemChange();
+    expect(component.auctionDetails).toEqual({});
+
+    component.selectedAuction = null;
+    component.auctionItemChange();
+
     procSvc.getPRIdsList.and.returnValue(of([{ prId: 'PR-100' }]));
     component.getPrsList();
     expect(component.prList.length).toBe(1);
@@ -153,11 +160,11 @@ describe('ReportsComponent', () => {
     component.getPrsList();
     expect(component.prList).toEqual([]);
 
-    component.prList = [{ prId: 'PR-100' }, { prId: 'PR-200' }];
+    component.prList = [{ prId: 'PR-100' }, { prId: 'PR-200' }, { prId: null }];
     component.filterPr({ query: '100' });
     expect(component.filteredprList.length).toBe(1);
 
-    component.auctionItemList = [{ auctionId: 'AUC-100' }, { auctionId: 'AUC-200' }];
+    component.auctionItemList = [{ auctionId: 'AUC-100' }, { auctionId: 'AUC-200' }, { auctionId: null }];
     component.filterAuction({ query: '200' });
     expect(component.filteredauctionList.length).toBe(1);
 

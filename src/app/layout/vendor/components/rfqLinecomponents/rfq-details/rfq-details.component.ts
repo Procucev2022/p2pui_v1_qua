@@ -74,7 +74,7 @@ export class RfqDetailsComponent implements OnInit {
 
         this.rfqservice.getLineitemsById({ 'id': this.rfqData.rfquuid}).subscribe((response) => {
             if (Array.isArray(response)) {
-                this.rfqdetailsList = response || [];
+                this.rfqdetailsList = response;
             } else {
                 // this.tostrService.error('Failed! No Data fetched', 'Failed')
                 this.rfqdetailsList =  [];

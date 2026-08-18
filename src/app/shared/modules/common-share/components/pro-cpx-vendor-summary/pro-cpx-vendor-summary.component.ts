@@ -43,38 +43,35 @@ export class ProCpxVendorSummaryComponent implements OnInit, OnChanges {
         private encryDecryService: EncryDecryService) { }
 
     ngOnInit() {
-
-        if ((this.loggedUserDetails.role.roleName === "ClientApprover" || this.loggedUserDetails.role.roleName === "ClientInitiator")) { //CM Role
-        this.getVendorListByClient();
+        const isClient = this.loggedUserDetails && (this.loggedUserDetails.roleName === 'ClientApprover' || this.loggedUserDetails.roleName === 'ClientInitiator');
+        if (isClient) {
+            this.getVendorListByClient();
         }
-
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         const temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
-        this.loggedUserDetails = temp.details;
+        this.loggedUserDetails = temp ? temp.details : null;
         this.pageRecordSize = AppConfig.GRID_PAGE_INFO.initpageSize;
         this.pageOptions = AppConfig.GRID_PAGE_INFO.pageOptions;
-            if (changes && changes.clientData &&  !!changes.clientData.currentValue) {
-                this.getVendorListByClient();
-            }
+        if (changes && changes.clientData && changes.clientData.currentValue) {
+            this.getVendorListByClient();
+        }
     }
 
     getVendorListByClient() {
-        let reqObj: any;
-        if (!((this.loggedUserDetails && this.loggedUserDetails.role )&& this.loggedUserDetails.role.roleName === "ClientApprover" || this.loggedUserDetails.role.roleName === "ClientInitiator")) { //CM Role
-            reqObj = {"id":  this.clientData.id} ;
-        } else {
-            reqObj = { id: this.loggedUserDetails.org.id }
-        }
+        const role = this.loggedUserDetails && this.loggedUserDetails.role ? this.loggedUserDetails.role.roleName : null;
+        const isClient = role === 'ClientApprover' || role === 'ClientInitiator';
+        const reqObj = isClient
+            ? { id: this.loggedUserDetails && this.loggedUserDetails.org ? this.loggedUserDetails.org.id : null }
+            : { id: this.clientData ? this.clientData.id : null };
+
         this.quotsService
             .getVendorsByClientId(reqObj)
             .subscribe(data => {
                 this.vendorList = Array.isArray(data) ? data.map((ele:any)=>{
                     return {...ele, id: ele.vendorId}
                 }) : [];
-                console.log('this.pre', this.vendorList);
-
             });
     }
 

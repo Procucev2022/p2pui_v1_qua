@@ -53,8 +53,8 @@ export class CommonGridComponent implements OnInit, OnChanges  {
     this.allowRowMultipleSelction = true;
     this.selectedData  = [];
     if (this.gridData) {
-      this.showSelctionCheckBox = this.gridData ? this.gridData.gridSelectionCheckbox.showSelction : false;
-      this.allowRowMultipleSelction = this.gridData ? this.gridData.gridSelectionCheckbox.allowMultipleSelection ? 'multiple' : 'single' : true;
+      this.showSelctionCheckBox = this.gridData.gridSelectionCheckbox ? this.gridData.gridSelectionCheckbox.showSelction : false;
+      this.allowRowMultipleSelction = this.gridData.gridSelectionCheckbox && this.gridData.gridSelectionCheckbox.allowMultipleSelection ? 'multiple' : 'single';
       this.gridColumnData = this.gridData.gridColumnData;
       this.gridHeaders = this.gridData.gridHeaders;
       this.gridTitle = this.gridData.gridTitle;

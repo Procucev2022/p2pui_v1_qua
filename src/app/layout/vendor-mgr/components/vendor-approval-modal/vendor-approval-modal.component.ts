@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { VendorNamesService } from '../../services/vendor-names.service';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import swal from 'sweetalert2';
+import { swalConfirm } from 'src/app/shared/helpers/swal-confirm';
 import { AppConfig } from 'src/app/app.config';
 export interface VendorApprovalModelList {
   segmentName: string;
@@ -587,7 +587,7 @@ export class VendorApprovalModalComponent implements OnInit {
 
   onSubmit(form: NgForm, selected) {
     if ((this.classificationList.length > 0 && this.classificationList[0].typeName) ) {
-        swal({
+        swalConfirm.open({
           title: '<h5>Please Confirm!!<h5>',
           html: '<h3>Are you sure you want to approve?</h3>',
           type: 'warning',
@@ -705,9 +705,8 @@ export class VendorApprovalModalComponent implements OnInit {
 
           // }
 
-        } else if (result.dismiss === swal.DismissReason.cancel) {
-
-      }
+        } else if (result && (result.dismiss === 'cancel' || result.dismiss === (swalConfirm as any)?.DismissReason?.cancel)) {
+        }
     });
 
 

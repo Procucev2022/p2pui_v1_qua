@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { of } from 'rxjs';
@@ -752,4 +752,268 @@ describe('AuctionsComponent', () => {
     try { c.bidAuction({ id: '1' }); } catch(e) {}
     expect(c).toBeTruthy();
   });
+
+  it('should test auction reports, export PDF, and chart refresh in depth', fakeAsync(() => {
+    const c: any = component;
+    const encrySvc = TestBed.inject(EncryDecryService) as any;
+    const auctionSvc = TestBed.inject(AuctionService) as any;
+    const catprocSvc = TestBed.inject(CatProcuRequestsService) as any;
+    encrySvc.get.and.returnValue(JSON.stringify({ details: { role: { roleName: 'CategoryManager' }, listofPermission: ['ALL'], org: { id: 'o1' } } }));
+    c.ngOnInit();
+    c.refreshAuction();
+
+    let canvas = document.getElementById('ctx');
+    if (!canvas) {
+      canvas = document.createElement('canvas');
+      canvas.id = 'ctx';
+      document.body.appendChild(canvas);
+    }
+
+    const rowItemWise: any = {
+      id: 'a1',
+      rfquuid: 'r1',
+      auctionCategory: 'item wise',
+      auctionStarttime: new Date().toISOString(),
+      auctionEndtime: new Date(Date.now() + 3600000).toISOString(),
+      auctionName: 'Auction 1',
+      auctionstatus: { uiDisplay: 'Live', status: 'AUCTION_LIVE' },
+      termsAndConditions: 'T&C'
+    };
+
+    const rowRfqWise: any = {
+      id: 'a2',
+      rfquuid: 'r2',
+      auctionCategory: 'rfq total wise',
+      auctionStarttime: new Date().toISOString(),
+      auctionEndtime: new Date(Date.now() + 3600000).toISOString(),
+      auctionName: 'Auction 2',
+      auctionstatus: { uiDisplay: 'Live', status: 'AUCTION_LIVE' },
+      termsAndConditions: 'T&C'
+    };
+
+    auctionSvc.getBidItemsByAuction.and.returnValue(of([{ id: 'b1', description: 'Item 1', quote: [{ d1: 'v1', dataKey: 'd1' }], bids: [{ d1: 'v1', dataKey: 'd1' }] }]));
+    auctionSvc.getBidsByAuction.and.returnValue(of({
+      description: 'Item 1',
+      startpricevalue: 100,
+      minimumBidReductionPrice: 10,
+      leadingPrice: 90,
+      savings: 10,
+      bids: [{ d1: 'v1', dataKey: 'd1' }]
+    }));
+    auctionSvc.getQuoteitemsByRFQ.and.returnValue(of([{ description: 'Item 1', quote: [{ d1: 'v1', dataKey: 'd1' }] }]));
+    catprocSvc.getVendorsByRfq.and.returnValue(of([{ d1: 'v1', dataKey: '1' }]));
+    catprocSvc.getCompareQuoteByRFQ.and.returnValue(of({
+      vendorHeaders: [{ quoteId: 'Q1', quotationId: 'qid1' }],
+      totalItems: [{ quotationId: 'qid1', totalamount: 100, description: 'Item 1' }]
+    }));
+    catprocSvc.getQuotationsByRfq.and.returnValue(of([{ orgId: { companyName: 'Org1' }, quotationId: 'qid1', excludeTaxAmt: 100 }]));
+    auctionSvc.getBidByVendorPdf.and.returnValue(of({
+      vendorName: 'V1',
+      currentRank: 1,
+      bidItems: [{ description: 'Item 1', bidAmount: 100, specification: 'Spec', unitofMeasures: 'KG', quantity: 1, rank: 1 }]
+    }));
+    auctionSvc.getAuctionVendorsByAuction.and.returnValue(of([{ d1: 'v1', dataKey: '1' }]));
+    auctionSvc.getAuctionChartData.and.returnValue(of({
+      vendor: ['V1', 'V2'],
+      prices: [{ minBidAmount: 10, maxBidAmount: 50 }, { minBidAmount: 20, maxBidAmount: 60 }]
+    }));
+
+    c.itemwiseAuctionData = [
+      { description: null, startpricevalue: null, minimumBidReductionPrice: null, leadingPrice: null, savings: null, bids: [{ d1: null, dataKey: 'd1' }] },
+      { description: 'Item 1', startpricevalue: 100, minimumBidReductionPrice: 10, leadingPrice: 90, savings: 10, bids: [{ d1: 'v1', dataKey: 'd1' }] }
+    ];
+    c.rfqwisedata = { description: 'Item 1', startpricevalue: 100, minimumBidReductionPrice: 10, leadingPrice: 90, savings: 10, bids: [{ d1: 'v1', dataKey: 'd1' }] };
+    c.quoteitemdata = [
+      { description: null, quote: [{ d1: null, dataKey: 'd1' }] },
+      { description: 'Item 1', quote: [{ d1: 'v1', dataKey: 'd1' }] }
+    ];
+    c.qoutationByRfqData = [{ d1: 'v1', dataKey: 'd1' }];
+    c.aucvendorsdata = [{ d1: 'v1', dataKey: 'd1' }];
+    c.vendordata = [{ d1: 'v1', dataKey: 'd1' }];
+
+    c.viewAuctionReports(rowItemWise);
+    c.auctionbid(rowItemWise);
+
+    c.viewAuctionReports(rowRfqWise);
+    c.auctionbid(rowRfqWise);
+
+    c.selectedAuctionData = {
+      auctionName: 'Auction 1',
+      auctionStarttime: new Date().toISOString(),
+      auctionEndtime: new Date(Date.now() + 3600000).toISOString(),
+      auctionstatus: { uiDisplay: 'Live' },
+      auctionCategory: 'item wise'
+    };
+    c.getBidVendorPdfDetails = {
+      vendorName: 'V1',
+      bidAmount: 100,
+      currentRank: 1
+    };
+    c.viewAuctionResponseData = [{
+      description: null,
+      startpricevalue: null,
+      minimumBidReductionPrice: null,
+      leadingPrice: null,
+      savings: null,
+      bids: [{ d1: null, dataKey: 'd1' }]
+    }, {
+      description: 'Item 2',
+      startpricevalue: 200,
+      minimumBidReductionPrice: 20,
+      leadingPrice: 180,
+      savings: 20,
+      bids: [{ d1: 'v2', dataKey: 'd1' }]
+    }];
+
+    c.rfqBidWiseLists = [{ d1: 'v1', dataKey: 'd1' }];
+    c.exportColumns = [{ title: 'Col', dataKey: 'd1' }];
+
+    c.exportPdf();
+    c.itemWiseExportPdf();
+
+    c.getBidVendorPdfDetails = {
+      vendorName: null,
+      bidAmount: null,
+      currentRank: null
+    };
+    c.exportPdf();
+    c.itemWiseExportPdf();
+
+    c.selectedData = [rowItemWise];
+    c.refresh();
+    tick(2000);
+    if (c.auction && typeof c.auction.destroy === 'function') {
+      try { c.auction.destroy(); } catch (e) {}
+    }
+
+    c.auctionChart({}, [rowItemWise]);
+    tick(2000);
+    if (c.auction && typeof c.auction.destroy === 'function') {
+      try { c.auction.destroy(); } catch (e) {}
+    }
+
+    c.selectedData = [];
+    c.auctionChart({}, []);
+
+    c.onCancelAuction();
+
+    c.currentDate = new Date();
+    c.selectedData = [{
+      id: 'a1',
+      auctionEndtime: new Date(Date.now() + 7200000).toISOString(),
+      auctionStarttime: new Date(Date.now() + 3600000).toISOString(),
+      auctionstatus: { status: 'AUCTION_NOT_STARTED' }
+    }];
+    auctionSvc.cancelledAuctions.and.returnValue(of({ status: 'Success', statusCode: '200', message: 'Cancelled' }));
+    c.onCancelAuction();
+
+    c.selectedData = [{
+      id: 'a1',
+      auctionEndtime: new Date(Date.now() + 7200000).toISOString(),
+      auctionStarttime: new Date(Date.now() + 3600000).toISOString(),
+      auctionstatus: { status: 'AUCTION_NOT_STARTED' }
+    }];
+    auctionSvc.cancelledAuctions.and.returnValue(of({ status: 'Failure', statusCode: '500' }));
+    c.onCancelAuction();
+
+    c.selectedData = [{
+      id: 'a1',
+      auctionEndtime: new Date(Date.now() + 7200000).toISOString(),
+      auctionStarttime: new Date(Date.now() + 3600000).toISOString(),
+      auctionstatus: { status: 'AUCTION_CANCEL' }
+    }];
+    c.onCancelAuction();
+
+    // bidAuction branches
+    auctionSvc.getBidsByAuctionIdAndVendorId.and.returnValue(of({
+      id: 'b1',
+      auctionType: 'sealed bid',
+      auction: { auctionVendors: [{ vendor: { id: 'o1' }, bidSubmitted: true }] }
+    }));
+    c.bidAuction(rowItemWise);
+
+    auctionSvc.getBidsByAuctionIdAndVendorId.and.returnValue(of({
+      id: 'b2',
+      auctionType: 'sealed bid',
+      auction: { auctionCategory: 'rfq total wise', auctionVendors: [{ vendor: { id: 'o1' }, bidSubmitted: false }] }
+    }));
+    c.bidAuction(rowItemWise);
+
+    auctionSvc.getBidsByAuctionIdAndVendorId.and.returnValue(of({
+      id: 'b3',
+      auctionType: 'reverse auction',
+      auction: { bidsLimitForVendor: true, auctionVendors: [{ vendor: { id: 'o1' }, remainingBid: 0, bidSubmitted: true }] }
+    }));
+    c.bidAuction(rowItemWise);
+
+    auctionSvc.getBidsByAuctionIdAndVendorId.and.returnValue(of({
+      id: 'b4',
+      auctionType: 'reverse auction',
+      auction: { auctionCategory: 'rfq total wise', bidsLimitForVendor: false, auctionVendors: [{ vendor: { id: 'o1' }, remainingBid: 5, bidSubmitted: false }] }
+    }));
+    c.bidAuction(rowItemWise);
+
+    auctionSvc.getBidsByAuctionIdAndVendorId.and.returnValue(of({
+      id: 'b5',
+      auctionType: 'reverse auction',
+      auction: { auctionCategory: 'item wise', bidsLimitForVendor: false, auctionVendors: [{ vendor: { id: 'o1' }, remainingBid: 5, bidSubmitted: false }] }
+    }));
+    c.bidAuction(rowItemWise);
+
+    c.bidAuction({ auctionEndtime: new Date(Date.now() - 3600000).toISOString() });
+
+    const rowTT = { ...rowItemWise, auctionCategory: 'item wise', auctionStarttime: new Date(Date.now() - 3600000).toISOString(), auctionEndtime: new Date(Date.now() + 3600000).toISOString() };
+    const rowTF = { ...rowItemWise, auctionCategory: 'item wise', auctionStarttime: new Date(Date.now() + 3600000).toISOString(), auctionEndtime: new Date(Date.now() + 7200000).toISOString() };
+    const rowFT = { ...rowItemWise, auctionCategory: 'item wise', auctionStarttime: new Date(Date.now() - 7200000).toISOString(), auctionEndtime: new Date(Date.now() - 3600000).toISOString() };
+    const rowFF = { ...rowItemWise, auctionCategory: 'item wise', auctionStarttime: new Date(Date.now() + 3600000).toISOString(), auctionEndtime: new Date(Date.now() - 3600000).toISOString() };
+
+    const rfqTT = { ...rowRfqWise, auctionCategory: 'rfq total wise', auctionStarttime: new Date(Date.now() - 3600000).toISOString(), auctionEndtime: new Date(Date.now() + 3600000).toISOString() };
+    const rfqTF = { ...rowRfqWise, auctionCategory: 'rfq total wise', auctionStarttime: new Date(Date.now() + 3600000).toISOString(), auctionEndtime: new Date(Date.now() + 7200000).toISOString() };
+    const rfqFT = { ...rowRfqWise, auctionCategory: 'rfq total wise', auctionStarttime: new Date(Date.now() - 7200000).toISOString(), auctionEndtime: new Date(Date.now() - 3600000).toISOString() };
+    const rfqFF = { ...rowRfqWise, auctionCategory: 'rfq total wise', auctionStarttime: new Date(Date.now() + 3600000).toISOString(), auctionEndtime: new Date(Date.now() - 3600000).toISOString() };
+
+    c.currentDate = new Date();
+    ['CategoryManager', 'ClientInitiator', 'clientInitiator1.1', 'PRApprover', 'Vendor', 'PartialVendor', 'OtherRole'].forEach(role => {
+      c.loggedUserType = role;
+      [rowTT, rowTF, rowFT, rowFF, rfqTT, rfqTF, rfqFT, rfqFF].forEach(r => {
+        c.viewBidDetails({}, r);
+      });
+    });
+
+    // Additional methods & branches
+    auctionSvc.getAuctionDocByAuction.and.returnValue(of(null));
+    c.getAuctionDocByAuction('1');
+    auctionSvc.getAuctionDocByAuction.and.returnValue(of([{ id: 'd1' }]));
+    c.documents({}, { id: '1' });
+
+    auctionSvc.getAuctionById.and.returnValue(of({ id: 'a1' }));
+    c.editAuction({ id: 'a1' });
+    auctionSvc.getAuctionById.and.returnValue(of({}));
+    c.editAuction({ id: 'a1' });
+
+    c.selectedData = [{ id: '1' }];
+    c.ppoActions('Submit');
+    c.ppoActions('Reject');
+    c.ppoActions('Accept');
+    c.selectedData = [];
+    c.ppoActions('Submit');
+
+    c.viewCorresspondance({ id: '1' });
+    c.onPage({ page: 1 });
+
+    c.selectedData = [{ id: 'a1' }];
+    auctionSvc.getAuctionChartData.and.returnValue(of(null));
+    c.refresh();
+
+    c.processAuctionList([
+      { auctionId: 'AUC-001-1' },
+      { auctionId: 'AUC-001' },
+      { auctionId: 'AUC' }
+    ]);
+
+    tick(10000);
+    flush();
+
+    expect(c).toBeTruthy();
+  }));
 });

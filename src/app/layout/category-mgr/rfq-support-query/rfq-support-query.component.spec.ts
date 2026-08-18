@@ -198,21 +198,34 @@ describe('RfqSupportQueryComponent', () => {
     expect(component.loggedUserName).toBe('user1');
     expect(component.rfqList.length).toBe(2);
 
-    component.rfqList = ['RFQ-001', 'RFQ-002'];
+    rfqSvc.getAllRFQSByClientInitiatorGMT.and.returnValue(of(null));
+    component.ngOnInit();
+
+    component.rfqList = ['RFQ-001', 'RFQ-002', null];
     component.filterAutoCompleteData({ query: '001' }, 'rfqList', 'filtered_rfqList', true);
     expect(component.filtered_rfqList).toEqual(['RFQ-001']);
 
-    component.filterAutoCompleteData({ query: 'RFQ-002' }, 'rfqList', 'filtered_rfqList', false);
-    expect(component.filtered_rfqList).toEqual(['RFQ-002']);
+    component.filterAutoCompleteData({ query: null }, 'rfqList', 'filtered_rfqList', false);
+    expect(component.filtered_rfqList.length).toBe(2);
 
     component.messageObj = { rfqId: '', subject: '', message: '' };
     expect(component.sendSupportRequest()).toBeFalse();
     expect(toastr.warning).toHaveBeenCalledWith('Please Fill the all the required details', 'Warning');
+
+    component.messageObj = { rfqId: 'rfq1', subject: '', message: 'Issue' };
+    expect(component.sendSupportRequest()).toBeFalse();
+
+    component.messageObj = { rfqId: 'rfq1', subject: 'Help', message: '' };
+    expect(component.sendSupportRequest()).toBeFalse();
 
     component.messageObj = { rfqId: 'rfq1', subject: 'Help', message: 'Issue' };
     rfqSvc.querySupportMailByClientIntiatory.and.returnValue(of({ status: 'Success', message: 'Sent' }));
     component.sendSupportRequest();
     expect(toastr.success).toHaveBeenCalledWith('Sent', 'Success');
     expect(component.messageObj.rfqId).toBe('');
+
+    component.messageObj = { rfqId: 'rfq1', subject: 'Help', message: 'Issue' };
+    rfqSvc.querySupportMailByClientIntiatory.and.returnValue(of({ status: 'Failure' }));
+    component.sendSupportRequest();
   });
 });

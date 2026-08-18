@@ -15,7 +15,7 @@ import { ConvertToBase64Service } from 'src/app/shared/modules/common-share/serv
 import { ToastrService } from 'ngx-toastr';
 import { EncryDecryService } from 'src/app/shared/services';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
-import swal from 'sweetalert2';
+import { swalConfirm } from 'src/app/shared/helpers/swal-confirm';
 import { ClientService } from '../../services/client-service.service';
 import { ViewChild } from '@angular/core';
 
@@ -230,7 +230,7 @@ export class CreatePrModalComponent implements OnInit {
                 }
                 console.log('ratecarddoc---', this.rateCardDocToBase64);
                 console.log('doc arr---', this.documentsArray);
-                setInterval(() => {
+                setTimeout(() => {
                     this.prItemsFromInvoice = res.pritems;
                 }, 1000);
             });
@@ -409,7 +409,7 @@ export class CreatePrModalComponent implements OnInit {
                 newCreatePRformList.push(data);
             });
 
-            swal({
+            swalConfirm.open({
                 title: '<h5>Please Confirm!!<h5>',
                 html: '<h3>Are you sure you want to submit?</h3>',
                 confirmButtonText: 'Yes',

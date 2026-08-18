@@ -53,8 +53,8 @@ export class PpoItemsComponent implements OnInit {
     pdfDataSize: any;
     vList: any[];
     @Output() onSelectVendorEvent: EventEmitter<any> = new EventEmitter();
-    ppoAuditHistory: any[];
-    prAuditHistory: any[];
+    ppoAuditHistory: any[] = [];
+    prAuditHistory: any[] = [];
     constructor(private poService: PoService,
         private exportPDFService: ExportPdfService, private excelService: ExcelService) {}
 
@@ -113,7 +113,7 @@ export class PpoItemsComponent implements OnInit {
 
         self.vendorsList.forEach((vendor, index) => {
 
-            const finalY = doc.autoTable.previous.finalY || 10;
+            const finalY = (doc as any).lastAutoTable?.finalY ?? 10;
 
             doc.setTextColor(255, 0, 0);
 
@@ -158,20 +158,12 @@ export class PpoItemsComponent implements OnInit {
             this.poService.getVendorsByClientAndItem(obj).subscribe((res) => {
                 if (res && Array.isArray(res)) {
                     this.linkedVendorListByItem = [];
-                    if (res.length <= 5) {
-                        for (let i = 0; i < res.length; i++) {
-                            const data = res[i];
-                            data['uom'] = data['uom']['description'];
-                            data['status'] = data.status ? data['status']['uiDisplay'] : '';
-                            this.linkedVendorListByItem.push(data);
-                        }
-                    } else {
-                        for (let i = 0; i < 5; i++) {
-                            const data = res[i];
-                            data['uom'] = data['uom']['description'];
-                            data['status'] = data.status ? data['status']['uiDisplay'] : '';
-                            this.linkedVendorListByItem.push(data);
-                        }
+                    const count = Math.min(res.length, 5);
+                    for (let i = 0; i < count; i++) {
+                        const data = res[i];
+                        data['uom'] = data['uom'] ? data['uom']['description'] : '';
+                        data['status'] = data.status ? data['status']['uiDisplay'] : '';
+                        this.linkedVendorListByItem.push(data);
                     }
                 }
             });
@@ -200,12 +192,12 @@ export class PpoItemsComponent implements OnInit {
     async getAuditHistory(){
         this.excelService.getPPOAuditHistory({id: this.ppoData.id}).subscribe((res:any)=>{
             if(Array.isArray(res)){
-                this.ppoAuditHistory = res || [];
+                this.ppoAuditHistory = res;
             }
         })
         this.excelService.getPRAuditHistory({id: this.ppoData.prsid}).subscribe((res:any)=>{
             if(Array.isArray(res)){
-                this.prAuditHistory = res || [];
+                this.prAuditHistory = res;
             }
         })
     }
@@ -229,9 +221,6 @@ export class PpoItemsComponent implements OnInit {
         doc.setFont('helvetica');
         doc.setFontType('bold');
         doc.text(75, 8, 'Pre Purchase Order');
-
-        const img = new Image();
-        img.src = 'assets/Procuce_ New_Logo.png';
 
         const imgData = AppApiConfig.LOGO_IMG_BASE64_DATA;
         doc.addImage(imgData, 'png', 155, 8, 45, 20);
@@ -275,87 +264,62 @@ export class PpoItemsComponent implements OnInit {
         doc.setFontType('normal');
         doc.text('Delivery Terms ', 12,  y = y + 8 );
 
-        if ( y + 10 > pageHeight - 20) {
-            doc.addPage();
-            doc.setLineWidth(0.3);
-        y = 10;
-        } else {}
+        const checkPageOverflow = (increment = 10) => {
+            if (y + increment > pageHeight - 20) {
+                doc.addPage();
+                doc.setLineWidth(0.3);
+                y = 10;
+            }
+        };
+
+        checkPageOverflow();
         doc.setFontSize(8);
         doc.setTextColor(128, 128, 128);
         doc.setFont('helvetica');
         doc.setFontType('normal');
         doc.text(this.ppoData.deliveryTerms == null ? 'tc' : this.ppoData.deliveryTerms, 12,  y = y + 8);
 
-        if ( y + 10 > pageHeight - 20) {
-            doc.addPage();
-            doc.setLineWidth(0.3);
-            y = 10;
-        } else {}
+        checkPageOverflow();
         doc.setFontSize(12);
         doc.setTextColor(0, 0, 0);
         doc.setFont('helvetica');
         doc.setFontType('normal');
         doc.text('Other Terms ', 12, y = y + 8);
 
-        if ( y + 10 > pageHeight - 20) {
-            doc.addPage();
-            doc.setLineWidth(0.3);
-       y = 10;
-        } else {}
+        checkPageOverflow();
         doc.setFontSize(8);
         doc.setTextColor(128, 128, 128);
         doc.setFont('helvetica');
         doc.setFontType('normal');
         doc.text(this.ppoData.otherTerms == null ? 'tc' :  this.ppoData.otherTerms, 12, y = y + 5);
 
-        if ( y + 10 > pageHeight - 20) {
-            doc.addPage();
-            doc.setLineWidth(0.3);
-       y = 10;
-        } else {}
+        checkPageOverflow();
         doc.setFontSize(12);
         doc.setTextColor(0, 0, 0);
         doc.setFont('helvetica');
         doc.setFontType('normal');
         doc.text('Payment Terms', 12 , y = y + 8);
 
-        if ( y + 10 > pageHeight - 20) {
-            doc.addPage();
-            doc.setLineWidth(0.3);
-        y = 10;
-        } else {}
+        checkPageOverflow();
         doc.setFontSize(8);
         doc.setTextColor(128, 128, 128);
         doc.setFont('helvetica');
         doc.setFontType('normal');
         doc.text(this.ppoData.paymentTerms == null ? 'tc' : this.ppoData.paymentTerms, 12, y = y + 5);
 
-        if (y + 10 > pageHeight - 20) {
-            doc.addPage();
-            doc.setLineWidth(0.3);
-            y = 10;
-        } else {}
-       doc.setFontSize(10);
-       doc.setTextColor(0, 0, 0);
+        checkPageOverflow();
+        doc.setFontSize(10);
+        doc.setTextColor(0, 0, 0);
         doc.setFont('helvetica');
         doc.setFontType('normal');
         doc.text('ApprovedBy' , 12, y = y + 8);
-         doc.text(': ' + this.ppoData.approvedBy, 80, y);
+        doc.text(': ' + this.ppoData.approvedBy, 80, y);
 
-        if (y + 10 > pageHeight - 20) {
-            doc.addPage();
-            doc.setLineWidth(0.3);
-           y = 10;
-        } else {}
+        checkPageOverflow();
         doc.text('ReviewedBy', 12, y = y  + 8);
-         doc.text(': ' + this.ppoData.submittedBy, 80, y);
+        doc.text(': ' + this.ppoData.submittedBy, 80, y);
 
-
-        if (y + 10 > pageHeight - 20) {
-            doc.addPage();
-            doc.setLineWidth(0.3);
-            y = 10;
-        } else {}
+        checkPageOverflow();
         doc.text('Submitted', 12, y = y + 8);
         doc.text(': ' + this.ppoData.createdBy, 80, y);
         const headers = [];
@@ -363,30 +327,34 @@ export class PpoItemsComponent implements OnInit {
         this.exportColumns.forEach(col => {
             headers.push(col.title);
         });
-        self.vendorsList.forEach((vendor, index) => {
-            if (data === vendor) {
-            const body = [];
-            self.groupItemsByVendorId[vendor].forEach(each => {
-                this.pdfDataSize = self.groupItemsByVendorId[vendor];
-                doc.setTextColor(255, 0, 0);
-                doc.text('Vendor Name: ' + each.org.companyName, 12, index !== 0 ? y = y + 20 : 130);
-                const eachRow = [];
-                this.exportColumns.forEach(col => {
-                    eachRow.push(each[col.dataKey]);
-                });
-                body.push(eachRow);
-            }
-            );
-            autoTable(doc, {
-                startY: y = y + 20,
-                head: [headers],
-                body: body,
-            });
-            if (doc.lastAutoTable.finalY + 10 > pageHeight - 20) {
+        const checkAutoTableOverflow = (offset = 10) => {
+            const tableY = (doc as any).lastAutoTable?.finalY ?? y;
+            if (tableY + offset > pageHeight - 20) {
                 doc.addPage();
-                doc.lastAutoTable.finalY = 10;
-            } else {}
-        }
+                (doc as any).lastAutoTable = { finalY: 10 };
+            }
+        };
+
+        this.vendorsList.forEach((vendor, index) => {
+            if (data === vendor) {
+                const body = [];
+                this.pdfDataSize = this.groupItemsByVendorId[vendor];
+                this.groupItemsByVendorId[vendor].forEach(each => {
+                    doc.setTextColor(255, 0, 0);
+                    doc.text('Vendor Name: ' + each.org.companyName, 12, index !== 0 ? y = y + 20 : 130);
+                    const eachRow = [];
+                    this.exportColumns.forEach(col => {
+                        eachRow.push(each[col.dataKey]);
+                    });
+                    body.push(eachRow);
+                });
+                autoTable(doc, {
+                    startY: y = y + 20,
+                    head: [headers],
+                    body: body,
+                });
+                checkAutoTableOverflow(10);
+            }
         });
 
         const vedndorHeaders = [];
@@ -408,16 +376,16 @@ export class PpoItemsComponent implements OnInit {
                     if (res && Array.isArray(res)) {
                         updatedres = this.getTopFiveElements(res);
 
-
-                        updatedres.forEach((data) => {
-                            data['uom'] = data['uom']['description'];
-                            data['status'] = data.status ? data['status']['uiDisplay'] : '';
+                        updatedres.forEach((itemData) => {
+                            itemData['uom'] = itemData['uom'] ? itemData['uom']['description'] : '';
+                            itemData['status'] = itemData.status ? itemData['status']['uiDisplay'] : '';
                         });
 
                         const body = [];
+                        const curFinalY = (doc as any).lastAutoTable?.finalY ?? y;
                         doc.setTextColor(255, 0, 0);
-                        doc.text('Item Name: ' + this.ppoItems[v].description,  12,  doc.lastAutoTable.finalY + 10);
-                        updatedres.forEach((vendor, index) => {
+                        doc.text('Item Name: ' + this.ppoItems[v].description,  12,  curFinalY + 10);
+                        updatedres.forEach((vendor) => {
                             const eachRow = [];
                             this.exportVendorColumns.forEach(col => {
                                 eachRow.push(vendor[col.dataKey]);
@@ -426,50 +394,42 @@ export class PpoItemsComponent implements OnInit {
                         });
 
                         autoTable(doc, {
-                            startY:  doc.lastAutoTable.finalY + 15,
+                            startY:  curFinalY + 15,
                             head: [vedndorHeaders],
                             body: body
                         });
 
-                        if (doc.lastAutoTable.finalY + 10 > pageHeight - 20) {
-                            doc.addPage();
-                            doc.lastAutoTable.finalY = 10;
-                        }
-
-
-
+                        checkAutoTableOverflow(10);
                     }
                 });
             }
         }
-        if (doc.lastAutoTable.finalY + 40 > pageHeight - 20) {
-            doc.addPage();
-            doc.lastAutoTable.finalY = 10;
-        }
+        checkAutoTableOverflow(40);
 
+        const auditY = (doc as any).lastAutoTable?.finalY ?? y;
         doc.setFontType('bold');
         doc.setTextColor(255, 0, 0);
-        doc.text('PPO Accepted History: ',12 , (doc.lastAutoTable.finalY<=220? doc.lastAutoTable.finalY+15 : 25) );
+        doc.text('PPO Accepted History: ',12 , (auditY<=220? auditY+15 : 25) );
         doc.setFontType('normal');
         doc.setTextColor('#000000');
-        const ppoAuditData = this.ppoAuditHistory.map((ele:any, index)=>{return [index+1, ele.email, this.exportPDFService.utcToIst(ele.createdTS)]})
-        const prAuditData = this.prAuditHistory.map((ele:any, index)=>{return [index+1, ele.email, this.exportPDFService.utcToIst(ele.createdTS)]})
+        const ppoAuditData = (this.ppoAuditHistory || []).map((ele:any, index)=>{return [index+1, ele.email, this.exportPDFService.utcToIst(ele.createdTS)]})
+        const prAuditData = (this.prAuditHistory || []).map((ele:any, index)=>{return [index+1, ele.email, this.exportPDFService.utcToIst(ele.createdTS)]})
         autoTable(doc, {
-            startY:  doc.lastAutoTable.finalY + 20,
+            startY:  auditY + 20,
             head: [['S.No', 'Username/ Email', 'Date & Time']],
             body:
                 ppoAuditData
 
         });
 
-
+        const curY3 = (doc as any).lastAutoTable?.finalY ?? auditY;
         doc.setFontType('bold');
         doc.setTextColor(255, 0, 0);
-        doc.text('PR Accepted History: ',12 , doc.lastAutoTable.finalY + 15);
+        doc.text('PR Accepted History: ',12 , curY3 + 15);
         doc.setFontType('normal');
         doc.setTextColor('#000000');
         autoTable(doc, {
-            startY:  doc.lastAutoTable.finalY +20,
+            startY:  curY3 +20,
             head: [['S.No', 'Username/ Email', 'Date & Time']],
             body:
             prAuditData
@@ -483,15 +443,10 @@ export class PpoItemsComponent implements OnInit {
     }
 
     getTopFiveElements(arr): any[] {
-        const new_array = [];
-        if (arr.length <= 5) {
-            return arr;
-        } else {
-            for (let i = 0; i < arr.length; i++) {
-                new_array.push(arr[i]);
-            }
-            return new_array;
+        if (!arr || arr.length <= 5) {
+            return arr || [];
         }
+        return arr.slice(0, 5);
     }
 
 }

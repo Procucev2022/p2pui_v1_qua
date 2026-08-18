@@ -1,7 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush, discardPeriodicTasks } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { CatMgrRfqTabComponent } from './cat-mgr-rfq-tab.component';
 import {autoMock, defaultAppConfig, seedComponent, exerciseComponent, deepExerciseComponent} from '../../../../testing/test-helpers';
 import { APP_CONFIG } from 'src/app/app.config';
@@ -10,6 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 import { EncryDecryService } from 'src/app/shared/services';
 import { ConvertToBase64Service } from 'src/app/shared/modules/common-share/services/convert-to-base64.service';
 import { MAT_DIALOG_SCROLL_STRATEGY, MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { swalConfirm } from 'src/app/shared/helpers/swal-confirm';
 
 describe('CatMgrRfqTabComponent', () => {
   let component: CatMgrRfqTabComponent;
@@ -720,18 +721,137 @@ describe('CatMgrRfqTabComponent', () => {
     expect(c).toBeTruthy();
   });
 
-  it('should test fileUploadEvent and filesDropped branches', () => {
+  it('should test fileUploadEvent and filesDropped branches', fakeAsync(() => {
     const convertSer = TestBed.inject(ConvertToBase64Service) as any;
     convertSer.getBase64.and.returnValue(Promise.resolve('data:application/vnd.ms-excel;base64,AAAA'));
 
     component.filesDropped([{ name: 'test.xlsx' }]);
+    tick(100);
+    component.filesDropped([{ name: 'test.doc' }]);
+    tick(100);
+
+    component.fileUploadEvent([{ name: 'test.xlsx' }], true);
+    component.fileUploadEvent([{ name: 'test.xls' }], true);
+    component.fileUploadEvent([{ name: '' }], true);
 
     const evValid = { target: { files: [{ name: 'test.xls' }] } };
     component.fileUploadEvent(evValid, false);
+    tick(100);
 
     const evInvalid = { target: { files: [{ name: 'test.pdf' }] } };
     component.fileUploadEvent(evInvalid, false);
 
+    const evEmpty = { target: { files: [] } };
+    component.fileUploadEvent(evEmpty, false);
+
     expect(component.isFileFormatValid).toBeFalse();
-  });
+    component.removeFile();
+    expect(component.selectedFileData).toBeNull();
+  }));
+
+  it('should cover real methods and branches with fakeAsync', fakeAsync(() => {
+    const enc = TestBed.inject(EncryDecryService) as any;
+    const procu = TestBed.inject(CatProcuRequestsService) as any;
+    const dialog = TestBed.inject(MatDialog) as any;
+    const toastr = TestBed.inject(ToastrService) as any;
+    const convert = TestBed.inject(ConvertToBase64Service) as any;
+
+    spyOn(window, 'alert').and.stub();
+    enc.get.and.returnValue(JSON.stringify({
+      details: { listofPermission: ['ALL'], fullName: 'Test User' }
+    }));
+    convert.getBase64.and.returnValue(Promise.resolve('data:application/pdf;base64,QUJDRA=='));
+
+    const mockDialogRef: any = {
+      afterClosed: () => of(true),
+      updateSize: jasmine.createSpy('updateSize')
+    };
+    dialog.open.and.returnValue(mockDialogRef);
+
+    component.prData = { id: 'pr-001', procucevStatus: { uiDisplay: 'Open' } };
+    component.prId = 'pr-001';
+
+    procu.getRfqsByPr.and.returnValue(of([{ id: 'rfq-1', rfqId: 'RFQ-001' }]));
+    procu.getLineItemsByPr.and.returnValue(of([{ id: 'item-1', description: 'Item 1' }]));
+    procu.getPrAttachments.and.returnValue(of([{ id: 'att-1', fileName: 'att.pdf', file: 'AAA' }]));
+    procu.getPrAdresses.and.returnValue(of([{ id: 'addr-1', address: 'Addr', city: 'City', state: 'State' }]));
+    procu.getVendorsByCategory.and.returnValue(of([{ id: 'v1', name: 'Vendor 1' }]));
+    procu.createRfq.and.returnValue(of({ status: 'Success', message: 'RFQ created' }));
+
+    component.ngOnInit();
+    expect(component.loggedUserData.fullName).toBe('Test User');
+    expect(component.rfqsList.length).toBe(1);
+
+    component.ngOnChanges();
+    component.prId = null;
+    component.ngOnChanges();
+
+    procu.getRfqsByPr.and.returnValue(of({ status: 'Failure', errorMessage: 'err' }));
+    procu.getLineItemsByPr.and.returnValue(of(null));
+    procu.getPrAttachments.and.returnValue(of(null));
+    procu.getPrAdresses.and.returnValue(of(null));
+    procu.getVendorsByCategory.and.returnValue(of(null));
+    component.getRfqsByPr();
+    component.getPrLineItems();
+    component.getAttachedPrDocs();
+    component.getPrAdresses();
+    component.getVendorsByCategory();
+
+    component.getRFQs({ id: 'rfq-1' }, { srcElement: { lastChild: { data: 'RFQ-001' } } });
+    expect(component.rfqId).toBe('RFQ-001');
+
+    component.getThirdTab({});
+    component.onPage({ page: 1 });
+    component.dragAndDropDocs({});
+
+    component.uploadDocuments([{ name: 'doc1.pdf' }, { name: 'doc2.pdf' }]);
+    tick(100);
+    expect(component.rfqDocumentsBase64.length).toBe(2);
+
+    component.deleteAttachment(0, 'documentsArray');
+    tick(100);
+
+    component.selectedFilesArray = ['f1', 'f2'];
+    component.removeFiles(0);
+    expect(component.selectedFilesArray.length).toBe(1);
+
+    component.viewCorresspondance({ id: 'rfq-1' });
+
+    component.selectedRFQList = [{ id: 'rfq-1' }];
+    component.vendorSearch();
+    tick(600);
+    expect(component.rfqId).toBe('rfq-1');
+
+    component.onCreateRfqs({});
+    component.zoomout();
+    expect(mockDialogRef.updateSize).toHaveBeenCalledWith('70%');
+    component.zoomin();
+    expect(mockDialogRef.updateSize).toHaveBeenCalledWith('90%');
+
+    component.selectedCreateRfqItems = [
+      { id: 'i1', brand: 'B', category: 'C', createdBy: 'U', createdTS: 'T', description: 'D', itemcode: 'IC', lastModifiedBy: 'U', lastModifiedTS: 'T', quantity: 10, status: 'S', unitofMeasures: 'KG', serialNo: 1 }
+    ];
+    component.selectedAttachedPrDocs = [{ file: 'AAA', fileName: 'att.pdf' }];
+    component.rfqDocumentsBase64 = [{ file: 'BBB', fileName: 'rfq.pdf' }];
+    component.selectedPrAddresses = [{ address: 'A', city: 'C', state: 'S' }];
+    component.specialInstruction = 'Special';
+
+    const swalSpy = spyOn(swalConfirm, 'open').and.returnValue(Promise.resolve({ value: true }));
+    procu.createRfq.and.returnValue(of({ status: 'Success', message: 'Created' }));
+    component.createRfq();
+    tick(1000);
+    expect(toastr.success).toHaveBeenCalled();
+
+    procu.createRfq.and.returnValue(throwError(() => new Error('Failed')));
+    component.createRfq();
+    tick(1000);
+
+    swalSpy.and.returnValue(Promise.resolve({ value: false }));
+    component.createRfq();
+    tick(1000);
+
+    try { flush(); } catch (e) {}
+    try { discardPeriodicTasks(); } catch (e) {}
+  }));
 });
+

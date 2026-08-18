@@ -9,7 +9,7 @@ import jsPDF from 'jspdf';
 import {DatePipe} from '@angular/common';
 import autoTable from 'jspdf-autotable';
 import { PposService } from 'src/app/layout/ppos/services/ppos.service';
-import swal from 'sweetalert2';
+import { swalConfirm } from 'src/app/shared/helpers/swal-confirm';
 @Component({
     selector: 'app-ppo-view-modal',
     templateUrl: './ppo-view-modal.component.html',
@@ -83,7 +83,7 @@ export class PpoViewModalComponent implements OnInit {
         const ppos =[this.data];
         if (actionType === 'Reject') {
 
-            swal({
+            swalConfirm.open({
                 title: '<h6>Please Confirm!!<h6>',
                 html: '<h4>Are you sure you want to reject ppo?</h4>',
                 confirmButtonText: 'Yes',
@@ -103,18 +103,11 @@ export class PpoViewModalComponent implements OnInit {
                         }
                     });
                 }
-                // else if (result.dismiss === swal.DismissReason.cancel) {
-                //   swal(
-                //     'Cancelled',
-                //     'OK',
-                //     'error'
-                //   )
-                // }
               });
         }
         if (actionType === 'Accept') {
 
-            swal({
+            swalConfirm.open({
                 title: '<h6>Please Confirm!!<h6>',
                 html: '<h4>Are you sure you want to accept ppo?</h4>',
                 confirmButtonText: 'Yes',
@@ -241,13 +234,13 @@ export class PpoViewModalComponent implements OnInit {
                 vendors_matrix.push(row);
             });
 
-            (doc as any).autoTable({
+            autoTable(doc, {
                 startY: y = y + 10 ,
                 head: [vendors_headers],
                 body: vendors_matrix
 
             });
-            y = doc.lastAutoTable.finalY  + 10;
+            y = (doc as any).lastAutoTable.finalY  + 10;
         } else {
             y = y + 10;
         }
@@ -270,14 +263,14 @@ export class PpoViewModalComponent implements OnInit {
             data_matrix.push(row);
 
         });
-        (doc as any).autoTable({
+        autoTable(doc, {
             startY: y = y + 10 ,
             head: [ppoheaders],
             body: data_matrix
 
         });
 
-        y = doc.lastAutoTable.finalY  + 10;
+        y = (doc as any).lastAutoTable.finalY  + 10;
         doc.setFontSize(12);
         doc.setFont('helvetica');
         doc.setFontType('bold');
@@ -298,7 +291,7 @@ export class PpoViewModalComponent implements OnInit {
             address_matrix.push(row);
         });
 
-        (doc as any).autoTable({
+        autoTable(doc, {
             startY: y = y + 10 ,
             head: [address_headers],
             body: address_matrix
@@ -307,10 +300,10 @@ export class PpoViewModalComponent implements OnInit {
 
 
 
-        y = doc.lastAutoTable.finalY ;
+        y = (doc as any).lastAutoTable.finalY ;
         // post auction comparision
     if (this.selectedauctionData != null ) {
-        if (doc.lastAutoTable.finalY + 20 > pageHeight - 20) {
+        if ((doc as any).lastAutoTable.finalY + 20 > pageHeight - 20) {
             doc.setPage(doc.internal.getCurrentPageInfo().pageNumber + 1);
             y = 0;
         } else {}
@@ -346,13 +339,13 @@ export class PpoViewModalComponent implements OnInit {
             auction_data.push(row);
         }
 
-        (doc as any).autoTable({
+        autoTable(doc, {
             startY: y = y + 10 ,
             head: [auction_headers],
             body: auction_data
 
         });
-        y = doc.lastAutoTable.finalY ;
+        y = (doc as any).lastAutoTable.finalY ;
 
     }
 
@@ -425,13 +418,13 @@ export class PpoViewModalComponent implements OnInit {
             });
 
 
-            (doc as any).autoTable({
+            autoTable(doc, {
                 startY: y = y + 10 ,
                 head: [headers],
                 body: data_matrix
 
             });
-            y = doc.lastAutoTable.finalY;
+            y = (doc as any).lastAutoTable.finalY;
         }
 
         doc.setFontSize(12);
@@ -551,7 +544,7 @@ export class PpoViewModalComponent implements OnInit {
             return;
         }
         if (actionType === 'Submit') {
-            swal({
+            swalConfirm.open({
                 title: '<h6>Please Confirm!!<h6>',
                 html: '<h4>Are you sure you want to submit ppo?</h4>',
                 confirmButtonText: 'Yes',
@@ -573,7 +566,7 @@ export class PpoViewModalComponent implements OnInit {
             });
         }
         if (actionType === 'Accept') {
-            swal({
+            swalConfirm.open({
                 title: '<h6>Please Confirm!!<h6>',
                 html: '<h4>Are you sure you want to accept ppo?</h4>',
                 confirmButtonText: 'Yes',
@@ -598,7 +591,7 @@ export class PpoViewModalComponent implements OnInit {
 
         if (actionType === 'Reject') {
 
-            swal({
+            swalConfirm.open({
                 title: '<h6>Please Confirm!!<h6>',
                 html: '<h4>Are you sure you want to reject ppo?</h4>',
                 confirmButtonText: 'Yes',
@@ -616,19 +609,12 @@ export class PpoViewModalComponent implements OnInit {
                         }
                     });
                 }
-                // else if (result.dismiss === swal.DismissReason.cancel) {
-                //   swal(
-                //     'Cancelled',
-                //     'OK',
-                //     'error'
-                //   )
-                // }
               });
         }
 
         if (actionType === 'Reject_p') {
 
-            swal({
+            swalConfirm.open({
                 title: '<h6>Please Confirm!!<h6>',
                 html: '<h4>Are you sure you want to reject ppo?</h4>',
                 confirmButtonText: 'Yes',

@@ -1,47 +1,114 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { CreatePrModalNewComponent } from './create-pr-modal-new.component';
-import {autoMock, defaultAppConfig, seedComponent, exerciseComponent, deepExerciseComponent} from '../../../../../testing/test-helpers';
+import { defaultAppConfig } from 'src/testing/test-helpers';
 import { APP_CONFIG } from 'src/app/app.config';
 import { CreatePrModelService } from '../../services/create-pr-model.service';
 import { ConvertToBase64Service } from 'src/app/shared/modules/common-share/services/convert-to-base64.service';
 import { ToastrService } from 'ngx-toastr';
 import { EncryDecryService } from 'src/app/shared/services';
 import { ClientService } from '../../services/client-service.service';
-import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, NgForm } from '@angular/forms';
 import { MAT_DIALOG_SCROLL_STRATEGY, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { swalConfirm } from 'src/app/shared/helpers/swal-confirm';
 
 describe('CreatePrModalNewComponent', () => {
   let component: CreatePrModalNewComponent;
   let fixture: ComponentFixture<CreatePrModalNewComponent>;
+  let toastr: any;
+  let createPrService: any;
+  let convertSer: any;
+  let encryDecryService: any;
+  let clientService: any;
+
+  const mockLoggedUserData = {
+    details: {
+      id: 'u1',
+      org: { id: 'org1' },
+      department: { id: 'dept1', department: 'Procurement' }
+    }
+  };
+
+  const samplePrData = {
+    id: 'pr-1',
+    prId: 'PR-100',
+    prCorrespond: 'Capex',
+    prDescription: 'Sample Description',
+    singleVendor: true,
+    suggestNewVendor: true,
+    rateCardAvailable: true,
+    futureRequirement: 'Yes',
+    totalSqft: 1500,
+    priority: 'High',
+    dueDate: '2026-08-18T00:00:00Z',
+    clientcostcentre: [{ id: 'cc1', name: 'Cost Center 1' }],
+    estimatedPrvalue: 5000,
+    boq: false,
+    pritems: [
+      { description: 'Item 1', brand: 'Brand 1', unitofMeasures: 'PCS', quantity: 10, category: 'Cat 1', itemcode: 'C1', serialNo: 1, uom: 'PCS', price: '100' }
+    ],
+    clientdeliverylocation: [
+      { address: '123 Main St', city: 'Metropolis', state: 'NY' }
+    ],
+    prVendors: [
+      { companyName: 'Vendor 1', contactPerson: 'John', email: 'john@v1.com', phone: '1234567890' }
+    ],
+    prDocuments: [
+      { fileName: 'doc1.png', file: 'QUJD' }
+    ],
+    rateCardDocument: 'QUJD',
+    ratecardName: 'ratecard.png'
+  };
 
   beforeEach(async () => {
-    localStorage.setItem('logData', 'x');
-    localStorage.setItem('at', 'token');
-    localStorage.setItem('rt', 'refresh');
-    localStorage.setItem('et', String(Date.now() + 600000));
-    localStorage.setItem('orgId', 'o1');
-    localStorage.setItem('system-view', 'GMT Basic');
-    localStorage.setItem('perm', 'x');
+    localStorage.setItem('orgId', 'org1');
+    localStorage.setItem('loggedId', 'u1');
+    localStorage.setItem('userFullName', 'Test User');
 
+    toastr = {
+      success: jasmine.createSpy('success'),
+      error: jasmine.createSpy('error'),
+      warning: jasmine.createSpy('warning')
+    };
+
+    createPrService = {
+      editPr: jasmine.createSpy('editPr').and.returnValue(of({ status: 'Success' })),
+      getClientCostCentreByorgId: jasmine.createSpy('getClientCostCentreByorgId').and.returnValue(of([{ id: 'cc1', name: 'CC1' }])),
+      savePR: jasmine.createSpy('savePR').and.returnValue(of({ id: 'pr-saved-1', message: 'Saved successfully', pritems: [{ serialNo: 1 }] })),
+      submitPrdetails: jasmine.createSpy('submitPrdetails').and.returnValue(of({ status: 'Success', message: 'Submitted successfully', pritems: [{ serialNo: 1 }] }))
+    };
+
+    convertSer = {
+      getBase64: jasmine.createSpy('getBase64').and.returnValue(Promise.resolve('data:image/png;base64,QUJDRA=='))
+    };
+
+    encryDecryService = {
+      get: jasmine.createSpy('get').and.returnValue(JSON.stringify(mockLoggedUserData))
+    };
+
+    clientService = {
+      getPrById: jasmine.createSpy('getPrById').and.returnValue(of(samplePrData)),
+      setToEditPRModal: jasmine.createSpy('setToEditPRModal'),
+      $_prData: new Subject<any>()
+    };
 
     await TestBed.configureTestingModule({
       declarations: [CreatePrModalNewComponent],
       imports: [CommonModule, FormsModule, ReactiveFormsModule],
       providers: [
         { provide: APP_CONFIG, useValue: defaultAppConfig },
-        { provide: ChangeDetectorRef, useValue: autoMock('ChangeDetectorRef') },
+        { provide: ChangeDetectorRef, useValue: { markForCheck: () => undefined, detectChanges: () => undefined } },
         DatePipe,
         { provide: MAT_DIALOG_SCROLL_STRATEGY, useValue: () => ({ attach: () => undefined, enable: () => undefined, disable: () => undefined, detach: () => undefined }) },
-        { provide: CreatePrModelService, useValue: autoMock('CreatePrModelService') },
-        { provide: ConvertToBase64Service, useValue: autoMock('ConvertToBase64Service') },
-        { provide: ToastrService, useValue: autoMock('ToastrService') },
-        { provide: EncryDecryService, useValue: autoMock('EncryDecryService') },
-        { provide: ClientService, useValue: autoMock('ClientService') },
-        { provide: MAT_DIALOG_DATA, useValue: { isNewVendor: true, vendorProduct: [], vendorService: [], id: '1', status: 'Success', data: [], graphTitle: 'Price: Item A', deliveryDate: '2020-01-01', lineItems: [], documents: [], vendors: [], items: [], content: [], clientdeliverylocationrfq: [] } },
-        { provide: MatDialogRef, useValue: autoMock('MatDialogRef') },
+        { provide: CreatePrModelService, useValue: createPrService },
+        { provide: ConvertToBase64Service, useValue: convertSer },
+        { provide: ToastrService, useValue: toastr },
+        { provide: EncryDecryService, useValue: encryDecryService },
+        { provide: ClientService, useValue: clientService },
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+        { provide: MatDialogRef, useValue: { close: () => undefined } },
         FormBuilder
       ],
       schemas: [NO_ERRORS_SCHEMA]
@@ -52,764 +119,368 @@ describe('CreatePrModalNewComponent', () => {
 
     fixture = TestBed.createComponent(CreatePrModalNewComponent);
     component = fixture.componentInstance;
-    
-    const sampleRow: any = {
-      id: '1', vendorId: 'v1', ID: '1', name: 'n', status: 'Open', status_ui_display: 'Open',
-      description: 'desc1', projectCategory: 'cat1', projectSubCategory: 'subcat1', brand: 'b1',
-      quantity: 10, unitofMeasures: 'KG', unitprice: 100, excludetaxamount: 1000, gstValue: 180, totalamount: 1180,
-      uom: { description: 'KG', id: 'u1' }, vendorData: ['v1'], action: null, org: { id: 'o1', companyName: 'Org1' },
-      certificates: [{ fileName: 'c.pdf', file: 'AAA' }], clientStatus: { uiDisplay: 'Open' },
-      createdTS: new Date().toISOString(), query: 'a|b', pricePerUnit: 10, rank: 1, city: 'City1',
-      vendorName: 'Vendor1', companyId: 'comp1', lineItems: [], documents: [], items: [],
-      rfqData: { id: '1' }, vendorRequest: { id: '1' }, vendorDataObj: { id: '1' },
-    };
-                (component as any).data = (component as any).data || { ppoId: '1', prId: '1', id: '1', status: 'Success', items: [sampleRow], lineItems: [sampleRow], vendorProduct: [sampleRow], vendorService: [sampleRow], rfqData: sampleRow, vendors: [sampleRow] };
-    (component as any).rfqDataList = [sampleRow];
-    (component as any).cache_rfqDataList = [sampleRow];
-    (component as any).clientList = [sampleRow];
-
-    seedComponent(component as any);
+    component.loggedUserData = mockLoggedUserData;
+    component.tabGroup1 = { selectedIndex: 0 };
   });
 
-  it('should create', () => {
+  it('should create and initialize in creation mode (no dialogData)', () => {
+    component.ngOnInit();
     expect(component).toBeTruthy();
+    expect(component.deptName as any).toBe('Procurement');
+    expect(clientService.setToEditPRModal).toHaveBeenCalledWith(null);
+    expect(createPrService.getClientCostCentreByorgId).toHaveBeenCalled();
+
+    // Department is null
+    encryDecryService.get.and.returnValue(JSON.stringify({ details: { id: 'u1', org: { id: 'o1' }, department: null } }));
+    component.ngOnInit();
+    expect(component.deptName as any).toBe('');
   });
 
-  it('should exercise component API for coverage', () => {
-    exerciseComponent(component as any);
-    expect(component).toBeTruthy();
+  it('should initialize in edit mode with dialogData.prId, singleVendor false, boq true, and null rateCardDocument', fakeAsync(() => {
+    component.dialogData = { prId: 'PR-100' };
+    clientService.getPrById.and.returnValue(of({
+      ...samplePrData,
+      singleVendor: false,
+      boq: true,
+      rateCardDocument: null,
+      ratecardName: null
+    }));
+    component.ngOnInit();
+    tick();
+
+    expect(clientService.getPrById).toHaveBeenCalled();
+    expect(component.pruuid).toBe('PR-100');
+    expect(component.singleVendor).toBeFalse();
+
+    // flush interval timer inside ngOnInit edit mode
+    tick(1100);
+    expect(component.prItemsFromInvoice.length).toBe(1);
+    flush();
+  }));
+
+  it('should handle numberOnly and alphaOnly helper methods', () => {
+    expect(component.numberOnly({ which: 50, keyCode: 50 })).toBeTrue(); // '2'
+    expect(component.numberOnly({ which: 65, keyCode: 65 })).toBeFalse(); // 'A'
+    expect(component.numberOnly({ which: 8, keyCode: 8 })).toBeTrue(); // backspace
+    expect(component.numberOnly({ which: null, keyCode: 55 })).toBeTrue();
+
+    expect(component.alphaOnly({ keyCode: 65 })).toBeTrue(); // 'A'
+    expect(component.alphaOnly({ keyCode: 90 })).toBeTrue(); // 'Z'
+    expect(component.alphaOnly({ keyCode: 50 })).toBeFalse(); // '2'
+    expect(component.alphaOnly({ keyCode: 8 })).toBeTrue(); // backspace
   });
 
-
-
-
-
-  it('branch-path coverage harness', () => {
-    const c: any = component;
-    c.op = { hide: () => undefined, show: () => undefined, toggle: () => undefined };
-    c.targetEl = { nativeElement: document.createElement('div') };
-    c.vendorData = { vendorId: 'v1', id: '1' };
-    c.data = { id: '1', graphTitle: 'Price: Item', isNewVendor: true, vendorProduct: [], vendorService: [], clientdeliverylocationrfq: [] };
-    c.rowData = [{ id: '1', status: 'Open', org: { id: 'o1' } }];
-    c.selectedOrg = { id: 'o1' };
-    c.selectedOrgData = { id: 'o1' };
-    c.form = { valid: true, invalid: false, value: {}, reset: () => undefined, patchValue: () => undefined, get: () => ({ value: 'x', setValue: () => undefined, valid: true }) };
-    c.itemForm = c.form;
-    try { if (typeof c.ngOnInit === 'function') c.ngOnInit(); } catch (e) { /* ignore */ }
-    try { (component as any).numberOnly(); } catch (e) { /* ignore */ }
-    try { (component as any).numberOnly(null); } catch (e) { /* ignore */ }
-    try { (component as any).numberOnly({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).numberOnly(true); } catch (e) { /* ignore */ }
-    try { (component as any).numberOnly(false); } catch (e) { /* ignore */ }
-    try { (component as any).alphaOnly(); } catch (e) { /* ignore */ }
-    try { (component as any).alphaOnly(null); } catch (e) { /* ignore */ }
-    try { (component as any).alphaOnly({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).alphaOnly(true); } catch (e) { /* ignore */ }
-    try { (component as any).alphaOnly(false); } catch (e) { /* ignore */ }
-    try { (component as any).ngOnInit(); } catch (e) { /* ignore */ }
-    try { (component as any).ngOnInit(null); } catch (e) { /* ignore */ }
-    try { (component as any).ngOnInit({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).ngOnInit(true); } catch (e) { /* ignore */ }
-    try { (component as any).ngOnInit(false); } catch (e) { /* ignore */ }
-    try { (component as any).dataURItoBlob(); } catch (e) { /* ignore */ }
-    try { (component as any).dataURItoBlob(null); } catch (e) { /* ignore */ }
-    try { (component as any).dataURItoBlob({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).dataURItoBlob(true); } catch (e) { /* ignore */ }
-    try { (component as any).dataURItoBlob(false); } catch (e) { /* ignore */ }
-    try { (component as any).editPr(); } catch (e) { /* ignore */ }
-    try { (component as any).editPr(null); } catch (e) { /* ignore */ }
-    try { (component as any).editPr({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).editPr(true); } catch (e) { /* ignore */ }
-    try { (component as any).editPr(false); } catch (e) { /* ignore */ }
-    try { (component as any).getClientCostCentreByorgId(); } catch (e) { /* ignore */ }
-    try { (component as any).getClientCostCentreByorgId(null); } catch (e) { /* ignore */ }
-    try { (component as any).getClientCostCentreByorgId({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).getClientCostCentreByorgId(true); } catch (e) { /* ignore */ }
-    try { (component as any).getClientCostCentreByorgId(false); } catch (e) { /* ignore */ }
-    try { (component as any).onItemSelect(); } catch (e) { /* ignore */ }
-    try { (component as any).onItemSelect(null); } catch (e) { /* ignore */ }
-    try { (component as any).onItemSelect({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).onItemSelect(true); } catch (e) { /* ignore */ }
-    try { (component as any).onItemSelect(false); } catch (e) { /* ignore */ }
-    try { (component as any).onSelectAll(); } catch (e) { /* ignore */ }
-    try { (component as any).onSelectAll(null); } catch (e) { /* ignore */ }
-    try { (component as any).onSelectAll({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).onSelectAll(true); } catch (e) { /* ignore */ }
-    try { (component as any).onSelectAll(false); } catch (e) { /* ignore */ }
-    try { (component as any).addItem(); } catch (e) { /* ignore */ }
-    try { (component as any).addItem(null); } catch (e) { /* ignore */ }
-    try { (component as any).addItem({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).addItem(true); } catch (e) { /* ignore */ }
-    try { (component as any).addItem(false); } catch (e) { /* ignore */ }
-    try { (component as any).removeItem(); } catch (e) { /* ignore */ }
-    try { (component as any).removeItem(null); } catch (e) { /* ignore */ }
-    try { (component as any).removeItem({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).removeItem(true); } catch (e) { /* ignore */ }
-    try { (component as any).removeItem(false); } catch (e) { /* ignore */ }
-    try { (component as any).addLocation(); } catch (e) { /* ignore */ }
-    try { (component as any).addLocation(null); } catch (e) { /* ignore */ }
-    try { (component as any).addLocation({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).addLocation(true); } catch (e) { /* ignore */ }
-    try { (component as any).addLocation(false); } catch (e) { /* ignore */ }
-    try { (component as any).removeLocation(); } catch (e) { /* ignore */ }
-    try { (component as any).removeLocation(null); } catch (e) { /* ignore */ }
-    try { (component as any).removeLocation({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).removeLocation(true); } catch (e) { /* ignore */ }
-    try { (component as any).removeLocation(false); } catch (e) { /* ignore */ }
-    try { (component as any).addNewVendor(); } catch (e) { /* ignore */ }
-    try { (component as any).addNewVendor(null); } catch (e) { /* ignore */ }
-    try { (component as any).addNewVendor({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).addNewVendor(true); } catch (e) { /* ignore */ }
-    try { (component as any).addNewVendor(false); } catch (e) { /* ignore */ }
-    try { (component as any).removing(); } catch (e) { /* ignore */ }
-    try { (component as any).removing(null); } catch (e) { /* ignore */ }
-    try { (component as any).removing({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).removing(true); } catch (e) { /* ignore */ }
-    try { (component as any).removing(false); } catch (e) { /* ignore */ }
-    try { (component as any).closeDialog(); } catch (e) { /* ignore */ }
-    try { (component as any).closeDialog(null); } catch (e) { /* ignore */ }
-    try { (component as any).closeDialog({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).closeDialog(true); } catch (e) { /* ignore */ }
-    try { (component as any).closeDialog(false); } catch (e) { /* ignore */ }
-    try { (component as any).uploadDocuments(); } catch (e) { /* ignore */ }
-    try { (component as any).uploadDocuments(null); } catch (e) { /* ignore */ }
-    try { (component as any).uploadDocuments({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).uploadDocuments(true); } catch (e) { /* ignore */ }
-    try { (component as any).uploadDocuments(false); } catch (e) { /* ignore */ }
-    try { (component as any).deleteAttachment(); } catch (e) { /* ignore */ }
-    try { (component as any).deleteAttachment(null); } catch (e) { /* ignore */ }
-    try { (component as any).deleteAttachment({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).deleteAttachment(true); } catch (e) { /* ignore */ }
-    try { (component as any).deleteAttachment(false); } catch (e) { /* ignore */ }
-    try { (component as any).removeFile(); } catch (e) { /* ignore */ }
-    try { (component as any).removeFile(null); } catch (e) { /* ignore */ }
-    try { (component as any).removeFile({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).removeFile(true); } catch (e) { /* ignore */ }
-    try { (component as any).removeFile(false); } catch (e) { /* ignore */ }
-    try { (component as any).getPrDocuments(); } catch (e) { /* ignore */ }
-    try { (component as any).getPrDocuments(null); } catch (e) { /* ignore */ }
-    try { (component as any).getPrDocuments({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).getPrDocuments(true); } catch (e) { /* ignore */ }
-    try { (component as any).getPrDocuments(false); } catch (e) { /* ignore */ }
-    try { (component as any).onSubmit(); } catch (e) { /* ignore */ }
-    try { (component as any).onSubmit(null); } catch (e) { /* ignore */ }
-    try { (component as any).onSubmit({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).onSubmit(true); } catch (e) { /* ignore */ }
-    try { (component as any).onSubmit(false); } catch (e) { /* ignore */ }
-    try { (component as any).uploadRateCard(); } catch (e) { /* ignore */ }
-    try { (component as any).uploadRateCard(null); } catch (e) { /* ignore */ }
-    try { (component as any).uploadRateCard({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).uploadRateCard(true); } catch (e) { /* ignore */ }
-    try { (component as any).uploadRateCard(false); } catch (e) { /* ignore */ }
-    try { (component as any).dropRateCard(); } catch (e) { /* ignore */ }
-    try { (component as any).dropRateCard(null); } catch (e) { /* ignore */ }
-    try { (component as any).dropRateCard({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).dropRateCard(true); } catch (e) { /* ignore */ }
-    try { (component as any).dropRateCard(false); } catch (e) { /* ignore */ }
-    try { (component as any).uploadLineItemFile(); } catch (e) { /* ignore */ }
-    try { (component as any).uploadLineItemFile(null); } catch (e) { /* ignore */ }
-    try { (component as any).uploadLineItemFile({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).uploadLineItemFile(true); } catch (e) { /* ignore */ }
-    try { (component as any).uploadLineItemFile(false); } catch (e) { /* ignore */ }
-    try { (component as any).uploadBOQFile(); } catch (e) { /* ignore */ }
-    try { (component as any).uploadBOQFile(null); } catch (e) { /* ignore */ }
-    try { (component as any).uploadBOQFile({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).uploadBOQFile(true); } catch (e) { /* ignore */ }
-    try { (component as any).uploadBOQFile(false); } catch (e) { /* ignore */ }
-    try { (component as any).next(); } catch (e) { /* ignore */ }
-    try { (component as any).next(null); } catch (e) { /* ignore */ }
-    try { (component as any).next({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).next(true); } catch (e) { /* ignore */ }
-    try { (component as any).next(false); } catch (e) { /* ignore */ }
-    try { (component as any).back(); } catch (e) { /* ignore */ }
-    try { (component as any).back(null); } catch (e) { /* ignore */ }
-    try { (component as any).back({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).back(true); } catch (e) { /* ignore */ }
-    try { (component as any).back(false); } catch (e) { /* ignore */ }
-    try { (component as any).backToCreatePR(); } catch (e) { /* ignore */ }
-    try { (component as any).backToCreatePR(null); } catch (e) { /* ignore */ }
-    try { (component as any).backToCreatePR({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).backToCreatePR(true); } catch (e) { /* ignore */ }
-    try { (component as any).backToCreatePR(false); } catch (e) { /* ignore */ }
-    try { (component as any).formSave(); } catch (e) { /* ignore */ }
-    try { (component as any).formSave(null); } catch (e) { /* ignore */ }
-    try { (component as any).formSave({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).formSave(true); } catch (e) { /* ignore */ }
-    try { (component as any).formSave(false); } catch (e) { /* ignore */ }
-    try { (component as any).onChangeVendor(); } catch (e) { /* ignore */ }
-    try { (component as any).onChangeVendor(null); } catch (e) { /* ignore */ }
-    try { (component as any).onChangeVendor({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).onChangeVendor(true); } catch (e) { /* ignore */ }
-    try { (component as any).onChangeVendor(false); } catch (e) { /* ignore */ }
-    try { (component as any).updatePRList(); } catch (e) { /* ignore */ }
-    try { (component as any).updatePRList(null); } catch (e) { /* ignore */ }
-    try { (component as any).updatePRList({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).updatePRList(true); } catch (e) { /* ignore */ }
-    try { (component as any).updatePRList(false); } catch (e) { /* ignore */ }
-    try { (component as any).onChangeCostCenter(); } catch (e) { /* ignore */ }
-    try { (component as any).onChangeCostCenter(null); } catch (e) { /* ignore */ }
-    try { (component as any).onChangeCostCenter({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).onChangeCostCenter(true); } catch (e) { /* ignore */ }
-    try { (component as any).onChangeCostCenter(false); } catch (e) { /* ignore */ }
-    try { (component as any).ngOnDestroy(); } catch (e) { /* ignore */ }
-    try { (component as any).ngOnDestroy(null); } catch (e) { /* ignore */ }
-    try { (component as any).ngOnDestroy({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).ngOnDestroy(true); } catch (e) { /* ignore */ }
-    try { (component as any).ngOnDestroy(false); } catch (e) { /* ignore */ }
-
-    c.vendorData = { vendorId: null };
-    c.selectedOrg = null;
-    c.form = { valid: false, invalid: true, value: {}, reset: () => undefined, patchValue: () => undefined, get: () => ({ value: '', setValue: () => undefined, valid: false }) };
-    try { if (typeof c.ngOnInit === 'function') c.ngOnInit(); } catch (e) { /* ignore */ }
-    try { (component as any).numberOnly(); } catch (e) { /* ignore */ }
-    try { (component as any).numberOnly(null); } catch (e) { /* ignore */ }
-    try { (component as any).numberOnly({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).numberOnly(true); } catch (e) { /* ignore */ }
-    try { (component as any).numberOnly(false); } catch (e) { /* ignore */ }
-    try { (component as any).alphaOnly(); } catch (e) { /* ignore */ }
-    try { (component as any).alphaOnly(null); } catch (e) { /* ignore */ }
-    try { (component as any).alphaOnly({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).alphaOnly(true); } catch (e) { /* ignore */ }
-    try { (component as any).alphaOnly(false); } catch (e) { /* ignore */ }
-    try { (component as any).ngOnInit(); } catch (e) { /* ignore */ }
-    try { (component as any).ngOnInit(null); } catch (e) { /* ignore */ }
-    try { (component as any).ngOnInit({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).ngOnInit(true); } catch (e) { /* ignore */ }
-    try { (component as any).ngOnInit(false); } catch (e) { /* ignore */ }
-    try { (component as any).dataURItoBlob(); } catch (e) { /* ignore */ }
-    try { (component as any).dataURItoBlob(null); } catch (e) { /* ignore */ }
-    try { (component as any).dataURItoBlob({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).dataURItoBlob(true); } catch (e) { /* ignore */ }
-    try { (component as any).dataURItoBlob(false); } catch (e) { /* ignore */ }
-    try { (component as any).editPr(); } catch (e) { /* ignore */ }
-    try { (component as any).editPr(null); } catch (e) { /* ignore */ }
-    try { (component as any).editPr({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).editPr(true); } catch (e) { /* ignore */ }
-    try { (component as any).editPr(false); } catch (e) { /* ignore */ }
-    try { (component as any).getClientCostCentreByorgId(); } catch (e) { /* ignore */ }
-    try { (component as any).getClientCostCentreByorgId(null); } catch (e) { /* ignore */ }
-    try { (component as any).getClientCostCentreByorgId({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).getClientCostCentreByorgId(true); } catch (e) { /* ignore */ }
-    try { (component as any).getClientCostCentreByorgId(false); } catch (e) { /* ignore */ }
-    try { (component as any).onItemSelect(); } catch (e) { /* ignore */ }
-    try { (component as any).onItemSelect(null); } catch (e) { /* ignore */ }
-    try { (component as any).onItemSelect({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).onItemSelect(true); } catch (e) { /* ignore */ }
-    try { (component as any).onItemSelect(false); } catch (e) { /* ignore */ }
-    try { (component as any).onSelectAll(); } catch (e) { /* ignore */ }
-    try { (component as any).onSelectAll(null); } catch (e) { /* ignore */ }
-    try { (component as any).onSelectAll({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).onSelectAll(true); } catch (e) { /* ignore */ }
-    try { (component as any).onSelectAll(false); } catch (e) { /* ignore */ }
-    try { (component as any).addItem(); } catch (e) { /* ignore */ }
-    try { (component as any).addItem(null); } catch (e) { /* ignore */ }
-    try { (component as any).addItem({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).addItem(true); } catch (e) { /* ignore */ }
-    try { (component as any).addItem(false); } catch (e) { /* ignore */ }
-    try { (component as any).removeItem(); } catch (e) { /* ignore */ }
-    try { (component as any).removeItem(null); } catch (e) { /* ignore */ }
-    try { (component as any).removeItem({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).removeItem(true); } catch (e) { /* ignore */ }
-    try { (component as any).removeItem(false); } catch (e) { /* ignore */ }
-    try { (component as any).addLocation(); } catch (e) { /* ignore */ }
-    try { (component as any).addLocation(null); } catch (e) { /* ignore */ }
-    try { (component as any).addLocation({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).addLocation(true); } catch (e) { /* ignore */ }
-    try { (component as any).addLocation(false); } catch (e) { /* ignore */ }
-    try { (component as any).removeLocation(); } catch (e) { /* ignore */ }
-    try { (component as any).removeLocation(null); } catch (e) { /* ignore */ }
-    try { (component as any).removeLocation({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).removeLocation(true); } catch (e) { /* ignore */ }
-    try { (component as any).removeLocation(false); } catch (e) { /* ignore */ }
-    try { (component as any).addNewVendor(); } catch (e) { /* ignore */ }
-    try { (component as any).addNewVendor(null); } catch (e) { /* ignore */ }
-    try { (component as any).addNewVendor({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).addNewVendor(true); } catch (e) { /* ignore */ }
-    try { (component as any).addNewVendor(false); } catch (e) { /* ignore */ }
-    try { (component as any).removing(); } catch (e) { /* ignore */ }
-    try { (component as any).removing(null); } catch (e) { /* ignore */ }
-    try { (component as any).removing({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).removing(true); } catch (e) { /* ignore */ }
-    try { (component as any).removing(false); } catch (e) { /* ignore */ }
-    try { (component as any).closeDialog(); } catch (e) { /* ignore */ }
-    try { (component as any).closeDialog(null); } catch (e) { /* ignore */ }
-    try { (component as any).closeDialog({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).closeDialog(true); } catch (e) { /* ignore */ }
-    try { (component as any).closeDialog(false); } catch (e) { /* ignore */ }
-    try { (component as any).uploadDocuments(); } catch (e) { /* ignore */ }
-    try { (component as any).uploadDocuments(null); } catch (e) { /* ignore */ }
-    try { (component as any).uploadDocuments({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).uploadDocuments(true); } catch (e) { /* ignore */ }
-    try { (component as any).uploadDocuments(false); } catch (e) { /* ignore */ }
-    try { (component as any).deleteAttachment(); } catch (e) { /* ignore */ }
-    try { (component as any).deleteAttachment(null); } catch (e) { /* ignore */ }
-    try { (component as any).deleteAttachment({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).deleteAttachment(true); } catch (e) { /* ignore */ }
-    try { (component as any).deleteAttachment(false); } catch (e) { /* ignore */ }
-    try { (component as any).removeFile(); } catch (e) { /* ignore */ }
-    try { (component as any).removeFile(null); } catch (e) { /* ignore */ }
-    try { (component as any).removeFile({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).removeFile(true); } catch (e) { /* ignore */ }
-    try { (component as any).removeFile(false); } catch (e) { /* ignore */ }
-    try { (component as any).getPrDocuments(); } catch (e) { /* ignore */ }
-    try { (component as any).getPrDocuments(null); } catch (e) { /* ignore */ }
-    try { (component as any).getPrDocuments({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).getPrDocuments(true); } catch (e) { /* ignore */ }
-    try { (component as any).getPrDocuments(false); } catch (e) { /* ignore */ }
-    try { (component as any).onSubmit(); } catch (e) { /* ignore */ }
-    try { (component as any).onSubmit(null); } catch (e) { /* ignore */ }
-    try { (component as any).onSubmit({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).onSubmit(true); } catch (e) { /* ignore */ }
-    try { (component as any).onSubmit(false); } catch (e) { /* ignore */ }
-    try { (component as any).uploadRateCard(); } catch (e) { /* ignore */ }
-    try { (component as any).uploadRateCard(null); } catch (e) { /* ignore */ }
-    try { (component as any).uploadRateCard({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).uploadRateCard(true); } catch (e) { /* ignore */ }
-    try { (component as any).uploadRateCard(false); } catch (e) { /* ignore */ }
-    try { (component as any).dropRateCard(); } catch (e) { /* ignore */ }
-    try { (component as any).dropRateCard(null); } catch (e) { /* ignore */ }
-    try { (component as any).dropRateCard({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).dropRateCard(true); } catch (e) { /* ignore */ }
-    try { (component as any).dropRateCard(false); } catch (e) { /* ignore */ }
-    try { (component as any).uploadLineItemFile(); } catch (e) { /* ignore */ }
-    try { (component as any).uploadLineItemFile(null); } catch (e) { /* ignore */ }
-    try { (component as any).uploadLineItemFile({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).uploadLineItemFile(true); } catch (e) { /* ignore */ }
-    try { (component as any).uploadLineItemFile(false); } catch (e) { /* ignore */ }
-    try { (component as any).uploadBOQFile(); } catch (e) { /* ignore */ }
-    try { (component as any).uploadBOQFile(null); } catch (e) { /* ignore */ }
-    try { (component as any).uploadBOQFile({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).uploadBOQFile(true); } catch (e) { /* ignore */ }
-    try { (component as any).uploadBOQFile(false); } catch (e) { /* ignore */ }
-    try { (component as any).next(); } catch (e) { /* ignore */ }
-    try { (component as any).next(null); } catch (e) { /* ignore */ }
-    try { (component as any).next({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).next(true); } catch (e) { /* ignore */ }
-    try { (component as any).next(false); } catch (e) { /* ignore */ }
-    try { (component as any).back(); } catch (e) { /* ignore */ }
-    try { (component as any).back(null); } catch (e) { /* ignore */ }
-    try { (component as any).back({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).back(true); } catch (e) { /* ignore */ }
-    try { (component as any).back(false); } catch (e) { /* ignore */ }
-    try { (component as any).backToCreatePR(); } catch (e) { /* ignore */ }
-    try { (component as any).backToCreatePR(null); } catch (e) { /* ignore */ }
-    try { (component as any).backToCreatePR({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).backToCreatePR(true); } catch (e) { /* ignore */ }
-    try { (component as any).backToCreatePR(false); } catch (e) { /* ignore */ }
-    try { (component as any).formSave(); } catch (e) { /* ignore */ }
-    try { (component as any).formSave(null); } catch (e) { /* ignore */ }
-    try { (component as any).formSave({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).formSave(true); } catch (e) { /* ignore */ }
-    try { (component as any).formSave(false); } catch (e) { /* ignore */ }
-    try { (component as any).onChangeVendor(); } catch (e) { /* ignore */ }
-    try { (component as any).onChangeVendor(null); } catch (e) { /* ignore */ }
-    try { (component as any).onChangeVendor({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).onChangeVendor(true); } catch (e) { /* ignore */ }
-    try { (component as any).onChangeVendor(false); } catch (e) { /* ignore */ }
-    try { (component as any).updatePRList(); } catch (e) { /* ignore */ }
-    try { (component as any).updatePRList(null); } catch (e) { /* ignore */ }
-    try { (component as any).updatePRList({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).updatePRList(true); } catch (e) { /* ignore */ }
-    try { (component as any).updatePRList(false); } catch (e) { /* ignore */ }
-    try { (component as any).onChangeCostCenter(); } catch (e) { /* ignore */ }
-    try { (component as any).onChangeCostCenter(null); } catch (e) { /* ignore */ }
-    try { (component as any).onChangeCostCenter({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).onChangeCostCenter(true); } catch (e) { /* ignore */ }
-    try { (component as any).onChangeCostCenter(false); } catch (e) { /* ignore */ }
-    try { (component as any).ngOnDestroy(); } catch (e) { /* ignore */ }
-    try { (component as any).ngOnDestroy(null); } catch (e) { /* ignore */ }
-    try { (component as any).ngOnDestroy({ id: '1', vendorId: 'v1', status: 'Open', graphTitle: 'Price: X', target: { value: 'x', files: [] }, preventDefault() {}, stopPropagation() {} }); } catch (e) { /* ignore */ }
-    try { (component as any).ngOnDestroy(true); } catch (e) { /* ignore */ }
-    try { (component as any).ngOnDestroy(false); } catch (e) { /* ignore */ }
-
-    try { if (typeof c.ngOnDestroy === 'function') c.ngOnDestroy(); } catch (e) { /* ignore */ }
-    expect(component).toBeTruthy();
+  it('should handle dataURItoBlob conversion', () => {
+    const blob = component.dataURItoBlob('QUJD');
+    expect(blob).toBeTruthy();
+    expect(blob.size).toBe(3);
   });
 
+  it('should handle editPr and getClientCostCentreByorgId', () => {
+    component.editPr({ id: '1' });
+    expect(createPrService.editPr).toHaveBeenCalledWith({ id: '1' });
 
-  it('focused uncovered-method coverage', () => {
-    const methods: string[] = ["numberOnly","ngOnInit","uploadDocuments","deleteAttachment","exportAsXLSX","onSubmit","uploadRateCard","uploadLineItemFile","uploadBOQFile","formSave","updatePRList"];
-    const row: any = {
-      id: '1', vendorId: 'v1', ID: '1', name: 'n', status: 'Open',
-      uom: { description: 'KG' }, vendorData: ['v1'], action: null,
-      org: { id: 'o1' }, certificates: [{ fileName: 'c.pdf', file: 'AAA' }],
-    };
-    const ev: any = {
-      preventDefault() {}, stopPropagation() {},
-      target: { files: [{ name: 'a.pdf' }], value: 'x', checked: true },
-      index: 0,
-    };
-    (component as any).roleName = 'VendorManager';
-    (component as any).selectedType = 'Weekly';
-    (component as any).day = 'Monday';
-    (component as any).startTime = new Date(2020, 0, 1, 9, 0);
-    (component as any).endTime = new Date(2020, 0, 1, 17, 0);
-    (component as any).selectedItems = new Map([['1', ['v1']]]);
-    (component as any).selectedData = row;
-    (component as any).vendorRegData = { ...row, vendorProduct: [row], vendorService: [row], certificates: [row] };
-    (component as any).productsList = [row, { id: '2' }];
-    (component as any).servicesList = [row, { id: '2' }];
-    (component as any).vendorList = [{ id: '1', isLinked: true, isEdit: true }];
-    (component as any).rowData = [row];
-    (component as any).regId = 'o1';
+    createPrService.getClientCostCentreByorgId.and.returnValue(of(null));
+    component.getClientCostCentreByorgId();
+  });
 
-    // Rebind any jasmine spies on injected-looking fields
-    Object.keys(component as any).forEach((k) => {
-      const svc = (component as any)[k];
-      if (!svc || typeof svc !== 'object') return;
-      Object.keys(svc).forEach((m) => {
-        const spy = svc[m];
-        if (spy && spy.and && typeof spy.and.returnValue === 'function') {
-          try { spy.and.returnValue(of({ status: 'Success', statusCode: '200', message: 'ok', data: [row], ...row, vendorProduct: [row], vendorService: [row], certificates: [row] })); } catch { /* */ }
-        }
-      });
-      // materialize proxy methods commonly used
-      ['get', 'getAll', 'search', 'save', 'create', 'update', 'delete', 'getVendorById', 'getRFQs', 'submit'].forEach((m) => {
-        try {
-          const spy = svc[m];
-          if (spy && spy.and) spy.and.returnValue(of([row]));
-        } catch { /* */ }
-      });
-    });
+  it('should handle addItem and removeItem with limit', () => {
+    component.createPRformList = [];
+    component.addItem();
+    expect(component.createPRformList.length).toBe(1);
 
-    for (const name of methods) {
-      const fn = (component as any)[name];
-      if (typeof fn !== 'function') continue;
-      for (const args of [[], [row], [ev, row], ['add', row], [row, 0, true, true], [0, 'certificatesArray'], [ev], [true], ['x'], [{ index: 0 }]]) {
-        try { fn.apply(component, args); } catch { /* ignore branch errors */ }
+    component.createPRformList = Array.from({ length: 10 }, () => ({ description: '' }));
+    component.addItem();
+    expect(toastr.error).toHaveBeenCalledWith('You can add maximum 10 items only', 'Error');
+
+    component.removeItem(0);
+    expect(component.createPRformList.length).toBe(9);
+  });
+
+  it('should handle addLocation and removeLocation with limit', () => {
+    component.deliveryLocationList = [];
+    component.addLocation();
+    expect(component.deliveryLocationList.length).toBe(1);
+
+    component.deliveryLocationList = Array.from({ length: 10 }, () => ({ address: '' }));
+    component.addLocation();
+    expect(toastr.error).toHaveBeenCalledWith('You can add maximum 10 locations only', 'Error');
+
+    component.removeLocation(0);
+    expect(component.deliveryLocationList.length).toBe(9);
+  });
+
+  it('should handle addNewVendor and removing with limit', () => {
+    component.singleVendorform = [];
+    component.addNewVendor();
+    expect(component.singleVendorform.length).toBe(1);
+
+    component.singleVendorform = Array.from({ length: 5 }, () => ({ companyName: '' }));
+    component.addNewVendor();
+    expect(toastr.error).toHaveBeenCalledWith('You can add maximum 5 vendors only', 'Error');
+
+    component.removing(0);
+    expect(component.singleVendorform.length).toBe(4);
+  });
+
+  it('should handle drag and drop host listeners', () => {
+    const file = new File(['abc'], 'test.png');
+    const dragEvent = { preventDefault: () => undefined, stopPropagation: () => undefined, dataTransfer: { files: [file] } };
+
+    component.onDragOver(dragEvent);
+    expect(component.dragAreaClass).toBe('droparea');
+
+    component.onDragEnter(dragEvent);
+    expect(component.dragAreaClass).toBe('droparea');
+
+    component.onDragEnd(dragEvent);
+    expect(component.dragAreaClass).toBe('dragarea');
+
+    component.onDragLeave(dragEvent);
+    expect(component.dragAreaClass).toBe('dragarea');
+
+    component.onDrop(dragEvent);
+    expect(component.dragAreaClass).toBe('dragarea');
+
+    // drop without dataTransfer.files
+    component.onDrop({ preventDefault: () => undefined, stopPropagation: () => undefined, dataTransfer: {} });
+  });
+
+  it('should handle deleteAttachment, removeFile, and getPrDocuments', fakeAsync(() => {
+    const file = new File(['test'], 'file1.png');
+    component.documentsArray = [file];
+    component.selectedFilesArray = [file];
+
+    component.getPrDocuments();
+    tick();
+    expect(convertSer.getBase64).toHaveBeenCalledWith(file);
+    expect(component.prDocumentsBase64.length).toBe(1);
+
+    component.deleteAttachment(0, 'documentsArray');
+    expect(component.documentsArray.length).toBe(0);
+
+    component.removeFile(0);
+    expect(component.selectedFilesArray.length).toBe(0);
+
+    component.exportAsXLSX();
+    expect(component.excelData).toEqual([]);
+    flush();
+  }));
+
+  it('should handle uploadRateCard, uploadLineItemFile, uploadBOQFile, dropRateCard, deleteRateCard', fakeAsync(() => {
+    const file = new File(['test'], 'ratecard.png');
+    const event = { target: { files: [file] } };
+
+    component.uploadRateCard(event);
+    tick();
+    expect(component.rateCardDocToBase64.length).toBe(1);
+
+    component.uploadLineItemFile(event);
+    tick();
+    expect(component.BOQDocToBase64.length).toBe(1);
+
+    component.uploadBOQFile(event);
+    tick();
+    expect(component.BOQDocToBase64.length).toBe(2);
+
+    component.dropRateCard(event);
+    component.deleteRateCard(0);
+    component.onItemSelect({});
+    component.onSelectAll({});
+    component.onChangeCostCenter();
+    component.closeDialog('event');
+    flush();
+  }));
+
+  it('should handle next() navigation, validations, and formSave', () => {
+    const validForm = {
+      value: {
+        prDescription: 'Desc',
+        dueDate: '2026-08-18',
+        prCorrespond: 'Capex',
+        totalSqft: '500',
+        city_0: 'City',
+        address_0: 'Addr',
+        state_0: 'State'
       }
-    }
+    } as NgForm;
 
-    // failure payloads
-    Object.keys(component as any).forEach((k) => {
-      const svc = (component as any)[k];
-      if (!svc || typeof svc !== 'object') return;
-      Object.keys(svc).forEach((m) => {
-        const spy = svc[m];
-        if (spy && spy.and && typeof spy.and.returnValue === 'function') {
-          try { spy.and.returnValue(of({ status: 'Failure', statusCode: '500', message: 'err' })); } catch { /* */ }
-        }
-      });
-    });
-    for (const name of methods) {
-      const fn = (component as any)[name];
-      if (typeof fn !== 'function') continue;
-      try { fn.call(component, row); } catch { /* */ }
-      try { fn.call(component, ev, row); } catch { /* */ }
-      try { fn.call(component); } catch { /* */ }
-    }
-    expect(component).toBeTruthy();
-  });
+    component.tabGroup1 = { selectedIndex: 0 };
+    component.createPRformList = [{ description: 'Item 1', brand: 'Brand 1', uom: 'PCS', price: '100' }];
+    component.next(validForm);
+    expect(component.selectedIndex).toBe(1);
 
-
-  it('targeted deepExercise state-method coverage', () => {
-    const c: any = component;
-    const row: any = {
-      id: '1', vendorId: 'v1', ID: '1', name: 'n', status: 'Open', status_ui_display: 'Open',
-      uom: { description: 'KG' }, vendorData: ['v1'], action: null, org: { id: 'o1' },
-      certificates: [{ fileName: 'c.pdf', file: 'AAA' }], clientStatus: { uiDisplay: 'Open' },
-      createdTS: new Date().toISOString(), query: 'a|b',
-    };
-    const ev: any = {
-      preventDefault() {}, stopPropagation() {},
-      target: { files: [{ name: 'a.pdf' }], value: 'x', checked: true },
-      index: 0, first: 0, rows: 10,
-    };
-    c.roleName = 'CategoryManager';
-    c.currentRole = 'CategoryManager';
-    c.loggedUserDetails = { id: 'u1', username: 'tester', role: { roleName: 'CategoryManager' }, org: { id: 'o1' }, listofPermission: [] };
-    c.selectedData = [row];
-    c.rowData = [row];
-    c.rfqDataList = [row];
-    c.cache_rfqDataList = [row];
-    c.vendorList = [{ id: '1', isLinked: true, isEdit: true }];
-    c.productsList = [row];
-    c.servicesList = [row];
-    c.itemList = [row];
-    c.regId = 'o1';
-    c.searchTextValue = 'x';
-    c.searchCriteria = 'Inline';
-    c.selectedIndex = 0;
-    c.form = { valid: true, invalid: false, value: { id: '1' }, reset: () => undefined, patchValue: () => undefined, get: () => ({ value: 'x', setValue: () => undefined, valid: true }) };
-    c.itemForm = c.form;
-
-    Object.keys(c).forEach((k) => {
-      const svc = c[k];
-      if (!svc || typeof svc !== 'object') return;
-      Object.keys(svc).forEach((m) => {
-        const spy = svc[m];
-        if (spy && spy.and && typeof spy.and.returnValue === 'function') {
-          try {
-            spy.and.returnValue(of({
-              status: 'Success', statusCode: '200', message: 'ok', data: [row], totalRecords: 1,
-              ...row, vendorProduct: [row], vendorService: [row], certificates: [row],
-            }));
-          } catch { /* */ }
-        }
-      });
-    });
-
-    try { deepExerciseComponent(c); } catch { /* */ }
-
-    Object.keys(c).forEach((k) => {
-      const svc = c[k];
-      if (!svc || typeof svc !== 'object') return;
-      Object.keys(svc).forEach((m) => {
-        const spy = svc[m];
-        if (spy && spy.and && typeof spy.and.returnValue === 'function') {
-          try { spy.and.returnValue(of({ status: 'Failure', statusCode: '500', message: 'err', errorMessage: 'err', data: null })); } catch { /* */ }
-        }
-      });
-    });
-    try { deepExerciseComponent(c); } catch { /* */ }
-
-    c.form = { valid: false, invalid: true, value: {}, reset: () => undefined, patchValue: () => undefined, get: () => ({ value: '', setValue: () => undefined, valid: false }) };
-    c.selectedData = [];
-    c.searchTextValue = '';
-    try { deepExerciseComponent(c); } catch { /* */ }
-    expect(component).toBeTruthy();
-  });
-
-  beforeEach(() => {
-    const c: any = component;
-    if (!c) return;
-
-    const row: any = {
-      id: '1', prId: 'PR100', ppoId: 'PPO100', rfqId: 'RFQ100', vendorId: 'v1', vendorName: 'Vendor 1', companyName: 'Vendor 1',
-      description: 'Item 1', brand: 'Brand A', unitofMeasures: 'PCS', quantity: 5, unitprice: 10,
-      pricePerUnit: 10, totalamount: 50, excludetaxamount: 40, gstValue: '10', price: 100,
-      status: 'Open', clientStatus: { uiDisplay: 'Submitted' }, userStatus: { uiDisplay: 'ApprovalPending' },
-      procucevStatus: { uiDisplay: 'Submitted' }, auctionstatus: { status: 'AUCTION_LIVE', uiDisplay: 'Live' },
-      auctionId: 'AUC-001-1', auctionName: 'Auction 1', auctionType: 'reverse auction', auctionCategory: 'item wise',
-      auctionStarttime: new Date(Date.now() - 3600000).toISOString(), auctionEndtime: new Date(Date.now() + 3600000).toISOString(),
-      rfquuid: 'rfq1',
-      org: { id: 'o1', companyName: 'Org 1', companyId: 'comp1' },
-      pritems: Array(10).fill({ serialNo: 1, description: 'Item 1', brand: 'B1', unitofMeasures: 'PCS', quantity: 5, price: 10 }),
-      lineItems: [{ description: 'Item 1', quantity: 5, unitPrice: 10, totalPrice: 50 }],
-      ppoitems: [{ serialNo: 1, description: 'Item 1', brand: 'B1', unitofMeasures: 'PCS', quantity: 5, unitprice: 10, excludetaxamount: 40, gstValue: '10', totalamount: 50, org: { id: 'o1', companyName: 'Org 1' } }],
-      clientdeliverylocation: [{ address: 'Addr 1', city: 'City 1', state: 'State 1' }],
-      clientcostcentre: [{ id: 'cc1', name: 'CC1' }],
-      prVendors: [{ companyName: 'V1', contactPerson: 'P1', email: 'v1@test.com', phone: '123' }],
-      vendorHeaders: [{ vendorId: 'v1', vendorName: 'V1', quotationId: 'q1', quoteId: 'quoteId_perUnit_v1' }],
-      itemsHeaders: [{ id: 'i1', itemId: 'i1', description: 'Item 1', quantity: 2, serialNo: 1 }],
-      totalItems: [{ id: '1', itemId: 'i1', pritemId: 'i1', rfqitemId: 'i1', quotationId: 'q1', vendorId: 'v1', totalamount: 100, unitprice: 10, excludetaxamount: 80, gstValue: '20', isActive: true, description: 'Item 1', pricePerUnit: 10, quantity: 2 }],
-      totalSqft: 500, isCapex: true, priority: 'High', singleVendor: true, suggestNewVendor: true, rateCardAvailable: true,
-      prCorrespond: 'Capex', prDescription: 'Desc 1', estimatedPrvalue: 5000, estimatedItemValue: 4000,
-      futureRequirement: 'Yes', dueDate: new Date().toISOString(), ppoValue: 1000, createdTS: new Date().toISOString(),
-      deliveryTerms: 'D', otherTerms: 'O', paymentTerms: 'P', approvedBy: 'User 1', submittedBy: 'User 2', createdBy: 'User 3',
-      deptName: 'Dept 1', pr: { prId: 'PR100' }, clientReference: [{ name: 'Ref 1' }]
-    };
-
-    c.loggedUserDetails = {
-      id: 'u1', username: 'tester', fullName: 'Tester User', phone: '123',
-      role: { roleName: 'PRApprover' },
-      org: { id: 'o1', name: 'Org 1', companyId: 'comp1' },
-      department: { id: 'd1', name: 'Dept 1' },
-      listofPermission: []
-    };
-    c.loggedUserData = { id: 'u1', fullName: 'Tester User' };
-    c.loggedUserType = 'PRApprover';
-    c.loggedUserPermissions = [];
-    c.defaultPermissions = {};
-    c.pruuid = 'uuid1';
-    c.editPrId = 'edit1';
-    c.savedPRData = { id: 'pr1', pritems: Array(10).fill({ serialNo: 1, description: 'Item 1', brand: 'B1', unitofMeasures: 'PCS', quantity: 5, price: 10 }) };
-    c.prData = { id: 'pr1', prId: 'PR100', procucevStatus: { uiDisplay: 'Submitted' } };
-    c.prId = 'PR100';
-    c.selectedPr = { id: 'PR100' };
-    c.selectedRFQ = 'RFQ100';
-    c.viewPrByIdList = { ...row };
-    c.prDetails = { ...row };
-    c.ppoData = { ...row };
-    c.data = { ...row };
-    c.dialogData = { ...row };
-    c.rfqData = { ...row, items: [{ id: 'i1', price: 100 }] };
-    c.ppoItems = [{ ...row, linkedItemId: 'l1', org: { id: 'o1', companyName: 'Org 1', companyId: 'comp1' } }];
-    c.items = [{ ...row }];
-    c.selectedData = [{ ...row }];
-    c.auctionsList = [{ ...row }];
-    c.ppoAuditHistory = [{ email: 'user@test.com', createdTS: new Date().toISOString() }];
-    c.prAuditHistory = [{ email: 'user@test.com', createdTS: new Date().toISOString() }];
-    c.selectedPoItems = [{ ...row, org: { id: 'o1', companyName: 'Org 1' } }];
-    c.selectedauctionData = { headers: [{ vname: 'V1', qid: 'Q1', vid: 'v1' }], items: [{ description: 'Item 1', data: [{ vendorid: 'v1', totalamount: 100 }] }] };
-    c.generalModel = { name: 'V1' };
-    c.regId = 'r1';
-    c.contactsList = [{ name: 'C1' }];
-    c.branchesForm = { getRawValue: () => ({ orgBranches: [] }) };
-    c.authorizedForm = { value: { isAuthorizedDistributor: true }, getRawValue: () => ({ distributors: [] }) };
-    c.financialModel = { bankName: 'B1' };
-    c.turnOver = [{ amount: '100', year: '2025' }];
-    c.certificatesToBase64 = [{ fileName: 'c.pdf' }];
-    c.documentsToBase64 = [{ fileName: 'd.pdf' }];
-    c.selectedCreateRfqItems = [{ id: '1', brand: 'B', category: 'C', createdBy: 'u', createdTS: 'd', description: 'd', itemcode: 'c', lastModifiedBy: 'u', lastModifiedTS: 'd', quantity: 1, status: 's', unitofMeasures: 'u', serialNo: 1 }];
-    c.selectedAttachedPrDocs = [{ file: 'f', fileName: 'fn' }];
-    c.selectedPrAddresses = [{ address: 'a', city: 'c', state: 's' }];
-    c.rfqDocumentsBase64 = [{ file: 'AAAA', fileName: 'd1.pdf' }];
-    c.itemHeader = [{ field: 'startpricevalue' }, { field: 'minimumBidReductionPrice' }];
-    c.startPrice = true;
-    c.minimumBidReduction = true;
-    c.exportPDFService = { utcToIst: (d: any) => d, addFooters: () => {} };
-    c.convertSer = { getBase64: () => Promise.resolve('data:application/pdf;base64,AAAA') };
-    c.vendorRegObj = {
-      acceptedTerms: true, clientRefference: true, tempapproval: true, validdate: '2025-12-31',
-      createdTS: new Date().toISOString(), emailsent: true, vendorStatus: 'Active', procucevStatus: 'Active',
-      status: 'Active', email: 'v@test.com', refference: 'Ref', website: 'web.com', organizationPhonenumber: '123',
-      vendorcategory: 'Cat 1', subCategory: 'Sub 1', dpsName: 'DPS', gmtName: 'GMT', bfsName: 'BFS',
-      upgradeVendor: false, upgradeStartDate: '2025-01-01', upgradeEndDate: '2025-12-31', upgradeDays: 365,
-      crn: 'CRN1', india: true, orgType: 'OrgType',
-      documents: [{ fileName: 'd1.pdf', file: 'AAAA' }],
-      certificates: [{ fileName: 'c1.pdf', file: 'BBBB' }],
-      clientReference: [{ name: 'Ref 1' }],
-      vendorProduct: [], vendorService: [], vendorContact: [], orgBankDetails: [], orgTurnOver: [],
-      distributors: [], authorizedDistributor: false
-    };
-    c.clientRefList = [{ name: 'Ref 1' }];
-    c.deliveryLocationList = [{ address: 'Addr 1', city: 'City 1', state: 'State 1' }];
-    c.createPRformList = [{ description: 'Item 1', uom: 'PCS', price: '100', isBoqItem: false }, { description: 'BOQ Item', uom: 'M', price: '200', isBoqItem: true }];
-    c.singleVendorform = [{ companyName: 'V1', contactPerson: 'P1', email: 'v1@test.com', phone: '123' }];
-    c.rateCardDocToBase64 = [{ file: 'AAAA', fileName: 'rc.pdf' }];
-    c.BOQDocToBase64 = [{ file: 'AAAA', fileName: 'boq.xlsx' }];
-    c.selectedCostCentreItems = [{ id: 'cc1', name: 'CC1' }];
-    c.tabGroup1 = { selectedIndex: 0 };
-    c.prLineItemsDetails = [{ header: 'H1', field: 'description' }];
-    c.ppoItemsHeaders = [{ header: 'H1', field: 'description' }];
-    c.exportTable = { nativeElement: document.createElement('table') };
-
-    if (c.encryDecryService && c.encryDecryService.get && typeof c.encryDecryService.get.and === 'object') {
-      try {
-        c.encryDecryService.get.and.returnValue(JSON.stringify({ details: c.loggedUserDetails }));
-      } catch { /* */ }
-    }
-
-    // Wire up all service spies on c to return success payloads with full pritems/ppoitems
-    Object.keys(c).forEach((k) => {
-      const svc = c[k];
-      if (!svc || typeof svc !== 'object') return;
-      Object.keys(svc).forEach((m) => {
-        const spy = svc[m];
-        if (spy && spy.and && typeof spy.and.returnValue === 'function') {
-          try {
-            spy.and.returnValue(of({
-              status: 'Success', statusCode: '200', message: 'ok', id: '1', data: [row], content: [row], result: [row], payload: [row],
-              pritems: Array(10).fill({ serialNo: 1, description: 'Item 1', brand: 'B1', unitofMeasures: 'PCS', quantity: 5, price: 10 }),
-              ppoitems: Array(10).fill({ serialNo: 1, description: 'Item 1', brand: 'B1', unitofMeasures: 'PCS', quantity: 5, price: 10, org: { id: 'o1', companyName: 'Org 1' } }),
-              lineItems: [{ description: 'Item 1', quantity: 5, unitPrice: 10, totalPrice: 50 }],
-              bidItems: [{ description: 'd', specification: 's', unitofMeasures: 'u', quantity: 1, bidAmount: 10, rank: 1 }],
-              vendorName: 'V1', currentRank: 1, bidAmount: 10,
-              vendor: ['V1'], prices: [{ minBidAmount: 10, maxBidAmount: 50 }],
-              uom: { description: 'PCS' },
-              ...row
-            }));
-          } catch { /* */ }
-        }
-      });
-    });
-  });
-
-  it('patch-pending-specs-marker create-pr-modal-new deep branch coverage', () => {
-    const c: any = component;
-    
-    const origSetTimeout = window.setTimeout;
-    (window as any).setTimeout = (fn: any, delay: any) => {
-      if (typeof fn === 'function') {
-        try { fn(); } catch (e) {}
+    // Test brand_0 fallback path
+    component.createPRformList = [];
+    component.next({
+      value: {
+        prDescription: 'Desc',
+        dueDate: '2026-08-18',
+        prCorrespond: 'Capex',
+        totalSqft: '500',
+        brand_0: 'B',
+        quantity_0: 1,
+        description_0: 'D',
+        unitofMeasures_0: 'KG'
       }
-      return 0;
-    };
-    (window as any).swal = (opts: any) => ({
-      then: (fn: any) => {
-        if (typeof fn === 'function') {
-          try { fn({ value: true }); } catch (e) {}
-        }
-        return { catch: () => {} };
+    } as NgForm);
+    expect(component.selectedIndex).toBe(2);
+
+    // Form missing description
+    component.next({ value: {} } as NgForm);
+    expect(toastr.warning).toHaveBeenCalledWith('Please Enter PR Description', 'Warning');
+
+    // Form missing dueDate
+    component.next({ value: { prDescription: 'Desc' } } as NgForm);
+    expect(toastr.warning).toHaveBeenCalledWith('Please select Expacted Date', 'Warning');
+
+    // Form missing prCorrespond
+    component.next({ value: { prDescription: 'Desc', dueDate: '2026-08-18' } } as NgForm);
+    expect(toastr.warning).toHaveBeenCalledWith('Please select Pr Corresponds', 'Warning');
+
+    // Form missing totalSqft
+    component.next({ value: { prDescription: 'Desc', dueDate: '2026-08-18', prCorrespond: 'Capex' } } as NgForm);
+    expect(toastr.warning).toHaveBeenCalledWith('Please Enter Square Feet', 'Warning');
+
+    // back and backToCreatePR
+    component.selectedIndex = 2;
+    component.back();
+    expect(component.selectedIndex).toBe(1);
+
+    spyOn(component.closeCreatePR, 'emit');
+    component.backToCreatePR();
+    expect(component.closeCreatePR.emit).toHaveBeenCalled();
+  });
+
+  it('should handle formSave with success, failure, boq items, and editPRData', () => {
+    const form = {
+      value: {
+        prDescription: 'Desc',
+        dueDate: '2026-08-18',
+        prCorrespond: 'Capex',
+        totalSqft: '500',
+        singleVendor: false,
+        rateCardAvailable: false
       }
-    });
+    } as NgForm;
 
-    const sweepRow: any = c.viewPrByIdList || c.data || { id: '1', prId: 'PR100', ppoId: 'PPO100', rfqId: 'RFQ100', vendorId: 'v1', vendorName: 'V1', status: 'Open', auctionEndtime: new Date(Date.now()+3600000).toISOString(), auctionStarttime: new Date(Date.now()-3600000).toISOString(), auctionCategory: 'item wise' };
-    const sweepEv: any = { preventDefault() {}, stopPropagation() {}, target: { files: [{ name: 'a.pdf' }], value: 'x', checked: true }, srcElement: { lastChild: { data: '1' } }, index: 0, first: 0, rows: 10 };
-    const sweepForm: any = { valid: true, invalid: false, value: { prDescription: 'Desc', dueDate: '2025-12-31', prCorrespond: 'Capex', singleVendor: true, suggestNewVendor: true, rateCardAvailable: true, futureRequirement: 'Yes', priority: 'High', brand_0: 'B', quantity_0: '1', description_0: 'D', unitofMeasures_0: 'PCS', city_0: 'C', address_0: 'A', state_0: 'S', id: '1' }, reset() {}, patchValue() {}, get: () => ({ value: 'x', valid: true }) };
+    // Missing prDescription
+    component.formSave({ value: {} } as NgForm);
+    expect(toastr.warning).toHaveBeenCalledWith('Please Enter PR Description', 'Warning');
 
-    const proto = Object.getPrototypeOf(c);
-    const props = new Set([...Object.keys(c), ...Object.getOwnPropertyNames(proto)]);
-
-    const stateConfigs = [
-      { role: 'CategoryManager', cat: 'item wise', action: 'Submit', bool: true },
-      { role: 'Vendor', cat: 'rfq total wise', action: 'Accept', bool: false },
-      { role: 'ClientInitiator', cat: 'PR Wise', action: 'Reject', bool: true },
-      { role: 'PRApprover', cat: 'RFQ Wise', action: 'PPO', bool: false }
+    component.createPRformList = [
+      { id: '1', description: 'Item 1', isBoqItem: false, uom: 'PCS', specification: 'Spec 1', price: '100' },
+      { id: '2', description: 'Item 2', isBoqItem: true }
     ];
+    component.singleVendorform = [{ companyName: 'V1' }];
+    component.editPRData = { pritems: [{ id: 'item1' }] };
+    component.tabGroup1 = { selectedIndex: 0 };
+    component.editPrId = 'PR-100';
+    component.pruuid = 'uuid-1';
 
-    const runSweep = () => {
-      stateConfigs.forEach(cfg => {
-        c.loggedUserType = cfg.role;
-        if (c.loggedUserDetails && c.loggedUserDetails.role) c.loggedUserDetails.role.roleName = cfg.role;
-        c.selectedCategoryType = cfg.cat;
-        c.auctionCategory = cfg.cat;
-        c.isCapex = cfg.bool;
-        c.singleVendor = cfg.bool;
-        c.suggestNewVendor = cfg.bool;
-        c.rateCardAvailable = cfg.bool;
+    // Save success
+    createPrService.savePR.and.returnValue(of({ id: 'saved-1', message: 'Saved OK', pritems: [{ serialNo: 1 }, { serialNo: 2 }] }));
+    component.formSave(form);
+    expect(toastr.success).toHaveBeenCalledWith('Saved OK', 'Success');
+    expect(component.savedPRData.id).toBe('saved-1');
 
-        props.forEach((m) => {
-          if (m === 'constructor') return;
-          const fn = c[m];
-          if (typeof fn !== 'function') return;
-          try { fn.call(c); } catch (e) {}
-          try { fn.call(c, sweepRow); } catch (e) {}
-          try { fn.call(c, sweepEv); } catch (e) {}
-          try { fn.call(c, sweepForm); } catch (e) {}
-          try { fn.call(c, cfg.action, sweepRow); } catch (e) {}
-          try { fn.call(c, sweepRow, sweepEv); } catch (e) {}
-          try { fn.call(c, '1', 'v1'); } catch (e) {}
-          try { fn.call(c, cfg.bool); } catch (e) {}
-        });
-      });
-    };
+    // Save failure (Failure / failure)
+    createPrService.savePR.and.returnValue(of({ status: 'failure', message: 'Failed to save' }));
+    component.formSave(form);
+    expect(toastr.error).toHaveBeenCalledWith('Failed to save', 'Failure');
+  });
 
-    // Pass 1: Truthy populated state
-    runSweep();
+  it('should handle onSubmit with confirm and success/failure callbacks', fakeAsync(() => {
+    spyOn(swalConfirm, 'open').and.returnValue(Promise.resolve({ value: true }));
+    component.savedPRData = { id: 'saved-1' };
+    component.deliveryLocationList = [{ address: 'Main St', city: 'City', state: 'State' }];
+    component.rateCardDocToBase64 = [{ fileName: 'rc.png', file: 'QUJD' }];
+    component.BOQDocToBase64 = [{ fileName: 'boq.png', file: 'QUJD' }];
+    component.createPRformList = [{ uom: 'PCS', brand: 'B', price: '100' }];
+    component.singleVendorform = [{ companyName: 'Vendor' }];
+    component.pruuid = 'PR-100';
+    component.editPrId = 'PR-100';
 
-    // Pass 2: Falsy state fallbacks with safe empty inner structures
-    c.viewPrByIdList = { pritems: [{ serialNo: 1, description: 'Item 1', brand: 'B1', unitofMeasures: 'PCS', quantity: 5, price: 10 }], clientdeliverylocation: [{ address: 'A', city: 'C', state: 'S' }], org: { id: 'o1' } };
-    c.prDetails = { pritems: [{ serialNo: 1, description: 'Item 1', brand: 'B1', unitofMeasures: 'PCS', quantity: 5, price: 10 }], clientdeliverylocation: [{ address: 'A', city: 'C', state: 'S' }], org: { id: 'o1' } };
-    c.ppoData = { ppoitems: [{ serialNo: 1, description: 'Item 1', brand: 'B1', unitofMeasures: 'PCS', quantity: 5, price: 10, org: { id: 'o1' } }], clientdeliverylocation: [{ address: 'A', city: 'C', state: 'S' }], pr: { prId: 'PR1' }, org: { id: 'o1' } };
-    c.data = { vendorHeaders: [{ vendorId: 'v1', vendorName: 'V1', quoteId: 'Q1' }], itemsHeaders: [{ id: 'i1', itemId: 'i1' }], totalItems: [{ id: '1', itemId: 'i1', vendorId: 'v1' }] };
-    c.rfqData = { items: [{ id: 'i1' }] };
-    c.ppoItems = [{ id: '1', description: 'Item 1', linkedItemId: 'l1', org: { id: 'o1', companyName: 'Org 1', companyId: 'comp1' } }];
-    c.selectedData = [{ id: '1', auctionEndtime: new Date(Date.now()+3600000).toISOString(), auctionStarttime: new Date(Date.now()-3600000).toISOString(), auctionstatus: { status: 'AUCTION_LIVE' }, org: { id: 'o1' } }];
-    c.auctionsList = [{ id: '1', auctionId: 'AUC-001-1' }];
-    c.vendorRegObj = { documents: [{ fileName: 'd.pdf' }], certificates: [{ fileName: 'c.pdf' }], clientReference: [{ name: 'R' }] };
-    c.clientRefList = [{ name: 'R' }];
-    c.deliveryLocationList = [{ address: 'A', city: 'C', state: 'S' }];
-    c.createPRformList = [{ description: 'Item 1', uom: 'PCS', price: '100', isBoqItem: false }];
-    c.singleVendorform = [{ companyName: 'V1', contactPerson: 'P1', email: 'v1@test.com', phone: '123' }];
-    c.rateCardDocToBase64 = [{ file: 'A', fileName: 'rc.pdf' }];
-    c.BOQDocToBase64 = [{ file: 'A', fileName: 'boq.xlsx' }];
-    c.selectedCostCentreItems = [{ id: 'cc1', name: 'CC1' }];
-    runSweep();
+    const validForm = {
+      value: {
+        prCorrespond: 'Capex',
+        prDescription: 'Desc',
+        dueDate: '2026-08-18',
+        singleVendor: true,
+        suggestNewVendor: true,
+        rateCardAvailable: true,
+        futureRequirement: 'Yes',
+        totalSqft: 1000,
+        priority: 'High'
+      }
+    } as NgForm;
 
-    // Pass 3: Error observable responses
-    Object.keys(c).forEach((k) => {
-      const svc = c[k];
-      if (!svc || typeof svc !== 'object') return;
-      Object.keys(svc).forEach((m) => {
-        const spy = svc[m];
-        if (spy && spy.and && typeof spy.and.returnValue === 'function') {
-          try { spy.and.returnValue(of({ status: 'Failure', statusCode: '500', message: 'err', errorMessage: 'err', data: null, result: null })); } catch { /* */ }
-        }
-      });
+    // Submit success ('Success' / 'success')
+    createPrService.submitPrdetails.and.returnValue(of({ status: 'success', message: 'PR Submitted', pritems: [{ serialNo: 1 }] }));
+    component.onSubmit(validForm);
+    tick(600);
+    expect(toastr.success).toHaveBeenCalledWith('PR Submitted', 'Success');
+
+    // Submit failure ('Failure' / 'failure')
+    createPrService.submitPrdetails.and.returnValue(of({ status: 'failure', message: 'Submit failed' }));
+    component.onSubmit(validForm);
+    tick(600);
+    expect(toastr.error).toHaveBeenCalledWith('Submit failed', 'Failure');
+
+    // Submit with rateCardAvailable: false, BOQDocToBase64: [], singleVendorform empty, no pruuid, no editPrId
+    component.rateCardDocToBase64 = [];
+    component.BOQDocToBase64 = [];
+    component.singleVendorform = [{ companyName: '' }];
+    component.pruuid = '';
+    component.editPrId = '';
+    component.savedPRData = { id: 'saved-2' };
+    createPrService.submitPrdetails.and.returnValue(of({ status: 'Success', message: 'PR Submitted', pritems: [{ serialNo: 1 }] }));
+    component.onSubmit({
+      value: {
+        prCorrespond: 'Capex',
+        prDescription: 'Desc',
+        dueDate: '2026-08-18',
+        singleVendor: false,
+        suggestNewVendor: false,
+        rateCardAvailable: false
+      }
+    } as NgForm);
+    tick(600);
+
+    // Warning when required fields missing
+    component.savedPRData = null;
+    component.onSubmit(validForm);
+    expect(toastr.warning).toHaveBeenCalledWith('Please Enter Required Fields', 'Warning');
+
+    flush();
+  }));
+
+  it('should handle onChangeVendor, updatePRList, and ngOnDestroy', () => {
+    component.onChangeVendor({});
+    expect(component.singleVendorform.length).toBe(1);
+
+    component.updatePRList({
+      prCapexVendors: [{ id: 'cv1' }],
+      prItemsList: [{ id: '1', name: 'Item 1' }, { name: 'Item 2' }],
+      estimatedPRValue: 5000,
+      estimatedItemValue: 4000
     });
-    runSweep();
+    expect(component.selectedCapexVendors.length).toBe(1);
+    expect(component.createPRformList.length).toBe(2);
+    expect(component.estimatedPrvalue).toBe(5000);
+    expect(component.estimatedItemValue).toBe(4000);
 
-    (window as any).setTimeout = origSetTimeout;
+    // updatePRList with empty/falsy values
+    component.updatePRList({
+      prCapexVendors: null,
+      prItemsList: null,
+      estimatedPRValue: 0,
+      estimatedItemValue: 0
+    });
+    expect(component.selectedCapexVendors).toEqual([]);
 
-    try { c.ngOnInit(); } catch(e) {}
-    try { c.formSave(c.sweepForm || { value: { prDescription: 'D', dueDate: '2025-12-31', prCorrespond: 'Capex' } }); } catch(e) {}
-    try { c.next(c.sweepForm || { value: { prDescription: 'D', dueDate: '2025-12-31', prCorrespond: 'Capex' } }); } catch(e) {}
-    try { c.uploadRateCard({ target: { files: [{ name: 'rc.pdf' }] } }); } catch(e) {}
-    try { c.uploadLineItemFile({ target: { files: [{ name: 'boq.xlsx' }] } }); } catch(e) {}
-    try { c.uploadBOQFile({ target: { files: [{ name: 'boq.xlsx' }] } }); } catch(e) {}
-    try { c.updatePRList({ prItemsList: [{ serialNo: 1, description: 'Item 1' }], estimatedPRValue: 1000, estimatedItemValue: 800 }); } catch(e) {}
-    expect(c).toBeTruthy();
+    spyOn(clientService.$_prData, 'next');
+    component.ngOnDestroy();
+    expect(clientService.$_prData.next).toHaveBeenCalledWith(null);
   });
 });

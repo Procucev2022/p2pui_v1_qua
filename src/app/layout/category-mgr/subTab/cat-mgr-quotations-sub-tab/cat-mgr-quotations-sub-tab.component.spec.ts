@@ -146,7 +146,7 @@ describe('CatMgrQuotationsSubTabComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should test getQuotationsByRfq array/object responses, viewCorresspondance, and viewQuotDetails', () => {
+  it('should test all methods and branches in CatMgrQuotationsSubTabComponent', () => {
     const procuSvc = TestBed.inject(CatProcuRequestsService) as any;
     const toastr = TestBed.inject(ToastrService) as any;
     const dialog = TestBed.inject(MatDialog) as any;
@@ -154,8 +154,13 @@ describe('CatMgrQuotationsSubTabComponent', () => {
     component.rfqData = { id: 'rfq1' };
 
     procuSvc.getQuotationsByRfq.and.returnValue(of([{ quotationId: 'q1', totalAmount: '100' }]));
-    component.getQuotationsByRfq();
+    component.ngOnInit();
     expect(component.quotsList.length).toBe(1);
+
+    component.rfqId = 'rfq1';
+    component.ngOnChanges();
+    component.rfqId = null;
+    component.ngOnChanges();
 
     procuSvc.getQuotationsByRfq.and.returnValue(of({ errorMessage: 'No quots' }));
     component.getQuotationsByRfq();
@@ -166,11 +171,21 @@ describe('CatMgrQuotationsSubTabComponent', () => {
     });
     component.viewCorresspondance({ id: 'q1' });
 
+    component.getRFQs({ id: 'q1' });
+    expect(component.selectedQuotData.id).toBe('q1');
+
+    component.onPage({ page: 1 });
+    component.sendRfqToVendors({ id: 'q1' });
+    component.getTabData({});
+
     component.viewQuotDetails({ totalAmount: '500' });
     expect(dialog.open).toHaveBeenCalled();
 
     component.viewQuotDetails({ totalAmount: null });
     expect(toastr.warning).toHaveBeenCalledWith('Not allowed at this moment ', 'Warning');
+
+    component.viewQuotDetails({ totalAmount: '' });
+    component.viewQuotDetails({ totalAmount: 'null' });
   });
 
   it('exerciseComponent branch coverage', () => {
