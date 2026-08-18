@@ -68,7 +68,8 @@ const routes: Routes = [
     {   path: 'gmt-vendors', component: GmtVendorsListComponent},
     {path: 'payment-success', component: SubscriptionPaymentSuccessComponent},
     {path: 'payment-failure', component: SubscriptionPaymentFailureComponent},
-    {path: 'cat-mgr-reports', component: CategoryMgrReportsComponent}
+    {path: 'cat-mgr-reports', component: CategoryMgrReportsComponent},
+    {path: 'buyer-vendors', loadChildren: () => import('../buyer-vendors/buyer-vendors.module').then(m => m.BuyerVendorsModule)}
 ];
 @NgModule({
     imports: [RouterModule.forChild(routes)],

@@ -41,7 +41,7 @@ export class ScreenAccessGuardGuard implements CanActivateChild {
         if (!!this.currentSystem && this.currentSystem != 'null') {
             // currentSystem should be in GMT Subscriptions
             if (this.GMT_USERS.includes(this.roleName) && [SystemViewConfig.GMT_BASIC, SystemViewConfig.GMT_BASIC_PLUS, SystemViewConfig.GMT_PROF].includes(this.currentSystem)) {
-                if (this.GMT_SYSTEM_SCREENS_LIST[this.roleName].includes(state.url)) {
+                if (this.isUrlAllowed(state.url, this.GMT_SYSTEM_SCREENS_LIST[this.roleName])) {
                     return true;
                 } else {
                     this.navigateToUnAuthorized();
@@ -50,7 +50,7 @@ export class ScreenAccessGuardGuard implements CanActivateChild {
             }
             // For BFS System Users
             else if(this.GMT_USERS.includes(this.roleName) && [SystemViewConfig.BFS_PRO].includes(this.currentSystem)){
-                if (BFS_SYSTEM_SCREEN_LIST[this.roleName].includes(state.url)) {
+                if (this.isUrlAllowed(state.url, BFS_SYSTEM_SCREEN_LIST[this.roleName])) {
                     return true;
                 } else {
                     this.navigateToUnAuthorized();
@@ -58,7 +58,7 @@ export class ScreenAccessGuardGuard implements CanActivateChild {
                 }
             }
             else {
-                if (this.GMT_SYSTEM_SCREENS_LIST[this.roleName].includes(state.url)) {
+                if (this.isUrlAllowed(state.url, this.GMT_SYSTEM_SCREENS_LIST[this.roleName])) {
                     this.navigateToUnAuthorized();
                     return false;
                 } else {
@@ -79,6 +79,11 @@ export class ScreenAccessGuardGuard implements CanActivateChild {
 
 
 
+    }
+
+    isUrlAllowed(url: string, allowedList: string[]): boolean {
+        if (!allowedList) { return false; }
+        return allowedList.some(allowed => url === allowed || url.startsWith(allowed + '/'));
     }
 
 
