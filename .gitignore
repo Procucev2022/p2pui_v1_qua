@@ -45,10 +45,17 @@ testem.log
 # Coverage work scripts & logs (local dev only)
 .coverage-work/
 
-# Temporary helper scripts
+# Temporary helper and generator scripts
 _list_stubs.js
+scripts/auto-patch-*.js
+scripts/boost-*.js
+scripts/deepen-*.js
+scripts/gen-*.js
+scripts/patch-*.js
+scripts/pattern-*.js
 
 # System files
 .DS_Store
 Thumbs.db
+
  
