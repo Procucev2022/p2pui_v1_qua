@@ -1,3 +1,0 @@
-# Cursor repository rules
-
-Read and follow `AGENTS.md` before changing code. Every application change requires deterministic unit tests and the full coverage gate. Measure every `src/**/*.ts` application file (exclude specs/typings) without omissions and enforce >=90% statements, branches, functions, and lines per file and in aggregate. Keep the global Jasmine timeout at 60 seconds. Mock HTTP and external browser services. Never lower thresholds or add exclusions to hide untested application behavior. Include the complete coverage output in the completion report.

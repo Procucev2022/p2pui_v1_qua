@@ -37,6 +37,17 @@ yarn-error.log
 testem.log
 /typings
 
+# AI/Agent tooling (should not be committed)
+.agents/
+.cursor/
+.cursorrules
+
+# Coverage work scripts & logs (local dev only)
+.coverage-work/
+
+# Temporary helper scripts
+_list_stubs.js
+
 # System files
 .DS_Store
 Thumbs.db
