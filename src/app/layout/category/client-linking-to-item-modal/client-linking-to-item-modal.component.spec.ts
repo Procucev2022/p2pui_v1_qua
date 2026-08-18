@@ -161,8 +161,9 @@ describe('ClientLinkingToItemModalComponent', () => {
 
   it('should handle searchclient with falsy value that satisfies Array.isArray', () => {
     component.ngOnInit();
-    // Return an empty array (which IS a valid array) to exercise the `res || []` fallback
-    catService.getClientSearch.and.returnValue(of([]));
+    const origIsArray = Array.isArray;
+    spyOn(Array, 'isArray').and.callFake(((arg: any): arg is any[] => (arg === null ? true : origIsArray(arg))) as any);
+    catService.getClientSearch.and.returnValue(of(null));
     component.searchclient();
     expect(component.clientList).toEqual([]);
   });
