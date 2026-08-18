@@ -1,34 +1,38 @@
-import {
-  noTransition,
-  routerTransition,
-  slideToBottom,
-  slideToLeft,
-  slideToRight,
-  slideToTop
-} from './router.animations';
+import { routerTransition, noTransition, slideToRight, slideToLeft, slideToBottom, slideToTop } from './router.animations';
 
 describe('router.animations', () => {
-  it('should return a truthy trigger from routerTransition', () => {
-    expect(routerTransition()).toBeTruthy();
+  it('routerTransition should return a trigger', () => {
+    const result = routerTransition();
+    expect(result.name).toBe('routerTransition');
   });
 
-  it('should return a truthy trigger from noTransition', () => {
-    expect(noTransition()).toBeTruthy();
+  it('noTransition should return a trigger with no transitions', () => {
+    const result = noTransition();
+    expect(result.name).toBe('routerTransition');
+    expect(result.definitions.length).toBe(0);
   });
 
-  it('should return a truthy trigger from slideToRight', () => {
-    expect(slideToRight()).toBeTruthy();
+  it('slideToRight should return a trigger with transitions', () => {
+    const result = slideToRight();
+    expect(result.name).toBe('routerTransition');
+    expect(result.definitions.length).toBeGreaterThan(0);
   });
 
-  it('should return a truthy trigger from slideToLeft', () => {
-    expect(slideToLeft()).toBeTruthy();
+  it('slideToLeft should return a trigger with transitions', () => {
+    const result = slideToLeft();
+    expect(result.name).toBe('routerTransition');
+    expect(result.definitions.length).toBeGreaterThan(0);
   });
 
-  it('should return a truthy trigger from slideToBottom', () => {
-    expect(slideToBottom()).toBeTruthy();
+  it('slideToBottom should return a trigger with transitions', () => {
+    const result = slideToBottom();
+    expect(result.name).toBe('routerTransition');
+    expect(result.definitions.length).toBeGreaterThan(0);
   });
 
-  it('should return a truthy trigger from slideToTop', () => {
-    expect(slideToTop()).toBeTruthy();
+  it('slideToTop should return a trigger with transitions', () => {
+    const result = slideToTop();
+    expect(result.name).toBe('routerTransition');
+    expect(result.definitions.length).toBeGreaterThan(0);
   });
 });

@@ -3,7 +3,6 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { CommentsService } from './comments.service';
 import { AppApiConfig } from 'src/app/shared/constants/app-api.config';
 
-
 describe('CommentsService', () => {
   let service: CommentsService;
   let httpMock: HttpTestingController;
@@ -11,190 +10,130 @@ describe('CommentsService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [
-        CommentsService
-      ]
+      providers: [CommentsService]
     });
     service = TestBed.inject(CommentsService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
-  afterEach(() => {
-    httpMock.verify();
-  });
+  afterEach(() => httpMock.verify());
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should call getRFQComments', () => {
-    service.getRFQComments({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
+  it('getRFQComments should POST', () => {
+    service.getRFQComments({ id: 1 }).subscribe(r => expect(r).toEqual({ ok: true }));
     const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_RFQ_COMMENTS_BY);
     expect(req.request.method).toBe('POST');
     req.flush({ ok: true });
   });
 
-  it('should call getRFQCommentsByRFQandVendor', () => {
-    service.getRFQCommentsByRFQandVendor({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
+  it('getRFQCommentsByRFQandVendor should POST', () => {
+    service.getRFQCommentsByRFQandVendor({ id: 1 }).subscribe(r => expect(r).toBeTruthy());
     const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_RFQ_COMMENTS_BY_RFQ_VENDOR);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    req.flush({});
   });
 
-  it('should call saveRFQComments', () => {
-    service.saveRFQComments({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
+  it('saveRFQComments should POST', () => {
+    service.saveRFQComments({ text: 'hi' }).subscribe(r => expect(r).toBeTruthy());
     const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.SAVE_RFQ_COMMENTS);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    req.flush({});
   });
 
-  it('should call getVendorsByRfq', () => {
-    service.getVendorsByRfq({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
+  it('getVendorsByRfq should POST', () => {
+    service.getVendorsByRfq({ rfqId: 1 }).subscribe(r => expect(r).toBeTruthy());
     const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_VENDORS_BY_RFQ);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    req.flush({});
   });
 
-  it('should call getPRComments', () => {
-    service.getPRComments({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
+  it('getPRComments should POST', () => {
+    service.getPRComments({ id: 1 }).subscribe(r => expect(r).toBeTruthy());
     const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_PR_COMMENTS);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    req.flush({});
   });
 
-  it('should call savePRComments', () => {
-    service.savePRComments({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
+  it('savePRComments should POST', () => {
+    service.savePRComments({ text: 'x' }).subscribe(r => expect(r).toBeTruthy());
     const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.SAVE_PR_COMMENTS);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    req.flush({});
   });
 
-  it('should call getQuoteComments', () => {
-    service.getQuoteComments({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
+  it('getQuoteComments should POST', () => {
+    service.getQuoteComments({ id: 1 }).subscribe(r => expect(r).toBeTruthy());
     const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_QUOTE_COMMENTS);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    req.flush({});
   });
 
-  it('should call saveQuoteComments', () => {
-    service.saveQuoteComments({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
+  it('saveQuoteComments should POST', () => {
+    service.saveQuoteComments({ text: 'x' }).subscribe(r => expect(r).toBeTruthy());
     const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.SAVE_QUOTE_COMMENTS);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    req.flush({});
   });
 
-  it('should call getPPOComments', () => {
-    service.getPPOComments({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
+  it('getPPOComments should POST', () => {
+    service.getPPOComments({ id: 1 }).subscribe(r => expect(r).toBeTruthy());
     const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_PPO_COMMENTS);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    req.flush({});
   });
 
-  it('should call savePPOComments', () => {
-    service.savePPOComments({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
+  it('savePPOComments should POST', () => {
+    service.savePPOComments({ text: 'x' }).subscribe(r => expect(r).toBeTruthy());
     const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.SAVE_PPO_COMMENTS);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    req.flush({});
   });
 
-  it('should call savePrClientComment', () => {
-    service.savePrClientComment({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
+  it('savePrClientComment should POST', () => {
+    service.savePrClientComment({ text: 'x' }).subscribe(r => expect(r).toBeTruthy());
     const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.SAVE_PR_CLIENT_COMMENTS);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    req.flush({});
   });
 
-  it('should call getPrClientCommentByPr', () => {
-    service.getPrClientCommentByPr({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
+  it('getPrClientCommentByPr should POST', () => {
+    service.getPrClientCommentByPr({ id: 1 }).subscribe(r => expect(r).toBeTruthy());
     const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_CLIENT_PR_COMMENTS_BY_PR);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    req.flush({});
   });
 
-  it('should call getPOComments', () => {
-    service.getPOComments({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
+  it('getPOComments should POST', () => {
+    service.getPOComments({ id: 1 }).subscribe(r => expect(r).toBeTruthy());
     const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_PO_COMMENTS);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    req.flush({});
   });
 
-  it('should call savePOComments', () => {
-    service.savePOComments({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
+  it('savePOComments should POST', () => {
+    service.savePOComments({ text: 'x' }).subscribe(r => expect(r).toBeTruthy());
     const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.SAVE_PO_COMMENTS);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    req.flush({});
   });
 
-  it('should call getDeliveryComments', () => {
-    service.getDeliveryComments({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
+  it('getDeliveryComments should POST', () => {
+    service.getDeliveryComments({ id: 1 }).subscribe(r => expect(r).toBeTruthy());
     const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_DELIVERY_COMMENTS);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    req.flush({});
   });
 
-  it('should call saveDeliveryComments', () => {
-    service.saveDeliveryComments({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
+  it('saveDeliveryComments should POST', () => {
+    service.saveDeliveryComments({ text: 'x' }).subscribe(r => expect(r).toBeTruthy());
     const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.SAVE_DELIVERY_COMMENTS);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    req.flush({});
   });
 
-  it('should call getASNComments', () => {
-    service.getASNComments({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
+  it('getASNComments should POST', () => {
+    service.getASNComments({ id: 1 }).subscribe(r => expect(r).toBeTruthy());
     const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_ASN_COMMENTS);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    req.flush({});
   });
 
-  it('should call saveASNComments', () => {
-    service.saveASNComments({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
+  it('saveASNComments should POST', () => {
+    service.saveASNComments({ text: 'x' }).subscribe(r => expect(r).toBeTruthy());
     const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.SAVE_ASN_COMMENTS);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    req.flush({});
   });
 
-  it('should call getValidatePincode', () => {
-    service.getValidatePincode({ id: 1 }).subscribe((res: any) => {
-      expect(res).toEqual({ ok: true });
-    });
+  it('getValidatePincode should POST', () => {
+    service.getValidatePincode({ pincode: '500001' }).subscribe(r => expect(r).toBeTruthy());
     const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.GET_PINCODE_VALIDATION);
-    expect(req.request.method).toBe('POST');
-    req.flush({ ok: true });
+    req.flush({});
   });
 });

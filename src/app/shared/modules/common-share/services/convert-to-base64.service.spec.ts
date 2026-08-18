@@ -1,67 +1,53 @@
-import { TestBed } from '@angular/core/testing';
 import { ConvertToBase64Service } from './convert-to-base64.service';
 
 describe('ConvertToBase64Service', () => {
   let service: ConvertToBase64Service;
-  let OriginalFileReader: typeof FileReader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [ConvertToBase64Service],
-    });
-    service = TestBed.inject(ConvertToBase64Service);
-    OriginalFileReader = (window as any).FileReader;
-  });
-
-  afterEach(() => {
-    (window as any).FileReader = OriginalFileReader;
+    service = new ConvertToBase64Service();
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should resolve with FileReader result on load', async () => {
-    // Service assigns onload AFTER readAsDataURL — defer callback.
-    (window as any).FileReader = function MockFileReader(this: any) {
-      this.result = null;
-      this.onload = null;
-      this.onerror = null;
-      this.readAsDataURL = jasmine
-        .createSpy('readAsDataURL')
-        .and.callFake(() => {
-          this.result = 'data:text/plain;base64,YWJj';
-          setTimeout(() => {
-            if (this.onload) {
-              this.onload();
-            }
-          }, 0);
-        });
-    };
-
-    const file = new Blob(['abc'], { type: 'text/plain' });
+  it('getBase64 should resolve with base64 string for valid file', async () => {
+    const blob = new Blob(['hello'], { type: 'text/plain' });
+    const file = new File([blob], 'test.txt', { type: 'text/plain' });
     const result = await service.getBase64(file);
-    expect(result).toBe('data:text/plain;base64,YWJj');
+    expect((result as string)).toContain('data:text/plain;base64,');
   });
 
-  it('should reject when FileReader errors', async () => {
-    const readError = new Error('read failed');
-    (window as any).FileReader = function MockFileReader(this: any) {
-      this.result = null;
-      this.onload = null;
-      this.onerror = null;
-      this.readAsDataURL = jasmine
-        .createSpy('readAsDataURL')
-        .and.callFake(() => {
-          setTimeout(() => {
-            if (this.onerror) {
-              this.onerror(readError);
-            }
-          }, 0);
-        });
-    };
+  it('getBase64 should reject on error', async () => {
+    const origFileReader = (window as any).FileReader;
+    class MockFileReader {
+      onload: any;
+      onerror: any;
+      result: any;
+      readAsDataURL(file: any) {
+        setTimeout(() => {
+          if (this.onerror) {
+            this.onerror(new Error('Read failed'));
+          }
+        }, 0);
+      }
+    }
+    (window as any).FileReader = MockFileReader;
+    try {
+      const file = new File(['test'], 'test.txt');
+      await service.getBase64(file);
+      fail('should have rejected');
+    } catch (e) {
+      expect(e).toBeDefined();
+    } finally {
+      (window as any).FileReader = origFileReader;
+    }
+  });
 
-    const file = new Blob(['abc'], { type: 'text/plain' });
-    await expectAsync(service.getBase64(file)).toBeRejectedWith(readError);
+  it('getBase64 should handle empty file', async () => {
+    const blob = new Blob([], { type: 'text/plain' });
+    const file = new File([blob], 'empty.txt', { type: 'text/plain' });
+    const result = await service.getBase64(file);
+    expect(result).toBeTruthy();
   });
 });

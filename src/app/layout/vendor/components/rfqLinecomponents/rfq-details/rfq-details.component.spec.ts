@@ -88,8 +88,26 @@ describe('RfqDetailsComponent', () => {
 
   it('should handle getRFQs', () => {
     const row = { id: 'r1' };
-    component.getRFQs(row, {});
+    component.getRFQs(row, { srcElement: { lastChild: { data: 'rfq-1' } } });
     expect(component.selectedRFQData).toBe(row);
     expect(component.selectedData).toEqual([row]);
+  });
+
+  it('should cover no-change path and RFQ selection event', () => {
+    component.rfqId = null;
+    component.ngOnChanges(null);
+    const row = { id: 'r1' };
+    component.getRFQs(row, { srcElement: { lastChild: { data: 'rfq-2' } } });
+    expect(component.selectedRFQData).toBe(row);
+    expect(component.rfqId).toBe('rfq-2');
+    component.getThirdTab({});
+  });
+
+  it('should ignore changes without an RFQ id', () => {
+    component.rfqId = undefined;
+
+    component.ngOnChanges({ rfqId: new SimpleChange('rfq-100', undefined, false) });
+
+    expect(rfqService.getLineitemsById).not.toHaveBeenCalled();
   });
 });

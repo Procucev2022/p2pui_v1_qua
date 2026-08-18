@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush, flushMicrotasks } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { of, throwError } from 'rxjs';
@@ -208,4 +208,53 @@ describe('CorrespondenceComponent', () => {
     component.ngOnChanges();
     flush();
   }));
+
+  it('should cover no-dropdown initialization and invalid vendor payload', () => {
+    component.data = { ...mockDialogData, dropDownFlag: false, commentRootPath: 'UNKNOWN' };
+    component.ngOnInit();
+    expect(component.dropDownFlag).toBeFalse();
+    expect(commentsService.getVendorsByRfq).not.toHaveBeenCalled();
+    commentsService.getVendorsByRfq.and.returnValue(of({ error: true }));
+    component.getVendorsList();
+    expect(component.vendors).toEqual([]);
+    component.commentText = null;
+    component.saveComment();
+    expect(toastr.error).toHaveBeenCalledWith('Please type your comments', 'Warning');
+  });
+
+  it('should process dropped and uploaded files and handle an empty drop', fakeAsync(() => {
+    const file = new File(['data'], 'uploaded.pdf', { type: 'application/pdf' });
+    component.filesDropped([file]);
+    flushMicrotasks();
+    expect(component.commentFilesDataList[0]).toEqual({ fileName: 'uploaded.pdf', file: 'QUJD' });
+
+    component.fileUploadEvent([file]);
+    flushMicrotasks();
+    expect(component.commentFileData).toBe('QUJD');
+    expect(component.commentFileType).toBe('uploaded.pdf');
+
+    const emptyDrop = {
+      preventDefault: jasmine.createSpy('preventDefault'),
+      stopPropagation: jasmine.createSpy('stopPropagation'),
+      dataTransfer: { files: null }
+    };
+    component.onDrop(emptyDrop);
+    expect(emptyDrop.preventDefault).toHaveBeenCalled();
+    expect(emptyDrop.stopPropagation).toHaveBeenCalled();
+  }));
+
+  it('should reset comment state through clearCommentData and handle changes', () => {
+    component.isPageLoading = false;
+    component.commentText = 'comment';
+    component.commentFileData = 'QUJD';
+    component.commentFileType = 'uploaded.pdf';
+
+    component.clearCommentData();
+    component.ngOnChanges();
+
+    expect(component.isPageLoading).toBeTrue();
+    expect(component.commentText).toBe('');
+    expect(component.commentFileData).toBeNull();
+    expect(component.commentFileType).toBeNull();
+  });
 });

@@ -213,4 +213,50 @@ describe('VendorApprovalModalComponent', () => {
     expect(component.approvalList.length).toBe(1);
     expect(component.classificationList.length).toBe(1);
   });
+
+
+  it('should cover empty lookup responses and code-based submit branches', fakeAsync(() => {
+    component.ngOnInit();
+    vendorApprovalSer.getVendorClassificationDataForServices.and.returnValue(of(null));
+    vendorApprovalSer.getVendorClassificationData.and.returnValue(of(null));
+    component.getHeadings('Sec', 0);
+    component.getGroupDescriptions('Head', 'Sec', 0);
+    component.getSacs('Grp', 'Sec', 'Head', 0);
+    component.getFamilyNames('Seg', 0);
+    component.getClassNames('Fam', 'Seg', 0);
+    component.getCommodityNames('Class', 'Seg', 'Fam', 0);
+    component.getHsnCode('Comm', 'Class', 'Fam', 'Seg', 0);
+    component.getSacCode('Sac', 'Sec', 'Head', 'Grp', 0);
+
+    component.selectChangeHandler({ target: { value: 'Other' } }, 0, 'Other');
+    component.classificationList = [{ typeName: 'Product', segmentName: '', hsnCode: '111' }];
+    (component as any).hsncodeList = { errorCode: '404' };
+    spyOn(swalConfirm, 'open').and.returnValue(Promise.resolve({ value: true }));
+    component.onSubmit({} as NgForm, 'Product');
+    tick();
+    expect(toastr.error).toHaveBeenCalledWith('No details found', 'Failure');
+
+    // Product HSN success path (without errorCode)
+    component.classificationList = [{ typeName: 'Product', segmentName: '', hsnCode: '111' }];
+    (component as any).hsncodeList = ['Seg', 'Fam', 'Class', 'Comm'];
+    component.onSubmit({} as NgForm, 'Product');
+    tick();
+
+    // Service SAC error path (with errorCode)
+    component.classificationList = [{ typeName: 'Service', section: '', sacCode: '222' }];
+    (component as any).saccodeList = { errorCode: '404' };
+    component.onSubmit({} as NgForm, 'Service');
+    tick();
+    expect(toastr.error).toHaveBeenCalledWith('No details found', 'Failure');
+
+    // Service SAC success path (without errorCode)
+    component.classificationList = [{ typeName: 'Service', section: '', sacCode: '222' }];
+    (component as any).saccodeList = ['Grp', 'Head', 'Sac', 'Sec'];
+    vendorApprovalSer.approveVendorRegistration.and.returnValue(of({ status: 'success', message: 'Approved again' }));
+    component.onSubmit({} as NgForm, 'Service');
+    tick();
+    expect(dialogRef.close).toHaveBeenCalledWith({ event: 'submit' });
+    flush();
+  }));
+
 });

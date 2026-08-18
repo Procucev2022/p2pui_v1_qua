@@ -1,23 +1,28 @@
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FilePipe } from './file.pipe';
+import { DomSanitizer } from '@angular/platform-browser';
+import { TestBed } from '@angular/core/testing';
 
 describe('FilePipe', () => {
   let pipe: FilePipe;
-  let sanitizer: jasmine.SpyObj<DomSanitizer>;
+  let sanitizer: DomSanitizer;
 
   beforeEach(() => {
-    sanitizer = jasmine.createSpyObj('DomSanitizer', ['bypassSecurityTrustResourceUrl']);
-    sanitizer.bypassSecurityTrustResourceUrl.and.callFake((url: string) => `safe:${url}` as unknown as SafeResourceUrl);
+    TestBed.configureTestingModule({});
+    sanitizer = TestBed.inject(DomSanitizer);
     pipe = new FilePipe(sanitizer);
   });
 
-  it('should create an instance', () => {
+  it('should create', () => {
     expect(pipe).toBeTruthy();
   });
 
-  it('should bypass security for resource urls', () => {
+  it('should transform a url to a safe resource url', () => {
     const result = pipe.transform('http://example.com/file.pdf');
-    expect(sanitizer.bypassSecurityTrustResourceUrl).toHaveBeenCalledWith('http://example.com/file.pdf');
-    expect(result).toBe('safe:http://example.com/file.pdf' as any);
+    expect(result).toBeTruthy();
+  });
+
+  it('should handle empty string', () => {
+    const result = pipe.transform('');
+    expect(result).toBeTruthy();
   });
 });

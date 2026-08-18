@@ -7,24 +7,24 @@ describe('BlockCopyPasteDirective', () => {
     directive = new BlockCopyPasteDirective();
   });
 
-  it('should create an instance', () => {
+  it('should create', () => {
     expect(directive).toBeTruthy();
   });
 
-  it('should prevent paste', () => {
-    const event = { preventDefault: jasmine.createSpy('preventDefault') } as any;
+  it('blockPaste should call preventDefault', () => {
+    const event = jasmine.createSpyObj('event', ['preventDefault']);
     directive.blockPaste(event);
     expect(event.preventDefault).toHaveBeenCalled();
   });
 
-  it('should prevent copy', () => {
-    const event = { preventDefault: jasmine.createSpy('preventDefault') } as any;
+  it('blockCopy should call preventDefault', () => {
+    const event = jasmine.createSpyObj('event', ['preventDefault']);
     directive.blockCopy(event);
     expect(event.preventDefault).toHaveBeenCalled();
   });
 
-  it('should prevent cut', () => {
-    const event = { preventDefault: jasmine.createSpy('preventDefault') } as any;
+  it('blockCut should call preventDefault', () => {
+    const event = jasmine.createSpyObj('event', ['preventDefault']);
     directive.blockCut(event);
     expect(event.preventDefault).toHaveBeenCalled();
   });

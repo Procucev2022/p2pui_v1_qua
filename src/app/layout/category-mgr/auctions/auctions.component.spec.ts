@@ -1016,4 +1016,270 @@ describe('AuctionsComponent', () => {
 
     expect(c).toBeTruthy();
   }));
+
+
+  it('should cover auction role, cancellation, details, bidding, and dialog branches deterministically', fakeAsync(() => {
+    const c: any = component;
+    const service: any = TestBed.inject(AuctionService);
+    const dialog: any = TestBed.inject(MatDialog);
+    const enc: any = TestBed.inject(EncryDecryService);
+    const row: any = {
+      id: 'a1', auctionId: 'ORG-2024-1', auctionCategory: 'item wise',
+      auctionType: 'sealed bid', auctionStarttime: new Date(Date.now() - 1000).toISOString(),
+      auctionEndtime: new Date(Date.now() + 3600000).toISOString(),
+      auctionstatus: { status: 'OPEN' }
+    };
+    const ref = { afterClosed: () => of(true) };
+    dialog.open.and.returnValue(ref);
+    service.getAllAuctions.and.returnValue(of([row]));
+    service.getAllAuctionsByVendor.and.returnValue(of([row]));
+    service.getAuctionsByClientId.and.returnValue(of([row]));
+    service.cancelledAuctions.and.returnValue(of({ status: 'Success', message: 'Cancelled' }));
+    service.getAuctionDetails.and.returnValue(of({ id: 'a1' }));
+    service.getBidByVendorPdf.and.returnValue(of({ vendorName: 'V', currentRank: 1, bidItems: [{ bidAmount: 10, description: 'D', specification: 'S', unitofMeasures: 'EA', quantity: 1, rank: 1 }] }));
+    service.getBidItemsByAuction.and.returnValue(of({ items: [] }));
+    service.getBidsByAuction.and.returnValue(of({ bids: [] }));
+    service.getAuctionById.and.returnValue(of({ id: 'a1' }));
+    enc.get.and.returnValue(JSON.stringify({ details: { id: 'u1', org: { id: 'v1' }, role: { roleName: 'CategoryManager' }, listofPermission: [] } }));
+
+    c.loggedUserDetails = { id: 'u1', org: { id: 'v1' }, role: { roleName: 'CategoryManager' }, listofPermission: [] };
+    c.loggedUserType = 'CategoryManager';
+    c.ngOnInit();
+    c.loggedUserType = 'Vendor';
+    c.getAllAuctions();
+    c.loggedUserType = 'ClientInitiator';
+    c.getAllAuctions();
+    c.loggedUserType = 'PRApprover';
+    c.loggedUserDetails.department = { id: 'd1' };
+    c.getAllAuctions();
+    c.loggedUserType = 'Unknown';
+    c.getAllAuctions();
+    expect(c.processAuctionList([{ auctionId: 'A-B-3' }, { auctionId: 'A-4' }])[0].tooltiptext).toBe('A-B');
+
+    c.currentDate = new Date();
+    c.selectedData = [];
+    c.onCancelAuction();
+    c.selectedData = [row];
+    c.onCancelAuction();
+    tick();
+    c.selectedData = [{ ...row, auctionEndtime: new Date(Date.now() - 1000).toISOString() }];
+    c.onCancelAuction();
+
+    c.getAuctionDetails(row);
+    c.selectedAuctionData = row;
+    c.loggedUserDetails = { org: { id: 'v1' } };
+    c.rfqwiseListForGridMethod();
+
+    // getBidByVendorPdf with null response
+    service.getBidByVendorPdf.and.returnValue(of(null));
+    c.rfqwiseListForGridMethod();
+
+    c.viewBidDetails(row, {});
+    c.bidAuction({ ...row, auctionEndtime: new Date(Date.now() - 1000).toISOString() });
+    c.editAuction(row);
+    tick();
+    c.getBidsByAuctionId(row, { srcElement: { lastChild: { data: 'a1' } } });
+    c.onPage({ page: 2 });
+    c.ppoActions('Submit');
+    c.viewCorresspondance({ id: 'a1' });
+    c.documents({}, { id: 'a1' });
+    tick(700);
+    flush();
+  }));
+
+  it('should cover viewAuctionReports for rfq-wise and item-wise with non-null and null fields', () => {
+    const c: any = component;
+    c.exportColumnsOne = [{ title: 'Vendor', dataKey: 'companyName' }];
+    c.exportColumnsTwo = [{ title: 'Vendor', dataKey: 'companyName' }];
+    c.exportColumnsThree = [{ title: 'Vendor', dataKey: 'companyName' }];
+    c.exportColumnsFour = [{ title: 'Vendor', dataKey: 'companyName' }];
+    c.exportColumnsFive = [{ title: 'Vendor', dataKey: 'companyName' }];
+    c.exportColumnsSix = [{ title: 'Vendor', dataKey: 'companyName' }];
+
+    c.vendordata = [{ companyName: 'V1' }];
+    c.aucvendorsdata = [{ companyName: 'V1' }];
+    c.auctionbidData = [{ companyName: 'V1' }];
+    c.qouteVendorData = [{ companyName: 'V1' }];
+    c.qoutationByRfqData = [{ companyName: 'V1' }];
+    c.quoteitemdata = [{ companyName: 'V1' }];
+
+    // 1. Non-item-wise with non-null fields
+    c.rfqwisedata = {
+      description: 'Test RFQ',
+      startpricevalue: 1000,
+      minimumBidReductionPrice: 50,
+      leadingPrice: 950,
+      savings: 50,
+      bids: [{ companyName: 'V1', bidAmount: 950, currentRank: 1 }]
+    };
+    c.viewAuctionReports({
+      auctionId: 'AUC-1',
+      auctionName: 'Auction 1',
+      termsAndConditions: 'Terms Apply',
+      auctionCategory: 'rfq wise'
+    });
+
+    // 2. Non-item-wise with null fields
+    c.rfqwisedata = {
+      description: null,
+      startpricevalue: null,
+      minimumBidReductionPrice: null,
+      leadingPrice: null,
+      savings: null,
+      bids: []
+    };
+    c.viewAuctionReports({
+      auctionId: 'AUC-2',
+      auctionName: 'Auction 2',
+      termsAndConditions: null,
+      auctionCategory: 'rfq wise'
+    });
+
+    // 3. Item-wise with non-null fields
+    c.itemwiseAuctionData = [
+      {
+        description: 'Item 1',
+        startpricevalue: 200,
+        minimumBidReductionPrice: 10,
+        leadingPrice: 190,
+        savings: 10,
+        bids: [{ companyName: 'V1', bidAmount: 190, currentRank: 1 }]
+      }
+    ];
+    c.viewAuctionReports({
+      auctionId: 'AUC-3',
+      auctionName: 'Auction 3',
+      termsAndConditions: 'Terms 3',
+      auctionCategory: 'item wise'
+    });
+
+    // 4. Item-wise with null fields
+    c.itemwiseAuctionData = [
+      {
+        description: null,
+        startpricevalue: null,
+        minimumBidReductionPrice: null,
+        leadingPrice: null,
+        savings: null,
+        bids: []
+      }
+    ];
+    c.viewAuctionReports({
+      auctionId: 'AUC-4',
+      auctionName: 'Auction 4',
+      termsAndConditions: null,
+      auctionCategory: 'item wise'
+    });
+  });
+
+  it('should cover viewBidDetails date comparisons and user roles', () => {
+    const c: any = component;
+    const service: any = TestBed.inject(AuctionService);
+    service.getBidItemsByAuction.and.returnValue(of({ items: [] }));
+    service.getBidItemsByAuctionForVendor.and.returnValue(of({ items: [] }));
+    service.getBidsByAuction.and.returnValue(of({ bids: [] }));
+    service.getBidsByAuctionForVendor.and.returnValue(of({ bids: [] }));
+
+    c.currentDate = new Date();
+    const activeRow = {
+      id: 'a1',
+      auctionCategory: 'item wise',
+      auctionStarttime: new Date(Date.now() - 100000).toISOString(),
+      auctionEndtime: new Date(Date.now() + 100000).toISOString()
+    };
+    const futureRow = {
+      id: 'a2',
+      auctionCategory: 'rfq wise',
+      auctionStarttime: new Date(Date.now() + 100000).toISOString(),
+      auctionEndtime: new Date(Date.now() + 200000).toISOString()
+    };
+    const expiredRow = {
+      id: 'a3',
+      auctionCategory: 'item wise',
+      auctionStarttime: new Date(Date.now() - 200000).toISOString(),
+      auctionEndtime: new Date(Date.now() - 100000).toISOString()
+    };
+
+    // CategoryManager with active, future, and expired
+    c.loggedUserType = 'CategoryManager';
+    c.viewBidDetails(activeRow, {});
+    expect(c.refreshBtn).toBeTrue();
+    c.viewBidDetails(futureRow, {});
+    expect(c.refreshBtn).toBeFalse();
+    c.viewBidDetails(expiredRow, {});
+    expect(c.refreshBtn).toBeFalse();
+
+    // Vendor with item-wise and rfq-wise
+    c.loggedUserType = 'Vendor';
+    c.viewBidDetails(activeRow, {});
+    c.viewBidDetails(futureRow, {});
+
+    // PartialVendor
+    c.loggedUserType = 'PartialVendor';
+    c.viewBidDetails(activeRow, {});
+    c.viewBidDetails(futureRow, {});
+  });
+
+  it('should cover itemWiseExportPdf and auctionbid for both item-wise and rfq-wise categories', () => {
+    const c: any = component;
+    c.selectedAuctionData = {
+      auctionName: 'Auction Test',
+      auctionStarttime: new Date().toISOString(),
+      auctionEndtime: new Date().toISOString(),
+      auctionstatus: { uiDisplay: 'OPEN' }
+    };
+    c.viewAuctionResponseData = [
+      {
+        description: 'Item 1',
+        startpricevalue: 100,
+        minimumBidReductionPrice: 10,
+        leadingPrice: 90,
+        savings: 10,
+        bids: [{ vendorName: 'V1', bidAmount: 90, currentRank: 1 }]
+      },
+      {
+        description: 'Item 2',
+        startpricevalue: 200,
+        minimumBidReductionPrice: 20,
+        leadingPrice: 180,
+        savings: 20,
+        bids: [{ vendorName: 'V2', bidAmount: 180, currentRank: 1 }]
+      }
+    ];
+
+    c.itemWiseExportPdf();
+
+    c.exportColumnsOne = [{ title: 'Vendor', dataKey: 'companyName' }];
+    c.exportColumnsTwo = [{ title: 'Vendor', dataKey: 'companyName' }];
+    c.exportColumnsThree = [{ title: 'Vendor', dataKey: 'companyName' }];
+    c.exportColumnsFour = [{ title: 'Vendor', dataKey: 'companyName' }];
+    c.exportColumnsFive = [{ title: 'Vendor', dataKey: 'companyName' }];
+    c.exportColumnsSix = [{ title: 'Vendor', dataKey: 'companyName' }];
+
+    c.vendordata = [{ companyName: 'V1' }];
+    c.aucvendorsdata = [{ companyName: 'V1' }];
+    c.auctionbidData = [{ companyName: 'V1' }];
+    c.qouteVendorData = [{ companyName: 'V1' }];
+    c.qoutationByRfqData = [{ companyName: 'V1' }];
+    c.quoteitemdata = [{ description: 'Desc', quote: [{ totalamount: 100 }] }];
+    c.itemwiseAuctionData = [{ description: 'Desc', quote: [{ totalamount: 100 }] }];
+    c.rfqwisedata = { leadingPrice: 100, savings: 10, bids: [{ companyName: 'V1' }] };
+
+    // auctionbid for rfq-wise
+    c.auctionbid({
+      auctionId: 'AUC-1',
+      auctionName: 'Auction 1',
+      auctionstatus: { uiDisplay: 'OPEN' },
+      auctionCategory: 'rfq wise'
+    });
+
+    // auctionbid for item-wise
+    c.auctionbid({
+      auctionId: 'AUC-2',
+      auctionName: 'Auction 2',
+      auctionstatus: { uiDisplay: 'OPEN' },
+      auctionCategory: 'item wise'
+    });
+  });
+
 });

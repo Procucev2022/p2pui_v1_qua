@@ -297,4 +297,16 @@ describe('QuotCompareViewComponent', () => {
     component.filterPr({ query: '100' });
     expect((component as any).filteredprList).toEqual([{ prId: 'PR-100' }]);
   });
+
+  it('should cover quote comparison fallbacks and total helpers', () => {
+    component.quoteItemList = [];
+    component.isCreatePR = false;
+    component.getQuoteComparison({ itemsHeaders: [{ itemId: 'missing', description: 'Missing' }], vendorHeaders: [{ vendorId: 'v1', quoteId: 'q_perQty' }], totalItems: [] });
+    expect(component.isLoadedComparison).toBeTrue();
+    expect(component.getVendorBasicTotal({ vendorId: 'none' }, 'perUnit')).toBe(0);
+    expect(component.getVendorSquareFeetTotal({ vendorId: 'none', quoteId: 'q_perUnit' }, 'total')).toBe(0);
+    expect(component.createTotalObject({ vendorId: 'v1', quotationId: 'q1' }, 'GSTValue', 10, 'id')).toEqual(jasmine.objectContaining({ gstValues: 10 }));
+    component.filterPr({ query: 'none' });
+    expect(component.filteredprList).toEqual([]);
+  });
 });

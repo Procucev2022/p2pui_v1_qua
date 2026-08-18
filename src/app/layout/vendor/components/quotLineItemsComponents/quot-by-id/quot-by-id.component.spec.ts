@@ -84,4 +84,21 @@ describe('QuotByIdComponent', () => {
     component.quotId = null;
     component.ngOnChanges({ quotId: new SimpleChange('quot-100', null, false) });
   });
+
+  it('should cover no-change and no-quot-id paths plus no-op handlers', () => {
+    component.quotData = { id: 'quot-200' };
+    component.quotId = null;
+    component.ngOnChanges(null);
+    component.getQuotLineData({}, {});
+    component.getThirdTab({});
+    expect(component.quotInfoList).toEqual([]);
+  });
+
+  it('should ignore changes without a quotation id', () => {
+    component.quotId = undefined;
+
+    component.ngOnChanges({ quotId: new SimpleChange('quot-100', undefined, false) });
+
+    expect(vendorquotService.getQuotDataByid).not.toHaveBeenCalled();
+  });
 });

@@ -109,4 +109,31 @@ describe('VmgrVendorInvitationComponent', () => {
 
     component.p({});
   });
+
+  it('should cover reset behavior and alternate successful status code', () => {
+    component.ngOnInit();
+    component.tempvendor({ target: { checked: true } });
+    component.invitationForm.patchValue({ hsncode: '1234', vendorcategory: 'Cat', validdate: new Date() });
+    component.tempvendor({ target: { checked: false } });
+    expect(component.invitationForm.get('hsncode').value).toBeNull();
+    expect(component.validateValue).toBeFalse();
+
+    component.invitationForm.patchValue({ orgName: 'Acme', phone: '1234567890', email: 'a@b.com' });
+    vendorInviteSer.requestRegistration.and.returnValue(of({ statusCode: 'Success', message: 'Sent' }));
+    component.onSubmit();
+    expect(toastr.success).toHaveBeenCalledWith('Sent', 'Success');
+  });
+
+  it('should handle lowercase failure and success response statuses', () => {
+    component.ngOnInit();
+    component.invitationForm.patchValue({ orgName: 'Acme', phone: '1234567890', email: 'a@b.com' });
+
+    vendorInviteSer.requestRegistration.and.returnValue(of({ status: 'failure', errorMessage: 'Rejected' }));
+    component.onSubmit();
+    expect(toastr.error).toHaveBeenCalledWith('Rejected', 'Failure');
+
+    vendorInviteSer.requestRegistration.and.returnValue(of({ status: 'success', message: 'Accepted' }));
+    component.onSubmit();
+    expect(toastr.success).toHaveBeenCalledWith('Accepted', 'Success');
+  });
 });

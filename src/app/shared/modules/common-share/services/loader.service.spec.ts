@@ -1,23 +1,26 @@
-import { TestBed } from '@angular/core/testing';
 import { LoaderService } from './loader.service';
 
 describe('LoaderService (common-share)', () => {
   let service: LoaderService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [LoaderService]
-    });
-    service = TestBed.inject(LoaderService);
+    service = new LoaderService();
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should toggle isLoading', () => {
-    expect(service.isLoading.value).toBe(false);
+  it('should default isLoading to false', () => {
+    let val: boolean;
+    service.isLoading.subscribe(v => val = v);
+    expect(val).toBe(false);
+  });
+
+  it('should update isLoading', () => {
+    let val: boolean;
+    service.isLoading.subscribe(v => val = v);
     service.isLoading.next(true);
-    expect(service.isLoading.value).toBe(true);
+    expect(val).toBe(true);
   });
 });

@@ -1,34 +1,19 @@
-import {
-  CommonGridData,
-  createEmptyCommonGridData,
-} from './commonGridData';
+import { createEmptyCommonGridData, CommonGridData } from './commonGridData';
 
-describe('CommonGridData', () => {
-  it('should accept a conforming grid config object', () => {
-    const data: CommonGridData = {
-      actionEvents: [],
-      gridTopButtonActions: [],
-      gridColumnData: [],
-      gridHeaders: ['id'],
-      gridTitle: 'Title',
-      displayParentLabel: 'Parent',
-      displayParentId: '1',
-      rowEventClickEventName: 'rowClick',
-      editableCells: [],
-      gridSelectionCheckbox: {
-        showSelction: true,
-        allowMultipleSelection: false,
-      },
-    };
-    expect(data.gridTitle).toBe('Title');
-    expect(data.gridSelectionCheckbox.showSelction).toBe(true);
-  });
-
-  it('should create an empty grid data via factory', () => {
-    const empty = createEmptyCommonGridData();
-    expect(empty.actionEvents).toEqual([]);
-    expect(empty.gridSelectionCheckbox.showSelction).toBe(false);
-    expect(empty.gridSelectionCheckbox.allowMultipleSelection).toBe(false);
-    expect(empty.gridTitle).toBe('');
+describe('commonGridData model', () => {
+  it('createEmptyCommonGridData should return valid object', () => {
+    const data: CommonGridData = createEmptyCommonGridData();
+    expect(data).toBeTruthy();
+    expect(data.actionEvents).toEqual([]);
+    expect(data.gridTopButtonActions).toEqual([]);
+    expect(data.gridColumnData).toEqual([]);
+    expect(data.gridHeaders).toEqual([]);
+    expect(data.gridTitle).toBe('');
+    expect(data.displayParentLabel).toBe('');
+    expect(data.displayParentId).toBe('');
+    expect(data.rowEventClickEventName).toBe('');
+    expect(data.editableCells).toEqual([]);
+    expect(data.gridSelectionCheckbox.showSelction).toBe(false);
+    expect(data.gridSelectionCheckbox.allowMultipleSelection).toBe(false);
   });
 });

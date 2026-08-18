@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -98,20 +98,20 @@ describe('TimeoutModalComponent', () => {
   }));
 
   it('should clear interval on destroy', () => {
-    component.timer = setInterval(() => undefined, 10000);
-    spyOn(window, 'clearInterval').and.callThrough();
+    component.timer = 12345 as any;
+    spyOn(window, 'clearInterval');
     component.ngOnDestroy();
-    expect(clearInterval).toHaveBeenCalled();
+    expect(window.clearInterval).toHaveBeenCalledWith(12345 as any);
   });
 
-  it('pattern-branch coverage', () => {
+  it('pattern-branch coverage', fakeAsync(() => {
     const c: any = component;
     c.op = { hide() {}, show() {}, toggle() {} };
     c.targetEl = { nativeElement: document.createElement('div') };
     try { c.closeModal(); } catch (e) {}
     try { c.closeSession(); } catch (e) {}
     c.counter = 0; try { c.startTimer(); } catch (e) {}
-    c.counter = 1; c.sessionExtended = true; try { c.startTimer(); } catch (e) {}
+    c.counter = 1; c.sessionExtended = true; try { c.startTimer(); tick(1000); } catch (e) {}
     if (c.timer) { clearInterval(c.timer); c.timer = null; }
     try { c.ngOnDestroy(); } catch (e) {}
     c.form = { valid: true, invalid: false, value: { id: '1' }, reset() {}, patchValue() {}, get: () => ({ value: 'x', setValue() {}, valid: true }), form: { valid: true } };
@@ -154,9 +154,9 @@ describe('TimeoutModalComponent', () => {
     try { c.ngOnDestroy({ invalid: true, valid: false, value: {}, form: { valid: false } }); } catch (e) {}
     try { c.ngOnDestroy(null); } catch (e) {}
     try { c.ngOnDestroy(true); } catch (e) {}
-    try { c.ngOnDestroy(false); } catch (e) {}
     expect(component).toBeTruthy();
-  });
+    flush();
+  }));
 
   it('exerciseComponent branch coverage', () => {
     const c: any = component;

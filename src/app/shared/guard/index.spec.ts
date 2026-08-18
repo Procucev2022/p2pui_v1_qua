@@ -1,11 +1,12 @@
-import { AuthGuard, SHARED_GUARD_BARREL } from './index';
+import { SHARED_GUARD_BARREL } from './index';
+import { AuthGuard } from './auth.guard';
 
-describe('shared/guard index', () => {
-  it('should export AuthGuard', () => {
-    expect(AuthGuard).toBeDefined();
+describe('shared/guard barrel', () => {
+  it('should export SHARED_GUARD_BARREL as true', () => {
+    expect(SHARED_GUARD_BARREL).toBe(true);
   });
 
-  it('should export barrel marker', () => {
-    expect(SHARED_GUARD_BARREL).toBe(true);
+  it('should export AuthGuard', () => {
+    expect(AuthGuard).toBeDefined();
   });
 });

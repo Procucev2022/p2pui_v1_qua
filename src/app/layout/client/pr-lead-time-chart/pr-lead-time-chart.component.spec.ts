@@ -79,14 +79,17 @@ describe('PrLeadTimeChartComponent', () => {
   });
 
   it('should handle chart details for PRApprover and PRApprover2 with and without department', () => {
-    component.chart = { destroy: jasmine.createSpy('destroy') };
+    const destroy = jasmine.createSpy('destroy');
+    component.chart = { destroy };
     component.loggedUserDetails = {
       id: 'u2',
       role: { roleName: 'PRApprover' },
       department: { id: 'dept-1' }
     };
+    component.prTimeFromDate = new Date('2024-01-01');
+    component.prTimeToDate = new Date('2024-01-31');
     component.getChartDetails();
-    expect(component.chart.destroy).toHaveBeenCalled();
+    expect(destroy).toHaveBeenCalled();
 
     // PRApprover2 without department
     component.loggedUserDetails = {
@@ -103,6 +106,8 @@ describe('PrLeadTimeChartComponent', () => {
       id: 'u3',
       role: { roleName: 'OtherRole' }
     };
+    component.prTimeFromDate = new Date('2024-01-01');
+    component.prTimeToDate = new Date('2024-01-31');
     component.getChartDetails();
     expect(component.isDataPresent).toBe(1);
     expect(component.disableColorWrapper).toBe(0);
@@ -120,5 +125,32 @@ describe('PrLeadTimeChartComponent', () => {
     component.prTimeFromDate = null;
     component.onSubmit('filter');
     expect(toastr.error).toHaveBeenCalledWith('Please enter all the required fields', 'Error');
+  });
+
+  it('should cover date fallback and empty chart response branches', () => {
+    component.loggedUserDetails = { id: 'u1', role: { roleName: 'PRApprover' }, department: null };
+    component.prTimeFromDate = new Date('2024-01-01');
+    component.prTimeToDate = new Date('2024-01-31');
+    clientService.prLeadTimeChart.and.returnValue(of({ data: [] , header: [] }));
+    component.getChartDetails();
+    expect(component.isDataPresent).toBe(0);
+
+    clientService.prLeadTimeChart.and.returnValue(of({ data: undefined }));
+    component.getChartDetails('', '');
+    expect(component.isDataPresent).toBe(1);
+    expect(component.disableColorWrapper).toBe(0);
+  });
+
+  it('should use the existing chart cleanup path before rendering a populated response', () => {
+    const destroy = jasmine.createSpy('destroy');
+    component.chart = { destroy };
+    component.loggedUserDetails = { id: 'u4', role: { roleName: 'OtherRole' } };
+    clientService.prLeadTimeChart.and.returnValue(of({ data: [5], header: ['0-5 Days'] }));
+
+    component.getChartDetails('2024-02-01', '2024-02-29');
+
+    expect(destroy).toHaveBeenCalled();
+    expect(component.prLeadTimeList).toEqual([5]);
+    expect(component.prLeadTimeHeaders).toEqual(['0-5 Days']);
   });
 });

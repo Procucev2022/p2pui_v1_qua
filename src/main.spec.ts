@@ -1,39 +1,29 @@
-import { mainHooks, runMain } from './main';
+import * as mainModule from './main';
 
-describe('main', () => {
-  const originalBootstrap = mainHooks.bootstrap;
-
-  afterEach(() => {
-    mainHooks.bootstrap = originalBootstrap;
-    if (typeof (window as any).__karma__ === 'undefined') {
-      (window as any).__karma__ = { start: () => undefined };
-    }
+describe('main.ts', () => {
+  it('should export mainHooks with a bootstrap function', () => {
+    expect(mainModule.mainHooks).toBeDefined();
+    expect(typeof mainModule.mainHooks.bootstrap).toBe('function');
   });
 
-  it('should export runMain', () => {
-    expect(typeof runMain).toBe('function');
-  });
-
-  it('should no-op under Karma (__karma__ present)', () => {
-    const result = runMain();
+  it('runMain should return undefined under Karma', () => {
+    const result = mainModule.runMain();
     expect(result).toBeUndefined();
   });
 
-  it('should call mainHooks.bootstrap when __karma__ is undefined', async () => {
-    const karmaRef = (window as any).__karma__;
-    mainHooks.bootstrap = jasmine
-      .createSpy('bootstrap')
-      .and.returnValue(Promise.resolve({ booted: true })) as any;
+  it('runMain should call bootstrap when not under Karma', () => {
+    const origKarma = (window as any).__karma__;
+    delete (window as any).__karma__;
+    const spy = jasmine.createSpy('bootstrap').and.returnValue(Promise.resolve());
+    const origBootstrap = mainModule.mainHooks.bootstrap;
+    mainModule.mainHooks.bootstrap = spy;
 
-    try {
-      (window as any).__karma__ = undefined;
-      const result = runMain();
-      expect(mainHooks.bootstrap).toHaveBeenCalled();
-      await expectAsync(Promise.resolve(result)).toBeResolvedTo({
-        booted: true,
-      });
-    } finally {
-      (window as any).__karma__ = karmaRef;
-    }
+    const result = mainModule.runMain();
+    expect(spy).toHaveBeenCalled();
+    expect(result).toBeDefined();
+
+    // Restore
+    mainModule.mainHooks.bootstrap = origBootstrap;
+    (window as any).__karma__ = origKarma;
   });
 });

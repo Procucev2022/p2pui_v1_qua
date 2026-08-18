@@ -33,6 +33,7 @@ describe('ItemCatalogueComponent', () => {
   beforeEach(async () => {
     localStorage.setItem('orgId', 'org-1');
     localStorage.setItem('logData', 'x');
+    (window as any).event = { target: { files: [] } };
 
     toastr = {
       success: jasmine.createSpy('success'),
@@ -207,31 +208,45 @@ describe('ItemCatalogueComponent', () => {
     component.generateChart({}, true);
   });
 
-  it('should handle fileUploadEvent and filesDropped with excel and invalid files', fakeAsync(() => {
-    const excelFile = new File(['data'], 'test.xlsx', { type: 'application/vnd.ms-excel' });
+  it('should handle fileUploadEvent and filesDropped with excel, xls, and invalid files', fakeAsync(() => {
+    const xlsxFile = new File(['data'], 'test.xlsx', { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const xlsFile = new File(['data'], 'test.xls', { type: 'application/vnd.ms-excel' });
     const pdfFile = new File(['data'], 'test.pdf', { type: 'application/pdf' });
 
-    // Valid Excel
-    component.fileUploadEvent([excelFile], false);
+    // Valid XLSX
+    component.fileUploadEvent([xlsxFile], false);
     tick();
     expect(component.commentFilesDataList.length).toBe(1);
+    expect(component.commentFileType).toBe('test.xlsx');
 
-    // Invalid PDF
-    component.fileUploadEvent([pdfFile], false);
-    expect(toastr.warning).toHaveBeenCalledWith('Invalid File format, pls upload excel file only', 'warning');
-
-    // Dropped valid
-    component.filesDropped([excelFile], false);
+    // Valid XLS
+    component.fileUploadEvent([xlsFile], false);
     tick();
     expect(component.commentFilesDataList.length).toBe(2);
 
-    // Dropped invalid
+    // Invalid PDF (not allow any)
+    component.fileUploadEvent([pdfFile], false);
+    expect(toastr.warning).toHaveBeenCalledWith('Invalid File format, pls upload excel file only', 'warning');
+
+    // Dropped valid XLSX
+    component.filesDropped([xlsxFile], false);
+    tick();
+    expect(component.commentFilesDataList.length).toBe(3);
+
+    // Dropped valid XLS
+    component.filesDropped([xlsFile], false);
+    tick();
+    expect(component.commentFilesDataList.length).toBe(4);
+
+    // Dropped invalid PDF
     component.filesDropped([pdfFile], false);
     expect(toastr.warning).toHaveBeenCalledWith('Invalid File format, pls upload excel file only', 'warning');
 
     // Remove file and removeFileFromList
     component.removeFileFromList(0);
-    expect(component.commentFilesDataList.length).toBe(1);
+    expect(component.commentFilesDataList.length).toBe(3);
+    component.removeFileFromList(0);
+    expect(component.commentFilesDataList.length).toBe(2);
 
     component.removeFile();
     expect(component.commentFilesDataList.length).toBe(0);
@@ -263,4 +278,40 @@ describe('ItemCatalogueComponent', () => {
     component.closeModal();
     expect(matDialog.closeAll).toHaveBeenCalled();
   });
+
+
+  it('should cover catalogue fallback, upload, and view branches', fakeAsync(() => {
+    component.ngOnInit();
+    clientService.getItemCatalogue.and.returnValue(of({ errorMessage: 'not an array' }));
+    component.getAllItems();
+    expect(component.itemList).toEqual([]);
+
+    // Array with existing status
+    clientService.getItemCatalogue.and.returnValue(of([{ id: 'i1', status: 'Reserved' }]));
+    component.getAllItems();
+    expect(component.itemList[0].status).toBe('Reserved');
+
+    component.editItemModel = { id: 'item-1', description: 'Updated', documents: [] };
+    component.commentFilesDataList = [{ file: 'new.pdf' }];
+    component.uploadItemCatalogueByRequest();
+    expect(clientService.updateItemCatalogueByRequest).toHaveBeenCalledWith({
+      id: 'item-1', description: 'Updated', documents: [{ file: 'new.pdf' }]
+    });
+
+    component.commentFileData = null;
+    component.createItemCatalogueByRequestBOQFile();
+    component.editItemModel = {};
+    component.uploadItemCatalogueByRequest();
+
+    const anyFile = new File(['data'], 'notes.txt', { type: 'text/plain' });
+    component.fileUploadEvent([anyFile], true);
+    component.filesDropped([anyFile], true);
+    tick();
+    expect(convertSer.getBase64).toHaveBeenCalledWith(anyFile);
+
+    component.viewItemData({ id: 'item-1', clientItemFlag: false }, {});
+    expect(component.isEditable).toBeFalse();
+    component.successChilds([{ id: 'other' }], { id: 'missing' });
+  }));
+
 });

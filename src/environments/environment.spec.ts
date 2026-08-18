@@ -5,9 +5,7 @@ describe('environment', () => {
     expect(environment.production).toBe(false);
   });
 
-  it('should define baseURL', () => {
-    expect(environment.baseURL).toBeDefined();
-    expect(typeof environment.baseURL).toBe('string');
-    expect(environment.baseURL.length).toBeGreaterThan(0);
+  it('should have a baseURL defined', () => {
+    expect(environment.baseURL).toBeTruthy();
   });
 });

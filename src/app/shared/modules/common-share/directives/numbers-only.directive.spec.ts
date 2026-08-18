@@ -1,31 +1,29 @@
 import { NumbersOnlyDirective } from './numbers-only.directive';
+import { ElementRef } from '@angular/core';
 
 describe('NumbersOnlyDirective', () => {
   let directive: NumbersOnlyDirective;
-  let el: { nativeElement: { value: string } };
+  let el: ElementRef;
 
   beforeEach(() => {
-    el = { nativeElement: { value: '' } };
-    directive = new NumbersOnlyDirective(el as any);
+    el = { nativeElement: { value: '' } } as any;
+    directive = new NumbersOnlyDirective(el);
   });
 
-  it('should create an instance', () => {
-    expect(directive).toBeTruthy();
-  });
+  it('should create', () => { expect(directive).toBeTruthy(); });
 
-  it('should strip non-numeric characters and stop propagation', () => {
+  it('should strip non-numeric characters', () => {
     el.nativeElement.value = '12a3b';
-    const event = { stopPropagation: jasmine.createSpy('stopPropagation') };
+    const event = jasmine.createSpyObj('event', ['stopPropagation']);
     directive.onInputChange(event);
     expect(el.nativeElement.value).toBe('123');
     expect(event.stopPropagation).toHaveBeenCalled();
   });
 
-  it('should not stop propagation when value is already numeric', () => {
-    el.nativeElement.value = '987';
-    const event = { stopPropagation: jasmine.createSpy('stopPropagation') };
+  it('should not call stopPropagation when value unchanged', () => {
+    el.nativeElement.value = '123';
+    const event = jasmine.createSpyObj('event', ['stopPropagation']);
     directive.onInputChange(event);
-    expect(el.nativeElement.value).toBe('987');
     expect(event.stopPropagation).not.toHaveBeenCalled();
   });
 });

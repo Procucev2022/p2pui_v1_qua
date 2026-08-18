@@ -83,7 +83,13 @@ describe('ClientLinkingToItemModalComponent', () => {
     expect(component.clientList.length).toBe(1);
     expect(component.clientList[0].isLinked).toBeFalse();
 
-    // Non-array response
+    // Non-array response (object)
+    catService.getClientSearch.and.returnValue(of({ error: true }));
+    component.searchclient();
+    // clientList should not be overwritten with non-array
+    expect(component.clientList.length).toBe(1);
+
+    // Non-array response (null)
     catService.getClientSearch.and.returnValue(of(null));
     component.searchclient();
   });
@@ -135,5 +141,29 @@ describe('ClientLinkingToItemModalComponent', () => {
     catService.LinkToClientWithItem.and.returnValue(of({ status: 'Error', errorMessage: 'Linking failed' }));
     component.submitForm();
     expect(toastr.error).toHaveBeenCalledWith('Linking failed', 'Error');
+  });
+
+  it('should cover linked-client predicate and modal callback replacement', () => {
+    component.ngOnInit();
+    component.clientList = [{ id: 'c1', isLinked: false }, { id: 'c2', isLinked: true }];
+    expect(component.checkAnyClientLinkedOrNot()).toBeTrue();
+    component.linkUnLinkClientModal(component.clientList[0], 0);
+    expect(component.clientList[0].isLinked).toBeTrue();
+    component.unLinkClient(component.clientList[0], 0);
+    expect(component.checkAnyClientLinkedOrNot()).toBeTrue();
+  });
+
+  it('should return false when no client is linked', () => {
+    component.clientList = [{ id: 'c1', isLinked: false }, { id: 'c2', isLinked: false }];
+
+    expect(component.checkAnyClientLinkedOrNot()).toBeFalse();
+  });
+
+  it('should handle searchclient with falsy value that satisfies Array.isArray', () => {
+    component.ngOnInit();
+    spyOn(Array, 'isArray').and.returnValue(true);
+    catService.getClientSearch.and.returnValue(of(null));
+    component.searchclient();
+    expect(component.clientList).toEqual([]);
   });
 });

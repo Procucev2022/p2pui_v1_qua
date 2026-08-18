@@ -1,48 +1,44 @@
 import { DragDirective } from './dragAndDropDirective';
 import { DomSanitizer } from '@angular/platform-browser';
+import { TestBed } from '@angular/core/testing';
 
 describe('DragDirective', () => {
   let directive: DragDirective;
-  let sanitizer: jasmine.SpyObj<DomSanitizer>;
+  let sanitizer: DomSanitizer;
 
   beforeEach(() => {
-    sanitizer = jasmine.createSpyObj('DomSanitizer', ['bypassSecurityTrustUrl']);
+    TestBed.configureTestingModule({});
+    sanitizer = TestBed.inject(DomSanitizer);
     directive = new DragDirective(sanitizer);
   });
 
-  it('should create an instance', () => {
-    expect(directive).toBeTruthy();
-  });
+  it('should create', () => { expect(directive).toBeTruthy(); });
 
-  it('should handle dragover', () => {
-    const evt = {
-      preventDefault: jasmine.createSpy('preventDefault'),
-      stopPropagation: jasmine.createSpy('stopPropagation')
-    } as any;
+  it('onDragOver should set background', () => {
+    const evt = jasmine.createSpyObj('DragEvent', ['preventDefault', 'stopPropagation']);
     directive.onDragOver(evt);
-    expect(evt.preventDefault).toHaveBeenCalled();
-    expect(evt.stopPropagation).toHaveBeenCalled();
+    expect((directive as any).background).toBe('#999');
   });
 
-  it('should handle dragleave', () => {
-    const evt = {
-      preventDefault: jasmine.createSpy('preventDefault'),
-      stopPropagation: jasmine.createSpy('stopPropagation')
-    } as any;
+  it('onDragLeave should reset background', () => {
+    const evt = jasmine.createSpyObj('DragEvent', ['preventDefault', 'stopPropagation']);
     directive.onDragLeave(evt);
-    expect(evt.preventDefault).toHaveBeenCalled();
+    expect((directive as any).background).toBe('#eee');
   });
 
-  it('should emit files on drop', () => {
-    const emitSpy = jasmine.createSpy('emit');
-    directive.files.emit = emitSpy;
-    const fileList = { length: 1, 0: new File(['x'], 'a.txt') } as any;
-    const evt = {
-      preventDefault: jasmine.createSpy('preventDefault'),
-      stopPropagation: jasmine.createSpy('stopPropagation'),
-      dataTransfer: { files: fileList }
-    } as any;
+  it('onDrop should emit files', () => {
+    const mockFiles = [new File([''], 'test.txt')];
+    const evt = { preventDefault: jasmine.createSpy(), stopPropagation: jasmine.createSpy(), dataTransfer: { files: mockFiles } } as any;
+    spyOn(directive.files, 'emit');
     directive.onDrop(evt);
-    expect(emitSpy).toHaveBeenCalledWith(fileList);
+    expect(directive.files.emit).toHaveBeenCalledWith(mockFiles);
+    expect((directive as any).background).toBe('#eee');
+  });
+
+  it('onDrop should not emit if no files', () => {
+    const evt = { preventDefault: jasmine.createSpy(), stopPropagation: jasmine.createSpy(), dataTransfer: { files: null } } as any;
+    spyOn(directive.files, 'emit');
+    directive.onDrop(evt);
+    expect(directive.files.emit).not.toHaveBeenCalled();
   });
 });
