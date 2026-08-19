@@ -54,4 +54,10 @@ export class BuyerVendorService {
       AppApiConfig.apiEndpoint + AppApiConfig.BUYER_VENDORS + '/' + id + '/status', { status }
     );
   }
+
+  bulkCreateVendors(vendors: BuyerVendor[]): Observable<any> {
+    return this.httpService.post<any>(
+      AppApiConfig.apiEndpoint + AppApiConfig.BUYER_VENDORS + '/bulk', vendors
+    );
+  }
 }

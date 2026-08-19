@@ -1,7 +1,7 @@
 .table-title .btn i {
   float: left;
-  font-size: 19px;
-  margin: 0px 15px 0 0;
+  font-size: 16px;
+  margin: 0px 8px 0 0;
   font-weight: 700;
 }
 
@@ -17,6 +17,41 @@
 
   &:hover {
     background: #288cd8 !important;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn-uploadExcel {
+  background: #ff4800 !important;
+  box-shadow: 0px 3px 0px 2px rgba(255, 72, 0, 0.35);
+  border-radius: 5px !important;
+  color: #fff !important;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background: #e03f00 !important;
+  }
+}
+
+.rippel-btn {
+  border: 1px solid #3f9fe8 !important;
+  color: #3f9fe8 !important;
+  box-shadow: none !important;
+  background-color: #fff !important;
+  font-weight: 600;
+  border-radius: 5px !important;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: #edf4f8 !important;
   }
 }
 
@@ -238,4 +273,220 @@
       }
     }
   }
+}
+
+/* ================= Excel Upload Modal Styles ================= */
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  min-width: 130vw;
+  min-height: 130vh;
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  z-index: 1040;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1050;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.excel-modal-content {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+.excel-modal-header {
+  background: #0c2146;
+  padding: 15px 20px;
+  border-bottom: 2px solid #ff4800;
+
+  .modal-title {
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .close {
+    font-size: 24px;
+    opacity: 0.85;
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+.template-box {
+  background: #edf4f8;
+  border: 1px solid #c9dff0;
+  border-radius: 6px;
+  padding: 15px 20px;
+
+  .btn-download-template {
+    background-color: #28a745;
+    border-color: #28a745;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 8px 16px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: #218838;
+      border-color: #1e7e34;
+      transform: translateY(-1px);
+    }
+  }
+}
+
+.badge-primary-light {
+  background-color: #e2f0fb;
+  color: #0c2146;
+  border: 1px solid #b8daff;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.drop-zone {
+  border: 2px dashed #3f9fe8;
+  border-radius: 8px;
+  background-color: #f9fbfe;
+  padding: 30px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover, &.drag-over {
+    background-color: #eaf4fd;
+    border-color: #ff4800;
+  }
+
+  .drop-icon {
+    font-size: 42px;
+    color: #3f9fe8;
+  }
+
+  .drop-text {
+    font-size: 14px;
+    color: #344054;
+  }
+}
+
+.preview-section {
+  .preview-table-container {
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: auto;
+    border: 1px solid #eef0f5;
+    border-radius: 6px;
+  }
+
+  .preview-table {
+    margin-bottom: 0;
+    font-size: 12px;
+    white-space: nowrap;
+
+    thead th {
+      background: #f1f5f9;
+      color: #0c2146;
+      font-weight: 700;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      padding: 8px 12px;
+      vertical-align: middle;
+    }
+
+    tbody td {
+      padding: 8px 12px;
+      vertical-align: middle;
+    }
+
+    .table-danger-row {
+      background-color: #fff5f5;
+    }
+
+    .table-success-row {
+      background-color: #f8fff9;
+    }
+
+    /* Fixed / Sticky Columns */
+    .sticky-col-left-1 {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      background-color: #fff;
+    }
+
+    .sticky-col-left-2 {
+      position: sticky;
+      left: 50px;
+      z-index: 2;
+      background-color: #fff;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .sticky-col-right {
+      position: sticky;
+      right: 0;
+      z-index: 2;
+      background-color: #fff;
+      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.06);
+    }
+
+    thead th.sticky-col-left-1,
+    thead th.sticky-col-left-2,
+    thead th.sticky-col-right {
+      background-color: #f1f5f9 !important;
+      z-index: 4;
+    }
+
+    .table-danger-row td.sticky-col-left-1,
+    .table-danger-row td.sticky-col-left-2,
+    .table-danger-row td.sticky-col-right {
+      background-color: #fff5f5 !important;
+    }
+
+    .table-success-row td.sticky-col-left-1,
+    .table-success-row td.sticky-col-left-2,
+    .table-success-row td.sticky-col-right {
+      background-color: #f8fff9 !important;
+    }
+
+    ul {
+      font-size: 11px;
+      margin: 0;
+      padding-left: 15px;
+    }
+  }
+}
+
+.excel-modal-footer {
+  background: #f8f9fa;
+  border-top: 1px solid #eef0f5;
+  padding: 12px 20px;
+}
+
+.font-size-12 {
+  font-size: 12px;
+}
+
+.font-size-13 {
+  font-size: 13px;
+}
+
+.font-weight-600 {
+  font-weight: 600;
 }

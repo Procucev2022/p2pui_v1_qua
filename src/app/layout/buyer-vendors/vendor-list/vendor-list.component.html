@@ -5,9 +5,14 @@
         <h2>Vendor Management</h2>
         <p><span class="dot"></span>{{totalRecords}} Total</p>
       </div>
-      <div class="col-sm-6">
+      <div class="col-sm-6 text-right">
+        <button class="btn btn-primary btn-uploadExcel mr-2" type="button"
+          style="align-items: center; width: 170px; vertical-align: middle; text-align: center; display: inline-flex; justify-content: center;"
+          (click)="openUploadModal()">
+          <i class="fa fa-file-excel-o"></i> <span>Upload Excel</span>
+        </button>
         <button class="btn btn-primary btn-createRFQ" type="button"
-          style="align-items: center; width: 180px; vertical-align: middle; text-align: center; display: inline-flex;"
+          style="align-items: center; width: 170px; vertical-align: middle; text-align: center; display: inline-flex; justify-content: center;"
           (click)="addVendor()">
           <i class="fa fa-plus"></i> <span>Add Vendor</span>
         </button>
@@ -120,6 +125,180 @@
         </button>
         <button class="btn-page" [disabled]="currentPage >= totalPages - 1" (click)="onPageChange(totalPages - 1)" title="Last Page">
           Last <i class="fa fa-angle-double-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= Excel Upload Modal ================= -->
+<div class="modal-backdrop fade show" *ngIf="showUploadModal"></div>
+<div class="modal fade show d-block" tabindex="-1" role="dialog" *ngIf="showUploadModal">
+  <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+    <div class="modal-content excel-modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header excel-modal-header">
+        <h5 class="modal-title text-white">
+          <i class="fa fa-file-excel-o mr-2 text-warning"></i> Bulk Vendor Upload (Excel / CSV)
+        </h5>
+        <button type="button" class="close text-white" aria-label="Close" (click)="closeUploadModal()" [disabled]="isUploading">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body p-4">
+        <!-- Step 1: Download Template -->
+        <div class="template-box mb-4">
+          <div class="row align-items-center mb-2">
+            <div class="col-md-8">
+              <h6 class="mb-1 text-primary font-weight-bold">
+                <i class="fa fa-download mr-1"></i> Step 1: Download Sample Excel Template
+              </h6>
+              <p class="text-muted mb-0 font-size-13">
+                Download the official template pre-formatted with all column header.
+              </p>
+            </div>
+            <div class="col-md-4 text-right">
+              <button type="button" class="btn btn-success btn-download-template" (click)="downloadTemplate()">
+                <i class="fa fa-file-excel-o mr-1"></i> Download Template (.xlsx)
+              </button>
+            </div>
+          </div>
+
+          <!-- Column Header Tags -->
+          <div class="template-columns-preview mt-2 pt-2 border-top">
+            <span class="font-size-12 font-weight-600 text-dark mr-2">Template Headers:</span>
+            <span class="badge badge-primary-light mr-1 mb-1">Vendor Code *</span>
+            <span class="badge badge-primary-light mr-1 mb-1">Vendor Name *</span>
+            <span class="badge badge-primary-light mr-1 mb-1">Search Term</span>
+            <span class="badge badge-primary-light mr-1 mb-1">Phone 1 (Primary) *</span>
+            <span class="badge badge-primary-light mr-1 mb-1">Phone 2 (Alternate)</span>
+            <span class="badge badge-primary-light mr-1 mb-1">PAN</span>
+            <span class="badge badge-primary-light mr-1 mb-1">GSTIN</span>
+            <span class="badge badge-primary-light mr-1 mb-1">Country</span>
+            <span class="badge badge-primary-light mr-1 mb-1">Region Code / State</span>
+            <span class="badge badge-primary-light mr-1 mb-1">Address Line</span>
+            <span class="badge badge-primary-light mr-1 mb-1">City</span>
+            <span class="badge badge-primary-light mr-1 mb-1">District</span>
+            <span class="badge badge-primary-light mr-1 mb-1">Postal Code</span>
+            <span class="badge badge-primary-light mr-1 mb-1">Type of Business</span>
+            <span class="badge badge-primary-light mr-1 mb-1">Type of Industry</span>
+            <span class="badge badge-primary-light mr-1 mb-1">Vendor Group</span>
+            <span class="badge badge-primary-light mr-1 mb-1">Sourcing Scope</span>
+          </div>
+        </div>
+
+        <!-- Step 2: Upload File -->
+        <div class="upload-box mb-4">
+          <h6 class="mb-2 text-primary font-weight-bold">
+            <i class="fa fa-cloud-upload mr-1"></i> Step 2: Select or Drag &amp; Drop Filled Excel File
+          </h6>
+          <div class="drop-zone" [class.drag-over]="isDragging"
+               (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)"
+               (click)="fileInput.click()">
+            <input type="file" #fileInput (change)="onFileSelected($event)" accept=".xlsx, .xls, .csv" style="display: none;" />
+            <div class="drop-zone-content text-center">
+              <i class="fa fa-cloud-upload drop-icon mb-2"></i>
+              <p class="drop-text mb-1" *ngIf="!selectedFileName">
+                Click here to browse or <strong>drag &amp; drop</strong> your filled <code>.xlsx</code> / <code>.csv</code> file
+              </p>
+              <p class="drop-text font-weight-bold text-success mb-1" *ngIf="selectedFileName">
+                <i class="fa fa-check-circle mr-1"></i> {{selectedFileName}}
+              </p>
+              <span class="file-hint text-muted font-size-12">Supported formats: .xlsx, .xls, .csv (Max 1000 records per batch)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Data Preview & Validation -->
+        <div *ngIf="parsedRows.length > 0" class="preview-section">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="text-primary font-weight-bold mb-0">
+              <i class="fa fa-list-alt mr-1"></i> Step 3: Data Validation &amp; Preview
+            </h6>
+            <div>
+              <span class="badge badge-secondary mr-2">Total Rows: {{parsedRows.length}}</span>
+              <span class="badge badge-success mr-2">Valid: {{validCount}}</span>
+              <span class="badge badge-danger" *ngIf="invalidCount > 0">Invalid: {{invalidCount}}</span>
+            </div>
+          </div>
+
+          <div class="table-responsive preview-table-container">
+            <table class="table table-bordered table-sm preview-table">
+              <thead>
+                <tr>
+                  <th class="sticky-col-left-1" style="width: 50px; text-align: center;">Status</th>
+                  <th class="sticky-col-left-2">Vendor Code *</th>
+                  <th>Vendor Name *</th>
+                  <th>Search Term</th>
+                  <th>Phone 1 *</th>
+                  <th>Phone 2</th>
+                  <th>PAN</th>
+                  <th>GSTIN</th>
+                  <th>Country</th>
+                  <th>Region / State</th>
+                  <th>Address Line</th>
+                  <th>City</th>
+                  <th>District</th>
+                  <th>Postal Code</th>
+                  <th>Business Type</th>
+                  <th>Industry</th>
+                  <th>Vendor Group</th>
+                  <th>Sourcing Scope</th>
+                  <th class="sticky-col-right" style="min-width: 180px;">Validation Remarks</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of parsedRows" [class.table-danger-row]="!row.isValid" [class.table-success-row]="row.isValid">
+                  <td class="text-center sticky-col-left-1">
+                    <i class="fa fa-check-circle text-success font-size-14" *ngIf="row.isValid" title="Valid"></i>
+                    <i class="fa fa-times-circle text-danger font-size-14" *ngIf="!row.isValid" title="Invalid"></i>
+                  </td>
+                  <td class="sticky-col-left-2"><strong>{{row.vendor.vendorCode || '-'}}</strong></td>
+                  <td>{{row.vendor.vendorName || '-'}}</td>
+                  <td>{{row.vendor.searchTerm || '-'}}</td>
+                  <td>{{row.vendor.phone1 || '-'}}</td>
+                  <td>{{row.vendor.phone2 || '-'}}</td>
+                  <td>{{row.vendor.pan || '-'}}</td>
+                  <td>{{row.vendor.gstin || '-'}}</td>
+                  <td>{{row.vendor.country || 'IN'}}</td>
+                  <td>{{row.vendor.regionCode || '-'}}</td>
+                  <td>{{row.vendor.addressLine || '-'}}</td>
+                  <td>{{row.vendor.city || '-'}}</td>
+                  <td>{{row.vendor.district || '-'}}</td>
+                  <td>{{row.vendor.postalCode || '-'}}</td>
+                  <td>{{row.vendor.typeOfBusiness || '-'}}</td>
+                  <td>{{row.vendor.typeOfIndustry || '-'}}</td>
+                  <td>{{row.vendor.vendorGroup || '-'}}</td>
+                  <td>{{row.vendor.sourcingScope || 'Client Only'}}</td>
+                  <td class="sticky-col-right">
+                    <span class="text-success font-weight-600" *ngIf="row.isValid">
+                      <i class="fa fa-check"></i> Valid &amp; Ready
+                    </span>
+                    <ul class="text-danger pl-3 mb-0" *ngIf="!row.isValid">
+                      <li *ngFor="let err of row.errors">{{err}}</li>
+                    </ul>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer excel-modal-footer">
+        <button type="button" class="btn btn-secondary rippel-btn mr-2" (click)="closeUploadModal()" [disabled]="isUploading">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-primary btn-createRFQ"
+                [disabled]="validCount === 0 || isUploading"
+                (click)="uploadVendors()"
+                style="min-width: 220px; align-items: center; justify-content: center; display: inline-flex;">
+          <i class="fa fa-spinner fa-spin mr-2" *ngIf="isUploading"></i>
+          <i class="fa fa-cloud-upload mr-2" *ngIf="!isUploading"></i>
+          <span>{{isUploading ? 'Uploading Vendors...' : 'Import ' + validCount + ' Valid Vendor(s)'}}</span>
         </button>
       </div>
     </div>
