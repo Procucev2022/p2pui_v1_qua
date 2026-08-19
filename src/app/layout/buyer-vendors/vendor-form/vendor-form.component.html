@@ -3,18 +3,20 @@
     <div class="row">
       <div class="col-sm-6">
         <h2>{{isEditMode ? 'Edit Vendor' : 'Add New Vendor'}}</h2>
+        <p><span class="dot"></span>Vendor Management</p>
       </div>
       <div class="col-sm-6">
-        <button class="btn btn-secondary" type="button" (click)="onCancel()" style="margin-right: 10px;">
+        <button class="btn btn-secondary rippel-btn" type="button" (click)="onCancel()"
+          style="align-items: center; width: 140px; vertical-align: middle; text-align: center; display: inline-flex; justify-content: center;">
           <i class="fa fa-arrow-left"></i> <span>Back</span>
         </button>
       </div>
     </div>
   </div>
 
-  <form [formGroup]="vendorForm" (ngSubmit)="onSubmit()" class="p-3">
+  <form [formGroup]="vendorForm" (ngSubmit)="onSubmit()" class="form-container">
     <!-- Basic Info -->
-    <div class="card mb-3">
+    <div class="card mb-3 form-section-card">
       <div class="card-header"><i class="fa fa-info-circle"></i> Basic Information</div>
       <div class="card-body">
         <div class="row">
@@ -78,7 +80,7 @@
     </div>
 
     <!-- Tax & Compliance -->
-    <div class="card mb-3">
+    <div class="card mb-3 form-section-card">
       <div class="card-header"><i class="fa fa-university"></i> Tax &amp; Compliance</div>
       <div class="card-body">
         <div class="row">
@@ -110,7 +112,7 @@
     </div>
 
     <!-- Address -->
-    <div class="card mb-3">
+    <div class="card mb-3 form-section-card">
       <div class="card-header"><i class="fa fa-map-marker"></i> Address Details</div>
       <div class="card-body">
         <div class="row">
@@ -150,7 +152,7 @@
     </div>
 
     <!-- Contact -->
-    <div class="card mb-3">
+    <div class="card mb-3 form-section-card">
       <div class="card-header"><i class="fa fa-phone"></i> Contact Information</div>
       <div class="card-body">
         <div class="row">
@@ -176,11 +178,13 @@
     </div>
 
     <!-- Actions -->
-    <div class="row">
+    <div class="row mt-4 mb-4">
       <div class="col-md-12 text-right">
-        <button type="button" class="btn btn-secondary mr-2" (click)="onCancel()">Cancel</button>
-        <button type="submit" class="btn btn-primary" [disabled]="loading">
-          {{isEditMode ? 'Update Vendor' : 'Save Vendor'}}
+        <button type="button" class="btn btn-secondary rippel-btn mr-2" (click)="onCancel()">Cancel</button>
+        <button type="submit" class="btn btn-primary btn-createRFQ" [disabled]="loading"
+          style="align-items: center; width: 180px; vertical-align: middle; text-align: center; display: inline-flex; justify-content: center;">
+          <i class="fa" [ngClass]="isEditMode ? 'fa-check' : 'fa-plus'"></i>
+          <span>{{isEditMode ? 'Update Vendor' : 'Save Vendor'}}</span>
         </button>
       </div>
     </div>

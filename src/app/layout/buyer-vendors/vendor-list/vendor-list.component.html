@@ -6,7 +6,7 @@
         <p><span class="dot"></span>{{totalRecords}} Total</p>
       </div>
       <div class="col-sm-6">
-        <button class="btn btn-primary" type="button"
+        <button class="btn btn-primary btn-createRFQ" type="button"
           style="align-items: center; width: 180px; vertical-align: middle; text-align: center; display: inline-flex;"
           (click)="addVendor()">
           <i class="fa fa-plus"></i> <span>Add Vendor</span>
@@ -15,37 +15,39 @@
     </div>
   </div>
 
-  <!-- Filters -->
-  <div class="row p-3">
-    <div class="col-md-4">
-      <input type="text" class="form-control" placeholder="Search by name, code or search term..."
-        [(ngModel)]="searchText" (keyup.enter)="onSearch()">
-    </div>
-    <div class="col-md-3">
-      <select class="form-control" [(ngModel)]="statusFilter" (change)="onFilterChange()">
-        <option value="">All Status</option>
-        <option value="Active">Active</option>
-        <option value="Inactive">Inactive</option>
-        <option value="Pending">Pending</option>
-      </select>
-    </div>
-    <div class="col-md-3">
-      <select class="form-control" [(ngModel)]="industryFilter" (change)="onFilterChange()">
-        <option value="">All Industries</option>
-        <option *ngFor="let ind of industryTypes" [value]="ind">{{ind}}</option>
-      </select>
-    </div>
-    <div class="col-md-2">
-      <button class="btn btn-secondary btn-block" (click)="onSearch()">
-        <i class="fa fa-search"></i> Search
-      </button>
+  <!-- Search & Filters -->
+  <div class="table-search">
+    <div class="row">
+      <div class="col-sm-4">
+        <input class="main-input" type="text" placeholder="Search by name, code or search term..."
+          [(ngModel)]="searchText" (keyup.enter)="onSearch()" />
+      </div>
+      <div class="col-sm-3">
+        <select class="form-control select-input" [(ngModel)]="statusFilter" (change)="onFilterChange()">
+          <option value="">All Status</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+          <option value="Pending">Pending</option>
+        </select>
+      </div>
+      <div class="col-sm-3">
+        <select class="form-control select-input" [(ngModel)]="industryFilter" (change)="onFilterChange()">
+          <option value="">All Industries</option>
+          <option *ngFor="let ind of industryTypes" [value]="ind">{{ind}}</option>
+        </select>
+      </div>
+      <div class="col-sm-2">
+        <button class="btn btn-primary btn-createRFQ btn-search" (click)="onSearch()">
+          <i class="fa fa-search"></i> <span>Search</span>
+        </button>
+      </div>
     </div>
   </div>
 
   <!-- Table -->
   <div class="table-responsive">
-    <table class="table table-bordered table-hover">
-      <thead class="thead-light">
+    <table class="table vendor-table">
+      <thead>
         <tr>
           <th>Vendor Code</th>
           <th>Vendor Name</th>
@@ -53,38 +55,45 @@
           <th>GSTIN</th>
           <th>Industry</th>
           <th>Status</th>
-          <th>Actions</th>
+          <th style="width: 14rem; text-align: center;">Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngIf="loading">
-          <td colspan="7" class="text-center">Loading...</td>
+          <td colspan="7" class="text-center py-4 text-muted">
+            <i class="fa fa-spinner fa-spin fa-2x"></i>
+            <p class="mt-2">Loading vendors...</p>
+          </td>
         </tr>
         <tr *ngIf="!loading && vendors.length === 0">
-          <td colspan="7" class="text-center">No vendors found</td>
+          <td colspan="7" class="text-center py-4 text-muted">
+            <i class="fa fa-folder-open-o fa-2x"></i>
+            <p class="mt-2">No vendors found</p>
+          </td>
         </tr>
         <tr *ngFor="let vendor of vendors">
-          <td>{{vendor.vendorCode}}</td>
+          <td><strong>{{vendor.vendorCode}}</strong></td>
           <td>{{vendor.vendorName}}</td>
-          <td>{{vendor.city}}</td>
-          <td>{{vendor.gstin}}</td>
-          <td>{{vendor.typeOfIndustry}}</td>
+          <td>{{vendor.city || '-'}}</td>
+          <td>{{vendor.gstin || '-'}}</td>
+          <td>{{vendor.typeOfIndustry || '-'}}</td>
           <td>
-            <span class="badge" [ngClass]="{
+            <span class="badge-status" [ngClass]="{
               'badge-success': vendor.status === 'Active',
               'badge-danger': vendor.status === 'Inactive',
               'badge-warning': vendor.status === 'Pending'
             }">{{vendor.status}}</span>
           </td>
-          <td>
-            <button class="btn btn-sm btn-info mr-1" (click)="viewVendor(vendor)" title="View">
-              <i class="fa fa-eye"></i>
+          <td style="text-align: center;">
+            <button type="button" class="btn-skelton" (click)="viewVendor(vendor)" title="View Vendor Details">
+              <img src="/assets/images/new/view-doc.png" alt="View">
             </button>
-            <button class="btn btn-sm btn-primary mr-1" (click)="editVendor(vendor)" title="Edit">
-              <i class="fa fa-edit"></i>
-            </button>
-            <button class="btn btn-sm" [ngClass]="vendor.status === 'Active' ? 'btn-warning' : 'btn-success'"
-              (click)="deactivateVendor(vendor)" [title]="vendor.status === 'Active' ? 'Deactivate' : 'Activate'">
+            <img class="cursor-pointer" src="/assets/images/new/edit-data.png" title="Edit Vendor"
+              (click)="editVendor(vendor)" alt="Edit">
+            <button type="button" class="btn btn-sm action-btn"
+              [ngClass]="vendor.status === 'Active' ? 'btn-status-deactivate' : 'btn-status-activate'"
+              (click)="deactivateVendor(vendor)"
+              [title]="vendor.status === 'Active' ? 'Deactivate Vendor' : 'Activate Vendor'">
               <i class="fa" [ngClass]="vendor.status === 'Active' ? 'fa-ban' : 'fa-check'"></i>
             </button>
           </td>
@@ -94,24 +103,25 @@
   </div>
 
   <!-- Pagination -->
-  <div class="row p-3" *ngIf="totalPages > 1">
-    <div class="col-md-6">
-      <p>Showing page {{currentPage + 1}} of {{totalPages}} ({{totalRecords}} records)</p>
+  <div class="row pagination-panel" *ngIf="totalPages > 1">
+    <div class="col-md-6 d-flex align-items-center">
+      <p class="mb-0">Showing page <strong>{{currentPage + 1}}</strong> of <strong>{{totalPages}}</strong> ({{totalRecords}} total records)</p>
     </div>
     <div class="col-md-6">
-      <nav>
-        <ul class="pagination justify-content-end">
-          <li class="page-item" [class.disabled]="currentPage === 0">
-            <a class="page-link" (click)="onPageChange(currentPage - 1)">Previous</a>
-          </li>
-          <li class="page-item" *ngFor="let p of pages" [class.active]="p === currentPage">
-            <a class="page-link" (click)="onPageChange(p)">{{p + 1}}</a>
-          </li>
-          <li class="page-item" [class.disabled]="currentPage >= totalPages - 1">
-            <a class="page-link" (click)="onPageChange(currentPage + 1)">Next</a>
-          </li>
-        </ul>
-      </nav>
+      <div class="pagination-btns">
+        <button class="btn-page" [disabled]="currentPage === 0" (click)="onPageChange(0)" title="First Page">
+          <i class="fa fa-angle-double-left"></i> First
+        </button>
+        <button class="btn-page" [disabled]="currentPage === 0" (click)="onPageChange(currentPage - 1)" title="Previous Page">
+          <i class="fa fa-angle-left"></i> Prev
+        </button>
+        <button class="btn-page" [disabled]="currentPage >= totalPages - 1" (click)="onPageChange(currentPage + 1)" title="Next Page">
+          Next <i class="fa fa-angle-right"></i>
+        </button>
+        <button class="btn-page" [disabled]="currentPage >= totalPages - 1" (click)="onPageChange(totalPages - 1)" title="Last Page">
+          Last <i class="fa fa-angle-double-right"></i>
+        </button>
+      </div>
     </div>
   </div>
 </div>

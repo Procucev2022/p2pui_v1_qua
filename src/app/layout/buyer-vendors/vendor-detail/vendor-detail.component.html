@@ -3,16 +3,20 @@
     <div class="row">
       <div class="col-sm-6">
         <h2>Vendor Details</h2>
+        <p><span class="dot"></span>Vendor Management</p>
       </div>
       <div class="col-sm-6" *ngIf="vendor">
-        <button class="btn btn-secondary" style="margin-right: 10px;" (click)="goBack()">
+        <button class="btn btn-secondary rippel-btn mr-2" (click)="goBack()"
+          style="align-items: center; width: 120px; vertical-align: middle; text-align: center; display: inline-flex; justify-content: center;">
           <i class="fa fa-arrow-left"></i> <span>Back</span>
         </button>
-        <button class="btn btn-primary" style="margin-right: 10px;" (click)="editVendor()">
+        <button class="btn btn-primary btn-createRFQ mr-2" (click)="editVendor()"
+          style="align-items: center; width: 120px; vertical-align: middle; text-align: center; display: inline-flex; justify-content: center;">
           <i class="fa fa-edit"></i> <span>Edit</span>
         </button>
-        <button class="btn" [ngClass]="vendor.status === 'Active' ? 'btn-warning' : 'btn-success'"
-          (click)="deactivateVendor()">
+        <button class="btn" [ngClass]="vendor.status === 'Active' ? 'btn-status-deactivate' : 'btn-status-activate'"
+          (click)="deactivateVendor()"
+          style="align-items: center; min-width: 130px; vertical-align: middle; text-align: center; display: inline-flex; justify-content: center;">
           <i class="fa" [ngClass]="vendor.status === 'Active' ? 'fa-ban' : 'fa-check'"></i>
           <span>{{vendor.status === 'Active' ? 'Deactivate' : 'Activate'}}</span>
         </button>
@@ -20,80 +24,129 @@
     </div>
   </div>
 
-  <div *ngIf="loading" class="text-center p-5">Loading...</div>
+  <div *ngIf="loading" class="text-center py-5 text-muted">
+    <i class="fa fa-spinner fa-spin fa-2x"></i>
+    <p class="mt-2">Loading vendor details...</p>
+  </div>
 
-  <div *ngIf="vendor && !loading" class="p-3">
+  <div *ngIf="vendor && !loading" class="detail-container">
     <!-- Basic Info -->
-    <div class="card mb-3">
+    <div class="card mb-3 detail-section-card">
       <div class="card-header"><i class="fa fa-info-circle"></i> Basic Information</div>
       <div class="card-body">
         <div class="row">
-          <div class="col-md-4"><strong>Vendor Code:</strong> {{vendor.vendorCode}}</div>
-          <div class="col-md-4"><strong>Vendor Name:</strong> {{vendor.vendorName}}</div>
-          <div class="col-md-4"><strong>Search Term:</strong> {{vendor.searchTerm}}</div>
-        </div>
-        <div class="row mt-2">
-          <div class="col-md-4"><strong>Industry:</strong> {{vendor.typeOfIndustry}}</div>
-          <div class="col-md-4"><strong>Business Type:</strong> {{vendor.typeOfBusiness}}</div>
-          <div class="col-md-4"><strong>Vendor Group:</strong> {{vendor.vendorGroup}}</div>
-        </div>
-        <div class="row mt-2">
-          <div class="col-md-4"><strong>Status:</strong>
-            <span class="badge" [ngClass]="{
-              'badge-success': vendor.status === 'Active',
-              'badge-danger': vendor.status === 'Inactive',
-              'badge-warning': vendor.status === 'Pending'
-            }">{{vendor.status}}</span>
+          <div class="col-md-4 detail-field">
+            <span class="field-label">Vendor Code</span>
+            <span class="field-value font-weight-bold">{{vendor.vendorCode}}</span>
           </div>
-          <div class="col-md-4"><strong>Sourcing Scope:</strong> {{vendor.sourcingScope}}</div>
+          <div class="col-md-4 detail-field">
+            <span class="field-label">Vendor Name</span>
+            <span class="field-value">{{vendor.vendorName}}</span>
+          </div>
+          <div class="col-md-4 detail-field">
+            <span class="field-label">Search Term</span>
+            <span class="field-value">{{vendor.searchTerm || '-'}}</span>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-4 detail-field">
+            <span class="field-label">Industry</span>
+            <span class="field-value">{{vendor.typeOfIndustry || '-'}}</span>
+          </div>
+          <div class="col-md-4 detail-field">
+            <span class="field-label">Business Type</span>
+            <span class="field-value">{{vendor.typeOfBusiness || '-'}}</span>
+          </div>
+          <div class="col-md-4 detail-field">
+            <span class="field-label">Vendor Group</span>
+            <span class="field-value">{{vendor.vendorGroup || '-'}}</span>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-4 detail-field">
+            <span class="field-label">Status</span>
+            <span class="field-value">
+              <span class="badge-status" [ngClass]="{
+                'badge-success': vendor.status === 'Active',
+                'badge-danger': vendor.status === 'Inactive',
+                'badge-warning': vendor.status === 'Pending'
+              }">{{vendor.status}}</span>
+            </span>
+          </div>
+          <div class="col-md-4 detail-field">
+            <span class="field-label">Sourcing Scope</span>
+            <span class="field-value">{{vendor.sourcingScope}}</span>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Tax & Compliance -->
-    <div class="card mb-3">
+    <div class="card mb-3 detail-section-card">
       <div class="card-header"><i class="fa fa-university"></i> Tax &amp; Compliance</div>
       <div class="card-body">
         <div class="row">
-          <div class="col-md-4"><strong>PAN:</strong> {{vendor.pan || 'N/A'}}</div>
-          <div class="col-md-4"><strong>GSTIN:</strong> {{vendor.gstin || 'N/A'}}</div>
-          <div class="col-md-4"><strong>Country:</strong> {{vendor.country || 'N/A'}}</div>
+          <div class="col-md-4 detail-field">
+            <span class="field-label">PAN</span>
+            <span class="field-value">{{vendor.pan || '-'}}</span>
+          </div>
+          <div class="col-md-4 detail-field">
+            <span class="field-label">GSTIN</span>
+            <span class="field-value">{{vendor.gstin || '-'}}</span>
+          </div>
+          <div class="col-md-4 detail-field">
+            <span class="field-label">Country</span>
+            <span class="field-value">{{vendor.country || 'IN'}}</span>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Address -->
-    <div class="card mb-3">
+    <div class="card mb-3 detail-section-card">
       <div class="card-header"><i class="fa fa-map-marker"></i> Address Details</div>
       <div class="card-body">
         <div class="row">
-          <div class="col-md-6"><strong>Address:</strong> {{vendor.addressLine}}</div>
-          <div class="col-md-3"><strong>City:</strong> {{vendor.city}}</div>
-          <div class="col-md-3"><strong>District:</strong> {{vendor.district}}</div>
+          <div class="col-md-6 detail-field">
+            <span class="field-label">Address</span>
+            <span class="field-value">{{vendor.addressLine || '-'}}</span>
+          </div>
+          <div class="col-md-3 detail-field">
+            <span class="field-label">City</span>
+            <span class="field-value">{{vendor.city || '-'}}</span>
+          </div>
+          <div class="col-md-3 detail-field">
+            <span class="field-label">District</span>
+            <span class="field-value">{{vendor.district || '-'}}</span>
+          </div>
         </div>
-        <div class="row mt-2">
-          <div class="col-md-4"><strong>Postal Code:</strong> {{vendor.postalCode}}</div>
-          <div class="col-md-4"><strong>Region Code:</strong> {{vendor.regionCode}}</div>
+        <div class="row mt-3">
+          <div class="col-md-4 detail-field">
+            <span class="field-label">Postal Code</span>
+            <span class="field-value">{{vendor.postalCode || '-'}}</span>
+          </div>
+          <div class="col-md-4 detail-field">
+            <span class="field-label">Region Code / State</span>
+            <span class="field-value">{{vendor.regionCode || '-'}}</span>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Contact -->
-    <div class="card mb-3">
+    <div class="card mb-3 detail-section-card">
       <div class="card-header"><i class="fa fa-phone"></i> Contact Information</div>
       <div class="card-body">
         <div class="row">
-          <div class="col-md-4"><strong>Phone 1:</strong> {{vendor.phone1}}</div>
-          <div class="col-md-4"><strong>Phone 2:</strong> {{vendor.phone2 || 'N/A'}}</div>
+          <div class="col-md-4 detail-field">
+            <span class="field-label">Phone 1 (Primary)</span>
+            <span class="field-value">{{vendor.phone1}}</span>
+          </div>
+          <div class="col-md-4 detail-field">
+            <span class="field-label">Phone 2 (Alternate)</span>
+            <span class="field-value">{{vendor.phone2 || '-'}}</span>
+          </div>
         </div>
-      </div>
-    </div>
-
-    <!-- Placeholder for future -->
-    <div class="card mb-3">
-      <div class="card-header"><i class="fa fa-bar-chart"></i> Performance &amp; Compliance</div>
-      <div class="card-body">
-        <p class="text-muted">Performance metrics and compliance data will be available in a future release.</p>
       </div>
     </div>
   </div>
