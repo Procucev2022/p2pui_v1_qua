@@ -15,8 +15,8 @@
     <p-table dataKey="id"  [ngClass]="{  'bfs-container': isBFSView}"  #itemCatalogueTable [columns]="itemHeaders" [value]="itemList"
     sortMode="multiple" [paginator]="true" [rows]="pageRecordSize" id="prqTable" [rowsPerPageOptions]="pageOptions"
     [tableStyle]="{ minWidth: '100%'}" exportFilename="items details" [(selection)]="selectedData" [scrollable]="true"
-    [scrollHeight]="'calc(100vh - 218px)'"  [expandedRowKeys]="expandedRowKeys">
-      
+    [scrollHeight]="'calc(100vh - 218px)'"  >
+      <!-- [expandedRowKeys]="expandedRows" -->
       <ng-template pTemplate="caption">
         <div class="table-search">
           <div class="row" style="align-items: center;">
@@ -24,17 +24,9 @@
               <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
                 (input)="itemCatalogueTable.filterGlobal($event.target.value, 'contains')" />
             </div>
-            <div class="col-sm-8" 
-            style=" text-align: right;">
-               <h5 style="text-align: right;    font-size: 1.2rem;">Not finding items you want? You can raise <span class="link-cls" (click)="navigateToGMT('gmtName')"><b>RFQ here</b></span>  to get quotes directly on email</h5> 
-               <span class="info-icon-desc"> *QYP : Quote Your Price   </span>
-               <span class="info-icon-desc"> 
-                <img src="/assets/images/new/bid-request-wb.png" width="30" height="30" title="Request Bid"  *ngIf="!['CategoryManager','CategoryManager2'].includes(roleName)">  - Request Bid  </span>  
-                <span class="info-icon-desc"> 
-                   
-              <img src="/assets/images/new/bid-requrested-wb.png" width="30" height="30" title="Bid Requested"    *ngIf="!['CategoryManager','CategoryManager2'].includes(roleName)"  >
-              -  Requested Bid 
-              </span>
+            <div class="col-sm-8">
+               <h5 style="text-align: left;">Not finding items you want? You can raise <span class="link-cls" (click)="navigateToGMT('gmtName')"><b>RFQ here</b></span>  to get quotes directly on email</h5>
+               <span> *QYP : Quote Your Price</span>
             </div>
           </div>
         </div>
@@ -49,7 +41,7 @@
               <p-sortIcon [field]="col.field"></p-sortIcon>
             </th>
           </ng-container>
-          <th   style="width:23rem">Actions</th>
+          <th   style="width:18rem">Actions</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
@@ -73,10 +65,8 @@
                         <span *ngIf="rowData?.itemNumber == null || rowData?.itemNumber  == ''" class="cellLinkCls" (click)=" getVendorAndClientListByItemId(rowData,$event, true)">Assign Category</span>
                     </span>
                     <span *ngIf="col.field != 'itemNumber'">
-                        <span *ngIf=" col.field == 'askPrice'">{{ (rowData?.buyPriceDisclosure == true ||  rowData[col.field] >0) ? (rowData[col.field]) : 'QYP' }}</span>
-                        <span *ngIf=" col.field != 'askPrice'">  {{rowData[col.field]}}
-
-                        </span>
+                        <span *ngIf=" col.field == 'sellPrice'">{{ (rowData?.buyPriceDisclosure == true ||  rowData[col.field] >0) ? (rowData[col.field]) : 'QYP' }}</span>
+                        <span *ngIf=" col.field != 'sellPrice'">  {{rowData[col.field]}}</span>
                     </span>
                 </span>
             </span>
@@ -90,21 +80,25 @@
             </span>
 
           </td>
-          <td   style="width:23rem">
-            <div class="action-icons" style="display: flex;align-items: center;">
-                <img src="/assets/images/new/view-doc.png" width="40" height="40" (click)="onViewItemDetails(rowData, false)"
-                    title="View Item Details">
-                <img src="/assets/images/new/edit-data.png" width="40" height="40" *ngIf="roleName == 'CategoryManager2'" (click)="onEditBFSItemDetails(rowData)"
-                title="Edit BFS Item Details"> 
-                <span class="blink" *ngIf="  (rowData.commentsFlag && rowData.commentsFlag  == true)">
-                    <i class="fa fa-bell" aria-hidden="true"></i>
-                </span>
-                <img src="/assets/images/new/comments-write.png" width="40" height="40" (click)="openCreateCommentsByBuyer(rowData)" /> 
+          <td   style="width:18rem">
+            <button type="button" class="btn-skelton" >
+                <img src="/assets/images/new/view-doc.png" (click)="onViewItemDetails(rowData, false)"
+                    title="View Item Details"> &nbsp;&nbsp;
+                    <img src="/assets/images/new/edit-data.png" *ngIf="roleName == 'CategoryManager2'" (click)="onEditBFSItemDetails(rowData)"
+                    title="Edit BFS Item Details"> &nbsp;&nbsp;
+                    <span class="blink" *ngIf="  (rowData.commentsFlag && rowData.commentsFlag  == true)">
+                        <i class="fa fa-bell" aria-hidden="true"></i>
+                    </span>
+                    <img src="/assets/images/new/comments-write.png"  (click)="openCreateCommentsByBuyer(rowData)" />
 
-            <img src="/assets/images/new/bid-request-wb.png" width="40" height="40" title="Request Bid"  *ngIf="!['CategoryManager','CategoryManager2'].includes(roleName)    && (rowData.status.status == 'BFS_NEW')" (click)="onBidReqest(rowData)" style="cursor: pointer;">
+            </button>
 
-            <img src="/assets/images/new/bid-requrested-wb.png" width="40" height="40" title="Bid Requested"   style="cursor: not-allowed;"   *ngIf="!['CategoryManager','CategoryManager2'].includes(roleName)  && (rowData.status && rowData.status.status == 'BID_REQUESTED')" >
-            </div>
+            <!-- <button type="button" class="btn-skelton" *ngIf="roleName == 'CategoryManager'" (click)="editDescription(rowData, editItem)">
+            <img src="/assets/images/new/edit-data.png" title="Edit Item Description">
+          </button> -->
+
+            <button type="button" class="btn btn-blue" *ngIf="!['CategoryManager','CategoryManager2'].includes(roleName)    && (rowData.status.status == 'BFS_NEW')" (click)="onBidReqest(rowData)">Bid Request</button>
+            <button type="button" class="btn btn-orange" *ngIf="!['CategoryManager','CategoryManager2'].includes(roleName)  && (rowData.status && rowData.status.status == 'BID_REQUESTED')" disabled>Requested</button>
 
         </td>
         </tr>
@@ -142,7 +136,7 @@
     </ng-template>
       <ng-template pTemplate="emptymessage" let-columns>
         <tr>
-          <td [attr.colspan]="8" style="text-align:center;">
+          <td [attr.colspan]="5" style="text-align:center;">
             No Records Found.
           </td>
         </tr>
@@ -172,7 +166,7 @@
                                   <div class="rfqContainer ">
                                         <div class="col-12">
                                             <form class="row" [formGroup]="itemForm" novalidate (ngSubmit)="onAddItemsToCart()">
-                                                <div class="col-5 mb-1 form-group">
+                                                <div class="col-4 mb-1 form-group">
                                                     <label class="form-label required">Organization</label>
                                                     <div class="input-group">
                                                         <input *ngIf="selectedOrgData" class="form-control" placeholder="Search Organization" disabled [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedOrgData.companyName" />
@@ -181,19 +175,19 @@
                                                     </div>
 
                                                 </div>
-                                                    <div class="col-3 mb-1">
+                                                    <div class="col-2 mb-1">
                                                     <label class="form-label required">User</label>
                                                     <select class="form-control" formControlName="user">
                                                         <option value="">--Select--</option>
                                                         <option *ngFor="let user of userList" [ngValue]="user">{{user.username}}</option>
                                                     </select>
                                                 </div>
-                                                    <div class="col-4 mb-1">
+                                                    <div class="col-2 mb-1">
                                                         <label class="form-label required">Item Description</label>
                                                         <input type="text" class="form-control"  formControlName="description" placeholder="Item Description" />
 
                                                     </div>
-                                                    <div class="col-5 mb-1">
+                                                    <div class="col-2 mb-1">
                                                         <label class="form-label required">Category</label>
                                                         <p-autoComplete  formControlName="category" showEmptyMessage="true"
                                                         [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
@@ -208,7 +202,7 @@
                                                                     </ng-template>
                                                         </p-autoComplete>
                                                     </div>
-                                                    <div class="col-3 mb-1">
+                                                    <div class="col-2 mb-1">
                                                         <label class="form-label required">Item Specification</label>
                                                         <input class="form-control" formControlName="specification" placeholder="Item Specification" />
                                                     </div>
@@ -216,13 +210,6 @@
                                                         <label class="form-label required">Item Number</label>
                                                         <input class="form-control" formControlName="itemNumber" placeholder="Item Number" />
                                                     </div> -->
-                                                    <div class="col-4 mb-1">
-                                                    <label class="form-label required">Age Of Asset <small>(In Months)</small></label>
-                                                    <input class="form-control" formControlName="ageOfAsset" type="number" placeholder="Age of asset" />
-                                                    <p class="error"  *ngIf="(itemForm.controls?.ageOfAsset?.touched && itemForm.controls.ageOfAsset.errors) && (itemForm.controls.ageOfAsset.errors.invalid )">Aseet Age should be Number</p>
-
-
-                                                </div>
                                                     <div class="col-2 mb-1">
                                                         <label class="form-label required">UOM</label>
                                                         <input class="form-control" formControlName="unitofMeasures" placeholder="Item UOM" />
@@ -230,24 +217,49 @@
                                                         Only Alphabets allowed and  No Special Characters not allowed.
                                                         </div>
                                                     </div>
-                                                    
-                                                    <div class="col-3 mb-1">
+                                                    <div class="col-2 mb-1">
+                                                    <label class="form-label required">Age Of Asset <small>(In Months)</small></label>
+                                                    <input class="form-control" formControlName="ageOfAsset" type="text" placeholder="Age of asset" />
+                                                    <p class="error"  *ngIf="(itemForm.controls?.ageOfAsset?.touched && itemForm.controls.ageOfAsset.errors) && (itemForm.controls.ageOfAsset.errors.invalid )">Aseet Age should be Number</p>
+
+
+                                                </div>
+                                                    <div class="col-2 mb-1">
                                                             <label class="form-label required">Available Quantity</label>
                                                             <input class="form-control" formControlName="availableQuantity" type="number" placeholder="Available Quantity" />
                                                             <p class="error"  *ngIf="(itemForm.controls?.availableQuantity?.touched && itemForm.controls.availableQuantity.errors) && (itemForm.controls.availableQuantity.errors.invalid || itemForm.controls.availableQuantity.errors.required)">Quantity is a mandatory field & should be number</p>
                                                     </div>
 
-                                                
-                                                <div class="col-3 mb-1" >
+                                                <div class="col-2 mb-1">
+                                                    <label class="form-label required">Do you know Buy Price?</label>
+                                                    <div style="    display: flex;
+                                                    align-items: center;
+                                                    padding: 4px;">
+                                                        <input type="radio" name="r2" [value]="true" formControlName="buyPriceDisclosure" (click)="onChangePriceDisclosure(true)" />&nbsp;&nbsp;Yes &nbsp;&nbsp;&nbsp;
+                                                        <input type="radio" name="r2" [value]="false" formControlName="buyPriceDisclosure" (click)="onChangePriceDisclosure(false)" />&nbsp;&nbsp;No
+                                                    </div>
+                                                </div>
+                                                <div class="col-2 mb-1" *ngIf="itemForm.controls.buyPriceDisclosure.value && itemForm.controls.buyPriceDisclosure.value == true">
+                                                    <label class="form-label required">Buy Price(Per Unit)</label>
+                                                    <input class="form-control" formControlName="sellPrice" type="number" placeholder="Buy Price" (change)="onPriceDiscountChange()" />
+                                                    <p class="error"  *ngIf="(itemForm.controls?.sellPrice?.touched && itemForm.controls.sellPrice.errors) && (itemForm.controls.sellPrice.errors.invalid || itemForm.controls.sellPrice.errors.required)">Buy Price is a mandatory field & should be number</p>
+                                                </div>
+                                                <div class="col-2 mb-1" *ngIf="itemForm.controls.buyPriceDisclosure.value && itemForm.controls.buyPriceDisclosure.value == true">
+                                                    <label class="form-label required">Discount(%)</label>
+
+                                                    <input class="form-control" formControlName="discount" type="number" placeholder="Discount" (change)="onPriceDiscountChange()"/>
+                                                    <p class="error"  *ngIf="(itemForm.controls?.discount?.touched && itemForm.controls.discount.errors) && (itemForm.controls.discount.errors.invalid || itemForm.controls.discount.errors.required)">Discount is a mandatory field & should be number</p>
+                                                </div>
+                                                <div class="col-2 mb-1" *ngIf="itemForm.controls.buyPriceDisclosure.value == true ||  itemForm.controls.buyPriceDisclosure.value == false">
                                                     <label class="form-label" [ngClass]="{'required':  itemForm.controls.buyPriceDisclosure.value == false}">Sale Price(Per Unit)</label>
                                                     <input class="form-control" formControlName="askPrice"  type="number" placeholder="Sale Price"  />
                                                 </div>
-                                                <div class="col-4 mb-1">
+                                                <div class="col-2 mb-1">
                                                     <label class="form-label required">Location</label>
                                                     <input class="form-control" formControlName="location"  type="text" placeholder="Location"  />
                                                 </div>
 
-                                                <div class="col-3 mb-1">
+                                                <div class="col-2 mb-1">
                                                     <label class="form-label required" >BFS Group</label>
                                                     <p-autoComplete  formControlName="bfsGroup" showEmptyMessage="true"
                                                     [emptyMessage]="'No data available'" styleClass="form-control" inputStyleClass="p-auto-cls"
@@ -262,7 +274,7 @@
                                                                 </ng-template>
                                                     </p-autoComplete>
                                                 </div>
-                                                <div class="col-5 mb-1">
+                                                <div class="col-4 mb-1">
                                                     <label class="form-label">Remarks</label>
                                                     <input class="form-control" formControlName="remarks"  type="text" placeholder="Remarks.."  />
                                                 </div>
@@ -371,13 +383,7 @@
              </div>
              <div class="col-12 mt-3 row">
                  <fieldset class=" col-12 fieldSec ">
-                        <legend class="displayFlexCenter" style="font-size: 1.3rem;"> <span class="cart" style="margin-right: 8px;"> <i class="fa fa-shopping-cart" aria-hidden="true"></i></span> Items In Cart   <span class="cart-count" style="    background: #f44336b8;
-    margin: 4px;
-    padding: 3px 8px;
-    font-size: 17px;
-    color: #ffffff;
-    border-radius: 11px;
-    font-weight: 800;min-width: 30px;text-align: center;"> {{itemGridData.gridValue.length}}</span></legend>
+                        <legend class="displayFlexCenter">Items In Cart <span class="cart"> <i class="fa fa-shopping-cart" aria-hidden="true"></i> <span class="cart-count">{{itemGridData.gridValue.length}}</span></span></legend>
                         <div class="col-12">
                                 <app-bfs-common-grid *ngIf="isShowGrid" [gridData]="itemGridData" (onGridAction)="onGridAction($event)"></app-bfs-common-grid>
                         </div>
@@ -402,15 +408,11 @@
         </div>
         <div class="modal-body">
             <div class="row">
-                 <div class="col-4 mb-1">
-                <input type="text" class="form-control" [(ngModel)]="searchedEmail"
-                    placeholder="Enter Email / User ID" />
-            </div>
-            <div class="col-4 mb-1">
-                <input type="text" class="form-control" [(ngModel)]="searchedPhone"
-                    placeholder="Enter  Mobile Number" />
-            </div>
-            <div class="col-4"><button class="btn btn-blue" (click)="searchForOrgs()">Search</button></div>
+                <div class="col-6 mb-1">
+                    <input type="text" class="form-control" [(ngModel)]="searchedOrgString"
+                        placeholder="Enter Organization Name" />
+                </div>
+                <div class="col-5"><button class="btn btn-blue" (click)="searchForOrgs()">Search</button></div>
 
                 <div class="col-12 orgList">
                     <ul style="list-style:  none;">
@@ -467,6 +469,10 @@
           <div class="col-6" [ngClass]="{'col-4': isBidRequest}">
             <label>Buy Price(Per Unit)</label>
             <label>{{selectedRowData.sellPrice >0 ? selectedRowData.sellPrice: 'QYP'}}</label>
+          </div>
+          <div class="col-6" [ngClass]="{'col-4': isBidRequest}">
+            <label>Discount(%)</label>
+            <label>{{selectedRowData.discount}}</label>
           </div>
           <div class="col-6" [ngClass]="{'col-4': isBidRequest}">
             <label>Sale Price(Per Unit)</label>
@@ -734,16 +740,8 @@ styleClass="ui-sidebar-lg" [style]="{width:'100vw'}">
 
     </div>
 </div>
-<div class="col-12" style="    display: flex;
-    align-items: center;
-    flex-direction: row-reverse;
-    position: fixed;
-    bottom: 0;
-    right: 16px;
-    width: 84%;
-    background: #ffffff;
-    height: 61px;
-    margin-top: 4rem;" >
+<div class="col-12" style="display: flex;align-items: center;flex-direction: row-reverse;    position: fixed;
+bottom: 16px;right: 16px;" >
    <button class="btn btn-green" (click)="updateBFSItemData()">Update</button>
    <button class="btn btn-red" (click)="onCloseEditForm()">Close</button>
 
@@ -758,15 +756,11 @@ styleClass="ui-sidebar-lg" [style]="{width:'100vw'}">
     </div>
     <div class="modal-body">
         <div class="row">
-            <div class="col-4 mb-1">
-                <input type="text" class="form-control" [(ngModel)]="searchedEmail"
-                    placeholder="Enter Email / User ID" />
+            <div class="col-6 mb-1">
+                <input type="text" class="form-control" [(ngModel)]="searchedOrgString"
+                    placeholder="Enter Organization Name" />
             </div>
-            <div class="col-4 mb-1">
-                <input type="text" class="form-control" [(ngModel)]="searchedPhone"
-                    placeholder="Enter  Mobile Number" />
-            </div>
-            <div class="col-2"><button class="btn btn-blue" (click)="searchForOrgs()">Search</button></div>
+            <div class="col-5"><button class="btn btn-blue" (click)="searchForOrgs()">Search</button></div>
 
             <div class="col-12 orgList">
                 <ul style="list-style:  none;">
