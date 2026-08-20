@@ -105,22 +105,17 @@ export class LiveAuctionForItemwiseComponent implements OnInit, OnDestroy {
   }
 
 
-  onAutoRefreshInterval() {
-    if (!this.isEditBidAmount) {
-      this.refresh();
-    }
-    console.log(' this.intervalTime',  this.intervalTime);
-  }
-
   autoRefreshPage() {
     if (this.intervalTime) {
       clearInterval(this.intervalTime);
     }
     if (!this.auctionExpired ) {
-      this.intervalTime = setInterval(
-        this.onAutoRefreshInterval.bind(this),
-        this.auctionBidAndVendorData['auction']['pageRefrestInterval'] * 1000
-      );
+      this.intervalTime = setInterval(() => {
+        if (!this.isEditBidAmount) {
+          this.refresh();
+       }
+        console.log(' this.intervalTime',  this.intervalTime);
+      }, this.auctionBidAndVendorData['auction']['pageRefrestInterval'] * 1000);
     }
 
   }
@@ -195,27 +190,19 @@ export class LiveAuctionForItemwiseComponent implements OnInit, OnDestroy {
     }
   }
 
-  onItemTimeoutRefresh() {
-    this.isEditBidAmount = false;
-    this.auctionEndsInSeconds = (new Date(this.auctionBidAndVendorData['auction']['auctionEndtime']).getTime() - (new Date()).getTime()) / 1000;
-    this.refresh();
-  }
-
-  onBidTimeInterval() {
-    if ((new Date()) > new Date(this.auctionBidAndVendorData['auction']['auctionEndtime'])) {
-      this.auctionExpired = true;
-      this.itemtimeoutinteval = setTimeout(
-        this.onItemTimeoutRefresh.bind(this),
-        this.auctionBidAndVendorData['auction']['pageRefrestInterval'] * 1000
-      );
-      clearInterval(this.timer);
-    } else {
-      this.auctionExpired = false;
-    }
-  }
-
   checkBidTime() {
     this.auctionEndsInSeconds =   (new Date(this.auctionBidAndVendorData['auction']['auctionEndtime']).getTime() - (new Date()).getTime()) / 1000;
+    // if (this.auctionEndsInSeconds > 0) {
+    //   setInterval(() => {
+    //     if (this.auctionEndsInSeconds > 0 &&  !this.auctionExpired) {
+    //        this.auctionEndsInSeconds --;
+    //     }
+    //     console.log('a', this.auctionEndsInSeconds);
+    //     if (this.auctionEndsInSeconds <= 0) {
+    //       this.auctionExpired = true;
+    //     }
+    //   }, 1000);
+    // }
     console.log('end in seconds', ((new Date(this.auctionBidAndVendorData['auction']['auctionEndtime']).getTime() - (new Date()).getTime()) / 1000) / 60);
     clearTimeout(this.timer);
     if (this.timer) {
@@ -223,7 +210,26 @@ export class LiveAuctionForItemwiseComponent implements OnInit, OnDestroy {
     }
 
     this.auctionExpired =  (new Date())  > new Date(this.auctionBidAndVendorData['auction']['auctionEndtime']) ? true : false;
-    this.timer = setInterval(this.onBidTimeInterval.bind(this), 2000);
+    if (true) {
+      this.timer = setInterval(() => {
+        if ( (new Date())  > new Date(this.auctionBidAndVendorData['auction']['auctionEndtime'])) {
+          this.auctionExpired = true;
+
+          this.itemtimeoutinteval =
+          setTimeout(function() {
+            this.isEditBidAmount = false;
+            // this.auctionExpired =  (new Date())  > new Date(this.auctionBidAndVendorData['auction']['auctionEndtime']) ? false: true;
+            this.auctionEndsInSeconds =  (new Date(this.auctionBidAndVendorData['auction']['auctionEndtime']).getTime() - (new Date()).getTime()) / 1000;
+            this.refresh(); }, this.auctionBidAndVendorData['auction']['pageRefrestInterval'] * 1000);
+
+
+          clearInterval(this.timer);
+        } else {
+          this.auctionExpired = false;
+        }
+
+      }, 2000);
+    }
 
     if (this.auctionExpired) {
       clearInterval(this.timer);

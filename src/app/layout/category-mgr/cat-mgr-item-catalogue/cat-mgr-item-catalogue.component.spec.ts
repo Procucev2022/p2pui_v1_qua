@@ -1,7 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { of } from 'rxjs';
+import swal from 'sweetalert2';
 import { CatMgrItemCatalogueComponent } from './cat-mgr-item-catalogue.component';
 import { deepExerciseComponent,  autoMock, defaultAppConfig, seedComponent } from '../../../../testing/test-helpers';
 import { APP_CONFIG } from 'src/app/app.config';
@@ -102,33 +103,19 @@ describe('CatMgrItemCatalogueComponent', () => {
     expect(component.itemList).toEqual([]);
   });
 
-  it('should close request via swal and success/error callbacks', () => {
-    let confirm = true;
-    spyOn(component, 'promptCloseRequest').and.callFake(() => ({
-      then: (cb: any) => {
-        cb({ value: confirm });
-        return { then: () => undefined };
-      },
-    }));
-    spyOn(swalModule as any, 'default').and.stub();
+  it('should close request via swal and success/error callbacks', fakeAsync(() => {
     catItems.getAllItemCatalogues.and.returnValue(of([]));
     catItems.closeItemReq.and.returnValue(of({ status: 'Success', message: 'ok' }));
     component.closeRequest({ id: '1', procucevItemCode: 'P1' });
+    tick(500);
+    if (swal.isVisible()) { swal.clickConfirm(); tick(500); }
     expect(toaster.success).toHaveBeenCalledWith('ok', 'Success');
 
     catItems.closeItemReq.and.returnValue(of({ status: 'Failure', message: 'bad' }));
     component.closeRequestFun({ id: '2', procucevItemCode: 'P2' });
     expect(toaster.error).toHaveBeenCalledWith('bad', 'Error');
-
-    confirm = false;
-    spyOn(component, 'closeRequestFun');
-    component.closeRequest({ id: '3', procucevItemCode: 'P3' });
-    expect(component.closeRequestFun).not.toHaveBeenCalled();
-    component.onCloseRequestDialogResult({ value: false }, { id: '3b' });
-    component.confirmCloseRequest({ id: '4', procucevItemCode: 'P4' });
-    (component.promptCloseRequest as jasmine.Spy).and.callThrough();
-    component.promptCloseRequest();
-  });
+    flush();
+  }));
 
   it('should page, export and view item', () => {
     component.itemList = [

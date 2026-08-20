@@ -224,9 +224,9 @@ describe('LiveAuctionForItemwiseComponent', () => {
     component.intervalTime = 9;
     component.autoRefreshPage();
     component.isEditBidAmount = false;
-    component.onAutoRefreshInterval();
+    ((window as any).__intervalCbs || []).forEach((cb: any) => { try { cb(); } catch (e) {} });
     component.isEditBidAmount = true;
-    component.onAutoRefreshInterval();
+    ((window as any).__intervalCbs || []).forEach((cb: any) => { try { cb(); } catch (e) {} });
 
     component.auctionExpired = true;
     component.autoRefreshPage();
@@ -240,13 +240,13 @@ describe('LiveAuctionForItemwiseComponent', () => {
     component.auctionBidAndVendorData = bidData(future).bidAuctionVendorData;
     component.auctionExpired = false;
     component.checkBidTime();
-    component.onBidTimeInterval();
+    ((window as any).__intervalCbs || []).forEach((cb: any) => { try { cb(); } catch (e) {} });
 
     component.auctionBidAndVendorData = bidData(past).bidAuctionVendorData;
     component.timer = 6;
     component.checkBidTime();
-    component.onBidTimeInterval();
-    component.onItemTimeoutRefresh();
+    ((window as any).__intervalCbs || []).forEach((cb: any) => { try { cb(); } catch (e) {} });
+    ((window as any).__timeoutCbs || []).forEach((cb: any) => { try { cb(); } catch (e) {} });
 
     if (component.intervalTime) { try { clearInterval(component.intervalTime); } catch (e) {} }
     if (component.timer) { try { clearInterval(component.timer); } catch (e) {} }

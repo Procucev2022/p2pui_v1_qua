@@ -2,8 +2,16 @@ import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core
 import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { of } from 'rxjs';
-import { swalConfirm } from 'src/app/shared/helpers/swal-confirm';
+import swal from 'sweetalert2';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { PpoViewModalComponent } from './ppo-view-modal.component';
+
+if (typeof (jsPDF as any).prototype?.autoTable !== 'function') {
+  (jsPDF as any).prototype.autoTable = function (...args: any[]) {
+    return (autoTable as any)(this, ...args);
+  };
+}
 import { defaultAppConfig } from 'src/testing/test-helpers';
 import { APP_CONFIG } from 'src/app/app.config';
 import { EncryDecryService } from 'src/app/shared/services';
@@ -136,11 +144,11 @@ describe('PpoViewModalComponent', () => {
 
   it('should handle acceptPPO for Accept and Reject (success and failure)', fakeAsync(() => {
     component.ngOnInit();
-    spyOn(swalConfirm, 'open').and.returnValue(Promise.resolve({ value: true }));
 
     // Accept Success
     component.acceptPPO('Accept');
-    tick();
+    tick(500);
+    if (swal.isVisible()) { swal.clickConfirm(); tick(500); }
     expect(ppoService.acceptPPO).toHaveBeenCalled();
     expect(toastr.success).toHaveBeenCalledWith('Accepted', 'Success');
     expect(matDialog.closeAll).toHaveBeenCalled();
@@ -148,19 +156,22 @@ describe('PpoViewModalComponent', () => {
     // Accept Failure
     ppoService.acceptPPO.and.returnValue(of({ status: 'Failed' }));
     component.acceptPPO('Accept');
-    tick();
+    tick(500);
+    if (swal.isVisible()) { swal.clickConfirm(); tick(500); }
     expect(toastr.error).toHaveBeenCalledWith('PPO Acceptance failed', 'Failed');
 
     // Reject Success
     component.acceptPPO('Reject');
-    tick();
+    tick(500);
+    if (swal.isVisible()) { swal.clickConfirm(); tick(500); }
     expect(ppoService.rejectPPO).toHaveBeenCalled();
     expect(toastr.success).toHaveBeenCalledWith('Rejected', 'Success');
 
     // Reject Failure
     ppoService.rejectPPO.and.returnValue(of({ status: 'Failed' }));
     component.acceptPPO('Reject');
-    tick();
+    tick(500);
+    if (swal.isVisible()) { swal.clickConfirm(); tick(500); }
     expect(toastr.error).toHaveBeenCalledWith('PPO Rejection failed', 'Failed');
     flush();
   }));
@@ -188,58 +199,66 @@ describe('PpoViewModalComponent', () => {
 
   it('should handle ppoActions across all action types (Submit, Accept, Reject, Reject_p)', fakeAsync(() => {
     component.ngOnInit();
-    spyOn(swalConfirm, 'open').and.returnValue(Promise.resolve({ value: true }));
 
     // Submit as non-CategoryManager2
     component.loggedUserDetails.role.roleName = 'CategoryManager';
     component.ppoActions('Submit');
-    tick();
+    tick(500);
+    if (swal.isVisible()) { swal.clickConfirm(); tick(500); }
     expect(ppoService.submitPPO).toHaveBeenCalled();
 
     // Submit as CategoryManager2
     component.loggedUserDetails.role.roleName = 'CategoryManager2';
     component.ppoActions('Submit');
-    tick();
+    tick(500);
+    if (swal.isVisible()) { swal.clickConfirm(); tick(500); }
     expect(ppoService.submitPPO).toHaveBeenCalled();
     expect(toastr.success).toHaveBeenCalledWith('Submitted', 'Success');
 
     // Submit failure
     ppoService.submitPPO.and.returnValue(of({ status: 'Failed' }));
     component.ppoActions('Submit');
-    tick();
+    tick(500);
+    if (swal.isVisible()) { swal.clickConfirm(); tick(500); }
     expect(toastr.error).toHaveBeenCalledWith('PPO submission failed', 'Failed');
 
     // Accept action success & failure
     ppoService.acceptPPO.and.returnValue(of({ status: 'Success' }));
     component.ppoActions('Accept');
-    tick();
+    tick(500);
+    if (swal.isVisible()) { swal.clickConfirm(); tick(500); }
     expect(ppoService.acceptPPO).toHaveBeenCalled();
 
     ppoService.acceptPPO.and.returnValue(of({ status: 'Failed' }));
     component.ppoActions('Accept');
-    tick();
+    tick(500);
+    if (swal.isVisible()) { swal.clickConfirm(); tick(500); }
     expect(toastr.error).toHaveBeenCalledWith('PPO Acceptance failed', 'Failed');
 
     // Reject action success & failure
     ppoService.rejectPPO.and.returnValue(of({ status: 'Success' }));
     component.ppoActions('Reject');
-    tick();
+    tick(500);
+    if (swal.isVisible()) { swal.clickConfirm(); tick(500); }
     expect(ppoService.rejectPPO).toHaveBeenCalled();
 
     ppoService.rejectPPO.and.returnValue(of({ status: 'Failed' }));
     component.ppoActions('Reject');
-    tick();
+    tick(500);
+    if (swal.isVisible()) { swal.clickConfirm(); tick(500); }
     expect(toastr.error).toHaveBeenCalledWith('PPO Rejection failed', 'Failed');
 
     // Reject_p action success & failure
     ppoService.rejectPPOByCm.and.returnValue(of({ status: 'Success' }));
     component.ppoActions('Reject_p');
-    tick();
+    tick(500);
+    if (swal.isVisible()) { swal.clickConfirm(); tick(500); }
     expect(ppoService.rejectPPOByCm).toHaveBeenCalled();
 
     ppoService.rejectPPOByCm.and.returnValue(of({ status: 'Failed' }));
     component.ppoActions('Reject_p');
-    tick();
+    tick(500);
+    if (swal.isVisible()) { swal.clickConfirm(); tick(500); }
     expect(toastr.error).toHaveBeenCalledWith('PPO Rejection failed', 'Failed');
 
     // Client Accepted guard check
