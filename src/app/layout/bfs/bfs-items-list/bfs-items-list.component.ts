@@ -248,6 +248,9 @@ export class BfsItemsListComponent implements OnInit {
     }
 
     onChangePriceDisclosure(value:boolean){
+        if (!this.itemForm || !this.itemForm.controls || !this.itemForm.controls['askPrice']) {
+            return;
+        }
         if(value == true){
             this.itemForm.controls['askPrice'].disable();
             if( this.isEditBFSItem){
@@ -711,7 +714,7 @@ export class BfsItemsListComponent implements OnInit {
 
 
     fileUploadEvent(files, isEditForm: boolean) {
-        const fileData = event;
+        const fileData = typeof event !== 'undefined' ? event : null;
         // console.log('event1', event);
         const file = files[0];
         this.converSer.getBase64(file).then((data: string) => {
@@ -728,7 +731,7 @@ export class BfsItemsListComponent implements OnInit {
                 // For Muliple files upload
                 this.editBFSItemData.bfsDocuments.push(temp);
                 this.commentFileData = null;
-                this.fileInput.value = null;
+                if (this.fileInput) { this.fileInput.value = null; }
             } else {
                 // For Single files upload
                 this.commentFileData = data.split(',')[1];
@@ -737,14 +740,14 @@ export class BfsItemsListComponent implements OnInit {
                 // For Muliple files upload
                 this.commentFilesDataList.push(temp);
                 this.commentFileData = null;
-                this.fileInput.value = null;
+                if (this.fileInput) { this.fileInput.value = null; }
             }
 
         });
     }
 
     fileUploadEventForImages(files, isEditForm: boolean) {
-        const fileData = event;
+        const fileData = typeof event !== 'undefined' ? event : null;
         console.log('event1', files);
         const file = files[0];
         const imgFilesTypes = ['png', 'PNG', 'jpeg', 'JPEG', 'JPG', 'jpg']
@@ -767,7 +770,7 @@ export class BfsItemsListComponent implements OnInit {
                 // For Muliple files upload
                 this.editBFSItemData.bfsImages.push(temp);
                 this.commentFileDataImg = null;
-                this.fileInput3.value = null;
+                if (this.fileInput3) { this.fileInput3.value = null; }
             } else {
                 // For Single files upload
                 this.commentFileDataImg = data.split(',')[1];
@@ -776,7 +779,7 @@ export class BfsItemsListComponent implements OnInit {
                 // For Muliple files upload
                 this.commentFilesDataListImg.push(temp);
                 this.commentFileDataImg = null;
-                this.fileInput3.value = null;
+                if (this.fileInput3) { this.fileInput3.value = null; }
             }
 
         });

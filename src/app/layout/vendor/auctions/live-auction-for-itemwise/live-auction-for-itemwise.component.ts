@@ -105,17 +105,22 @@ export class LiveAuctionForItemwiseComponent implements OnInit, OnDestroy {
   }
 
 
+  onAutoRefreshInterval() {
+    if (!this.isEditBidAmount) {
+      this.refresh();
+    }
+    console.log(' this.intervalTime',  this.intervalTime);
+  }
+
   autoRefreshPage() {
     if (this.intervalTime) {
       clearInterval(this.intervalTime);
     }
     if (!this.auctionExpired ) {
-      this.intervalTime = setInterval(() => {
-        if (!this.isEditBidAmount) {
-          this.refresh();
-       }
-        console.log(' this.intervalTime',  this.intervalTime);
-      }, this.auctionBidAndVendorData['auction']['pageRefrestInterval'] * 1000);
+      this.intervalTime = window.setInterval(
+        this.onAutoRefreshInterval.bind(this),
+        this.auctionBidAndVendorData['auction']['pageRefrestInterval'] * 1000
+      );
     }
 
   }
@@ -190,6 +195,28 @@ export class LiveAuctionForItemwiseComponent implements OnInit, OnDestroy {
     }
   }
 
+  onItemTimeoutRefresh() {
+    this.isEditBidAmount = false;
+    // this.auctionExpired =  (new Date())  > new Date(this.auctionBidAndVendorData['auction']['auctionEndtime']) ? false: true;
+    this.auctionEndsInSeconds =  (new Date(this.auctionBidAndVendorData['auction']['auctionEndtime']).getTime() - (new Date()).getTime()) / 1000;
+    this.refresh();
+  }
+
+  onBidTimeInterval() {
+    if ( (new Date())  > new Date(this.auctionBidAndVendorData['auction']['auctionEndtime'])) {
+      this.auctionExpired = true;
+
+      this.itemtimeoutinteval = window.setTimeout(
+        this.onItemTimeoutRefresh.bind(this),
+        this.auctionBidAndVendorData['auction']['pageRefrestInterval'] * 1000
+      );
+
+      clearInterval(this.timer);
+    } else {
+      this.auctionExpired = false;
+    }
+  }
+
   checkBidTime() {
     this.auctionEndsInSeconds =   (new Date(this.auctionBidAndVendorData['auction']['auctionEndtime']).getTime() - (new Date()).getTime()) / 1000;
     // if (this.auctionEndsInSeconds > 0) {
@@ -211,24 +238,7 @@ export class LiveAuctionForItemwiseComponent implements OnInit, OnDestroy {
 
     this.auctionExpired =  (new Date())  > new Date(this.auctionBidAndVendorData['auction']['auctionEndtime']) ? true : false;
     if (true) {
-      this.timer = setInterval(() => {
-        if ( (new Date())  > new Date(this.auctionBidAndVendorData['auction']['auctionEndtime'])) {
-          this.auctionExpired = true;
-
-          this.itemtimeoutinteval =
-          setTimeout(function() {
-            this.isEditBidAmount = false;
-            // this.auctionExpired =  (new Date())  > new Date(this.auctionBidAndVendorData['auction']['auctionEndtime']) ? false: true;
-            this.auctionEndsInSeconds =  (new Date(this.auctionBidAndVendorData['auction']['auctionEndtime']).getTime() - (new Date()).getTime()) / 1000;
-            this.refresh(); }, this.auctionBidAndVendorData['auction']['pageRefrestInterval'] * 1000);
-
-
-          clearInterval(this.timer);
-        } else {
-          this.auctionExpired = false;
-        }
-
-      }, 2000);
+      this.timer = window.setInterval(this.onBidTimeInterval.bind(this), 2000);
     }
 
     if (this.auctionExpired) {
@@ -242,7 +252,7 @@ export class LiveAuctionForItemwiseComponent implements OnInit, OnDestroy {
   finishTest() {
     this.auctionEndsInSeconds = 0;
     if (this.counter) {
-   setTimeout(() => this.counter.restart(), 10);
+   window.setTimeout(() => this.counter.restart(), 10);
     }
   }
   onSubmitBid() {

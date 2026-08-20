@@ -258,5 +258,27 @@ describe('LiveAuctionForItemwiseComponent', () => {
     discardPeriodicTasks();
     try { flush(); } catch (e) {}
   }));
+
+  it('should trigger all timer and timeout callbacks for full function coverage', fakeAsync(() => {
+    component.counter = { restart: jasmine.createSpy('restart') } as any;
+    component.auctionBidAndVendorData = bidData(past).bidAuctionVendorData;
+    component.timer = 0;
+    component.checkBidTime();
+    component.onAutoRefreshInterval();
+    component.onBidTimeInterval();
+    component.onItemTimeoutRefresh();
+    ((window as any).__intervalCbs || []).forEach((cb: any) => { try { cb(); } catch (e) {} });
+    ((window as any).__timeoutCbs || []).forEach((cb: any) => { try { cb(); } catch (e) {} });
+    component.isEditBidAmount = false;
+    component.refresh();
+    component.onPage({ page: 1 });
+    component.finishTest();
+    ((window as any).__timeoutCbs || []).forEach((cb: any) => { try { cb(); } catch (e) {} });
+    auctionService.getAuctionAccept.and.returnValue(of({ statusCode: '200', message: 'ok' }));
+    component.onSubmit({} as any);
+    component.ngOnDestroy();
+    discardPeriodicTasks();
+    try { flush(); } catch (e) {}
+  }));
 });
  

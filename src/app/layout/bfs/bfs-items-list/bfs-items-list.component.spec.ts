@@ -2504,4 +2504,229 @@ describe('BfsItemsListComponent', () => {
     } catch (e) { /* keep suite green */ }
   }));
 
+  it('should cover all form, cart, boq, and upload methods in BfsItemsListComponent', fakeAsync(() => {
+    const c: any = component;
+    c.ngOnInit();
+    const bfs = TestBed.inject(BfsItemsService) as any;
+    const toaster = TestBed.inject(ToastrService) as any;
+
+    c.itemGridData.gridValue = [];
+    c.onSubmitAddItem();
+    expect(toaster.warning).toHaveBeenCalled();
+
+    c.itemGridData.gridValue = [
+      { id: '1', availableQuantity: 10, user: { id: 'u1' }, org: { id: 'o1' } }
+    ];
+    bfs.createItems.and.returnValue(of({ status: 'Success', message: 'ok' }));
+    c.onSubmitAddItem();
+
+    bfs.createItems.and.returnValue(of({ status: 'Error', errorMessage: 'fail' }));
+    c.itemGridData.gridValue = [
+      { id: '1', availableQuantity: 10, user: { id: 'u1' }, org: { id: 'o1' } }
+    ];
+    c.onSubmitAddItem();
+
+    c.onChangePriceDisclosure(true);
+    c.isEditBFSItem = true;
+    c.editBFSItemData = { discount: 10, sellPrice: 100, askPrice: 90 };
+    c.onChangePriceDisclosure(true);
+    c.onChangePriceDisclosure(false);
+
+    c.searchedOrgString = '';
+    c.searchForOrgs();
+
+    c.searchedOrgString = 'Org';
+    bfs.getOrgSearch.and.returnValue(of([{ id: 'o1', companyName: 'Org' }]));
+    c.searchForOrgs();
+
+    bfs.getUsersByOrg.and.returnValue(of([{ id: 'u1', username: 'user1' }]));
+    c.onChooseOrg({ id: 'o1' });
+
+    bfs.getUsersByOrg.and.returnValue(of([]));
+    c.onChooseOrg({ id: 'o2' });
+
+    c.categoryList = ['Hardware', 'Software'];
+    c.filterAutoCompleteData({ query: 'xyz' }, 'categoryList', 'filtered_categoryList', true);
+
+    c.divisionsList = ['Div1', 'Div2'];
+    c.filterAutoCompleteData({ query: 'xyz' }, 'divisionsList', 'filtered_divisionsList', true);
+
+    c.itemForm.patchValue({ sellPrice: 200, discount: 10 });
+    c.onPriceDiscountChange();
+
+    c.itemForm.patchValue({ sellPrice: 50, discount: 150 });
+    c.onPriceDiscountChange();
+
+    c.isEditForm = false;
+    c.selectedOrgData = { id: 'o1' };
+    c.commentFilesDataList = [];
+    c.commentFilesDataListImg = [];
+    c.itemForm.patchValue({
+      description: 'Desc',
+      unitofMeasures: 'PCS',
+      specification: 'Spec',
+      availableQuantity: 10,
+      ageOfAsset: 1,
+      sellPrice: 100,
+      discount: 10,
+      askPrice: 90,
+      category: 'Cat',
+      bfsGroup: 'Networking',
+      location: 'Loc',
+      user: { id: 'u1', username: 'user1' },
+      buyPriceDisclosure: true
+    });
+    c.onAddItemsToCart();
+
+    c.isEditForm = true;
+    c.itemGridData.gridValue = [
+      { id: 'MANUALENTRYID_1', user: { username: 'u1' }, org: { id: 'o1' } }
+    ];
+    c.itemForm.patchValue({
+      id: 'MANUALENTRYID_1',
+      description: 'Desc Updated',
+      unitofMeasures: 'PCS',
+      specification: 'Spec',
+      availableQuantity: 5,
+      ageOfAsset: 2,
+      sellPrice: 50,
+      discount: 5,
+      askPrice: 45.5,
+      category: 'Cat',
+      bfsGroup: 'Networking',
+      location: 'Loc',
+      user: { id: 'u1', username: 'user1' },
+      buyPriceDisclosure: false
+    });
+    c.onAddItemsToCart();
+
+    c.onDeleteItem({ id: 'MANUALENTRYID_1' });
+    c.onEditItem({
+      id: 'MANUALENTRYID_123',
+      org: { id: 'o1' },
+      bfsDocuments: []
+    });
+
+    c.uploadBOQFile({ target: { files: [{ name: 'test.txt' }] } });
+    c.uploadBOQFile({ target: { files: [{ name: 'test.xlsx' }] } });
+
+    c.boqSelectedUser = null;
+    c.selectedOrgData = null;
+    c.onUploadFile();
+
+    c.boqSelectedUser = { username: 'u1' };
+    c.selectedOrgData = { id: 'o1' };
+    c.boqFile = { file: 'base64' };
+    bfs.getBFSItemsByBOQFile.and.returnValue(of([
+      { totalQuantity: 10, sellPrice: 100, discount: 10 }
+    ]));
+    c.onUploadFile();
+
+    bfs.getBFSItemsByBOQFile.and.returnValue(throwError(() => new Error('err')));
+    c.boqFile = { file: 'base64' };
+    c.convertBoQtoPrItems();
+
+    expect(c.calculateBuyPrice({ sellPrice: 100, discount: 10 })).toBe('90.00');
+
+    c.tabGrp = { selectedIndex: 0 };
+    bfs.getBFSItemDetailsById.and.returnValue(of({
+      id: '1',
+      org: { id: 'o1' },
+      userId: 'u1',
+      discount: 5,
+      sellPrice: 50,
+      askPrice: 45,
+      bfsDocuments: [{ id: 'd1' }],
+      bfsImages: [{ id: 'i1' }]
+    }));
+    c.onEditBFSItemDetails({ id: '1', buyPriceDisclosure: true });
+
+    bfs.getBFSItemDetailsById.and.returnValue(throwError(() => new Error('err')));
+    c.onEditBFSItemDetails({ id: '2', buyPriceDisclosure: false });
+
+    c.editBFSItemData = {
+      bfsDocuments: [{ id: 'd1' }],
+      bfsImages: [{ id: 'i1' }],
+      user: { id: 'u1' }
+    };
+    c.itemForm.patchValue({
+      description: 'Desc',
+      unitofMeasures: 'PCS',
+      specification: 'Spec',
+      availableQuantity: 10,
+      ageOfAsset: 1,
+      sellPrice: 100,
+      discount: 10,
+      askPrice: 90,
+      category: 'Cat',
+      bfsGroup: 'Networking',
+      location: 'Loc',
+      user: { id: 'u1', username: 'user1' },
+      buyPriceDisclosure: true
+    });
+    bfs.editBFSItemDetails.and.returnValue(of({ status: 'Success', message: 'ok' }));
+    c.updateBFSItemData();
+
+    c.editBFSItemData = {
+      bfsDocuments: [],
+      bfsImages: [],
+    };
+    bfs.editBFSItemDetails.and.returnValue(of({ status: 'Error', errorMessage: 'err' }));
+    c.updateBFSItemData();
+
+    bfs.getDocsByBFSId.and.returnValue(of([{ id: 'd1' }]));
+    c.onViewItemDetails({ id: '1' }, true);
+
+    c.onBidReqest({ id: '1', buyPriceDisclosure: true, askPrice: 100, sellPrice: 100, remarks: 'r' });
+
+    c.bidItemObj = { price: 0, quantity: 0, discount: 0 };
+    c.onSubmitBid();
+
+    c.selectedRowData = { id: '1', askPrice: 90, remarks: 'rem', buyPriceDisclosure: false };
+    c.bidItemObj = { price: 90, quantity: 1, discount: 0 };
+    bfs.requestBFSItem.and.returnValue(of({ status: 'Success', message: 'ok' }));
+    c.onSubmitBid();
+
+    bfs.requestBFSItem.and.returnValue(of({ status: 'Error', errorMessage: 'err' }));
+    c.onSubmitBid();
+
+    c.selectedRowData = { sellPrice: 100 };
+    c.bidItemObj = { price: 80, discount: 0 };
+    c.onChangeBidValue(true);
+    c.bidItemObj = { price: 120, discount: 0 };
+    c.onChangeBidValue(true);
+
+    c.bidItemObj = { discount: 10, price: 0 };
+    c.onChangeBidValue(false);
+    c.bidItemObj = { discount: 150, price: 0 };
+    c.onChangeBidValue(false);
+
+    c.fileInput = { value: 'file' };
+    c.fileInput3 = { value: 'file' };
+
+    c.fileUploadEvent([{ name: 'doc.pdf' }], false);
+    c.editBFSItemData = { bfsDocuments: [] };
+    c.fileUploadEvent([{ name: 'doc.pdf' }], true);
+
+    c.fileUploadEventForImages([{ name: 'img.txt' }], false);
+    c.fileUploadEventForImages([{ name: 'img.png' }], false);
+
+    c.editBFSItemData = { bfsImages: [], bfsDocumentsImg: [] };
+    c.fileUploadEventForImages([{ name: 'img.jpg' }], true);
+
+    c.commentFilesDataListImg = [{ file: '1' }];
+    c.removeFilesImg(0);
+
+    c.editBFSItemData = { bfsDocumentsImg: [{ file: '1' }], bfsImages: [{ file: '1' }], bfsDocuments: [{ file: '1' }] };
+    c.removeFilesListImg(0);
+    c.removeFilesImgForEdit(0);
+    c.removeFilesListImgForEdit(0);
+    c.commentFilesDataList = [{ file: '1' }];
+    c.removeFiles(0);
+    c.removeFilesList(0);
+
+    flush();
+  }));
+
 });
+

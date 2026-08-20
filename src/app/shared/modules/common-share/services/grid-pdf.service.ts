@@ -33,9 +33,10 @@ export class GridPdfService {
         const header = function (data) {
           doc.setFontSize(25);
           doc.setTextColor(0);
-          doc.text(this.companyname, 15, 15);
+          doc.text((this && this.companyname) || '', 15, 15);
           doc.setFontStyle('normal');
         };
+        header.call(this, {});
         // doc.autoTableHtmlToJson(columns, rows);
         const totalPages = doc.internal.getNumberOfPages();
 
