@@ -1,13 +1,14 @@
 import { LayoutModule } from './layout.module';
 
 describe('LayoutModule', () => {
-    let layoutModule: LayoutModule;
+  it('should create an instance', () => {
+    expect(new LayoutModule()).toBeTruthy();
+  });
 
-    beforeEach(() => {
-        layoutModule = new LayoutModule();
-    });
-
-    it('should create an instance', () => {
-        expect(layoutModule).toBeTruthy();
-    });
+  it('should be constructible multiple times', () => {
+    const a = new LayoutModule();
+    const b = new LayoutModule();
+    expect(a).toBeTruthy();
+    expect(b).toBeTruthy();
+  });
 });

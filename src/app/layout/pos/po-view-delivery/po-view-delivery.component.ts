@@ -121,6 +121,34 @@ export class PoViewDeliveryComponent implements OnInit {
     console.log('even', event);
   }
 
+  promptDeliveryDateConfirm(deliveryDateLabel: string): any {
+    return swal({
+      title: `<h4>Are you sure?</h4>`,
+      html: `<h5>You will be ready to delivery on  <b>${deliveryDateLabel}</b><h5>`,
+      type: 'warning',
+      confirmButtonText: 'Yes',
+      confirmButtonColor: '#006dd5',
+      cancelButtonColor: '#d63636',
+      showCancelButton: true,
+      reverseButtons: true,
+    });
+  }
+
+  onDeliveryDateDialogResult(result: any) {
+    if (result?.value) {
+      const obj = {
+        id: this.deliveryData.id,
+        deliveryDate: this.deliveryDate,
+      };
+      this.poService.setRequestDate(obj).subscribe((response) => {
+        if (response['status'] === 'Success') {
+          this.toaster.success('New Delivery Date submitted successfully', 'Success');
+          this.dialogRef.close({ event: 'close' });
+        }
+      });
+    }
+  }
+
   changeDeliveryDate(isEdit, isApplyNewDate) {
 
     if (!isEdit && isApplyNewDate) {
@@ -129,28 +157,9 @@ export class PoViewDeliveryComponent implements OnInit {
         return;
       }
       const deliveryDate = this. datepipe. transform(this.deliveryDate, 'dd-MM-yyyy');
-      swal({
-        title: `<h4>Are you sure?</h4>`,
-        html: `<h5>You will be ready to delivery on  <b>${deliveryDate}</b><h5>`,
-        type: 'warning',
-        confirmButtonText: 'Yes',
-        confirmButtonColor: '#006dd5',
-        cancelButtonColor: '#d63636',
-        showCancelButton: true,
-        reverseButtons: true,
-    }).then((result) => {
-        if (result.value) {
-          const obj = {'id': this.deliveryData.id,
-            'deliveryDate': this.deliveryDate
-          };
-          this.poService.setRequestDate(obj).subscribe((response) => {
-          if (response['status'] === 'Success') {
-          this.toaster.success('New Delivery Date submitted successfully', 'Success');
-          this.dialogRef.close({event: 'close'});
-          }
-          });
-        }
-      });
+      this.promptDeliveryDateConfirm(deliveryDate).then((result) =>
+        this.onDeliveryDateDialogResult(result)
+      );
     }
     if ((!isEdit && !isApplyNewDate) || (isEdit && ! isApplyNewDate)) {
       this.deliveryDate = new Date(this.deliveryData.deliveryDate);

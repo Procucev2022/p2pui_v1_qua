@@ -52,8 +52,8 @@ export class CatMgrPrLineItemsTabComponent implements OnInit , OnChanges {
     };
     this.procuReqService.getLineItemsByPr(reqObj).subscribe( (data: any[] ) => {
       if (data && Array.isArray(data)) {
-        this.prLineItemsList = data || [];
-        this.tempPrLineItemsList = data || [];
+        this.prLineItemsList = data;
+        this.tempPrLineItemsList = data;
       }
     });
    }

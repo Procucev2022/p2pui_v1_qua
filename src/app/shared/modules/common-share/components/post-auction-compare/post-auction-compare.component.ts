@@ -54,7 +54,7 @@ export class PostAuctionCompareComponent implements OnInit {
       this.clientService.getPrById(temp).subscribe((res: any) => {
 
         if (res) {
-            this.viewPrByData= res || {};
+            this.viewPrByData= res;
             console.log('this.viewPrByData', this.viewPrByData);
         } else {
         //   this.toaster.error('Failed to Fetch data', 'Failure')
@@ -79,12 +79,12 @@ export class PostAuctionCompareComponent implements OnInit {
           this.selectedAucType = element.auctionCategory;
         if(this.viewPrByData.isCapex == true){
             this.clientService.getCapexExcelSummary(element).subscribe((res:any)=>{
-                this.itemData = data || {};
+                this.itemData = res;
                 this.auctionDetails.emit(this.itemData);
             })
         }else{
             this.clientService.getRFQWiseSummary(element).subscribe((data: any) => {
-                this.itemData = data || {};
+                this.itemData = data;
                 this.auctionDetails.emit(this.itemData);
               });
         }
@@ -92,13 +92,13 @@ export class PostAuctionCompareComponent implements OnInit {
         } else {
             if(this.viewPrByData.isCapex == true){
                 this.clientService.getCapexExcelSummary(element).subscribe((data:any)=>{
-                    this.itemData = data || {};
+                    this.itemData = data;
                     this.auctionDetails.emit(this.itemData);
                 })
             }else{
                 this.selectedAucType = element.auctionCategory;
                 this.clientService.getItemWiseSummary(element).subscribe((data: any) => {
-                this.itemData = data || {};
+                this.itemData = data;
                 this.auctionDetails.emit(this.itemData);
 
               });

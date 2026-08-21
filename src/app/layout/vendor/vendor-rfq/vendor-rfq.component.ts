@@ -7,8 +7,8 @@ import { RfqService } from '../services/rfq.service';
 import { ToastrService } from 'ngx-toastr';
 import { CorrespondenceComponent } from 'src/app/shared/modules/common-share/components/correspondence/correspondence.component';
 import { ViewRFQByIdModalComponent } from '../components/view-rfq-by-id-modal/view-rfq-by-id-modal.component';
-import swal from 'sweetalert2';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { swalConfirm } from 'src/app/shared/helpers/swal-confirm';
 
 
 @Component({
@@ -215,7 +215,7 @@ export class VendorRFQComponent implements OnInit {
 
                     });
 
-                    swal({
+                    swalConfirm.open({
                         title: '<h5>Please Confirm!!<h5>',
                         html: '<h3>Are you sure you want to accept?</h3>',
                         confirmButtonText: 'Yes',
@@ -261,7 +261,7 @@ export class VendorRFQComponent implements OnInit {
                             req.push({'id': data.id, cmUser: this.selectedData[0].cmUser?this.selectedData[0].cmUser : null });
                     }
                 });
-                swal({
+                swalConfirm.open({
                     title: '<h5>Please Confirm!!<h5>',
                     html: '<h3>Are you sure you want to reject?</h3>',
                     confirmButtonText: 'Yes',
@@ -305,7 +305,7 @@ export class VendorRFQComponent implements OnInit {
 
             if (res) {
                 res['rfqClosingDate'] = rowData['vendorResponseDate'];
-              this.viewRFQByIdData = res || {};
+              this.viewRFQByIdData = res;
               this.viewRFQByIdModal();
             } else {
               this.toastrService.error('Failed to Fetch data', 'Failure');

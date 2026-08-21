@@ -90,7 +90,7 @@ export class AdvancePaymentRequestsComponent implements OnInit, OnChanges {
       if (methodName) {
         this.invoiceService[methodName]({id:  this.loggedUserDetails.org.id }).subscribe((res) => {
           if (Array.isArray(res)) {
-            this.advancePaymentsList = res || [];
+            this.advancePaymentsList = res;
             this.setPoGridData();
             this.poGridData['gridColumnData'] =  [...res];
           }

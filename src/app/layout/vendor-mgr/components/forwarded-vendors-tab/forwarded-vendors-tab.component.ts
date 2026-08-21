@@ -55,7 +55,7 @@ export class ForwardedVendorsTabComponent implements OnInit {
 
       this.vendMgrSer.getAllForwardedVendors().subscribe(res => {
         if (Array.isArray(res)) {
-          this.forwardVendorsList = res || [];
+          this.forwardVendorsList = res;
         } else {
           this.forwardVendorsList = [];
         }
@@ -98,7 +98,7 @@ export class ForwardedVendorsTabComponent implements OnInit {
       this.vendorViewService.getVendorById(temp).subscribe((res: any) => {
 
         if (res) {
-          const vendorRegData = res || {};
+          const vendorRegData = res;
           this.viewVendorModal(vendorRegData);
         } else {
           this.toaster.error('Failed to Fetch data', 'Failure');

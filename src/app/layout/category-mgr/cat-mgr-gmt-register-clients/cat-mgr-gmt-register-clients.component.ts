@@ -16,20 +16,14 @@ import swal from 'sweetalert2';
 })
 export class CatMgrGmtRegisterClientsComponent implements OnInit {
     isLoaded: boolean = false;
-    sourceList = [
-        { label: 'Web App', value: 'Web App' },
-        { label: 'WhatsApp', value: 'WhatsApp' }
-    ];
     clientTableHeaders: any = [
-
-
-        { field: 'fullName', header: 'User Name', isLink: true, isExceedContent: false, width: '155px' },
-        { field: 'companyName', header: 'Company Name', isLink: false, isExceedContent: true, width: '165px' }, 
-        { field: 'phone', header: 'Phone Number', isLink: false, isExceedContent: true, width: '125px' },
-        { field: 'username', header: 'User Email', isLink: false, isExceedContent: true, width: '165px' },
-        { field: 'createdTS', header: 'Reg. Date', isLink: false, fieldType: 'date',isExceedContent: true, width: '215px' },
+        { field: 'companyId', header: 'Company Id', isLink: true, isExceedContent: false, width: '155px' },
+        { field: 'companyName', header: 'Company Name', isLink: false, isExceedContent: true, width: '165px' },
+        { field: 'clientSector', header: 'Sector', isLink: false, isExceedContent: true, width: '145px' },
+        { field: 'pan', header: 'PAN', isLink: false, isExceedContent: true, width: '125px' },
+        { field: 'organizationPhonenumber', header: 'Phone Number', isLink: false, isExceedContent: true, width: '125px' },
+        { field: 'address1', header: 'City', isLink: false, isExceedContent: true, width: '165px' },
         { field: 'status', header: 'Status', isLink: false, isExceedContent: true, width: '135px' },
-        { field: 'sourceType', header: 'Source Type', isLink: false, isExceedContent: false, width: '165px' },
     ];
 
     userTableHeaders =[
@@ -42,7 +36,6 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
     ];
     usersList =[];
     clientsList = [];
-    cached_clientList = [];
     selectedClientData: any;
     pageRecordSize: number;
     pageOptions: number[];
@@ -95,20 +88,12 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
         })
     }
 
-
-    onSourceTypeChange(value){
-        if(value){
-            this.clientsList = this.cached_clientList.filter(ele => ele.sourceType == value);
-        }else{
-           this.clientsList = this.cached_clientList;
-        }
-    }
-
     onAcceptUserByClient(rowData: any, isAceept:boolean) {
         if(isAceept){
             this.createRfqService.acceptGMTRegisteredClient({ 'id': rowData.id }).subscribe((res: any) => {
                 if (res && res.status == 'Success') {
-                    this.toaster.success(res.message, 'Success'); 
+                    this.toaster.success(res.message, 'Success');
+                    this.getUsersByClient();
                     this.getRegClients();
                 }else{
                     this.toaster.error(res.message, 'Error');
@@ -119,7 +104,7 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
             this.createRfqService. ignoreGMTRegisteredClient({ 'id': rowData.id }).subscribe((res: any) => {
                 if (res && res.status == 'Success') {
                     this.toaster.success(res.message, 'Success');
-                    this.getRegClients();
+                    this.getUsersByClient();
                 }else{
                     this.toaster.error(res.message, 'Error');
 
@@ -133,11 +118,9 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
 
     getCloseClients(selectedRowData, event) {
         this.expandedRows = {};
-        this.isShowChildGrid = false;
     }
 
     getClients(selectedRowData, event) {
-         this.isShowChildGrid = false;
         this.expandedRows = {};
         const thisRef = this;
         this.usersList =[];
@@ -152,21 +135,19 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
     }
 
     getUsersByClient(){
-       
+        this.isShowChildGrid = false;
         this.catProcService.getClientUserByClient({id: this.selectedClientData.id}).subscribe((res:any)=>{
             this.usersList = Array.isArray(res)? res.map(ele =>{ return {...ele, status: ele.clientStatus.uiDisplay}}): [];
-               this.isShowChildGrid =true;
-        }); 
+        });
+        setTimeout(() => {
+            this.isShowChildGrid =true;
+        }, 500);
     }
 
     getRegClients() {
-        this.createRfqService.getGMTRegisteredClientsWithUser().subscribe((res: any) => {
+        this.createRfqService.getGMTRegisteredClients().subscribe((res: any) => {
             if (res) {
-                const clientsList =  Array.isArray(res)? res.map(ele =>{ return {...ele, status: ele.clientStatus ?ele.clientStatus.uiDisplay: '-',
-                     sourceType: ele.sourceType ? ele.sourceType == 'T' ? 'Web App': 'WhatsApp' : 'Web App'
-                }}): [];
-                this.clientsList = clientsList;
-                this.cached_clientList = clientsList;
+                this.clientsList =  Array.isArray(res)? res.map(ele =>{ return {...ele, status: ele.clientStatus ?ele.clientStatus.uiDisplay: '-'}}): [];
                 this.isLoaded = true;
             }
         })

@@ -66,7 +66,7 @@ export class UomComponent implements OnInit {
       this.uomGridCoreData = {
         actionEvents: [...actionEvents],
         gridTopButtonActions  : [...gridTopActions],
-        gridColumnData:  this.uomList || [],
+        gridColumnData:  this.uomList,
         gridHeaders: [...gridHeaders],
         gridTitle: '',
         displayParentLabel: '',

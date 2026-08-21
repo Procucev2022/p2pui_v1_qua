@@ -70,7 +70,7 @@ getQuotInfo() {
 
     this.rfqservice.getLineitemsById({ 'id': this.rfqData.rfq.id}).subscribe((response)=> {
         if (Array.isArray(response)){
-            this.quotInfoList = response || [];
+            this.quotInfoList = response;
         } else {
            // this.tostrService.error('Failed! No data Fetched')
             this.quotInfoList =  [];

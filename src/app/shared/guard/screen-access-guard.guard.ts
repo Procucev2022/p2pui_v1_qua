@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { EncryDecryService } from '../services';
 import { GMT_SYSTEM_SCREENS_LIST, SystemViewConfig } from 'src/app/app.config';
 import { ToastrService } from 'ngx-toastr';
+import { AuthPageReload } from 'src/app/shared/services/authentication.service';
 
 @Injectable({
     providedIn: 'root'
@@ -89,7 +90,7 @@ export class ScreenAccessGuardGuard implements CanActivateChild {
     navigateToLogin(){
         this.router.navigate(['/login'])
         // .then(()=>{
-        //     window.location.reload();
+        //     AuthPageReload.run();
         // });
     }
 }

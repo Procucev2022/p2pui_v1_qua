@@ -97,10 +97,18 @@
           "options": {
             "polyfills": [
               "zone.js",
-              "zone.js/testing"
+              "zone.js/testing",
+              "src/test-setup.ts"
             ],
             "tsConfig": "tsconfig.spec.json",
+            "karmaConfig": "karma.conf.js",
             "inlineStyleLanguage": "scss",
+            "codeCoverage": true,
+            "codeCoverageExclude": [
+              "src/test-setup.ts",
+              "src/test.ts",
+              "src/testing/**"
+            ],
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -109,18 +117,6 @@
               "src/styles.scss"
             ],
             "scripts": []
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
           }
         }
       }

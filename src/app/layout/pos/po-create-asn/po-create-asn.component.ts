@@ -67,7 +67,7 @@ export class PoCreateAsnComponent implements OnInit {
     this.deliveryItemsData = null;
     this.poService.getItemsByDeliveryId({id: this.data.deliveryData.id}).subscribe((res) => {
       if (Array.isArray(res)) {
-        this.itemsData = res || [];
+        this.itemsData = res;
         this.itemsData.forEach(element => {
           element['deliveryQuantity'] = element['quantity'];
           element['isInvalid'] = false;

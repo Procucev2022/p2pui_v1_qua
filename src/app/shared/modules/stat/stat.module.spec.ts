@@ -1,13 +1,8 @@
 import { StatModule } from './stat.module';
 
 describe('StatModule', () => {
-    let statModule: StatModule;
-
-    beforeEach(() => {
-        statModule = new StatModule();
-    });
-
-    it('should create an instance', () => {
-        expect(statModule).toBeTruthy();
-    });
+  it('should create', () => {
+    const mod = new StatModule();
+    expect(mod).toBeTruthy();
+  });
 });

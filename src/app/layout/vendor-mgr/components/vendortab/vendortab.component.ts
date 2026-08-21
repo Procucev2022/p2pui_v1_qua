@@ -63,7 +63,7 @@ export class VendortabComponent implements OnInit {
                             res.forEach(element => {
                               element['status'] = element['status']['uiDisplay'];
                             });
-                            this.vendorNameRequestList = res || [];
+                            this.vendorNameRequestList = res;
                           }
                           });
                         } else { this.vendorNameRequestList = [];}
@@ -81,7 +81,7 @@ export class VendortabComponent implements OnInit {
           this.vendorViewService.getVendorById(temp).subscribe((res:any) => {
 
             if (res) {
-              this.vendorRegData = res || {};
+              this.vendorRegData = res;
               this.viewVendorModal();
             } else {
               this.toaster.error('Failed to Fetch data', 'Failure');

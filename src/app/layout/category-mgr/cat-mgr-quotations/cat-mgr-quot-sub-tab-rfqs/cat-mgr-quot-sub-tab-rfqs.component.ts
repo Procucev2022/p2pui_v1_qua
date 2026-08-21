@@ -34,7 +34,7 @@ export class CatMgrQuotSubTabRfqsComponent implements OnInit , OnChanges {
       const req = {'id': this.quotData.id};
       this.quotService.getRFQsByQuot(req).subscribe((response) => {
         if (response.id) {
-            this.lineItemsList =  [response] || [];
+            this.lineItemsList =  [response];
         }
         // }
       });

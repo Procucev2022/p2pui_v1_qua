@@ -1,13 +1,14 @@
 import { VendorRequestModule } from './vendor-request.module';
 
 describe('VendorRequestModule', () => {
-  let vendorRequestModule: VendorRequestModule;
-
-  beforeEach(() => {
-    vendorRequestModule = new VendorRequestModule();
+  it('should create an instance', () => {
+    expect(new VendorRequestModule()).toBeTruthy();
   });
 
-  it('should create an instance', () => {
-    expect(vendorRequestModule).toBeTruthy();
+  it('should be constructible multiple times', () => {
+    const a = new VendorRequestModule();
+    const b = new VendorRequestModule();
+    expect(a).toBeTruthy();
+    expect(b).toBeTruthy();
   });
 });

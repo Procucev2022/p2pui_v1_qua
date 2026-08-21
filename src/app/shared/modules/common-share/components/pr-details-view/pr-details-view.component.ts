@@ -107,7 +107,7 @@ export class PrDetailsViewComponent implements OnInit {
       );
       if (this.viewPrByIdList.clientdeliverylocation.length > 0) {
           this.deliveryLocationList =
-              this.viewPrByIdList.clientdeliverylocation || [];
+              this.viewPrByIdList.clientdeliverylocation;
       }
   }
 
@@ -124,7 +124,7 @@ export class PrDetailsViewComponent implements OnInit {
       );
       if (this.viewPrByIdList.clientcostcentre.length > 0) {
           this.selectedCostCentreItems =
-              this.viewPrByIdList.clientcostcentre || [];
+              this.viewPrByIdList.clientcostcentre;
       }
   }
 
@@ -201,7 +201,7 @@ export class PrDetailsViewComponent implements OnInit {
     this.clientService.getPrById(temp).subscribe((res: any) => {
 
       if (res) {
-          this.viewPrByIdList = res || {};
+          this.viewPrByIdList = res;
           this.prDetails.emit(this.viewPrByIdList);
           console.log('this.viewPrByIdList', this.viewPrByIdList);
       } else {

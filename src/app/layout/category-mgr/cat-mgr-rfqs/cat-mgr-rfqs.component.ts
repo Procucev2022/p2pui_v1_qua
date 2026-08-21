@@ -58,7 +58,7 @@ export class CatMgrRfqsComponent implements OnInit {
       };
       this.rfqservice.fetchRfqById(temp).subscribe((res: any) => {
         if (res) {
-          this.viewRFQByIdData = res || {};
+          this.viewRFQByIdData = res;
           this.viewRFQByIdModal();
         } else {
           this.toastrService.error('Failed to Fetch data', 'Failure');

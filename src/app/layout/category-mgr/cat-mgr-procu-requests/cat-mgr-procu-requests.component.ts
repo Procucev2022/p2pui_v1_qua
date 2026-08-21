@@ -176,7 +176,7 @@ export class CatMgrProcuRequestsComponent implements OnInit {
           this.clientService.getPrById(temp).subscribe((res: any) => {
 
             if (res) {
-              this.viewPrByIdData = res || {};
+              this.viewPrByIdData = res;
               this.viewPrByIdModal();
             } else {
               this.toaster.error('Failed to Fetch data', 'Failure');

@@ -92,7 +92,7 @@ export class ViewInvoiceModalComponent implements OnInit {
       if (res['clientStatus'] && res['clientStatus']['status'] === 'VENDOR_INITIATED') {
         topButtons.push( {btnName: 'Convert To PR', btnColor: 'primary', btnEventName: 'converToPR'});
       }
-      const response = res['pritems'] || [];
+      const response = Array.isArray(res['pritems']) ? res['pritems'] : [];
       this.additionalItemsGridData = {
         actionEvents: [],
         gridTopButtonActions  : this.roleName === 'ClientInitiator' ? [...topButtons] : [],
@@ -131,8 +131,8 @@ export class ViewInvoiceModalComponent implements OnInit {
     this[event.eventName](event);
   }
 
-  accpetInvoice() {
-    swal({
+  promptAcceptInvoice(): any {
+    return swal({
       title: '<h6>Please Confirm!!<h6>',
       html: '<h4>Are you sure you want to Accept Invoice?</h4>',
       confirmButtonText: 'Yes',
@@ -140,18 +140,24 @@ export class ViewInvoiceModalComponent implements OnInit {
       cancelButtonColor: '#d63636',
       showCancelButton: true,
       reverseButtons: true
-     }).then((result) => {
-      if (result.value) {
-        this.invoiceService.acceptInvoiceById({id: this.invoiceData.id}).subscribe((res) => {
-          if (res['status'] === 'Success') {
-            this.toaster.success(res['message'], 'Success');
-            this.dialogRef.close({event: 'close'});
-          } else {
-            this.toaster.error(res['message'], 'Failure');
-          }
-        });
-      }
     });
+  }
+
+  onAcceptInvoiceDialogResult(result: any) {
+    if (result?.value) {
+      this.invoiceService.acceptInvoiceById({ id: this.invoiceData.id }).subscribe((res) => {
+        if (res['status'] === 'Success') {
+          this.toaster.success(res['message'], 'Success');
+          this.dialogRef.close({ event: 'close' });
+        } else {
+          this.toaster.error(res['message'], 'Failure');
+        }
+      });
+    }
+  }
+
+  accpetInvoice() {
+    this.promptAcceptInvoice().then((result) => this.onAcceptInvoiceDialogResult(result));
   }
 
   converToPR(event) {

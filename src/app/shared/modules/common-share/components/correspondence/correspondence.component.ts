@@ -193,7 +193,7 @@ export class CorrespondenceComponent implements OnInit, OnChanges {
         this.commentService
             .getPrClientCommentByPr(obj)
             .subscribe((response) => {
-                this.commentsList = response || [];
+                this.commentsList = response;
                 this.clearCommentData();
             });
     }
@@ -204,7 +204,7 @@ export class CorrespondenceComponent implements OnInit, OnChanges {
             commentby: { id: localStorage.getItem('orgId') },
         };
         this.commentService.getPPOComments(obj).subscribe((response) => {
-            this.commentsList = response || [];
+            this.commentsList = response;
             this.clearCommentData();
         });
     }
@@ -215,7 +215,7 @@ export class CorrespondenceComponent implements OnInit, OnChanges {
             commentby: { id: localStorage.getItem('orgId') },
         };
         this.commentService.getPOComments(obj).subscribe((response) => {
-            this.commentsList = response || [];
+            this.commentsList = response;
             this.clearCommentData();
         });
     }
@@ -227,7 +227,7 @@ export class CorrespondenceComponent implements OnInit, OnChanges {
             commentby: { id: localStorage.getItem('orgId') },
         };
         this.commentService.getDeliveryComments(obj).subscribe((response) => {
-            this.commentsList = response || [];
+            this.commentsList = response;
             this.clearCommentData();
         });
     }
@@ -238,7 +238,7 @@ export class CorrespondenceComponent implements OnInit, OnChanges {
             commentby: { id: localStorage.getItem('orgId') },
         };
         this.commentService.getASNComments(obj).subscribe((response) => {
-            this.commentsList = response || [];
+            this.commentsList = response;
             this.clearCommentData();
         });
     }
@@ -253,7 +253,7 @@ export class CorrespondenceComponent implements OnInit, OnChanges {
             },
         };
         this.commentService.getQuoteComments(obj).subscribe((response) => {
-            this.commentsList = response || [];
+            this.commentsList = response;
             this.clearCommentData();
         });
     }
@@ -267,7 +267,7 @@ export class CorrespondenceComponent implements OnInit, OnChanges {
             },
         };
         this.commentService.getPRComments(obj).subscribe((response) => {
-            this.commentsList = response || [];
+            this.commentsList = response;
             this.clearCommentData();
         });
     }
@@ -283,7 +283,7 @@ export class CorrespondenceComponent implements OnInit, OnChanges {
         };
         this.commentService.getRFQComments(obj).subscribe(
             (response) => {
-                this.commentsList = response || [];
+                this.commentsList = response;
                 this.clearCommentData();
             },
             (error) => {
@@ -304,7 +304,7 @@ export class CorrespondenceComponent implements OnInit, OnChanges {
         };
         this.commentService.getRFQCommentsByRFQandVendor(obj).subscribe(
             (response) => {
-                this.commentsList = response || [];
+                this.commentsList = response;
                 this.clearCommentData();
             },
             (error) => {
@@ -355,7 +355,7 @@ export class CorrespondenceComponent implements OnInit, OnChanges {
                     });
                 break;
             case 'CAT-RFQ-COMMENTS-MODAL':
-                if (this.selectedVendor == null || this.selectedVendor === undefined || this.selectedVendor === 'undefined' ) {
+                if (!this.selectedVendor || this.selectedVendor === 'undefined' ) {
                      this.selectedVendor = 'all';
                 }
                 const catrfqObj = {

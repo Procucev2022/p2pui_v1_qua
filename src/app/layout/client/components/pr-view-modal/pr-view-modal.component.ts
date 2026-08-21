@@ -6,7 +6,7 @@ import { ApprovePrService } from '../../services/approve-pr.service';
 import { ToastrService } from 'ngx-toastr';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 
-import swal from 'sweetalert2';
+import { swalConfirm } from 'src/app/shared/helpers/swal-confirm';
 import { EncryDecryService } from 'src/app/shared/services';
 import { CatProcuRequestsService } from 'src/app/layout/category-mgr/services';
 import {NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -314,7 +314,7 @@ export class PrViewModalComponent implements OnInit {
     }
 
     approvePR() {
-        swal({
+        swalConfirm.open({
             title: '<h5>Please Confirm!!</h5>',
             html: '<h3>Are you sure you want to approve?</h3>',
             type: 'warning',
@@ -357,7 +357,7 @@ export class PrViewModalComponent implements OnInit {
         });
     }
     rejectPR() {
-        swal({
+        swalConfirm.open({
             title: '<h5>Please Confirm!!<h5>',
             html: '<h3>Are you sure you want to reject?</h3>',
             type: 'warning',
@@ -408,7 +408,7 @@ export class PrViewModalComponent implements OnInit {
         });
       }
     closePr() {
-            swal({
+            swalConfirm.open({
                 title: '<h5>Please Confirm!!<h5>',
                 html: '<h3>Are you sure you want to Close PR?</h3>',
                 type: 'warning',

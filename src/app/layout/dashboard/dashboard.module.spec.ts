@@ -1,13 +1,14 @@
 import { DashboardModule } from './dashboard.module';
 
 describe('DashboardModule', () => {
-  let dashboardModule: DashboardModule;
-
-  beforeEach(() => {
-    dashboardModule = new DashboardModule();
+  it('should create an instance', () => {
+    expect(new DashboardModule()).toBeTruthy();
   });
 
-  it('should create an instance', () => {
-    expect(dashboardModule).toBeTruthy();
+  it('should be constructible multiple times', () => {
+    const a = new DashboardModule();
+    const b = new DashboardModule();
+    expect(a).toBeTruthy();
+    expect(b).toBeTruthy();
   });
 });
