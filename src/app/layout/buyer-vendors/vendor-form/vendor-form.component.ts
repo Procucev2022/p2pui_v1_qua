@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BuyerVendorService } from '../services/buyer-vendor.service';
+import { AiVendorProcessingService } from '../services/ai-vendor-processing.service';
 import { BuyerVendor, INDUSTRY_TYPES, VENDOR_GROUPS, SOURCING_SCOPES } from '../models/buyer-vendor.model';
 
 @Component({
@@ -22,6 +23,7 @@ export class VendorFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private vendorService: BuyerVendorService,
+    private aiProcessingService: AiVendorProcessingService,
     private route: ActivatedRoute,
     private router: Router
   ) {
@@ -61,14 +63,42 @@ export class VendorFormComponent implements OnInit {
   loadVendor(id: string): void {
     this.loading = true;
     this.vendorService.getVendorById(id).subscribe({
-      next: (res) => {
-        if (res && res.data && res.data.vendor) {
-          this.vendorForm.patchValue(res.data.vendor);
+      next: (res: any) => {
+        const vendor = res?.data?.vendor || res?.data;
+        if (vendor) {
+          this.vendorForm.patchValue(vendor);
         }
         this.loading = false;
       },
       error: () => {
-        this.loading = false;
+        // Fallback: try loading via AI profile endpoint if called by code
+        this.aiProcessingService.getVendorByCode(id).subscribe({
+          next: (p: any) => {
+            if (p) {
+              this.vendorForm.patchValue({
+                vendorCode: p.vendorCode,
+                vendorName: p.vendorName,
+                phone1: p.contactInfo?.phone1 || p.phone1,
+                phone2: p.contactInfo?.phone2 || p.phone2,
+                pan: p.credentials?.pan?.value !== 'Not Provided' ? p.credentials?.pan?.value : (p.pan || ''),
+                gstin: p.credentials?.gstin?.value !== 'Not Provided' ? p.credentials?.gstin?.value : (p.gstin || ''),
+                addressLine: p.contactInfo?.addressLine || p.addressLine,
+                city: p.contactInfo?.city || p.city,
+                regionCode: p.contactInfo?.state || p.state,
+                postalCode: p.contactInfo?.postalCode || p.postalCode,
+                country: p.contactInfo?.country || p.country || 'IN',
+                typeOfBusiness: p.typeOfBusiness,
+                typeOfIndustry: p.industry,
+                vendorGroup: p.vendorGroup,
+                sourcingScope: p.sourcingScope || 'Client Only'
+              });
+            }
+            this.loading = false;
+          },
+          error: () => {
+            this.loading = false;
+          }
+        });
       }
     });
   }
@@ -109,5 +139,7 @@ export class VendorFormComponent implements OnInit {
     this.router.navigate(['/categorymgr/buyer-vendors']);
   }
 
-  get f() { return this.vendorForm.controls; }
+  get f() {
+    return this.vendorForm.controls;
+  }
 }

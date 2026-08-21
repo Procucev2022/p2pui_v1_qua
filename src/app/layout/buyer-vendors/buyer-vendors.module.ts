@@ -5,6 +5,8 @@ import { BuyerVendorsRoutingModule } from './buyer-vendors-routing.module';
 import { VendorListComponent } from './vendor-list/vendor-list.component';
 import { VendorFormComponent } from './vendor-form/vendor-form.component';
 import { VendorDetailComponent } from './vendor-detail/vendor-detail.component';
+import { VendorAiAnalysisComponent } from './vendor-ai-analysis/vendor-ai-analysis.component';
+import { VendorAiProfileComponent } from './vendor-ai-profile/vendor-ai-profile.component';
 
 @NgModule({
   imports: [
@@ -16,7 +18,9 @@ import { VendorDetailComponent } from './vendor-detail/vendor-detail.component';
   declarations: [
     VendorListComponent,
     VendorFormComponent,
-    VendorDetailComponent
+    VendorDetailComponent,
+    VendorAiAnalysisComponent,
+    VendorAiProfileComponent
   ]
 })
 export class BuyerVendorsModule {}

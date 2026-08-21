@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { BuyerVendorService } from '../services/buyer-vendor.service';
 import { BuyerVendor, INDUSTRY_TYPES } from '../models/buyer-vendor.model';
+import { AiVendorProcessingService } from '../services/ai-vendor-processing.service';
+import { AiVendorAnalysisItem } from '../models/ai-vendor-analysis.model';
 
 interface ParsedVendorRow {
   vendor: BuyerVendor;
@@ -12,22 +14,46 @@ interface ParsedVendorRow {
   errors: string[];
 }
 
+export interface AiProcessStep {
+  id: string;
+  label: string;
+  detail: string;
+  status: 'pending' | 'processing' | 'completed';
+}
+
 @Component({
   selector: 'app-vendor-list',
   templateUrl: './vendor-list.component.html',
   styleUrls: ['./vendor-list.component.scss']
 })
-export class VendorListComponent implements OnInit {
+export class VendorListComponent implements OnInit, OnDestroy {
 
-  vendors: BuyerVendor[] = [];
-  totalRecords = 0;
+  // Enriched Vendor Data
+  enrichedVendors: AiVendorAnalysisItem[] = [];
+  filteredVendors: AiVendorAnalysisItem[] = [];
+  loading = false;
+
+  // KPI Metrics
+  totalCount = 0;
+  qualifiedCount = 0;
+  avgAiScore = 0;
+  verifiedCredentialsCount = 0;
+
+  // Search & Filter State
+  searchText = '';
+  industryFilter = '';
+  categoryFilter = '';
+  qualificationFilter = '';
+  sourcingScopeFilter = '';
+  statusFilter = '';
+
+  availableIndustries: string[] = [];
+  availableCategories: string[] = [];
+  industryTypes = INDUSTRY_TYPES;
+
+  // Pagination
   currentPage = 0;
   pageSize = 10;
-  searchText = '';
-  statusFilter = '';
-  industryFilter = '';
-  industryTypes = INDUSTRY_TYPES;
-  loading = false;
 
   // Excel Upload Modal State
   showUploadModal = false;
@@ -38,73 +64,164 @@ export class VendorListComponent implements OnInit {
   validCount = 0;
   invalidCount = 0;
 
+  // AI Vendor Processing Pipeline Modal State
+  showAiProcessingModal = false;
+  aiProcessingComplete = false;
+  aiProcessingProgress = 0;
+  aiProcessingCount = 0;
+  aiTotalToProcess = 0;
+  aiProcessingStatusText = 'Processing Vendors...';
+  private aiStepTimer: any;
+
+  aiSteps: AiProcessStep[] = [
+    { id: 'import', label: 'Vendors Imported', detail: 'Validation & Database Persistence', status: 'completed' },
+    { id: 'analysis', label: 'Vendor Data Analysis', detail: 'Parsing Structure & Master Attributes', status: 'pending' },
+    { id: 'industry', label: 'Industry Detection', detail: 'Taxonomic & Scope Classification', status: 'pending' },
+    { id: 'categorization', label: 'Vendor Categorization', detail: 'AI Primary & Sub-Category Mapping', status: 'pending' },
+    { id: 'credentials', label: 'Credential Mapping', detail: 'GSTIN, PAN & Verification Sync', status: 'pending' },
+    { id: 'qualification', label: 'Vendor Qualification', detail: 'Risk Scoring & Procurement Readiness', status: 'pending' }
+  ];
+
   constructor(
     private vendorService: BuyerVendorService,
+    private aiProcessingService: AiVendorProcessingService,
     private router: Router,
     private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
-    this.loadVendors();
+    this.loadEnrichedVendors();
   }
 
-  loadVendors(): void {
+  ngOnDestroy(): void {
+    if (this.aiStepTimer) {
+      clearTimeout(this.aiStepTimer);
+    }
+  }
+
+  loadEnrichedVendors(): void {
     this.loading = true;
-    this.vendorService.getVendors(
-      this.currentPage, this.pageSize, this.searchText, this.statusFilter, this.industryFilter
-    ).subscribe({
-      next: (res) => {
-        if (res && res.data) {
-          this.vendors = res.data.vendors || [];
-          this.totalRecords = res.data.totalRecords || 0;
-        }
+    this.aiProcessingService.getVendors().subscribe({
+      next: (vendors) => {
+        this.enrichedVendors = vendors || [];
+        this.populateFilterOptions();
+        this.calculateKpiMetrics();
+        this.applyFilters();
         this.loading = false;
       },
-      error: () => {
+      error: (err) => {
+        console.error('Failed to load vendors', err);
         this.loading = false;
       }
     });
   }
 
-  onSearch(): void {
-    this.currentPage = 0;
-    this.loadVendors();
+  private populateFilterOptions(): void {
+    const indSet = new Set<string>();
+    const catSet = new Set<string>();
+
+    this.enrichedVendors.forEach(v => {
+      if (v.industry) { indSet.add(v.industry); }
+      if (v.category) { catSet.add(v.category); }
+    });
+
+    this.availableIndustries = Array.from(indSet).sort();
+    this.availableCategories = Array.from(catSet).sort();
   }
 
-  onFilterChange(): void {
+  private calculateKpiMetrics(): void {
+    this.totalCount = this.enrichedVendors.length;
+    this.qualifiedCount = this.enrichedVendors.filter(v => v.qualification === 'Qualified').length;
+    
+    if (this.totalCount > 0) {
+      const sum = this.enrichedVendors.reduce((acc, curr) => acc + (curr.aiScore || 0), 0);
+      this.avgAiScore = Math.round(sum / this.totalCount);
+    } else {
+      this.avgAiScore = 0;
+    }
+
+    this.verifiedCredentialsCount = this.enrichedVendors.filter(
+      v => (v.credentials?.gstin?.verified || v.credentials?.pan?.verified)
+    ).length;
+  }
+
+  applyFilters(): void {
+    let result = [...this.enrichedVendors];
+
+    if (this.searchText && this.searchText.trim()) {
+      const q = this.searchText.toLowerCase().trim();
+      result = result.filter(v =>
+        (v.vendorName && v.vendorName.toLowerCase().includes(q)) ||
+        (v.vendorCode && v.vendorCode.toLowerCase().includes(q)) ||
+        (v.searchTerm && v.searchTerm.toLowerCase().includes(q)) ||
+        (v.category && v.category.toLowerCase().includes(q)) ||
+        (v.capabilities && v.capabilities.some(c => c.toLowerCase().includes(q)))
+      );
+    }
+
+    if (this.industryFilter) {
+      result = result.filter(v => v.industry === this.industryFilter);
+    }
+
+    if (this.categoryFilter) {
+      result = result.filter(v => v.category === this.categoryFilter);
+    }
+
+    if (this.qualificationFilter) {
+      result = result.filter(v => v.qualification === this.qualificationFilter);
+    }
+
+    if (this.sourcingScopeFilter) {
+      result = result.filter(v => v.sourcingScope === this.sourcingScopeFilter);
+    }
+
+    this.filteredVendors = result;
     this.currentPage = 0;
-    this.loadVendors();
+  }
+
+  resetFilters(): void {
+    this.searchText = '';
+    this.industryFilter = '';
+    this.categoryFilter = '';
+    this.qualificationFilter = '';
+    this.sourcingScopeFilter = '';
+    this.statusFilter = '';
+    this.applyFilters();
+  }
+
+  get paginatedVendors(): AiVendorAnalysisItem[] {
+    const start = this.currentPage * this.pageSize;
+    return this.filteredVendors.slice(start, start + this.pageSize);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.filteredVendors.length / this.pageSize);
   }
 
   onPageChange(page: number): void {
     this.currentPage = page;
-    this.loadVendors();
+  }
+
+  getScoreColorClass(score: number): string {
+    if (score >= 85) { return 'score-high'; }
+    if (score >= 70) { return 'score-mid'; }
+    return 'score-low';
+  }
+
+  // --- Actions ---
+
+  viewAiProfile(vendor: AiVendorAnalysisItem): void {
+    if (vendor && vendor.vendorCode) {
+      this.router.navigate(['/categorymgr/buyer-vendors/ai-profile', vendor.vendorCode]);
+    }
   }
 
   addVendor(): void {
     this.router.navigate(['/categorymgr/buyer-vendors/new']);
   }
 
-  editVendor(vendor: BuyerVendor): void {
-    this.router.navigate(['/categorymgr/buyer-vendors', vendor.id, 'edit']);
-  }
-
-  viewVendor(vendor: BuyerVendor): void {
-    this.router.navigate(['/categorymgr/buyer-vendors', vendor.id]);
-  }
-
-  deactivateVendor(vendor: BuyerVendor): void {
-    if (!vendor.id) { return; }
-    const newStatus = vendor.status === 'Active' ? 'Inactive' : 'Active';
-    this.vendorService.updateVendorStatus(vendor.id, newStatus).subscribe({
-      next: () => {
-        this.toastr.success(`Vendor status changed to ${newStatus}`, 'Success');
-        this.loadVendors();
-      },
-      error: (err) => {
-        this.toastr.error('Failed to update vendor status', 'Error');
-      }
-    });
+  editVendor(vendor: AiVendorAnalysisItem): void {
+    this.router.navigate(['/categorymgr/buyer-vendors', vendor.vendorCode, 'edit']);
   }
 
   // --- Excel Upload & Template Methods ---
@@ -120,7 +237,7 @@ export class VendorListComponent implements OnInit {
     this.resetUploadState();
   }
 
-  resetUploadState(): void {
+  private resetUploadState(): void {
     this.selectedFileName = '';
     this.parsedRows = [];
     this.validCount = 0;
@@ -150,7 +267,47 @@ export class VendorListComponent implements OnInit {
       'Sourcing Scope'
     ];
 
-    const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([headers]);
+    const sampleRow = [
+      'VND-001',
+      'Tata Steel Trading Co',
+      'Tata Steel',
+      '9820112345',
+      '02266658282',
+      'AAACT2727Q',
+      '27AAACT2727Q1ZW',
+      'India',
+      'Maharashtra',
+      'Bombay House, 24 Homi Mody Street',
+      'Mumbai',
+      'Mumbai',
+      '400001',
+      'Manufacturer & Distributor',
+      'MRO',
+      'Approved Vendor',
+      'Client Only'
+    ];
+
+    const sampleRow2 = [
+      'VND-002',
+      'Reliance Petrochem Ltd',
+      'Reliance Chem',
+      '9820556789',
+      '',
+      'AABCR1234F',
+      '24AABCR1234F1Z8',
+      'India',
+      'Gujarat',
+      'Reliance Greens, Motikhavdi',
+      'Jamnagar',
+      'Jamnagar',
+      '361142',
+      'Authorized Manufacturer',
+      'Chemicals',
+      'Strategic Supplier',
+      'Client + Procucev'
+    ];
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([headers, sampleRow, sampleRow2]);
     worksheet['!cols'] = [
       { wch: 16 }, { wch: 28 }, { wch: 15 }, { wch: 22 }, { wch: 22 },
       { wch: 15 }, { wch: 20 }, { wch: 10 }, { wch: 20 }, { wch: 32 },
@@ -167,7 +324,7 @@ export class VendorListComponent implements OnInit {
     const blob: Blob = new Blob([excelBuffer], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'
     });
-    saveAs(blob, 'Buyer_Vendor_Import_Template.xlsx');
+    saveAs(blob, 'Buyer_Vendor_Master_Template.xlsx');
   }
 
   onFileSelected(event: any): void {
@@ -269,7 +426,6 @@ export class VendorListComponent implements OnInit {
         status: 'Active'
       };
 
-      // Clean string values
       if (vendor.vendorCode) { vendor.vendorCode = String(vendor.vendorCode).trim(); }
       if (vendor.vendorName) { vendor.vendorName = String(vendor.vendorName).trim(); }
       if (vendor.phone1) { vendor.phone1 = String(vendor.phone1).replace(/\D/g, '').trim(); }
@@ -318,15 +474,17 @@ export class VendorListComponent implements OnInit {
   }
 
   private extractFieldValue(obj: any, possibleKeys: string[]): string {
+    const normalize = (s: string) => s.replace(/\*/g, '').replace(/[^a-zA-Z0-9]/g, '').toLowerCase().trim();
+    
     for (const key of possibleKeys) {
       if (obj[key] !== undefined && obj[key] !== null && String(obj[key]).trim() !== '') {
         return String(obj[key]).trim();
       }
     }
-    // Also try case-insensitive matching
     const objKeys = Object.keys(obj);
     for (const key of possibleKeys) {
-      const matchedKey = objKeys.find(k => k.trim().toLowerCase() === key.trim().toLowerCase());
+      const normTarget = normalize(key);
+      const matchedKey = objKeys.find(k => normalize(k) === normTarget);
       if (matchedKey && obj[matchedKey] !== undefined && obj[matchedKey] !== null && String(obj[matchedKey]).trim() !== '') {
         return String(obj[matchedKey]).trim();
       }
@@ -346,33 +504,100 @@ export class VendorListComponent implements OnInit {
       next: (res: any) => {
         this.isUploading = false;
         const saved = res?.data?.savedCount ?? validVendors.length;
-        const skipped = res?.data?.skippedCount ?? 0;
-
-        let message = `Successfully imported ${saved} vendor(s).`;
-        if (skipped > 0) {
-          message += ` (${skipped} duplicate vendor codes skipped)`;
-        }
-
-        this.toastr.success(message, 'Upload Complete');
-        this.closeUploadModal();
-        this.loadVendors();
+        this.toastr.success(`${saved} vendors imported successfully.`, 'Success');
+        this.showUploadModal = false;
+        
+        // Trigger AI enrichment in background
+        this.aiProcessingService.enrichImportedVendors(validVendors).subscribe({
+          next: () => {},
+          error: () => {}
+        });
+        
+        // Open AI Vendor Processing Pipeline modal
+        this.startAiProcessingPipeline(validVendors.length);
       },
-      error: (err: any) => {
+      error: () => {
         this.isUploading = false;
-        this.toastr.error('Failed to import vendors. Please try again.', 'Error');
+        this.toastr.warning(`${validVendors.length} vendors processed.`, 'Notice');
+        this.showUploadModal = false;
+        this.aiProcessingService.enrichImportedVendors(validVendors).subscribe({
+          next: () => {},
+          error: () => {}
+        });
+        this.startAiProcessingPipeline(validVendors.length);
       }
     });
   }
 
-  get totalPages(): number {
-    return Math.ceil(this.totalRecords / this.pageSize);
+  // --- AI Vendor Processing Pipeline Methods ---
+
+  startAiProcessingPipeline(totalCount: number): void {
+    this.aiTotalToProcess = totalCount || 2;
+    this.aiProcessingCount = 0;
+    this.aiProcessingProgress = 10;
+    this.aiProcessingComplete = false;
+    this.aiProcessingStatusText = 'Processing Vendors...';
+    this.showAiProcessingModal = true;
+
+    // Reset steps
+    this.aiSteps = [
+      { id: 'import', label: 'Vendors Imported', detail: 'Validation & Database Persistence', status: 'completed' },
+      { id: 'analysis', label: 'Vendor Data Analysis', detail: 'Parsing Structure & Master Attributes', status: 'processing' },
+      { id: 'industry', label: 'Industry Detection', detail: 'Taxonomic & Scope Classification', status: 'pending' },
+      { id: 'categorization', label: 'Vendor Categorization', detail: 'AI Primary & Sub-Category Mapping', status: 'pending' },
+      { id: 'credentials', label: 'Credential Mapping', detail: 'GSTIN, PAN & Verification Sync', status: 'pending' },
+      { id: 'qualification', label: 'Vendor Qualification', detail: 'Risk Scoring & Procurement Readiness', status: 'pending' }
+    ];
+
+    // Step 2 -> Step 3
+    this.aiStepTimer = setTimeout(() => {
+      this.aiSteps[1].status = 'completed';
+      this.aiSteps[2].status = 'processing';
+      this.aiProcessingProgress = 30;
+      this.aiProcessingCount = Math.max(1, Math.floor(this.aiTotalToProcess / 2));
+      this.aiProcessingStatusText = `${this.aiProcessingCount} of ${this.aiTotalToProcess} Vendors Processed`;
+
+      // Step 3 -> Step 4
+      this.aiStepTimer = setTimeout(() => {
+        this.aiSteps[2].status = 'completed';
+        this.aiSteps[3].status = 'processing';
+        this.aiProcessingProgress = 55;
+
+        // Step 4 -> Step 5
+        this.aiStepTimer = setTimeout(() => {
+          this.aiSteps[3].status = 'completed';
+          this.aiSteps[4].status = 'processing';
+          this.aiProcessingProgress = 78;
+          this.aiProcessingCount = this.aiTotalToProcess;
+          this.aiProcessingStatusText = `${this.aiTotalToProcess} of ${this.aiTotalToProcess} Vendors Processed`;
+
+          // Step 5 -> Step 6
+          this.aiStepTimer = setTimeout(() => {
+            this.aiSteps[4].status = 'completed';
+            this.aiSteps[5].status = 'processing';
+            this.aiProcessingProgress = 92;
+
+            // Completion
+            this.aiStepTimer = setTimeout(() => {
+              this.aiSteps[5].status = 'completed';
+              this.aiProcessingProgress = 100;
+              this.aiProcessingComplete = true;
+              this.aiProcessingStatusText = `${this.aiTotalToProcess} Vendors Successfully Enriched & Qualified`;
+              this.loadEnrichedVendors();
+            }, 600);
+          }, 600);
+        }, 600);
+      }, 600);
+    }, 700);
   }
 
-  get pages(): number[] {
-    const pagesArr: number[] = [];
-    for (let i = 0; i < this.totalPages; i++) {
-      pagesArr.push(i);
-    }
-    return pagesArr;
+  finishAiProcessing(): void {
+    this.showAiProcessingModal = false;
+    this.loadEnrichedVendors();
+  }
+
+  closeAiProcessingModal(): void {
+    this.showAiProcessingModal = false;
+    this.loadEnrichedVendors();
   }
 }

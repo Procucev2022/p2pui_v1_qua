@@ -1,0 +1,215 @@
+<div class="col-12 pad-nill">
+  <!-- Table Title & Action Bar -->
+  <div class="table-title">
+    <div class="row align-items-center">
+      <div class="col-sm-7">
+        <h2><i class="fa fa-magic text-warning mr-2"></i>AI Vendor Analysis</h2>
+        <p><span class="dot"></span>Vendor Management &bull; AI Enrichment &amp; Qualification</p>
+      </div>
+      <div class="col-sm-5 text-right">
+        <button class="btn btn-secondary rippel-btn mr-2" (click)="goBackToVendorList()"
+          style="align-items: center; min-width: 150px; vertical-align: middle; text-align: center; display: inline-flex; justify-content: center;">
+          <i class="fa fa-arrow-left"></i> <span>Vendor Directory</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI Summary Banner -->
+  <div class="row mb-3">
+    <div class="col-lg-3 col-md-6 mb-2">
+      <div class="kpi-card kpi-card-blue">
+        <div class="kpi-icon"><i class="fa fa-building-o"></i></div>
+        <div class="kpi-content">
+          <span class="kpi-title">Total Analyzed</span>
+          <span class="kpi-value">{{totalCount}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-2">
+      <div class="kpi-card kpi-card-green">
+        <div class="kpi-icon"><i class="fa fa-check-circle-o"></i></div>
+        <div class="kpi-content">
+          <span class="kpi-title">Qualified Vendors</span>
+          <span class="kpi-value">{{qualifiedCount}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-2">
+      <div class="kpi-card kpi-card-orange">
+        <div class="kpi-icon"><i class="fa fa-tachometer"></i></div>
+        <div class="kpi-content">
+          <span class="kpi-title">Avg AI Score</span>
+          <span class="kpi-value">{{avgAiScore}}%</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-2">
+      <div class="kpi-card kpi-card-purple">
+        <div class="kpi-icon"><i class="fa fa-shield"></i></div>
+        <div class="kpi-content">
+          <span class="kpi-title">Credentials Verified</span>
+          <span class="kpi-value">{{verifiedCredentialsCount}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search & Filters -->
+  <div class="table-search">
+    <div class="row">
+      <div class="col-md-3 mb-2 mb-md-0">
+        <div class="position-relative">
+          <i class="fa fa-search position-absolute text-muted" style="top: 13px; left: 14px; font-size: 14px;"></i>
+          <input type="text" class="main-input" [(ngModel)]="searchText" (ngModelChange)="applyFilters()"
+            placeholder="Search vendor, code, category..." />
+        </div>
+      </div>
+
+      <div class="col-md-3 mb-2 mb-md-0">
+        <select class="form-control select-input" [(ngModel)]="industryFilter" (change)="applyFilters()">
+          <option value="">All Industries</option>
+          <option *ngFor="let ind of availableIndustries" [value]="ind">{{ind}}</option>
+        </select>
+      </div>
+
+      <div class="col-md-3 mb-2 mb-md-0">
+        <select class="form-control select-input" [(ngModel)]="categoryFilter" (change)="applyFilters()">
+          <option value="">All Categories</option>
+          <option *ngFor="let cat of availableCategories" [value]="cat">{{cat}}</option>
+        </select>
+      </div>
+
+      <div class="col-md-2 mb-2 mb-md-0">
+        <select class="form-control select-input" [(ngModel)]="qualificationFilter" (change)="applyFilters()">
+          <option value="">All Qualification</option>
+          <option value="Qualified">Qualified</option>
+          <option value="Pending">Pending</option>
+          <option value="Unqualified">Unqualified</option>
+        </select>
+      </div>
+
+      <div class="col-md-1 text-right">
+        <button class="btn btn-outline-secondary btn-block select-input p-0"
+          (click)="searchText=''; industryFilter=''; categoryFilter=''; qualificationFilter=''; applyFilters()"
+          title="Reset filters"
+          style="display: inline-flex; align-items: center; justify-content: center;">
+          <i class="fa fa-refresh"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="text-center py-5 text-muted">
+    <i class="fa fa-spinner fa-spin fa-2x"></i>
+    <p class="mt-2 font-weight-500">Loading AI Vendor Analysis...</p>
+  </div>
+
+  <!-- Analysis Table -->
+  <div *ngIf="!loading" class="table-responsive">
+    <table class="table vendor-table ai-analysis-table">
+      <thead>
+        <tr>
+          <th style="min-width: 120px;">Vendor Code</th>
+          <th style="min-width: 180px;">Vendor Name</th>
+          <th style="min-width: 120px;">Industry</th>
+          <th style="min-width: 160px;">AI Category</th>
+          <th style="min-width: 220px;">Capabilities</th>
+          <th style="min-width: 130px;">Credentials</th>
+          <th style="min-width: 120px;">Qualification</th>
+          <th style="min-width: 120px;" class="text-center">AI Score</th>
+          <th style="min-width: 140px;" class="text-center">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let vendor of filteredVendors">
+          <!-- Vendor Code -->
+          <td>
+            <span class="code-pill">{{vendor.vendorCode}}</span>
+          </td>
+
+          <!-- Vendor Name -->
+          <td>
+            <div class="font-weight-bold text-navy">{{vendor.vendorName}}</div>
+            <div class="small text-muted" *ngIf="vendor.searchTerm">Alias: {{vendor.searchTerm}}</div>
+          </td>
+
+          <!-- Industry -->
+          <td>
+            <span class="industry-badge">{{vendor.industry}}</span>
+          </td>
+
+          <!-- AI Category -->
+          <td>
+            <span class="category-text">
+              <i class="fa fa-folder-open-o text-primary mr-1"></i>
+              <strong>{{vendor.category}}</strong>
+            </span>
+          </td>
+
+          <!-- Capabilities -->
+          <td>
+            <div class="capabilities-tags">
+              <span class="capability-tag" *ngFor="let cap of vendor.capabilities">
+                {{cap}}
+              </span>
+            </div>
+          </td>
+
+          <!-- Credentials -->
+          <td>
+            <span class="badge-credential-verified" *ngIf="vendor.credentials.gstin.verified || vendor.credentials.pan.verified">
+              <i class="fa fa-check-circle text-success mr-1"></i> Provided
+            </span>
+            <span class="badge-credential-pending" *ngIf="!vendor.credentials.gstin.verified && !vendor.credentials.pan.verified">
+              <i class="fa fa-clock-o text-warning mr-1"></i> Pending
+            </span>
+            <div class="small text-muted mt-1">
+              <span *ngIf="vendor.credentials.gstin.verified" title="GSTIN Provided" class="mr-1"><i class="fa fa-check text-success"></i> GST</span>
+              <span *ngIf="vendor.credentials.pan.verified" title="PAN Provided"><i class="fa fa-check text-success"></i> PAN</span>
+            </div>
+          </td>
+
+          <!-- Qualification -->
+          <td>
+            <span class="badge-status" [ngClass]="{
+              'badge-success': vendor.qualification === 'Qualified',
+              'badge-warning': vendor.qualification === 'Pending',
+              'badge-danger': vendor.qualification === 'Unqualified'
+            }">
+              <i class="fa fa-check-circle mr-1" *ngIf="vendor.qualification === 'Qualified'"></i>
+              {{vendor.qualification}}
+            </span>
+          </td>
+
+          <!-- AI Score -->
+          <td class="text-center">
+            <div class="score-container" [ngClass]="getScoreColorClass(vendor.aiScore)">
+              <div class="score-number">{{vendor.aiScore}}%</div>
+              <div class="score-bar">
+                <div class="score-bar-fill" [style.width.%]="vendor.aiScore"></div>
+              </div>
+            </div>
+          </td>
+
+          <!-- Action -->
+          <td class="text-center">
+            <button class="btn btn-sm btn-action-profile" (click)="viewAiProfile(vendor)">
+              <i class="fa fa-id-card-o mr-1"></i> View AI Profile
+            </button>
+          </td>
+        </tr>
+
+        <!-- Empty State -->
+        <tr *ngIf="filteredVendors.length === 0">
+          <td colspan="9" class="text-center py-5 text-muted">
+            <i class="fa fa-inbox fa-3x mb-2 text-muted"></i>
+            <p class="font-weight-600 mb-1">No vendor analysis records found.</p>
+            <small class="text-muted">Import vendors from Excel or add vendors in Vendor Management to view AI Analysis.</small>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

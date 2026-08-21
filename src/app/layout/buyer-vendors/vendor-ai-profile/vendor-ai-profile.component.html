@@ -1,0 +1,367 @@
+<div class="col-12 pad-nill">
+  <!-- Table Title / Action Header -->
+  <div class="table-title">
+    <div class="row align-items-center">
+      <div class="col-sm-7">
+        <h2><i class="fa fa-id-card text-warning mr-2"></i>Vendor AI Profile</h2>
+        <p><span class="dot"></span>Vendor Management &bull; AI Enrichment &bull; Qualification Assessment</p>
+      </div>
+      <div class="col-sm-5 text-right">
+        <button class="btn btn-secondary rippel-btn mr-2" (click)="goBack()"
+          style="align-items: center; min-width: 140px; vertical-align: middle; text-align: center; display: inline-flex; justify-content: center;">
+          <i class="fa fa-arrow-left"></i> <span>Back to Analysis</span>
+        </button>
+        <button class="btn btn-primary btn-createRFQ" (click)="goToDirectory()"
+          style="align-items: center; min-width: 140px; vertical-align: middle; text-align: center; display: inline-flex; justify-content: center;">
+          <i class="fa fa-users"></i> <span>Vendor Directory</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="text-center py-5 text-muted">
+    <i class="fa fa-spinner fa-spin fa-2x"></i>
+    <p class="mt-2 font-weight-500">Loading Vendor AI Profile...</p>
+  </div>
+
+  <!-- Profile Content -->
+  <div *ngIf="!loading && vendor" class="profile-container">
+    
+    <!-- Prominent Hero Card: Qualification & AI Score -->
+    <div class="card hero-card mb-4">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col-md-7">
+            <div class="d-flex align-items-center mb-2">
+              <span class="prominent-badge mr-3" [ngClass]="{
+                'badge-success': vendor.qualification === 'Qualified',
+                'badge-warning': vendor.qualification === 'Pending',
+                'badge-danger': vendor.qualification === 'Unqualified'
+              }">
+                <i class="fa fa-check-circle" *ngIf="vendor.qualification === 'Qualified'"></i>
+                {{vendor.qualification | uppercase}} VENDOR
+              </span>
+              <span class="verified-pill">
+                <i class="fa fa-shield"></i> {{vendor.verificationStatus}}
+              </span>
+            </div>
+            <h3 class="vendor-hero-name mb-1">{{vendor.vendorName}}</h3>
+            <div class="hero-subtext text-muted">
+              <span class="code-badge mr-2"><i class="fa fa-hashtag"></i> {{vendor.vendorCode}}</span>
+              <span class="mr-3"><i class="fa fa-industry"></i> {{vendor.industry}}</span>
+              <span *ngIf="vendor.contactInfo.city"><i class="fa fa-map-marker"></i> {{vendor.contactInfo.city}}, {{vendor.contactInfo.state}}</span>
+            </div>
+          </div>
+
+          <div class="col-md-5 text-md-right mt-3 mt-md-0">
+            <div class="score-hero-box">
+              <div class="score-circle">
+                <span class="score-val">{{vendor.aiScore}}%</span>
+                <span class="score-lbl">AI SCORE</span>
+              </div>
+              <div class="score-status-text text-left pl-3">
+                <div class="font-weight-bold" [ngClass]="vendor.aiScore >= 85 ? 'text-success' : 'text-warning'">
+                  <i class="fa" [ngClass]="vendor.aiScore >= 85 ? 'fa-check' : 'fa-clock-o'"></i>
+                  {{vendor.aiScore >= 85 ? 'High Fit Rating' : 'Moderate Fit Rating'}}
+                </div>
+                <small class="text-muted">Procurement ready for RFQ sourcing</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 Core Sections Grid -->
+    <div class="row">
+      <!-- Section 1: Vendor Information -->
+      <div class="col-lg-6 mb-4">
+        <div class="card section-card h-100">
+          <div class="card-header d-flex align-items-center">
+            <i class="fa fa-info-circle section-icon text-primary mr-2"></i>
+            <h5 class="mb-0">1. Vendor Information</h5>
+          </div>
+          <div class="card-body">
+            <div class="row info-row">
+              <div class="col-sm-5 info-label">Vendor Name</div>
+              <div class="col-sm-7 info-value font-weight-bold text-navy">{{vendor.vendorName}}</div>
+            </div>
+            <div class="row info-row">
+              <div class="col-sm-5 info-label">Vendor Code</div>
+              <div class="col-sm-7 info-value"><code>{{vendor.vendorCode}}</code></div>
+            </div>
+            <div class="row info-row" *ngIf="vendor.searchTerm">
+              <div class="col-sm-5 info-label">Search Alias</div>
+              <div class="col-sm-7 info-value">{{vendor.searchTerm}}</div>
+            </div>
+            <div class="row info-row">
+              <div class="col-sm-5 info-label">Industry</div>
+              <div class="col-sm-7 info-value">{{vendor.industry}}</div>
+            </div>
+            <div class="row info-row">
+              <div class="col-sm-5 info-label">Category</div>
+              <div class="col-sm-7 info-value font-weight-600">{{vendor.category}}</div>
+            </div>
+            <div class="row info-row">
+              <div class="col-sm-5 info-label">Business Type</div>
+              <div class="col-sm-7 info-value">{{vendor.typeOfBusiness || 'Authorized Enterprise'}}</div>
+            </div>
+            <div class="row info-row">
+              <div class="col-sm-5 info-label">Contact Information</div>
+              <div class="col-sm-7 info-value">
+                <div *ngIf="vendor.contactInfo.phone1"><i class="fa fa-phone text-muted mr-1"></i> {{vendor.contactInfo.phone1}}</div>
+                <div *ngIf="vendor.contactInfo.phone2"><i class="fa fa-phone text-muted mr-1"></i> {{vendor.contactInfo.phone2}} (Alt)</div>
+                <div *ngIf="vendor.contactInfo.email"><i class="fa fa-envelope-o text-muted mr-1"></i> {{vendor.contactInfo.email}}</div>
+                <div class="text-muted small mt-1" *ngIf="vendor.contactInfo.addressLine">
+                  <i class="fa fa-map-marker mr-1"></i>
+                  {{vendor.contactInfo.addressLine}}, {{vendor.contactInfo.city}}, {{vendor.contactInfo.state}} {{vendor.contactInfo.postalCode ? '- ' + vendor.contactInfo.postalCode : ''}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: AI Categorization -->
+      <div class="col-lg-6 mb-4">
+        <div class="card section-card h-100">
+          <div class="card-header d-flex align-items-center">
+            <i class="fa fa-sitemap section-icon text-info mr-2"></i>
+            <h5 class="mb-0">2. AI Categorization</h5>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <div class="sub-section-title">Primary Category</div>
+              <div class="category-highlight">
+                <i class="fa fa-folder-open text-primary mr-2"></i>
+                <strong>{{vendor.category}}</strong> ({{vendor.industry}})
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <div class="sub-section-title">Sub Categories</div>
+              <div class="d-flex flex-wrap gap-2 mt-1">
+                <span class="pill-tag pill-tag-blue" *ngFor="let sub of vendor.subCategories">
+                  <i class="fa fa-tag mr-1"></i> {{sub}}
+                </span>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <div class="sub-section-title">Vendor Capabilities</div>
+              <div class="d-flex flex-wrap gap-2 mt-1">
+                <span class="pill-tag pill-tag-green" *ngFor="let cap of vendor.capabilities">
+                  <i class="fa fa-check mr-1"></i> {{cap}}
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <div class="sub-section-title">Suitable Procurement Categories</div>
+              <ul class="suitable-list mt-1 pl-3 mb-0">
+                <li *ngFor="let cat of vendor.suitableProcurementCategories">
+                  {{cat}}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Credential Mapping -->
+      <div class="col-lg-6 mb-4">
+        <div class="card section-card h-100">
+          <div class="card-header d-flex align-items-center">
+            <i class="fa fa-shield section-icon text-success mr-2"></i>
+            <h5 class="mb-0">3. Credential Mapping</h5>
+          </div>
+          <div class="card-body">
+            <!-- GSTIN -->
+            <div class="credential-item">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="credential-name"><i class="fa fa-file-text-o text-muted mr-1"></i> GSTIN</div>
+                  <div class="credential-val font-weight-bold">{{vendor.credentials.gstin.value}}</div>
+                </div>
+                <span class="badge-credential-status" [ngClass]="vendor.credentials.gstin.verified ? 'verified' : 'pending'">
+                  <i class="fa" [ngClass]="vendor.credentials.gstin.verified ? 'fa-check-circle' : 'fa-clock-o'"></i>
+                  {{vendor.credentials.gstin.verified ? 'Provided' : 'Pending Verification'}}
+                </span>
+              </div>
+              <div class="credential-meta text-muted small mt-1">
+                Source: {{vendor.credentials.gstin.source}} &bull; Synced {{vendor.credentials.gstin.verifiedDate}}
+              </div>
+            </div>
+
+            <!-- PAN -->
+            <div class="credential-item">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="credential-name"><i class="fa fa-id-card-o text-muted mr-1"></i> PAN</div>
+                  <div class="credential-val font-weight-bold">{{vendor.credentials.pan.value}}</div>
+                </div>
+                <span class="badge-credential-status" [ngClass]="vendor.credentials.pan.verified ? 'verified' : 'pending'">
+                  <i class="fa" [ngClass]="vendor.credentials.pan.verified ? 'fa-check-circle' : 'fa-clock-o'"></i>
+                  {{vendor.credentials.pan.verified ? 'Provided' : 'Pending Verification'}}
+                </span>
+              </div>
+              <div class="credential-meta text-muted small mt-1">
+                Source: {{vendor.credentials.pan.source}} &bull; Synced {{vendor.credentials.pan.verifiedDate}}
+              </div>
+            </div>
+
+            <!-- Company Info -->
+            <div class="credential-item">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="credential-name"><i class="fa fa-building-o text-muted mr-1"></i> Company Information</div>
+                  <div class="credential-val">{{vendor.credentials.companyInfo.value}}</div>
+                </div>
+                <span class="badge-credential-status" [ngClass]="vendor.credentials.companyInfo.verified ? 'verified' : 'pending'">
+                  <i class="fa" [ngClass]="vendor.credentials.companyInfo.verified ? 'fa-check-circle' : 'fa-clock-o'"></i>
+                  {{vendor.credentials.companyInfo.verified ? 'Provided' : 'Pending'}}
+                </span>
+              </div>
+              <div class="credential-meta text-muted small mt-1">
+                Source: {{vendor.credentials.companyInfo.source}}
+              </div>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="credential-item border-0 pb-0">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="credential-name"><i class="fa fa-phone text-muted mr-1"></i> Contact Information</div>
+                  <div class="credential-val">{{vendor.credentials.contactInfo.value}}</div>
+                </div>
+                <span class="badge-credential-status" [ngClass]="vendor.credentials.contactInfo.verified ? 'verified' : 'pending'">
+                  <i class="fa" [ngClass]="vendor.credentials.contactInfo.verified ? 'fa-check-circle' : 'fa-clock-o'"></i>
+                  {{vendor.credentials.contactInfo.verified ? 'Provided' : 'Pending'}}
+                </span>
+              </div>
+              <div class="credential-meta text-muted small mt-1">
+                Source: {{vendor.credentials.contactInfo.source}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Vendor Qualification -->
+      <div class="col-lg-6 mb-4">
+        <div class="card section-card h-100">
+          <div class="card-header d-flex align-items-center">
+            <i class="fa fa-certificate section-icon text-warning mr-2"></i>
+            <h5 class="mb-0">4. Vendor Qualification</h5>
+          </div>
+          <div class="card-body">
+            <div class="row mb-3">
+              <div class="col-6">
+                <div class="qual-metric-card">
+                  <span class="qual-lbl">Qualification Status</span>
+                  <span class="qual-status font-weight-bold" [ngClass]="{
+                    'text-success': vendor.qualification === 'Qualified',
+                    'text-warning': vendor.qualification === 'Pending',
+                    'text-danger': vendor.qualification === 'Unqualified'
+                  }">
+                    <i class="fa fa-check-circle" *ngIf="vendor.qualification === 'Qualified'"></i>
+                    {{vendor.qualification}}
+                  </span>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="qual-metric-card">
+                  <span class="qual-lbl">AI Overall Score</span>
+                  <span class="qual-status text-primary font-weight-bold">
+                    {{vendor.aiScore}}%
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-6">
+                <div class="qual-metric-card">
+                  <span class="qual-lbl">Verification Status</span>
+                  <span class="qual-status text-navy font-weight-600">
+                    {{vendor.verificationStatus}}
+                  </span>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="qual-metric-card">
+                  <span class="qual-lbl">Compliance Status</span>
+                  <span class="qual-status text-navy font-weight-600">
+                    {{vendor.complianceStatus}}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Detailed Score Breakdown -->
+            <div class="score-breakdown-box mt-3">
+              <div class="sub-section-title mb-2">Score Assessment Breakdown</div>
+              
+              <div class="score-row mb-2">
+                <div class="d-flex justify-content-between small font-weight-600 mb-1">
+                  <span>Data Completeness</span>
+                  <span>{{vendor.scoreBreakdown.financialStability}}%</span>
+                </div>
+                <div class="progress progress-sm">
+                  <div class="progress-bar bg-success" [style.width.%]="vendor.scoreBreakdown.financialStability"></div>
+                </div>
+              </div>
+
+              <div class="score-row mb-2">
+                <div class="d-flex justify-content-between small font-weight-600 mb-1">
+                  <span>Operational Capability</span>
+                  <span>{{vendor.scoreBreakdown.operationalScope}}%</span>
+                </div>
+                <div class="progress progress-sm">
+                  <div class="progress-bar bg-info" [style.width.%]="vendor.scoreBreakdown.operationalScope"></div>
+                </div>
+              </div>
+
+              <div class="score-row mb-2">
+                <div class="d-flex justify-content-between small font-weight-600 mb-1">
+                  <span>Regulatory Compliance</span>
+                  <span>{{vendor.scoreBreakdown.compliance}}%</span>
+                </div>
+                <div class="progress progress-sm">
+                  <div class="progress-bar bg-primary" [style.width.%]="vendor.scoreBreakdown.compliance"></div>
+                </div>
+              </div>
+
+              <div class="score-row mb-2">
+                <div class="d-flex justify-content-between small font-weight-600 mb-1">
+                  <span>Financial Stability</span>
+                  <span class="text-muted font-weight-normal">Not Available</span>
+                </div>
+              </div>
+
+              <div class="score-row">
+                <div class="d-flex justify-content-between small font-weight-600 mb-1">
+                  <span>Past Performance</span>
+                  <span class="text-muted font-weight-normal">Not Available</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Not Found State -->
+  <div *ngIf="!loading && !vendor" class="text-center py-5">
+    <i class="fa fa-exclamation-triangle fa-3x text-warning mb-2"></i>
+    <h4>Vendor Profile Not Found</h4>
+    <p class="text-muted">The vendor '{{vendorCode}}' was not found in the database.</p>
+    <button class="btn btn-primary btn-createRFQ mt-2" (click)="goBack()">
+      Return to AI Vendor Analysis
+    </button>
+  </div>
+</div>
