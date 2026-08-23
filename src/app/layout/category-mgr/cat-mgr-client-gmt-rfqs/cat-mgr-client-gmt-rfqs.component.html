@@ -63,11 +63,11 @@
                     <!-- <td style="width: 3em">
                     <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
                     </td> -->
-                    <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
+                    <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  (col.field == 'rfqId' ? (rowData.displayRfqId || (rowData.rfqIcon ? rowData.rfqIcon + ' ' + rowData.rfqId : rowData.rfqId)) : rowData[col.field]): ''">
                     <span *ngIf="!col.isLink">
-                        <span *ngIf="col.field == 'rfqId'" class="row_{{rowData?.sourceType?.toUpperCase()}}"></span>
                             <span *ngIf="col.fieldType != 'date'">
-                                {{rowData[col.field]}}
+                                <span *ngIf="col.field == 'rfqId'">{{rowData.displayRfqId || (rowData.rfqIcon ? rowData.rfqIcon + ' ' + rowData.rfqId : rowData.rfqId)}}</span>
+                                <span *ngIf="col.field != 'rfqId'">{{rowData[col.field]}}</span>
                             </span>
                             <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
                               {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
@@ -75,7 +75,7 @@
 
                     </span>
                     <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);"
-                        (click)="getRFQLineItems(rowData, $event)"> {{rowData[col.field]}} </a></span>
+                        (click)="getRFQLineItems(rowData, $event)"> {{col.field == 'rfqId' ? (rowData.displayRfqId || (rowData.rfqIcon ? rowData.rfqIcon + ' ' + rowData.rfqId : rowData.rfqId)) : rowData[col.field]}} </a></span>
 
                     </td>
                 </tr>
@@ -155,13 +155,13 @@
               <!-- <p-button type="button" pRipple [pRowToggler]="rowData" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" /> -->
           </td>
           <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}" 
-           [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
+           [title]="col.isExceedContent == true ? (col.field == 'rfqId' ? (rowData.displayRfqId || (rowData.rfqIcon ? rowData.rfqIcon + ' ' + rowData.rfqId : rowData.rfqId)) : rowData[col.field]): ''">
                   <span *ngIf="!col.isLink">
-                      <span *ngIf="col.field == 'rfqId'" class="row_{{rowData?.sourceType?.toUpperCase()}}"></span>
                         <i class="fa fa-info-circle" style="font-size: 1.2rem;cursor: pointer;color:rgb(255, 106, 0)" *ngIf="col.field =='companyName' " (click)="getVendorInfo(rowData, 'companyId')"></i>  
 
                           <span *ngIf="col.fieldType != 'date'" [ngClass]="{'blueCls': col.field == 'rfqId' && rowData.byClient == true}">
-                              {{rowData[col.field]}} 
+                              <span *ngIf="col.field == 'rfqId'">{{rowData.displayRfqId || (rowData.rfqIcon ? rowData.rfqIcon + ' ' + rowData.rfqId : rowData.rfqId)}}</span>
+                              <span *ngIf="col.field != 'rfqId'">{{rowData[col.field]}}</span> 
                           </span>
                           <span class="blink" *ngIf="col.field=='rfqId' && (rowData.newCommentAvailableVendor == true)">
                                     <i class="fa fa-bell" aria-hidden="true"></i>

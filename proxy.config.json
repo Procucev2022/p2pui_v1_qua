@@ -2,7 +2,7 @@
 
     {
         "/oauth": {
-           "target": "http://10.12.1.35:8080",
+           "target": "http://localhost:8081",
            "secure": false,
            "logLevel": "debug",
            "changeOrigin": true
