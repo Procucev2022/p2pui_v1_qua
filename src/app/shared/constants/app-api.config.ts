@@ -1,7 +1,7 @@
 import { environment } from 'src/environments/environment';
 
 export class AppApiConfig {
-  public static apiEndpoint = environment.baseURL || 'https://p2pv1servicesdev-etfrcte5fhdvfrd4.centralindia-01.azurewebsites.net';
+  public static apiEndpoint = environment.baseURL;
   public static LOGGED_USER_PATH = '/rest/users/user/loggedUser';
   public static ACCESS_TOKEN_PATH = '/authenticate';
   public static GET_RFQS_FOR_NOPR_FOR_CLIENT_INITIATOR = "/rest/gmt/getNoPrRfqByClient";
