@@ -2,18 +2,28 @@
   <!-- Table Title & Action Bar -->
   <div class="table-title">
     <div class="row align-items-center">
-      <div class="col-sm-6">
+      <div class="col-sm-5">
         <h2>Vendor Management</h2>
-        <p><span class="dot"></span>Private Enterprise Vendor Directory &bull; AI Enrichment &amp; Qualification</p>
+        <p><span class="dot"></span>Private Enterprise Vendor Directory &bull; AI Enrichment &amp; Governance</p>
       </div>
-      <div class="col-sm-6 text-right">
+      <div class="col-sm-7 text-right">
+        <button class="btn btn-outline-primary mr-2" type="button"
+          style="align-items: center; min-width: 110px; vertical-align: middle; text-align: center; display: inline-flex; justify-content: center; height: 38px; border-radius: 6px;"
+          (click)="refreshDirectory()" [disabled]="loading" title="Refresh Vendor List">
+          <i class="fa fa-refresh mr-1" [class.fa-spin]="loading"></i> <span>Refresh</span>
+        </button>
+        <button class="btn btn-outline-success mr-2" type="button"
+          style="align-items: center; min-width: 140px; vertical-align: middle; text-align: center; display: inline-flex; justify-content: center; height: 38px; border-radius: 6px;"
+          (click)="exportVendorsToExcel()" title="Export Directory to Excel">
+          <i class="fa fa-file-excel-o mr-1"></i> <span>Export Excel</span>
+        </button>
         <button class="btn btn-primary btn-uploadExcel mr-2" type="button"
-          style="align-items: center; width: 170px; vertical-align: middle; text-align: center; display: inline-flex; justify-content: center;"
+          style="align-items: center; width: 155px; vertical-align: middle; text-align: center; display: inline-flex; justify-content: center; height: 38px;"
           (click)="openUploadModal()">
-          <i class="fa fa-file-excel-o"></i> <span>Upload Excel</span>
+          <i class="fa fa-cloud-upload"></i> <span>Upload Excel</span>
         </button>
         <button class="btn btn-primary btn-createRFQ" type="button"
-          style="align-items: center; width: 160px; vertical-align: middle; text-align: center; display: inline-flex; justify-content: center;"
+          style="align-items: center; width: 145px; vertical-align: middle; text-align: center; display: inline-flex; justify-content: center; height: 38px;"
           (click)="addVendor()">
           <i class="fa fa-plus"></i> <span>Add Vendor</span>
         </button>
@@ -21,9 +31,9 @@
     </div>
   </div>
 
-  <!-- KPI Summary Banner -->
+  <!-- Real KPI Summary Banner (6 Metrics) -->
   <div class="row mb-3">
-    <div class="col-lg-3 col-md-6 mb-2">
+    <div class="col-xl-2 col-md-4 col-sm-6 mb-2">
       <div class="kpi-card kpi-card-blue">
         <div class="kpi-icon"><i class="fa fa-building-o"></i></div>
         <div class="kpi-content">
@@ -32,7 +42,7 @@
         </div>
       </div>
     </div>
-    <div class="col-lg-3 col-md-6 mb-2">
+    <div class="col-xl-2 col-md-4 col-sm-6 mb-2">
       <div class="kpi-card kpi-card-green">
         <div class="kpi-icon"><i class="fa fa-check-circle-o"></i></div>
         <div class="kpi-content">
@@ -41,21 +51,39 @@
         </div>
       </div>
     </div>
-    <div class="col-lg-3 col-md-6 mb-2">
-      <div class="kpi-card kpi-card-orange">
-        <div class="kpi-icon"><i class="fa fa-tachometer"></i></div>
+    <div class="col-xl-2 col-md-4 col-sm-6 mb-2">
+      <div class="kpi-card kpi-card-purple">
+        <div class="kpi-icon"><i class="fa fa-id-card-o"></i></div>
         <div class="kpi-content">
-          <span class="kpi-title">Avg AI Score</span>
-          <span class="kpi-value">{{avgAiScore}}%</span>
+          <span class="kpi-title">KYC Verified</span>
+          <span class="kpi-value">{{kycVerifiedCount}}</span>
         </div>
       </div>
     </div>
-    <div class="col-lg-3 col-md-6 mb-2">
-      <div class="kpi-card kpi-card-purple">
-        <div class="kpi-icon"><i class="fa fa-shield"></i></div>
+    <div class="col-xl-2 col-md-4 col-sm-6 mb-2">
+      <div class="kpi-card kpi-card-red">
+        <div class="kpi-icon"><i class="fa fa-exclamation-triangle"></i></div>
         <div class="kpi-content">
-          <span class="kpi-title">Credentials Provided</span>
-          <span class="kpi-value">{{verifiedCredentialsCount}}</span>
+          <span class="kpi-title">Compliance Issues</span>
+          <span class="kpi-value">{{complianceIssuesCount}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-sm-6 mb-2">
+      <div class="kpi-card kpi-card-gold">
+        <div class="kpi-icon"><i class="fa fa-star"></i></div>
+        <div class="kpi-content">
+          <span class="kpi-title">AI Preferred (>80%)</span>
+          <span class="kpi-value">{{aiRecommendedCount}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-sm-6 mb-2">
+      <div class="kpi-card kpi-card-orange">
+        <div class="kpi-icon"><i class="fa fa-clock-o"></i></div>
+        <div class="kpi-content">
+          <span class="kpi-title">Pending Verification</span>
+          <span class="kpi-value">{{pendingVerificationCount}}</span>
         </div>
       </div>
     </div>
@@ -64,50 +92,51 @@
   <!-- Search & Smart Filters -->
   <div class="table-search">
     <div class="row">
-      <div class="col-md-3 mb-2 mb-md-0">
+      <div class="col-lg-3 col-md-6 mb-2">
         <div class="position-relative">
           <i class="fa fa-search position-absolute text-muted" style="top: 13px; left: 14px; font-size: 14px;"></i>
           <input type="text" class="main-input" [(ngModel)]="searchText" (ngModelChange)="applyFilters()"
-            placeholder="Search vendor name, code, category..." />
+            placeholder="Search name, code, GSTIN, PAN, email..." />
         </div>
       </div>
 
-      <div class="col-md-2 mb-2 mb-md-0">
+      <div class="col-lg-2 col-md-3 col-sm-6 mb-2">
         <select class="form-control select-input" [(ngModel)]="industryFilter" (change)="applyFilters()">
           <option value="">All Industries</option>
           <option *ngFor="let ind of availableIndustries" [value]="ind">{{ind}}</option>
         </select>
       </div>
 
-      <div class="col-md-2 mb-2 mb-md-0">
+      <div class="col-lg-2 col-md-3 col-sm-6 mb-2">
         <select class="form-control select-input" [(ngModel)]="categoryFilter" (change)="applyFilters()">
           <option value="">All Categories</option>
           <option *ngFor="let cat of availableCategories" [value]="cat">{{cat}}</option>
         </select>
       </div>
 
-      <div class="col-md-2 mb-2 mb-md-0">
+      <div class="col-lg-2 col-md-3 col-sm-6 mb-2">
         <select class="form-control select-input" [(ngModel)]="qualificationFilter" (change)="applyFilters()">
-          <option value="">All Qualification</option>
+          <option value="">All Qualifications</option>
           <option value="Qualified">Qualified</option>
           <option value="Pending">Pending</option>
           <option value="Unqualified">Unqualified</option>
         </select>
       </div>
 
-      <div class="col-md-2 mb-2 mb-md-0">
-        <select class="form-control select-input" [(ngModel)]="sourcingScopeFilter" (change)="applyFilters()">
-          <option value="">All Sourcing Modes</option>
-          <option value="Client Only">Client Only (Private)</option>
-          <option value="Client + Procucev">Hybrid (Client+Procucev)</option>
+      <div class="col-lg-2 col-md-3 col-sm-6 mb-2">
+        <select class="form-control select-input" [(ngModel)]="scoreFilter" (change)="applyFilters()">
+          <option value="">All AI Scores</option>
+          <option value="preferred">Preferred (>80%)</option>
+          <option value="high">High Fit (90%+)</option>
+          <option value="standard">Standard (Below 80%)</option>
         </select>
       </div>
 
-      <div class="col-md-1 text-right">
+      <div class="col-lg-1 col-md-2 text-right mb-2">
         <button class="btn btn-outline-secondary btn-block select-input p-0"
-          (click)="resetFilters()" title="Reset filters"
+          (click)="resetFilters()" title="Reset all filters"
           style="display: inline-flex; align-items: center; justify-content: center;">
-          <i class="fa fa-refresh"></i>
+          <i class="fa fa-refresh mr-1"></i> Reset
         </button>
       </div>
     </div>
@@ -124,29 +153,32 @@
     <table class="table vendor-table ai-analysis-table">
       <thead>
         <tr>
-          <th style="min-width: 120px;">Vendor Code</th>
-          <th style="min-width: 180px;">Vendor Name</th>
+          <th style="min-width: 110px;">Vendor Code</th>
+          <th style="min-width: 170px;">Vendor Name</th>
           <th style="min-width: 120px;">Industry</th>
-          <th style="min-width: 160px;">AI Category</th>
-          <th style="min-width: 200px;">Capabilities</th>
-          <th style="min-width: 130px;">Credentials</th>
-          <th style="min-width: 130px;">Qualification</th>
-          <th style="min-width: 110px;" class="text-center">AI Score</th>
-          <th style="min-width: 130px;" class="text-center">Sourcing Mode</th>
-          <th style="min-width: 140px;" class="text-center">Actions</th>
+          <th style="min-width: 140px;">AI Category</th>
+          <th style="min-width: 110px;">Group</th>
+          <th style="min-width: 110px;">Scope</th>
+          <th style="min-width: 110px;">Qualification</th>
+          <th style="min-width: 100px;" class="text-center">AI Score</th>
+          <th style="min-width: 120px;">KYC Status</th>
+          <th style="min-width: 110px;">Compliance</th>
+          <th style="min-width: 120px;" class="text-center">AI Status</th>
+          <th style="min-width: 160px;" class="text-center">Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let vendor of paginatedVendors">
           <!-- Vendor Code -->
           <td>
-            <span class="code-pill">{{vendor.vendorCode}}</span>
+            <span class="code-pill cursor-pointer" (click)="viewAiProfile(vendor)">{{vendor.vendorCode}}</span>
           </td>
 
-          <!-- Vendor Name & Alias -->
+          <!-- Vendor Name & Details -->
           <td>
-            <div class="font-weight-bold text-navy">{{vendor.vendorName}}</div>
+            <div class="font-weight-bold text-navy cursor-pointer" (click)="viewAiProfile(vendor)">{{vendor.vendorName}}</div>
             <div class="small text-muted" *ngIf="vendor.searchTerm">Alias: {{vendor.searchTerm}}</div>
+            <div class="small text-muted" *ngIf="vendor.contactInfo?.email"><i class="fa fa-envelope-o mr-1"></i>{{vendor.contactInfo.email}}</div>
           </td>
 
           <!-- Industry -->
@@ -162,27 +194,16 @@
             </span>
           </td>
 
-          <!-- Capabilities -->
+          <!-- Vendor Group -->
           <td>
-            <div class="capabilities-tags">
-              <span class="capability-tag" *ngFor="let cap of vendor.capabilities">
-                {{cap}}
-              </span>
-            </div>
+            <span class="badge-vendor-group">{{vendor.vendorGroup || 'Approved Vendor'}}</span>
           </td>
 
-          <!-- Credentials -->
+          <!-- Sourcing Scope -->
           <td>
-            <span class="badge-credential-verified" *ngIf="vendor.credentials.gstin.verified || vendor.credentials.pan.verified">
-              <i class="fa fa-check-circle text-success mr-1"></i> Provided
+            <span class="badge-scope" [ngClass]="vendor.sourcingScope === 'Client + Procucev' ? 'badge-scope-hybrid' : 'badge-scope-private'">
+              {{vendor.sourcingScope === 'Client + Procucev' ? 'Hybrid' : 'Private'}}
             </span>
-            <span class="badge-credential-pending" *ngIf="!vendor.credentials.gstin.verified && !vendor.credentials.pan.verified">
-              <i class="fa fa-clock-o text-warning mr-1"></i> Pending
-            </span>
-            <div class="small text-muted mt-1">
-              <span *ngIf="vendor.credentials.gstin.verified" title="GSTIN Provided" class="mr-1"><i class="fa fa-check text-success"></i> GST</span>
-              <span *ngIf="vendor.credentials.pan.verified" title="PAN Provided"><i class="fa fa-check text-success"></i> PAN</span>
-            </div>
           </td>
 
           <!-- Qualification -->
@@ -207,27 +228,63 @@
             </div>
           </td>
 
-          <!-- Sourcing Scope -->
+          <!-- KYC / Verification -->
+          <td>
+            <span class="badge-credential-verified" *ngIf="vendor.credentials.gstin.verified && vendor.credentials.pan.verified">
+              <i class="fa fa-check-circle text-success mr-1"></i> VERIFIED
+            </span>
+            <span class="badge-credential-pending" *ngIf="vendor.credentials.gstin.verified !== vendor.credentials.pan.verified">
+              <i class="fa fa-adjust text-warning mr-1"></i> PARTIAL
+            </span>
+            <span class="badge-credential-pending" *ngIf="!vendor.credentials.gstin.verified && !vendor.credentials.pan.verified">
+              <i class="fa fa-clock-o text-warning mr-1"></i> PENDING
+            </span>
+            <div class="small text-muted mt-1">
+              <span *ngIf="vendor.credentials.gstin.verified" title="GSTIN Provided" class="mr-1"><i class="fa fa-check text-success"></i> GST</span>
+              <span *ngIf="vendor.credentials.pan.verified" title="PAN Provided"><i class="fa fa-check text-success"></i> PAN</span>
+            </div>
+          </td>
+
+          <!-- Compliance -->
+          <td>
+            <span class="badge-compliance" [ngClass]="vendor.complianceStatus === 'Compliant' || vendor.complianceStatus === 'Fully Compliant' ? 'badge-compliance-ok' : 'badge-compliance-warn'">
+              <i class="fa" [ngClass]="vendor.complianceStatus === 'Compliant' || vendor.complianceStatus === 'Fully Compliant' ? 'fa-shield text-success' : 'fa-exclamation-circle text-warning'"></i>
+              {{vendor.complianceStatus || 'Compliant'}}
+            </span>
+          </td>
+
+          <!-- AI Status (Preferred Vendor Logic) -->
           <td class="text-center">
-            <span class="badge-scope" [ngClass]="vendor.sourcingScope === 'Client + Procucev' ? 'badge-scope-hybrid' : 'badge-scope-private'">
-              {{vendor.sourcingScope || 'Client Only'}}
+            <span class="badge-preferred-vendor" *ngIf="isPreferredVendor(vendor)" title="Score > 80% — Preferred Vendor">
+              <i class="fa fa-star mr-1"></i> PREFERRED
+            </span>
+            <span class="badge-standard-vendor" *ngIf="!isPreferredVendor(vendor)" title="Score <= 80% — Standard Review">
+              STANDARD
             </span>
           </td>
 
           <!-- Actions -->
           <td class="text-center">
-            <button class="btn btn-sm btn-action-profile" (click)="viewAiProfile(vendor)" title="View Profile">
-              View Profile
-            </button>
-            <button type="button" class="btn-skelton ml-1" (click)="editVendor(vendor)" title="Edit Vendor Details">
-              <img class="cursor-pointer" src="/assets/images/new/edit-data.png" alt="Edit">
-            </button>
+            <div class="btn-group btn-group-sm" role="group">
+              <button class="btn btn-sm btn-action-profile" (click)="viewAiProfile(vendor)" title="View Full AI Profile">
+                View Profile
+              </button>
+              <button class="btn btn-sm btn-outline-info ml-1" (click)="viewDocuments(vendor)" title="View Vendor Documents">
+                <i class="fa fa-file-text-o"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-primary ml-1" (click)="viewPerformance(vendor)" title="View Performance Metrics">
+                <i class="fa fa-line-chart"></i>
+              </button>
+              <button type="button" class="btn-skelton ml-1" (click)="editVendor(vendor)" title="Edit Vendor">
+                <img class="cursor-pointer" src="/assets/images/new/edit-data.png" alt="Edit" style="width: 16px; height: 16px;">
+              </button>
+            </div>
           </td>
         </tr>
 
         <!-- Empty State -->
         <tr *ngIf="filteredVendors.length === 0">
-          <td colspan="10" class="text-center py-5 text-muted">
+          <td colspan="12" class="text-center py-5 text-muted">
             <i class="fa fa-inbox fa-3x mb-2 text-muted"></i>
             <p class="font-weight-600 mb-1">No vendors found matching your filter criteria.</p>
             <small class="text-muted">Upload an Excel file or click "Add Vendor" to onboard suppliers.</small>

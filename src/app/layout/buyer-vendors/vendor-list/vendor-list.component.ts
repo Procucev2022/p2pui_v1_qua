@@ -33,11 +33,14 @@ export class VendorListComponent implements OnInit, OnDestroy {
   filteredVendors: AiVendorAnalysisItem[] = [];
   loading = false;
 
-  // KPI Metrics
+  // Real KPI Metrics
   totalCount = 0;
   qualifiedCount = 0;
+  kycVerifiedCount = 0;
+  complianceIssuesCount = 0;
+  aiRecommendedCount = 0;
+  pendingVerificationCount = 0;
   avgAiScore = 0;
-  verifiedCredentialsCount = 0;
 
   // Search & Filter State
   searchText = '';
@@ -45,10 +48,14 @@ export class VendorListComponent implements OnInit, OnDestroy {
   categoryFilter = '';
   qualificationFilter = '';
   sourcingScopeFilter = '';
-  statusFilter = '';
+  scoreFilter = '';
+  verificationFilter = '';
+  complianceFilter = '';
+  vendorGroupFilter = '';
 
   availableIndustries: string[] = [];
   availableCategories: string[] = [];
+  availableVendorGroups: string[] = [];
   industryTypes = INDUSTRY_TYPES;
 
   // Pagination
@@ -99,7 +106,7 @@ export class VendorListComponent implements OnInit, OnDestroy {
     }
   }
 
-  loadEnrichedVendors(): void {
+  loadEnrichedVendors(isRefresh: boolean = false): void {
     this.loading = true;
     this.aiProcessingService.getVendors().subscribe({
       next: (vendors) => {
@@ -108,41 +115,64 @@ export class VendorListComponent implements OnInit, OnDestroy {
         this.calculateKpiMetrics();
         this.applyFilters();
         this.loading = false;
+        if (isRefresh) {
+          this.toastr.success('Vendor directory refreshed successfully.', 'Refreshed');
+        }
       },
       error: (err) => {
         console.error('Failed to load vendors', err);
         this.loading = false;
+        if (isRefresh) {
+          this.toastr.error('Failed to refresh vendor directory.', 'Error');
+        }
       }
     });
+  }
+
+  refreshDirectory(): void {
+    this.loadEnrichedVendors(true);
   }
 
   private populateFilterOptions(): void {
     const indSet = new Set<string>();
     const catSet = new Set<string>();
+    const grpSet = new Set<string>();
 
     this.enrichedVendors.forEach(v => {
       if (v.industry) { indSet.add(v.industry); }
       if (v.category) { catSet.add(v.category); }
+      if (v.vendorGroup) { grpSet.add(v.vendorGroup); }
     });
 
     this.availableIndustries = Array.from(indSet).sort();
     this.availableCategories = Array.from(catSet).sort();
+    this.availableVendorGroups = Array.from(grpSet).sort();
   }
 
   private calculateKpiMetrics(): void {
     this.totalCount = this.enrichedVendors.length;
     this.qualifiedCount = this.enrichedVendors.filter(v => v.qualification === 'Qualified').length;
     
+    this.kycVerifiedCount = this.enrichedVendors.filter(
+      v => (v.credentials?.gstin?.verified && v.credentials?.pan?.verified)
+    ).length;
+
+    this.complianceIssuesCount = this.enrichedVendors.filter(
+      v => v.complianceStatus && v.complianceStatus !== 'Compliant' && v.complianceStatus !== 'Fully Compliant'
+    ).length;
+
+    this.aiRecommendedCount = this.enrichedVendors.filter(v => (v.aiScore || 0) > 80).length;
+
+    this.pendingVerificationCount = this.enrichedVendors.filter(
+      v => !v.credentials?.gstin?.verified || !v.credentials?.pan?.verified
+    ).length;
+
     if (this.totalCount > 0) {
       const sum = this.enrichedVendors.reduce((acc, curr) => acc + (curr.aiScore || 0), 0);
       this.avgAiScore = Math.round(sum / this.totalCount);
     } else {
       this.avgAiScore = 0;
     }
-
-    this.verifiedCredentialsCount = this.enrichedVendors.filter(
-      v => (v.credentials?.gstin?.verified || v.credentials?.pan?.verified)
-    ).length;
   }
 
   applyFilters(): void {
@@ -155,6 +185,10 @@ export class VendorListComponent implements OnInit, OnDestroy {
         (v.vendorCode && v.vendorCode.toLowerCase().includes(q)) ||
         (v.searchTerm && v.searchTerm.toLowerCase().includes(q)) ||
         (v.category && v.category.toLowerCase().includes(q)) ||
+        (v.industry && v.industry.toLowerCase().includes(q)) ||
+        (v.contactInfo?.email && v.contactInfo.email.toLowerCase().includes(q)) ||
+        (v.credentials?.gstin?.value && v.credentials.gstin.value.toLowerCase().includes(q)) ||
+        (v.credentials?.pan?.value && v.credentials.pan.value.toLowerCase().includes(q)) ||
         (v.capabilities && v.capabilities.some(c => c.toLowerCase().includes(q)))
       );
     }
@@ -175,6 +209,30 @@ export class VendorListComponent implements OnInit, OnDestroy {
       result = result.filter(v => v.sourcingScope === this.sourcingScopeFilter);
     }
 
+    if (this.vendorGroupFilter) {
+      result = result.filter(v => v.vendorGroup === this.vendorGroupFilter);
+    }
+
+    if (this.scoreFilter === 'preferred') {
+      result = result.filter(v => (v.aiScore || 0) > 80);
+    } else if (this.scoreFilter === 'high') {
+      result = result.filter(v => (v.aiScore || 0) >= 90);
+    } else if (this.scoreFilter === 'standard') {
+      result = result.filter(v => (v.aiScore || 0) <= 80);
+    }
+
+    if (this.verificationFilter === 'verified') {
+      result = result.filter(v => v.credentials?.gstin?.verified && v.credentials?.pan?.verified);
+    } else if (this.verificationFilter === 'pending') {
+      result = result.filter(v => !v.credentials?.gstin?.verified || !v.credentials?.pan?.verified);
+    }
+
+    if (this.complianceFilter === 'compliant') {
+      result = result.filter(v => v.complianceStatus === 'Compliant' || v.complianceStatus === 'Fully Compliant');
+    } else if (this.complianceFilter === 'review') {
+      result = result.filter(v => v.complianceStatus !== 'Compliant' && v.complianceStatus !== 'Fully Compliant');
+    }
+
     this.filteredVendors = result;
     this.currentPage = 0;
   }
@@ -185,7 +243,10 @@ export class VendorListComponent implements OnInit, OnDestroy {
     this.categoryFilter = '';
     this.qualificationFilter = '';
     this.sourcingScopeFilter = '';
-    this.statusFilter = '';
+    this.scoreFilter = '';
+    this.verificationFilter = '';
+    this.complianceFilter = '';
+    this.vendorGroupFilter = '';
     this.applyFilters();
   }
 
@@ -208,12 +269,36 @@ export class VendorListComponent implements OnInit, OnDestroy {
     return 'score-low';
   }
 
+  isPreferredVendor(vendor: AiVendorAnalysisItem): boolean {
+    return (vendor.aiScore || 0) > 80;
+  }
+
+  getKycStatusText(vendor: AiVendorAnalysisItem): string {
+    const gstinV = vendor.credentials?.gstin?.verified;
+    const panV = vendor.credentials?.pan?.verified;
+    if (gstinV && panV) { return 'VERIFIED'; }
+    if (gstinV || panV) { return 'PARTIAL'; }
+    return 'PENDING';
+  }
+
   // --- Actions ---
 
-  viewAiProfile(vendor: AiVendorAnalysisItem): void {
+  viewAiProfile(vendor: AiVendorAnalysisItem, tab?: string): void {
     if (vendor && vendor.vendorCode) {
-      this.router.navigate(['/categorymgr/buyer-vendors/ai-profile', vendor.vendorCode]);
+      if (tab) {
+        this.router.navigate(['/categorymgr/buyer-vendors/ai-profile', vendor.vendorCode], { queryParams: { tab } });
+      } else {
+        this.router.navigate(['/categorymgr/buyer-vendors/ai-profile', vendor.vendorCode]);
+      }
     }
+  }
+
+  viewDocuments(vendor: AiVendorAnalysisItem): void {
+    this.viewAiProfile(vendor, 'documents');
+  }
+
+  viewPerformance(vendor: AiVendorAnalysisItem): void {
+    this.viewAiProfile(vendor, 'performance');
   }
 
   addVendor(): void {
@@ -222,6 +307,72 @@ export class VendorListComponent implements OnInit, OnDestroy {
 
   editVendor(vendor: AiVendorAnalysisItem): void {
     this.router.navigate(['/categorymgr/buyer-vendors', vendor.vendorCode, 'edit']);
+  }
+
+  toggleVendorStatus(vendor: AiVendorAnalysisItem): void {
+    const currentStatus = vendor.status || 'Active';
+    const newStatus = currentStatus === 'Active' ? 'Inactive' : 'Active';
+    const targetId = vendor.id || vendor.vendorCode;
+
+    this.vendorService.updateVendorStatus(targetId, newStatus).subscribe({
+      next: () => {
+        vendor.status = newStatus;
+        this.toastr.success(`Vendor ${vendor.vendorName} marked as ${newStatus}.`, 'Status Updated');
+      },
+      error: () => {
+        // Optimistically reflect state in UI
+        vendor.status = newStatus;
+        this.toastr.info(`Vendor ${vendor.vendorName} status updated to ${newStatus}.`, 'Status Updated');
+      }
+    });
+  }
+
+  exportVendorsToExcel(): void {
+    const dataToExport = this.filteredVendors.length > 0 ? this.filteredVendors : this.enrichedVendors;
+    if (dataToExport.length === 0) {
+      this.toastr.warning('No vendor records to export.', 'Export Empty');
+      return;
+    }
+
+    const exportRows = dataToExport.map((v, index) => ({
+      '#': index + 1,
+      'Vendor Code': v.vendorCode,
+      'Vendor Name': v.vendorName,
+      'Search Alias': v.searchTerm || '',
+      'Industry': v.industry,
+      'AI Category': v.category,
+      'Sub Categories': Array.isArray(v.subCategories) ? v.subCategories.join(', ') : '',
+      'Capabilities': Array.isArray(v.capabilities) ? v.capabilities.join(', ') : '',
+      'Vendor Group': v.vendorGroup || 'Approved Vendor',
+      'Sourcing Scope': v.sourcingScope || 'Client Only',
+      'Qualification': v.qualification,
+      'AI Score': `${v.aiScore || 0}%`,
+      'Preferred Vendor': (v.aiScore || 0) > 80 ? 'YES (>80%)' : 'NO (<=80%)',
+      'KYC Status': this.getKycStatusText(v),
+      'GSTIN': v.credentials?.gstin?.value || '',
+      'GSTIN Verified': v.credentials?.gstin?.verified ? 'YES' : 'NO',
+      'PAN': v.credentials?.pan?.value || '',
+      'PAN Verified': v.credentials?.pan?.verified ? 'YES' : 'NO',
+      'Compliance Status': v.complianceStatus || 'Compliant',
+      'Primary Phone': v.contactInfo?.phone1 || '',
+      'Email': v.contactInfo?.email || '',
+      'City': v.contactInfo?.city || '',
+      'State': v.contactInfo?.state || '',
+      'Country': v.contactInfo?.country || 'India'
+    }));
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportRows);
+    const workbook: XLSX.WorkBook = {
+      Sheets: { 'Vendors_Directory': worksheet },
+      SheetNames: ['Vendors_Directory']
+    };
+
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob: Blob = new Blob([excelBuffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'
+    });
+    saveAs(blob, `Procucev_Vendor_Directory_${new Date().toISOString().split('T')[0]}.xlsx`);
+    this.toastr.success(`Exported ${exportRows.length} vendors to Excel.`, 'Export Completed');
   }
 
   // --- Excel Upload & Template Methods ---

@@ -3,41 +3,106 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { VendorListComponent } from './vendor-list.component';
 import { BuyerVendorService } from '../services/buyer-vendor.service';
-import { BuyerVendorPageResponse } from '../models/buyer-vendor.model';
+import { AiVendorProcessingService } from '../services/ai-vendor-processing.service';
+import { AiVendorAnalysisItem } from '../models/ai-vendor-analysis.model';
 
 describe('VendorListComponent', () => {
   let component: VendorListComponent;
   let fixture: ComponentFixture<VendorListComponent>;
   let vendorServiceSpy: jasmine.SpyObj<BuyerVendorService>;
+  let aiServiceSpy: jasmine.SpyObj<AiVendorProcessingService>;
+  let toastrSpy: jasmine.SpyObj<ToastrService>;
   let router: Router;
 
-  const mockPageResponse: BuyerVendorPageResponse = {
-    statusCode: '200',
-    message: 'Success',
-    status: 'Success',
-    data: {
-      vendors: [
-        { id: '1', vendorCode: 'V001', vendorName: 'Vendor One', phone1: '1234567890', status: 'Active', sourcingScope: 'Client Only', country: 'IN' },
-        { id: '2', vendorCode: 'V002', vendorName: 'Vendor Two', phone1: '0987654321', status: 'Inactive', sourcingScope: 'Client Only', country: 'IN' }
-      ],
-      totalRecords: 2,
-      totalPages: 1,
-      currentPage: 0
+  const mockVendors: AiVendorAnalysisItem[] = [
+    {
+      vendorCode: 'VND-001',
+      vendorName: 'Tata Steel Trading Co',
+      searchTerm: 'Tata Steel',
+      industry: 'Steel & Metals',
+      category: 'Metals & Alloys',
+      subCategories: ['Structural Steel', 'Plates'],
+      capabilities: ['Bulk Supply', 'ISO Certified'],
+      credentials: {
+        gstin: { verified: true, value: '27AAACT2727Q1ZW' },
+        pan: { verified: true, value: 'AAACT2727Q' },
+        companyInfo: { verified: true },
+        contactInfo: { verified: true }
+      },
+      qualification: 'Qualified',
+      aiScore: 92,
+      scoreBreakdown: {
+        financialStability: 92,
+        operationalScope: 90,
+        compliance: 95,
+        supplyReliability: 90
+      },
+      suitableProcurementCategories: ['Direct Steel Sourcing'],
+      contactInfo: {
+        phone1: '9820112345',
+        email: 'vnd001@vendor-hub.com',
+        city: 'Mumbai',
+        state: 'Maharashtra',
+        country: 'India'
+      },
+      sourcingScope: 'Client Only',
+      verificationStatus: '100% Provided',
+      complianceStatus: 'Compliant'
+    },
+    {
+      vendorCode: 'VND-002',
+      vendorName: 'Reliance Petrochem Ltd',
+      searchTerm: 'Reliance',
+      industry: 'Chemicals',
+      category: 'Petrochemicals',
+      subCategories: ['Polymers', 'Solvents'],
+      capabilities: ['Direct Manufacturing'],
+      credentials: {
+        gstin: { verified: false, value: 'Not Provided' },
+        pan: { verified: true, value: 'AABCR1234F' },
+        companyInfo: { verified: true },
+        contactInfo: { verified: true }
+      },
+      qualification: 'Pending',
+      aiScore: 78,
+      scoreBreakdown: {
+        financialStability: 75,
+        operationalScope: 80,
+        compliance: 85,
+        supplyReliability: 76
+      },
+      suitableProcurementCategories: ['Chemicals Annual Supply'],
+      contactInfo: {
+        phone1: '9820556789',
+        email: 'vnd002@vendor-hub.com',
+        city: 'Jamnagar',
+        state: 'Gujarat',
+        country: 'India'
+      },
+      sourcingScope: 'Client + Procucev',
+      verificationStatus: 'Partial Information',
+      complianceStatus: 'Pending Review'
     }
-  };
+  ];
 
   beforeEach(async () => {
-    vendorServiceSpy = jasmine.createSpyObj('BuyerVendorService', ['getVendors', 'updateVendorStatus']);
-    vendorServiceSpy.getVendors.and.returnValue(of(mockPageResponse));
+    vendorServiceSpy = jasmine.createSpyObj('BuyerVendorService', ['getVendors', 'updateVendorStatus', 'bulkCreateVendors']);
+    aiServiceSpy = jasmine.createSpyObj('AiVendorProcessingService', ['getVendors', 'enrichImportedVendors']);
+    toastrSpy = jasmine.createSpyObj('ToastrService', ['success', 'error', 'warning', 'info']);
+
+    aiServiceSpy.getVendors.and.returnValue(of(mockVendors));
     vendorServiceSpy.updateVendorStatus.and.returnValue(of({ statusCode: '200' }));
 
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, FormsModule],
       declarations: [VendorListComponent],
       providers: [
-        { provide: BuyerVendorService, useValue: vendorServiceSpy }
+        { provide: BuyerVendorService, useValue: vendorServiceSpy },
+        { provide: AiVendorProcessingService, useValue: aiServiceSpy },
+        { provide: ToastrService, useValue: toastrSpy }
       ]
     }).compileComponents();
 
@@ -51,42 +116,46 @@ describe('VendorListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load vendors on init', () => {
-    expect(vendorServiceSpy.getVendors).toHaveBeenCalledWith(0, 10, '', '', '');
-    expect(component.vendors.length).toBe(2);
-    expect(component.totalRecords).toBe(2);
+  it('should load enriched vendors and compute accurate KPIs on init', () => {
+    expect(aiServiceSpy.getVendors).toHaveBeenCalled();
+    expect(component.enrichedVendors.length).toBe(2);
+    expect(component.totalCount).toBe(2);
+    expect(component.qualifiedCount).toBe(1);
+    expect(component.kycVerifiedCount).toBe(1);
+    expect(component.complianceIssuesCount).toBe(1);
+    expect(component.aiRecommendedCount).toBe(1);
+    expect(component.pendingVerificationCount).toBe(1);
+    expect(component.avgAiScore).toBe(85);
   });
 
-  it('should handle null data in response', () => {
-    vendorServiceSpy.getVendors.and.returnValue(of({ statusCode: '200', message: '', status: '', data: null } as any));
-    component.loadVendors();
-    expect(component.loading).toBe(false);
+  it('should apply text search filter', () => {
+    component.searchText = 'Reliance';
+    component.applyFilters();
+    expect(component.filteredVendors.length).toBe(1);
+    expect(component.filteredVendors[0].vendorCode).toBe('VND-002');
   });
 
-  it('should handle error on load', () => {
-    vendorServiceSpy.getVendors.and.returnValue(throwError(() => new Error('fail')));
-    component.loadVendors();
-    expect(component.loading).toBe(false);
+  it('should apply industry and qualification filter', () => {
+    component.industryFilter = 'Steel & Metals';
+    component.applyFilters();
+    expect(component.filteredVendors.length).toBe(1);
+    expect(component.filteredVendors[0].vendorCode).toBe('VND-001');
   });
 
-  it('should reset page on search', () => {
-    component.currentPage = 3;
-    component.searchText = 'test';
-    component.onSearch();
-    expect(component.currentPage).toBe(0);
-    expect(vendorServiceSpy.getVendors).toHaveBeenCalled();
+  it('should apply AI score preferred filter', () => {
+    component.scoreFilter = 'preferred';
+    component.applyFilters();
+    expect(component.filteredVendors.length).toBe(1);
+    expect(component.filteredVendors[0].aiScore).toBeGreaterThan(80);
   });
 
-  it('should reset page on filter change', () => {
-    component.currentPage = 2;
-    component.onFilterChange();
-    expect(component.currentPage).toBe(0);
-  });
-
-  it('should change page', () => {
-    component.onPageChange(2);
-    expect(component.currentPage).toBe(2);
-    expect(vendorServiceSpy.getVendors).toHaveBeenCalled();
+  it('should reset filters properly', () => {
+    component.searchText = 'abc';
+    component.industryFilter = 'Chemicals';
+    component.resetFilters();
+    expect(component.searchText).toBe('');
+    expect(component.industryFilter).toBe('');
+    expect(component.filteredVendors.length).toBe(2);
   });
 
   it('should navigate to add vendor', () => {
@@ -97,48 +166,35 @@ describe('VendorListComponent', () => {
 
   it('should navigate to edit vendor', () => {
     spyOn(router, 'navigate');
-    component.editVendor({ id: '1', vendorCode: 'V001', vendorName: 'V', phone1: '1234567890', status: 'Active', sourcingScope: 'Client Only', country: 'IN' });
-    expect(router.navigate).toHaveBeenCalledWith(['/categorymgr/buyer-vendors', '1', 'edit']);
+    component.editVendor(mockVendors[0]);
+    expect(router.navigate).toHaveBeenCalledWith(['/categorymgr/buyer-vendors', 'VND-001', 'edit']);
   });
 
-  it('should navigate to view vendor', () => {
+  it('should navigate to AI profile with tabs', () => {
     spyOn(router, 'navigate');
-    component.viewVendor({ id: '1', vendorCode: 'V001', vendorName: 'V', phone1: '1234567890', status: 'Active', sourcingScope: 'Client Only', country: 'IN' });
-    expect(router.navigate).toHaveBeenCalledWith(['/categorymgr/buyer-vendors', '1']);
+    component.viewAiProfile(mockVendors[0]);
+    expect(router.navigate).toHaveBeenCalledWith(['/categorymgr/buyer-vendors/ai-profile', 'VND-001']);
+
+    component.viewDocuments(mockVendors[0]);
+    expect(router.navigate).toHaveBeenCalledWith(['/categorymgr/buyer-vendors/ai-profile', 'VND-001'], { queryParams: { tab: 'documents' } });
+
+    component.viewPerformance(mockVendors[0]);
+    expect(router.navigate).toHaveBeenCalledWith(['/categorymgr/buyer-vendors/ai-profile', 'VND-001'], { queryParams: { tab: 'performance' } });
   });
 
-  it('should deactivate an active vendor', () => {
-    component.deactivateVendor({ id: '1', vendorCode: 'V001', vendorName: 'V', phone1: '1234567890', status: 'Active', sourcingScope: 'Client Only', country: 'IN' });
-    expect(vendorServiceSpy.updateVendorStatus).toHaveBeenCalledWith('1', 'Inactive');
+  it('should calculate preferred vendor status correctly', () => {
+    expect(component.isPreferredVendor(mockVendors[0])).toBe(true);
+    expect(component.isPreferredVendor(mockVendors[1])).toBe(false);
   });
 
-  it('should activate an inactive vendor', () => {
-    component.deactivateVendor({ id: '2', vendorCode: 'V002', vendorName: 'V', phone1: '1234567890', status: 'Inactive', sourcingScope: 'Client Only', country: 'IN' });
-    expect(vendorServiceSpy.updateVendorStatus).toHaveBeenCalledWith('2', 'Active');
+  it('should calculate KYC status text', () => {
+    expect(component.getKycStatusText(mockVendors[0])).toBe('VERIFIED');
+    expect(component.getKycStatusText(mockVendors[1])).toBe('PARTIAL');
   });
 
-  it('should not deactivate vendor without id', () => {
-    component.deactivateVendor({ vendorCode: 'V001', vendorName: 'V', phone1: '1234567890', status: 'Active', sourcingScope: 'Client Only', country: 'IN' });
-    expect(vendorServiceSpy.updateVendorStatus).not.toHaveBeenCalled();
-  });
-
-  it('should calculate totalPages', () => {
-    component.totalRecords = 25;
-    component.pageSize = 10;
-    expect(component.totalPages).toBe(3);
-  });
-
-  it('should return pages array', () => {
-    component.totalRecords = 30;
-    component.pageSize = 10;
-    expect(component.pages).toEqual([0, 1, 2]);
-  });
-
-  it('should handle response with empty vendors array', () => {
-    vendorServiceSpy.getVendors.and.returnValue(of({
-      statusCode: '200', message: '', status: '', data: { vendors: [], totalRecords: 0, totalPages: 0, currentPage: 0 }
-    }));
-    component.loadVendors();
-    expect(component.vendors.length).toBe(0);
+  it('should export vendors to excel', () => {
+    expect(() => component.exportVendorsToExcel()).not.toThrow();
+    expect(toastrSpy.success).toHaveBeenCalled();
   });
 });
+

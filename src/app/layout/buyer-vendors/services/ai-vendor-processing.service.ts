@@ -112,65 +112,62 @@ export class AiVendorProcessingService {
       vendorCode: p.vendorCode || '',
       vendorName: p.vendorName || '',
       searchTerm: p.searchTerm || p.vendorName || '',
-      industry: p.industry || 'Manufacturing & Industrial',
-      category: p.category || 'Industrial Goods & Assemblies',
-      subCategories: subCategories.length ? subCategories : ['Standard Components', 'OEM Spare Parts'],
-      capabilities: capabilities.length ? capabilities : ['Quality Assured Batching', 'Just-In-Time Delivery'],
+      industry: p.industry || '',
+      category: p.category || '',
+      subCategories: subCategories,
+      capabilities: capabilities,
       credentials: {
         gstin: {
           verified: hasGstin,
-          value: p.gstin || 'Not Provided',
-          verifiedDate: (p.createdTS ? p.createdTS.split('T')[0] : new Date().toISOString().split('T')[0]),
-          source: hasGstin ? 'Provided in Import' : 'Missing'
+          value: p.gstin || '',
+          verifiedDate: (p.createdTS ? p.createdTS.split('T')[0] : ''),
+          source: hasGstin ? 'Imported Master Record' : 'Missing'
         },
         pan: {
           verified: hasPan,
-          value: p.pan || 'Not Provided',
-          verifiedDate: (p.createdTS ? p.createdTS.split('T')[0] : new Date().toISOString().split('T')[0]),
-          source: hasPan ? 'Provided in Import' : 'Missing'
+          value: p.pan || '',
+          verifiedDate: (p.createdTS ? p.createdTS.split('T')[0] : ''),
+          source: hasPan ? 'Imported Master Record' : 'Missing'
         },
         companyInfo: {
           verified: hasAddress,
-          value: p.typeOfBusiness ? `${p.typeOfBusiness} - ${p.city || 'India'}` : 'Details Provided',
-          verifiedDate: (p.createdTS ? p.createdTS.split('T')[0] : new Date().toISOString().split('T')[0]),
+          value: p.typeOfBusiness ? `${p.typeOfBusiness}${p.city ? ' - ' + p.city : ''}` : (hasAddress ? 'Address Provided' : ''),
+          verifiedDate: (p.createdTS ? p.createdTS.split('T')[0] : ''),
           source: 'Master Data Record'
         },
         contactInfo: {
           verified: hasPhone,
-          value: p.phone1 ? `+91-${p.phone1}` : 'Phone Not Provided',
-          verifiedDate: (p.createdTS ? p.createdTS.split('T')[0] : new Date().toISOString().split('T')[0]),
-          source: 'Primary Phone Field'
+          value: p.phone1 ? p.phone1 : '',
+          verifiedDate: (p.createdTS ? p.createdTS.split('T')[0] : ''),
+          source: 'Primary Phone'
         }
       },
-      qualification: p.qualification || 'Qualified',
-      aiScore: p.aiScore || 90,
+      qualification: p.qualification || 'Pending',
+      aiScore: typeof p.aiScore === 'number' ? p.aiScore : (p.aiScore ? Number(p.aiScore) : 0),
       scoreBreakdown: {
-        financialStability: p.financialStability || 90,
-        operationalScope: p.operationalScope || 90,
-        compliance: p.complianceScore || 95,
-        supplyReliability: p.supplyReliability || 90
+        financialStability: p.financialStability || 0,
+        operationalScope: p.operationalScope || 0,
+        compliance: p.complianceScore || 0,
+        supplyReliability: p.supplyReliability || 0
       },
-      suitableProcurementCategories: suitableCategories.length ? suitableCategories : [
-        `${p.industry || 'General'} Direct Sourcing`,
-        `${p.category || 'Standard'} Annual Contract`
-      ],
+      suitableProcurementCategories: suitableCategories,
       contactInfo: {
         phone1: p.phone1 || '',
         phone2: p.phone2 || '',
-        email: p.email || `${(p.vendorCode || 'vnd').toLowerCase()}@vendor-hub.com`,
+        email: p.email || '',
         addressLine: p.addressLine || '',
         city: p.city || '',
         district: p.district || p.city || '',
         state: p.state || p.regionCode || '',
         postalCode: p.postalCode || '',
-        country: p.country || 'India'
+        country: p.country || ''
       },
-      typeOfBusiness: p.typeOfBusiness || 'Authorized Enterprise',
-      vendorGroup: p.vendorGroup || 'Approved Vendor',
+      typeOfBusiness: p.typeOfBusiness || '',
+      vendorGroup: p.vendorGroup || '',
       sourcingScope: p.sourcingScope || 'Client Only',
-      verificationStatus: p.verificationStatus || (hasGstin && hasPan ? '100% Provided' : 'Partial Information'),
+      verificationStatus: p.verificationStatus || (hasGstin && hasPan ? '100% Provided' : (hasGstin || hasPan ? 'Partial Information' : 'Pending Verification')),
       complianceStatus: p.complianceStatus || (hasGstin && hasPan ? 'Compliant' : 'Pending Review'),
-      processedAt: p.createdTS || new Date().toISOString()
+      processedAt: p.createdTS || ''
     };
   }
 }

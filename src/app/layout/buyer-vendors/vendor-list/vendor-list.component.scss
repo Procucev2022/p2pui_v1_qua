@@ -90,6 +90,8 @@
   &.kpi-card-green .kpi-icon { background: #dcfce7; color: #16a34a; }
   &.kpi-card-orange .kpi-icon { background: #ffedd5; color: #ea580c; }
   &.kpi-card-purple .kpi-icon { background: #f3e8ff; color: #9333ea; }
+  &.kpi-card-red .kpi-icon { background: #fee2e2; color: #dc2626; }
+  &.kpi-card-gold .kpi-icon { background: #fef3c7; color: #d97706; }
 }
 
 .table-search {
@@ -241,6 +243,59 @@
     color: #6d28d9;
     border: 1px solid #ddd6fe;
   }
+}
+
+.badge-vendor-group {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: #f8fafc;
+  color: #334155;
+  border: 1px solid #e2e8f0;
+  display: inline-block;
+}
+
+.badge-compliance {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  &.badge-compliance-ok {
+    background: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+  }
+  &.badge-compliance-warn {
+    background: #fffbeb;
+    color: #b45309;
+    border: 1px solid #fde68a;
+  }
+}
+
+.badge-preferred-vendor {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 12px;
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fcd34d;
+  display: inline-block;
+  letter-spacing: 0.5px;
+}
+
+.badge-standard-vendor {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 12px;
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+  display: inline-block;
+  letter-spacing: 0.5px;
 }
 
 .score-container {
