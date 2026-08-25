@@ -26,6 +26,7 @@ describe('layout-route-loaders', () => {
     category: 'CategoryModule',
     config: 'ConfigurationsModule',
     bfs: 'BfsModule',
+    'buyer-dashboard': 'BuyerDashboardModule',
   };
 
   it('should load modules via fixtures for every key (Edge-safe)', async () => {

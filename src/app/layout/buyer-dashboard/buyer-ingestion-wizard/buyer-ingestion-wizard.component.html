@@ -1,0 +1,301 @@
+<div class="wizard-page-container">
+
+  <!-- Toast Notification -->
+  <div class="feedback-toast" *ngIf="toastMessage" id="wizard-feedback-toast">
+    <i class="fa fa-info-circle toast-icon"></i>
+    <span>{{ toastMessage }}</span>
+    <button class="toast-close" (click)="toastMessage = null">✕</button>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- PAGE HEADER                                              -->
+  <!-- ======================================================== -->
+  <header class="wizard-header" id="wizard-page-header">
+    <div class="header-left">
+      <div class="title-row">
+        <h1 class="page-title">AI Ingestion &amp; Sourcing Mode Selection Wizard</h1>
+        <span class="screen-badge" id="badge-screen-1-2">SCREEN 1.2</span>
+      </div>
+      <p class="page-subtitle">
+        Automated document entity parsing, verification, and autonomous vendor pool routing.
+      </p>
+    </div>
+
+    <div class="header-right">
+      <button class="btn btn-exit-wizard" (click)="exitWizard()" id="btn-exit-wizard">
+        Exit Wizard
+      </button>
+    </div>
+  </header>
+
+  <!-- ======================================================== -->
+  <!-- WIZARD STEP NAVIGATION TABS                              -->
+  <!-- ======================================================== -->
+  <section class="wizard-steps-grid" id="wizard-steps-nav">
+    <!-- Step 1 Tab -->
+    <div 
+      class="wizard-step-card" 
+      [class.active]="currentStep === 1"
+      [class.completed]="currentStep > 1"
+      (click)="goToStep(1)"
+      id="step-tab-1"
+    >
+      <div class="step-card-content">
+        <div class="step-title-row">
+          <span class="step-number-title">1. STEP 1: INGESTION</span>
+          <span class="step-tag-pill">Document OCR</span>
+        </div>
+        <p class="step-desc">Drag &amp; drop BOQ file or email</p>
+      </div>
+    </div>
+
+    <!-- Step 2 Tab -->
+    <div 
+      class="wizard-step-card" 
+      [class.active]="currentStep === 2"
+      [class.completed]="currentStep > 2"
+      (click)="goToStep(2)"
+      id="step-tab-2"
+    >
+      <div class="step-card-content">
+        <div class="step-title-row">
+          <span class="step-number-title">2. STEP 2: REVIEW ENTITIES</span>
+          <span class="step-tag-pill">AI Extraction</span>
+        </div>
+        <p class="step-desc">Verify items, quantities &amp; specs</p>
+      </div>
+    </div>
+
+    <!-- Step 3 Tab -->
+    <div 
+      class="wizard-step-card" 
+      [class.active]="currentStep === 3"
+      (click)="goToStep(3)"
+      id="step-tab-3"
+    >
+      <div class="step-card-content">
+        <div class="step-title-row">
+          <span class="step-number-title">3. STEP 3: SOURCING MODE</span>
+          <span class="step-tag-pill">Dispatch</span>
+        </div>
+        <p class="step-desc">Choose Version 1, 2, or 3</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================== -->
+  <!-- STEP 1: INGESTION & DOCUMENT EXTRACTION                  -->
+  <!-- ======================================================== -->
+  <div class="step-main-card" *ngIf="currentStep === 1" id="step-1-container">
+    <!-- Card Header -->
+    <div class="card-top-bar">
+      <div class="card-heading-group">
+        <div class="card-icon-title">
+          <i class="fa fa-cloud-upload title-icon-cloud"></i>
+          <h2 class="step-card-heading">STEP 1: INGESTION &amp; DOCUMENT EXTRACTION</h2>
+        </div>
+        <p class="step-card-subheading">
+          Upload your Bill of Quantities (BOQ), RFP specification sheet, or ingest automatically via email.
+        </p>
+      </div>
+
+      <!-- Pill Mode Toggle: File Upload vs Email Ingestion -->
+      <div class="mode-toggle-pill-group">
+        <button 
+          class="mode-toggle-btn"
+          [class.active]="ingestionMode === 'upload'"
+          (click)="setIngestionMode('upload')"
+          id="btn-toggle-upload"
+        >
+          File Upload
+        </button>
+        <button 
+          class="mode-toggle-btn"
+          [class.active]="ingestionMode === 'email'"
+          (click)="setIngestionMode('email')"
+          id="btn-toggle-email"
+        >
+          Email Ingestion
+        </button>
+      </div>
+    </div>
+
+    <!-- Mode A: File Upload Drag & Drop Box -->
+    <div class="upload-dropzone-box" *ngIf="ingestionMode === 'upload'" id="dropzone-file-upload">
+      <div 
+        class="dropzone-inner"
+        [class.dragging]="isDragging"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)"
+        (drop)="onDrop($event)"
+      >
+        <input 
+          type="file" 
+          #fileInput 
+          class="hidden-file-input" 
+          (change)="onFileInputChange($event)"
+          accept=".xlsx,.xls,.pdf,.docx"
+        />
+        
+        <div class="drop-icon-box" (click)="fileInput.click()">
+          <i class="fa fa-file-text-o"></i>
+        </div>
+
+        <h3 class="dropzone-title" (click)="fileInput.click()">
+          [ Drag &amp; Drop RFQ Document / BOQ Spreadsheet Here ]
+        </h3>
+
+        <p class="dropzone-formats">
+          Supports Excel (.xlsx, .xls), PDF engineering drawings, and Word specifications (.docx).
+        </p>
+
+        <div *ngIf="selectedFileName" class="selected-file-badge">
+          <i class="fa fa-check-circle"></i>
+          <span>Attached: <strong>{{ selectedFileName }}</strong></span>
+        </div>
+
+        <button class="btn btn-browse-files" (click)="fileInput.click()">
+          <i class="fa fa-folder-open-o"></i> Browse Local Files
+        </button>
+      </div>
+    </div>
+
+    <!-- Mode B: Autonomous Email Ingestion Gateway -->
+    <div class="email-gateway-card" *ngIf="ingestionMode === 'email'" id="gateway-email-ingestion">
+      <div class="gateway-content-box">
+        <div class="gateway-header-line">
+          <i class="fa fa-envelope-o gateway-icon"></i>
+          <h3 class="gateway-title">Autonomous Email Ingestion Gateway</h3>
+        </div>
+        
+        <p class="gateway-desc">
+          Forward your vendor RFP attachments directly to: <strong>client&#64;procucev.com</strong>. The QUA AI engine will autonomously parse attachments, extract entities, and create an RFQ draft.
+        </p>
+
+        <div class="gateway-address-bar">
+          <span class="gateway-address">client&#64;procucev.com (Enterprise Ingestion Active)</span>
+          <span class="badge-connected">CONNECTED</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 1 Bottom Action Bar -->
+    <div class="step-actions-footer">
+      <button 
+        class="btn btn-parse-document" 
+        (click)="parseAndReview()" 
+        [disabled]="isProcessing"
+        id="btn-parse-document"
+      >
+        <span *ngIf="!isProcessing">Parse Document &amp; Review Entities →</span>
+        <span *ngIf="isProcessing"><i class="fa fa-spinner fa-spin"></i> Parsing with QUA OCR...</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- STEP 2: REVIEW EXTRACTED ENTITIES                        -->
+  <!-- ======================================================== -->
+  <div class="step-main-card" *ngIf="currentStep === 2" id="step-2-container">
+    <div class="card-top-bar">
+      <div class="card-heading-group">
+        <div class="card-icon-title">
+          <i class="fa fa-check-square-o title-icon-cloud"></i>
+          <h2 class="step-card-heading">STEP 2: REVIEW EXTRACTED ENTITIES &amp; QUANTITIES</h2>
+        </div>
+        <p class="step-card-subheading">
+          AI OCR successfully parsed 3 line-item entity sets with 97.4% composite confidence. Verify specifications before routing.
+        </p>
+      </div>
+    </div>
+
+    <!-- Extracted Table -->
+    <div class="entities-table-wrapper">
+      <table class="entities-table">
+        <thead>
+          <tr>
+            <th>ITEM CODE</th>
+            <th>DESCRIPTION</th>
+            <th>CATEGORY</th>
+            <th>QTY</th>
+            <th>UNIT</th>
+            <th>CONFIDENCE</th>
+            <th>STATUS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ent of extractedEntities">
+            <td><strong>{{ ent.itemCode }}</strong></td>
+            <td>{{ ent.description }}</td>
+            <td><span class="cat-pill">{{ ent.category }}</span></td>
+            <td><strong>{{ ent.quantity }}</strong></td>
+            <td>{{ ent.unit }}</td>
+            <td><span class="conf-pill">{{ ent.confidence }}</span></td>
+            <td><span class="status-verified-pill"><i class="fa fa-check"></i> {{ ent.status }}</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="step-actions-footer between-footer">
+      <button class="btn btn-outline-action" (click)="goToStep(1)">← Back to Ingestion</button>
+      <button class="btn btn-parse-document" (click)="proceedToSourcingMode()" id="btn-proceed-sourcing">
+        Confirm Entities &amp; Select Sourcing Mode →
+      </button>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- STEP 3: SOURCING MODE SELECTION                          -->
+  <!-- ======================================================== -->
+  <div class="step-main-card" *ngIf="currentStep === 3" id="step-3-container">
+    <div class="card-top-bar">
+      <div class="card-heading-group">
+        <div class="card-icon-title">
+          <i class="fa fa-cubes title-icon-cloud"></i>
+          <h2 class="step-card-heading">STEP 3: SOURCING MODE SELECTION &amp; AUTONOMOUS DISPATCH</h2>
+        </div>
+        <p class="step-card-subheading">
+          Select how the QUA AI engine will broadcast this RFQ across suppliers and conduct autonomous evaluation.
+        </p>
+      </div>
+    </div>
+
+    <!-- Sourcing Modes Grid -->
+    <div class="sourcing-modes-grid">
+      <div 
+        class="mode-selection-card"
+        *ngFor="let m of sourcingModes"
+        [class.selected]="m.selected"
+        (click)="selectSourcingMode(m)"
+        [attr.id]="'mode-card-' + m.id"
+      >
+        <div class="mode-card-header">
+          <span class="mode-version-tag">{{ m.version }}</span>
+          <span class="mode-badge-pill">{{ m.badge }}</span>
+        </div>
+        <h3 class="mode-card-title">{{ m.title }}</h3>
+        <p class="mode-card-desc">{{ m.description }}</p>
+        <div class="mode-pool-stat">
+          <i class="fa fa-users"></i>
+          <span>{{ m.poolSize }}</span>
+        </div>
+        <ul class="mode-features-list">
+          <li *ngFor="let f of m.features"><i class="fa fa-check-circle check-icon"></i> {{ f }}</li>
+        </ul>
+        <div class="mode-select-indicator">
+          <span *ngIf="m.selected" class="selected-text"><i class="fa fa-check"></i> Selected Mode</span>
+          <span *ngIf="!m.selected" class="unselected-text">Click to Choose</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-actions-footer between-footer">
+      <button class="btn btn-outline-action" (click)="goToStep(2)">← Back to Review</button>
+      <button class="btn btn-dispatch-rfq" (click)="dispatchRfq()" id="btn-dispatch-rfq">
+        <i class="fa fa-paper-plane-o"></i> Launch Autonomous RFQ Dispatch →
+      </button>
+    </div>
+  </div>
+
+</div>

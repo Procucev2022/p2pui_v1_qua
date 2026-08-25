@@ -1,0 +1,329 @@
+<div class="command-center-container">
+
+  <!-- Floating Toast Notification if any action is triggered -->
+  <div class="feedback-toast" *ngIf="feedbackMessage" id="buyer-feedback-toast">
+    <i class="fa fa-info-circle toast-icon"></i>
+    <span>{{ feedbackMessage }}</span>
+    <button class="toast-close" (click)="feedbackMessage = null">✕</button>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- 1. PAGE HEADER                                           -->
+  <!-- ======================================================== -->
+  <header class="page-header" id="buyer-page-header">
+    <div class="header-left">
+      <div class="title-row">
+        <h1 class="page-title">Executive Buyer Command Center</h1>
+        <span class="screen-badge" id="badge-screen-1-1">SCREEN 1.1</span>
+      </div>
+      <p class="page-subtitle">
+        Real-time procurement pipeline governance, live AI chasing updates &amp; transactional spend metrics.
+      </p>
+    </div>
+
+    <div class="header-right-actions">
+      <button class="btn btn-primary-rfq" (click)="onCreateRfq()" id="btn-create-rfq">
+        <i class="fa fa-plus action-icon"></i>
+        <span>Create New RFQ</span>
+      </button>
+
+      <button class="btn btn-outline-action" (click)="onUploadBoq()" id="btn-upload-boq">
+        <i class="fa fa-cloud-upload action-icon"></i>
+        <span>Upload BOQ File</span>
+      </button>
+
+      <button class="btn btn-outline-action" (click)="onExportAnalytics()" id="btn-export-analytics">
+        <i class="fa fa-download action-icon"></i>
+        <span>Export Analytics</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ======================================================== -->
+  <!-- 2. KPI CARDS SECTION (4 COLUMNS)                         -->
+  <!-- ======================================================== -->
+  <section class="kpi-section" id="buyer-kpi-grid">
+    <div class="kpi-grid">
+      
+      <!-- Card 1: Active RFQs -->
+      <div class="kpi-card" id="kpi-active-rfqs">
+        <div class="kpi-card-inner">
+          <div class="kpi-top-row">
+            <span class="kpi-title">ACTIVE RFQs</span>
+            <div class="kpi-icon-box icon-purple">
+              <i class="fa fa-file-text-o"></i>
+            </div>
+          </div>
+          <div class="kpi-value-row">
+            <span class="kpi-value">5</span>
+            <span class="kpi-trend trend-positive">
+              <i class="fa fa-arrow-up trend-arrow"></i> +3 this week
+            </span>
+          </div>
+          <div class="kpi-bottom-row">
+            <span class="kpi-subtext">4 Sourcing categories active</span>
+          </div>
+        </div>
+        <div class="card-bottom-accent accent-purple"></div>
+      </div>
+
+      <!-- Card 2: Pending Quotes -->
+      <div class="kpi-card" id="kpi-pending-quotes">
+        <div class="kpi-card-inner">
+          <div class="kpi-top-row">
+            <span class="kpi-title">PENDING QUOTES</span>
+            <div class="kpi-icon-box icon-blue">
+              <i class="fa fa-clock-o"></i>
+            </div>
+          </div>
+          <div class="kpi-value-row">
+            <span class="kpi-value">40</span>
+            <span class="kpi-trend trend-info">8 in review</span>
+          </div>
+          <div class="kpi-bottom-row">
+            <span class="kpi-subtext">Across 18 invited vendors</span>
+          </div>
+        </div>
+        <div class="card-bottom-accent accent-blue"></div>
+      </div>
+
+      <!-- Card 3: AI Follow-Ups Today -->
+      <div class="kpi-card card-variant-green" id="kpi-ai-followups">
+        <div class="kpi-card-inner">
+          <div class="kpi-top-row">
+            <span class="kpi-title">AI FOLLOW-UPS TODAY</span>
+            <div class="kpi-icon-box icon-green">
+              <i class="fa fa-cube"></i>
+            </div>
+          </div>
+          <div class="kpi-value-row">
+            <span class="kpi-value">12</span>
+            <span class="kpi-trend trend-green-pill">
+              <span class="status-dot dot-green"></span> 92% Responded
+            </span>
+          </div>
+          <div class="kpi-bottom-row">
+            <span class="kpi-subtext">WhatsApp &amp; Email Auto-Chasers</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4: Total Spend (YTD) -->
+      <div class="kpi-card card-variant-purple" id="kpi-total-spend">
+        <div class="kpi-card-inner">
+          <div class="kpi-top-row">
+            <span class="kpi-title">TOTAL SPEND (YTD)</span>
+            <div class="kpi-icon-box icon-magenta">
+              <i class="fa fa-dollar"></i>
+            </div>
+          </div>
+          <div class="kpi-value-row">
+            <span class="kpi-value">$1.24M</span>
+            <span class="kpi-trend trend-saved">$184k Saved</span>
+          </div>
+          <div class="kpi-bottom-row">
+            <span class="kpi-subtext">Aggregated from Azure SQL Master</span>
+          </div>
+        </div>
+        <div class="card-bottom-accent accent-magenta"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ======================================================== -->
+  <!-- 3. MAIN DASHBOARD CONTENT (PIPELINE & AI BOT FEED)       -->
+  <!-- ======================================================== -->
+  <div class="dashboard-main-grid" id="buyer-main-grid">
+
+    <!-- LEFT COLUMN: Active Procurement Pipeline (~68%) -->
+    <section class="dashboard-card pipeline-card" id="card-active-pipeline">
+      <!-- Card Header -->
+      <div class="card-header-flex">
+        <div class="card-header-title">
+          <div class="header-icon-box icon-layers">
+            <i class="fa fa-clone"></i>
+          </div>
+          <h2 class="card-title-text">ACTIVE PROCUREMENT PIPELINE</h2>
+        </div>
+        <div class="card-header-meta">
+          <span>Showing 5 Active Sourcing Events</span>
+        </div>
+      </div>
+
+      <!-- Table Container -->
+      <div class="pipeline-table-wrapper">
+        <table class="pipeline-table" id="table-procurement-pipeline">
+          <thead>
+            <tr>
+              <th class="th-rfq">RFQ DETAILS</th>
+              <th class="th-mode">SOURCING MODE</th>
+              <th class="th-quotes">QUOTES</th>
+              <th class="th-status">STATUS</th>
+              <th class="th-action">ACTION</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr 
+              *ngFor="let item of pipelineEvents; let idx = index"
+              [class.highlighted-row]="item.isHighlighted"
+              [attr.id]="'pipeline-row-' + idx"
+            >
+              <!-- RFQ Details -->
+              <td class="td-rfq">
+                <div class="rfq-header-line">
+                  <span class="rfq-id" [class.rfq-id-highlight]="item.isHighlighted">{{ item.rfqNumber }}</span>
+                  <span *ngIf="item.matchScore" class="match-badge">
+                    {{ item.matchScore }}
+                  </span>
+                </div>
+                <div class="product-title">{{ item.productName }}</div>
+                <div class="product-category">{{ item.category }}</div>
+              </td>
+
+              <!-- Sourcing Mode -->
+              <td class="td-mode">
+                <span class="mode-badge" [ngClass]="item.sourcingModeClass">
+                  {{ item.sourcingMode }}
+                </span>
+              </td>
+
+              <!-- Quotes Count -->
+              <td class="td-quotes">
+                <span class="quotes-count">{{ item.quotesCount }}</span>
+              </td>
+
+              <!-- Status -->
+              <td class="td-status">
+                <span class="status-badge" [ngClass]="item.statusClass">
+                  {{ item.status }}
+                </span>
+              </td>
+
+              <!-- Action Button / Text -->
+              <td class="td-action">
+                <ng-container [ngSwitch]="item.actionType">
+                  <!-- Matrix Action -->
+                  <button 
+                    *ngSwitchCase="'matrix'" 
+                    class="btn btn-view-matrix" 
+                    (click)="onViewMatrix(item)"
+                    [attr.id]="'btn-view-matrix-' + idx"
+                  >
+                    <span>View Matrix</span>
+                    <i class="fa fa-angle-right chevron-icon"></i>
+                  </button>
+
+                  <!-- AI Recommended Action (Highlighted solid green) -->
+                  <button 
+                    *ngSwitchCase="'recommended'" 
+                    class="btn btn-ai-recommended" 
+                    (click)="onAiRecommended(item)"
+                    [attr.id]="'btn-ai-recommended-' + idx"
+                  >
+                    <i class="fa fa-magic sparkle-icon"></i>
+                    <span>AI Recommended</span>
+                  </button>
+
+                  <!-- In Validation (OCR Parsing) -->
+                  <span 
+                    *ngSwitchCase="'validation'" 
+                    class="action-text-validation"
+                  >
+                    In Validation
+                  </span>
+                </ng-container>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- RIGHT COLUMN: AI Bot Live Feed (~32%) -->
+    <aside class="dashboard-card ai-feed-card" id="card-ai-bot-feed">
+      <!-- Card Header -->
+      <div class="card-header-flex feed-header">
+        <div class="card-header-title">
+          <span class="pulsing-live-dot"></span>
+          <h2 class="card-title-text">AI BOT LIVE FEED</h2>
+        </div>
+        <div class="feed-badge-live">
+          <span>Live Stream</span>
+        </div>
+      </div>
+
+      <!-- Feed Filter Tabs (All (9), Calls, WA, SMS, System) -->
+      <div class="feed-filter-tabs-row" id="feed-filter-tabs">
+        <button 
+          *ngFor="let tab of feedTabs"
+          class="feed-tab-btn"
+          [class.active]="selectedFeedTab === tab.id"
+          (click)="selectFeedTab(tab.id)"
+          [attr.id]="'tab-feed-' + tab.id"
+        >
+          <i *ngIf="tab.icon" [class]="tab.icon + ' tab-channel-icon'"></i>
+          <span>{{ tab.label }}</span>
+        </button>
+      </div>
+
+      <!-- Feed Activities Scroll Container -->
+      <div class="feed-activities-container" id="ai-feed-scroll-box">
+        <div 
+          class="feed-item" 
+          *ngFor="let act of filteredFeedEvents; let i = index"
+          [attr.id]="'feed-item-' + i"
+        >
+          <div class="feed-item-header">
+            <div class="feed-indicator-title">
+              <!-- Indicator: Green Dot -->
+              <span *ngIf="act.iconType === 'green-dot'" class="feed-dot feed-dot-green"></span>
+              
+              <!-- Indicator: AI Sparkle -->
+              <span *ngIf="act.iconType === 'ai-sparkle'" class="feed-icon-sparkle">
+                <i class="fa fa-magic"></i>
+              </span>
+
+              <!-- Indicator: Document / Mail -->
+              <span *ngIf="act.iconType === 'document-mail'" class="feed-icon-doc">
+                <i class="fa fa-envelope-o"></i>
+              </span>
+
+              <!-- Indicator: Phone Call -->
+              <span *ngIf="act.iconType === 'phone-call'" class="feed-icon-phone">
+                <i class="fa fa-phone"></i>
+              </span>
+
+              <!-- Indicator: SMS Msg -->
+              <span *ngIf="act.iconType === 'sms-msg'" class="feed-icon-sms">
+                <i class="fa fa-mobile"></i>
+              </span>
+
+              <span class="feed-title">{{ act.title }}</span>
+            </div>
+            <span class="feed-time">{{ act.time }}</span>
+          </div>
+
+          <div class="feed-item-body">
+            <p class="feed-desc">{{ act.description }}</p>
+            <div *ngIf="act.target" class="feed-target">
+              <span>{{ act.target }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="filteredFeedEvents.length === 0" class="empty-feed-placeholder">
+          <span>No activities recorded in this channel.</span>
+        </div>
+      </div>
+
+      <!-- Feed Card Bottom Pinned Bar -->
+      <div class="feed-footer-pinned">
+        <span class="feed-listeners-label">Asynchronous real-time listeners</span>
+        <span class="feed-autochasing-label">Auto-Chasing 24/7</span>
+      </div>
+    </aside>
+
+  </div>
+
+</div>
