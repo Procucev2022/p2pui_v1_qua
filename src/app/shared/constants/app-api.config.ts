@@ -57,6 +57,17 @@ export class AppApiConfig {
   public static UPDATE_DELIVERY_LOCATION = '/rest/gmt/updateDeliveryLocation';
   public static CHANGE_PASSWORD = '/rest/users/changePswd';
 
+  // Analytics Endpoints
+  public static GET_ANALYTICS_DASHBOARD = '/rest/analytics/dashboard';
+  public static GET_ANALYTICS_CATEGORIES = '/rest/analytics/categories';
+  public static GET_ANALYTICS_FUNNEL = '/rest/analytics/funnel';
+  public static GET_ANALYTICS_CALENDAR = '/rest/analytics/calendar';
+  public static SEARCH_ANALYTICS_COMPANIES = '/rest/analytics/console/search';
+  public static CHAT_ANALYTICS_CONSOLE = '/rest/analytics/console/chat';
+
+  // Buyer Vendor Management
+  public static BUYER_VENDORS = '/rest/buyer/vendors';
+
   public static OTPs_SENT ='/partialvendor/validateClient';
   public static VALIDATE_ALL_OTPS = '/partialvendor/validateAllOtps';
   public static VALIDATE_EMAIL_OTP = '/partialvendor/validateAllOtps';
