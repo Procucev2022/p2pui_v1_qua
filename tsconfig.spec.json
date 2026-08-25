@@ -9,6 +9,10 @@
   },
   "include": [
     "src/**/*.spec.ts",
-    "src/**/*.d.ts"
+    "src/**/*.d.ts",
+    "src/test-setup.ts",
+    "src/app-bootstrap.ts",
+    "src/main.ts",
+    "src/polyfills.ts"
   ]
 }

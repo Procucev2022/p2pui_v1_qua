@@ -134,6 +134,7 @@ export class VendorProfileComponent {
     this.loggedUserName = this.loggedUserDetails.username;
     this.roleName = this.loggedUserDetails.role.roleName === 'Registration' ? 'Vendor' : this.loggedUserDetails.role.roleName;
     this.isBuyer = this.loggedUserDetails.role.roleName === 'ClientInitiator';
+    this.buildVendorForm();
     if (this.loggedUserDetails) {
       if (this.isBuyer) {
         this.getBuyerDataById(this.loggedUserDetails.id)
@@ -141,7 +142,6 @@ export class VendorProfileComponent {
         this.getVendorById(this.loggedUserDetails.org.id)
       }
     }
-    this.buildVendorForm();
 
     this.createRfqService.getSubscriptionsList().subscribe((res: any) => {
       this.subscriptionPlansList = res.data && res.data.plans ? res.data.plans : []
@@ -384,6 +384,7 @@ export class VendorProfileComponent {
 
   bindData() {
     this.isShowDivisions = false;
+    if (!this.vendorForm) return;
     this.vendorForm.patchValue(this.vendorRegObj);
     if (this.vendorRegObj.branches && !this.isBuyer) {
       const skillsArray = this.vendorForm.get('branches') as FormArray;

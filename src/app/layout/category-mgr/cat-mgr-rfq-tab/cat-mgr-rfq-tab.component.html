@@ -67,7 +67,8 @@
                     <span *ngIf="col.field == 'status'">{{rowData[col.field].uiDisplay}}</span>
                     <span *ngIf="col.field != 'status'">
                         <span *ngIf="col.fieldType == 'text'">
-                            {{rowData[col.field]}}
+                            <span *ngIf="col.field == 'rfqId'">{{rowData.displayRfqId || (rowData.rfqIcon ? rowData.rfqIcon + ' ' + rowData.rfqId : rowData.rfqId)}}</span>
+                            <span *ngIf="col.field != 'rfqId'">{{rowData[col.field]}}</span>
                         </span>
                         <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
                             {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
@@ -76,7 +77,7 @@
                 </span>
                 <span *ngIf="col.isLink" class="cellLinkCls">
 
-                    <a href="javascript:void(0);" (click)="getRFQs(rowData, $event)"> {{rowData[col.field]}} </a>
+                    <a href="javascript:void(0);" (click)="getRFQs(rowData, $event)"> {{col.field == 'rfqId' ? (rowData.displayRfqId || (rowData.rfqIcon ? rowData.rfqIcon + ' ' + rowData.rfqId : rowData.rfqId)) : rowData[col.field]}} </a>
                 </span>
 
             </td>

@@ -483,7 +483,6 @@ onCategoryChange() {
   if (this.auctionCategory === 'item wise') {
     const startPrice_index = this.itemHeader.map(function(o) { return o.field; }).indexOf('startpricevalue');
     const leadingPrice_index = this.itemHeader.map(function(o) { return o.field; }).indexOf('leadingPrice');
-    const minBidReductionPrice_index = this.itemHeader.map(function(o) { return o.field; }).indexOf('minimumBidReductionPrice');
 
     if (this.startPrice && startPrice_index < 0) {
       this.itemHeader.push({ field: 'startpricevalue', header: 'Start Price'  , isLink: false, fieldType: 'text', width: '166px'});
@@ -501,6 +500,7 @@ onCategoryChange() {
     //   }
     // }
 
+    const minBidReductionPrice_index = this.itemHeader.map(function(o) { return o.field; }).indexOf('minimumBidReductionPrice');
     if (this.minimumBidReduction && minBidReductionPrice_index < 0) {
       this.itemHeader.push({ field: 'minimumBidReductionPrice', header: 'Min. Bid Reduction Price'  , isLink: false, fieldType: 'text', width: '166px'});
     } else {

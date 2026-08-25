@@ -32,7 +32,7 @@ export class AddServicesComponent implements OnInit {
   getSacCodes() {
     this.vendorRegSer.getSacCodes().subscribe((res: any) => {
       if (res) {
-        this.SACCodes = res || []
+        this.SACCodes = res;
       }
     })
   }

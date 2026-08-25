@@ -5,7 +5,7 @@ import { AppConfig } from 'src/app/app.config';
 import { CreateRfqService } from 'src/app/layout/category-mgr/services/create-rfq.service';
 import { ConvertToBase64Service } from 'src/app/shared/modules/common-share/services/convert-to-base64.service';
 import { EncryDecryService } from 'src/app/shared/services';
-import swal from 'sweetalert2';
+import { swalConfirm } from 'src/app/shared/helpers/swal-confirm';
 @Component({
     selector: 'app-edit-rfq-by-id-modal',
     templateUrl: './edit-rfq-by-id-modal.component.html',
@@ -344,7 +344,7 @@ export class EditRfqByIdModalComponent implements OnInit {
     }
 
     closeModal() {
-        swal({
+        swalConfirm.open({
             title: '<h6>Are you sure you want to Close the RFQ!<h6>',
             html: '<h4>You will be lost Unsaved changes?</h4>',
             confirmButtonText: 'Yes',

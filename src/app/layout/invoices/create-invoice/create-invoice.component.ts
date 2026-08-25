@@ -189,7 +189,7 @@ export class CreateInvoiceComponent implements OnInit {
     this.invoiceService.getItemsByASNId({id: this.data.asnData.id}).subscribe((res) => {
       if (Array.isArray(res)) {
         this.totalAmount = 0;
-        this.itemsData = res || [];
+        this.itemsData = res;
         this.itemsData.forEach(element => {
           element['invoiceQuantity'] = element['quantity'];
           element['isInvalid'] = false;

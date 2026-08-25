@@ -302,15 +302,13 @@ export class QuotCompareViewComponent implements OnInit, OnChanges {
             id: this.prId
           };
           this.clientService.getPrById(temp).subscribe((res: any) => {
-
             if (res) {
-              this.viewPrByIdData = res || {};
+              this.viewPrByIdData = res;
             }
           });
           this.clientService.getSquareFeetPrById(temp).subscribe((res: any) => {
-
             if (res) {
-              this.prSquareFeet = res || 1;
+              this.prSquareFeet = res;
             }
           });
 
@@ -321,12 +319,7 @@ export class QuotCompareViewComponent implements OnInit, OnChanges {
             'masterStatus': ['PC_PR_ACCEPTED']
         };
         this.procService.getPRIdsList().subscribe((res) => {
-            if (Array.isArray(res)) {
-                this.prList = res || [];
-            } else {
-                this.prList = [];
-            }
-
+            this.prList = Array.isArray(res) ? res : [];
         });
     }
 
@@ -345,48 +338,6 @@ export class QuotCompareViewComponent implements OnInit, OnChanges {
     }
 
     itemClicked(event, item, itemHead, venHead, idx) {
-        return;
-        if (item.item_NA) {
-            return;
-        }
-        if (this.selectedCategoryType === 'PR Wise' || this.selectedCategoryType === 'Item Wise') {
-            if (item.pritemId === 'quotTotId123') {  // By clicking Total Amount Cell
-                this.itemArray.forEach(element => {
-                    if (item.quotationId === element.quotationId && item.vendorId === element.vendorId && !element.item_NA) {
-                        element['isActive'] = true;
-                    } else {
-                        element['isActive'] = false;
-                    }
-                });
-            } else {  // By clicking individual Cell
-                this.itemArray.forEach((element, index) => {
-                    if (item.id !== element.id && (item.pritemId === element.pritemId || element.pritemId === 'quotTotId123')) {
-                        this.itemArray[index]['isActive'] = false;
-                    }
-
-                });
-                this.itemArray[idx]['isActive'] = item.isActive ? false : true;
-            }
-        } else {
-            if (item.rfqitemId === 'quotTotId123') {  // By clicking Total Amount Cell
-                this.itemArray.forEach(element => {
-                    if (item.quotationId === element.quotationId && item.vendorId === element.vendorId && !element.item_NA) {
-                        element['isActive'] = true;
-                    } else {
-                        element['isActive'] = false;
-                    }
-                });
-            } else {  // By clicking individual Cell
-                this.itemArray.forEach((element, index) => {
-                    if (item.id !== element.id && (item.pritemId === element.pritemId || element.rfqitemId === 'quotTotId123')) {
-                        this.itemArray[index]['isActive'] = false;
-                    }
-
-                });
-                this.itemArray[idx]['isActive'] = item.isActive ? false : true;
-            }
-        }
-
     }
 
     resetContainer() {
@@ -518,6 +469,7 @@ export class QuotCompareViewComponent implements OnInit, OnChanges {
     }
 
     createTotalObject(venHead, description, value, id) {
+        const isRfq = this.selectedCategoryType === 'RFQ Wise';
         return {
             unitprice: description === 'total' ? value : undefined,
             basicAmount: description === 'BasicAmount' ? value : undefined,
@@ -525,53 +477,31 @@ export class QuotCompareViewComponent implements OnInit, OnChanges {
             quotationId: venHead.quotationId,
             vendorId: venHead.vendorId,
             description,
-            rfqitemId: this.selectedCategoryType === 'RFQ Wise' ? id : undefined,
-            pritemId: this.selectedCategoryType !== 'RFQ Wise' ? id : undefined,
+            rfqitemId: isRfq ? id : undefined,
+            pritemId: isRfq ? undefined : id,
         };
     }
 
 
     calculateVendorBasesTotal(){
-
-
           // Group by id and calculate the sum of 'value'
-          let result = this.itemArray.reduce((acc, item) => {
-            // If the id doesn't exist in the accumulator, initialize it
-            const itemObj = this.itemRowHeaders.find((ele:any)=> item &&  ele.itemId == item.itemId)
+          const result = this.itemArray.reduce((acc, item) => {
+            const itemObj = this.itemRowHeaders.find((ele:any)=> item && ele.itemId == item.itemId);
             if (!acc[item.vendorId] && item) {
               acc[item.vendorId] = { id: item.vendorId, sum: 0, totalPrice: 0 };
             }
-            const qty = itemObj ? Number(itemObj.quantity) : 0
-            // Add the current item's value to the sum
-            acc[item.vendorId].sum += isNaN(item.pricePerUnit)? 0:  item.pricePerUnit;
-            acc[item.vendorId].totalPrice += ((isNaN(item.pricePerUnit)? 0:  item.pricePerUnit) * qty);
-            // acc[item.vendorId].squareFeetTotal  = (this.prSquareFeet? Number(this.prSquareFeet): 0) *  acc[item.vendorId].totalPrice
+            const qty = itemObj ? Number(itemObj.quantity) : 0;
+            const price = isNaN(item.pricePerUnit) ? 0 : item.pricePerUnit;
+            acc[item.vendorId].sum += price;
+            acc[item.vendorId].totalPrice += (price * qty);
 
             return acc;
           }, {});
 
-          console.log("result", result)
-
-          // Convert the result back into an array
-          const groupedArray = !!result && Object.keys(result).length>0 ? Object.values(result) : [];
-          this.vendorWiseBasicTotalArray = [...groupedArray]
-          console.log('groupedArray',groupedArray);
-         this.prEstimatedValue= groupedArray.length>0 ? groupedArray.reduce((ac:any, cur:any)=>{
-            let cr:any = 0;
-            if(isNaN(cur.totalPrice))  {
-               cr =0
-            }else{
-             cr = cur.totalPrice;
-            }
-
-            if(ac >0  && cr < ac){
-                ac = cr;
-            }
-            return ac;
-
-         }): 0;
-          console.log('prEstimatedValue',this.prEstimatedValue)
-          this.updateQuoteCompareData.emit({totalPrice: this.prEstimatedValue.totalPrice})
+          const groupedArray: any = Object.values(result);
+          this.vendorWiseBasicTotalArray = [...groupedArray];
+          this.prEstimatedValue = groupedArray.length > 0 ? Math.min(...groupedArray.map((g: any) => isNaN(g.totalPrice) ? 0 : g.totalPrice)) : 0;
+          this.updateQuoteCompareData.emit({totalPrice: this.prEstimatedValue});
     }
 
     getVendorBasicTotal(vendor:any, columnName:string){
@@ -581,65 +511,42 @@ export class QuotCompareViewComponent implements OnInit, OnChanges {
 
     getVendorSquareFeetTotal(vendor:any, columnName){
         const item = this.vendorWiseBasicTotalArray.find((ele:any) => vendor.vendorId && vendor.vendorId == ele.id);
-        const itemTotal =  item ? ( columnName == 'perUnit' ? item.sum : item.totalPrice ): 0;
-        // return ( (vendor.vendorName == 'qty' || vendor.vendorName == 'uom' )? ( vendor.vendorName == 'qty' ? this.prSquareFeet : ' ' ): item ?
-        //  ( vendor.quoteId.split('_').includes('perUnit') ? '' : (itemTotal / (this.prSquareFeet ? Number(this.prSquareFeet) : 1)).toFixed(1)) : 0);
-        return ( (vendor.vendorName == 'qty' || vendor.vendorName == 'uom' )? ( vendor.vendorName == 'qty' ? this.prSquareFeet : ' ' ): item ?
-         ( !vendor.quoteId.split('_').includes('perUnit') ? '' : (itemTotal / (this.prSquareFeet ? Number(this.prSquareFeet) : 1)).toFixed(1)) : 0);
+        const itemTotal = item ? (columnName == 'perUnit' ? item.sum : item.totalPrice) : 0;
+        if (vendor.vendorName == 'qty' || vendor.vendorName == 'uom') {
+            return vendor.vendorName == 'qty' ? this.prSquareFeet : ' ';
+        }
+        if (!item) return 0;
+        return !vendor.quoteId.split('_').includes('perUnit') ? '' : (itemTotal / (this.prSquareFeet ? Number(this.prSquareFeet) : 1)).toFixed(1);
    }
 
     getMinMaxValue() {
         this.itemRowHeaders.forEach(itemRowHead => {
             const itemsList = [];
-            const zeroTotalItemsList = [];
-            const itemsList_NA = [];
             itemRowHead['l1Value'] = null;
             this.vendorColHeaders.forEach(venHead => {
-                const obj = {};
-                const totalamount = 0;
-                let itemCount = 0;
                 this.itemArray.forEach(item => {
                     if (item.vendorId === venHead.vendorId) {
-                        itemCount = itemCount + 1;
                         if (this.selectedCategoryType === 'RFQ Wise') {
                             if (item.rfqitemId === itemRowHead.id) {
-                                if (item.id != null && item.totalamount > 0) {
-                                    item['item_NA'] = false;
-                                    itemsList.push(item);
-                                } else {
-                                    item['item_NA'] = true;
-                                }
+                                const isValid = item.id != null && item.totalamount > 0;
+                                item['item_NA'] = !isValid;
+                                if (isValid) itemsList.push(item);
                             }
                         } else {
                             if (item.itemId === itemRowHead.itemId) {
-                                if (item.itemId != null &&    item.quantity) {
-                                    item['item_NA'] = false;
-                                    itemsList.push(item);
-                                } else {
-                                    item['item_NA'] = true;
-                                }
+                                const isValid = item.itemId != null && item.quantity;
+                                item['item_NA'] = !isValid;
+                                if (isValid) itemsList.push(item);
                             }
                         }
-
-
                     }
                 });
-
             });
             itemRowHead['l1Value'] = Math.min.apply(Math, itemsList.map(function (o) {
                 return o.unitprice;
             })
             );
         });
-
-
-        console.log('itemArray', this.itemArray);
-        // this.itemArray.forEach(element => {
-        //  if(element['pritemId'] = 'quotTotId123'){
-        //   console.log('ele1::', element)
-        //  }
-
-        // });
     }
 
     onCreate(actionType) {
@@ -653,12 +560,11 @@ export class QuotCompareViewComponent implements OnInit, OnChanges {
             if (element.isActive) {
                 selectedItems.push(element);
                 if (element.pritemId !== 'quotTotId123') {
-                    excludetax = excludetax + (element.id ? element.excludetaxamount : 0);
-                    quotTotal = quotTotal + (element.id ? element.totalamount : 0);
+                    excludetax += (element.excludetaxamount || 0);
+                    quotTotal += (element.totalamount || 0);
                     this.finalPPOData.push(element);
                 }
             }
-            // console.log('items array '+this.itemArray)
         });
 
         if (selectedItems.length >= this.itemRowHeaders.length - 3) {

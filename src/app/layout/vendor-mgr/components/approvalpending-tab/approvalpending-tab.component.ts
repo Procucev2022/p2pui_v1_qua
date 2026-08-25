@@ -6,7 +6,7 @@ import { VendorViewModelComponent } from '../../../../shared/modules/common-shar
 import { VendorMgrService } from '../../services/vendor-mgr.service';
 import { ToastrService } from 'ngx-toastr';
 import { VendorViewModelService } from '../../services/vendor-view-model.service';
-import swal from 'sweetalert2';
+import * as Swal from 'sweetalert2';
 import { AppApiConfig } from 'src/app/shared/constants/app-api.config';
 import { EncryDecryService } from 'src/app/shared/services';
 
@@ -89,7 +89,7 @@ export class ApprovalpendingTabComponent implements OnInit {
     this.vendorViewService.getVendorById(temp).subscribe((res: any) => {
 
       if (res) {
-        this.vendorRegData = res || {};
+        this.vendorRegData = res;
         this.viewVendorModal();
       } else {
         this.toaster.error('Failed to Fetch data', 'Failure');
@@ -127,10 +127,45 @@ export class ApprovalpendingTabComponent implements OnInit {
         res.forEach(element => {
           element['status'] = element['status']['uiDisplay'];
         });
-        this.approvalPendingList = res || [];
+        this.approvalPendingList = res;
       }
     });
   }
+  handleRejectConfirm(temp: any[]) {
+    this.vendMgrSer.rejectRegistration(temp).subscribe((res: any) => {
+      if (res.status === 'Success' || res.status === 'success') {
+        this.toaster.success(res.message, 'Success');
+        this.getAllVendorsByVendorApprovalPending();
+      } else if (res.status === 'Failure' || res.status === 'failure') {
+        this.toaster.error(res.message, 'Failure');
+      }
+    });
+  }
+
+  handleRejectCancel() {
+    (Swal as any).default('Cancelled', 'OK', 'error');
+  }
+
+  promptRejectConfirm(): any {
+    return (Swal as any).default({
+      title: '<h5>Please Confirm!!<h5>',
+      html: '<h3>Are you sure you want to reject?</h3>',
+      confirmButtonText: 'Yes',
+      confirmButtonColor: '#006dd5',
+      cancelButtonColor: '#d63636',
+      showCancelButton: true,
+      reverseButtons: true
+    });
+  }
+
+  onRejectDialogResult(result: any, temp: any[]) {
+    if (result?.value) {
+      this.handleRejectConfirm(temp);
+    } else if (result?.dismiss === ((Swal as any).default?.DismissReason?.cancel ?? 'cancel')) {
+      this.handleRejectCancel();
+    }
+  }
+
   rejectRegistration(selectedData) {
     if (selectedData.length) {
 
@@ -142,32 +177,7 @@ export class ApprovalpendingTabComponent implements OnInit {
           temp.push(obj);
         });
 
-        swal({
-            title: '<h5>Please Confirm!!<h5>',
-            html: '<h3>Are you sure you want to reject?</h3>',
-            confirmButtonText: 'Yes',
-            confirmButtonColor: '#006dd5',
-            cancelButtonColor: '#d63636',
-            showCancelButton: true,
-            reverseButtons: true
-           }).then((result) => {
-            if (result.value) {
-                this.vendMgrSer.rejectRegistration(temp).subscribe((res: any) => {
-                    if (res.status === 'Success' || res.status === 'success') {
-                      this.toaster.success(res.message, 'Success');
-                      this.getAllVendorsByVendorApprovalPending(); // calling this to refresh the grid data
-                    } else if (res.status === 'Failure' || res.status === 'failure') {
-                      this.toaster.error(res.message, 'Failure');
-                    }
-                  });
-            } else if (result.dismiss === swal.DismissReason.cancel) {
-              swal(
-                'Cancelled',
-                'OK',
-                'error'
-              );
-            }
-          });
+        this.promptRejectConfirm().then((result) => this.onRejectDialogResult(result, temp));
     } else {
       this.toaster.error('Please select at lease one record', 'Failure');
     }

@@ -61,7 +61,7 @@ export class LinkedClientListComponent implements OnInit {
 
     this.catService.getLinkedClientByItemId({id: this.itemData.id}).subscribe((res) => {
       if (Array.isArray(res)) {
-        this.clientList = res || [];
+        this.clientList = res;
       }
     });
   }

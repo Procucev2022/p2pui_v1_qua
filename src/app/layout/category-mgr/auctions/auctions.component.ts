@@ -378,11 +378,7 @@ export class AuctionsComponent implements OnInit {
         this.viewAuctionResponseData = null;
         if (this.selectedAuctionData['auctionCategory'] === 'item wise') {
             if (this.loggedUserType === 'CategoryManager' || this.loggedUserType === 'ClientInitiator' || this.loggedUserType === 'clientInitiator1.1' || this.loggedUserType === 'PRApprover') {
-                if (this.getEndDate(rowData.auctionEndtime) > this.currentDate && this.getStartDate(rowData.auctionStarttime) <= this.currentDate) {
-                    this.refreshBtn = true;
-                } else {
-                    this.refreshBtn = false;
-                }
+                this.refreshBtn = this.getEndDate(rowData.auctionEndtime) > this.currentDate && this.getStartDate(rowData.auctionStarttime) <= this.currentDate;
                 this.auctionService.getBidItemsByAuction({ 'id': rowData['id'] }).subscribe((res) => {
                     this.viewAuctionResponseData = res;
                 });
@@ -397,11 +393,7 @@ export class AuctionsComponent implements OnInit {
             }
         } else {
             if (this.loggedUserType === 'CategoryManager' || this.loggedUserType === 'ClientInitiator' || this.loggedUserType === 'clientInitiator1.1' || this.loggedUserType === 'PRApprover') {
-                if (this.getEndDate(rowData.auctionEndtime) > this.currentDate && this.getStartDate(rowData.auctionStarttime) <= this.currentDate) {
-                    this.refreshBtn = true;
-                } else {
-                    this.refreshBtn = false;
-                }
+                this.refreshBtn = this.getEndDate(rowData.auctionEndtime) > this.currentDate && this.getStartDate(rowData.auctionStarttime) <= this.currentDate;
                 this.auctionService.getBidsByAuction({ 'id': rowData['id'] }).subscribe((res) => {
                     this.viewAuctionResponseData = res;
                 });

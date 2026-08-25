@@ -4,6 +4,7 @@ import { AppApiConfig } from 'src/app/shared/constants/app-api.config';
 import { EncryDecryService } from 'src/app/shared/services';
 import { Router } from '@angular/router';
 import { SystemViewConfig } from 'src/app/app.config';
+import { AuthPageReload } from 'src/app/shared/services/authentication.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -41,12 +42,12 @@ export class DashboardComponent implements OnInit {
         if (data.role.roleName === "ClientInitiator") {//For GMT USER
             if(data.selfClient == true && [this.SYSTEM_VIEW_CONFIG.GMT_BASIC, this.SYSTEM_VIEW_CONFIG.GMT_BASIC_PLUS].includes(systemView)){
                 this.router.navigate(['/categorymgr/create-rfq']).then(() => {
-                    window.location.reload();
+                    AuthPageReload.run();
                 });
             }
             if(data.selfClient == false && [this.SYSTEM_VIEW_CONFIG.DPS_BASIC, this.SYSTEM_VIEW_CONFIG.DPS_BASIC_PLUS].includes(systemView)){
                 this.router.navigate(['/client/procurerequest']).then(() => {
-                    window.location.reload();
+                    AuthPageReload.run();
                 });
             }
         }

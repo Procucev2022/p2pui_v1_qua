@@ -108,10 +108,7 @@ export class BfsMyItemsComponent implements OnInit {
     getRFQs(rowData, $event) {
         console.log('closed1')
         this.selectedRowData = rowData;
-        this.expandedRows = {};
-        const thisRef = this;
-        thisRef.expandedRows[rowData.id] = 1;
-           this.expandedRows = this.expandedRows?.id === rowData.id ? null : rowData;
+        this.expandedRows = rowData;
         this.requestedUsers  =[];
         this.bfsItemService.getRequestedUsersByBFSForSeller({ id: rowData.id }).subscribe((res: any) => {
             if (res && Array.isArray(res)) {
@@ -129,7 +126,9 @@ export class BfsMyItemsComponent implements OnInit {
            
     }
       get expandedRowKeys() {
-        return this.expandedRows ? { [this.expandedRows.id]: true } : {};
+        return this.expandedRows && this.expandedRows.id != null
+          ? { [this.expandedRows.id]: true }
+          : {};
     }
 
     reloadGridComponent() {

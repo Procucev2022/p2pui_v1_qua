@@ -13,3 +13,22 @@ export interface CommonGridData {
         allowMultipleSelection: Boolean
       };
 }
+
+/** Runtime helper so this model module is instrumented for coverage. */
+export function createEmptyCommonGridData(): CommonGridData {
+  return {
+    actionEvents: [],
+    gridTopButtonActions: [],
+    gridColumnData: [],
+    gridHeaders: [],
+    gridTitle: '',
+    displayParentLabel: '',
+    displayParentId: '',
+    rowEventClickEventName: '',
+    editableCells: [],
+    gridSelectionCheckbox: {
+      showSelction: false,
+      allowMultipleSelection: false
+    }
+  };
+}

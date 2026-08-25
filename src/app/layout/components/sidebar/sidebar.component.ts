@@ -150,7 +150,7 @@ export class SidebarComponent implements OnInit {
             this.repCollapsed = true
             this.rep = "GMT";
         }
-        else if(this.isGMTView){
+        else if(this.isBFSView){
             this.repCollapsed = true
             this.rep = "BFS";
         }

@@ -246,7 +246,7 @@ export class CategoryMgrVendorSummaryComponent {
                     return { ...ele, status_ui_display: status_display, quotationReceived: ele.quotationReceived == true? 'YES': 'WIP' ,
                         sourceType: ele.sourceType ? ele.sourceType == 'T' ? 'Web App': 'WhatsApp' : 'Web App',
                     }
-                }) || [];
+                });
                 this.totalRecords = res.totalRecords || 0;
             } else {
                 this.rfqDataList = [];
@@ -263,7 +263,7 @@ export class CategoryMgrVendorSummaryComponent {
         };
         this.rfqservice.fetchRfqById(temp).subscribe((res: any) => {
             if (res) {
-                this.viewRFQByIdData = res || {};
+                this.viewRFQByIdData = res;
                 this.viewRFQByIdModal();
             } else {
                 this.toastrService.error('Failed to Fetch data', 'Failure');
@@ -318,7 +318,7 @@ export class CategoryMgrVendorSummaryComponent {
                     //     this.categoryList.push(ele['category'])
                     // }
                     return { ...ele, status_ui_display: status_display, queryContent: desc }
-                }) || [];
+                });
             } else {
                 this.rfqDataList = [];
             }
@@ -427,7 +427,7 @@ export class CategoryMgrVendorSummaryComponent {
         };
         this.rfqservice.fetchRfqById(temp).subscribe((res: any) => {
             if (res) {
-                this.viewRFQByIdData = res || {};
+                this.viewRFQByIdData = res;
                 this.viewRFQByIdModal();
             } else {
                 this.toastrService.error('Failed to Fetch data', 'Failure');
@@ -477,7 +477,7 @@ export class CategoryMgrVendorSummaryComponent {
                 this.vendorsList = res.map((ele: any) => {
                     const status_display = ele['status'] && ele['status']['uiDisplay'] ? ele.status.uiDisplay : ele.status;
                     return { ...ele, status_ui_display: status_display }
-                }) || [];
+                });
             }
         });
         setTimeout(() => {
@@ -569,7 +569,7 @@ export class CategoryMgrVendorSummaryComponent {
 
         this.rfqservice.getItemsByRFQIdForGMT(obj).subscribe((res: any) => {
             if (Array.isArray(res)) {
-                this.itemsList = res || [];
+                this.itemsList = res;
             }
         });
 

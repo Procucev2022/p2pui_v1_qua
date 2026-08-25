@@ -35,17 +35,16 @@ export class RfqSupportQueryComponent implements OnInit {
         this.loggedUserName = this.loggedUserDetails.username;
         this.rfqservice.getAllRFQSByClientInitiatorGMT({ id: this.loggedUserDetails.id }).subscribe((res: any) => {
             if (Array.isArray(res)) {
-                this.rfqList = res || [];
+                this.rfqList = res;
                 this.filtered_rfqList = [];
             }
-        })
+        });
     }
 
     filterAutoCompleteData(event, inputArrayName, outputArrayName, isStringType) {
 
-        let filtered: any[] = [];
         this[outputArrayName] = [];
-        const query = isStringType ? event.query.toLowerCase() : event.query;
+        const query = event.query ? event.query.toLowerCase() : '';
 
         this[outputArrayName] = this[inputArrayName].filter(ele => ele != null && (ele.toLowerCase().includes(query)));
 

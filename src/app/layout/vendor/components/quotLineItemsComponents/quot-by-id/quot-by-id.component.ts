@@ -83,7 +83,7 @@ getQuotInfo() {
 
     this.vendorquotService.getQuotDataByid({ 'id': this.quotData.id}).subscribe((response) => {
         if (Array.isArray(response)) {
-            this.quotInfoList = response || [];
+            this.quotInfoList = response;
         } else {
             this.tostrService.error('Failed');
             this.quotInfoList =  [];

@@ -34,7 +34,7 @@ export class ReportsComponent implements OnInit {
     };
     this.clientService.getRfqwiseAuctionIdsByPR(reqObj).subscribe((data) => {
       if (Array.isArray(data)) {
-        this.auctionItemList = data || [];
+        this.auctionItemList = data;
       } else {
         this.auctionItemList = [];
       }
@@ -60,7 +60,7 @@ export class ReportsComponent implements OnInit {
     };
       this.procService.getPRIdsList().subscribe((res) => {
       if (Array.isArray(res)) {
-        this.prList = res || [];
+        this.prList = res;
       } else {
         this.prList = [];
       }

@@ -51,7 +51,7 @@ export class PrReportsComponent implements OnInit {
     };
     this.procuReqService.getDepartmentsByOrg(reqObj).subscribe((data) => {
       if (Array.isArray(data)) {
-        this.departments = data || [];
+        this.departments = data;
       } else {
         this.departments = [];
       }
@@ -67,7 +67,7 @@ export class PrReportsComponent implements OnInit {
       };
       this.procuReqService.getDepartmentsByOrg(reqObj).subscribe((data) => {
         if (Array.isArray(data)) {
-          this.departments = data || [];
+          this.departments = data;
         } else {
           this.departments = [];
         }
@@ -76,7 +76,7 @@ export class PrReportsComponent implements OnInit {
 
       this.procuReqService.getUserNamesByOrg(reqObj).subscribe((data) => {
         if (Array.isArray(data)) {
-          this.userNames = data || [];
+          this.userNames = data;
         } else {
           this.userNames = [];
         }
@@ -93,7 +93,7 @@ export class PrReportsComponent implements OnInit {
     };
     this.procuReqService.getUserNamesByOrg(reqObj).subscribe((data) => {
       if (Array.isArray(data)) {
-        this.userNames = data || [];
+        this.userNames = data;
       } else {
         this.userNames = [];
       }
@@ -119,7 +119,7 @@ export class PrReportsComponent implements OnInit {
 
       this.procuReqService.getPrByCMAndCreatedTS(reqObj).subscribe((data) => {
         if (Array.isArray(data)) {
-          this.reportData = data || [];
+          this.reportData = data;
           this.prepareData(this.reportData);
         } else {
           this.reportData = [];
@@ -140,7 +140,7 @@ export class PrReportsComponent implements OnInit {
       };
       this.procuReqService.getPrByOrgAndCreatedTS(reqObj).subscribe((data) => {
         if (Array.isArray(data)) {
-          this.reportData = data || [];
+          this.reportData = data;
           this.prepareData(this.reportData);
         } else {
           this.reportData = [];

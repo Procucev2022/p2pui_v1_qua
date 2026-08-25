@@ -10,7 +10,7 @@ import { EncryDecryService } from 'src/app/shared/services';
 import { ApprovePrService } from '../services/approve-pr.service';
 import { CorrespondenceComponent } from 'src/app/shared/modules/common-share/components/correspondence/correspondence.component';
 import { PrViewModalComponent } from '../components/pr-view-modal/pr-view-modal.component';
-import swal from 'sweetalert2';
+import * as Swal from 'sweetalert2';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InvoicesService } from '../../invoices/invoices.service';
 import { ExcelService } from 'src/app/shared/modules/common-share/services/excel.service';
@@ -221,17 +221,21 @@ export class ClientProcureRequestComponent implements OnInit, OnDestroy {
         this.showSecondScreen = false;
         this.getPrSummaryData();
     }
+    confirmApprovePR() {
+        return ((Swal as any).default || (Swal as any))({
+            title: '<h5>Please Confirm!!</h5>',
+            html: '<h3>Are you sure you want to accept?</h4>',
+            confirmButtonText: 'Yes',
+            confirmButtonColor: '#006dd5',
+            cancelButtonColor: '#d63636',
+            showCancelButton: true,
+            reverseButtons: true
+        });
+    }
+
     approvePR() {
         if (this.selectedData.length) {
-            swal({
-                title: '<h5>Please Confirm!!</h5>',
-                html: '<h3>Are you sure you want to accept?</h4>',
-                confirmButtonText: 'Yes',
-                confirmButtonColor: '#006dd5',
-                cancelButtonColor: '#d63636',
-                showCancelButton: true,
-                reverseButtons: true
-               }).then((result) => {
+            this.confirmApprovePR().then((result) => {
                 if (result.value) {
                     const ids: any = [];
             this.selectedData.forEach(selected => {
@@ -314,7 +318,7 @@ export class ClientProcureRequestComponent implements OnInit, OnDestroy {
           };
           this.clientService.getPrById(temp).subscribe((res: any) => {
             if (res) {
-              this.viewPrByIdData = res || {};
+              this.viewPrByIdData = res;
               this.viewPrByIdModal();
             } else {
               this.toaster.error('Failed to Fetch data', 'Failure');

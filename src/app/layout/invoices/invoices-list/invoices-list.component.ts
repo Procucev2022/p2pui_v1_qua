@@ -55,56 +55,36 @@ export class InvoicesListComponent implements OnInit, OnChanges {
     switch (this.roleName) {
       case 'Vendor':
         this.invoiceService.getAllInvoicesByVendor({ id: this.loggedUserDetails.org.id })
-          .subscribe((res) => {
-            if (Array.isArray(res) || res['errorCode'] === 204) {
-              const resArray = Array.isArray(res) ? res : [];
-              this.invoicesList = resArray || [];
-              this.invoicesList.forEach((ele) => ele['status'] = ele['status']['uiDisplay']);
-              this.setGridData();
-              this.invoicesData['gridColumnData'] = this.invoicesList || [];
-
-            }
-          });
+          .subscribe((res) => this.applyInvoiceResponse(res));
         break;
       case 'ClientInitiator':
-        this.invoiceService.getAllInvoicesByClientId({ id: this.loggedUserDetails.org.id }).subscribe((res) => {
-          if (Array.isArray(res) || res['errorCode'] === 204) {
-            const resArray = Array.isArray(res) ? res : [];
-              this.invoicesList = resArray || [];
-              this.invoicesList.forEach((ele) => ele['status'] = ele['status']['uiDisplay']);
-              this.setGridData();
-              this.invoicesData['gridColumnData'] = this.invoicesList || [];
-
-            }
-          });
+        this.invoiceService.getAllInvoicesByClientId({ id: this.loggedUserDetails.org.id })
+          .subscribe((res) => this.applyInvoiceResponse(res));
         break;
         case 'PRApprover':
-          this.invoiceService.getAllInvoicesByClientId({ id: this.loggedUserDetails.org.id }).subscribe((res) => {
-            if (Array.isArray(res) || res['errorCode'] === 204) {
-              const resArray = Array.isArray(res) ? res : [];
-                this.invoicesList = resArray || [];
-                this.invoicesList.forEach((ele) => ele['status'] = ele['status']['uiDisplay']);
-                this.setGridData();
-                this.invoicesData['gridColumnData'] = this.invoicesList || [];
-
-              }
-            });
+          this.invoiceService.getAllInvoicesByClientId({ id: this.loggedUserDetails.org.id })
+            .subscribe((res) => this.applyInvoiceResponse(res));
           break;
       case 'CategoryManager':
-        this.invoiceService.getAllInvoices({ id: this.loggedUserDetails.org.id }).subscribe((res) => {
-          if (Array.isArray(res) || res['errorCode'] === 204) {
-            const resArray = Array.isArray(res) ? res : [];
-              this.invoicesList = resArray || [];
-            this.invoicesList.forEach((ele) => ele['status'] = ele['status']['uiDisplay']);
-            this.setGridData();
-            this.invoicesData['gridColumnData'] = this.invoicesList || [];
-
-          }
-        });
+        this.invoiceService.getAllInvoices({ id: this.loggedUserDetails.org.id })
+          .subscribe((res) => this.applyInvoiceResponse(res));
         break;
       default:
     }
   }
+  applyInvoiceResponse(res: any) {
+    if (Array.isArray(res)) {
+      this.invoicesList = res;
+    } else if (res && res['errorCode'] === 204) {
+      this.invoicesList = [];
+    } else {
+      return;
+    }
+    this.invoicesList.forEach((ele) => ele['status'] = ele['status'] ? ele['status']['uiDisplay'] : ele['status']);
+    this.setGridData();
+    this.invoicesData['gridColumnData'] = this.invoicesList;
+  }
+
   setGridData() {
     const actionEvents = [{
       name: 'View Invoice',

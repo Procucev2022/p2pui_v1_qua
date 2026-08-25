@@ -1,13 +1,14 @@
 import { PposModule } from './ppos.module';
 
 describe('PposModule', () => {
-  let pposModule: PposModule;
-
-  beforeEach(() => {
-    pposModule = new PposModule();
+  it('should create an instance', () => {
+    expect(new PposModule()).toBeTruthy();
   });
 
-  it('should create an instance', () => {
-    expect(pposModule).toBeTruthy();
+  it('should be constructible multiple times', () => {
+    const a = new PposModule();
+    const b = new PposModule();
+    expect(a).toBeTruthy();
+    expect(b).toBeTruthy();
   });
 });

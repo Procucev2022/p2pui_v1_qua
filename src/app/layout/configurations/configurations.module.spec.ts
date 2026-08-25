@@ -1,13 +1,14 @@
 import { ConfigurationsModule } from './configurations.module';
 
 describe('ConfigurationsModule', () => {
-  let configurationsModule: ConfigurationsModule;
-
-  beforeEach(() => {
-    configurationsModule = new ConfigurationsModule();
+  it('should create an instance', () => {
+    expect(new ConfigurationsModule()).toBeTruthy();
   });
 
-  it('should create an instance', () => {
-    expect(configurationsModule).toBeTruthy();
+  it('should be constructible multiple times', () => {
+    const a = new ConfigurationsModule();
+    const b = new ConfigurationsModule();
+    expect(a).toBeTruthy();
+    expect(b).toBeTruthy();
   });
 });

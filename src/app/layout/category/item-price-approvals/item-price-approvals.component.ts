@@ -42,7 +42,7 @@ export class ItemPriceApprovalsComponent implements OnInit {
 
     getAllApprovalItem() {
         this.catService.getAllItemPriceApprovals().subscribe((res) => {
-        if (!!res && Array.isArray(res)) {
+        if (Array.isArray(res)) {
             this.itemApprovalsList = []
             res.forEach((data) => {
                 data['status'] = data.status.uiDisplay

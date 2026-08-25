@@ -32,7 +32,7 @@ export class AddProductsComponent implements OnInit {
   getHsnCodes(){
     this.vendorRegSer.getHsnCodes().subscribe((res:any)=>{
       if(res){
-        this.HSNCodes = res || [];
+        this.HSNCodes = res;
       }
     })
   }

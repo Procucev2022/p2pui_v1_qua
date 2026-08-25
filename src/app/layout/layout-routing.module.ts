@@ -10,7 +10,7 @@ export const layoutRoutes: Routes = [
         path: '',
         component: LayoutComponent,
         children: [
-            { path: '', redirectTo: 'dashboard', pathMatch: 'prefix' },
+            { path: '', redirectTo: 'dashboard', pathMatch: 'prefix' }, 
             { path: 'dashboard', loadChildren: () => loadLayoutRouteModule('dashboard', 'DashboardModule') },
             { path: 'vendormgr', loadChildren: () => loadLayoutRouteModule('vendormgr', 'VendorMgrModule') },
             { path: 'categorymgr', loadChildren: () => loadLayoutRouteModule('categorymgr', 'CategoryMgrModule') , canActivateChild: [ScreenAccessGuardGuard] },
@@ -25,7 +25,7 @@ export const layoutRoutes: Routes = [
             { path: 'category', loadChildren: () => loadLayoutRouteModule('category', 'CategoryModule')},
             { path: 'config', loadChildren: () => loadLayoutRouteModule('config', 'ConfigurationsModule')},
             { path: 'bfs', loadChildren: ()=> loadLayoutRouteModule('bfs', 'BfsModule'), canActivateChild: [ScreenAccessGuardGuard] },
-            { path: 'buyer-vendors', loadChildren: () => loadLayoutRouteModule('buyer-vendors', 'BuyerVendorsModule') }
+            { path: 'buyer-dashboard', loadChildren: () => loadLayoutRouteModule('buyer-dashboard', 'BuyerDashboardModule') }
         ]
     }
 ];

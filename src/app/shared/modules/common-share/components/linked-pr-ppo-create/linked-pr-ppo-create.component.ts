@@ -3,8 +3,8 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { ToastrService } from 'ngx-toastr';
 import { AppConfig } from 'src/app/app.config';
 import { CatProcuRequestsService } from 'src/app/layout/category-mgr/services';
-import swal from 'sweetalert2';
 import { ConvertToBase64Service } from '../../services/convert-to-base64.service';
+import { swalConfirm } from 'src/app/shared/helpers/swal-confirm';
 
 @Component({
   selector: 'app-linked-pr-ppo-create',
@@ -87,7 +87,7 @@ export class LinkedPrPpoCreateComponent implements OnInit {
         'createdBy': localStorage.getItem('userFullName'),
         'documents': this.documentsArray,
       };
-      swal({
+      swalConfirm.open({
         title: '<h6>Please Confirm!!<h6>',
         html: '<h4>Are you sure you want to create PPO?</h4>',
         confirmButtonText: 'Yes',

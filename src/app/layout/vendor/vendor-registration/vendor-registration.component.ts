@@ -101,7 +101,7 @@ export class VendorRegistrationComponent implements OnInit {
     this.vendorService
     .getProductsData()
     .subscribe(data => {
-        this.productsList = data || [];
+        this.productsList = data ? data : [];
     });
   }
 
@@ -109,7 +109,7 @@ export class VendorRegistrationComponent implements OnInit {
     this.vendorService
     .getServicesData()
     .subscribe(data => {
-        this.servicesList = data || [];
+        this.servicesList = data ? data : [];
     });
   }
 
@@ -117,14 +117,14 @@ export class VendorRegistrationComponent implements OnInit {
     this.vendorService
     .getVendorContactsData()
     .subscribe(data => {
-        this.contactsList = data || [];
+        this.contactsList = data ? data : [];
     });
   }
   getClientRefData() {
     this.vendorService
     .getClientRefData()
     .subscribe(data => {
-        this.clientRefList = data || [];
+        this.clientRefList = data ? data : [];
     });
     console.log(this.productsList);
   }

@@ -29,7 +29,7 @@ export class CatMgrGmtSummaryComponent implements OnInit {
     this.itemGridData.gridValue =[];
     this.createRfqService.getGMTSummary().subscribe((res:any) =>{
         if(res && Array.isArray(res)){
-            this.itemGridData.gridValue = res.map(ele =>{ return {...ele, isSummaryScreen: true, isSendRFQToVendorScreen: false}}) || [];
+            this.itemGridData.gridValue = res.map(ele =>{ return {...ele, isSummaryScreen: true, isSendRFQToVendorScreen: false}});
 
         }
         setTimeout(() => {

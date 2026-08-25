@@ -71,7 +71,7 @@ export class VendorProfileSubscriptionsComponent {
     }
     const obj = this.vendorRegObj;
     this.isLoading = true;
-    obj.subscriptionPlan = this.selectedSubscription ? { id: this.selectedSubscription.id } : null;
+    obj.subscriptionPlan = { id: this.selectedSubscription.id };
     this.createRfqService.updatePaymentForSubscription({
       planId: this.selectedSubscription.id, userEmail: this.loggedUserDetails.username,
       userPhone: this.loggedUserDetails.phone

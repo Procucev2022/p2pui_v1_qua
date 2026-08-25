@@ -48,9 +48,9 @@ export class CatMgrQuotationsSubTabComponent implements OnInit , OnChanges {
     };
     this.procuReqService.getQuotationsByRfq(reqObj).subscribe( (data: any[] ) => {
         if (Array.isArray(data)) {
-          this.quotsList = data || [];
+          this.quotsList = data;
         } else {
-          this.toastService.warning(data['errorMessage'], 'Warning');
+          this.toastService.warning(data ? data['errorMessage'] : 'Error', 'Warning');
           this.quotsList = [];
         }
     });

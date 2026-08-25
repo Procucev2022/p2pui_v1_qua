@@ -43,7 +43,7 @@ export class VendorRegistrationPendingComponent implements OnInit {
                     element['vendorStatus'] = element['vendorStatus']['uiDisplay'];
                     element['isChecked'] = false;
                 });
-                this.vendorRegPendingList = res || [];
+                this.vendorRegPendingList = res;
             } else {
                 //this.toaster.error(res.message, 'Failure')
             }
