@@ -1,0 +1,192 @@
+<div class="col-12 pad-nill">
+  <div class="table-title">
+    <div class="row">
+      <div class="col-sm-6">
+        <h2>{{isEditMode ? 'Edit Vendor' : 'Add New Vendor'}}</h2>
+        <p><span class="dot"></span>Vendor Management</p>
+      </div>
+      <div class="col-sm-6">
+        <button class="btn btn-secondary rippel-btn" type="button" (click)="onCancel()"
+          style="align-items: center; width: 140px; vertical-align: middle; text-align: center; display: inline-flex; justify-content: center;">
+          <i class="fa fa-arrow-left"></i> <span>Back</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <form [formGroup]="vendorForm" (ngSubmit)="onSubmit()" class="form-container">
+    <!-- Basic Info -->
+    <div class="card mb-3 form-section-card">
+      <div class="card-header"><i class="fa fa-info-circle"></i> Basic Information</div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4 form-group">
+            <label for="vendorName">Vendor Name *</label>
+            <input type="text" class="form-control" id="vendorName" formControlName="vendorName"
+              placeholder="e.g. Acme Corporation"
+              [class.is-invalid]="f['vendorName'].touched && f['vendorName'].invalid">
+            <div class="invalid-feedback" *ngIf="f['vendorName'].touched && f['vendorName'].errors?.['required']">
+              Vendor name is required
+            </div>
+            <div class="invalid-feedback" *ngIf="f['vendorName'].touched && f['vendorName'].errors?.['minlength']">
+              Vendor name must be at least 3 characters
+            </div>
+          </div>
+          <div class="col-md-4 form-group">
+            <label for="searchTerm">Search Term</label>
+            <input type="text" class="form-control" id="searchTerm" formControlName="searchTerm"
+              placeholder="e.g. ACME">
+          </div>
+          <div class="col-md-4 form-group">
+            <label for="vendorCode">Vendor Code *</label>
+            <input type="text" class="form-control" id="vendorCode" formControlName="vendorCode"
+              placeholder="e.g. VND-001"
+              [class.is-invalid]="f['vendorCode'].touched && f['vendorCode'].invalid">
+            <div class="invalid-feedback" *ngIf="f['vendorCode'].touched && f['vendorCode'].errors?.['required']">
+              Vendor code is required
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 form-group">
+            <label for="typeOfBusiness">Type of Business</label>
+            <input type="text" class="form-control" id="typeOfBusiness" formControlName="typeOfBusiness"
+              placeholder="e.g. Manufacturing, Trading">
+          </div>
+          <div class="col-md-4 form-group">
+            <label for="typeOfIndustry">Type of Industry</label>
+            <select class="form-control" id="typeOfIndustry" formControlName="typeOfIndustry">
+              <option value="">Select Industry...</option>
+              <option *ngFor="let ind of industryTypes" [value]="ind">{{ind}}</option>
+            </select>
+          </div>
+          <div class="col-md-4 form-group">
+            <label for="vendorGroup">Vendor Group</label>
+            <select class="form-control" id="vendorGroup" formControlName="vendorGroup">
+              <option value="">Select Group...</option>
+              <option *ngFor="let grp of vendorGroups" [value]="grp">{{grp}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 form-group">
+            <label for="sourcingScope">Sourcing Scope</label>
+            <select class="form-control" id="sourcingScope" formControlName="sourcingScope">
+              <option *ngFor="let scope of sourcingScopes" [value]="scope">{{scope}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tax & Compliance -->
+    <div class="card mb-3 form-section-card">
+      <div class="card-header"><i class="fa fa-university"></i> Tax &amp; Compliance</div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4 form-group">
+            <label for="pan">PAN Number</label>
+            <input type="text" class="form-control" id="pan" formControlName="pan" maxlength="10"
+              placeholder="e.g. ABCDE1234F"
+              [class.is-invalid]="f['pan'].touched && f['pan'].invalid">
+            <div class="invalid-feedback" *ngIf="f['pan'].touched && f['pan'].errors?.['pattern']">
+              Invalid PAN format (Expected: 5 Letters, 4 Digits, 1 Letter)
+            </div>
+          </div>
+          <div class="col-md-4 form-group">
+            <label for="gstin">GSTIN</label>
+            <input type="text" class="form-control" id="gstin" formControlName="gstin" maxlength="15"
+              placeholder="e.g. 22ABCDE1234F1Z5"
+              [class.is-invalid]="f['gstin'].touched && f['gstin'].invalid">
+            <div class="invalid-feedback" *ngIf="f['gstin'].touched && f['gstin'].errors?.['pattern']">
+              Invalid GSTIN format (e.g. 29ABCDE1234F1Z5)
+            </div>
+          </div>
+          <div class="col-md-4 form-group">
+            <label for="country">Country</label>
+            <input type="text" class="form-control" id="country" formControlName="country"
+              placeholder="e.g. IN">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Address -->
+    <div class="card mb-3 form-section-card">
+      <div class="card-header"><i class="fa fa-map-marker"></i> Address Details</div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6 form-group">
+            <label for="addressLine">Address Line</label>
+            <input type="text" class="form-control" id="addressLine" formControlName="addressLine"
+              placeholder="Building, Street Name">
+          </div>
+          <div class="col-md-3 form-group">
+            <label for="city">City</label>
+            <input type="text" class="form-control" id="city" formControlName="city"
+              placeholder="City Name">
+          </div>
+          <div class="col-md-3 form-group">
+            <label for="district">District</label>
+            <input type="text" class="form-control" id="district" formControlName="district"
+              placeholder="District Name">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 form-group">
+            <label for="regionCode">Region Code / State</label>
+            <input type="text" class="form-control" id="regionCode" formControlName="regionCode"
+              placeholder="e.g. MH, KA, TN">
+          </div>
+          <div class="col-md-4 form-group">
+            <label for="postalCode">Postal Code</label>
+            <input type="text" class="form-control" id="postalCode" formControlName="postalCode" maxlength="6"
+              placeholder="6 Digits"
+              [class.is-invalid]="f['postalCode'].touched && f['postalCode'].invalid">
+            <div class="invalid-feedback" *ngIf="f['postalCode'].touched && f['postalCode'].errors?.['pattern']">
+              Postal code must be 6 digits
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact -->
+    <div class="card mb-3 form-section-card">
+      <div class="card-header"><i class="fa fa-phone"></i> Contact Information</div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4 form-group">
+            <label for="phone1">Phone 1 (Primary) *</label>
+            <input type="text" class="form-control" id="phone1" formControlName="phone1" maxlength="10"
+              placeholder="+91 10 Digit Number"
+              [class.is-invalid]="f['phone1'].touched && f['phone1'].invalid">
+            <div class="invalid-feedback" *ngIf="f['phone1'].touched && f['phone1'].errors?.['required']">
+              Phone is required
+            </div>
+            <div class="invalid-feedback" *ngIf="f['phone1'].touched && f['phone1'].errors?.['pattern']">
+              Phone must be 10 digits
+            </div>
+          </div>
+          <div class="col-md-4 form-group">
+            <label for="phone2">Phone 2 (Alternate)</label>
+            <input type="text" class="form-control" id="phone2" formControlName="phone2"
+              placeholder="+91 10 Digit Number">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="row mt-4 mb-4">
+      <div class="col-md-12 text-right">
+        <button type="button" class="btn btn-secondary rippel-btn mr-2" (click)="onCancel()">Cancel</button>
+        <button type="submit" class="btn btn-primary btn-createRFQ" [disabled]="loading"
+          style="align-items: center; width: 180px; vertical-align: middle; text-align: center; display: inline-flex; justify-content: center;">
+          <i class="fa" [ngClass]="isEditMode ? 'fa-check' : 'fa-plus'"></i>
+          <span>{{isEditMode ? 'Update Vendor' : 'Save Vendor'}}</span>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

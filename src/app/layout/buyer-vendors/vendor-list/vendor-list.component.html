@@ -1,0 +1,510 @@
+<div class="col-12 pad-nill vendor-mgmt-wrap">
+  <!-- Table Title & Action Bar -->
+  <div class="table-title">
+    <div class="title-row">
+      <div class="title-copy">
+        <h2 class="title-heading-orange">Vendor Management</h2>
+        <p><span class="dot"></span>Private Enterprise Vendor Directory &bull; AI Enrichment &amp; Governance</p>
+      </div>
+      <div class="title-actions">
+        <button class="btn btn-default-action btn-refresh" type="button"
+          (click)="refreshDirectory()" [disabled]="loading" title="Refresh Vendor List">
+          <i class="fa fa-refresh mr-1" [class.fa-spin]="loading"></i> <span>Refresh</span>
+        </button>
+        <button class="btn btn-default-action btn-export-excel" type="button"
+          (click)="exportVendorsToExcel()" title="Export Directory to Excel">
+          <i class="fa fa-file-excel-o mr-1"></i> <span>Export Excel</span>
+        </button>
+        <button class="btn btn-primary btn-uploadExcel" type="button"
+          (click)="openUploadModal()">
+          <i class="fa fa-cloud-upload mr-1"></i> <span>Upload Excel</span>
+        </button>
+        <button class="btn btn-primary btn-createRFQ" type="button"
+          (click)="addVendor()">
+          <i class="fa fa-plus mr-1"></i> <span>Add Vendor</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI Summary Banner -->
+  <div class="kpi-grid">
+    <div class="kpi-card kpi-card-blue">
+      <div class="kpi-icon"><i class="fa fa-building-o"></i></div>
+      <div class="kpi-content">
+        <span class="kpi-title">Total Vendors</span>
+        <span class="kpi-value">{{totalCount}}</span>
+      </div>
+    </div>
+    <div class="kpi-card kpi-card-green">
+      <div class="kpi-icon"><i class="fa fa-check-circle-o"></i></div>
+      <div class="kpi-content">
+        <span class="kpi-title">Qualified Vendors</span>
+        <span class="kpi-value">{{qualifiedCount}}</span>
+      </div>
+    </div>
+    <div class="kpi-card kpi-card-purple">
+      <div class="kpi-icon"><i class="fa fa-id-card-o"></i></div>
+      <div class="kpi-content">
+        <span class="kpi-title">KYC Verified</span>
+        <span class="kpi-value">{{kycVerifiedCount}}</span>
+      </div>
+    </div>
+    <div class="kpi-card kpi-card-red">
+      <div class="kpi-icon"><i class="fa fa-exclamation-triangle"></i></div>
+      <div class="kpi-content">
+        <span class="kpi-title">Compliance Issues</span>
+        <span class="kpi-value">{{complianceIssuesCount}}</span>
+      </div>
+    </div>
+    <div class="kpi-card kpi-card-gold">
+      <div class="kpi-icon"><i class="fa fa-star"></i></div>
+      <div class="kpi-content">
+        <span class="kpi-title">AI Preferred (&gt;80%)</span>
+        <span class="kpi-value">{{aiRecommendedCount}}</span>
+      </div>
+    </div>
+    <div class="kpi-card kpi-card-orange">
+      <div class="kpi-icon"><i class="fa fa-clock-o"></i></div>
+      <div class="kpi-content">
+        <span class="kpi-title">Pending Verification</span>
+        <span class="kpi-value">{{pendingVerificationCount}}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search & Smart Filters -->
+  <div class="table-search">
+    <div class="search-grid">
+      <div class="search-field search-field-main">
+        <i class="fa fa-search search-icon"></i>
+        <input type="text" class="main-input" [(ngModel)]="searchText" (ngModelChange)="applyFilters()"
+          placeholder="Search name, code, GSTIN, PAN, email..." />
+      </div>
+
+      <select class="form-control select-input" [(ngModel)]="industryFilter" (change)="applyFilters()">
+        <option value="">All Industries</option>
+        <option *ngFor="let ind of availableIndustries" [value]="ind">{{ind}}</option>
+      </select>
+
+      <select class="form-control select-input" [(ngModel)]="categoryFilter" (change)="applyFilters()">
+        <option value="">All Categories</option>
+        <option *ngFor="let cat of availableCategories" [value]="cat">{{cat}}</option>
+      </select>
+
+      <select class="form-control select-input" [(ngModel)]="qualificationFilter" (change)="applyFilters()">
+        <option value="">All Qualifications</option>
+        <option value="Qualified">Qualified</option>
+        <option value="Pending">Pending</option>
+        <option value="Unqualified">Unqualified</option>
+      </select>
+
+      <select class="form-control select-input" [(ngModel)]="scoreFilter" (change)="applyFilters()">
+        <option value="">All AI Scores</option>
+        <option value="preferred">Preferred (&gt;80%)</option>
+        <option value="high">High Fit (90%+)</option>
+        <option value="standard">Standard (Below 80%)</option>
+      </select>
+
+      <button class="btn btn-outline-secondary btn-reset" (click)="resetFilters()" title="Reset all filters">
+        <i class="fa fa-refresh mr-1"></i> <span>Reset</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="text-center py-5 text-muted">
+    <i class="fa fa-spinner fa-spin fa-2x"></i>
+    <p class="mt-2 font-weight-500">Loading vendor records...</p>
+  </div>
+
+  <!-- Vendor Directory: table on desktop/tablet, cards on mobile -->
+  <div *ngIf="!loading" class="table-responsive vendor-table-scroll">
+    <table class="table vendor-table ai-analysis-table">
+      <thead>
+        <tr>
+          <th style="min-width: 110px;">Vendor Code</th>
+          <th style="min-width: 170px;">Vendor Name</th>
+          <th style="min-width: 120px;">Industry</th>
+          <th style="min-width: 140px;">AI Category</th>
+          <th style="min-width: 110px;">Group</th>
+          <th style="min-width: 110px;">Scope</th>
+          <th style="min-width: 110px;">Qualification</th>
+          <th style="min-width: 100px;" class="text-center">AI Score</th>
+          <th style="min-width: 120px;">KYC Status</th>
+          <th style="min-width: 110px;">Compliance</th>
+          <th style="min-width: 120px;" class="text-center">AI Status</th>
+          <th style="min-width: 170px;" class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let vendor of paginatedVendors" class="vendor-row">
+          <!-- Vendor Code -->
+          <td data-label="Vendor Code">
+            <span class="code-pill cursor-pointer" (click)="viewAiProfile(vendor)">{{vendor.vendorCode}}</span>
+          </td>
+
+          <!-- Vendor Name & Details -->
+          <td data-label="Vendor Name" class="vendor-name-cell">
+            <div class="font-weight-bold text-navy cursor-pointer" (click)="viewAiProfile(vendor)">{{vendor.vendorName}}</div>
+            <div class="small text-muted" *ngIf="vendor.searchTerm">Alias: {{vendor.searchTerm}}</div>
+            <div class="small text-muted" *ngIf="vendor.contactInfo?.email"><i class="fa fa-envelope-o mr-1"></i>{{vendor.contactInfo.email}}</div>
+          </td>
+
+          <!-- Industry -->
+          <td data-label="Industry">
+            <span class="industry-badge">{{vendor.industry}}</span>
+          </td>
+
+          <!-- AI Category -->
+          <td data-label="AI Category">
+            <span class="category-text">
+              <i class="fa fa-folder-open-o text-primary mr-1"></i>
+              <strong>{{vendor.category}}</strong>
+            </span>
+          </td>
+
+          <!-- Vendor Group -->
+          <td data-label="Group">
+            <span class="badge-vendor-group">{{vendor.vendorGroup || 'Approved Vendor'}}</span>
+          </td>
+
+          <!-- Sourcing Scope -->
+          <td data-label="Scope">
+            <span class="badge-scope" [ngClass]="vendor.sourcingScope === 'Client + Procucev' ? 'badge-scope-hybrid' : 'badge-scope-private'">
+              {{vendor.sourcingScope === 'Client + Procucev' ? 'Hybrid' : 'Private'}}
+            </span>
+          </td>
+
+          <!-- Qualification -->
+          <td data-label="Qualification">
+            <span class="badge-status" [ngClass]="{
+              'badge-success': vendor.qualification === 'Qualified',
+              'badge-warning': vendor.qualification === 'Pending',
+              'badge-danger': vendor.qualification === 'Unqualified'
+            }">
+              <i class="fa fa-check-circle mr-1" *ngIf="vendor.qualification === 'Qualified'"></i>
+              {{vendor.qualification}}
+            </span>
+          </td>
+
+          <!-- AI Score -->
+          <td data-label="AI Score" class="text-center">
+            <div class="score-container" [ngClass]="getScoreColorClass(vendor.aiScore)">
+              <div class="score-number">{{vendor.aiScore}}%</div>
+              <div class="score-bar">
+                <div class="score-bar-fill" [style.width.%]="vendor.aiScore"></div>
+              </div>
+            </div>
+          </td>
+
+          <!-- KYC / Verification -->
+          <td data-label="KYC Status">
+            <span class="badge-credential-verified" *ngIf="vendor.credentials.gstin.verified && vendor.credentials.pan.verified">
+              <i class="fa fa-check-circle text-success mr-1"></i> VERIFIED
+            </span>
+            <span class="badge-credential-pending" *ngIf="vendor.credentials.gstin.verified !== vendor.credentials.pan.verified">
+              <i class="fa fa-adjust text-warning mr-1"></i> PARTIAL
+            </span>
+            <span class="badge-credential-pending" *ngIf="!vendor.credentials.gstin.verified && !vendor.credentials.pan.verified">
+              <i class="fa fa-clock-o text-warning mr-1"></i> PENDING
+            </span>
+            <div class="small text-muted mt-1">
+              <span *ngIf="vendor.credentials.gstin.verified" title="GSTIN Provided" class="mr-1"><i class="fa fa-check text-success"></i> GST</span>
+              <span *ngIf="vendor.credentials.pan.verified" title="PAN Provided"><i class="fa fa-check text-success"></i> PAN</span>
+            </div>
+          </td>
+
+          <!-- Compliance -->
+          <td data-label="Compliance">
+            <span class="badge-compliance" [ngClass]="vendor.complianceStatus === 'Compliant' || vendor.complianceStatus === 'Fully Compliant' ? 'badge-compliance-ok' : 'badge-compliance-warn'">
+              <i class="fa" [ngClass]="vendor.complianceStatus === 'Compliant' || vendor.complianceStatus === 'Fully Compliant' ? 'fa-shield text-success' : 'fa-exclamation-circle text-warning'"></i>
+              {{vendor.complianceStatus || 'Compliant'}}
+            </span>
+          </td>
+
+          <!-- AI Status (Preferred Vendor Logic) -->
+          <td data-label="AI Status" class="text-center">
+            <span class="badge-preferred-vendor" *ngIf="isPreferredVendor(vendor)" title="Score > 80% — Preferred Vendor">
+              <i class="fa fa-star mr-1"></i> PREFERRED
+            </span>
+            <span class="badge-standard-vendor" *ngIf="!isPreferredVendor(vendor)" title="Score <= 80% — Standard Review">
+              STANDARD
+            </span>
+          </td>
+
+          <!-- Actions -->
+          <td data-label="Actions" class="text-center">
+            <div class="btn-group btn-group-sm vendor-actions" role="group">
+              <button class="btn btn-sm btn-action-profile" (click)="viewAiProfile(vendor)" title="View Full AI Profile">
+                View Profile
+              </button>
+              <button class="btn btn-sm btn-outline-info" (click)="viewDocuments(vendor)" title="View Vendor Documents">
+                <i class="fa fa-file-text-o"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-primary" (click)="viewPerformance(vendor)" title="View Performance Metrics">
+                <i class="fa fa-line-chart"></i>
+              </button>
+              <button type="button" class="btn-skelton" (click)="editVendor(vendor)" title="Edit Vendor">
+                <img class="cursor-pointer" src="/assets/images/new/edit-data.png" alt="Edit" style="width: 16px; height: 16px;">
+              </button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Empty State -->
+        <tr *ngIf="filteredVendors.length === 0" class="empty-row">
+          <td colspan="12" class="text-center py-5 text-muted">
+            <i class="fa fa-inbox fa-3x mb-2 text-muted"></i>
+            <p class="font-weight-600 mb-1">No vendors found matching your filter criteria.</p>
+            <small class="text-muted">Upload an Excel file or click "Add Vendor" to onboard suppliers.</small>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination-panel" *ngIf="totalPages > 1">
+    <p class="pagination-summary">Showing page <strong>{{currentPage + 1}}</strong> of <strong>{{totalPages}}</strong> ({{filteredVendors.length}} total vendors)</p>
+    <div class="pagination-btns">
+      <button class="btn-page" [disabled]="currentPage === 0" (click)="onPageChange(0)" title="First Page">
+        <i class="fa fa-angle-double-left"></i> <span class="btn-page-label">First</span>
+      </button>
+      <button class="btn-page" [disabled]="currentPage === 0" (click)="onPageChange(currentPage - 1)" title="Previous Page">
+        <i class="fa fa-angle-left"></i> <span class="btn-page-label">Prev</span>
+      </button>
+      <button class="btn-page" [disabled]="currentPage >= totalPages - 1" (click)="onPageChange(currentPage + 1)" title="Next Page">
+        <span class="btn-page-label">Next</span> <i class="fa fa-angle-right"></i>
+      </button>
+      <button class="btn-page" [disabled]="currentPage >= totalPages - 1" (click)="onPageChange(totalPages - 1)" title="Last Page">
+        <span class="btn-page-label">Last</span> <i class="fa fa-angle-double-right"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= Excel Upload Modal ================= -->
+<div class="modal-backdrop fade show" *ngIf="showUploadModal"></div>
+<div class="modal fade show d-block" tabindex="-1" role="dialog" *ngIf="showUploadModal">
+  <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+    <div class="modal-content excel-modal-content">
+
+      <!-- Header -->
+      <div class="modal-header excel-modal-header text-white">
+        <h5 class="modal-title text-white">
+          <i class="fa fa-file-excel-o mr-2 text-warning"></i> Upload Vendors via Excel / CSV
+        </h5>
+        <button type="button" class="close text-white" aria-label="Close" (click)="closeUploadModal()" [disabled]="isUploading">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body p-4">
+
+        <!-- Step 1: Download Template -->
+        <div class="template-box mb-4">
+          <div class="template-box-row">
+            <div class="template-box-copy">
+              <h6 class="font-weight-700 text-navy mb-1">
+                <i class="fa fa-download text-success mr-2"></i> Step 1: Download Excel Master Template
+              </h6>
+              <p class="text-muted font-size-13 mb-0">
+                Download the official Procucev vendor master template with pre-configured headers, validation rules, and sample enterprise records.
+              </p>
+            </div>
+            <div class="template-box-action">
+              <button class="btn btn-success btn-download-template" type="button" (click)="downloadTemplate()">
+                <i class="fa fa-file-excel-o mr-1"></i> Download Template (.xlsx)
+              </button>
+            </div>
+          </div>
+          <div class="template-chips mt-3">
+            <span class="text-muted font-size-12 mr-2 chip-label"><strong>Required Columns:</strong></span>
+            <span class="badge-primary-light mr-2 mb-1">Vendor Code *</span>
+            <span class="badge-primary-light mr-2 mb-1">Vendor Name *</span>
+            <span class="badge-primary-light mr-2 mb-1">Primary Phone *</span>
+            <span class="badge-primary-light mr-2 mb-1">GSTIN / PAN</span>
+            <span class="badge-primary-light mr-2 mb-1">Industry &amp; Business Type</span>
+          </div>
+        </div>
+
+        <!-- Step 2: Drag & Drop Zone -->
+        <div class="upload-box mb-3">
+          <h6 class="font-weight-700 text-navy mb-2">
+            <i class="fa fa-cloud-upload text-primary mr-2"></i> Step 2: Upload Filled File
+          </h6>
+          <div class="drop-zone text-center p-4" [class.drag-over]="isDragging"
+            (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)"
+            (click)="fileInput.click()">
+            <input type="file" #fileInput (change)="onFileSelected($event)" accept=".xlsx, .xls, .csv" style="display: none;" />
+            <i class="fa fa-cloud-upload drop-icon mb-2"></i>
+            <h6 class="font-weight-600 mb-1" *ngIf="!selectedFileName">
+              Click here to browse or drag &amp; drop your filled .xlsx / .csv file
+            </h6>
+            <h6 class="font-weight-600 text-success mb-1" *ngIf="selectedFileName">
+              <i class="fa fa-file-excel-o mr-1"></i> Selected: {{selectedFileName}}
+            </h6>
+            <p class="text-muted font-size-12 mb-0">Supported formats: Microsoft Excel (.xlsx, .xls) and CSV (.csv)</p>
+          </div>
+        </div>
+
+        <!-- Step 3: Validation & Preview Section -->
+        <div class="preview-section mt-4" *ngIf="parsedRows.length > 0">
+          <div class="preview-header mb-2">
+            <h6 class="font-weight-700 text-navy mb-0">
+              <i class="fa fa-table text-info mr-2"></i> Validation &amp; Preview ({{parsedRows.length}} Rows)
+            </h6>
+            <div class="validation-summary">
+              <span class="badge badge-success px-3 py-2 mr-2 font-size-12">
+                <i class="fa fa-check-circle mr-1"></i> {{validCount}} Valid
+              </span>
+              <span class="badge badge-danger px-3 py-2 font-size-12" *ngIf="invalidCount > 0">
+                <i class="fa fa-exclamation-triangle mr-1"></i> {{invalidCount}} Invalid (Will be skipped)
+              </span>
+            </div>
+          </div>
+
+          <div class="preview-table-container">
+            <table class="table table-sm table-bordered preview-table">
+              <thead class="thead-light">
+                <tr>
+                  <th class="sticky-col-left-1 text-center">#</th>
+                  <th class="sticky-col-left-2 text-center">Status</th>
+                  <th>Vendor Code</th>
+                  <th>Vendor Name</th>
+                  <th>Primary Phone</th>
+                  <th>GSTIN</th>
+                  <th>PAN</th>
+                  <th>Industry</th>
+                  <th>Type of Business</th>
+                  <th>City</th>
+                  <th>State</th>
+                  <th>Sourcing Scope</th>
+                  <th class="sticky-col-right">Remarks</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of parsedRows; let i = index" [class.table-danger-row]="!row.isValid" [class.table-success-row]="row.isValid">
+                  <td class="sticky-col-left-1 text-center">{{i + 1}}</td>
+                  <td class="sticky-col-left-2 text-center">
+                    <span *ngIf="row.isValid" class="text-success"><i class="fa fa-check-circle"></i> Ready</span>
+                    <span *ngIf="!row.isValid" class="text-danger"><i class="fa fa-times-circle"></i> Error</span>
+                  </td>
+                  <td><strong>{{row.vendor.vendorCode || '-'}}</strong></td>
+                  <td>{{row.vendor.vendorName || '-'}}</td>
+                  <td>{{row.vendor.phone1 || '-'}}</td>
+                  <td>{{row.vendor.gstin || '-'}}</td>
+                  <td>{{row.vendor.pan || '-'}}</td>
+                  <td>{{row.vendor.typeOfIndustry || '-'}}</td>
+                  <td>{{row.vendor.typeOfBusiness || '-'}}</td>
+                  <td>{{row.vendor.city || '-'}}</td>
+                  <td>{{row.vendor.regionCode || '-'}}</td>
+                  <td>{{row.vendor.sourcingScope || '-'}}</td>
+                  <td class="sticky-col-right">
+                    <span *ngIf="row.isValid" class="text-success font-size-12">Valid row</span>
+                    <span *ngIf="!row.isValid" class="text-danger font-size-12">{{row.errors.join('; ')}}</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer excel-modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeUploadModal()" [disabled]="isUploading">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-primary btn-uploadExcel" (click)="uploadVendors()" [disabled]="validCount === 0 || isUploading">
+          <i class="fa fa-spinner fa-spin mr-1" *ngIf="isUploading"></i>
+          <i class="fa fa-cloud-upload mr-1" *ngIf="!isUploading"></i>
+          <span>Import {{validCount}} Valid Vendor(s)</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ================= AI Vendor Processing Pipeline Modal ================= -->
+<div class="modal-backdrop fade show" *ngIf="showAiProcessingModal"></div>
+<div class="modal fade show d-block" tabindex="-1" role="dialog" *ngIf="showAiProcessingModal">
+  <div class="modal-dialog modal-dialog-centered ai-processing-modal-dialog" role="document">
+    <div class="modal-content ai-processing-modal-content shadow-lg">
+
+      <!-- Header -->
+      <div class="modal-header ai-modal-header text-white">
+        <div class="ai-header-title">
+          <div class="ai-header-icon-box">
+            <i class="fa fa-magic"></i>
+          </div>
+          <div>
+            <h5 class="modal-title text-white font-weight-700 mb-0">AI Vendor Processing</h5>
+            <small class="text-light-blue">AI Categorization &bull; Credential Mapping &bull; Qualification</small>
+          </div>
+        </div>
+        <button type="button" class="close text-white" aria-label="Close" (click)="closeAiProcessingModal()" [disabled]="!aiProcessingComplete">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body p-4">
+        <!-- Progress Summary -->
+        <div class="ai-progress-summary-box mb-4">
+          <div class="ai-progress-summary-top mb-2">
+            <span class="ai-status-text font-weight-600">{{aiProcessingStatusText}}</span>
+            <span class="ai-percentage-badge font-weight-700">{{aiProcessingProgress}}%</span>
+          </div>
+          <div class="progress ai-progress-bar-container">
+            <div class="progress-bar progress-bar-striped progress-bar-animated ai-progress-bar-fill"
+                 role="progressbar" [style.width.%]="aiProcessingProgress"></div>
+          </div>
+        </div>
+
+        <!-- 6-Stage Checklist -->
+        <div class="ai-pipeline-steps-list">
+          <div class="ai-step-item" *ngFor="let step of aiSteps"
+               [ngClass]="{'step-completed': step.status === 'completed', 'step-processing': step.status === 'processing', 'step-pending': step.status === 'pending'}">
+            
+            <div class="step-icon-circle" [ngClass]="step.status">
+              <i class="fa fa-check" *ngIf="step.status === 'completed'"></i>
+              <i class="fa fa-spinner fa-spin" *ngIf="step.status === 'processing'"></i>
+              <i class="fa fa-circle-o" *ngIf="step.status === 'pending'"></i>
+            </div>
+
+            <div class="step-content-col">
+              <div class="step-label font-weight-600">{{step.label}}</div>
+              <div class="step-detail small text-muted">{{step.detail}}</div>
+            </div>
+
+            <div class="step-status-badge">
+              <span class="badge badge-step" [ngClass]="{
+                'badge-success': step.status === 'completed',
+                'badge-primary': step.status === 'processing',
+                'badge-light text-muted': step.status === 'pending'
+              }">
+                {{step.status === 'completed' ? 'Done' : (step.status === 'processing' ? 'Processing' : 'Pending')}}
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer ai-modal-footer text-right">
+        <button type="button" class="btn btn-primary btn-view-results"
+                (click)="finishAiProcessing()" [disabled]="!aiProcessingComplete">
+          <i class="fa fa-check-circle mr-1"></i>
+          <span>View Enriched Directory</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
