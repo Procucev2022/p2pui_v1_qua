@@ -578,6 +578,7 @@
                     </a>
                     <ul [ngStyle]="{'display':(rep == 'GMT' && repCollapsed) ? 'block' : 'none' }"
                     style="padding: 0px 0px 0px 32px;;" class="collapse list-unstyled" id="pageSubmenu">
+
                         <li *ngIf="loggedUserDetails?.role.roleName == 'ClientInitiator' ||loggedUserDetails?.role.roleName == 'CategoryManager' ">
                             <a class="list-group-item" [routerLink]="['/categorymgr/create-rfq']"
                             [routerLinkActive]="['router-link-active']">
