@@ -1,0 +1,40 @@
+.company-list-body {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.company-list-item {
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: #f8fbff;
+  }
+
+  &.active-item {
+    background-color: #e8f1fd;
+    border-left: 4px solid #0058be;
+  }
+}
+
+.chat-container {
+  height: 250px;
+  overflow-y: auto;
+}
+
+.chat-bubble {
+  max-width: 75%;
+  border-radius: 12px;
+}
+
+.bg-success-soft {
+  background-color: #e6f4ea;
+  border: 1px solid #ceead6;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.tiny {
+  font-size: 10px;
+}

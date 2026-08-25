@@ -1,0 +1,143 @@
+<div class="calendar-view position-relative">
+  <!-- Top Header with Month Selection -->
+  <div class="d-flex flex-column flex-md-row align-items-md-end justify-content-between mb-4 gap-2">
+    <div>
+      <div class="d-flex align-items-center gap-3 mb-1">
+        <h3 class="font-weight-bold text-dark mb-0 mr-3">{{ monthName }}</h3>
+        <!-- Month Dropdown -->
+        <select
+          [ngModel]="currentYear + '-' + currentMonth"
+          (ngModelChange)="handleMonthSelect($event)"
+          class="form-control form-control-sm w-auto font-weight-bold"
+        >
+          <option *ngFor="let m of availableMonths" [value]="m.year + '-' + m.month">
+            {{ m.label }}
+          </option>
+        </select>
+      </div>
+      <p class="text-muted small mb-0">Conversion activity and acquisition metrics from live database transactions.</p>
+    </div>
+
+    <div class="d-flex align-items-center gap-3">
+      <!-- Legend -->
+      <div class="d-flex align-items-center gap-3 bg-white px-3 py-2 rounded border shadow-2xs mr-2">
+        <span class="small text-muted mr-2"><span class="badge-dot bg-primary mr-1"></span>High</span>
+        <span class="small text-muted mr-2"><span class="badge-dot bg-secondary mr-1"></span>Avg</span>
+        <span class="small text-muted"><span class="badge-dot bg-danger mr-1"></span>Low</span>
+      </div>
+
+      <!-- Navigation buttons -->
+      <div class="btn-group btn-group-sm shadow-2xs">
+        <button (click)="handlePrevMonth()" class="btn btn-outline-secondary font-weight-bold" title="Previous Month">‹</button>
+        <button (click)="currentYear = 2026; currentMonth = 8; loadCalendar()" class="btn btn-light font-weight-bold">Current</button>
+        <button (click)="handleNextMonth()" class="btn btn-outline-secondary font-weight-bold" title="Next Month">›</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Loading calendar...</span>
+    </div>
+  </div>
+
+  <!-- Calendar Grid -->
+  <div *ngIf="!isLoading" class="card shadow-sm border-0 overflow-hidden mb-4">
+    <!-- Weekday Header -->
+    <div class="row no-gutters bg-light border-bottom text-center py-2 font-weight-bold small text-muted text-uppercase">
+      <div class="col">Sun</div>
+      <div class="col">Mon</div>
+      <div class="col">Tue</div>
+      <div class="col">Wed</div>
+      <div class="col">Thu</div>
+      <div class="col">Fri</div>
+      <div class="col">Sat</div>
+    </div>
+
+    <!-- Date Cells Grid -->
+    <div class="row no-gutters bg-light-border">
+      <ng-container *ngFor="let idx of totalGridCells">
+        <div class="col-7-cell p-2 border-right border-bottom bg-white min-h-cell position-relative cursor-pointer"
+             (click)="idx >= startDayOffset && (idx - startDayOffset + 1) <= days.length && handleCellClick(idx - startDayOffset + 1)"
+             [class.bg-light-faded]="idx < startDayOffset || (idx - startDayOffset + 1) > days.length"
+             [class.active-cell]="selectedDay && selectedDay.day === (idx - startDayOffset + 1) && isDrawerOpen">
+
+          <!-- Cell Header -->
+          <div *ngIf="idx >= startDayOffset && (idx - startDayOffset + 1) <= days.length" class="d-flex justify-content-between align-items-center mb-1">
+            <span *ngIf="days[idx - startDayOffset]?.statusLevel === 'high'" class="badge-dot bg-primary" title="High Activity"></span>
+            <span *ngIf="days[idx - startDayOffset]?.statusLevel === 'low'" class="badge-dot bg-danger" title="Low Activity"></span>
+            <span *ngIf="days[idx - startDayOffset]?.statusLevel !== 'high' && days[idx - startDayOffset]?.statusLevel !== 'low'"></span>
+            <span class="font-weight-bold text-dark small">{{ idx - startDayOffset + 1 }}</span>
+          </div>
+
+          <!-- Cell Body with Activity Pills -->
+          <div *ngIf="idx >= startDayOffset && (idx - startDayOffset + 1) <= days.length && days[idx - startDayOffset]">
+            <div class="p-1 bg-light rounded small text-muted d-flex justify-content-between mb-1">
+              <span>Reg</span>
+              <strong class="text-dark">{{ days[idx - startDayOffset].regB }}/{{ days[idx - startDayOffset].regS }}</strong>
+            </div>
+            <div class="p-1 bg-light-primary rounded small text-primary d-flex justify-content-between">
+              <span>RFQs</span>
+              <strong>{{ days[idx - startDayOffset].rfqs }}</strong>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- Day Activity Slide-over Drawer -->
+  <div *ngIf="isDrawerOpen && selectedDay" class="drawer-backdrop" (click)="isDrawerOpen = false">
+    <aside class="slide-drawer bg-white shadow-lg p-4" (click)="$event.stopPropagation()">
+      <div class="d-flex justify-content-between align-items-center pb-3 border-bottom mb-3">
+        <div>
+          <span class="text-primary small text-uppercase font-weight-bold">Day Activity Details</span>
+          <h4 class="font-weight-bold text-dark mb-0">{{ selectedDay.dateStr }}</h4>
+        </div>
+        <button (click)="isDrawerOpen = false" class="btn btn-light btn-sm rounded-circle">&times;</button>
+      </div>
+
+      <!-- Bento Summary -->
+      <div class="row text-center mb-4">
+        <div class="col-4">
+          <div class="p-2 border rounded bg-light">
+            <small class="text-muted font-weight-bold d-block">Buyers</small>
+            <h5 class="font-weight-bold text-dark mb-0">{{ selectedDay.regB }}</h5>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="p-2 border rounded bg-light">
+            <small class="text-muted font-weight-bold d-block">Sellers</small>
+            <h5 class="font-weight-bold text-dark mb-0">{{ selectedDay.regS }}</h5>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="p-2 border rounded bg-light">
+            <small class="text-muted font-weight-bold d-block">RFQs</small>
+            <h5 class="font-weight-bold text-primary mb-0">{{ selectedDay.rfqs }}</h5>
+          </div>
+        </div>
+      </div>
+
+      <!-- Acquisition Channels -->
+      <h6 class="text-muted small text-uppercase font-weight-bold mb-2">Acquisition Breakdown</h6>
+      <div *ngFor="let src of selectedDay.sources" class="mb-3">
+        <div class="d-flex justify-content-between small font-weight-bold mb-1">
+          <span>{{ src.source }}</span>
+          <span>{{ src.percent }}%</span>
+        </div>
+        <div class="progress" style="height: 6px;">
+          <div class="progress-bar bg-primary" [style.width.%]="src.percent"></div>
+        </div>
+      </div>
+
+      <!-- Activity Timeline -->
+      <h6 class="text-muted small text-uppercase font-weight-bold mt-4 mb-2">Activity Timeline</h6>
+      <div *ngFor="let log of selectedDay.activityLogs" class="p-2 border rounded bg-light mb-2 small">
+        <span class="badge badge-primary mr-1">{{ log.time }}</span>
+        <span>{{ log.text }}</span>
+      </div>
+    </aside>
+  </div>
+</div>

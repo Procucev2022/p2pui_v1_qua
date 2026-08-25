@@ -37,8 +37,8 @@ export const SystemViewConfig = {
 }
 
 export const GMT_SYSTEM_SCREENS_LIST ={
-    'CategoryManager' :['/categorymgr/create-rfq', '/categorymgr/gmt-rqfs', '/categorymgr/client-gmt-rqfs', '/categorymgr/vendor-summary', '/categorymgr/cat-mgr-reports'], // 3 Screens
-    'CategoryManager2':['/categorymgr/gmt-rqfs', '/categorymgr/gmt-summary','/categorymgr/gmt-reg-clients','/categorymgr/client-gmt-rqfs', '/categorymgr/gmt-vendors', '/categorymgr/cat-mgr-reports'], // 4 Screens
+    'CategoryManager' :['/categorymgr/create-rfq', '/categorymgr/gmt-rqfs', '/categorymgr/client-gmt-rqfs', '/categorymgr/vendor-summary', '/categorymgr/cat-mgr-reports', '/categorymgr/analytics'], // 3 Screens
+    'CategoryManager2':['/categorymgr/gmt-rqfs', '/categorymgr/gmt-summary','/categorymgr/gmt-reg-clients','/categorymgr/client-gmt-rqfs', '/categorymgr/gmt-vendors', '/categorymgr/cat-mgr-reports', '/categorymgr/analytics'], // 4 Screens
    'ClientInitiator':['/categorymgr/create-rfq', '/categorymgr/gmt-rfq-support','/categorymgr/gmt-rfq-faqs', '/categorymgr/my-profile', '/categorymgr/my-category-list', '/categorymgr/buyer-vendors'], // 3 Screens
 //    'Registration': [ '/categorymgr/vendor-profile',  '/categorymgr/gmt-rfq-faqs', '/categorymgr/my-profile' ], // 2 Screens
 //    'PartialVendor':['/categorymgr/vendor-profile' , '/categorymgr/gmt-rfq-faqs', '/categorymgr/my-profile' ],// 2 Screens
@@ -52,9 +52,9 @@ export const GMT_SYSTEM_SCREENS_LIST ={
 
 export const BFS_SYSTEM_SCREEN_LIST ={
     'CategoryManager' : ['/bfs', '/bfs/items', '/bfs/my-items', '/bfs/my-bids', '/bfs/requested-items', '/categorymgr/capex-quoteCompare', '/categorymgr/capex-auctions' , '/categorymgr/capex-post-auctions-comp',
-    '/client/pr-capex', '/client/cient-summary'
+    '/client/pr-capex', '/client/cient-summary', '/categorymgr/analytics'
     ],
-    'CategoryManager2': ['/bfs', '/bfs/items', '/bfs/my-items', '/bfs/my-bids', '/bfs/requested-items','/bfs/buyer-seller-details'],
+    'CategoryManager2': ['/bfs', '/bfs/items', '/bfs/my-items', '/bfs/my-bids', '/bfs/requested-items','/bfs/buyer-seller-details', '/categorymgr/analytics'],
     'Registration': ['/bfs',   '/bfs/my-items' , '/categorymgr/my-category-list'],
     'PartialVendor': ['/bfs', '/bfs/my-items', '/categorymgr/my-category-list' ],
     'Vendor': ['/bfs',  '/bfs/my-items', '/bfs/seller-bid-items', '/categorymgr/my-category-list' ],

@@ -1,0 +1,54 @@
+.stat-card {
+  border-radius: 12px;
+  border: 1px solid rgba(198, 198, 205, 0.6);
+  background-color: #ffffff;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    border-color: rgba(0, 88, 190, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.stat-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #76777d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.stat-change {
+  font-size: 11.5px;
+}
+
+.border-danger-left {
+  border-left: 4px solid #ba1a1a !important;
+}
+
+.bg-light-danger {
+  background-color: #fff5f5 !important;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.top-right-toast {
+  top: 80px;
+  right: 30px;
+  z-index: 1050;
+  max-width: 380px;
+}
+
+.modal-backdrop-custom {
+  background-color: rgba(0, 0, 0, 0.5);
+}

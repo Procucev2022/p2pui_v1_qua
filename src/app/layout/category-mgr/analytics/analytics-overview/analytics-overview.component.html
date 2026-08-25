@@ -1,0 +1,242 @@
+<div class="overview-view">
+  <!-- Header -->
+  <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 gap-2">
+    <div>
+      <h3 class="font-weight-bold text-dark mb-1">Platform Overview</h3>
+      <p class="text-muted small mb-0">Enterprise-wide conversion, demand activity, and RFQ pipeline metrics from Spring Boot backend.</p>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <select [(ngModel)]="selectedRange" class="form-control form-control-sm mr-2 w-auto">
+        <option value="Last 30 Days (Jul 26 - Aug 24)">Last 30 Days (Jul 26 - Aug 24)</option>
+        <option value="Current Month (August)">Current Month (August)</option>
+        <option value="Previous Month (July)">Previous Month (July)</option>
+        <option value="Year to Date (2026)">Year to Date (2026)</option>
+      </select>
+      <button (click)="exportData()" class="btn btn-sm btn-primary">
+        <i class="fa fa-download mr-1"></i> Export
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Loading metrics...</span>
+    </div>
+    <p class="text-muted small mt-2">Loading platform analytics from live database...</p>
+  </div>
+
+  <div *ngIf="!isLoading && metrics">
+    <!-- 12 Stat Bento Grid -->
+    <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 mb-4">
+      <!-- Total Buyers -->
+      <div class="col mb-3">
+        <div class="card h-100 p-3 stat-card">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="stat-label">Total Buyers</span>
+            <i class="fa fa-users text-primary"></i>
+          </div>
+          <div class="stat-value text-dark font-weight-bold">{{ metrics.totalBuyers?.value | number }}</div>
+          <span class="stat-change text-primary font-weight-bold mt-1">
+            <i class="fa fa-arrow-up mr-1"></i>{{ metrics.totalBuyers?.change }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Total Sellers -->
+      <div class="col mb-3">
+        <div class="card h-100 p-3 stat-card">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="stat-label">Total Sellers</span>
+            <i class="fa fa-building text-primary"></i>
+          </div>
+          <div class="stat-value text-dark font-weight-bold">{{ metrics.totalSellers?.value | number }}</div>
+          <span class="stat-change text-primary font-weight-bold mt-1">
+            <i class="fa fa-arrow-up mr-1"></i>{{ metrics.totalSellers?.change }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Active Buyers -->
+      <div class="col mb-3">
+        <div class="card h-100 p-3 stat-card">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="stat-label">Active Buyers</span>
+            <i class="fa fa-check-circle text-primary"></i>
+          </div>
+          <div class="stat-value text-dark font-weight-bold">{{ metrics.activeBuyers?.value | number }}</div>
+          <span class="stat-change text-muted small mt-1">{{ metrics.activeBuyers?.percentOfTotal }}</span>
+        </div>
+      </div>
+
+      <!-- Inactive Buyers -->
+      <div class="col mb-3">
+        <div class="card h-100 p-3 stat-card">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="stat-label">Inactive Buyers</span>
+            <i class="fa fa-user-times text-muted"></i>
+          </div>
+          <div class="stat-value text-dark font-weight-bold">{{ metrics.inactiveBuyers?.value | number }}</div>
+          <span class="stat-change text-muted small mt-1">{{ metrics.inactiveBuyers?.change }}</span>
+        </div>
+      </div>
+
+      <!-- Total RFQs -->
+      <div class="col mb-3">
+        <div class="card h-100 p-3 stat-card">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="stat-label">Total RFQs</span>
+            <i class="fa fa-file-text-o text-primary"></i>
+          </div>
+          <div class="stat-value text-dark font-weight-bold">{{ metrics.totalRfqs?.value | number }}</div>
+          <span class="stat-change text-primary font-weight-bold mt-1">
+            <i class="fa fa-arrow-up mr-1"></i>{{ metrics.totalRfqs?.change }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Open RFQs -->
+      <div class="col mb-3">
+        <div class="card h-100 p-3 stat-card border-danger-left">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="stat-label">Open RFQs</span>
+            <i class="fa fa-clock-o text-danger"></i>
+          </div>
+          <div class="stat-value text-dark font-weight-bold">{{ metrics.openRfqs?.value | number }}</div>
+          <span class="stat-change text-danger font-weight-bold small mt-1">{{ metrics.openRfqs?.tag }}</span>
+        </div>
+      </div>
+
+      <!-- New RFQs -->
+      <div class="col mb-3">
+        <div class="card h-100 p-3 stat-card">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="stat-label">New RFQs</span>
+            <i class="fa fa-plus-circle text-primary"></i>
+          </div>
+          <div class="stat-value text-dark font-weight-bold">{{ metrics.newRfqs?.value | number }}</div>
+          <span class="stat-change text-muted small mt-1">{{ metrics.newRfqs?.period }}</span>
+        </div>
+      </div>
+
+      <!-- RFQs Without Quotes -->
+      <div class="col mb-3">
+        <div class="card h-100 p-3 stat-card border-danger-left bg-light-danger">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="stat-label">RFQs W/O Quotes</span>
+            <i class="fa fa-exclamation-triangle text-danger"></i>
+          </div>
+          <div class="stat-value text-danger font-weight-bold">{{ metrics.rfqsWithoutQuotes?.value | number }}</div>
+          <span class="stat-change text-danger font-weight-bold small mt-1">{{ metrics.rfqsWithoutQuotes?.tag }}</span>
+        </div>
+      </div>
+
+      <!-- Seller Subs -->
+      <div class="col mb-3">
+        <div class="card h-100 p-3 stat-card">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="stat-label">Seller Subs</span>
+            <i class="fa fa-rupee text-primary"></i>
+          </div>
+          <div class="stat-value text-dark font-weight-bold">{{ metrics.sellerSubs?.value }}</div>
+          <span class="stat-change text-primary font-weight-bold mt-1">
+            <i class="fa fa-arrow-up mr-1"></i>{{ metrics.sellerSubs?.change }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Pending Credits -->
+      <div class="col mb-3">
+        <div class="card h-100 p-3 stat-card">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="stat-label">Pending Credits</span>
+            <i class="fa fa-credit-card text-primary"></i>
+          </div>
+          <div class="stat-value text-dark font-weight-bold">{{ metrics.pendingCredits?.value | number }}</div>
+          <span class="stat-change text-muted small mt-1">{{ metrics.pendingCredits?.tag }}</span>
+        </div>
+      </div>
+
+      <!-- Repeat Buyers -->
+      <div class="col mb-3">
+        <div class="card h-100 p-3 stat-card">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="stat-label">Repeat Buyers</span>
+            <i class="fa fa-repeat text-primary"></i>
+          </div>
+          <div class="stat-value text-dark font-weight-bold">{{ metrics.repeatBuyers?.value }}</div>
+          <span class="stat-change text-primary font-weight-bold small mt-1">{{ metrics.repeatBuyers?.tag }}</span>
+        </div>
+      </div>
+
+      <!-- Top Category -->
+      <div class="col mb-3">
+        <div class="card h-100 p-3 stat-card">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="stat-label">Top Category</span>
+            <i class="fa fa-cube text-primary"></i>
+          </div>
+          <div class="stat-value text-dark font-weight-bold text-truncate" title="{{ metrics.topCategory?.name }}">{{ metrics.topCategory?.name }}</div>
+          <span class="stat-change text-primary font-weight-bold small mt-1">{{ metrics.topCategory?.volumePercent }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Acquisition & Lifecycle Row -->
+    <div class="row mb-4">
+      <!-- Registration Source -->
+      <div class="col-lg-6 mb-3">
+        <div class="card p-4 h-100 shadow-sm border-0">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="font-weight-bold mb-0">Registration Source</h5>
+            <span class="badge badge-light text-primary font-weight-bold">Live Channels</span>
+          </div>
+          <div class="space-y-3">
+            <div *ngFor="let s of sources" class="mb-3">
+              <div class="d-flex justify-content-between small font-weight-bold mb-1">
+                <span>{{ s.channel }}</span>
+                <span>{{ s.buyersPercent }}% Buyers</span>
+              </div>
+              <div class="progress" style="height: 8px;">
+                <div class="progress-bar bg-primary" role="progressbar" [style.width.%]="s.buyersPercent"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RFQ Lifecycle Status -->
+      <div class="col-lg-6 mb-3">
+        <div class="card p-4 h-100 shadow-sm border-0">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="font-weight-bold mb-0">RFQ Lifecycle Status</h5>
+            <span class="badge badge-light text-muted">Pipeline Total: {{ metrics.totalRfqs?.value }}</span>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-sm table-borderless mb-0">
+              <thead>
+                <tr class="text-muted small border-bottom">
+                  <th>STATUS STAGE</th>
+                  <th class="text-right">VOLUME</th>
+                  <th class="text-right">TREND</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let stage of lifecycleStages" class="border-bottom">
+                  <td class="font-weight-bold text-dark py-2">
+                    <span class="dot mr-2" [ngClass]="stage.colorDot"></span>
+                    {{ stage.stage }}
+                  </td>
+                  <td class="text-right font-weight-bold text-dark py-2">{{ stage.volume | number }}</td>
+                  <td class="text-right py-2" [ngClass]="stage.isPositive ? 'text-primary font-weight-bold' : 'text-muted'">
+                    {{ stage.trend }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

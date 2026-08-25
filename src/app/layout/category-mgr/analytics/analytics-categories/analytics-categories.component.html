@@ -1,0 +1,197 @@
+<div class="categories-view position-relative">
+  <!-- Header -->
+  <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 gap-2">
+    <div>
+      <h3 class="font-weight-bold text-dark mb-1">Category Analysis</h3>
+      <p class="text-muted small mb-0">Monitor high-level procurement categories and drill down for specific RFQ insights from MySQL database.</p>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <button (click)="exportData()" class="btn btn-sm btn-primary">
+        <i class="fa fa-download mr-1"></i> Export Data
+      </button>
+    </div>
+  </div>
+
+  <!-- 4 KPI Cards -->
+  <div class="row mb-4">
+    <!-- Total Categories -->
+    <div class="col-md-3 mb-3">
+      <div class="card p-3 shadow-sm border-0 h-100 d-flex flex-row justify-content-between align-items-center">
+        <div>
+          <span class="text-muted small font-weight-bold text-uppercase">Total Categories</span>
+          <h3 class="font-weight-bold text-dark my-1">{{ stats.totalCategories | number }}</h3>
+          <span class="text-primary small font-weight-bold">Active in DB</span>
+        </div>
+        <div class="icon-box bg-primary-soft text-primary">
+          <i class="fa fa-th-large"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Buyers -->
+    <div class="col-md-3 mb-3">
+      <div class="card p-3 shadow-sm border-0 h-100 d-flex flex-row justify-content-between align-items-center">
+        <div>
+          <span class="text-muted small font-weight-bold text-uppercase">Active Buyers</span>
+          <h3 class="font-weight-bold text-dark my-1">{{ stats.activeBuyers | number }}</h3>
+          <span class="text-primary small font-weight-bold">Enterprise accounts</span>
+        </div>
+        <div class="icon-box bg-primary-soft text-primary">
+          <i class="fa fa-users"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Registered Sellers -->
+    <div class="col-md-3 mb-3">
+      <div class="card p-3 shadow-sm border-0 h-100 d-flex flex-row justify-content-between align-items-center">
+        <div>
+          <span class="text-muted small font-weight-bold text-uppercase">Registered Sellers</span>
+          <h3 class="font-weight-bold text-dark my-1">{{ stats.registeredSellers | number }}</h3>
+          <span class="text-muted small font-weight-bold">— Verified suppliers</span>
+        </div>
+        <div class="icon-box bg-primary-soft text-primary">
+          <i class="fa fa-building"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Open RFQs -->
+    <div class="col-md-3 mb-3">
+      <div class="card p-3 shadow-sm border-0 h-100 d-flex flex-row justify-content-between align-items-center border-left-danger">
+        <div>
+          <span class="text-muted small font-weight-bold text-uppercase">Open RFQs</span>
+          <h3 class="font-weight-bold text-dark my-1">{{ stats.openRfqs | number }}</h3>
+          <span class="text-danger small font-weight-bold">
+            <i class="fa fa-exclamation-triangle mr-1"></i>Active Bidding in DB
+          </span>
+        </div>
+        <div class="icon-box bg-danger-soft text-danger">
+          <i class="fa fa-file-text"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categories Table Card -->
+  <div class="card shadow-sm border-0 overflow-hidden mb-4">
+    <div class="card-header bg-white border-bottom p-3 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+      <div>
+        <h5 class="font-weight-bold mb-0">Top-Level Categories</h5>
+        <span class="text-muted small">Select any category to open the detailed subcategory drill-down.</span>
+      </div>
+      <div class="w-auto">
+        <input
+          [(ngModel)]="searchQuery"
+          type="text"
+          placeholder="Search categories..."
+          class="form-control form-control-sm"
+        />
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="thead-light">
+          <tr class="small text-muted text-uppercase">
+            <th>Category Name</th>
+            <th class="text-right">Buyers</th>
+            <th class="text-right">Sellers</th>
+            <th class="text-right">Active RFQs</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cat of displayedCategories" (click)="openDrawer(cat)" class="cursor-pointer" [class.table-active]="selectedCategory?.id === cat.id && isDrawerOpen">
+            <td>
+              <div class="d-flex align-items-center">
+                <div class="cat-icon-badge mr-2">
+                  <i class="fa fa-cube text-primary"></i>
+                </div>
+                <div>
+                  <div class="font-weight-bold text-dark">{{ cat.name }}</div>
+                  <small class="text-muted text-truncate d-block" style="max-width: 320px;">{{ cat.subDescription }}</small>
+                </div>
+              </div>
+            </td>
+            <td class="text-right font-weight-bold text-dark">{{ cat.buyers | number }}</td>
+            <td class="text-right font-weight-bold text-dark">{{ cat.sellers | number }}</td>
+            <td class="text-right font-weight-bold text-primary">{{ cat.activeRfqs }}</td>
+            <td class="text-center">
+              <span class="badge badge-pill" [ngClass]="cat.status === 'High Vol' ? 'badge-danger' : 'badge-primary'">
+                {{ cat.status }}
+              </span>
+            </td>
+            <td class="text-center text-muted">
+              <i class="fa fa-chevron-right"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Table Footer with Conditional Pagination -->
+    <div class="card-footer bg-white border-top p-3 d-flex justify-content-between align-items-center small text-muted">
+      <span>
+        {{ filteredCategories.length === 0 ? 'No categories found' : totalPages <= 1 ? 'Showing all ' + filteredCategories.length + ' categories from MySQL DB' : 'Showing ' + ((currentPage - 1) * itemsPerPage + 1) + ' - ' + (currentPage * itemsPerPage > filteredCategories.length ? filteredCategories.length : currentPage * itemsPerPage) + ' of ' + filteredCategories.length + ' categories' }}
+      </span>
+      <div *ngIf="totalPages > 1" class="btn-group btn-group-sm">
+        <button [disabled]="currentPage === 1" (click)="currentPage = currentPage - 1" class="btn btn-outline-secondary">‹</button>
+        <button class="btn btn-primary">{{ currentPage }}</button>
+        <button [disabled]="currentPage === totalPages" (click)="currentPage = currentPage + 1" class="btn btn-outline-secondary">›</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subcategory Right Slide-over Drawer -->
+  <div *ngIf="isDrawerOpen && selectedCategory" class="drawer-backdrop" (click)="closeDrawer()">
+    <aside class="slide-drawer bg-white shadow-lg p-4" (click)="$event.stopPropagation()">
+      <div class="d-flex justify-content-between align-items-center pb-3 border-bottom mb-3">
+        <div>
+          <span class="text-primary small text-uppercase font-weight-bold">Subcategory Analysis</span>
+          <h4 class="font-weight-bold text-dark mb-0">{{ selectedCategory.name }}</h4>
+        </div>
+        <button (click)="closeDrawer()" class="btn btn-light btn-sm rounded-circle">&times;</button>
+      </div>
+
+      <!-- Top Summary Metrics Bento -->
+      <div class="row text-center mb-4">
+        <div class="col-4">
+          <div class="p-2 border rounded bg-light">
+            <small class="text-muted font-weight-bold d-block">Subcategories</small>
+            <h5 class="font-weight-bold text-dark mb-0">{{ selectedCategory.subcategories?.length || 0 }}</h5>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="p-2 border rounded bg-light">
+            <small class="text-muted font-weight-bold d-block">Total RFQs</small>
+            <h5 class="font-weight-bold text-primary mb-0">{{ selectedCategory.activeRfqs }}</h5>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="p-2 border rounded bg-light">
+            <small class="text-muted font-weight-bold d-block">Avg. Demand</small>
+            <h5 class="font-weight-bold text-dark mb-0">{{ selectedCategory.avgValue || '100 Units' }}</h5>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subcategories Breakdown -->
+      <h6 class="text-muted small text-uppercase font-weight-bold mb-3">Subcategories Breakdown</h6>
+      <div class="space-y-3">
+        <div *ngFor="let sub of selectedCategory.subcategories" class="p-3 border rounded-lg bg-white mb-2 shadow-2xs">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="font-weight-bold text-dark mb-0">{{ sub.name }}</h6>
+            <span class="badge badge-light text-primary font-weight-bold">{{ sub.demandStatus }}</span>
+          </div>
+          <div class="d-flex justify-content-between small text-muted font-weight-bold">
+            <span>Buyers: <strong class="text-dark">{{ sub.buyers }}</strong></span>
+            <span>Sellers: <strong class="text-dark">{{ sub.sellers }}</strong></span>
+            <span>RFQs: <strong class="text-primary">{{ sub.rfqs }}</strong></span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
