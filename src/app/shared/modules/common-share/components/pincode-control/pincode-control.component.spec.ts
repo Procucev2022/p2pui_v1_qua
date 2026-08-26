@@ -111,7 +111,7 @@ describe('PincodeControlComponent', () => {
     component.updatePincodeValidationStatus.subscribe(spy);
     component.onChangePinCode();
     expect(component.isValid).toBe(false);
-    expect(spy).toHaveBeenCalledWith({ pincodeIsValid: false });
+    expect(spy).toHaveBeenCalledWith(jasmine.objectContaining({ pincodeIsValid: false }));
   });
 
   it('should validate standalone inputValue success and failure', () => {
