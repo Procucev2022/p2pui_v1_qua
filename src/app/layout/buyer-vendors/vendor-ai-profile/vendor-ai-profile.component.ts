@@ -36,7 +36,7 @@ export class VendorAiProfileComponent implements OnInit {
   tabs = [
     { id: 'overview', label: 'Overview', icon: 'fa-info-circle' },
     { id: 'credentials', label: 'Credentials & KYC', icon: 'fa-shield' },
-    { id: 'documents', label: 'Documents', icon: 'fa-file-text-o' },
+    // { id: 'documents', label: 'Documents', icon: 'fa-file-text-o' },
     { id: 'qualification', label: 'AI Qualification', icon: 'fa-certificate' },
     { id: 'performance', label: 'Performance', icon: 'fa-line-chart' },
     { id: 'rfq-history', label: 'RFQ History', icon: 'fa-history' },

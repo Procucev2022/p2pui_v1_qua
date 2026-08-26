@@ -55,6 +55,12 @@ export class BuyerVendorService {
     );
   }
 
+  deleteVendor(idOrCode: string): Observable<any> {
+    return this.httpService.delete<any>(
+      AppApiConfig.apiEndpoint + AppApiConfig.BUYER_VENDORS + '/' + encodeURIComponent(idOrCode)
+    );
+  }
+
   bulkCreateVendors(vendors: BuyerVendor[]): Observable<any> {
     return this.httpService.post<any>(
       AppApiConfig.apiEndpoint + AppApiConfig.BUYER_VENDORS + '/bulk', vendors
