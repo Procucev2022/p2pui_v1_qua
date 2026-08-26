@@ -33,15 +33,13 @@ export class AddProductsComponent implements OnInit {
   }
 
   onAddProduct(addForm: NgForm) {
-    console.log('data', this.data);
-      if (addForm.invalid) {
-        return;
-      }
-      console.log('obj', this.data);
+    if (addForm.invalid) {
+      return;
+    }
 
     if (this.data.isNewVendor) {
-      addForm.value['fileName'] = this.fileToUpload.name
-      addForm.value['file'] = this.imageUrl.split(',')[1]
+      addForm.value['fileName'] = this.fileToUpload.name;
+      addForm.value['file'] = this.imageUrl.split(',')[1];
       this.dialogRef.close({event: 'submit', data: addForm.value});
     } else {
       this.data['vendorProduct'].push(addForm.value);
@@ -54,7 +52,6 @@ export class AddProductsComponent implements OnInit {
         }
       });
     }
-
   }
 
 
