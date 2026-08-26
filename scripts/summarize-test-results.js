@@ -33,12 +33,13 @@ function parseJunit(xml) {
       attrs[m[1]] = m[2];
     }
   }
-  // Aggregate multiple testsuites if present
   let tests = 0;
   let failures = 0;
   let errors = 0;
   let skipped = 0;
   let time = 0;
+  const failedTestList = [];
+
   for (const m of xml.matchAll(/<testsuite\b([^>]*)>/g)) {
     const a = {};
     for (const am of m[1].matchAll(/(\w+)="([^"]*)"/g)) a[am[1]] = am[2];
@@ -48,6 +49,19 @@ function parseJunit(xml) {
     skipped += Number(a.skipped || 0);
     time += Number(a.time || 0);
   }
+
+  const testcaseRegex = /<testcase\s+classname="([^"]*)"\s+name="([^"]*)"[^>]*>([\s\S]*?)<\/testcase>/g;
+  for (const match of xml.matchAll(testcaseRegex)) {
+    const classname = match[1];
+    const name = match[2];
+    const body = match[3];
+    if (body.includes('<failure') || body.includes('<error')) {
+      const msgMatch = body.match(/<failure[^>]*message="([^"]*)"/i) || body.match(/<failure[^>]*>([\s\S]*?)<\/failure>/i);
+      const message = msgMatch ? (msgMatch[1] || msgMatch[0]).trim() : 'Assertion failure';
+      failedTestList.push({ classname, name, message: message.substring(0, 300) });
+    }
+  }
+
   return {
     tests,
     failures,
@@ -55,6 +69,7 @@ function parseJunit(xml) {
     skipped,
     time,
     passed: Math.max(0, tests - failures - errors - skipped),
+    failedTestList,
   };
 }
 
@@ -82,6 +97,16 @@ function main() {
     lines.push(`| Skipped | ${junit.skipped} |`);
     lines.push(`| Duration (s) | ${junit.time.toFixed(2)} |`);
     lines.push('');
+
+    if (junit.failedTestList?.length) {
+      lines.push('### ❌ Failing Spec Details');
+      lines.push('');
+      for (const ft of junit.failedTestList) {
+        lines.push(`- **\`${ft.classname}\`** > \`${ft.name}\``);
+        lines.push(`  > ${ft.message}`);
+        lines.push('');
+      }
+    }
   } else {
     lines.push('_JUnit report not found (`coverage/junit/test-results.xml`)._');
     lines.push('');
