@@ -119,11 +119,7 @@ describe('PincodeControlComponent', () => {
     component.inputFormControlName = '';
     component.inputValue = '560001';
     component.isValid = false;
-    try {
-      component.validatePincode();
-    } catch (e) {
-      /* fallthrough get() on plain object */
-    }
+    component.validatePincode();
     expect(toaster.success).toHaveBeenCalled();
     expect(component.isValid).toBe(true);
 
@@ -132,11 +128,7 @@ describe('PincodeControlComponent', () => {
     );
     component.isValid = false;
     component.inputValue = '560001';
-    try {
-      component.validatePincode();
-    } catch (e) {
-      /* fallthrough */
-    }
+    component.validatePincode();
     expect(toaster.error).toHaveBeenCalled();
   });
 
@@ -144,20 +136,12 @@ describe('PincodeControlComponent', () => {
     component.parentFormGroup = null as any;
     component.inputValue = '12';
     component.isValid = false;
-    try {
-      component.validatePincode();
-    } catch (e) {
-      /* fallthrough */
-    }
+    component.validatePincode();
     expect(toaster.error).toHaveBeenCalled();
 
     component.parentFormGroup = {} as any;
     component.isValid = true;
-    try {
-      component.validatePincode();
-    } catch (e) {
-      /* fallthrough */
-    }
+    component.validatePincode();
     expect(component.isValid).toBe(false);
   });
 
@@ -166,9 +150,12 @@ describe('PincodeControlComponent', () => {
     component.parentFormGroup = new FormGroup({ pin: ctrl });
     component.inputFormControlName = 'pin';
     component.isValid = false;
+    const spy = jasmine.createSpy('upd');
+    component.updatePincodeValidationStatus.subscribe(spy);
     component.validatePincode();
     expect(component.isValid).toBe(true);
     expect(ctrl.disabled).toBe(true);
+    expect(spy).toHaveBeenCalledWith(jasmine.objectContaining({ pincode: '560001', pincodeIsValid: true }));
 
     commentsService.getValidatePincode.and.returnValue(
       of({ errorMessage: 'nope' })

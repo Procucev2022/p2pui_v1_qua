@@ -71,6 +71,7 @@ export class PincodeControlComponent implements OnInit, OnChanges {
            this.updatePincodeValidationStatus.emit({pincodeIsValid: false, pincode: this.inputValue});
         } 
       });
+      return;
     }
   
     if (this.parentFormGroup.get(this.inputFormControlName)?.errors === null) {
@@ -81,17 +82,18 @@ export class PincodeControlComponent implements OnInit, OnChanges {
           return;
       }
  
-      console.log('PIN code submitted:', this.parentFormGroup.value[this.inputFormControlName]);
-      this.commentsService.getValidatePincode({ pincode: this.parentFormGroup.value[this.inputFormControlName] }).subscribe((response:any) => {
+      const pincode = this.parentFormGroup.get(this.inputFormControlName)?.value;
+      console.log('PIN code submitted:', pincode);
+      this.commentsService.getValidatePincode({ pincode }).subscribe((response:any) => {
         if(response && !!response.id){ 
           this.isValid = true;
           this.parentFormGroup.get(this.inputFormControlName)?.setErrors(null);
           this.parentFormGroup.get(this.inputFormControlName)?.disable();
           this.toaster.success('Success', 'Validated PIN code.');
-           this.updatePincodeValidationStatus.emit({pincodeIsValid: true, city: response.city, state: response.state, pincode: this.parentFormGroup.value[this.inputFormControlName]});
+           this.updatePincodeValidationStatus.emit({pincodeIsValid: true, city: response.city, state: response.state, pincode});
         } else {
           this.toaster.error('Failure', response.errorMessage);
-           this.updatePincodeValidationStatus.emit({pincodeIsValid: false, pincode: this.parentFormGroup.value[this.inputFormControlName]});
+           this.updatePincodeValidationStatus.emit({pincodeIsValid: false, pincode});
         } 
       });
     } else {

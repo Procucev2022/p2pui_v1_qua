@@ -50,14 +50,19 @@ function parseJunit(xml) {
     time += Number(a.time || 0);
   }
 
-  const testcaseRegex = /<testcase\s+classname="([^"]*)"\s+name="([^"]*)"[^>]*>([\s\S]*?)<\/testcase>/g;
+  const testcaseRegex = /<testcase\b([^>]*)>([\s\S]*?)<\/testcase>/g;
   for (const match of xml.matchAll(testcaseRegex)) {
-    const classname = match[1];
-    const name = match[2];
-    const body = match[3];
+    const testcaseAttrs = {};
+    for (const am of match[1].matchAll(/(\w+)="([^"]*)"/g)) testcaseAttrs[am[1]] = am[2];
+    const classname = testcaseAttrs.classname || '';
+    const name = testcaseAttrs.name || '';
+    const body = match[2];
     if (body.includes('<failure') || body.includes('<error')) {
-      const msgMatch = body.match(/<failure[^>]*message="([^"]*)"/i) || body.match(/<failure[^>]*>([\s\S]*?)<\/failure>/i);
-      const message = msgMatch ? (msgMatch[1] || msgMatch[0]).trim() : 'Assertion failure';
+      const messageAttrMatch = body.match(/<(failure|error)[^>]*message="([^"]*)"/i);
+      const messageBodyMatch = body.match(/<(failure|error)[^>]*>([\s\S]*?)<\/\1>/i);
+      const message = messageAttrMatch
+        ? messageAttrMatch[2].trim()
+        : (messageBodyMatch ? messageBodyMatch[2] : 'Assertion failure').trim();
       failedTestList.push({ classname, name, message: message.substring(0, 300) });
     }
   }
