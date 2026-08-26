@@ -464,9 +464,7 @@ export class VendorListComponent implements OnInit, OnDestroy {
         this.toastr.success(`Vendor ${vendor.vendorName} marked as ${newStatus}.`, 'Status Updated');
       },
       error: () => {
-        // Optimistically reflect state in UI
-        vendor.status = newStatus;
-        this.toastr.info(`Vendor ${vendor.vendorName} status updated to ${newStatus}.`, 'Status Updated');
+        this.toastr.error(`Failed to update ${vendor.vendorName}'s status. Please try again.`, 'Error');
       }
     });
   }
