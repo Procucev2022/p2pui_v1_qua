@@ -37,7 +37,6 @@ describe('VendorFormComponent', () => {
       ]
     }).compileComponents();
 
-
     fixture = TestBed.createComponent(VendorFormComponent);
     component = fixture.componentInstance;
     router = TestBed.inject(Router);
@@ -122,6 +121,18 @@ describe('VendorFormComponent', () => {
       expect(router.navigate).toHaveBeenCalledWith(['/categorymgr/buyer-vendors']);
     });
 
+    it('should create vendor when isEditMode is true but vendorId is null', () => {
+      spyOn(router, 'navigate');
+      component.isEditMode = true;
+      component.vendorId = null;
+      component.vendorForm.patchValue({
+        vendorCode: 'V001', vendorName: 'Test Vendor', phone1: '1234567890'
+      });
+      component.onSubmit();
+      expect(vendorServiceSpy.createVendor).toHaveBeenCalled();
+      expect(router.navigate).toHaveBeenCalledWith(['/categorymgr/buyer-vendors']);
+    });
+
     it('should handle create error', () => {
       vendorServiceSpy.createVendor.and.returnValue(throwError(() => new Error('fail')));
       component.vendorForm.patchValue({
@@ -151,9 +162,84 @@ describe('VendorFormComponent', () => {
       expect(component.vendorForm.get('vendorName')?.value).toBe('Test Vendor');
     });
 
-    it('should handle load error', () => {
-      vendorServiceSpy.getVendorById.and.returnValue(throwError(() => new Error('fail')));
-      component.loadVendor('abc123');
+    it('should load vendor data when res.data is direct object without vendor key', () => {
+      vendorServiceSpy.getVendorById.and.returnValue(of({
+        statusCode: '200', message: '', status: '',
+        data: { vendorCode: 'V002', vendorName: 'Direct Vendor', phone1: '9876543210', status: 'Active', sourcingScope: 'Client Only', country: 'IN' }
+      } as any));
+      component.loadVendor('V002');
+      expect(component.vendorForm.get('vendorName')?.value).toBe('Direct Vendor');
+    });
+
+    it('should fallback to AI profile service when getVendorById fails', () => {
+      vendorServiceSpy.getVendorById.and.returnValue(throwError(() => new Error('Not found in master')));
+      aiServiceSpy.getVendorByCode.and.returnValue(of({
+        vendorCode: 'VND-AI-1',
+        vendorName: 'AI Vendor Ltd',
+        contactInfo: {
+          phone1: '9820112233',
+          phone2: '9820112244',
+          addressLine: 'Tech Park',
+          city: 'Bangalore',
+          state: 'Karnataka',
+          postalCode: '560001',
+          country: 'India'
+        },
+        credentials: {
+          pan: { value: 'ABCDE1234F', verified: true },
+          gstin: { value: '29ABCDE1234F1Z5', verified: true },
+          companyInfo: { verified: true },
+          contactInfo: { verified: true }
+        },
+        typeOfBusiness: 'Software & IT',
+        industry: 'IT',
+        vendorGroup: 'Strategic',
+        sourcingScope: 'Client+Procucev'
+      } as any));
+
+      component.loadVendor('VND-AI-1');
+      expect(aiServiceSpy.getVendorByCode).toHaveBeenCalledWith('VND-AI-1');
+      expect(component.vendorForm.get('vendorName')?.value).toBe('AI Vendor Ltd');
+      expect(component.vendorForm.get('pan')?.value).toBe('ABCDE1234F');
+      expect(component.vendorForm.get('gstin')?.value).toBe('29ABCDE1234F1Z5');
+      expect(component.vendorForm.get('typeOfIndustry')?.value).toBe('IT');
+    });
+
+    it('should handle AI profile with Not Provided credentials and flat fields', () => {
+      vendorServiceSpy.getVendorById.and.returnValue(throwError(() => new Error('Not found')));
+      aiServiceSpy.getVendorByCode.and.returnValue(of({
+        vendorCode: 'VND-AI-2',
+        vendorName: 'Flat Vendor',
+        phone1: '9998887776',
+        phone2: '',
+        pan: '',
+        gstin: '',
+        addressLine: 'Main Road',
+        city: 'Delhi',
+        state: 'DL',
+        postalCode: '110001',
+        country: '',
+        credentials: {
+          pan: { value: 'Not Provided', verified: false },
+          gstin: { value: 'Not Provided', verified: false },
+          companyInfo: { verified: false },
+          contactInfo: { verified: false }
+        },
+        sourcingScope: ''
+      } as any));
+
+      component.loadVendor('VND-AI-2');
+      expect(component.vendorForm.get('vendorName')?.value).toBe('Flat Vendor');
+      expect(component.vendorForm.get('pan')?.value).toBe('');
+      expect(component.vendorForm.get('gstin')?.value).toBe('');
+      expect(component.vendorForm.get('country')?.value).toBe('IN');
+      expect(component.vendorForm.get('sourcingScope')?.value).toBe('Client Only');
+    });
+
+    it('should handle AI profile fallback error', () => {
+      vendorServiceSpy.getVendorById.and.returnValue(throwError(() => new Error('Not found')));
+      aiServiceSpy.getVendorByCode.and.returnValue(throwError(() => new Error('AI profile error')));
+      component.loadVendor('fail-id');
       expect(component.loading).toBe(false);
     });
 

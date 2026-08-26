@@ -126,6 +126,18 @@ describe('BuyerVendorService', () => {
     expect(req.request.body).toEqual(['VND-001', 'VND-002']);
     req.flush({ statusCode: '200', message: '2 vendor(s) deleted successfully' });
   });
+
+  it('should bulk create vendors', () => {
+    const vendors: any[] = [{ vendorCode: 'VND-001' }];
+    service.bulkCreateVendors(vendors).subscribe(res => {
+      expect(res).toBeTruthy();
+    });
+
+    const req = httpMock.expectOne(`${baseUrl}/bulk`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(vendors);
+    req.flush({ statusCode: '200', message: 'Bulk created' });
+  });
 });
 
 

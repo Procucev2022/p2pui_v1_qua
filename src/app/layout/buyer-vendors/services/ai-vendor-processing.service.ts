@@ -109,6 +109,7 @@ export class AiVendorProcessingService {
     const hasAddress = !!(p.addressLine && p.addressLine.trim());
 
     return {
+      id: p.id,
       vendorCode: p.vendorCode || '',
       vendorName: p.vendorName || '',
       searchTerm: p.searchTerm || p.vendorName || '',

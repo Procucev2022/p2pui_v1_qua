@@ -365,7 +365,7 @@ export class VendorListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const allVendorCodes = allVendors.map(v => v.id || v.vendorCode).filter(c => !!c);
+    const allVendorCodes = allVendors.map(v => v.vendorCode || v.id).filter(c => !!c);
 
     swalConfirm.open({
       title: '<h6>Please Confirm!</h6>',

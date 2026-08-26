@@ -44,7 +44,6 @@ describe('VendorDetailComponent', () => {
     fixture.detectChanges();
   }
 
-
   describe('with valid vendor id', () => {
     beforeEach(() => setup('abc123'));
 
@@ -112,6 +111,32 @@ describe('VendorDetailComponent', () => {
       expect(router.navigate).toHaveBeenCalledWith(['/categorymgr/buyer-vendors']);
     });
 
+    it('should handle delete vendor with isConfirmed and fallback names/ids', async () => {
+      const { swalConfirm } = await import('src/app/shared/helpers/swal-confirm');
+      spyOn(swalConfirm, 'open').and.returnValue(Promise.resolve({ isConfirmed: true } as any));
+      spyOn(router, 'navigate');
+
+      component.vendorId = null;
+      component.vendor = { vendorCode: 'V001', phone1: '1234567890', status: 'Active', sourcingScope: 'Client Only', country: 'IN' } as any;
+
+      component.deleteVendor();
+      await fixture.whenStable();
+
+      expect(vendorServiceSpy.deleteVendor).toHaveBeenCalledWith('V001');
+      expect(toastrSpy.success).toHaveBeenCalled();
+    });
+
+    it('should handle delete vendor error', async () => {
+      const { swalConfirm } = await import('src/app/shared/helpers/swal-confirm');
+      spyOn(swalConfirm, 'open').and.returnValue(Promise.resolve({ value: true }));
+      vendorServiceSpy.deleteVendor.and.returnValue(throwError(() => new Error('Delete failed')));
+
+      component.deleteVendor();
+      await fixture.whenStable();
+
+      expect(toastrSpy.error).toHaveBeenCalled();
+    });
+
     it('should not delete vendor when confirmation is cancelled', async () => {
       const { swalConfirm } = await import('src/app/shared/helpers/swal-confirm');
       spyOn(swalConfirm, 'open').and.returnValue(Promise.resolve({ value: false, isDismissed: true }));
@@ -122,8 +147,13 @@ describe('VendorDetailComponent', () => {
       expect(swalConfirm.open).toHaveBeenCalled();
       expect(vendorServiceSpy.deleteVendor).not.toHaveBeenCalled();
     });
-  });
 
+    it('should not delete vendor when vendor is null', () => {
+      component.vendor = null;
+      component.deleteVendor();
+      expect(vendorServiceSpy.deleteVendor).not.toHaveBeenCalled();
+    });
+  });
 
   describe('without vendor id', () => {
     beforeEach(() => setup(null));
