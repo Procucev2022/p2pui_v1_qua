@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { BuyerVendorService } from '../services/buyer-vendor.service';
 import { BuyerVendor } from '../models/buyer-vendor.model';
+import { swalConfirm } from 'src/app/shared/helpers/swal-confirm';
 
 @Component({
   selector: 'app-vendor-detail',
@@ -17,8 +19,10 @@ export class VendorDetailComponent implements OnInit {
   constructor(
     private vendorService: BuyerVendorService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) {}
+
 
   ngOnInit(): void {
     this.vendorId = this.route.snapshot.paramMap.get('id');
@@ -53,7 +57,39 @@ export class VendorDetailComponent implements OnInit {
     const newStatus = this.vendor.status === 'Active' ? 'Inactive' : 'Active';
     this.vendorService.updateVendorStatus(this.vendorId, newStatus).subscribe({
       next: () => {
+        this.toastr.success(`Vendor marked as ${newStatus}.`, 'Status Updated');
         this.loadVendor(this.vendorId!);
+      }
+    });
+  }
+
+  deleteVendor(): void {
+    if (!this.vendor) { return; }
+    const vendorName = this.vendor.vendorName || 'Vendor';
+    const targetId = this.vendorId || this.vendor.id || this.vendor.vendorCode;
+
+    swalConfirm.open({
+      title: '<h6>Please Confirm!</h6>',
+      html: `<h4>Are you sure you want to delete vendor <br/><b>${vendorName}</b> (${this.vendor.vendorCode})?</h4>`,
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, Delete',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true
+    }).then((result: any) => {
+      if (result && (result.value || result.isConfirmed)) {
+        this.vendorService.deleteVendor(targetId).subscribe({
+          next: () => {
+            this.toastr.success(`Vendor ${vendorName} deleted successfully.`, 'Deleted');
+            this.goBack();
+          },
+          error: (err: any) => {
+            console.error('Failed to delete vendor', err);
+            this.toastr.error('Failed to delete vendor. Please try again.', 'Error');
+          }
+        });
       }
     });
   }
@@ -62,3 +98,4 @@ export class VendorDetailComponent implements OnInit {
     this.router.navigate(['/categorymgr/buyer-vendors']);
   }
 }
+

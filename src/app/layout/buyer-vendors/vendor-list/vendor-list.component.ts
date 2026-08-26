@@ -7,6 +7,8 @@ import { BuyerVendorService } from '../services/buyer-vendor.service';
 import { BuyerVendor, INDUSTRY_TYPES } from '../models/buyer-vendor.model';
 import { AiVendorProcessingService } from '../services/ai-vendor-processing.service';
 import { AiVendorAnalysisItem } from '../models/ai-vendor-analysis.model';
+import { swalConfirm } from 'src/app/shared/helpers/swal-confirm';
+
 
 interface ParsedVendorRow {
   vendor: BuyerVendor;
@@ -62,7 +64,12 @@ export class VendorListComponent implements OnInit, OnDestroy {
   currentPage = 0;
   pageSize = 10;
 
+  // Selection & Bulk Actions State
+  selectedVendorCodes = new Set<string>();
+  isBulkDeleting = false;
+
   // Excel Upload Modal State
+
   showUploadModal = false;
   selectedFileName = '';
   isDragging = false;
@@ -309,6 +316,143 @@ export class VendorListComponent implements OnInit, OnDestroy {
     this.router.navigate(['/categorymgr/buyer-vendors', vendor.vendorCode, 'edit']);
   }
 
+  deleteVendor(vendor: AiVendorAnalysisItem): void {
+    if (!vendor) { return; }
+    swalConfirm.open({
+      title: '<h6>Please Confirm!</h6>',
+      html: `<h4>Are you sure you want to delete vendor <br/><b>${vendor.vendorName}</b> (${vendor.vendorCode})?</h4>`,
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, Delete',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true
+    }).then((result: any) => {
+      if (result && (result.value || result.isConfirmed)) {
+        const targetId = vendor.id || vendor.vendorCode;
+        this.vendorService.deleteVendor(targetId).subscribe({
+          next: () => {
+            this.toastr.success(`Vendor ${vendor.vendorName} deleted successfully.`, 'Deleted');
+            if (vendor.vendorCode) {
+              this.selectedVendorCodes.delete(vendor.vendorCode);
+            }
+            this.loadEnrichedVendors();
+          },
+          error: (err: any) => {
+            console.error('Failed to delete vendor', err);
+            this.toastr.error('Failed to delete vendor. Please try again.', 'Error');
+          }
+        });
+      }
+    });
+  }
+
+  // --- Bulk Deletion Methods ---
+
+  deleteAllVendorsConfirmation(event?: MouseEvent): void {
+    if (event) {
+      event.preventDefault();
+      const target = event.target as HTMLInputElement;
+      if (target) {
+        target.checked = false;
+      }
+    }
+
+    const allVendors = this.enrichedVendors;
+    if (!allVendors || allVendors.length === 0) {
+      this.toastr.warning('No vendors available to delete.', 'No Vendors');
+      return;
+    }
+
+    const allVendorCodes = allVendors.map(v => v.vendorCode || v.id).filter(c => !!c);
+
+    swalConfirm.open({
+      title: '<h6>Please Confirm!</h6>',
+      html: `<h4>Are you sure you want to delete all <b>${allVendors.length} vendor(s)</b>?<br/><span style="font-size:13px;color:#dc2626;">This action will permanently delete all vendors and their AI profiles.</span></h4>`,
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: `Yes, Delete All (${allVendors.length})`,
+      cancelButtonText: 'Cancel',
+      reverseButtons: true
+    }).then((result: any) => {
+      if (result && (result.value || result.isConfirmed)) {
+        this.loading = true;
+        this.vendorService.bulkDeleteVendors(allVendorCodes).subscribe({
+          next: (res: any) => {
+            const deleted = res?.data?.deletedCount ?? allVendorCodes.length;
+            this.toastr.success(`All ${deleted} vendor(s) deleted successfully.`, 'Vendors Deleted');
+            this.clearSelection();
+            this.loadEnrichedVendors();
+          },
+          error: (err: any) => {
+            this.loading = false;
+            console.error('Failed to delete all vendors', err);
+            this.toastr.error('Failed to delete all vendors. Please try again.', 'Error');
+          }
+        });
+      }
+    });
+  }
+
+  toggleSelectAll(event: any): void {
+    const isChecked = event?.target?.checked;
+    if (isChecked) {
+      this.paginatedVendors.forEach(v => {
+        if (v.vendorCode) {
+          this.selectedVendorCodes.add(v.vendorCode);
+        }
+      });
+    } else {
+      this.paginatedVendors.forEach(v => {
+        if (v.vendorCode) {
+          this.selectedVendorCodes.delete(v.vendorCode);
+        }
+      });
+    }
+  }
+
+  toggleSelectVendor(vendorCode: string): void {
+    if (!vendorCode) { return; }
+    if (this.selectedVendorCodes.has(vendorCode)) {
+      this.selectedVendorCodes.delete(vendorCode);
+    } else {
+      this.selectedVendorCodes.add(vendorCode);
+    }
+  }
+
+  isVendorSelected(vendorCode: string): boolean {
+    return !!vendorCode && this.selectedVendorCodes.has(vendorCode);
+  }
+
+  isAllSelected(): boolean {
+    if (!this.paginatedVendors || this.paginatedVendors.length === 0) {
+      return false;
+    }
+    return this.paginatedVendors.every(v => v.vendorCode && this.selectedVendorCodes.has(v.vendorCode));
+  }
+
+  isPartiallySelected(): boolean {
+    if (!this.paginatedVendors || this.paginatedVendors.length === 0) {
+      return false;
+    }
+    const selectedInPage = this.paginatedVendors.filter(v => v.vendorCode && this.selectedVendorCodes.has(v.vendorCode)).length;
+    return selectedInPage > 0 && selectedInPage < this.paginatedVendors.length;
+  }
+
+  clearSelection(): void {
+    this.selectedVendorCodes.clear();
+  }
+
+  bulkDeleteSelectedVendors(): void {
+    this.deleteAllVendorsConfirmation();
+  }
+
+
+
+
   toggleVendorStatus(vendor: AiVendorAnalysisItem): void {
     const currentStatus = vendor.status || 'Active';
     const newStatus = currentStatus === 'Active' ? 'Inactive' : 'Active';
@@ -550,32 +694,39 @@ export class VendorListComponent implements OnInit, OnDestroy {
     let valid = 0;
     let invalid = 0;
 
+    const phoneRegex = /^\d{10}$/;
     const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/i;
     const gstinRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/i;
-    const phoneRegex = /^\d{10}$/;
     const pinRegex = /^\d{6}$/;
 
     for (const item of rawJson) {
+      if (!item || typeof item !== 'object') { continue; }
+
       const vendor: BuyerVendor = {
-        vendorCode: this.extractFieldValue(item, ['Vendor Code *', 'Vendor Code', 'vendorCode', 'code', 'vendor_code']),
-        vendorName: this.extractFieldValue(item, ['Vendor Name *', 'Vendor Name', 'vendorName', 'name', 'vendor_name']),
-        searchTerm: this.extractFieldValue(item, ['Search Term', 'searchTerm', 'search_term']),
-        phone1: this.extractFieldValue(item, ['Phone 1 (Primary) *', 'Phone 1', 'phone1', 'Phone', 'mobile', 'phone']),
-        phone2: this.extractFieldValue(item, ['Phone 2 (Alternate)', 'Phone 2', 'phone2']),
-        pan: this.extractFieldValue(item, ['PAN', 'pan', 'PAN Number']),
-        gstin: this.extractFieldValue(item, ['GSTIN', 'gstin', 'GST', 'GST Number']),
+        vendorCode: this.extractFieldValue(item, ['Vendor Code *', 'Vendor Code', 'Vendor ID', 'Code', 'vendorCode', 'vendor_code']),
+        vendorName: this.extractFieldValue(item, ['Vendor Name *', 'Vendor Name', 'Company Name', 'Supplier Name', 'Name', 'vendorName', 'vendor_name']),
+        searchTerm: this.extractFieldValue(item, ['Search Term', 'Search Alias', 'Alias', 'searchTerm', 'search_term']),
+        phone1: this.extractFieldValue(item, ['Primary Phone *', 'Primary Phone', 'Phone 1 (Primary) *', 'Phone 1', 'phone1', 'Phone', 'Mobile', 'Mobile Number', 'Phone Number', 'contact', 'telephone']),
+        phone2: this.extractFieldValue(item, ['Phone 2 (Alternate)', 'Phone 2', 'Alternate Phone', 'Secondary Phone', 'phone2']),
+        pan: this.extractFieldValue(item, ['PAN', 'pan', 'PAN Number', 'pan_number', 'pan_no']),
+        gstin: this.extractFieldValue(item, ['GSTIN', 'gstin', 'GST', 'GST Number', 'gst_number', 'gstin_number', 'gst_no']),
         country: this.extractFieldValue(item, ['Country', 'country']) || 'IN',
-        regionCode: this.extractFieldValue(item, ['Region Code / State', 'Region Code', 'State', 'regionCode', 'state']),
-        addressLine: this.extractFieldValue(item, ['Address Line', 'Address', 'addressLine', 'address']),
-        city: this.extractFieldValue(item, ['City', 'city']),
+        regionCode: this.extractFieldValue(item, ['State', 'Region Code / State', 'Region Code', 'regionCode', 'state', 'province']),
+        addressLine: this.extractFieldValue(item, ['Address Line', 'Address', 'addressLine', 'address', 'street']),
+        city: this.extractFieldValue(item, ['City', 'city', 'Location']),
         district: this.extractFieldValue(item, ['District', 'district']),
-        postalCode: this.extractFieldValue(item, ['Postal Code', 'Pincode', 'postalCode', 'pin', 'zip']),
-        typeOfBusiness: this.extractFieldValue(item, ['Type of Business', 'Business Type', 'typeOfBusiness']),
-        typeOfIndustry: this.extractFieldValue(item, ['Type of Industry', 'Industry', 'typeOfIndustry']),
-        vendorGroup: this.extractFieldValue(item, ['Vendor Group', 'Group', 'vendorGroup']),
-        sourcingScope: this.extractFieldValue(item, ['Sourcing Scope', 'Scope', 'sourcingScope']) || 'Client Only',
+        postalCode: this.extractFieldValue(item, ['Postal Code', 'Pincode', 'Pin Code', 'postalCode', 'pin', 'zip', 'postal_code']),
+        typeOfBusiness: this.extractFieldValue(item, ['Type of Business', 'Business Type', 'typeOfBusiness', 'business_type', 'type_of_business']),
+        typeOfIndustry: this.extractFieldValue(item, ['Industry', 'Type of Industry', 'Type of Industry *', 'typeOfIndustry', 'industry_type', 'type_of_industry']),
+        vendorGroup: this.extractFieldValue(item, ['Vendor Group', 'Group', 'vendorGroup', 'vendor_group']),
+        sourcingScope: this.extractFieldValue(item, ['Sourcing Scope', 'Scope', 'sourcingScope', 'sourcing_scope']) || 'Client Only',
         status: 'Active'
       };
+
+      // Skip completely blank/empty rows in Excel
+      if (!vendor.vendorCode && !vendor.vendorName && !vendor.phone1) {
+        continue;
+      }
 
       if (vendor.vendorCode) { vendor.vendorCode = String(vendor.vendorCode).trim(); }
       if (vendor.vendorName) { vendor.vendorName = String(vendor.vendorName).trim(); }
@@ -590,8 +741,8 @@ export class VendorListComponent implements OnInit, OnDestroy {
       if (!vendor.vendorCode) {
         errors.push('Vendor Code is required');
       }
-      if (!vendor.vendorName || vendor.vendorName.length < 3) {
-        errors.push('Vendor Name is required (min 3 chars)');
+      if (!vendor.vendorName || vendor.vendorName.length < 2) {
+        errors.push('Vendor Name is required (min 2 chars)');
       }
       if (!vendor.phone1 || !phoneRegex.test(vendor.phone1)) {
         errors.push('Primary Phone must be 10 digits');
@@ -627,15 +778,23 @@ export class VendorListComponent implements OnInit, OnDestroy {
   private extractFieldValue(obj: any, possibleKeys: string[]): string {
     const normalize = (s: string) => s.replace(/\*/g, '').replace(/[^a-zA-Z0-9]/g, '').toLowerCase().trim();
     
+    // Check direct matches first
     for (const key of possibleKeys) {
       if (obj[key] !== undefined && obj[key] !== null && String(obj[key]).trim() !== '') {
         return String(obj[key]).trim();
       }
     }
+
+    // Build normalized map of Excel row headers
     const objKeys = Object.keys(obj);
+    const normalizedMap = new Map<string, string>();
+    for (const k of objKeys) {
+      normalizedMap.set(normalize(k), k);
+    }
+
     for (const key of possibleKeys) {
       const normTarget = normalize(key);
-      const matchedKey = objKeys.find(k => normalize(k) === normTarget);
+      const matchedKey = normalizedMap.get(normTarget);
       if (matchedKey && obj[matchedKey] !== undefined && obj[matchedKey] !== null && String(obj[matchedKey]).trim() !== '') {
         return String(obj[matchedKey]).trim();
       }
@@ -643,12 +802,19 @@ export class VendorListComponent implements OnInit, OnDestroy {
     return '';
   }
 
+
   uploadVendors(): void {
-    const validVendors = this.parsedRows.filter(r => r.isValid).map(r => r.vendor);
-    if (validVendors.length === 0) {
-      this.toastr.warning('No valid vendor rows to upload', 'Warning');
+    if (!this.selectedFileName || this.parsedRows.length === 0) {
+      this.toastr.warning('Please select an Excel (.xlsx, .xls) or CSV file first.', 'File Required');
       return;
     }
+
+    const validVendors = this.parsedRows.filter(r => r.isValid).map(r => r.vendor);
+    if (validVendors.length === 0) {
+      this.toastr.warning('No valid vendor rows found in the selected file to upload.', 'Warning');
+      return;
+    }
+
 
     this.isUploading = true;
     this.vendorService.bulkCreateVendors(validVendors).subscribe({
