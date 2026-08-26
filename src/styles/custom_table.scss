@@ -459,7 +459,7 @@ table,
 }
 
 
-// <span class="row_{{rowData.sourceType.toUpperCase()}}"></span> add css for the span element to show T or W based on sourceType in the HTML file
+// <span class="row_{{rowData.sourceType.toUpperCase()}}"></span> add css for the span element to show T or W or E based on sourceType in the HTML file
  span.row_W {
     background-image: url('/assets/images/new/wapp.png'); //fix this path to the image
     background-size: cover;
@@ -482,6 +482,20 @@ table,
     width: 25px;
     height: 25px;
     // background-color: #00796b;
+    color: #fff;
+    text-align: center;
+    line-height: 25px;
+    border-radius: 50%;
+    margin-right: 10px;
+    align-items: center;
+}
+
+  span.row_E, span.row_EMAIL, span.row_M, span.row_MAIL {
+    background-image: url('/assets/images/new/email.svg');
+    display: inline-flex;
+    background-size: cover;
+    width: 25px;
+    height: 25px;
     color: #fff;
     text-align: center;
     line-height: 25px;
