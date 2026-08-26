@@ -117,8 +117,7 @@
                         </p-table>
                     </div>
                 </div>
-
-                <div *ngIf="viewRFQbyIDdetails.clientdeliverylocationrfq.length>0">
+                <div *ngIf="viewRFQbyIDdetails.clientdeliverylocationrfq && viewRFQbyIDdetails.clientdeliverylocationrfq.length>0">
                     <div class="card" style="margin-top: 15px;">
                         <div class="col-12 page-title">
                             <h5>Delivery Address Location : </h5>
@@ -138,10 +137,10 @@
                                 <label for="state" style="font-size: medium; font-weight: bolder;"
                                     class="col-sm-5 col-form-label">State:</label>
                                 <div class="col-sm-5 col-form-label">
-                                    <input class="form-control" type="text" [(ngModel)] ="location.state" name="state" disabled/>
+                                    <input class="form-control" type="text" [(ngModel)] ="location.state" name="state"/>
                                 </div>
                             </div>
-                            <div class="form-group row"  *ngIf="roleName != 'CategoryManager'">
+                            <div class="form-group row">
                                
                                 <app-pincode-control [inputFormControlName]="''" [className]="'pincode-control '" [inputValue]="location.pincode"
                                 [parentObject]="location.pincode" 
@@ -150,24 +149,16 @@
                                                 (updatePincodeValidationStatus)="onupdatePincodeValidationStatus($event, i)"></app-pincode-control>
 
                             </div>
-                            <div class="form-group row" *ngIf="roleName == 'CategoryManager'">
-                                <label for="pincode" style="font-size: medium; font-weight: bolder;"
-                                        class="col-sm-5 col-form-label required">Pincode / Zipcode</label>
-                                    <div class="col-sm-5 col-form-label">
-                                    <input class="form-control" type="text" [(ngModel)] ="location.pincode" name="pincode" disabled/>
-                                </div>
-                            </div>
-                             <div class="form-group row" *ngIf="roleName == 'CategoryManager' || roleName == 'CategoryManager2'">
-                                <label for="pincode" style="font-size: medium; font-weight: bolder;"
+                             <div class="form-group row">
+                                <label for="deliveryDate" style="font-size: medium; font-weight: bolder;"
                                     class="col-sm-5 col-form-label required">Delivery Date</label>
                                 <div class="col-sm-5 col-form-label">
-                                    <input class="form-control" type="text" [(ngModel)] ="viewRFQbyIDdetails.deliverDate1" name="deliverDate1" disabled
-                                    value="{{ viewRFQbyIDdetails.deliverDate1 | date:'dd/MM/yyyy' }}"/>
+                                    <p-calendar [(ngModel)]="viewRFQbyIDdetails.deliveryDate" placeholder="DD-MM-YYYY" dateFormat="dd-mm-yy" [showIcon]="true" name="deliveryDate" [minDate]="minDate"></p-calendar>
                                 </div>
                             </div>
                         </mat-card>
                     </div>
-                </div>
+                </div>v>
 
                 <div class="col-12 row cust-card pad-nill"  >
                     <div class="col-12 pb-3 pt-3" >

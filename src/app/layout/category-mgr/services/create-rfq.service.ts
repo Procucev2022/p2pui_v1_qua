@@ -196,4 +196,8 @@ export class CreateRfqService {
         return this.httpService.get(AppApiConfig.apiEndpoint + AppApiConfig[reportType], { params })
 
     }
+
+    updateDeliveryLocation(data: any): Observable<any> {
+        return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.UPDATE_DELIVERY_LOCATION, data, {});
+    }
 }

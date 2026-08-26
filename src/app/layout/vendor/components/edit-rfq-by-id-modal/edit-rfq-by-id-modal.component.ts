@@ -35,6 +35,7 @@ export class EditRfqByIdModalComponent implements OnInit {
    @ViewChild('itemModal') itemModal!: TemplateRef<any>;
     itemDialogRef: MatDialogRef<any> | null = null;
     selectedItemCategory: string = '';
+    minDate: Date = new Date();
 
 
 
@@ -47,7 +48,18 @@ export class EditRfqByIdModalComponent implements OnInit {
         this.viewRFQbyIDdetails = data;
         const deliveryDate = this.viewRFQbyIDdetails.deliveryDate ? new Date(this.viewRFQbyIDdetails.deliveryDate) : null;
         this.viewRFQbyIDdetails.deliverDate1 = deliveryDate ? deliveryDate.toLocaleDateString("en-GB") : '';
-        this.viewRFQbyIDdetails.clientdeliverylocationrfq = this.viewRFQbyIDdetails.clientdeliverylocationrfq.map(loc => ({ ...loc, isValidPincode: true }));
+        this.viewRFQbyIDdetails.deliveryDate = deliveryDate;
+        if (!this.viewRFQbyIDdetails.clientdeliverylocationrfq || this.viewRFQbyIDdetails.clientdeliverylocationrfq.length === 0) {
+            this.viewRFQbyIDdetails.clientdeliverylocationrfq = [{
+                city: '',
+                state: '',
+                pincode: '',
+                address: '',
+                isValidPincode: true
+            }];
+        } else {
+            this.viewRFQbyIDdetails.clientdeliverylocationrfq = this.viewRFQbyIDdetails.clientdeliverylocationrfq.map(loc => ({ ...loc, isValidPincode: true }));
+        }
         console.log(this.viewRFQbyIDdetails);
     }
 
@@ -162,10 +174,25 @@ export class EditRfqByIdModalComponent implements OnInit {
 
     onupdatePincodeValidationStatus(event: any, index: number) {
         console.log('Pincode validation status event:', event);
+        if (!this.viewRFQbyIDdetails.clientdeliverylocationrfq || !this.viewRFQbyIDdetails.clientdeliverylocationrfq[index]) {
+            return;
+        }
         if (event && event.pincodeIsValid) {
-            this.viewRFQbyIDdetails.clientdeliverylocationrfq[index].isValidPincode = event.pincodeIsValid;
+            this.viewRFQbyIDdetails.clientdeliverylocationrfq[index].isValidPincode = true;
+            if (event.pincode) {
+                this.viewRFQbyIDdetails.clientdeliverylocationrfq[index].pincode = event.pincode;
+            }
+            if (event.state) {
+                this.viewRFQbyIDdetails.clientdeliverylocationrfq[index].state = event.state;
+            }
+            if (event.city) {
+                this.viewRFQbyIDdetails.clientdeliverylocationrfq[index].city = event.city;
+            }
         } else {
-            this.viewRFQbyIDdetails.clientdeliverylocationrfq[index].isValidPincode = event.pincodeIsValid;
+            this.viewRFQbyIDdetails.clientdeliverylocationrfq[index].isValidPincode = false;
+            if (event && event.pincode) {
+                this.viewRFQbyIDdetails.clientdeliverylocationrfq[index].pincode = event.pincode;
+            }
         }
     }
 
@@ -214,7 +241,7 @@ export class EditRfqByIdModalComponent implements OnInit {
         }
 
         console.log('reod data', this.viewRFQbyIDdetails)
-        this.viewRFQbyIDdetails['rfqDocument'] = [...this.viewRFQbyIDdetails['rfqDocument'], ...this.commentFilesDataList];
+        this.viewRFQbyIDdetails['rfqDocument'] = [...(this.viewRFQbyIDdetails['rfqDocument'] || []), ...this.commentFilesDataList];
         this.viewRFQbyIDdetails['fromClient'] = this.loggedUserDetails.role.roleName == 'ClientInitiator';
         this.createRfqService.editRFQByClient(this.viewRFQbyIDdetails).subscribe((res: any) => {
             if (res.status == 'Success') {
@@ -239,7 +266,7 @@ export class EditRfqByIdModalComponent implements OnInit {
             this.toaster.warning("Without  Vendor assignment, Not able to send RFQ", 'Warning')
             return;
         }
-        this.viewRFQbyIDdetails['rfqDocument'] = [...this.viewRFQbyIDdetails['rfqDocument'], ...this.commentFilesDataList];
+        this.viewRFQbyIDdetails['rfqDocument'] = [...(this.viewRFQbyIDdetails['rfqDocument'] || []), ...this.commentFilesDataList];
         this.viewRFQbyIDdetails['fromClient'] = this.loggedUserDetails.role.roleName == 'ClientInitiator';
         this.createRfqService.onSaveAndSend(this.viewRFQbyIDdetails).subscribe((res: any) => {
             if (res.status == 'Success') {
