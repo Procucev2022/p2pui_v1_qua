@@ -37,18 +37,20 @@ export class AddClientRefComponent implements OnInit {
     }
 
     onAddClient(addForm: NgForm) {
-      if (addForm.invalid) {
-        return;
-      }
+      console.log('data', this.data);
+        if (addForm.invalid) {
+          return;
+        }
+        console.log('obj', this.data);
 
       if (this.data.isNewVendor) {
-        addForm.value['files'] = this.selectedDocuments;
+        addForm.value['files'] = this.selectedDocuments
         this.dialogRef.close({event: 'submit', data: addForm.value});
       } else {
-        addForm.value['files'] = this.imageUrl ? [{
+        addForm.value['files'] =this.imageUrl ? [{
           'file' : this.imageUrl.split(',')[1],
           'fileName' : this.fileToUpload.name
-        }] : [];
+      }] : []
         this.data['clientReference'].push(addForm.value);
         this.vendorRegSer.submitVendorRegistration(this.data).subscribe((response) => {
           this.dialogRef.close({event: 'submit', data: addForm.value});
@@ -59,6 +61,7 @@ export class AddClientRefComponent implements OnInit {
           }
         });
       }
+
     }
 
     onFileUpload(file: FileList){

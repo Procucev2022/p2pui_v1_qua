@@ -30,16 +30,18 @@ export class AddServicesComponent implements OnInit {
   }
 
   onAddService(addForm: NgForm) {
-    if (addForm.invalid) {
-      return;
-    }
+      if (addForm.invalid) {
+          return;
+      }
+
+      console.log('obj', this.data);
 
     if (this.data.isNewVendor) {
-      this.dialogRef.close({ event: 'submit', data: addForm.value });
+      this.dialogRef.close({event: 'submit', data: addForm.value});
     } else {
       this.vendorRegData['vendorService'].push(addForm.value);
       this.vendorRegSer.submitVendorRegistration(this.vendorRegData).subscribe((response) => {
-        this.dialogRef.close({ event: 'submit', data: addForm.value });
+        this.dialogRef.close({event: 'submit', data: addForm.value});
         if (response['status'] === 'Success') {
           this.toastrService.success(response['message'], 'Success');
         } else {
@@ -47,6 +49,7 @@ export class AddServicesComponent implements OnInit {
         }
       });
     }
+
   }
 
 //   getSacCodes() {
