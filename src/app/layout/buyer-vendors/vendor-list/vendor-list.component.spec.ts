@@ -89,12 +89,14 @@ describe('VendorListComponent', () => {
   ];
 
   beforeEach(async () => {
-    vendorServiceSpy = jasmine.createSpyObj('BuyerVendorService', ['getVendors', 'updateVendorStatus', 'bulkCreateVendors']);
+    vendorServiceSpy = jasmine.createSpyObj('BuyerVendorService', ['getVendors', 'updateVendorStatus', 'bulkCreateVendors', 'deleteVendor']);
     aiServiceSpy = jasmine.createSpyObj('AiVendorProcessingService', ['getVendors', 'enrichImportedVendors']);
     toastrSpy = jasmine.createSpyObj('ToastrService', ['success', 'error', 'warning', 'info']);
 
     aiServiceSpy.getVendors.and.returnValue(of(mockVendors));
     vendorServiceSpy.updateVendorStatus.and.returnValue(of({ statusCode: '200' }));
+    vendorServiceSpy.deleteVendor.and.returnValue(of({ statusCode: '200' }));
+
 
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, FormsModule],
@@ -196,5 +198,29 @@ describe('VendorListComponent', () => {
     expect(() => component.exportVendorsToExcel()).not.toThrow();
     expect(toastrSpy.success).toHaveBeenCalled();
   });
+
+  it('should handle vendor deletion on confirmation', async () => {
+    const { swalConfirm } = await import('src/app/shared/helpers/swal-confirm');
+    spyOn(swalConfirm, 'open').and.returnValue(Promise.resolve({ value: true }));
+
+    component.deleteVendor(mockVendors[0]);
+    await fixture.whenStable();
+
+    expect(swalConfirm.open).toHaveBeenCalled();
+    expect(vendorServiceSpy.deleteVendor).toHaveBeenCalledWith('VND-001');
+    expect(toastrSpy.success).toHaveBeenCalled();
+  });
+
+  it('should not delete vendor when cancellation is chosen', async () => {
+    const { swalConfirm } = await import('src/app/shared/helpers/swal-confirm');
+    spyOn(swalConfirm, 'open').and.returnValue(Promise.resolve({ value: false, isDismissed: true }));
+
+    component.deleteVendor(mockVendors[0]);
+    await fixture.whenStable();
+
+    expect(swalConfirm.open).toHaveBeenCalled();
+    expect(vendorServiceSpy.deleteVendor).not.toHaveBeenCalled();
+  });
 });
+
 

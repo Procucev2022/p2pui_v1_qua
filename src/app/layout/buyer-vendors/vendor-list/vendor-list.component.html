@@ -239,17 +239,21 @@
               <button class="btn btn-sm btn-action-profile" (click)="viewAiProfile(vendor)" title="View Full AI Profile">
                 View Profile
               </button>
-              <button class="btn btn-sm btn-outline-info" (click)="viewDocuments(vendor)" title="View Vendor Documents">
+              <!-- <button class="btn btn-sm btn-outline-info" (click)="viewDocuments(vendor)" title="View Vendor Documents">
                 <i class="fa fa-file-text-o"></i>
-              </button>
+              </button> -->
               <button class="btn btn-sm btn-outline-primary" (click)="viewPerformance(vendor)" title="View Performance Metrics">
                 <i class="fa fa-line-chart"></i>
               </button>
               <button type="button" class="btn-skelton" (click)="editVendor(vendor)" title="Edit Vendor">
-                <img class="cursor-pointer" src="/assets/images/new/edit-data.png" alt="Edit" style="width: 16px; height: 16px;">
+                <img class="cursor-pointer" src="/assets/images/new/edit-data.png" alt="Edit" >
+              </button>
+              <button type="button" class="btn btn-sm btn-outline-danger btn-action-delete" (click)="deleteVendor(vendor)" title="Delete Vendor">
+                <i class="fa fa-trash-o"></i>
               </button>
             </div>
           </td>
+
         </tr>
 
         <!-- Empty State -->

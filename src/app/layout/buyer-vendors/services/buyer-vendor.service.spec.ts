@@ -105,4 +105,15 @@ describe('BuyerVendorService', () => {
     expect(req.request.body).toEqual({ status: 'Inactive' });
     req.flush({ statusCode: '200', message: 'Status updated' });
   });
+
+  it('should delete vendor', () => {
+    service.deleteVendor('VND-001').subscribe(res => {
+      expect(res).toBeTruthy();
+    });
+
+    const req = httpMock.expectOne(`${baseUrl}/VND-001`);
+    expect(req.request.method).toBe('DELETE');
+    req.flush({ statusCode: '200', message: 'Vendor deleted successfully' });
+  });
 });
+

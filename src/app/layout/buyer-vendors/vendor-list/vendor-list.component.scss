@@ -511,6 +511,18 @@
   &:hover { background: #288cd8; color: #fff; }
 }
 
+.btn-action-delete {
+  border-color: #f87171;
+  color: #ef4444;
+  transition: all 0.2s ease;
+  &:hover {
+    background-color: #dc2626;
+    border-color: #dc2626;
+    color: #fff;
+  }
+}
+
+
 .btn-skelton {
   border: none;
   background: none;

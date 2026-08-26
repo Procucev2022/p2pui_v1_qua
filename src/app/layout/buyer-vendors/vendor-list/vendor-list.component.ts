@@ -7,6 +7,8 @@ import { BuyerVendorService } from '../services/buyer-vendor.service';
 import { BuyerVendor, INDUSTRY_TYPES } from '../models/buyer-vendor.model';
 import { AiVendorProcessingService } from '../services/ai-vendor-processing.service';
 import { AiVendorAnalysisItem } from '../models/ai-vendor-analysis.model';
+import { swalConfirm } from 'src/app/shared/helpers/swal-confirm';
+
 
 interface ParsedVendorRow {
   vendor: BuyerVendor;
@@ -308,6 +310,36 @@ export class VendorListComponent implements OnInit, OnDestroy {
   editVendor(vendor: AiVendorAnalysisItem): void {
     this.router.navigate(['/categorymgr/buyer-vendors', vendor.vendorCode, 'edit']);
   }
+
+  deleteVendor(vendor: AiVendorAnalysisItem): void {
+    if (!vendor) { return; }
+    swalConfirm.open({
+      title: '<h6>Please Confirm!</h6>',
+      html: `<h4>Are you sure you want to delete vendor <br/><b>${vendor.vendorName}</b> (${vendor.vendorCode})?</h4>`,
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, Delete',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true
+    }).then((result: any) => {
+      if (result && (result.value || result.isConfirmed)) {
+        const targetId = vendor.id || vendor.vendorCode;
+        this.vendorService.deleteVendor(targetId).subscribe({
+          next: () => {
+            this.toastr.success(`Vendor ${vendor.vendorName} deleted successfully.`, 'Deleted');
+            this.loadEnrichedVendors();
+          },
+          error: (err: any) => {
+            console.error('Failed to delete vendor', err);
+            this.toastr.error('Failed to delete vendor. Please try again.', 'Error');
+          }
+        });
+      }
+    });
+  }
+
 
   toggleVendorStatus(vendor: AiVendorAnalysisItem): void {
     const currentStatus = vendor.status || 'Active';
