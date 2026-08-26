@@ -5,15 +5,21 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { VendorFormComponent } from './vendor-form.component';
 import { BuyerVendorService } from '../services/buyer-vendor.service';
+import { AiVendorProcessingService } from '../services/ai-vendor-processing.service';
 
 describe('VendorFormComponent', () => {
   let component: VendorFormComponent;
   let fixture: ComponentFixture<VendorFormComponent>;
   let vendorServiceSpy: jasmine.SpyObj<BuyerVendorService>;
+  let aiServiceSpy: jasmine.SpyObj<AiVendorProcessingService>;
   let router: Router;
 
   function setup(paramId: string | null = null) {
     vendorServiceSpy = jasmine.createSpyObj('BuyerVendorService', ['getVendorById', 'createVendor', 'updateVendor']);
+    aiServiceSpy = jasmine.createSpyObj('AiVendorProcessingService', ['getVendors', 'enrichImportedVendors', 'getVendorByCode']);
+    aiServiceSpy.enrichImportedVendors.and.returnValue(of([]));
+    aiServiceSpy.getVendorByCode.and.returnValue(of(undefined));
+
     vendorServiceSpy.getVendorById.and.returnValue(of({
       statusCode: '200', message: '', status: '',
       data: { vendor: { vendorCode: 'V001', vendorName: 'Test Vendor', phone1: '1234567890', status: 'Active', sourcingScope: 'Client Only', country: 'IN' } }
@@ -26,9 +32,11 @@ describe('VendorFormComponent', () => {
       declarations: [VendorFormComponent],
       providers: [
         { provide: BuyerVendorService, useValue: vendorServiceSpy },
+        { provide: AiVendorProcessingService, useValue: aiServiceSpy },
         { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => paramId } } } }
       ]
     }).compileComponents();
+
 
     fixture = TestBed.createComponent(VendorFormComponent);
     component = fixture.componentInstance;
