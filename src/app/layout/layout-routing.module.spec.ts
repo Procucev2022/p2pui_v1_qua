@@ -37,6 +37,7 @@ describe('LayoutRoutingModule', () => {
       category: 'CategoryModule',
       config: 'ConfigurationsModule',
       bfs: 'BfsModule',
+      'buyer-dashboard': 'BuyerDashboardModule',
     };
     layoutRouteLoaderHooks.fixtures = {};
     Object.keys(exportByKey).forEach((key) => {

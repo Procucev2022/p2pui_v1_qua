@@ -1,0 +1,96 @@
+<div class="subscriptions-root">
+
+  <!-- Toast -->
+  <div *ngIf="toastMessage" class="custom-toast alert alert-success" role="alert">
+    <i class="fa fa-check-circle mr-2"></i> {{ toastMessage }}
+  </div>
+
+  <!-- Header -->
+  <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+    <div>
+      <h1 class="page-title mb-1">Sourcing Plans & Subscriptions</h1>
+      <p class="page-subtitle text-muted mb-0">Choose the sourcing version that best fits your enterprise procurement scale</p>
+    </div>
+    <button class="btn btn-secondary btn-sm" (click)="handleResetTrial()">
+      <i class="fa fa-refresh mr-1"></i> Reset Demo Trial
+    </button>
+  </div>
+
+  <!-- Free Trial Quota Status Banner -->
+  <div class="glass-panel p-4 mb-4 rounded-2xl banner-trial">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
+      <div class="d-flex align-items-center gap-3">
+        <div class="banner-icon-box bg-indigo-light text-indigo">
+          <i class="fa fa-credit-card fa-lg"></i>
+        </div>
+        <div>
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <span class="font-bold text-dark text-sm">Trial Plan Active: Free Trial (Version 1: Client Roster)</span>
+            <span class="quota-pill badge">
+              {{ remainingFreeRFQs }} of 5 free Version 1 RFQs remaining
+            </span>
+          </div>
+          <p class="text-xs text-muted mb-0 mt-1">
+            Free trial allows sourcing via Mode 1 with automated working-hour phone & messaging chasers (Mon-Sat 8 AM - 7 PM IST).
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 Sourcing Plans Grid -->
+  <div class="row">
+    <div *ngFor="let plan of plans" class="col-lg-4 col-md-6 mb-4">
+      <div class="glass-panel plan-card h-100 p-4 d-flex flex-column justify-content-between position-relative" [ngClass]="{'border-highlight': activeSubscription === plan.id}">
+        <div>
+          <!-- Plan Header -->
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge" [ngClass]="{
+              'badge-blue': plan.id === 'version_1',
+              'badge-sky': plan.id === 'version_2',
+              'badge-purple': plan.id === 'version_3'
+            }">
+              {{ plan.badge }}
+            </span>
+            <span *ngIf="activeSubscription === plan.id" class="badge badge-emerald font-bold">
+              <i class="fa fa-check mr-1"></i> Active
+            </span>
+          </div>
+
+          <h3 class="plan-name font-bold text-dark mb-0">{{ plan.name }}</h3>
+          <small class="text-muted font-semibold d-block mb-3">{{ plan.subtext }}</small>
+
+          <!-- Price Display -->
+          <div class="price-box p-3 rounded-xl bg-light text-center mb-3">
+            <div class="d-flex justify-content-center align-items-baseline gap-1">
+              <h1 class="plan-price font-black text-dark mono mb-0">{{ plan.price }}</h1>
+              <span class="text-xs text-muted font-bold">/ month</span>
+            </div>
+            <small class="text-muted text-2xs">{{ plan.billing }}</small>
+          </div>
+
+          <p class="text-xs text-muted mb-3">{{ plan.description }}</p>
+
+          <!-- Feature List -->
+          <h6 class="text-2xs font-bold text-muted text-uppercase mb-2">Included Capabilities:</h6>
+          <ul class="list-unstyled text-xs space-y-2 mb-4">
+            <li *ngFor="let feat of plan.features" class="d-flex align-items-start mb-2">
+              <i class="fa fa-check text-emerald mr-2 mt-1"></i>
+              <span class="text-slate-700">{{ feat }}</span>
+            </li>
+          </ul>
+        </div>
+
+        <button
+          class="btn btn-sm w-100 font-bold"
+          [ngClass]="activeSubscription === plan.id ? 'btn-emerald' : 'btn-primary'"
+          (click)="handleSubscribe(plan.id)"
+        >
+          <span *ngIf="activeSubscription === plan.id"><i class="fa fa-check-circle mr-1"></i> Current Active Plan</span>
+          <span *ngIf="activeSubscription !== plan.id">Activate {{ plan.name }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

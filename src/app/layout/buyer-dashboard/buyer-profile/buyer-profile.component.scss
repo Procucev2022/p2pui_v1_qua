@@ -1,0 +1,64 @@
+.buyer-profile-root {
+  .page-title {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: #0f172a;
+  }
+
+  .section-heading {
+    font-size: 14px;
+    color: #0f172a;
+  }
+
+  .glass-panel {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  }
+
+  .form-label-xs {
+    font-size: 11px;
+    font-weight: 700;
+    color: #475569;
+    margin-bottom: 2px;
+  }
+
+  .category-pill {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 6px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+    transition: all 0.15s;
+
+    &.btn-cat-selected {
+      background: #e0e7ff;
+      color: #4338ca;
+      border: 1px solid #c7d2fe;
+    }
+
+    &.btn-cat-unselected {
+      background: #ffffff;
+      color: #64748b;
+      border: 1px solid #cbd5e1;
+      &:hover { color: #0f172a; border-color: #94a3b8; }
+    }
+  }
+
+  .badge-emerald { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+  .badge-sky { background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #074193 0%, #00dbff 100%);
+    border: none;
+    color: #ffffff !important;
+    font-weight: 600;
+    border-radius: 8px;
+  }
+
+  .mono { font-family: 'JetBrains Mono', Consolas, monospace; }
+  .text-indigo { color: #4f46e5; }
+}

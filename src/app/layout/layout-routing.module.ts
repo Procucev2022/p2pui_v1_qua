@@ -24,7 +24,8 @@ export const layoutRoutes: Routes = [
             { path: 'invoices', loadChildren: () => loadLayoutRouteModule('invoices', 'InvoicesModule') },
             { path: 'category', loadChildren: () => loadLayoutRouteModule('category', 'CategoryModule')},
             { path: 'config', loadChildren: () => loadLayoutRouteModule('config', 'ConfigurationsModule')},
-            { path: 'bfs', loadChildren: ()=> loadLayoutRouteModule('bfs', 'BfsModule'), canActivateChild: [ScreenAccessGuardGuard] }
+            { path: 'bfs', loadChildren: ()=> loadLayoutRouteModule('bfs', 'BfsModule'), canActivateChild: [ScreenAccessGuardGuard] },
+            { path: 'buyer-dashboard', loadChildren: () => loadLayoutRouteModule('buyer-dashboard', 'BuyerDashboardModule') }
         ]
     }
 ];

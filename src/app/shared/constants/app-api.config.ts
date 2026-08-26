@@ -59,6 +59,13 @@ export class AppApiConfig {
 
   // Buyer Vendor Management
   public static BUYER_VENDORS = '/rest/buyer/vendors';
+  public static BUYER_DASHBOARD_SUMMARY = '/rest/buyer/dashboard/summary';
+  public static BUYER_DASHBOARD_RFQS = '/rest/buyer/dashboard/rfqs';
+  public static BUYER_DASHBOARD_LIVE_FEED = '/rest/buyer/dashboard/live-feed';
+  public static BUYER_DASHBOARD_CHASER = '/rest/buyer/dashboard/chaser';
+  public static BUYER_DASHBOARD_PO_APPROVE = '/rest/buyer/dashboard/po/approve';
+  public static BUYER_DASHBOARD_EVALUATIONS = '/rest/buyer/dashboard/evaluations';
+  public static BUYER_DASHBOARD_SUBSCRIPTIONS = '/rest/buyer/dashboard/subscriptions';
 
   public static OTPs_SENT ='/partialvendor/validateClient';
   public static VALIDATE_ALL_OTPS = '/partialvendor/validateAllOtps';

@@ -1,0 +1,91 @@
+<div class="buyer-dashboard-root">
+
+  <!-- ── Modern Buyer Workspace Screen Cards Navigation ── -->
+  <div class="workspace-nav-section mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-2 px-1">
+      <div class="d-flex align-items-center gap-2">
+        <span class="section-tag-badge">
+          <i class="fa fa-cubes mr-1.5 text-indigo"></i> Buyer Operations Workspace
+        </span>
+        <span class="text-xs text-muted d-none d-md-inline">· 6 Integrated Sourcing Screens</span>
+      </div>
+
+      <div *ngIf="activeTab === 'quote-matrix'">
+        <button class="btn btn-sm btn-outline-primary shadow-xs" (click)="setTab('command-center')">
+          <i class="fa fa-arrow-left mr-1"></i> Back to Command Center
+        </button>
+      </div>
+    </div>
+
+    <!-- 6 Interactive Cards Grid -->
+    <div class="row g-2.5 screens-cards-grid">
+      <div *ngFor="let screen of screens" class="col-xl-2 col-lg-4 col-md-4 col-sm-6 mb-2.5">
+        <div
+          class="screen-nav-card glass-panel h-100 p-3 cursor-pointer position-relative"
+          [ngClass]="[screen.colorClass, activeTab === screen.id ? 'card-active' : 'card-inactive']"
+          (click)="setTab(screen.id)"
+        >
+          <!-- Active Glow Accent Top Line -->
+          <div class="card-top-accent"></div>
+
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="screen-num-pill font-bold mono">{{ screen.screenNum }}</span>
+            <span *ngIf="activeTab === screen.id" class="active-pulse-indicator">
+              <span class="pulse-ring"></span>
+              <span class="pulse-dot"></span>
+            </span>
+          </div>
+
+          <div class="d-flex align-items-center gap-2.5 mb-1.5">
+            <div class="screen-icon-box">
+              <i class="{{ screen.icon }} fa-lg"></i>
+            </div>
+            <div class="screen-text-content overflow-hidden">
+              <h6 class="screen-card-title font-bold mb-0 text-truncate">{{ screen.title }}</h6>
+              <span class="screen-card-subtitle text-muted text-truncate d-block">{{ screen.subtitle }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Tab Content Body ── -->
+  <div class="screen-view-container">
+    <app-buyer-command-center
+      *ngIf="activeTab === 'command-center'"
+      (navigateToWizard)="navigateToWizard()"
+      (navigateToMatrix)="navigateToMatrix($event)"
+      (navigateToSubscriptions)="navigateToSubscriptions()"
+    ></app-buyer-command-center>
+
+    <app-buyer-ingestion-wizard
+      *ngIf="activeTab === 'ingestion-wizard'"
+      (complete)="setTab('command-center')"
+      (cancel)="setTab('command-center')"
+    ></app-buyer-ingestion-wizard>
+
+    <app-buyer-quote-matrix
+      *ngIf="activeTab === 'quote-matrix'"
+      [rfq]="selectedRfqForMatrix"
+      (backToCommandCenter)="setTab('command-center')"
+    ></app-buyer-quote-matrix>
+
+    <app-buyer-vendor-evaluation
+      *ngIf="activeTab === 'vendor-eval'"
+    ></app-buyer-vendor-evaluation>
+
+    <app-buyer-vendor-directory
+      *ngIf="activeTab === 'vendor-directory'"
+      (createRfqForVendor)="navigateToWizard()"
+    ></app-buyer-vendor-directory>
+
+    <app-buyer-subscriptions
+      *ngIf="activeTab === 'subscriptions'"
+    ></app-buyer-subscriptions>
+
+    <app-buyer-profile
+      *ngIf="activeTab === 'buyer-profile'"
+    ></app-buyer-profile>
+  </div>
+</div>

@@ -1,0 +1,164 @@
+<div class="vendor-evaluation-root">
+
+  <!-- Toast -->
+  <div *ngIf="toastMessage" class="custom-toast alert alert-success" role="alert">
+    <i class="fa fa-check-circle mr-2"></i> {{ toastMessage }}
+  </div>
+
+  <!-- Header -->
+  <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+    <div>
+      <h1 class="page-title mb-1">Mode 3 Vendor Evaluation & Qualification Summary</h1>
+      <p class="page-subtitle text-muted mb-0">Autonomous multi-dimensional supplier risk vetting, technical audit, and ESG compliance scorecards</p>
+    </div>
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+      <button class="btn btn-secondary btn-sm" (click)="showOverrideModal = true">
+        <i class="fa fa-sliders mr-1"></i> Manual Score Override
+      </button>
+      <button class="btn btn-secondary btn-sm" (click)="showCapaModal = true">
+        <i class="fa fa-refresh mr-1"></i> Trigger CAPA
+      </button>
+      <button class="btn btn-primary btn-sm" (click)="showToast('Evaluation Dossier Exported to PDF with Cryptographic Seal.')">
+        <i class="fa fa-download mr-1"></i> Export Dossier
+      </button>
+    </div>
+  </div>
+
+  <!-- Supplier Profile Hero Card -->
+  <div class="glass-panel p-4 mb-4 rounded-2xl hero-supplier-card">
+    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 border-bottom pb-3 mb-3">
+      <div>
+        <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+          <h3 class="vendor-heading mb-0 font-bold">{{ vendorName }}</h3>
+          <span class="badge badge-sky mono font-bold">{{ vendorCode }}</span>
+        </div>
+        <p class="text-xs text-muted mb-0">{{ category }} · {{ location }} · GSTIN: {{ gstin }} · CIN: {{ cin }}</p>
+      </div>
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <span class="badge badge-emerald font-bold p-2 px-3 rounded-full">
+          <i class="fa fa-shield mr-1"></i> PREFERRED ENTERPRISE SUPPLIER
+        </span>
+      </div>
+    </div>
+
+    <!-- Overall Score & 4 Pillars Grid -->
+    <div class="row align-items-center">
+      <div class="col-lg-3 text-center border-right mb-3 mb-lg-0">
+        <span class="text-2xs font-bold text-muted text-uppercase d-block mb-1">Overall 360° AI Score</span>
+        <h1 class="display-3 font-black text-indigo mono mb-0">{{ overallScore }}%</h1>
+        <span class="badge badge-soft-success text-success font-bold text-xs mt-1">
+          <i class="fa fa-check mr-1"></i> Mode 3 Audit Passed
+        </span>
+      </div>
+
+      <div class="col-lg-9">
+        <div class="row">
+          <div *ngFor="let p of pillars" class="col-sm-6 mb-3">
+            <div class="p-3 rounded-xl border bg-light">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="font-bold text-xs text-slate-800">{{ p.name }}</span>
+                <span class="font-bold text-indigo mono text-sm">{{ p.score }}%</span>
+              </div>
+              <div class="progress" style="height: 6px;">
+                <div class="progress-bar bg-indigo" [style.width.%]="p.score"></div>
+              </div>
+              <small class="text-muted text-2xs mt-1 d-block">Weightage: {{ p.weight }} · AI Verified</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detailed Questionnaire Breakdown -->
+  <div class="glass-panel p-4 rounded-2xl">
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+      <h4 class="section-title mb-0 font-bold">Audit Evaluation Criteria Breakdown</h4>
+      <div class="btn-group btn-group-sm">
+        <button class="btn btn-xs" [ngClass]="selectedPillarFilter === 'ALL' ? 'btn-primary' : 'btn-light'" (click)="setPillarFilter('ALL')">All Pillars</button>
+        <button class="btn btn-xs" [ngClass]="selectedPillarFilter === 'Financial' ? 'btn-primary' : 'btn-light'" (click)="setPillarFilter('Financial')">Financial</button>
+        <button class="btn btn-xs" [ngClass]="selectedPillarFilter === 'Technical' ? 'btn-primary' : 'btn-light'" (click)="setPillarFilter('Technical')">Technical</button>
+        <button class="btn btn-xs" [ngClass]="selectedPillarFilter === 'Quality' ? 'btn-primary' : 'btn-light'" (click)="setPillarFilter('Quality')">Quality</button>
+        <button class="btn btn-xs" [ngClass]="selectedPillarFilter === 'ESG' ? 'btn-primary' : 'btn-light'" (click)="setPillarFilter('ESG')">ESG</button>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-sm text-xs bg-white">
+        <thead class="bg-slate-100 text-muted">
+          <tr>
+            <th>Pillar / Question Parameter</th>
+            <th>Verified Supplier Evidence & Answer</th>
+            <th class="text-center">Score</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">OCR Confidence</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let q of filteredQuestions">
+            <td>
+              <strong class="d-block text-dark">{{ q.question }}</strong>
+              <small class="text-muted">{{ q.pillar }}</small>
+            </td>
+            <td>
+              <div>{{ q.answer }}</div>
+              <small *ngIf="q.evidenceDoc" class="text-indigo font-bold cursor-pointer">
+                <i class="fa fa-paperclip mr-1"></i> {{ q.evidenceDoc }}
+              </small>
+            </td>
+            <td class="text-center font-bold mono text-indigo">{{ q.score }}/{{ q.maxScore }}</td>
+            <td class="text-center">
+              <span class="badge badge-emerald font-bold">{{ q.status }}</span>
+            </td>
+            <td class="text-center">
+              <span class="badge badge-sky font-bold">{{ q.confidence }}%</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Override Modal -->
+  <div *ngIf="showOverrideModal" class="modal-overlay">
+    <div class="modal-content glass-panel p-4 max-w-md">
+      <div class="d-flex justify-content-between align-items-center pb-3 border-bottom">
+        <h4 class="modal-heading mb-0 font-bold">Manual Score Override</h4>
+        <button type="button" class="btn-close-modal" (click)="showOverrideModal = false">&times;</button>
+      </div>
+      <div class="modal-body py-3 text-xs">
+        <p class="text-muted">Adjust overall Mode 3 360° qualification score for {{ vendorName }}. All adjustments are cryptographically logged in the audit ledger.</p>
+        <div class="form-group mb-3">
+          <label class="form-label-xs">New Evaluation Score (%)</label>
+          <input type="number" class="form-control form-control-sm font-bold mono" [(ngModel)]="newScoreInput" min="0" max="100">
+        </div>
+      </div>
+      <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+        <button class="btn btn-secondary btn-sm mr-2" (click)="showOverrideModal = false">Cancel</button>
+        <button class="btn btn-primary btn-sm" (click)="applyOverride()">Save & Apply Override</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAPA Modal -->
+  <div *ngIf="showCapaModal" class="modal-overlay">
+    <div class="modal-content glass-panel p-4 max-w-lg">
+      <div class="d-flex justify-content-between align-items-center pb-3 border-bottom">
+        <h4 class="modal-heading mb-0 font-bold">Trigger Corrective Action Plan (CAPA)</h4>
+        <button type="button" class="btn-close-modal" (click)="showCapaModal = false">&times;</button>
+      </div>
+      <div class="modal-body py-3 text-xs">
+        <p class="text-muted">Issue formal CAPA notice to {{ vendorName }} regarding quality or technical compliance gap.</p>
+        <div class="form-group mb-3">
+          <label class="form-label-xs">Corrective Action Requirement</label>
+          <textarea class="form-control form-control-sm" rows="4" [(ngModel)]="capaNotes"></textarea>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+        <button class="btn btn-secondary btn-sm mr-2" (click)="showCapaModal = false">Cancel</button>
+        <button class="btn btn-emerald btn-sm" (click)="saveCapa()">Dispatch CAPA Notice</button>
+      </div>
+    </div>
+  </div>
+
+</div>

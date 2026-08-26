@@ -1,0 +1,96 @@
+.subscriptions-root {
+  .page-title {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: #0f172a;
+  }
+
+  .glass-panel {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  }
+
+  .banner-trial {
+    background: linear-gradient(135deg, rgba(238, 242, 255, 0.7) 0%, rgba(245, 243, 255, 0.7) 100%);
+    border: 1px solid #c7d2fe;
+
+    .banner-icon-box {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(99, 102, 241, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .quota-pill {
+      font-size: 10px;
+      font-weight: 700;
+      background: #e0e7ff;
+      color: #4338ca;
+      border-radius: 9999px;
+      padding: 3px 8px;
+    }
+  }
+
+  .plan-card {
+    transition: all 0.2s;
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+    }
+
+    &.border-highlight {
+      border: 2px solid #4f46e5 !important;
+      box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15);
+    }
+  }
+
+  .plan-name {
+    font-size: 16px;
+    color: #0f172a;
+  }
+
+  .plan-price {
+    font-size: 28px;
+    color: #0f172a;
+  }
+
+  .badge-emerald { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+  .badge-blue { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+  .badge-sky { background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; }
+  .badge-purple { background: #faf5ff; color: #7e22ce; border: 1px solid #e9d5ff; }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #074193 0%, #00dbff 100%);
+    border: none;
+    color: #ffffff !important;
+    font-weight: 600;
+    border-radius: 8px;
+  }
+
+  .btn-secondary {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #1e293b;
+    font-weight: 600;
+    border-radius: 8px;
+  }
+
+  .btn-emerald {
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+    border: none;
+    color: #ffffff !important;
+    font-weight: 600;
+    border-radius: 8px;
+  }
+
+  .mono { font-family: 'JetBrains Mono', Consolas, monospace; }
+  .text-2xs { font-size: 10px; }
+  .text-indigo { color: #4f46e5; }
+  .text-emerald { color: #047857; }
+}

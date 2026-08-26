@@ -1,0 +1,303 @@
+<div class="ingestion-wizard-root">
+
+  <!-- Toast -->
+  <div *ngIf="toastMessage" class="custom-toast alert alert-success" role="alert">
+    <i class="fa fa-check-circle mr-2"></i> {{ toastMessage }}
+  </div>
+
+  <!-- ── Header ── -->
+  <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+    <div>
+      <h1 class="page-title mb-1">AI Sourcing & Mode Ingestion Wizard</h1>
+      <p class="page-subtitle text-muted mb-0">Multi-source document parsing, AI line-item extraction & dynamic supplier allocation</p>
+    </div>
+    <button class="btn btn-secondary btn-sm" (click)="cancel.emit()">
+      <i class="fa fa-times mr-1"></i> Exit Wizard
+    </button>
+  </div>
+
+  <!-- ── 4-Step Stepper Bar ── -->
+  <div class="glass-panel stepper-card p-3 mb-4 rounded-2xl">
+    <div class="d-flex justify-content-between align-items-center position-relative">
+      <!-- Step 1 -->
+      <div class="step-item d-flex align-items-center cursor-pointer" [ngClass]="{'active': activeStep === 1, 'completed': activeStep > 1}" (click)="setStep(1)">
+        <div class="step-num-circle mr-2">1</div>
+        <div class="step-meta">
+          <div class="step-title">Ingest BOQ</div>
+          <small class="text-muted d-none d-md-inline">OCR & Email Parsing</small>
+        </div>
+      </div>
+      <div class="stepper-connector" [ngClass]="{'active': activeStep > 1}"></div>
+
+      <!-- Step 2 -->
+      <div class="step-item d-flex align-items-center cursor-pointer" [ngClass]="{'active': activeStep === 2, 'completed': activeStep > 2}" (click)="setStep(2)">
+        <div class="step-num-circle mr-2">2</div>
+        <div class="step-meta">
+          <div class="step-title">Refine Entities</div>
+          <small class="text-muted d-none d-md-inline">Review Extracted Items</small>
+        </div>
+      </div>
+      <div class="stepper-connector" [ngClass]="{'active': activeStep > 2}"></div>
+
+      <!-- Step 3 -->
+      <div class="step-item d-flex align-items-center cursor-pointer" [ngClass]="{'active': activeStep === 3, 'completed': activeStep > 3}" (click)="setStep(3)">
+        <div class="step-num-circle mr-2">3</div>
+        <div class="step-meta">
+          <div class="step-title">Sourcing Strategy</div>
+          <small class="text-muted d-none d-md-inline">Modes 1, 2 & 3</small>
+        </div>
+      </div>
+      <div class="stepper-connector" [ngClass]="{'active': activeStep > 3}"></div>
+
+      <!-- Step 4 -->
+      <div class="step-item d-flex align-items-center cursor-pointer" [ngClass]="{'active': activeStep === 4}" (click)="setStep(4)">
+        <div class="step-num-circle mr-2">4</div>
+        <div class="step-meta">
+          <div class="step-title">Dispatch RFQ</div>
+          <small class="text-muted d-none d-md-inline">Target Allocations</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Step 1: Ingest BOQ ── -->
+  <div *ngIf="activeStep === 1" class="glass-panel p-4 rounded-2xl">
+    <div class="mb-4">
+      <h3 class="step-heading font-bold mb-1">Step 1: Document Upload & AI Multi-Source Ingestion</h3>
+      <p class="text-xs text-muted mb-0">Upload complex enterprise Bill of Quantities (Excel, CSV, scanned PDF) for automated entity extraction.</p>
+    </div>
+
+    <!-- Dropzone -->
+    <div class="dropzone-box p-5 text-center rounded-xl mb-4" (click)="simulateUpload()">
+      <div class="dropzone-icon-box mx-auto mb-3">
+        <i class="fa fa-cloud-upload fa-2x text-indigo"></i>
+      </div>
+      <h5 class="font-bold text-dark mb-1">Drop your BOQ spreadsheet or document here</h5>
+      <p class="text-xs text-muted mb-3">Supports .XLSX, .CSV, .PDF, .DWG (Engineering Drawings) up to 50MB</p>
+      <button class="btn btn-primary btn-sm px-4">
+        <i class="fa fa-folder-open mr-1"></i> Browse Files
+      </button>
+    </div>
+
+    <!-- Processing Overlay -->
+    <div *ngIf="isProcessingDoc" class="processing-state p-4 text-center rounded-xl bg-light border mb-4">
+      <div class="spinner-border text-indigo mb-2" role="status"></div>
+      <h6 class="font-bold text-dark mb-1">AI Extraction Agent Scanning Document...</h6>
+      <p class="text-xs text-muted mb-0">Performing deep optical recognition, matching technical parameters, and structuring line-item data.</p>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+      <span class="text-xs text-muted">Document: <strong>{{ uploadedFileName }}</strong></span>
+      <button class="btn btn-primary btn-sm" (click)="simulateUpload()">
+        Proceed to Review <i class="fa fa-arrow-right ml-1"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Step 2: Refine Extracted Entities ── -->
+  <div *ngIf="activeStep === 2" class="glass-panel p-4 rounded-2xl">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 mb-3">
+      <div>
+        <h3 class="step-heading font-bold mb-0">Step 2: Review & Refine Extracted Line Items</h3>
+        <p class="text-xs text-muted mb-0">Entities extracted with high confidence. Modify descriptions, quantities, and specifications.</p>
+      </div>
+      <span class="badge badge-emerald font-bold p-2">
+        <i class="fa fa-check-circle mr-1"></i> OCR Extraction 97.4% Confidence
+      </span>
+    </div>
+
+    <!-- RFQ Info Bar -->
+    <div class="row bg-slate-50 p-3 rounded-xl border mb-3">
+      <div class="col-md-6 mb-2 mb-md-0">
+        <label class="form-label-xs">RFQ Title</label>
+        <input type="text" class="form-control form-control-sm font-semibold" [(ngModel)]="rfqTitle">
+      </div>
+      <div class="col-md-3 mb-2 mb-md-0">
+        <label class="form-label-xs">Estimated Budget ($)</label>
+        <input type="number" class="form-control form-control-sm font-bold mono" [(ngModel)]="budget">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label-xs">Target Delivery Date</label>
+        <input type="date" class="form-control form-control-sm" [(ngModel)]="deliveryDate">
+      </div>
+    </div>
+
+    <!-- Entities Table -->
+    <div class="table-responsive mb-3">
+      <table class="table table-bordered table-sm text-xs bg-white">
+        <thead class="bg-slate-100 text-muted">
+          <tr>
+            <th>Item Name & Description</th>
+            <th class="text-center" style="width: 80px;">Qty</th>
+            <th class="text-center" style="width: 80px;">Unit</th>
+            <th>Category</th>
+            <th>Technical Specs</th>
+            <th class="text-center" style="width: 90px;">AI Confidence</th>
+            <th class="text-center" style="width: 60px;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of entities">
+            <td>
+              <input type="text" class="form-control form-control-sm font-bold" [(ngModel)]="item.itemName">
+            </td>
+            <td>
+              <input type="number" class="form-control form-control-sm text-center font-bold" [(ngModel)]="item.quantity">
+            </td>
+            <td>
+              <input type="text" class="form-control form-control-sm text-center" [(ngModel)]="item.unit">
+            </td>
+            <td>
+              <span class="badge badge-sky">{{ item.category }}</span>
+            </td>
+            <td>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="item.technicalSpecs">
+            </td>
+            <td class="text-center">
+              <span class="badge badge-emerald font-bold">{{ item.confidence }}%</span>
+            </td>
+            <td class="text-center">
+              <button class="btn btn-xs btn-outline-danger" (click)="handleDeleteEntity(item.id)">
+                <i class="fa fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <button class="btn btn-secondary btn-sm" (click)="handleAddEntity()">
+        <i class="fa fa-plus mr-1"></i> Add Line Item
+      </button>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+      <button class="btn btn-secondary btn-sm" (click)="setStep(1)">
+        <i class="fa fa-arrow-left mr-1"></i> Back
+      </button>
+      <button class="btn btn-primary btn-sm" (click)="setStep(3)">
+        Configure Strategy <i class="fa fa-arrow-right ml-1"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Step 3: Sourcing Strategy Selection ── -->
+  <div *ngIf="activeStep === 3" class="glass-panel p-4 rounded-2xl">
+    <div class="mb-4">
+      <h3 class="step-heading font-bold mb-1">Step 3: Select Sourcing Strategy Mode</h3>
+      <p class="text-xs text-muted mb-0">Select the autonomous supplier dispatch and negotiation policy for this sourcing round.</p>
+    </div>
+
+    <div class="row mb-4">
+      <!-- Mode 1 -->
+      <div class="col-md-4 mb-3 mb-md-0">
+        <div class="strategy-card p-4 rounded-xl border h-100 cursor-pointer" [ngClass]="{'selected': selectedMode === 'mode_1'}" (click)="selectMode('mode_1')">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="mode-badge-pill badge-mode-1 font-bold">VERSION 1</span>
+            <input type="radio" name="mode" [checked]="selectedMode === 'mode_1'">
+          </div>
+          <h5 class="font-bold text-dark text-sm mb-1">Client Approved Pool</h5>
+          <p class="text-xs text-muted mb-3">Restricted Private Roster - Dispatches RFQs exclusively to the pre-approved enterprise vendor master list.</p>
+          <ul class="text-2xs text-muted list-unstyled space-y-1 mb-0">
+            <li><i class="fa fa-check text-success mr-1"></i> Strict internal roster exclusivity</li>
+            <li><i class="fa fa-check text-success mr-1"></i> Automated multi-channel chasers</li>
+            <li><i class="fa fa-check text-success mr-1"></i> Free Trial eligible</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Mode 2 -->
+      <div class="col-md-4 mb-3 mb-md-0">
+        <div class="strategy-card p-4 rounded-xl border h-100 cursor-pointer" [ngClass]="{'selected': selectedMode === 'mode_2'}" (click)="selectMode('mode_2')">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="mode-badge-pill badge-mode-2 font-bold">VERSION 2 · RECOMMENDED</span>
+            <input type="radio" name="mode" [checked]="selectedMode === 'mode_2'">
+          </div>
+          <h5 class="font-bold text-dark text-sm mb-1">Hybrid Sourced Pool</h5>
+          <p class="text-xs text-muted mb-3">Combines your trusted vendor roster with vetted Procucev high-performance suppliers for maximum price discovery.</p>
+          <ul class="text-2xs text-muted list-unstyled space-y-1 mb-0">
+            <li><i class="fa fa-check text-success mr-1"></i> Internal roster + Procucev Network</li>
+            <li><i class="fa fa-check text-success mr-1"></i> AI proximity & rating matching</li>
+            <li><i class="fa fa-check text-success mr-1"></i> Market band benchmarking</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Mode 3 -->
+      <div class="col-md-4">
+        <div class="strategy-card p-4 rounded-xl border h-100 cursor-pointer" [ngClass]="{'selected': selectedMode === 'mode_3'}" (click)="selectMode('mode_3')">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="mode-badge-pill badge-mode-3 font-bold">VERSION 3 · AUTONOMOUS</span>
+            <input type="radio" name="mode" [checked]="selectedMode === 'mode_3'">
+          </div>
+          <h5 class="font-bold text-dark text-sm mb-1">AI Match (>80%)</h5>
+          <p class="text-xs text-muted mb-3">Autonomous market scanning, OCR evaluation, and deep capability scoring for suppliers with >80% match.</p>
+          <ul class="text-2xs text-muted list-unstyled space-y-1 mb-0">
+            <li><i class="fa fa-check text-success mr-1"></i> Autonomous multi-round negotiation</li>
+            <li><i class="fa fa-check text-success mr-1"></i> 360° qualification scorecard</li>
+            <li><i class="fa fa-check text-success mr-1"></i> Zero-touch PO awarding</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+      <button class="btn btn-secondary btn-sm" (click)="setStep(2)">
+        <i class="fa fa-arrow-left mr-1"></i> Back
+      </button>
+      <button class="btn btn-primary btn-sm" (click)="setStep(4)">
+        Review & Dispatch <i class="fa fa-arrow-right ml-1"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Step 4: Dispatch RFQ ── -->
+  <div *ngIf="activeStep === 4" class="glass-panel p-4 rounded-2xl">
+    <div class="mb-4">
+      <h3 class="step-heading font-bold mb-1">Step 4: Review RFQ & Launch Sourcing Dispatch</h3>
+      <p class="text-xs text-muted mb-0">Confirm RFQ parameters and broadcast to the allocated supplier roster.</p>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-md-6 mb-3 mb-md-0">
+        <div class="p-3.5 rounded-xl border bg-light h-100 text-xs">
+          <span class="text-2xs font-bold text-muted text-uppercase d-block mb-2">RFQ Parameters</span>
+          <div class="d-flex justify-content-between py-1 border-bottom"><span>RFQ Number:</span> <strong class="mono">{{ rfqNumber }}</strong></div>
+          <div class="d-flex justify-content-between py-1 border-bottom"><span>Title:</span> <strong class="text-truncate" style="max-width: 220px;">{{ rfqTitle }}</strong></div>
+          <div class="d-flex justify-content-between py-1 border-bottom"><span>Budget:</span> <strong class="mono text-indigo">${{ budget | number }}</strong></div>
+          <div class="d-flex justify-content-between py-1 border-bottom"><span>Target Date:</span> <strong>{{ deliveryDate }}</strong></div>
+          <div class="d-flex justify-content-between py-1"><span>Strategy Mode:</span> <strong class="text-uppercase">{{ selectedMode }}</strong></div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="p-3.5 rounded-xl border bg-light h-100 text-xs">
+          <span class="text-2xs font-bold text-muted text-uppercase d-block mb-2">Targeted Suppliers Allocation</span>
+          <div class="supplier-list-box overflow-auto" style="max-height: 180px;">
+            <div *ngFor="let v of getTargetedVendors()" class="d-flex justify-content-between py-1 border-bottom">
+              <span>{{ v.name }}</span>
+              <span class="badge badge-sky">{{ v.category }}</span>
+            </div>
+            <div *ngIf="selectedMode !== 'mode_1'">
+              <div *ngFor="let rec of recommendedVendors" class="d-flex justify-content-between py-1 border-bottom text-indigo font-bold">
+                <span>{{ rec.name }} ({{ rec.proximity }})</span>
+                <span class="badge badge-emerald">{{ rec.matchScore }}% AI Rec</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+      <button class="btn btn-secondary btn-sm" (click)="setStep(3)">
+        <i class="fa fa-arrow-left mr-1"></i> Back
+      </button>
+      <button class="btn btn-emerald btn-sm px-4" (click)="handleDispatch()">
+        <i class="fa fa-paper-plane mr-1"></i> Launch Autonomous RFQ Dispatch
+      </button>
+    </div>
+  </div>
+
+</div>

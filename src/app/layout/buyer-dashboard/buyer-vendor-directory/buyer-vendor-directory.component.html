@@ -1,0 +1,113 @@
+<div class="vendor-directory-root">
+
+  <!-- Header -->
+  <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+    <div>
+      <h1 class="page-title mb-1">Vendor Master Directory & Evaluations</h1>
+      <p class="page-subtitle text-muted mb-0">Unified supplier directory spanning client private roster and verified Procucev Network</p>
+    </div>
+    <button class="btn btn-primary btn-sm" (click)="createRfqForVendor.emit()">
+      <i class="fa fa-plus mr-1"></i> New RFQ for Roster
+    </button>
+  </div>
+
+  <!-- Search & Filters -->
+  <div class="glass-panel p-3.5 mb-4 rounded-xl">
+    <div class="row align-items-center">
+      <div class="col-md-5 mb-2 mb-md-0">
+        <div class="input-group input-group-sm">
+          <div class="input-group-prepend">
+            <span class="input-group-text bg-white border-right-0"><i class="fa fa-search text-muted"></i></span>
+          </div>
+          <input
+            type="text"
+            class="form-control border-left-0"
+            placeholder="Search by vendor name, category, or location..."
+            [(ngModel)]="searchQuery"
+            (input)="filterVendors()"
+          >
+        </div>
+      </div>
+      <div class="col-md-4 mb-2 mb-md-0">
+        <select class="form-control form-control-sm" [(ngModel)]="selectedCategory" (change)="filterVendors()">
+          <option value="ALL">All Categories</option>
+          <option value="Mechanical">Heavy Mechanical & Fluid Dynamics</option>
+          <option value="Valves">Valves & Flow Control</option>
+          <option value="Electrical">Electrical & Switchgear</option>
+          <option value="Pipes">Pipes & Fittings</option>
+          <option value="MRO">General Industrial & MRO</option>
+        </select>
+      </div>
+      <div class="col-md-3 text-right">
+        <span class="badge badge-light border text-dark font-bold p-2">{{ filteredVendors.length }} Suppliers Listed</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="glass-panel p-5 text-center text-muted rounded-2xl mb-4">
+    <i class="fa fa-spinner fa-spin fa-2x text-indigo mb-2"></i>
+    <p class="font-semibold text-xs mb-0">Loading supplier roster and qualification telemetry...</p>
+  </div>
+
+  <!-- Vendor Cards Grid / Table -->
+  <div class="glass-panel overflow-hidden rounded-2xl" *ngIf="!loading">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0 text-xs">
+        <thead class="bg-slate-100 text-muted">
+          <tr>
+            <th>Vendor Name & Source</th>
+            <th>Category</th>
+            <th>Location</th>
+            <th>Primary Contact</th>
+            <th class="text-center">Mode 3 Score</th>
+            <th>Qualification Status</th>
+            <th class="text-right">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let v of filteredVendors">
+            <td>
+              <strong class="text-dark d-block">{{ v.name }}</strong>
+              <span class="badge" [ngClass]="v.source.includes('buyer') || v.source.includes('roster') ? 'badge-blue' : 'badge-emerald'">
+                {{ v.source.includes('buyer') || v.source.includes('roster') ? 'Client Roster' : 'Procucev Network' }}
+              </span>
+            </td>
+            <td>{{ v.category }}</td>
+            <td>{{ v.location }}</td>
+            <td>
+              <div>{{ v.contactPerson }}</div>
+              <small class="text-muted">{{ v.phone }}</small>
+            </td>
+            <td class="text-center">
+              <span *ngIf="v.score" class="badge badge-emerald font-bold mono">
+                {{ v.score }}%
+              </span>
+              <span *ngIf="!v.score" class="text-muted text-2xs italic">N/A</span>
+            </td>
+            <td>
+              <span class="badge font-bold" [ngClass]="getStatusBadgeClass(v.status)">
+                {{ v.status }}
+              </span>
+            </td>
+            <td class="text-right">
+              <button class="btn btn-xs btn-primary" (click)="createRfqForVendor.emit()">
+                <i class="fa fa-paper-plane mr-1"></i> Invite
+              </button>
+            </td>
+          </tr>
+
+          <!-- Empty State -->
+          <tr *ngIf="filteredVendors.length === 0">
+            <td colspan="7" class="text-center py-5 text-muted">
+              <i class="fa fa-building-o fa-3x text-muted mb-2 d-block"></i>
+              <p class="font-bold mb-1">No supplier records found</p>
+              <small class="text-muted">Suppliers onboarded into your private roster or verified network will appear here.</small>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
