@@ -169,7 +169,8 @@ export class AiVendorProcessingService {
       status: p.status || 'Active',
       verificationStatus: p.verificationStatus || (hasGstin && hasPan ? '100% Provided' : (hasGstin || hasPan ? 'Partial Information' : 'Pending Verification')),
       complianceStatus: p.complianceStatus || (hasGstin && hasPan ? 'Compliant' : 'Pending Review'),
-      processedAt: p.createdTS || ''
+      processedAt: p.createdTS || '',
+      status: p.status
     };
   }
 }

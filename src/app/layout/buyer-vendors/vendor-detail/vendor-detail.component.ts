@@ -69,7 +69,7 @@ export class VendorDetailComponent implements OnInit {
     const targetId = this.vendorId || this.vendor.id || this.vendor.vendorCode;
 
     swalConfirm.open({
-      title: 'Delete Vendor?',
+      title: 'Please Confirm!',
       text: `Are you sure you want to delete vendor "${vendorName}" (${this.vendor.vendorCode})? This action cannot be undone.`,
       type: 'warning',
       showCancelButton: true,
