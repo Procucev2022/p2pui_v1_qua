@@ -196,8 +196,8 @@ export class VendorAiProfileComponent implements OnInit {
       {
         id: '6',
         name: 'Active',
-        subtitle: 'Ready for RFQ Direct Sourcing',
-        status: isQual ? 'completed' : 'current',
+        subtitle: (this.vendor.status === 'Inactive') ? 'Vendor Account Inactive' : 'Ready for RFQ Direct Sourcing',
+        status: (this.vendor.status === 'Inactive') ? 'pending' : (isQual ? 'completed' : 'current'),
         icon: 'fa-bolt'
       }
     ];

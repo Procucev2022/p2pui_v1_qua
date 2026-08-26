@@ -194,7 +194,7 @@ describe('VendorFormComponent', () => {
         typeOfBusiness: 'Software & IT',
         industry: 'IT',
         vendorGroup: 'Strategic',
-        sourcingScope: 'Client+Procucev'
+        sourcingScope: 'Client + Procucev'
       } as any));
 
       component.loadVendor('VND-AI-1');

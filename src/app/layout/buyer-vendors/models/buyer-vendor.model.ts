@@ -52,4 +52,4 @@ export const INDUSTRY_TYPES: string[] = [
 
 export const VENDOR_GROUPS: string[] = ['Z001', 'Z002', 'Z003', 'Z004'];
 
-export const SOURCING_SCOPES: string[] = ['Client Only', 'Client+Procucev'];
+export const SOURCING_SCOPES: string[] = ['Client Only', 'Client + Procucev'];

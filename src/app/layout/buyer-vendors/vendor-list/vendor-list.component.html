@@ -354,6 +354,8 @@
             <i class="fa fa-cloud-upload text-primary mr-2"></i> Step 2: Upload Filled File
           </h6>
           <div class="drop-zone text-center p-4" [class.drag-over]="isDragging"
+            tabindex="0" role="button" aria-label="Upload vendor master spreadsheet file"
+            (keydown.enter)="fileInput.click()" (keydown.space)="fileInput.click()"
             (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)"
             (click)="fileInput.click()">
             <input type="file" #fileInput (change)="onFileSelected($event)" accept=".xlsx, .xls, .csv" style="display: none;" />

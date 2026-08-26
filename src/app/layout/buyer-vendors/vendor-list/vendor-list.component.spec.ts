@@ -376,7 +376,7 @@ describe('VendorListComponent', () => {
 
     expect(mockEvent.preventDefault).toHaveBeenCalled();
     expect(mockCheckbox.checked).toBe(false);
-    expect(vendorServiceSpy.bulkDeleteVendors).toHaveBeenCalledWith(['v-1', 'v-2']);
+    expect(vendorServiceSpy.bulkDeleteVendors).toHaveBeenCalledWith(['VND-001', 'VND-002']);
     expect(toastrSpy.success).toHaveBeenCalled();
   });
 

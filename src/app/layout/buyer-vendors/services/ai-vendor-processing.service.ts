@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { AppApiConfig } from 'src/app/shared/constants/app-api.config';
 import { AiVendorAnalysisItem } from '../models/ai-vendor-analysis.model';
@@ -33,7 +33,7 @@ export class AiVendorProcessingService {
       }),
       catchError(err => {
         console.error('Error fetching AI vendor analysis:', err);
-        return of(this.analyzedVendorsSubject.getValue());
+        return throwError(() => err);
       })
     );
   }
@@ -166,6 +166,7 @@ export class AiVendorProcessingService {
       typeOfBusiness: p.typeOfBusiness || '',
       vendorGroup: p.vendorGroup || '',
       sourcingScope: p.sourcingScope || 'Client Only',
+      status: p.status || 'Active',
       verificationStatus: p.verificationStatus || (hasGstin && hasPan ? '100% Provided' : (hasGstin || hasPan ? 'Partial Information' : 'Pending Verification')),
       complianceStatus: p.complianceStatus || (hasGstin && hasPan ? 'Compliant' : 'Pending Review'),
       processedAt: p.createdTS || ''

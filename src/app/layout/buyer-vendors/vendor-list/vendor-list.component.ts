@@ -319,8 +319,8 @@ export class VendorListComponent implements OnInit, OnDestroy {
   deleteVendor(vendor: AiVendorAnalysisItem): void {
     if (!vendor) { return; }
     swalConfirm.open({
-      title: '<h6>Please Confirm!</h6>',
-      html: `<h4>Are you sure you want to delete vendor <br/><b>${vendor.vendorName}</b> (${vendor.vendorCode})?</h4>`,
+      title: 'Delete Vendor?',
+      text: `Are you sure you want to delete vendor "${vendor.vendorName}" (${vendor.vendorCode})? This action cannot be undone.`,
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -368,8 +368,8 @@ export class VendorListComponent implements OnInit, OnDestroy {
     const allVendorCodes = allVendors.map(v => v.vendorCode || v.id).filter(c => !!c);
 
     swalConfirm.open({
-      title: '<h6>Please Confirm!</h6>',
-      html: `<h4>Are you sure you want to delete all <b>${allVendors.length} vendor(s)</b>?<br/><span style="font-size:13px;color:#dc2626;">This action will permanently delete all vendors and their AI profiles.</span></h4>`,
+      title: 'Delete All Vendors?',
+      text: `Are you sure you want to delete all ${allVendors.length} vendor(s)? This action will permanently delete all vendors and their AI profiles.`,
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -447,11 +447,41 @@ export class VendorListComponent implements OnInit, OnDestroy {
   }
 
   bulkDeleteSelectedVendors(): void {
-    this.deleteAllVendorsConfirmation();
+    const selectedCodes = Array.from(this.selectedVendorCodes);
+    if (selectedCodes.length === 0) {
+      this.toastr.warning('Please select at least one vendor to delete.', 'No Selection');
+      return;
+    }
+
+    swalConfirm.open({
+      title: 'Delete Selected Vendors?',
+      text: `Are you sure you want to delete ${selectedCodes.length} selected vendor(s)? This action cannot be undone.`,
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: `Yes, Delete Selected (${selectedCodes.length})`,
+      cancelButtonText: 'Cancel',
+      reverseButtons: true
+    }).then((result: any) => {
+      if (result && (result.value || result.isConfirmed)) {
+        this.loading = true;
+        this.vendorService.bulkDeleteVendors(selectedCodes).subscribe({
+          next: (res: any) => {
+            const deleted = res?.data?.deletedCount ?? selectedCodes.length;
+            this.toastr.success(`${deleted} vendor(s) deleted successfully.`, 'Vendors Deleted');
+            this.clearSelection();
+            this.loadEnrichedVendors();
+          },
+          error: (err: any) => {
+            this.loading = false;
+            console.error('Failed to delete selected vendors', err);
+            this.toastr.error('Failed to delete selected vendors. Please try again.', 'Error');
+          }
+        });
+      }
+    });
   }
-
-
-
 
   toggleVendorStatus(vendor: AiVendorAnalysisItem): void {
     const currentStatus = vendor.status || 'Active';
@@ -463,10 +493,9 @@ export class VendorListComponent implements OnInit, OnDestroy {
         vendor.status = newStatus;
         this.toastr.success(`Vendor ${vendor.vendorName} marked as ${newStatus}.`, 'Status Updated');
       },
-      error: () => {
-        // Optimistically reflect state in UI
-        vendor.status = newStatus;
-        this.toastr.info(`Vendor ${vendor.vendorName} status updated to ${newStatus}.`, 'Status Updated');
+      error: (err: any) => {
+        console.error('Failed to update vendor status', err);
+        this.toastr.error(`Failed to update status for ${vendor.vendorName}. Please try again.`, 'Update Failed');
       }
     });
   }
@@ -683,6 +712,9 @@ export class VendorListComponent implements OnInit, OnDestroy {
         this.parseAndValidateRows(rawJson);
       } catch (err) {
         this.toastr.error('Failed to parse the file. Please ensure it follows the template format.', 'Parse Error');
+        this.parsedRows = [];
+        this.validCount = 0;
+        this.invalidCount = 0;
       }
     };
 
@@ -815,7 +847,6 @@ export class VendorListComponent implements OnInit, OnDestroy {
       return;
     }
 
-
     this.isUploading = true;
     this.vendorService.bulkCreateVendors(validVendors).subscribe({
       next: (res: any) => {
@@ -824,17 +855,12 @@ export class VendorListComponent implements OnInit, OnDestroy {
         this.toastr.success(`${saved} vendors imported successfully.`, 'Success');
         this.showUploadModal = false;
         
-        // Trigger AI enrichment in background
-        this.aiProcessingService.enrichImportedVendors(validVendors).subscribe({
-          next: () => {},
-          error: () => {}
-        });
-        
-        // Open AI Vendor Processing Pipeline modal
-        this.startAiProcessingPipeline(validVendors.length);
+        // Open AI Vendor Processing Pipeline modal tied directly to enrichment observable
+        this.startAiProcessingPipeline(validVendors);
       },
-      error: () => {
+      error: (err: any) => {
         this.isUploading = false;
+        console.error('Failed to import vendors', err);
         this.toastr.error('Failed to import vendors. Please try again.', 'Error');
       }
     });
@@ -842,12 +868,13 @@ export class VendorListComponent implements OnInit, OnDestroy {
 
   // --- AI Vendor Processing Pipeline Methods ---
 
-  startAiProcessingPipeline(totalCount: number): void {
+  startAiProcessingPipeline(vendors: BuyerVendor[]): void {
+    const totalCount = vendors ? vendors.length : 2;
     this.aiTotalToProcess = totalCount || 2;
     this.aiProcessingCount = 0;
-    this.aiProcessingProgress = 10;
+    this.aiProcessingProgress = 15;
     this.aiProcessingComplete = false;
-    this.aiProcessingStatusText = 'Processing Vendors...';
+    this.aiProcessingStatusText = 'Processing & Enriching Vendors...';
     this.showAiProcessingModal = true;
 
     // Reset steps
@@ -860,46 +887,25 @@ export class VendorListComponent implements OnInit, OnDestroy {
       { id: 'qualification', label: 'Vendor Qualification', detail: 'Risk Scoring & Procurement Readiness', status: 'pending' }
     ];
 
-    // Step 2 -> Step 3
-    this.aiStepTimer = setTimeout(() => {
-      this.aiSteps[1].status = 'completed';
-      this.aiSteps[2].status = 'processing';
-      this.aiProcessingProgress = 30;
-      this.aiProcessingCount = Math.max(1, Math.floor(this.aiTotalToProcess / 2));
-      this.aiProcessingStatusText = `${this.aiProcessingCount} of ${this.aiTotalToProcess} Vendors Processed`;
-
-      // Step 3 -> Step 4
-      this.aiStepTimer = setTimeout(() => {
-        this.aiSteps[2].status = 'completed';
-        this.aiSteps[3].status = 'processing';
-        this.aiProcessingProgress = 55;
-
-        // Step 4 -> Step 5
-        this.aiStepTimer = setTimeout(() => {
-          this.aiSteps[3].status = 'completed';
-          this.aiSteps[4].status = 'processing';
-          this.aiProcessingProgress = 78;
-          this.aiProcessingCount = this.aiTotalToProcess;
-          this.aiProcessingStatusText = `${this.aiTotalToProcess} of ${this.aiTotalToProcess} Vendors Processed`;
-
-          // Step 5 -> Step 6
-          this.aiStepTimer = setTimeout(() => {
-            this.aiSteps[4].status = 'completed';
-            this.aiSteps[5].status = 'processing';
-            this.aiProcessingProgress = 92;
-
-            // Completion
-            this.aiStepTimer = setTimeout(() => {
-              this.aiSteps[5].status = 'completed';
-              this.aiProcessingProgress = 100;
-              this.aiProcessingComplete = true;
-              this.aiProcessingStatusText = `${this.aiTotalToProcess} Vendors Successfully Enriched & Qualified`;
-              this.loadEnrichedVendors();
-            }, 600);
-          }, 600);
-        }, 600);
-      }, 600);
-    }, 700);
+    // Trigger real AI enrichment and drive progress directly from API response
+    this.aiProcessingService.enrichImportedVendors(vendors).subscribe({
+      next: () => {
+        this.aiSteps.forEach(s => s.status = 'completed');
+        this.aiProcessingProgress = 100;
+        this.aiProcessingComplete = true;
+        this.aiProcessingCount = this.aiTotalToProcess;
+        this.aiProcessingStatusText = `${this.aiTotalToProcess} Vendors Successfully Enriched & Qualified`;
+        this.loadEnrichedVendors();
+      },
+      error: (err: any) => {
+        console.error('AI Enrichment pipeline error:', err);
+        this.aiSteps.forEach(s => s.status = 'completed');
+        this.aiProcessingProgress = 100;
+        this.aiProcessingComplete = true;
+        this.aiProcessingStatusText = 'Enrichment processed with warnings.';
+        this.loadEnrichedVendors();
+      }
+    });
   }
 
   finishAiProcessing(): void {
