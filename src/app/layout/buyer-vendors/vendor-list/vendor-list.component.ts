@@ -89,6 +89,8 @@ export class VendorListComponent implements OnInit, OnDestroy {
     { id: 'qualification', label: 'Vendor Qualification', detail: 'Risk Scoring & Procurement Readiness', status: 'pending' }
   ];
 
+  isCategoryManager = false;
+
   constructor(
     private vendorService: BuyerVendorService,
     private aiProcessingService: AiVendorProcessingService,
@@ -97,6 +99,12 @@ export class VendorListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    try {
+      const userStr = localStorage.getItem('currentUser');
+      if (userStr && (userStr.includes('CategoryManager') || userStr.includes('Category Manager') || userStr.includes('VendorManager'))) {
+        this.isCategoryManager = true;
+      }
+    } catch (e) {}
     this.loadEnrichedVendors();
   }
 

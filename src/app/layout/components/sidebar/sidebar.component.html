@@ -612,7 +612,7 @@
                             <span>RFQ's Support</span>
                         </a>
                         </li>
-                        <li *ngIf="loggedUserDetails?.role.roleName == 'ClientInitiator' || loggedUserDetails?.role.roleName == 'PRApprover'">
+                        <li *ngIf="loggedUserDetails?.role.roleName == 'ClientInitiator' || loggedUserDetails?.role.roleName == 'PRApprover' || loggedUserDetails?.role.roleName == 'CategoryManager' || loggedUserDetails?.role.roleName == 'CategoryManager2' || loggedUserDetails?.role.roleName == 'Category Manager' || loggedUserDetails?.role.roleName == 'VendorManager'">
                             <a class="list-group-item" [routerLink]="['/categorymgr/buyer-vendors']"
                             [routerLinkActive]="['router-link-active']">
                             <i class="fa fa-address-book"></i>&nbsp;

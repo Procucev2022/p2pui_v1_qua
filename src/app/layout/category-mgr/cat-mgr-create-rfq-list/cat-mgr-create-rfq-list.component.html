@@ -229,6 +229,247 @@
                         </div> -->
                         </form>
                      </div>
+                     <div class="col-12 mt-3">
+                         <fieldset class="col-12 row fieldSec">
+                             <legend class="displayFlexCenter">Select Sourcing Strategy Mode <span class="text-danger ml-1">*</span></legend>
+                             <div class="col-12 mb-2">
+                                 <p class="text-muted" style="font-size: 12px; margin-bottom: 8px;">Select the autonomous supplier dispatch and negotiation policy for this sourcing round.</p>
+                             </div>
+                             <div class="col-12 row mr-0 pr-0">
+                                 <!-- Mode 1 -->
+                                 <div class="col-md-4 mb-2">
+                                     <div class="sourcing-strategy-card p-3 rounded border h-100 cursor-pointer"
+                                          [ngClass]="{'strategy-card-selected': selectedSourcingStrategyMode === 'mode_1' || selectedSourcingStrategyMode === 'Client Approved Pool'}"
+                                          (click)="onSelectSourcingStrategyMode('mode_1')">
+                                         <div class="d-flex justify-content-between align-items-center mb-2">
+                                             <span class="mode-badge badge-v1 font-weight-bold">VERSION 1</span>
+                                             <input type="radio" name="sourcingMode" [checked]="selectedSourcingStrategyMode === 'mode_1' || selectedSourcingStrategyMode === 'Client Approved Pool'">
+                                         </div>
+                                         <h5 class="font-weight-bold mb-1" style="font-size: 15px; color: #1e293b;">Client Approved Pool</h5>
+                                         <p class="text-muted mb-2" style="font-size: 12px; line-height: 1.4;">Restricted Private Roster - Dispatches RFQs exclusively to the pre-approved enterprise vendor master list.</p>
+                                         <ul class="list-unstyled mb-0" style="font-size: 11px; color: #64748b;">
+                                             <li class="mb-1"><i class="fa fa-check text-success mr-1"></i> Strict internal roster exclusivity</li>
+                                             <li class="mb-1"><i class="fa fa-check text-success mr-1"></i> Automated multi-channel chasers</li>
+                                             <li><i class="fa fa-check text-success mr-1"></i> Free Trial eligible</li>
+                                         </ul>
+                                     </div>
+                                 </div>
+
+                                 <!-- Mode 2 -->
+                                 <div class="col-md-4 mb-2">
+                                     <div class="sourcing-strategy-card p-3 rounded border h-100 cursor-pointer"
+                                          [ngClass]="{'strategy-card-selected': selectedSourcingStrategyMode === 'mode_2' || selectedSourcingStrategyMode === 'Hybrid Sourced Pool'}"
+                                          (click)="onSelectSourcingStrategyMode('mode_2')">
+                                         <div class="d-flex justify-content-between align-items-center mb-2">
+                                             <span class="mode-badge badge-v2 font-weight-bold">VERSION 2</span>
+                                             <input type="radio" name="sourcingMode" [checked]="selectedSourcingStrategyMode === 'mode_2' || selectedSourcingStrategyMode === 'Hybrid Sourced Pool'">
+                                         </div>
+                                         <h5 class="font-weight-bold mb-1" style="font-size: 15px; color: #1e293b;">Hybrid Sourced Pool</h5>
+                                         <p class="text-muted mb-2" style="font-size: 12px; line-height: 1.4;">Combines your trusted vendor roster with vetted Procucev high-performance suppliers for maximum price discovery.</p>
+                                         <ul class="list-unstyled mb-0" style="font-size: 11px; color: #64748b;">
+                                             <li class="mb-1"><i class="fa fa-check text-success mr-1"></i> Internal roster + Procucev Network</li>
+                                             <li class="mb-1"><i class="fa fa-check text-success mr-1"></i> AI proximity & rating matching</li>
+                                             <li><i class="fa fa-check text-success mr-1"></i> Market band benchmarking</li>
+                                         </ul>
+                                     </div>
+                                 </div>
+
+                                 <!-- Mode 3 -->
+                                 <div class="col-md-4 mb-2">
+                                     <div class="sourcing-strategy-card p-3 rounded border h-100 cursor-pointer"
+                                          [ngClass]="{'strategy-card-selected': selectedSourcingStrategyMode === 'mode_3' || selectedSourcingStrategyMode === 'AI Match (>80%)'}"
+                                          (click)="onSelectSourcingStrategyMode('mode_3')">
+                                         <div class="d-flex justify-content-between align-items-center mb-2">
+                                             <span class="mode-badge badge-v3 font-weight-bold">VERSION 3 · AUTONOMOUS</span>
+                                             <input type="radio" name="sourcingMode" [checked]="selectedSourcingStrategyMode === 'mode_3' || selectedSourcingStrategyMode === 'AI Match (>80%)'">
+                                         </div>
+                                         <h5 class="font-weight-bold mb-1" style="font-size: 15px; color: #1e293b;">AI Match (>80%)</h5>
+                                         <p class="text-muted mb-2" style="font-size: 12px; line-height: 1.4;">Autonomous market scanning, OCR evaluation, and deep capability scoring for suppliers with >80% match.</p>
+                                         <ul class="list-unstyled mb-0" style="font-size: 11px; color: #64748b;">
+                                             <li class="mb-1"><i class="fa fa-check text-success mr-1"></i> Autonomous multi-round negotiation</li>
+                                             <li class="mb-1"><i class="fa fa-check text-success mr-1"></i> 360° qualification scorecard</li>
+                                             <li><i class="fa fa-check text-success mr-1"></i> Zero-touch PO awarding</li>
+                                         </ul>
+                                     </div>
+                                 </div>
+                             </div>
+
+                             <!-- Dynamic Targeted Sourcing Pool Preview (Shown for Buyer / ClientInitiator role only) -->
+                             <div class="col-12 mt-3 px-1" *ngIf="isBuyerRole">
+                                 <div class="sourcing-pool-wrapper p-3.5 rounded-2xl border bg-white shadow-xs">
+                                     <!-- Header with glowing badge, count, and active strategy indicator -->
+                                     <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap" style="gap: 10px;">
+                                         <div class="d-flex align-items-center" style="gap: 10px;">
+                                             <div class="pool-header-icon-box">
+                                                 <i class="fa fa-users text-primary"></i>
+                                             </div>
+                                             <div>
+                                                 <h6 class="font-weight-bold mb-0 text-slate-800" style="font-size: 14px; letter-spacing: -0.01em;">
+                                                     Targeted Dispatch Pool Preview
+                                                 </h6>
+                                                 <span class="text-muted" style="font-size: 11px;">
+                                                     {{ buyerRosterVendors.length }} matched vendors from your approved AI Vendor Management roster
+                                                 </span>
+                                             </div>
+                                         </div>
+
+                                         <div>
+                                             <span *ngIf="selectedSourcingStrategyMode === 'mode_1' || selectedSourcingStrategyMode === 'Client Approved Pool'" class="badge-pool-rule badge-rule-v1">
+                                                 <i class="fa fa-lock mr-1"></i> Version 1 Active Pool Rules
+                                             </span>
+                                             <span *ngIf="selectedSourcingStrategyMode === 'mode_2' || selectedSourcingStrategyMode === 'Hybrid Sourced Pool'" class="badge-pool-rule badge-rule-v2">
+                                                 <i class="fa fa-layer-group mr-1"></i> Version 2 Hybrid Pool (Roster + Procucev Network)
+                                             </span>
+                                             <span *ngIf="selectedSourcingStrategyMode === 'mode_3' || selectedSourcingStrategyMode === 'AI Match (>80%)'" class="badge-pool-rule badge-rule-v3">
+                                                 <i class="fa fa-shield-alt mr-1"></i> Version 3 Double-Blind Verification Active
+                                             </span>
+                                         </div>
+                                     </div>
+
+                                     <!-- Sleek Informational Banners -->
+                                     <div *ngIf="selectedSourcingStrategyMode === 'mode_1' || selectedSourcingStrategyMode === 'Client Approved Pool'" class="banner-mode-1 p-3 mb-3 d-flex align-items-start" style="gap: 12px;">
+                                         <div class="banner-icon-circle bg-amber-100 text-amber-700">
+                                             <i class="fa fa-shield-alt"></i>
+                                         </div>
+                                         <div style="flex: 1;">
+                                             <div class="font-weight-bold text-amber-900 mb-0.5" style="font-size: 12px;">Version 1 Restrictions:</div>
+                                             <div class="text-amber-800" style="font-size: 11px; line-height: 1.5;">
+                                                 RFQ dispatch goes strictly to manually added or Excel-uploaded vendors in your buyer roster. **System-wide AI Vendor Evaluations are fully disabled in V1.** Target matching is calculated strictly based on **RFQ Category Match** and **Location Proximity**.
+                                             </div>
+                                         </div>
+                                     </div>
+
+                                     <div *ngIf="selectedSourcingStrategyMode === 'mode_2' || selectedSourcingStrategyMode === 'Hybrid Sourced Pool'" class="banner-mode-2 p-3 mb-3 d-flex align-items-start" style="gap: 12px;">
+                                         <div class="banner-icon-circle bg-sky-100 text-sky-700">
+                                             <i class="fa fa-balance-scale"></i>
+                                         </div>
+                                         <div style="flex: 1;">
+                                             <div class="font-weight-bold text-sky-900 mb-0.5" style="font-size: 12px;">Version 2 Hybrid Market Discovery (Recommended)</div>
+                                             <div class="text-sky-800" style="font-size: 11px; line-height: 1.5;">
+                                                 Combines your trusted private buyer roster with top-rated Procucev verified suppliers for optimal competitive price discovery and market band benchmarking.
+                                             </div>
+                                         </div>
+                                     </div>
+
+                                     <div *ngIf="selectedSourcingStrategyMode === 'mode_3' || selectedSourcingStrategyMode === 'AI Match (>80%)'" class="banner-mode-3 p-3 mb-3 d-flex align-items-start" style="gap: 12px;">
+                                         <div class="banner-icon-circle bg-purple-100 text-purple-700">
+                                             <i class="fa fa-user-secret"></i>
+                                         </div>
+                                         <div style="flex: 1;">
+                                             <div class="font-weight-bold text-purple-900 mb-0.5" style="font-size: 12px;">Version 3 Anonymous Double-Blind Sourcing & Qualification Protocol</div>
+                                             <div class="text-purple-800" style="font-size: 11px; line-height: 1.5;">
+                                                 This RFQ will be dispatched immediately to your uploaded roster. Simultaneously, our system recommends <strong>10 vetted Procucev database suppliers</strong> below. They receive an automated capability evaluation invite with specs and BOQ while <strong>your company identity and contact info remain strictly anonymous</strong> until preliminary validation passes.
+                                             </div>
+                                         </div>
+                                     </div>
+
+                                     <!-- Buyer Uploaded Roster Vendors Cards Grid -->
+                                     <div class="row mr-0 pr-0">
+                                         <div class="col-lg-6 col-md-12 mb-2.5" *ngFor="let v of buyerRosterVendors">
+                                             <div class="vendor-roster-card p-3 rounded-xl border h-100 d-flex flex-column justify-content-between">
+                                                 <div class="d-flex justify-content-between align-items-start mb-2" style="gap: 10px;">
+                                                     <div class="d-flex align-items-start" style="gap: 10px;">
+                                                         <div class="vendor-avatar" [style.background]="getVendorAvatarBg(v.name)">
+                                                             {{ getVendorInitials(v.name) }}
+                                                         </div>
+                                                         <div>
+                                                             <div class="font-weight-bold text-slate-900 vendor-name-title">{{ v.name }}</div>
+                                                             <div class="text-muted d-flex align-items-center flex-wrap" style="font-size: 11px; gap: 6px;">
+                                                                 <span><i class="fa fa-industry mr-1 text-slate-400"></i>{{ v.category }}</span>
+                                                                 <span class="text-slate-300">•</span>
+                                                                 <span><i class="fa fa-map-marker-alt mr-1 text-slate-400"></i>{{ v.location }}</span>
+                                                             </div>
+                                                         </div>
+                                                     </div>
+                                                     <span class="badge-match-pill" *ngIf="v.matchReason">
+                                                         {{ v.matchReason }}
+                                                     </span>
+                                                 </div>
+
+                                                 <div class="d-flex justify-content-between align-items-center pt-2 border-top vendor-card-footer">
+                                                     <div class="d-flex align-items-center text-slate-500" style="font-size: 11px;">
+                                                         <span class="proximity-pin-badge" *ngIf="v.proximity">
+                                                             <i class="fa fa-compass mr-1 text-indigo-500"></i>
+                                                             Proximity: <strong class="text-slate-700 ml-0.5">{{ v.proximity }}</strong>
+                                                         </span>
+                                                     </div>
+                                                     <span *ngIf="v.proximityMatch" class="badge-approved-roster">
+                                                         <i class="fa fa-check-circle mr-1 text-emerald-500"></i> Approved Roster
+                                                     </span>
+                                                 </div>
+                                             </div>
+                                         </div>
+
+                                         <div *ngIf="buyerRosterVendors.length === 0 && !isLoadingBuyerVendors" class="col-12 p-4 text-center text-muted border border-dashed rounded-xl mb-2 bg-slate-50">
+                                             <i class="fa fa-building fa-2x text-slate-300 mb-2 d-block"></i>
+                                             <div class="font-weight-bold text-slate-700 mb-0.5">No Matching Vendors in Approved Roster</div>
+                                             <div style="font-size: 12px;">Please upload or add vendors in your AI Vendor Management directory matching this RFQ category.</div>
+                                         </div>
+                                     </div>
+
+                                     <!-- Procucev Recommendations (Mode 3) -->
+                                     <div *ngIf="selectedSourcingStrategyMode === 'mode_3' || selectedSourcingStrategyMode === 'AI Match (>80%)'" class="mt-4 pt-3 border-top">
+                                         <div class="d-flex justify-content-between align-items-center mb-2.5">
+                                             <h6 class="font-weight-bold text-slate-700 text-uppercase mb-0" style="font-size: 11px; letter-spacing: 0.06em;">
+                                                 <i class="fa fa-sparkles text-amber-500 mr-1"></i>
+                                                 System Recommendations: {{ recommendedProcucevVendors.length }} Procucev Database Vendors (Invited for Anonymous Evaluation)
+                                             </h6>
+                                             <span class="badge badge-purple-soft text-purple-700 font-weight-bold px-2 py-0.5" style="font-size: 10px;">
+                                                 <i class="fa fa-eye-slash mr-1"></i> Double-Blind Protocol
+                                             </span>
+                                         </div>
+
+                                         <div class="row mr-0 pr-0">
+                                             <div class="col-lg-6 col-md-12 mb-2.5" *ngFor="let rv of recommendedProcucevVendors">
+                                                 <div class="vendor-recommended-card p-3 rounded-xl border h-100 d-flex flex-column justify-content-between">
+                                                     <div class="d-flex justify-content-between align-items-start mb-2" style="gap: 10px;">
+                                                         <div class="d-flex align-items-start" style="gap: 10px;">
+                                                             <div class="vendor-avatar-rec">
+                                                                 {{ getVendorInitials(rv.name) }}
+                                                             </div>
+                                                             <div>
+                                                                 <div class="font-weight-bold text-slate-900 d-flex align-items-center flex-wrap" style="font-size: 13px; gap: 6px;">
+                                                                     <span>{{ rv.name }}</span>
+                                                                     <span class="badge-score-pill"><i class="fa fa-bolt mr-0.5 text-amber-500"></i>{{ rv.matchScore }}% Match</span>
+                                                                 </div>
+                                                                 <div class="text-muted d-flex align-items-center flex-wrap mt-0.5" style="font-size: 11px; gap: 6px;">
+                                                                     <span><i class="fa fa-industry mr-1 text-slate-400"></i>{{ rv.category }}</span>
+                                                                     <span class="text-slate-300">•</span>
+                                                                     <span><i class="fa fa-map-marker-alt mr-1 text-slate-400"></i>{{ rv.location }}</span>
+                                                                 </div>
+                                                             </div>
+                                                         </div>
+                                                         <span class="badge-eval-queued">
+                                                             Evaluation Queued
+                                                         </span>
+                                                     </div>
+
+                                                     <div class="d-flex justify-content-between align-items-center pt-2 border-top vendor-card-footer" style="font-size: 11px;">
+                                                         <div class="d-flex align-items-center text-slate-600">
+                                                             <span class="rating-stars mr-1">⭐</span>
+                                                             <strong class="text-slate-800">{{ rv.rating }}</strong>
+                                                             <span class="text-slate-400 ml-1">/ 5.0</span>
+                                                             <span class="text-slate-300 mx-1.5">•</span>
+                                                             <span class="text-slate-500">{{ rv.proximity }}</span>
+                                                         </div>
+                                                         <span class="text-purple-700 font-weight-bold d-flex align-items-center" style="font-size: 10px;">
+                                                             <i class="fa fa-lock mr-1"></i> Double-Blind Active
+                                                         </span>
+                                                     </div>
+                                                 </div>
+                                             </div>
+
+                                             <div *ngIf="recommendedProcucevVendors.length === 0 && !isLoadingRecommendedVendors" class="col-12 p-4 text-center text-muted border border-dashed rounded-xl mb-2 bg-slate-50">
+                                                 <i class="fa fa-network-wired fa-2x text-slate-300 mb-2 d-block"></i>
+                                                 <div class="font-weight-bold text-slate-700 mb-0.5">No Category Manager Vendors Uploaded Yet</div>
+                                                 <div style="font-size: 12px;">Category Manager can upload Procucev Network suppliers in Vendor Management to populate this recommendation pool.</div>
+                                             </div>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
+                         </fieldset>
+                     </div>
                      <div class="col-12">
                          <fieldset class="col-12 row  mt-3 fieldSec">
                              <legend class="displayFlexCenter">Item Details <small style="font-size: 11px;

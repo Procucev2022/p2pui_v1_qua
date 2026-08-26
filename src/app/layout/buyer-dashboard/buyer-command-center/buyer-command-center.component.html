@@ -378,6 +378,22 @@
       </div>
 
       <div class="modal-body py-4 overflow-auto" style="max-height: 65vh;">
+        <!-- Sourcing Strategy Mode Banner in Deep Dive Modal -->
+        <div class="p-3 mb-3 rounded-xl border bg-light d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <span class="mode-badge-pill" [ngStyle]="getModeBadgeStyle(selectedRFQForDeepDive.sourcingMode)">
+                {{ getSourcingModeBadgePill(selectedRFQForDeepDive.sourcingMode) }}
+              </span>
+              <strong class="text-slate-800 text-sm">{{ getSourcingModeName(selectedRFQForDeepDive.sourcingMode) }}</strong>
+            </div>
+            <p class="text-xs text-muted mb-0">
+              {{ selectedRFQForDeepDive.sourcingMode === 'mode_3' ? 'Autonomous supplier matching & OCR evaluation (>80% score threshold)' : (selectedRFQForDeepDive.sourcingMode === 'mode_2' ? 'Trusted internal roster + Procucev high-performance verified network' : 'Restricted enterprise vendor master roster exclusivity') }}
+            </p>
+          </div>
+          <span class="badge badge-emerald px-2.5 py-1 text-xs">Strategy Active</span>
+        </div>
+
         <!-- KPI Metrics Grid -->
         <div class="row mb-3" *ngIf="selectedRFQForDeepDive.followUpData">
           <div class="col-sm-3 mb-2" *ngIf="selectedRFQForDeepDive.followUpData.callStats">

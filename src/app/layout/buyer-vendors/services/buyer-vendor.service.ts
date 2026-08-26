@@ -60,4 +60,14 @@ export class BuyerVendorService {
       AppApiConfig.apiEndpoint + AppApiConfig.BUYER_VENDORS + '/bulk', vendors
     );
   }
+
+  getProcucevRecommendations(category?: string, limit: number = 10): Observable<any> {
+    let params = new HttpParams().set('limit', limit.toString());
+    if (category && category.trim()) {
+      params = params.set('category', category.trim());
+    }
+    return this.httpService.get<any>(
+      AppApiConfig.apiEndpoint + AppApiConfig.BUYER_VENDOR_RECOMMENDATIONS, { params }
+    );
+  }
 }

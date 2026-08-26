@@ -22,6 +22,11 @@ export interface BuyerVendor {
   createdBy?: string;
   createdTS?: string;
   lastModifiedTS?: string;
+  isProcucevVendor?: boolean;
+  origin?: string;
+  rating?: number;
+  matchScore?: number;
+  proximity?: string;
 }
 
 export interface BuyerVendorPageResponse {
@@ -52,4 +57,4 @@ export const INDUSTRY_TYPES: string[] = [
 
 export const VENDOR_GROUPS: string[] = ['Z001', 'Z002', 'Z003', 'Z004'];
 
-export const SOURCING_SCOPES: string[] = ['Client Only', 'Client+Procucev'];
+export const SOURCING_SCOPES: string[] = ['Client Only', 'Client+Procucev', 'Procucev Network'];

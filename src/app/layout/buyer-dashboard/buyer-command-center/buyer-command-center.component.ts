@@ -233,6 +233,24 @@ export class BuyerCommandCenterComponent implements OnInit {
     }
   }
 
+  getSourcingModeName(mode: string): string {
+    switch (mode) {
+      case 'mode_1': return 'Client Approved Pool';
+      case 'mode_2': return 'Hybrid Sourced Pool';
+      case 'mode_3': return 'AI Match (>80%)';
+      default: return mode || 'Client Approved Pool';
+    }
+  }
+
+  getSourcingModeBadgePill(mode: string): string {
+    switch (mode) {
+      case 'mode_1': return 'VERSION 1';
+      case 'mode_2': return 'VERSION 2';
+      case 'mode_3': return 'VERSION 3';
+      default: return 'VERSION 1';
+    }
+  }
+
   getModeBadgeStyle(mode: string): any {
     switch (mode) {
       case 'mode_1':

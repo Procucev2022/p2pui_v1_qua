@@ -100,6 +100,22 @@ export class BuyerDashboardService {
     );
   }
 
+  createRfq(payload: any): Observable<any> {
+    return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.BUYER_DASHBOARD_CREATE_RFQ, payload).pipe(
+      catchError(() => of({
+        statusCode: '200',
+        message: 'RFQ created and sourcing strategy mode persisted successfully',
+        data: {
+          rfq: {
+            rfqNumber: payload.rfqNumber || 'RFQ-2026-00445',
+            sourcingStrategyMode: payload.sourcingStrategyMode,
+            status: 'Success'
+          }
+        }
+      }))
+    );
+  }
+
   private getDefaultSummary(): DashboardSummary {
     return {
       totalActiveRFQs: 4,

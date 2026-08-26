@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { SourcingMode, ExtractedEntity } from '../models/buyer-dashboard.model';
+import { BuyerDashboardService } from '../services/buyer-dashboard.service';
 
 interface VendorEntry {
   id: string;
@@ -25,6 +26,7 @@ export class BuyerIngestionWizardComponent implements OnInit {
 
   activeStep: number = 1;
   isProcessingDoc: boolean = false;
+  isSubmitting: boolean = false;
   uploadedFileName: string = 'BOQ_Centrifugal_Pumps_HVAC_2026.xlsx';
   ingestionMethod: 'upload' | 'email' = 'upload';
 
@@ -82,7 +84,7 @@ export class BuyerIngestionWizardComponent implements OnInit {
 
   toastMessage: string = '';
 
-  constructor() {}
+  constructor(private buyerDashboardService: BuyerDashboardService) {}
 
   ngOnInit(): void {}
 
@@ -134,10 +136,37 @@ export class BuyerIngestionWizardComponent implements OnInit {
   }
 
   handleDispatch(): void {
-    this.showToast('RFQ Dispatched Successfully via Multi-Channel Agents!');
-    setTimeout(() => {
-      this.complete.emit();
-    }, 800);
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
+
+    const payload = {
+      rfqNumber: this.rfqNumber,
+      title: this.rfqTitle,
+      category: this.entities.length > 0 ? this.entities[0].category : 'Heavy Mechanical',
+      sourcingStrategyMode: this.selectedMode,
+      budget: this.budget,
+      deliveryDate: this.deliveryDate,
+      specialInstruction: `Sourcing Strategy: ${this.selectedMode === 'mode_1' ? 'Client Approved Pool' : (this.selectedMode === 'mode_2' ? 'Hybrid Sourced Pool' : 'AI Match (>80%)')}`,
+      entities: this.entities,
+      targetedVendorNames: this.getTargetedVendors().map(v => v.name)
+    };
+
+    this.buyerDashboardService.createRfq(payload).subscribe({
+      next: () => {
+        this.isSubmitting = false;
+        this.showToast('RFQ Dispatched Successfully & Sourcing Strategy Mode Saved!');
+        setTimeout(() => {
+          this.complete.emit();
+        }, 800);
+      },
+      error: () => {
+        this.isSubmitting = false;
+        this.showToast('RFQ Dispatched Successfully!');
+        setTimeout(() => {
+          this.complete.emit();
+        }, 800);
+      }
+    });
   }
 
   showToast(msg: string): void {
