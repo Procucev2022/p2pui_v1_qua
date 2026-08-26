@@ -680,6 +680,9 @@ export class VendorListComponent implements OnInit, OnDestroy {
 
         this.parseAndValidateRows(rawJson);
       } catch (err) {
+        this.parsedRows = [];
+        this.validCount = 0;
+        this.invalidCount = 0;
         this.toastr.error('Failed to parse the file. Please ensure it follows the template format.', 'Parse Error');
       }
     };
