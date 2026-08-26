@@ -835,13 +835,7 @@ export class VendorListComponent implements OnInit, OnDestroy {
       },
       error: () => {
         this.isUploading = false;
-        this.toastr.warning(`${validVendors.length} vendors processed.`, 'Notice');
-        this.showUploadModal = false;
-        this.aiProcessingService.enrichImportedVendors(validVendors).subscribe({
-          next: () => {},
-          error: () => {}
-        });
-        this.startAiProcessingPipeline(validVendors.length);
+        this.toastr.error('Failed to import vendors. Please try again.', 'Error');
       }
     });
   }
