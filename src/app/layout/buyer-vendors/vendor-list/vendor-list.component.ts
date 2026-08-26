@@ -319,8 +319,8 @@ export class VendorListComponent implements OnInit, OnDestroy {
   deleteVendor(vendor: AiVendorAnalysisItem): void {
     if (!vendor) { return; }
     swalConfirm.open({
-      title: '<h6>Please Confirm!</h6>',
-      html: `<h4>Are you sure you want to delete vendor <br/><b>${vendor.vendorName}</b> (${vendor.vendorCode})?</h4>`,
+      title: 'Please Confirm!',
+      text: `Are you sure you want to delete vendor ${vendor.vendorName} (${vendor.vendorCode})?`
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
