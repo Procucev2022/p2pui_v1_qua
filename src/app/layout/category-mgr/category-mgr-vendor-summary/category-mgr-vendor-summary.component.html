@@ -221,9 +221,9 @@
                                     <span *ngIf="col.field == 'quotationReceived'" title="Work In Progress"> {{  rowData[col.field]}}</span>
                                     <span *ngIf="col.field != 'quotationReceived'"  [ngClass]="{'app-icon': col.field == 'sourceType' }"> 
                                         <span *ngIf="col.field == 'sourceType'" >
-                                            <img *ngIf="rowData[col.field] == 'Web App'" width="30" height="30" src="/assets/images/new/web.png" />
-                                            <img *ngIf="rowData[col.field] == 'WhatsApp'" width="30" height="30" src="/assets/images/new/wapp.png" />
-                                            <img *ngIf="rowData[col.field] == 'Email'" width="30" height="30" src="/assets/images/new/email.svg" />
+                                            <img *ngIf="rowData[col.field] == 'Web App'" width="30" height="30" src="/assets/images/new/web.png" alt="" />
+                                            <img *ngIf="rowData[col.field] == 'WhatsApp'" width="30" height="30" src="/assets/images/new/wapp.png" alt="" />
+                                            <img *ngIf="rowData[col.field] == 'Email'" width="30" height="30" src="/assets/images/new/email.svg" alt="" />
                                         </span>
                                         {{rowData[col.field]}}</span>
                                 </span>
