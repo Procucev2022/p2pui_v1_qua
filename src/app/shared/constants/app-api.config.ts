@@ -54,6 +54,7 @@ export class AppApiConfig {
   public static GET_CLIENT_USER_BY_CLIENT = '/rest/gmt/getclientusersByclient';
   public static REJECT_GMT_FOR_REG_CLIENTS =   '/rest/gmt/ignoreSelfRegisterClient';
   public static ACCEPT_AND_SAVE_RFQ_BY_CM = '/rest/gmt/editAndResendRfqByCM';
+  public static UPDATE_DELIVERY_LOCATION = '/rest/gmt/updateDeliveryLocation';
   public static CHANGE_PASSWORD = '/rest/users/changePswd';
 
   public static OTPs_SENT ='/partialvendor/validateClient';

@@ -23,7 +23,8 @@ export class CategoryMgrVendorSummaryComponent {
     @ViewChild('clientInfoTemplate') clientInfoTemplate: any;
      sourceList = [
         { label: 'Web App', value: 'T' },
-        { label: 'WhatsApp', value: 'W' }
+        { label: 'WhatsApp', value: 'W' },
+        { label: 'Email', value: 'E' }
     ];
 
     rfqDataList: any = [];
@@ -244,7 +245,7 @@ export class CategoryMgrVendorSummaryComponent {
                     const status_display = ele['status'] && ele['status']['uiDisplay'] ? ele.status.uiDisplay : ele.uiDisplay;
 
                     return { ...ele, status_ui_display: status_display, quotationReceived: ele.quotationReceived == true? 'YES': 'WIP' ,
-                        sourceType: ele.sourceType ? ele.sourceType == 'T' ? 'Web App': 'WhatsApp' : 'Web App',
+                        sourceType: ele.sourceType ? (ele.sourceType == 'T' ? 'Web App' : (ele.sourceType == 'W' ? 'WhatsApp' : (ele.sourceType == 'E' ? 'Email' : ele.sourceType))) : 'Web App',
                     }
                 });
                 this.totalRecords = res.totalRecords || 0;

@@ -17,6 +17,7 @@ export class PincodeControlComponent implements OnInit, OnChanges {
   @Input() label: string = 'PIN Code';
   @Input() parentFormGroup: FormGroup = new FormGroup({});
   @Output() updatePincodeValidationStatus: EventEmitter<any> = new EventEmitter<any>();
+  @Output() inputValueChange: EventEmitter<string> = new EventEmitter<string>();
   @Input() buttonClassName: string = 'btn btn-primary';
   @Input() inputValue: string = '';
   @Input() isValidatedPincode: boolean = false;
@@ -42,20 +43,21 @@ export class PincodeControlComponent implements OnInit, OnChanges {
   }
   onChangePinCode() {
     this.isValid = false;
-    this.updatePincodeValidationStatus.emit({pincodeIsValid: false});
+    this.inputValueChange.emit(this.inputValue);
+    this.updatePincodeValidationStatus.emit({pincodeIsValid: false, pincode: this.inputValue});
   }
 
   validatePincode() {
     if(this.parentFormGroup === undefined || this.parentFormGroup === null  || Object.keys(this.parentFormGroup).length === 0){
         if(this.isValid){
          
-          this.updatePincodeValidationStatus.emit({pincodeIsValid: false});
+          this.updatePincodeValidationStatus.emit({pincodeIsValid: false, pincode: this.inputValue});
           this.isValid = false; 
           return;
       }
       if(this.inputValue === undefined || this.inputValue === null || this.inputValue.length !== 6){
           this.toaster.error('Please enter a valid 6-digit PIN code.');
-           this.updatePincodeValidationStatus.emit({pincodeIsValid: false});
+           this.updatePincodeValidationStatus.emit({pincodeIsValid: false, pincode: this.inputValue});
            return;
       }
 
@@ -63,33 +65,35 @@ export class PincodeControlComponent implements OnInit, OnChanges {
         if(response && !!response.id){ 
           this.isValid = true; 
           this.toaster.success('Success', 'Validated PIN code.');
-           this.updatePincodeValidationStatus.emit({pincodeIsValid: true, city: response.city, state: response.state});
+           this.updatePincodeValidationStatus.emit({pincodeIsValid: true, city: response.city, state: response.state, pincode: this.inputValue});
         } else {
           this.toaster.error('Failure', response.errorMessage);
-           this.updatePincodeValidationStatus.emit({pincodeIsValid: false});
+           this.updatePincodeValidationStatus.emit({pincodeIsValid: false, pincode: this.inputValue});
         } 
       });
+      return;
     }
   
     if (this.parentFormGroup.get(this.inputFormControlName)?.errors === null) {
       if(this.isValid){
           this.parentFormGroup.get(this.inputFormControlName)?.enable();
-          this.updatePincodeValidationStatus.emit({pincodeIsValid: false});
+          this.updatePincodeValidationStatus.emit({pincodeIsValid: false, pincode: this.parentFormGroup.value[this.inputFormControlName]});
           this.isValid = false; 
           return;
       }
  
-      console.log('PIN code submitted:', this.parentFormGroup.value[this.inputFormControlName]);
-      this.commentsService.getValidatePincode({ pincode: this.parentFormGroup.value[this.inputFormControlName] }).subscribe((response:any) => {
+      const pincode = this.parentFormGroup.get(this.inputFormControlName)?.value;
+      console.log('PIN code submitted:', pincode);
+      this.commentsService.getValidatePincode({ pincode }).subscribe((response:any) => {
         if(response && !!response.id){ 
           this.isValid = true;
           this.parentFormGroup.get(this.inputFormControlName)?.setErrors(null);
           this.parentFormGroup.get(this.inputFormControlName)?.disable();
           this.toaster.success('Success', 'Validated PIN code.');
-           this.updatePincodeValidationStatus.emit({pincodeIsValid: true, city: response.city, state: response.state});
+           this.updatePincodeValidationStatus.emit({pincodeIsValid: true, city: response.city, state: response.state, pincode});
         } else {
           this.toaster.error('Failure', response.errorMessage);
-           this.updatePincodeValidationStatus.emit({pincodeIsValid: false});
+           this.updatePincodeValidationStatus.emit({pincodeIsValid: false, pincode});
         } 
       });
     } else {
