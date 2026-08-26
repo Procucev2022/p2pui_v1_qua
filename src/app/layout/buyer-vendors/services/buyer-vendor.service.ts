@@ -61,6 +61,12 @@ export class BuyerVendorService {
     );
   }
 
+  bulkDeleteVendors(vendorCodes: string[]): Observable<any> {
+    return this.httpService.post<any>(
+      AppApiConfig.apiEndpoint + AppApiConfig.BUYER_VENDORS + '/bulk-delete', vendorCodes
+    );
+  }
+
   bulkCreateVendors(vendors: BuyerVendor[]): Observable<any> {
     return this.httpService.post<any>(
       AppApiConfig.apiEndpoint + AppApiConfig.BUYER_VENDORS + '/bulk', vendors
