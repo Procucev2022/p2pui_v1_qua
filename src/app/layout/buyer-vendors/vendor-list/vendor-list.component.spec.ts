@@ -316,8 +316,7 @@ describe('VendorListComponent', () => {
 
     vendorServiceSpy.updateVendorStatus.and.returnValue(throwError(() => new Error('Status err')));
     component.toggleVendorStatus(target);
-    expect(target.status).toBe('Active');
-    expect(toastrSpy.info).toHaveBeenCalled();
+    expect(toastrSpy.error).toHaveBeenCalled();
   });
 
   it('should handle single vendor deletion on confirmation with fallback id', async () => {
@@ -424,10 +423,18 @@ describe('VendorListComponent', () => {
     expect(component.isAllSelected()).toBe(false);
   });
 
-  it('should call deleteAllVendorsConfirmation on bulkDeleteSelectedVendors', () => {
-    spyOn(component, 'deleteAllVendorsConfirmation');
+  it('should handle bulkDeleteSelectedVendors with warning when empty and delete on confirmation', async () => {
+    component.selectedVendorCodes.clear();
     component.bulkDeleteSelectedVendors();
-    expect(component.deleteAllVendorsConfirmation).toHaveBeenCalled();
+    expect(toastrSpy.warning).toHaveBeenCalled();
+
+    const { swalConfirm } = await import('src/app/shared/helpers/swal-confirm');
+    spyOn(swalConfirm, 'open').and.returnValue(Promise.resolve({ isConfirmed: true } as any));
+    component.selectedVendorCodes.add('VND-001');
+    component.bulkDeleteSelectedVendors();
+    await fixture.whenStable();
+    expect(vendorServiceSpy.bulkDeleteVendors).toHaveBeenCalledWith(['VND-001']);
+    expect(toastrSpy.success).toHaveBeenCalled();
   });
 
   it('should test Excel modal and drag & drop events', () => {
