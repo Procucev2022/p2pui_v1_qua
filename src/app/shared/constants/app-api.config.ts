@@ -103,9 +103,6 @@ export class AppApiConfig {
     public static REFRESH_TOKEN_PATH = '/oauth/refreshToken';
     public static ACCESS_TOKEN = localStorage.getItem('at');
     public static loggedUserRole = 'Category Manager';
-    // https://p2pv1servicesdev-etfrcte5fhdvfrd4.centralindia-01.azurewebsites.net/authenticate
-    // public static apiEndpoint =  'https://p2pproduction1-gcbhcag6fpgedpb3.centralindia-01.azurewebsites.net/procucev';
-    // https://p2pprodservices.azurewebsites.net --- prod
 
 
 
