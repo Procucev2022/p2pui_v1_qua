@@ -20,37 +20,44 @@ export class TimeoutModalComponent implements OnInit, OnDestroy {
   }
 
   startTimer(){
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
     if(this.counter > 0){
       this.timer = setInterval(()=>{
-        console.log('in interval');
-        
         this.counter--;
         if(this.counter<=0 && !this.sessionExtended){
           this.closeSession();
         }
       },1000)
     }
-    
   }
+
   closeModal(){
     this.sessionExtended = true;
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
     this.userIdle.resetTimer();
     this.activeModal.dismiss('Close click');
   }
 
   closeSession(){
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
     this.userIdle.stopWatching();
-    console.log('session ended');
     this.activeModal.dismiss('Close click');
   }
 
   ngOnDestroy(){
-    console.log('destroy');
-    //this.sessionExtended = true;
     if(this.timer){
       clearInterval(this.timer);
+      this.timer = null;
     }
-
   }
 
 }
