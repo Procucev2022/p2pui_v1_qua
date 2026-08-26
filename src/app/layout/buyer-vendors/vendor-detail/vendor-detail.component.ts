@@ -69,8 +69,8 @@ export class VendorDetailComponent implements OnInit {
     const targetId = this.vendorId || this.vendor.id || this.vendor.vendorCode;
 
     swalConfirm.open({
-      title: '<h6>Please Confirm!</h6>',
-      html: `<h4>Are you sure you want to delete vendor <br/><b>${vendorName}</b> (${this.vendor.vendorCode})?</h4>`,
+      title: 'Please Confirm!',
+      text: `Are you sure you want to delete vendor "${vendorName}" (${this.vendor.vendorCode})? This action cannot be undone.`,
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',

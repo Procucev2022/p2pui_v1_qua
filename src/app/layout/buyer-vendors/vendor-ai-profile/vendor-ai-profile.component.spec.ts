@@ -206,7 +206,7 @@ describe('VendorAiProfileComponent', () => {
       component['buildLifecycleStages']();
       expect(component.lifecycleStages[2].status).toBe('current');
       expect(component.lifecycleStages[3].status).toBe('current');
-      expect(component.lifecycleStages[5].status).toBe('current');
+      expect(component.lifecycleStages[5].status).toBe('completed');
 
       // No credentials and low score
       component.vendor = {

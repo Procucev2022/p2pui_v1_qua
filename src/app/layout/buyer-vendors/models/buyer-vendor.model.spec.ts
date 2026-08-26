@@ -15,6 +15,6 @@ describe('buyer-vendor model', () => {
 
   it('should export expected sourcing scopes constants', () => {
     expect(SOURCING_SCOPES).toBeDefined();
-    expect(SOURCING_SCOPES).toEqual(['Client Only', 'Client+Procucev']);
+    expect(SOURCING_SCOPES).toEqual(['Client Only', 'Client + Procucev']);
   });
 });

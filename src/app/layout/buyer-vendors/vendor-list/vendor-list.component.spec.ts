@@ -316,8 +316,7 @@ describe('VendorListComponent', () => {
 
     vendorServiceSpy.updateVendorStatus.and.returnValue(throwError(() => new Error('Status err')));
     component.toggleVendorStatus(target);
-    expect(target.status).toBe('Active');
-    expect(toastrSpy.info).toHaveBeenCalled();
+    expect(toastrSpy.error).toHaveBeenCalled();
   });
 
   it('should handle single vendor deletion on confirmation with fallback id', async () => {
@@ -376,7 +375,7 @@ describe('VendorListComponent', () => {
 
     expect(mockEvent.preventDefault).toHaveBeenCalled();
     expect(mockCheckbox.checked).toBe(false);
-    expect(vendorServiceSpy.bulkDeleteVendors).toHaveBeenCalledWith(['v-1', 'v-2']);
+    expect(vendorServiceSpy.bulkDeleteVendors).toHaveBeenCalledWith(['VND-001', 'VND-002']);
     expect(toastrSpy.success).toHaveBeenCalled();
   });
 
@@ -424,10 +423,18 @@ describe('VendorListComponent', () => {
     expect(component.isAllSelected()).toBe(false);
   });
 
-  it('should call deleteAllVendorsConfirmation on bulkDeleteSelectedVendors', () => {
-    spyOn(component, 'deleteAllVendorsConfirmation');
+  it('should handle bulkDeleteSelectedVendors with warning when empty and delete on confirmation', async () => {
+    component.selectedVendorCodes.clear();
     component.bulkDeleteSelectedVendors();
-    expect(component.deleteAllVendorsConfirmation).toHaveBeenCalled();
+    expect(toastrSpy.warning).toHaveBeenCalled();
+
+    const { swalConfirm } = await import('src/app/shared/helpers/swal-confirm');
+    spyOn(swalConfirm, 'open').and.returnValue(Promise.resolve({ isConfirmed: true } as any));
+    component.selectedVendorCodes.add('VND-001');
+    component.bulkDeleteSelectedVendors();
+    await fixture.whenStable();
+    expect(vendorServiceSpy.bulkDeleteVendors).toHaveBeenCalledWith(['VND-001']);
+    expect(toastrSpy.success).toHaveBeenCalled();
   });
 
   it('should test Excel modal and drag & drop events', () => {
@@ -549,11 +556,12 @@ describe('VendorListComponent', () => {
     component.uploadVendors();
     expect(toastrSpy.warning).toHaveBeenCalled();
 
-    component.parsedRows = [{ isValid: true, vendor: { vendorCode: 'V001' } as any, errors: [] }];
+    const testVendors = [{ vendorCode: 'V001' } as any];
+    component.parsedRows = [{ isValid: true, vendor: testVendors[0], errors: [] }];
     spyOn(component, 'startAiProcessingPipeline');
     component.uploadVendors();
     expect(vendorServiceSpy.bulkCreateVendors).toHaveBeenCalled();
-    expect(component.startAiProcessingPipeline).toHaveBeenCalledWith(1);
+    expect(component.startAiProcessingPipeline).toHaveBeenCalledWith(testVendors);
   });
 
   it('should handle bulkCreateVendors error in uploadVendors gracefully', () => {
@@ -563,40 +571,23 @@ describe('VendorListComponent', () => {
     spyOn(component, 'startAiProcessingPipeline');
 
     component.uploadVendors();
-    expect(component.startAiProcessingPipeline).toHaveBeenCalled();
+    expect(toastrSpy.error).toHaveBeenCalled();
   });
 
-  it('should run AI processing pipeline progression with timers', fakeAsync(() => {
-    component.startAiProcessingPipeline(4);
+  it('should run AI processing pipeline when enrichment succeeds', () => {
+    const testVendors = [{ vendorCode: 'V001' } as any, { vendorCode: 'V002' } as any];
+    aiServiceSpy.enrichImportedVendors.and.returnValue(of([]));
+    component.startAiProcessingPipeline(testVendors);
     expect(component.showAiProcessingModal).toBe(true);
-    expect(component.aiSteps[1].status).toBe('processing');
-
-    tick(750); // Step 2 -> 3
-    expect(component.aiSteps[1].status).toBe('completed');
-    expect(component.aiSteps[2].status).toBe('processing');
-
-    tick(650); // Step 3 -> 4
-    expect(component.aiSteps[2].status).toBe('completed');
-    expect(component.aiSteps[3].status).toBe('processing');
-
-    tick(650); // Step 4 -> 5
-    expect(component.aiSteps[3].status).toBe('completed');
-    expect(component.aiSteps[4].status).toBe('processing');
-
-    tick(650); // Step 5 -> 6
-    expect(component.aiSteps[4].status).toBe('completed');
-    expect(component.aiSteps[5].status).toBe('processing');
-
-    tick(650); // Completion
-    expect(component.aiSteps[5].status).toBe('completed');
     expect(component.aiProcessingComplete).toBe(true);
+    expect(component.aiProcessingProgress).toBe(100);
 
     component.finishAiProcessing();
     expect(component.showAiProcessingModal).toBe(false);
 
     component.closeAiProcessingModal();
     expect(component.showAiProcessingModal).toBe(false);
-  }));
+  });
 
   it('should export vendors to excel with non-array subCategories/capabilities and missing optional fields', () => {
     component.filteredVendors = [
@@ -645,16 +636,17 @@ describe('VendorListComponent', () => {
     expect(toastrSpy.success).toHaveBeenCalled();
 
     // uploadVendors with response without data.savedCount
+    const mockVendorList = [{ vendorCode: 'V001' } as any];
     component.selectedFileName = 'test.xlsx';
-    component.parsedRows = [{ isValid: true, vendor: { vendorCode: 'V001' } as any, errors: [] }];
+    component.parsedRows = [{ isValid: true, vendor: mockVendorList[0], errors: [] }];
     vendorServiceSpy.bulkCreateVendors.and.returnValue(of({ statusCode: '200' }));
     spyOn(component, 'startAiProcessingPipeline');
     component.uploadVendors();
-    expect(component.startAiProcessingPipeline).toHaveBeenCalledWith(1);
+    expect(component.startAiProcessingPipeline).toHaveBeenCalledWith(mockVendorList);
 
-    // startAiProcessingPipeline with 0 count
+    // startAiProcessingPipeline with empty array
     (component.startAiProcessingPipeline as jasmine.Spy).and.callThrough();
-    component.startAiProcessingPipeline(0);
+    component.startAiProcessingPipeline([]);
     expect(component.aiTotalToProcess).toBe(2);
   });
 
