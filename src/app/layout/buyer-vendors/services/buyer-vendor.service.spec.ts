@@ -115,5 +115,17 @@ describe('BuyerVendorService', () => {
     expect(req.request.method).toBe('DELETE');
     req.flush({ statusCode: '200', message: 'Vendor deleted successfully' });
   });
+
+  it('should bulk delete vendors', () => {
+    service.bulkDeleteVendors(['VND-001', 'VND-002']).subscribe(res => {
+      expect(res).toBeTruthy();
+    });
+
+    const req = httpMock.expectOne(`${baseUrl}/bulk-delete`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(['VND-001', 'VND-002']);
+    req.flush({ statusCode: '200', message: '2 vendor(s) deleted successfully' });
+  });
 });
+
 

@@ -89,13 +89,15 @@ describe('VendorListComponent', () => {
   ];
 
   beforeEach(async () => {
-    vendorServiceSpy = jasmine.createSpyObj('BuyerVendorService', ['getVendors', 'updateVendorStatus', 'bulkCreateVendors', 'deleteVendor']);
+    vendorServiceSpy = jasmine.createSpyObj('BuyerVendorService', ['getVendors', 'updateVendorStatus', 'bulkCreateVendors', 'deleteVendor', 'bulkDeleteVendors']);
     aiServiceSpy = jasmine.createSpyObj('AiVendorProcessingService', ['getVendors', 'enrichImportedVendors']);
     toastrSpy = jasmine.createSpyObj('ToastrService', ['success', 'error', 'warning', 'info']);
 
     aiServiceSpy.getVendors.and.returnValue(of(mockVendors));
     vendorServiceSpy.updateVendorStatus.and.returnValue(of({ statusCode: '200' }));
     vendorServiceSpy.deleteVendor.and.returnValue(of({ statusCode: '200' }));
+    vendorServiceSpy.bulkDeleteVendors.and.returnValue(of({ statusCode: '200', data: { deletedCount: 2 } }));
+
 
 
     await TestBed.configureTestingModule({
@@ -221,6 +223,38 @@ describe('VendorListComponent', () => {
     expect(swalConfirm.open).toHaveBeenCalled();
     expect(vendorServiceSpy.deleteVendor).not.toHaveBeenCalled();
   });
+
+  it('should toggle selection of individual and all vendors', () => {
+    component.toggleSelectVendor('VND-001');
+    expect(component.isVendorSelected('VND-001')).toBeTrue();
+    expect(component.selectedVendorCodes.size).toBe(1);
+
+    component.toggleSelectVendor('VND-001');
+    expect(component.isVendorSelected('VND-001')).toBeFalse();
+    expect(component.selectedVendorCodes.size).toBe(0);
+
+    component.toggleSelectAll({ target: { checked: true } });
+    expect(component.isAllSelected()).toBeTrue();
+    expect(component.selectedVendorCodes.size).toBe(2);
+
+    component.toggleSelectAll({ target: { checked: false } });
+    expect(component.isAllSelected()).toBeFalse();
+    expect(component.selectedVendorCodes.size).toBe(0);
+  });
+
+  it('should prompt and delete all vendors when header checkbox is clicked', async () => {
+    const { swalConfirm } = await import('src/app/shared/helpers/swal-confirm');
+    spyOn(swalConfirm, 'open').and.returnValue(Promise.resolve({ value: true }));
+
+    component.deleteAllVendorsConfirmation();
+    await fixture.whenStable();
+
+    expect(swalConfirm.open).toHaveBeenCalled();
+    expect(vendorServiceSpy.bulkDeleteVendors).toHaveBeenCalledWith(['VND-001', 'VND-002']);
+    expect(toastrSpy.success).toHaveBeenCalled();
+  });
 });
+
+
 
 

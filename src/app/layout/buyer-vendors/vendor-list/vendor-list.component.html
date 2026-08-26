@@ -8,6 +8,7 @@
       </div>
       <div class="title-actions">
         <button class="btn btn-default-action btn-refresh" type="button"
+
           (click)="refreshDirectory()" [disabled]="loading" title="Refresh Vendor List">
           <i class="fa fa-refresh mr-1" [class.fa-spin]="loading"></i> <span>Refresh</span>
         </button>
@@ -123,6 +124,12 @@
     <table class="table vendor-table ai-analysis-table">
       <thead>
         <tr>
+          <th style="width: 44px; min-width: 44px;" class="text-center">
+            <input type="checkbox" class="vendor-checkbox"
+                   [checked]="false"
+                   (click)="deleteAllVendorsConfirmation($event)"
+                   title="Delete All Vendors">
+          </th>
           <th style="min-width: 110px;">Vendor Code</th>
           <th style="min-width: 170px;">Vendor Name</th>
           <th style="min-width: 120px;">Industry</th>
@@ -138,7 +145,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let vendor of paginatedVendors" class="vendor-row">
+        <tr *ngFor="let vendor of paginatedVendors; let i = index" class="vendor-row">
+          <!-- Row Number -->
+          <td class="text-center text-muted font-size-12" data-label="#">
+            {{i + 1 + (currentPage * pageSize)}}
+          </td>
+
+
           <!-- Vendor Code -->
           <td data-label="Vendor Code">
             <span class="code-pill cursor-pointer" (click)="viewAiProfile(vendor)">{{vendor.vendorCode}}</span>
@@ -258,13 +271,14 @@
 
         <!-- Empty State -->
         <tr *ngIf="filteredVendors.length === 0" class="empty-row">
-          <td colspan="12" class="text-center py-5 text-muted">
+          <td colspan="13" class="text-center py-5 text-muted">
             <i class="fa fa-inbox fa-3x mb-2 text-muted"></i>
             <p class="font-weight-600 mb-1">No vendors found matching your filter criteria.</p>
             <small class="text-muted">Upload an Excel file or click "Add Vendor" to onboard suppliers.</small>
           </td>
         </tr>
       </tbody>
+
     </table>
   </div>
 
@@ -354,66 +368,16 @@
           </div>
         </div>
 
-        <!-- Step 3: Validation & Preview Section -->
-        <div class="preview-section mt-4" *ngIf="parsedRows.length > 0">
-          <div class="preview-header mb-2">
-            <h6 class="font-weight-700 text-navy mb-0">
-              <i class="fa fa-table text-info mr-2"></i> Validation &amp; Preview ({{parsedRows.length}} Rows)
-            </h6>
-            <div class="validation-summary">
-              <span class="badge badge-success px-3 py-2 mr-2 font-size-12">
-                <i class="fa fa-check-circle mr-1"></i> {{validCount}} Valid
-              </span>
-              <span class="badge badge-danger px-3 py-2 font-size-12" *ngIf="invalidCount > 0">
-                <i class="fa fa-exclamation-triangle mr-1"></i> {{invalidCount}} Invalid (Will be skipped)
-              </span>
-            </div>
+        <!-- Selected File Status Badge -->
+        <div class="alert alert-info py-2 px-3 mt-3 d-flex align-items-center justify-content-between" *ngIf="selectedFileName">
+          <div>
+            <i class="fa fa-file-excel-o text-success mr-2"></i>
+            <strong>{{selectedFileName}}</strong>
+            <span class="text-muted ml-2 font-size-13" *ngIf="parsedRows.length > 0">({{validCount}} valid vendor rows ready)</span>
           </div>
-
-          <div class="preview-table-container">
-            <table class="table table-sm table-bordered preview-table">
-              <thead class="thead-light">
-                <tr>
-                  <th class="sticky-col-left-1 text-center">#</th>
-                  <th class="sticky-col-left-2 text-center">Status</th>
-                  <th>Vendor Code</th>
-                  <th>Vendor Name</th>
-                  <th>Primary Phone</th>
-                  <th>GSTIN</th>
-                  <th>PAN</th>
-                  <th>Industry</th>
-                  <th>Type of Business</th>
-                  <th>City</th>
-                  <th>State</th>
-                  <th>Sourcing Scope</th>
-                  <th class="sticky-col-right">Remarks</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let row of parsedRows; let i = index" [class.table-danger-row]="!row.isValid" [class.table-success-row]="row.isValid">
-                  <td class="sticky-col-left-1 text-center">{{i + 1}}</td>
-                  <td class="sticky-col-left-2 text-center">
-                    <span *ngIf="row.isValid" class="text-success"><i class="fa fa-check-circle"></i> Ready</span>
-                    <span *ngIf="!row.isValid" class="text-danger"><i class="fa fa-times-circle"></i> Error</span>
-                  </td>
-                  <td><strong>{{row.vendor.vendorCode || '-'}}</strong></td>
-                  <td>{{row.vendor.vendorName || '-'}}</td>
-                  <td>{{row.vendor.phone1 || '-'}}</td>
-                  <td>{{row.vendor.gstin || '-'}}</td>
-                  <td>{{row.vendor.pan || '-'}}</td>
-                  <td>{{row.vendor.typeOfIndustry || '-'}}</td>
-                  <td>{{row.vendor.typeOfBusiness || '-'}}</td>
-                  <td>{{row.vendor.city || '-'}}</td>
-                  <td>{{row.vendor.regionCode || '-'}}</td>
-                  <td>{{row.vendor.sourcingScope || '-'}}</td>
-                  <td class="sticky-col-right">
-                    <span *ngIf="row.isValid" class="text-success font-size-12">Valid row</span>
-                    <span *ngIf="!row.isValid" class="text-danger font-size-12">{{row.errors.join('; ')}}</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <button type="button" class="btn btn-sm btn-outline-secondary" (click)="selectedFileName = ''; parsedRows = []; validCount = 0; invalidCount = 0;" [disabled]="isUploading">
+            <i class="fa fa-times mr-1"></i> Clear
+          </button>
         </div>
 
       </div>
@@ -423,12 +387,13 @@
         <button type="button" class="btn btn-secondary" (click)="closeUploadModal()" [disabled]="isUploading">
           Cancel
         </button>
-        <button type="button" class="btn btn-primary btn-uploadExcel" (click)="uploadVendors()" [disabled]="validCount === 0 || isUploading">
+        <button type="button" class="btn btn-primary btn-uploadExcel" (click)="uploadVendors()" [disabled]="isUploading">
           <i class="fa fa-spinner fa-spin mr-1" *ngIf="isUploading"></i>
           <i class="fa fa-cloud-upload mr-1" *ngIf="!isUploading"></i>
-          <span>Import {{validCount}} Valid Vendor(s)</span>
+          <span>Import Vendors</span>
         </button>
       </div>
+
 
     </div>
   </div>
