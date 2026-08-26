@@ -125,10 +125,11 @@
       <thead>
         <tr>
           <th style="width: 44px; min-width: 44px;" class="text-center">
-            <input type="checkbox" class="vendor-checkbox"
-                   [checked]="false"
-                   (click)="deleteAllVendorsConfirmation($event)"
-                   title="Delete All Vendors">
+            <button type="button" class="btn btn-sm btn-outline-danger"
+                    (click)="deleteAllVendorsConfirmation()"
+                    aria-label="Delete all vendors" title="Delete All Vendors">
+              <i class="fa fa-trash-o" aria-hidden="true"></i>
+            </button>
           </th>
           <th style="min-width: 110px;">Vendor Code</th>
           <th style="min-width: 170px;">Vendor Name</th>
