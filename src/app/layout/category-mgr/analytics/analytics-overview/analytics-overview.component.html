@@ -95,27 +95,29 @@
         </div>
       </div>
 
-      <!-- Open RFQs -->
-      <div class="col mb-3">
-        <div class="card h-100 p-3 stat-card border-danger-left">
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <span class="stat-label">Open RFQs</span>
-            <i class="fa fa-clock-o text-danger"></i>
-          </div>
-          <div class="stat-value text-dark font-weight-bold">{{ metrics.openRfqs?.value | number }}</div>
-          <span class="stat-change text-danger font-weight-bold small mt-1">{{ metrics.openRfqs?.tag }}</span>
-        </div>
-      </div>
-
-      <!-- New RFQs -->
+      <!-- RFQs with Quotes -->
       <div class="col mb-3">
         <div class="card h-100 p-3 stat-card">
           <div class="d-flex justify-content-between align-items-center mb-2">
-            <span class="stat-label">New RFQs</span>
-            <i class="fa fa-plus-circle text-primary"></i>
+            <span class="stat-label">RFQs with Quotes</span>
+            <i class="fa fa-check-square-o text-primary"></i>
           </div>
-          <div class="stat-value text-dark font-weight-bold">{{ metrics.newRfqs?.value | number }}</div>
-          <span class="stat-change text-muted small mt-1">{{ metrics.newRfqs?.period }}</span>
+          <div class="stat-value text-dark font-weight-bold">{{ metrics.rfqsWithQuotes?.value | number }}</div>
+          <span class="stat-change text-primary font-weight-bold small mt-1">{{ metrics.rfqsWithQuotes?.tag }}</span>
+        </div>
+      </div>
+
+      <!-- Total Seller Submissions -->
+      <div class="col mb-3">
+        <div class="card h-100 p-3 stat-card">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="stat-label">Seller Submissions</span>
+            <i class="fa fa-paper-plane text-primary"></i>
+          </div>
+          <div class="stat-value text-dark font-weight-bold">{{ metrics.sellerSubmissions?.value | number }}</div>
+          <span class="stat-change text-primary font-weight-bold mt-1">
+            <i class="fa fa-arrow-up mr-1"></i>{{ metrics.sellerSubmissions?.change }}
+          </span>
         </div>
       </div>
 
@@ -189,16 +191,45 @@
         <div class="card p-4 h-100 shadow-sm border-0">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="font-weight-bold mb-0">Registration Source</h5>
-            <span class="badge badge-light text-primary font-weight-bold">Live Channels</span>
+            <div class="d-flex align-items-center">
+              <span class="small text-muted mr-3"><span class="dot bg-primary mr-1"></span>Buyers</span>
+              <span class="small text-muted"><span class="dot bg-success mr-1"></span>Sellers</span>
+            </div>
           </div>
-          <div class="space-y-3">
-            <div *ngFor="let s of sources" class="mb-3">
-              <div class="d-flex justify-content-between small font-weight-bold mb-1">
-                <span>{{ s.channel }}</span>
-                <span>{{ s.buyersPercent }}% Buyers</span>
+          <div class="space-y-4">
+            <div *ngFor="let s of sources" class="mb-3 p-3 bg-light rounded border">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="font-weight-bold text-dark">
+                  <i class="fa {{ s.channel.includes('WhatsApp') ? 'fa-whatsapp text-success' : s.channel.includes('Web') ? 'fa-globe text-primary' : 'fa-share-alt text-info' }} mr-1"></i>
+                  {{ s.channel }}
+                </div>
+                <span class="badge badge-light border text-dark small font-weight-bold">
+                  {{ s.totalCount || ((s.buyersCount || 0) + (s.sellersCount || 0)) | number }} Total
+                </span>
               </div>
-              <div class="progress" style="height: 8px;">
+
+              <!-- Buyer Row -->
+              <div class="d-flex justify-content-between small mb-1">
+                <span class="text-muted">
+                  <span class="dot bg-primary mr-1"></span>Buyers:
+                  <strong class="text-dark ml-1">{{ s.buyersCount | number }}</strong>
+                </span>
+                <span class="font-weight-bold text-primary">{{ s.buyersPercent }}%</span>
+              </div>
+              <div class="progress mb-2" style="height: 6px;">
                 <div class="progress-bar bg-primary" role="progressbar" [style.width.%]="s.buyersPercent"></div>
+              </div>
+
+              <!-- Seller Row -->
+              <div class="d-flex justify-content-between small mb-1">
+                <span class="text-muted">
+                  <span class="dot bg-success mr-1"></span>Sellers:
+                  <strong class="text-dark ml-1">{{ s.sellersCount | number }}</strong>
+                </span>
+                <span class="font-weight-bold text-success">{{ s.sellersPercent }}%</span>
+              </div>
+              <div class="progress" style="height: 6px;">
+                <div class="progress-bar bg-success" role="progressbar" [style.width.%]="s.sellersPercent"></div>
               </div>
             </div>
           </div>

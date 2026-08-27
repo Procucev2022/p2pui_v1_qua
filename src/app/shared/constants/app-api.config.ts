@@ -61,6 +61,7 @@ export class AppApiConfig {
   public static GET_ANALYTICS_DASHBOARD = '/rest/analytics/dashboard';
   public static GET_ANALYTICS_CATEGORIES = '/rest/analytics/categories';
   public static GET_ANALYTICS_FUNNEL = '/rest/analytics/funnel';
+  public static GET_ANALYTICS_FUNNEL_DETAILS = '/rest/analytics/funnel/details';
   public static GET_ANALYTICS_CALENDAR = '/rest/analytics/calendar';
   public static SEARCH_ANALYTICS_COMPANIES = '/rest/analytics/console/search';
   public static CHAT_ANALYTICS_CONSOLE = '/rest/analytics/console/chat';
