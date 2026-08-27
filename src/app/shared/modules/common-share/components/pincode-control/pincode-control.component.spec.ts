@@ -112,9 +112,10 @@ describe('PincodeControlComponent', () => {
     component.onChangePinCode();
     expect(component.isValid).toBe(false);
    expect(spy).toHaveBeenCalledWith(
-       expect.objectContaining({
-       pincodeIsValid: false,
-    })
+      expect(spy).toHaveBeenCalledWith({
+  pincodeIsValid: false,
+  pincode: '',
+});
    );
   });
 
