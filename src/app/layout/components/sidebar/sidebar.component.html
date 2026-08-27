@@ -539,7 +539,7 @@
                     </a>
                     <ul [ngStyle]="{'display':(rep == 'GMT' && repCollapsed) ? 'block' : 'none' }"
                     style="padding: 0px 0px 0px 32px;;" class="collapse list-unstyled" id="pageSubmenu">
-                        <li *ngIf="loggedUserDetails?.role.roleName == 'ClientInitiator' || loggedUserDetails?.role.roleName == 'CategoryManager' || loggedUserDetails?.role.roleName == 'CategoryManager2' || loggedUserDetails?.role.roleName == 'Admin'">
+                        <li *ngIf="loggedUserDetails?.role.roleName != 'CategoryManager' && loggedUserDetails?.role.roleName != 'CategoryManager2' && (loggedUserDetails?.role.roleName == 'ClientInitiator' || loggedUserDetails?.role.roleName == 'Admin')">
                             <a class="list-group-item" [routerLink]="['/buyer-dashboard']"
                             [routerLinkActive]="['router-link-active']">
                             <i class="fa fa-dashboard"></i>&nbsp;
