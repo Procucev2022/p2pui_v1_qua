@@ -8,8 +8,11 @@ import { AnalyticsService } from '../../services/analytics.service';
 })
 export class AnalyticsCalendarComponent implements OnInit {
   days: any[] = [];
+  weeks: any[] = [];
   selectedDay: any = null;
+  selectedWeek: any = null;
   isDrawerOpen: boolean = false;
+  isWeekDrawerOpen: boolean = false;
   currentYear: number = 2026;
   currentMonth: number = 8;
   monthName: string = 'August 2026';
@@ -39,6 +42,7 @@ export class AnalyticsCalendarComponent implements OnInit {
       next: (res: any) => {
         if (res) {
           this.days = res.days || [];
+          this.weeks = res.weeks || [];
           this.monthName = res.month || `${this.currentMonth}/${this.currentYear}`;
           this.startDayOffset = res.startDayOffset ?? 0;
           if (res.availableMonths && res.availableMonths.length > 0) {
@@ -47,6 +51,9 @@ export class AnalyticsCalendarComponent implements OnInit {
           if (this.days.length > 0) {
             const active = this.days.find((d: any) => d.rfqs > 0) || this.days[0];
             this.selectedDay = active;
+          }
+          if (this.weeks.length > 0) {
+            this.selectedWeek = this.weeks[0];
           }
         }
         this.isLoading = false;
@@ -92,11 +99,67 @@ export class AnalyticsCalendarComponent implements OnInit {
     if (entry) {
       this.selectedDay = entry;
       this.isDrawerOpen = true;
+      this.isWeekDrawerOpen = false;
     }
   }
 
-  get totalGridCells(): number[] {
-    const total = Math.ceil((this.startDayOffset + this.days.length) / 7) * 7;
-    return Array.from({ length: total }, (_, i) => i);
+  handleWeekClick(week: any): void {
+    this.selectedWeek = week;
+    this.isWeekDrawerOpen = true;
+    this.isDrawerOpen = false;
+  }
+
+  get weekRows(): any[] {
+    const rows: any[] = [];
+    const totalCells = Math.ceil((this.startDayOffset + this.days.length) / 7) * 7;
+    const numWeeks = totalCells / 7;
+
+    for (let w = 0; w < numWeeks; w++) {
+      const weekCells: any[] = [];
+      let weekRfqs = 0;
+      let weekSubmissions = 0;
+      let weekRegB = 0;
+      let weekRegS = 0;
+      let startDayNum = 0;
+      let endDayNum = 0;
+
+      for (let c = 0; c < 7; c++) {
+        const cellIdx = w * 7 + c;
+        const dayNum = cellIdx - this.startDayOffset + 1;
+        if (cellIdx >= this.startDayOffset && dayNum <= this.days.length) {
+          const dayData = this.days[dayNum - 1];
+          weekCells.push(dayData);
+          if (!startDayNum) startDayNum = dayNum;
+          endDayNum = dayNum;
+          if (dayData) {
+            weekRfqs += dayData.rfqs || 0;
+            weekSubmissions += dayData.sellerSubmissions || 0;
+            weekRegB += dayData.regB || 0;
+            weekRegS += dayData.regS || 0;
+          }
+        } else {
+          weekCells.push(null);
+        }
+      }
+
+      const monthPrefix = this.monthName ? this.monthName.split(' ')[0].substring(0, 3) : 'Day';
+      const weekRange = (startDayNum && endDayNum)
+        ? `${monthPrefix} ${String(startDayNum).padStart(2, '0')} - ${monthPrefix} ${String(endDayNum).padStart(2, '0')}`
+        : `Week ${w + 1}`;
+
+      const backendWeek = (this.weeks && this.weeks[w]) || {};
+
+      rows.push({
+        weekNumber: w + 1,
+        dateRange: backendWeek.dateRange || weekRange,
+        cells: weekCells,
+        totalRfqs: backendWeek.rfqs !== undefined ? backendWeek.rfqs : weekRfqs,
+        totalSubmissions: backendWeek.sellerSubmissions !== undefined ? backendWeek.sellerSubmissions : weekSubmissions,
+        totalRegB: backendWeek.regB !== undefined ? backendWeek.regB : weekRegB,
+        totalRegS: backendWeek.regS !== undefined ? backendWeek.regS : weekRegS,
+        totalReg: backendWeek.totalReg !== undefined ? backendWeek.totalReg : (weekRegB + weekRegS)
+      });
+    }
+    return rows;
   }
 }
