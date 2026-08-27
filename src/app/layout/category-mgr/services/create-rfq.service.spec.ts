@@ -367,4 +367,13 @@ describe('CreateRfqService', () => {
     expect(req.request.method).toBe('GET');
     req.flush({ ok: true });
   });
+
+  it('should call updateDeliveryLocation', () => {
+    service.updateDeliveryLocation({ id: 1 }).subscribe((res: any) => {
+      expect(res).toEqual({ ok: true });
+    });
+    const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.UPDATE_DELIVERY_LOCATION);
+    expect(req.request.method).toBe('POST');
+    req.flush({ ok: true });
+  });
 });

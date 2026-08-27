@@ -40,6 +40,16 @@ jobs:
 
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1
+        id: setup-chrome
+
+      - name: Ensure CHROME_BIN environment
+        run: |
+          CHROME="${{ steps.setup-chrome.outputs.chrome-path }}"
+          if [ -z "$CHROME" ]; then
+            CHROME=$(which google-chrome || which chrome || which chromium || which chromium-browser || true)
+          fi
+          echo "CHROME_BIN=$CHROME" >> $GITHUB_ENV
+        shell: bash
 
       - name: Lint
         run: npm run lint
@@ -55,9 +65,7 @@ jobs:
           CI: 'true'
           TEST_CI: 'true'
         run: |
-          echo "CHROME_BIN=${CHROME_BIN:-$(which chrome || which google-chrome || true)}"
-          export CHROME_BIN="${CHROME_BIN:-$(which chrome || which google-chrome)}"
-          npm run test:coverage
+          npm run test:coverage -- --progress=false
 
       - name: Enforce 90% per-file coverage
         run: npm run coverage:check
