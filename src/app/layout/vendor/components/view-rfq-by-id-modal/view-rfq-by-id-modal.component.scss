@@ -117,3 +117,39 @@
     &.match-v3 { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
 }
 
+.badge-vendor-code {
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 7px;
+    background: #f1f5f9;
+    color: #334155;
+    border-radius: 5px;
+    border: 1px solid #e2e8f0;
+    letter-spacing: 0.03em;
+}
+
+.badge-source-buyer {
+    background: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3.5px 8px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.badge-source-procucev {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3.5px 8px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+}
+

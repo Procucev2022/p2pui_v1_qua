@@ -407,14 +407,22 @@
                                          </div>
                                      </div>
 
-                                     <!-- Procucev Recommendations (Mode 3) -->
-                                     <div *ngIf="selectedSourcingStrategyMode === 'mode_3' || selectedSourcingStrategyMode === 'AI Match (>80%)'" class="mt-4 pt-3 border-top">
+                                     <!-- Procucev Recommendations (Mode 2 & Mode 3) -->
+                                     <div *ngIf="selectedSourcingStrategyMode === 'mode_2' || selectedSourcingStrategyMode === 'Hybrid Sourced Pool' || selectedSourcingStrategyMode === 'mode_3' || selectedSourcingStrategyMode === 'AI Match (>80%)'" class="mt-4 pt-3 border-top">
                                          <div class="d-flex justify-content-between align-items-center mb-2.5">
                                              <h6 class="font-weight-bold text-slate-700 text-uppercase mb-0" style="font-size: 11px; letter-spacing: 0.06em;">
                                                  <i class="fa fa-sparkles text-amber-500 mr-1"></i>
-                                                 System Recommendations: {{ recommendedProcucevVendors.length }} Procucev Database Vendors (Invited for Anonymous Evaluation)
+                                                 <span *ngIf="selectedSourcingStrategyMode === 'mode_2' || selectedSourcingStrategyMode === 'Hybrid Sourced Pool'">
+                                                     Procucev Network Pool: {{ recommendedProcucevVendors.length }} Verified Procucev Suppliers (Hybrid Market Discovery)
+                                                 </span>
+                                                 <span *ngIf="selectedSourcingStrategyMode === 'mode_3' || selectedSourcingStrategyMode === 'AI Match (>80%)'">
+                                                     System Recommendations: {{ recommendedProcucevVendors.length }} Procucev Database Vendors (Invited for Anonymous Evaluation)
+                                                 </span>
                                              </h6>
-                                             <span class="badge badge-purple-soft text-purple-700 font-weight-bold px-2 py-0.5" style="font-size: 10px;">
+                                             <span *ngIf="selectedSourcingStrategyMode === 'mode_2' || selectedSourcingStrategyMode === 'Hybrid Sourced Pool'" class="badge badge-sky-soft text-sky-700 font-weight-bold px-2 py-0.5" style="font-size: 10px; background: #e0f2fe; color: #0369a1; border-radius: 4px;">
+                                                 <i class="fa fa-layer-group mr-1"></i> Hybrid Network Pool
+                                             </span>
+                                             <span *ngIf="selectedSourcingStrategyMode === 'mode_3' || selectedSourcingStrategyMode === 'AI Match (>80%)'" class="badge badge-purple-soft text-purple-700 font-weight-bold px-2 py-0.5" style="font-size: 10px;">
                                                  <i class="fa fa-eye-slash mr-1"></i> Double-Blind Protocol
                                              </span>
                                          </div>
@@ -439,8 +447,11 @@
                                                                  </div>
                                                              </div>
                                                          </div>
-                                                         <span class="badge-eval-queued">
+                                                         <span *ngIf="selectedSourcingStrategyMode === 'mode_3' || selectedSourcingStrategyMode === 'AI Match (>80%)'" class="badge-eval-queued">
                                                              Evaluation Queued
+                                                         </span>
+                                                         <span *ngIf="selectedSourcingStrategyMode === 'mode_2' || selectedSourcingStrategyMode === 'Hybrid Sourced Pool'" class="badge-eval-queued" style="background: #e0f2fe; color: #0369a1; border-color: #bae6fd;">
+                                                             Procucev Verified
                                                          </span>
                                                      </div>
 
@@ -452,8 +463,11 @@
                                                              <span class="text-slate-300 mx-1.5">•</span>
                                                              <span class="text-slate-500">{{ rv.proximity }}</span>
                                                          </div>
-                                                         <span class="text-purple-700 font-weight-bold d-flex align-items-center" style="font-size: 10px;">
+                                                         <span *ngIf="selectedSourcingStrategyMode === 'mode_3' || selectedSourcingStrategyMode === 'AI Match (>80%)'" class="text-purple-700 font-weight-bold d-flex align-items-center" style="font-size: 10px;">
                                                              <i class="fa fa-lock mr-1"></i> Double-Blind Active
+                                                         </span>
+                                                         <span *ngIf="selectedSourcingStrategyMode === 'mode_2' || selectedSourcingStrategyMode === 'Hybrid Sourced Pool'" class="text-sky-700 font-weight-bold d-flex align-items-center" style="font-size: 10px;">
+                                                             <i class="fa fa-shield-alt mr-1"></i> Procucev Network
                                                          </span>
                                                      </div>
                                                  </div>

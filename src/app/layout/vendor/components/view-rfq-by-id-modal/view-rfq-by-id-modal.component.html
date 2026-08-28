@@ -152,13 +152,13 @@
                     </div>
                 </div>
 
-                <!-- Vendor Details Section -->
-                <div class="mt-4">
+                <!-- RFQ Submitted To / Selected Vendors Section -->
+                <div class="mt-4" *ngIf="vendorDetailsList && vendorDetailsList.length > 0">
                     <div class="table-title mb-2">
                         <div class="row">
-                            <div class="col-sm-6">
-                                <h2>Vendor Details</h2>
-                                <p><span class="dot"></span>{{ vendorDetailsList.length }} Invited / Targeted Suppliers</p>
+                            <div class="col-sm-8">
+                                <h2>RFQ Submitted To / Selected Vendors</h2>
+                                <p><span class="dot"></span>{{ vendorDetailsList.length }} Vendors Associated with this RFQ</p>
                             </div>
                         </div>
                     </div>
@@ -175,31 +175,49 @@
                         </ng-template>
                         <ng-template pTemplate="body" let-rowData let-columns="columns">
                             <tr>
-                                <td style="width: 220px;">
-                                    <div class="font-weight-bold" style="color: #0f172a;">{{ rowData.companyName }}</div>
+                                <!-- Vendor Name -->
+                                <td style="width: 200px;">
+                                    <div class="font-weight-bold d-flex align-items-center" style="color: #0f172a; gap: 8px;">
+                                        <i class="fa fa-building text-secondary" style="font-size: 13px;"></i>
+                                        <span>{{ rowData.companyName }}</span>
+                                    </div>
                                 </td>
+                                <!-- Vendor Code -->
+                                <td style="width: 130px;">
+                                    <span class="badge-vendor-code">
+                                        {{ rowData.vendorCode || 'N/A' }}
+                                    </span>
+                                </td>
+                                <!-- Vendor Type / Source -->
+                                <td style="width: 180px;">
+                                    <span *ngIf="rowData.vendorType === 'Buyer Uploaded' || rowData.vendorType === 'Buyer Uploaded Vendor'" class="badge badge-source-buyer">
+                                        <i class="fa fa-user-check mr-1"></i> Buyer Uploaded
+                                    </span>
+                                    <span *ngIf="rowData.vendorType !== 'Buyer Uploaded' && rowData.vendorType !== 'Buyer Uploaded Vendor'" class="badge badge-source-procucev">
+                                        <i class="fa fa-network-wired mr-1"></i> Procucev Vendor
+                                    </span>
+                                </td>
+                                <!-- Contact Information -->
                                 <td style="width: 220px; font-size: 12px; color: #475569;">
                                     {{ rowData.contactInfo }}
                                 </td>
-                                <td style="width: 150px;">
-                                    <span class="badge badge-pill" [ngClass]="{'badge-success': rowData.vendorStatus === 'Active' || rowData.vendorStatus === 'Registered', 'badge-info': rowData.vendorStatus === 'Invited' || rowData.vendorStatus === 'Quotation Dispatched', 'badge-primary': rowData.vendorStatus === 'Quotation Received' || rowData.vendorStatus === 'Responded', 'badge-secondary': !rowData.vendorStatus}">
-                                        {{ rowData.vendorStatus || 'Active' }}
+                                <!-- RFQ Submission Status -->
+                                <td style="width: 170px;">
+                                    <span class="badge badge-pill" [ngClass]="{'badge-success': rowData.vendorStatus === 'Active' || rowData.vendorStatus === 'Registered', 'badge-info': rowData.vendorStatus === 'Invited' || rowData.vendorStatus === 'Quotation Dispatched' || rowData.vendorStatus === 'Submitted / Invited', 'badge-primary': rowData.vendorStatus === 'Quotation Received' || rowData.vendorStatus === 'Responded', 'badge-secondary': !rowData.vendorStatus}">
+                                        {{ rowData.vendorStatus || 'Submitted' }}
                                     </span>
                                 </td>
-                                <td style="width: 210px;">
-                                    <span class="badge-match-status" [ngClass]="{'match-v1': getSourcingModeKey() === 'mode_1', 'match-v2': getSourcingModeKey() === 'mode_2', 'match-v3': getSourcingModeKey() === 'mode_3'}">
-                                        <i class="fa fa-shield-alt mr-1" *ngIf="getSourcingModeKey() === 'mode_1'"></i>
-                                        <i class="fa fa-network-wired mr-1" *ngIf="getSourcingModeKey() === 'mode_2'"></i>
-                                        <i class="fa fa-bolt mr-1" *ngIf="getSourcingModeKey() === 'mode_3'"></i>
-                                        {{ rowData.sourcingMatchStatus }}
-                                    </span>
+                                <!-- Submission Date / Time -->
+                                <td style="width: 180px; font-size: 12px; color: #334155; font-weight: 500;">
+                                    <i class="fa fa-clock text-muted mr-1" style="font-size: 11px;"></i>
+                                    {{ rowData.submissionDate ? (rowData.submissionDate | date: 'dd-MMM-yyyy hh:mm a') : '-' }}
                                 </td>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="emptymessage">
                             <tr>
-                                <td colspan="4" class="text-center text-muted p-3">
-                                    No vendor details found for this RFQ.
+                                <td colspan="6" class="text-center text-muted p-3">
+                                    No selected vendors found for this RFQ.
                                 </td>
                             </tr>
                         </ng-template>

@@ -22,10 +22,12 @@ export class ViewRFQByIdModalComponent implements OnInit {
   isLoadingVendors: boolean = false;
 
   vendorDetailsHeaders: any = [
-    { field: 'companyName', header: 'Vendor / Company Name', width: '220px' },
-    { field: 'contactInfo', header: 'Contact Details', width: '220px' },
-    { field: 'vendorStatus', header: 'Vendor Status', width: '150px' },
-    { field: 'sourcingMatchStatus', header: 'Sourcing Match Status', width: '210px' }
+    { field: 'companyName', header: 'Vendor Name', width: '200px' },
+    { field: 'vendorCode', header: 'Vendor Code', width: '130px' },
+    { field: 'vendorType', header: 'Vendor Type / Source', width: '180px' },
+    { field: 'contactInfo', header: 'Contact Information', width: '220px' },
+    { field: 'vendorStatus', header: 'RFQ Submission Status', width: '170px' },
+    { field: 'submissionDate', header: 'Submission Date / Time', width: '180px' }
   ];
 
   rfqDetailsHeaders: any = [
@@ -83,29 +85,32 @@ export class ViewRFQByIdModalComponent implements OnInit {
           if (vendors.length > 0) {
             this.formatVendors(vendors);
           } else {
-            this.populateFallbackVendors();
+            this.vendorDetailsList = [];
           }
         },
         error: () => {
           this.isLoadingVendors = false;
-          this.populateFallbackVendors();
+          this.vendorDetailsList = [];
         }
       });
     } else {
-      this.populateFallbackVendors();
+      this.vendorDetailsList = [];
     }
   }
 
   private formatVendors(rawVendors: any[]) {
-    const modeKey = this.getSourcingModeKey();
+    const defaultDate = this.viewRFQbyIDdetails.createdTS || this.viewRFQbyIDdetails.deliveryDate || new Date();
     this.vendorDetailsList = rawVendors.map((v, idx) => {
-      const company = v.companyName || (v.organization && v.organization.companyName) || v.name || `Enterprise Supplier ${idx + 1}`;
+      const company = v.companyName || (v.organization && v.organization.companyName) || v.name || '';
+      const code = v.vendorCode || v.companyId || (v.organization && v.organization.companyId) || (v.organization && v.organization.id) || (v.id && !String(v.id).startsWith('v-') ? v.id : '') || '';
       const email = v.email || (v.organization && v.organization.email) || '-';
-      const phone = v.phone || v.phoneNumber || (v.organization && v.organization.phoneNumber) || '-';
+      const phone = v.phone || v.phoneNumber || (v.organization && v.organization.phoneNumber) || (v.organization && v.organization.organizationPhonenumber) || '-';
       const city = v.city || (v.organization && v.organization.city) || '';
-      const contactInfo = [email !== '-' ? email : '', phone !== '-' ? phone : '', city].filter(Boolean).join(' | ') || 'Contact on file';
+      const contactInfo = [email !== '-' ? email : '', phone !== '-' ? phone : '', city].filter(Boolean).join(' | ') || '-';
 
-      let status = 'Invited';
+      let vendorType = v.vendorType || (v.organization && v.organization.vendorType) || 'Buyer Uploaded';
+
+      let status = 'Submitted / Invited';
       if (v.vendorStatus && typeof v.vendorStatus === 'object') {
         status = v.vendorStatus.uiDisplay || v.vendorStatus.status || status;
       } else if (v.status && typeof v.status === 'object') {
@@ -116,42 +121,17 @@ export class ViewRFQByIdModalComponent implements OnInit {
         status = v.status;
       }
 
-      let matchStatus = 'Client Approved Roster';
-      if (modeKey === 'mode_2') {
-        matchStatus = idx % 2 === 0 ? 'Internal Roster Exclusive' : 'Procucev Network Match (AI Verified)';
-      } else if (modeKey === 'mode_3') {
-        matchStatus = `AI Capability Match: ${(92 + (idx * 2) % 7)}%`;
-      }
+      const submissionDate = v.submissionDate || v.createdTS || v.vendorResponseDate || defaultDate;
 
       return {
         companyName: company,
+        vendorCode: code,
+        vendorType: vendorType,
         contactInfo: contactInfo,
         vendorStatus: status,
-        sourcingMatchStatus: matchStatus
+        submissionDate: submissionDate
       };
     });
-  }
-
-  private populateFallbackVendors() {
-    const modeKey = this.getSourcingModeKey();
-    if (modeKey === 'mode_3') {
-      this.vendorDetailsList = [
-        { companyName: 'Apex Advanced Engineering', contactInfo: 'sales@apexeng.in | +91 98201 44820 | Mumbai', vendorStatus: 'Active / AI Evaluated', sourcingMatchStatus: 'AI Match Score: 96.4%' },
-        { companyName: 'Delta Flow Valve Systems', contactInfo: 'info@deltaflow.com | +91 97653 21098 | Pune', vendorStatus: 'Quotation Dispatched', sourcingMatchStatus: 'AI Match Score: 93.8%' },
-        { companyName: 'Precision Dynamics Corp', contactInfo: 'contact@precisioncorp.in | +91 87654 32109 | Ahmedabad', vendorStatus: 'Autonomous Chaser Active', sourcingMatchStatus: 'AI Match Score: 91.2%' }
-      ];
-    } else if (modeKey === 'mode_2') {
-      this.vendorDetailsList = [
-        { companyName: 'Apex Supplies Ltd.', contactInfo: 'rajesh@apexsupplies.in | +91 98201 44820 | Mumbai', vendorStatus: 'Active', sourcingMatchStatus: 'Internal Approved Roster' },
-        { companyName: 'Delta Valve Systems', contactInfo: 'contact@deltavalve.com | +91 97653 21098 | Pune', vendorStatus: 'Invited', sourcingMatchStatus: 'Procucev Network Match' },
-        { companyName: 'ElectroMech Pumps & Valves', contactInfo: 'sales@electromech.co.in | +91 87654 32109 | Bangalore', vendorStatus: 'Quotation Received', sourcingMatchStatus: 'Procucev Network Match' }
-      ];
-    } else {
-      this.vendorDetailsList = [
-        { companyName: 'Apex Supplies Ltd.', contactInfo: 'rajesh@apexsupplies.in | +91 98201 44820 | Mumbai', vendorStatus: 'Active', sourcingMatchStatus: 'Client Approved Pool' },
-        { companyName: 'Kiran Valve Industries', contactInfo: 'amit@kiranvalves.com | +91 97653 21098 | Ahmedabad', vendorStatus: 'Invited', sourcingMatchStatus: 'Client Approved Pool' }
-      ];
-    }
   }
 
   getSourcingModeKey(): string {

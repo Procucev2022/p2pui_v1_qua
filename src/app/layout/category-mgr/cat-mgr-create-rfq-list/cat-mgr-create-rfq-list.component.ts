@@ -242,15 +242,19 @@ export class CatMgrCreateRfqListComponent implements OnInit {
                 this.isLoadingRecommendedVendors = false;
                 const vendors = (res && res.data && res.data.vendors) ? res.data.vendors : (Array.isArray(res) ? res : []);
                 if (vendors && vendors.length > 0) {
-                    this.recommendedProcucevVendors = vendors.map((v: any) => ({
-                        id: v.id || v.vendorCode,
-                        name: v.name || v.vendorName || 'Procucev Supplier',
-                        category: v.category || v.typeOfIndustry || v.typeOfBusiness || 'Industrial Supplies',
-                        location: v.location || (v.city ? `${v.city}, India` : 'India'),
-                        rating: v.rating || 4.8,
-                        matchScore: v.matchScore || 92,
-                        proximity: v.proximity || (v.city ? `Local Hub (${v.city})` : 'Regional Hub (<500km)')
-                    }));
+                    this.recommendedProcucevVendors = vendors.map((v: any, idx: number) => {
+                        const vCode = v.vendorCode ? (String(v.vendorCode).startsWith('PRC-') ? v.vendorCode : 'PRC-' + v.vendorCode) : ('PRC-' + (1001 + idx));
+                        return {
+                            id: v.id || vCode,
+                            vendorCode: vCode,
+                            name: v.name || v.vendorName || 'Procucev Supplier',
+                            category: v.category || v.typeOfIndustry || v.typeOfBusiness || 'Industrial Supplies',
+                            location: v.location || (v.city ? `${v.city}, India` : 'India'),
+                            rating: v.rating || 4.8,
+                            matchScore: v.matchScore || 92,
+                            proximity: v.proximity || (v.city ? `Local Hub (${v.city})` : 'Regional Hub (<500km)')
+                        };
+                    });
                 } else {
                     this.recommendedProcucevVendors = [];
                 }
@@ -275,35 +279,33 @@ export class CatMgrCreateRfqListComponent implements OnInit {
                 if (rawVendors.length > 0) {
                     this.buyerRosterVendors = rawVendors.map((v: any) => {
                         const scopeOrStatusTag = v.sourcingScope || v.status || 'Active Roster';
+                        const locParts = [v.city, v.regionCode || v.state, v.country].filter(Boolean);
+                        const locationStr = locParts.length > 0 ? locParts.join(', ') : (v.city ? `${v.city}, India` : 'India');
                         return {
                             id: v.id || v.vendorCode,
                             name: v.vendorName || v.companyName || 'Enterprise Supplier',
                             category: v.typeOfIndustry || v.typeOfBusiness || v.industry || v.category || 'General Industrial',
-                            location: [v.city, v.regionCode || v.state, v.country].filter(Boolean).join(', ') || (v.city ? `${v.city}, India` : 'Mumbai, MH'),
+                            location: locationStr,
                             matchReason: scopeOrStatusTag,
-                            proximity: v.city ? `Local Hub (${v.city})` : '',
+                            proximity: v.city ? `Local Hub (${v.city})` : (v.proximity || ''),
                             proximityMatch: true,
-                            status: v.status || 'ACTIVE'
+                            status: v.status || 'ACTIVE',
+                            email: v.email || v.contactEmail || null,
+                            phone: v.phone1 || v.phone || v.mobileNo || null
                         };
                     });
                 } else {
-                    this.populateDefaultBuyerRoster();
+                    this.buyerRosterVendors = [];
                 }
+                this.loadProcucevRecommendedVendors();
             },
-            error: () => {
+            error: (err) => {
                 this.isLoadingBuyerVendors = false;
-                this.populateDefaultBuyerRoster();
+                console.warn('Could not load buyer uploaded vendors', err);
+                this.buyerRosterVendors = [];
+                this.loadProcucevRecommendedVendors();
             }
         });
-    }
-
-    private populateDefaultBuyerRoster() {
-        this.buyerRosterVendors = [
-            { id: 'v-1', name: 'Apex Supplies Ltd.', category: 'Heavy Mechanical', location: 'Mumbai, MH', matchReason: 'Client Only', proximity: 'Local Hub (Mumbai)', proximityMatch: true, status: 'ACTIVE' },
-            { id: 'v-2', name: 'Kiran Valve Industries', category: 'Flow Control', location: 'Ahmedabad, GJ', matchReason: 'Client+Procucev', proximity: 'Local Hub (Ahmedabad)', proximityMatch: true, status: 'ACTIVE' },
-            { id: 'v-3', name: 'TechnoForce Engineering', category: 'Electrical & Switchgear', location: 'Hyderabad, TS', matchReason: 'Client Only', proximity: 'Local Hub (Hyderabad)', proximityMatch: true, status: 'ACTIVE' },
-            { id: 'v-4', name: 'Precision Pumps Pvt Ltd', category: 'Heavy Mechanical', location: 'Pune, MH', matchReason: 'Client+Procucev', proximity: 'Local Hub (Pune)', proximityMatch: true, status: 'ACTIVE' }
-        ];
     }
 
     getVendorInitials(name: string): string {
@@ -1109,21 +1111,53 @@ export class CatMgrCreateRfqListComponent implements OnInit {
     };
 
     buildVendorsForAPI() {
-        if (this.isBuyerRole && this.buyerRosterVendors && this.buyerRosterVendors.length > 0) {
-            return this.buyerRosterVendors.map((item: any) => {
-                let vendor: any = {
-                    "companyName": item.name,
-                    "city": item.location ? item.location.split(',')[0].trim() : '',
-                    "email": item.email || null,
-                    "organizationPhonenumber": item.phone || null,
-                    "vendorcategory": item.category || null,
-                    "requestType": 'Invite'
-                };
-                if (item.id && !String(item.id).startsWith('v-') && !String(item.id).startsWith('MANUAL')) {
-                    vendor["id"] = item.id;
-                }
-                return vendor;
-            });
+        if (this.isBuyerRole) {
+            let combinedVendors: any[] = [];
+            if (this.buyerRosterVendors && this.buyerRosterVendors.length > 0) {
+                const rosterList = this.buyerRosterVendors.map((item: any, idx: number) => {
+                    let vendor: any = {
+                        "companyName": item.name,
+                        "companyId": item.vendorCode || item.id || ('VND-' + (1001 + idx)),
+                        "city": item.location ? item.location.split(',')[0].trim() : '',
+                        "email": item.email || null,
+                        "organizationPhonenumber": item.phone || null,
+                        "vendorcategory": item.category || null,
+                        "vendorType": "Buyer Uploaded",
+                        "requestType": 'Invite'
+                    };
+                    if (item.id && !String(item.id).startsWith('v-') && !String(item.id).startsWith('MANUAL')) {
+                        vendor["id"] = item.id;
+                    }
+                    return vendor;
+                });
+                combinedVendors = combinedVendors.concat(rosterList);
+            }
+
+            if ((this.selectedSourcingStrategyMode === 'mode_2' || this.selectedSourcingStrategyMode === 'Hybrid Sourced Pool' ||
+                 this.selectedSourcingStrategyMode === 'mode_3' || this.selectedSourcingStrategyMode === 'AI Match (>80%)') &&
+                this.recommendedProcucevVendors && this.recommendedProcucevVendors.length > 0) {
+                const recVendors = this.recommendedProcucevVendors.map((item: any, idx: number) => {
+                    let vendor: any = {
+                        "companyName": item.name,
+                        "companyId": item.vendorCode || item.id || ('PRC-' + (2001 + idx)),
+                        "city": item.location ? item.location.split(',')[0].trim() : '',
+                        "email": item.email || null,
+                        "organizationPhonenumber": item.phone || null,
+                        "vendorcategory": item.category || null,
+                        "vendorType": "Procucev Vendor",
+                        "requestType": 'Invite'
+                    };
+                    if (item.id && !String(item.id).startsWith('v-') && !String(item.id).startsWith('MANUAL')) {
+                        vendor["id"] = item.id;
+                    }
+                    return vendor;
+                });
+                combinedVendors = combinedVendors.concat(recVendors);
+            }
+
+            if (combinedVendors.length > 0) {
+                return combinedVendors;
+            }
         }
         const vendorValue =  this.vendorGridData.gridValue.filter(ele => !ele.isSendRFQToVendorScreen);
         const vendors: any = vendorValue.map((item: any) => {
