@@ -69,6 +69,23 @@ export class BuyerProfileComponent implements OnInit {
     return !!(this.selectedMinors[major] && this.selectedMinors[major].includes(minor));
   }
 
+  isAllSelected(major: string): boolean {
+    const cat = this.categories.find(c => c.name === major);
+    if (!cat || !cat.minors.length) return false;
+    const selected = this.selectedMinors[major] || [];
+    return cat.minors.every(m => selected.includes(m));
+  }
+
+  toggleSelectAll(major: string): void {
+    const cat = this.categories.find(c => c.name === major);
+    if (!cat) return;
+    if (this.isAllSelected(major)) {
+      this.selectedMinors[major] = [];
+    } else {
+      this.selectedMinors[major] = [...cat.minors];
+    }
+  }
+
   toggleMinor(major: string, minor: string): void {
     if (!this.selectedMinors[major]) {
       this.selectedMinors[major] = [];

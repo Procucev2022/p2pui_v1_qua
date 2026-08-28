@@ -1,9 +1,16 @@
 .buyer-profile-root {
+  background: transparent !important;
+
   .page-title {
     font-size: 22px;
     font-weight: 800;
     letter-spacing: -0.025em;
-    color: #0f172a;
+    color: #ea580c !important;
+    background: transparent !important;
+
+    i {
+      color: #ea580c !important;
+    }
   }
 
   .section-heading {
@@ -25,38 +32,122 @@
     margin-bottom: 2px;
   }
 
-  .category-pill {
-    font-size: 11px;
-    font-weight: 600;
-    padding: 3px 8px;
-    border-radius: 6px;
-    margin-right: 4px;
-    margin-bottom: 4px;
-    transition: all 0.15s;
+  // --- Category Select Grid & Pill Items (matching screenshot) ---
+  .category-select-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+    padding: 4px 0;
+  }
 
-    &.btn-cat-selected {
-      background: #e0e7ff;
-      color: #4338ca;
-      border: 1px solid #c7d2fe;
+  .category-select-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 16px;
+    border-radius: 14px;
+    border: 1px solid #dce4ef;
+    background-color: #ffffff;
+    color: #27374d;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.18s ease-in-out;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+
+    &:hover {
+      border-color: #94a3b8;
+      background-color: #f8fafc;
     }
 
-    &.btn-cat-unselected {
+    .custom-checkbox {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1.5px solid #a0aec0;
       background: #ffffff;
-      color: #64748b;
-      border: 1px solid #cbd5e1;
-      &:hover { color: #0f172a; border-color: #94a3b8; }
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+
+      i {
+        font-size: 11px;
+        font-weight: 900;
+        color: #002d62;
+      }
+    }
+
+    .category-name {
+      flex-grow: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: -0.01em;
+    }
+
+    // SELECTED STATE (Deep Navy Blue style from screenshot)
+    &.selected {
+      background-color: #002d62;
+      border-color: #002d62;
+      color: #ffffff;
+      font-weight: 600;
+      box-shadow: 0 3px 8px rgba(0, 45, 98, 0.3);
+
+      .custom-checkbox {
+        background-color: #ffffff;
+        border-color: #ffffff;
+
+        i {
+          color: #002d62;
+        }
+      }
+
+      &:hover {
+        background-color: #00244f;
+        border-color: #00244f;
+      }
     }
   }
 
   .badge-emerald { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
   .badge-sky { background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; }
 
-  .btn-primary {
-    background: linear-gradient(135deg, #074193 0%, #00dbff 100%);
-    border: none;
+  .btn-save-action {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    height: 38px !important;
+    padding: 0 20px !important;
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
     color: #ffffff !important;
-    font-weight: 600;
-    border-radius: 8px;
+    background: linear-gradient(135deg, #074193 0%, #0099ff 100%) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 6px rgba(7, 65, 147, 0.25) !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer !important;
+    white-space: nowrap !important;
+    line-height: normal !important;
+
+    i.fa, i {
+      font-size: 14px !important;
+      line-height: 1 !important;
+      color: #ffffff !important;
+      margin: 0 !important;
+      display: inline-block !important;
+      vertical-align: middle !important;
+    }
+
+    &:hover {
+      opacity: 0.94 !important;
+      transform: translateY(-1px) !important;
+      box-shadow: 0 4px 10px rgba(7, 65, 147, 0.35) !important;
+    }
   }
 
   .mono { font-family: 'JetBrains Mono', Consolas, monospace; }
