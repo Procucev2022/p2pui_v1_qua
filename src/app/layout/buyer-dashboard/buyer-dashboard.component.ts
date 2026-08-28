@@ -75,6 +75,21 @@ export class BuyerDashboardComponent implements OnInit {
   constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
+    const currentUrl = this.router.url;
+    if (currentUrl.includes('subscription-center') || currentUrl.includes('subscriptions') || currentUrl.includes('buyer-subscriptions')) {
+      this.activeTab = 'subscriptions';
+    } else if (currentUrl.includes('ingestion-wizard')) {
+      this.activeTab = 'ingestion-wizard';
+    } else if (currentUrl.includes('quote-matrix')) {
+      this.activeTab = 'quote-matrix';
+    } else if (currentUrl.includes('vendor-evaluation-summary') || currentUrl.includes('vendor-eval')) {
+      this.activeTab = 'vendor-eval';
+    } else if (currentUrl.includes('vendor-summary') || currentUrl.includes('vendor-directory')) {
+      this.activeTab = 'vendor-directory';
+    } else if (currentUrl.includes('buyer-profile')) {
+      this.activeTab = 'buyer-profile';
+    }
+
     this.route.queryParams.subscribe(params => {
       if (params['tab']) {
         this.activeTab = params['tab'];
@@ -83,6 +98,10 @@ export class BuyerDashboardComponent implements OnInit {
   }
 
   setTab(tab: string): void {
+    if (tab === 'subscriptions') {
+      this.router.navigate(['/subscriptions']);
+      return;
+    }
     this.activeTab = tab;
   }
 
@@ -98,6 +117,6 @@ export class BuyerDashboardComponent implements OnInit {
   }
 
   navigateToSubscriptions(): void {
-    this.activeTab = 'subscriptions';
+    this.router.navigate(['/subscriptions']);
   }
 }

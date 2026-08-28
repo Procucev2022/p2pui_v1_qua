@@ -1,7 +1,7 @@
 <div class="buyer-dashboard-root">
 
   <!-- ── Modern Buyer Workspace Screen Cards Navigation ── -->
-  <div class="workspace-nav-section mb-4">
+  <div class="workspace-nav-section mb-4" *ngIf="activeTab !== 'subscriptions'">
     <div class="d-flex justify-content-between align-items-center mb-2 px-1">
       <div class="d-flex align-items-center gap-2">
         <span class="section-tag-badge">

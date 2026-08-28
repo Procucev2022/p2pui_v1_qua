@@ -11,6 +11,20 @@
                     <span>Dashboard</span>
                 </a>
 
+                <a *ngIf="loggedUserDetails?.role.roleName == 'ClientInitiator' || loggedUserDetails?.role.roleName == 'Admin' || loggedUserDetails?.role.roleName == 'PRApprover'"
+                    class="list-group-item" [routerLink]="['/buyer-dashboard']"
+                    [routerLinkActive]="['router-link-active']">
+                    <i class="fa fa-dashboard"></i> &nbsp;
+                    <span>Buyer Dashboard</span>
+                </a>
+
+                <a *ngIf="loggedUserDetails?.role.roleName == 'ClientInitiator' || loggedUserDetails?.role.roleName == 'Admin' || loggedUserDetails?.role.roleName == 'PRApprover'"
+                    class="list-group-item" [routerLink]="['/subscriptions']"
+                    [routerLinkActive]="['router-link-active']">
+                    <i class="fa fa-credit-card"></i> &nbsp;
+                    <span>Sourcing Subscriptions</span>
+                </a>
+
                 <!-- For CI & CA -->
                 <a *ngIf="loggedUserPermissions?.indexOf(defaultPermissions.PC_C_PR_PAGE.VIEW) != -1 "
                     class="list-group-item" [routerLink]="['/client/procurerequest']"
@@ -546,6 +560,13 @@
                             <span>Buyer Dashboard</span>
                         </a>
                         </li>
+                        <li *ngIf="loggedUserDetails?.role.roleName != 'CategoryManager' && loggedUserDetails?.role.roleName != 'CategoryManager2' && (loggedUserDetails?.role.roleName == 'ClientInitiator' || loggedUserDetails?.role.roleName == 'Admin')">
+                            <a class="list-group-item" [routerLink]="['/subscriptions']"
+                            [routerLinkActive]="['router-link-active']">
+                            <i class="fa fa-credit-card"></i>&nbsp;
+                            <span>Sourcing Subscriptions</span>
+                        </a>
+                        </li>
                         <li *ngIf="loggedUserDetails?.role.roleName == 'ClientInitiator' ||loggedUserDetails?.role.roleName == 'CategoryManager' ">
                             <a class="list-group-item" [routerLink]="['/categorymgr/create-rfq']"
                             [routerLinkActive]="['router-link-active']">
@@ -661,6 +682,7 @@
                             <i class="fa fa-user"></i> &nbsp;
                             <span>My Subscripion Plan</span>
                         </a> 
+                      </li>
                         
                         <li *ngIf="loggedUserDetails?.role.roleName ==    'Vendor' || loggedUserDetails?.role.roleName ==    'ClientInitiator' || loggedUserDetails?.role.roleName == 'Registration'|| loggedUserDetails?.role.roleName == 'PartialVendor'">
                             <a class="list-group-item" [routerLink]="['/categorymgr/gmt-rfq-faqs']"

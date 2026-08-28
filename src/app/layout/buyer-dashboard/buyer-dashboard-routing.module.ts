@@ -10,6 +10,8 @@ const routes: Routes = [
   { path: 'vendor-evaluation-summary', component: BuyerDashboardComponent },
   { path: 'vendor-summary', component: BuyerDashboardComponent },
   { path: 'subscription-center', component: BuyerDashboardComponent },
+  { path: 'subscriptions', component: BuyerDashboardComponent },
+  { path: 'buyer-subscriptions', component: BuyerDashboardComponent },
   { path: 'buyer-profile', component: BuyerDashboardComponent }
 ];
 
