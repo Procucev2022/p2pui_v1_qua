@@ -216,9 +216,11 @@ export class VendorOpportunityFeedComponent implements OnInit {
     ).length;
   }
 
+  /** Closing within a day. A negative value means no deadline is recorded. */
   get urgentOpportunity(): VendorOpportunity | null {
-    const urgent = this.opportunities
-      .filter(o => o.status === 'pending_bid' && o.daysRemaining <= 1);
+    const urgent = this.opportunities.filter(o =>
+      o.status === 'pending_bid' && o.daysRemaining >= 0 && o.daysRemaining <= 1
+    );
     return urgent.length > 0 ? urgent[0] : null;
   }
 

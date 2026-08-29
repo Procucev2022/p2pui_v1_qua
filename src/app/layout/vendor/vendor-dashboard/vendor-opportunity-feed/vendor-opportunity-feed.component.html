@@ -255,8 +255,12 @@
             {{ getCatalogueMatches(opp).length }} Catalogue Match<span *ngIf="getCatalogueMatches(opp).length > 1">es</span>
           </span>
         </div>
-        <span class="deadline-pill" [class.deadline-urgent]="opp.daysRemaining <= 2">
-          <i class="fa fa-clock-o mr-1"></i>{{ opp.daysRemaining }}d left
+        <span class="deadline-pill"
+              [class.deadline-urgent]="opp.daysRemaining >= 0 && opp.daysRemaining <= 2">
+          <i class="fa fa-clock-o mr-1"></i>
+          <ng-container *ngIf="opp.daysRemaining < 0">No deadline set</ng-container>
+          <ng-container *ngIf="opp.daysRemaining === 0">Closes today</ng-container>
+          <ng-container *ngIf="opp.daysRemaining > 0">{{ opp.daysRemaining }}d left</ng-container>
         </span>
       </div>
 
@@ -265,7 +269,7 @@
       <div class="opp-meta">
         <span><i class="fa fa-building-o mr-1"></i>{{ opp.buyer }}</span>
         <span><i class="fa fa-map-marker mr-1"></i>{{ opp.deliveryLocation }}</span>
-        <span><i class="fa fa-calendar mr-1"></i>Due {{ opp.deadline }}</span>
+        <span *ngIf="opp.deadline"><i class="fa fa-calendar mr-1"></i>Due {{ opp.deadline }}</span>
         <span *ngIf="opp.estimatedValue"><i class="fa fa-inr mr-1"></i>{{ opp.estimatedValue }}</span>
       </div>
 

@@ -34,9 +34,16 @@
             <span><i class="fa fa-calendar mr-1"></i>Due {{ opp.deadline }}</span>
           </div>
         </div>
-        <div class="countdown-box" [class.countdown-urgent]="opp.daysRemaining <= 2">
+        <div class="countdown-box"
+             [class.countdown-urgent]="opp.daysRemaining >= 0 && opp.daysRemaining <= 2">
           <span class="countdown-label">Time remaining</span>
-          <span class="countdown-value mono">{{ opp.daysRemaining }} day<span *ngIf="opp.daysRemaining !== 1">s</span></span>
+          <span class="countdown-value mono">
+            <ng-container *ngIf="opp.daysRemaining < 0">Not set</ng-container>
+            <ng-container *ngIf="opp.daysRemaining === 0">Closes today</ng-container>
+            <ng-container *ngIf="opp.daysRemaining > 0">
+              {{ opp.daysRemaining }} day<span *ngIf="opp.daysRemaining !== 1">s</span>
+            </ng-container>
+          </span>
         </div>
       </div>
     </div>
