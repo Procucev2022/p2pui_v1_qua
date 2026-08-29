@@ -75,7 +75,7 @@ export class AiVendorProcessingService {
       }),
       catchError(err => {
         console.error('Error calling AI process endpoint:', err);
-        return of([]);
+        return throwError(() => err);
       })
     );
   }

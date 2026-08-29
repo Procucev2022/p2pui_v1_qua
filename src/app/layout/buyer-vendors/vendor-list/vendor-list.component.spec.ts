@@ -304,7 +304,7 @@ describe('VendorListComponent', () => {
     expect(router.navigate).toHaveBeenCalledWith(['/categorymgr/buyer-vendors/new']);
 
     component.editVendor(mockVendors[0]);
-    expect(router.navigate).toHaveBeenCalledWith(['/categorymgr/buyer-vendors', 'VND-001', 'edit']);
+    expect(router.navigate).toHaveBeenCalledWith(['/categorymgr/buyer-vendors', 'v-1', 'edit']);
   });
 
   it('should toggle vendor status and handle error with optimistic update', () => {
@@ -487,6 +487,49 @@ describe('VendorListComponent', () => {
     expect(toastrSpy.error).toHaveBeenCalled();
   });
 
+  it('should process valid xlsx file and parse rows via FileReader onload', () => {
+    const mockRows = [{ 'Vendor Code *': 'V001', 'Vendor Name *': 'Alpha', 'Primary Phone *': '9876543210', 'Country': 'India', 'Status': 'Active', 'Sourcing Scope': 'Client Only' }];
+    spyOn(XLSX, 'read').and.returnValue({ SheetNames: ['Sheet1'], Sheets: { Sheet1: {} } } as any);
+    spyOn(XLSX.utils, 'sheet_to_json').and.returnValue(mockRows);
+
+    const mockReader: any = { readAsArrayBuffer: jasmine.createSpy('readAsArrayBuffer'), onload: null };
+    spyOn(window as any, 'FileReader').and.returnValue(mockReader);
+
+    const validFile = new File(['dummy'], 'vendors.xlsx', { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    component.processFile(validFile);
+    expect(mockReader.readAsArrayBuffer).toHaveBeenCalledWith(validFile);
+
+    mockReader.onload({ target: { result: new ArrayBuffer(8) } });
+    expect(component.parsedRows.length).toBeGreaterThan(0);
+  });
+
+  it('should warn when xlsx file has empty sheet content', () => {
+    spyOn(XLSX, 'read').and.returnValue({ SheetNames: ['Sheet1'], Sheets: { Sheet1: {} } } as any);
+    spyOn(XLSX.utils, 'sheet_to_json').and.returnValue([]);
+
+    const mockReader: any = { readAsArrayBuffer: jasmine.createSpy('readAsArrayBuffer'), onload: null };
+    spyOn(window as any, 'FileReader').and.returnValue(mockReader);
+
+    component.processFile(new File(['dummy'], 'vendors.xlsx'));
+    mockReader.onload({ target: { result: new ArrayBuffer(8) } });
+
+    expect(toastrSpy.warning).toHaveBeenCalledWith('The uploaded file is empty', 'Empty File');
+    expect(component.parsedRows).toEqual([]);
+  });
+
+  it('should show error when xlsx parsing throws an exception', () => {
+    spyOn(XLSX, 'read').and.throwError('Corrupt file');
+
+    const mockReader: any = { readAsArrayBuffer: jasmine.createSpy('readAsArrayBuffer'), onload: null };
+    spyOn(window as any, 'FileReader').and.returnValue(mockReader);
+
+    component.processFile(new File(['dummy'], 'vendors.xlsx'));
+    mockReader.onload({ target: { result: new ArrayBuffer(8) } });
+
+    expect(toastrSpy.error).toHaveBeenCalledWith('Failed to parse the file. Please ensure it follows the template format.', 'Parse Error');
+    expect(component.parsedRows).toEqual([]);
+  });
+
   it('should parse and validate rows comprehensively via direct method invocation', () => {
     const rawRows = [
       {
@@ -587,6 +630,14 @@ describe('VendorListComponent', () => {
 
     component.closeAiProcessingModal();
     expect(component.showAiProcessingModal).toBe(false);
+  });
+
+  it('should handle AI processing pipeline error gracefully', () => {
+    aiServiceSpy.enrichImportedVendors.and.returnValue(throwError(() => new Error('Enrichment error')));
+    component.startAiProcessingPipeline([{ vendorCode: 'V001' } as any]);
+    expect(component.showAiProcessingModal).toBe(true);
+    expect(component.aiProcessingComplete).toBe(true);
+    expect(component.aiProcessingProgress).toBe(100);
   });
 
   it('should export vendors to excel with non-array subCategories/capabilities and missing optional fields', () => {
