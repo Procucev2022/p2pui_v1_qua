@@ -265,7 +265,7 @@ export class VendorAiProfileComponent implements OnInit {
 
   editVendorDetails(): void {
     if (this.vendor) {
-      this.router.navigate(['/categorymgr/buyer-vendors', this.vendor.vendorCode, 'edit']);
+      this.router.navigate(['/categorymgr/buyer-vendors', this.vendor.id || this.vendor.vendorCode, 'edit']);
     }
   }
 

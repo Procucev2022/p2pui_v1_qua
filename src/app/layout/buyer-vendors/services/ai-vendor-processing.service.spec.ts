@@ -75,9 +75,13 @@ describe('AiVendorProcessingService', () => {
       req.flush({ statusCode: '200', data: null });
     });
 
-    it('should catch error and return cached values', () => {
-      service.getVendors().subscribe(items => {
-        expect(items).toEqual([]);
+    it('should propagate error on getVendors failure', (done) => {
+      service.getVendors().subscribe({
+        next: () => fail('expected error'),
+        error: (err) => {
+          expect(err).toBeTruthy();
+          done();
+        }
       });
 
       const req = httpMock.expectOne(`${baseUrl}/ai-analysis`);
@@ -177,9 +181,13 @@ describe('AiVendorProcessingService', () => {
       req.flush({ statusCode: '200', data: null });
     });
 
-    it('should catch error and return empty array', () => {
-      service.enrichImportedVendors([]).subscribe(res => {
-        expect(res).toEqual([]);
+    it('should propagate error on enrichImportedVendors failure', (done) => {
+      service.enrichImportedVendors([]).subscribe({
+        next: () => fail('expected error'),
+        error: (err) => {
+          expect(err).toBeTruthy();
+          done();
+        }
       });
 
       const req = httpMock.expectOne(`${baseUrl}/ai-process`);

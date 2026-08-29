@@ -313,7 +313,7 @@ export class VendorListComponent implements OnInit, OnDestroy {
   }
 
   editVendor(vendor: AiVendorAnalysisItem): void {
-    this.router.navigate(['/categorymgr/buyer-vendors', vendor.vendorCode, 'edit']);
+    this.router.navigate(['/categorymgr/buyer-vendors', vendor.id || vendor.vendorCode, 'edit']);
   }
 
   deleteVendor(vendor: AiVendorAnalysisItem): void {
@@ -501,7 +501,7 @@ export class VendorListComponent implements OnInit, OnDestroy {
   }
 
   exportVendorsToExcel(): void {
-    const dataToExport = this.filteredVendors.length > 0 ? this.filteredVendors : this.enrichedVendors;
+    const dataToExport = this.filteredVendors;
     if (dataToExport.length === 0) {
       this.toastr.warning('No vendor records to export.', 'Export Empty');
       return;
