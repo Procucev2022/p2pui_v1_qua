@@ -1,0 +1,118 @@
+<div class="vendor-sub-root">
+
+  <!-- Header -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center pb-3 mb-3 border-bottom">
+    <div>
+      <h5 class="sub-title mb-1">
+        Vendor Subscription Plans &amp; Quotas
+        <span class="badge-screen">Screen 3.5</span>
+      </h5>
+      <p class="sub-subtitle mb-0">
+        Compare supplier tiers and download quotas. Payment is processed securely through Zoho Payments.
+      </p>
+    </div>
+  </div>
+
+  <!-- Active plan status -->
+  <div class="status-card mb-4" *ngIf="activePlan as plan">
+    <div class="d-flex align-items-start">
+      <div class="status-icon icon-indigo">
+        <i class="fa fa-shield"></i>
+      </div>
+      <div class="ml-3">
+        <div class="d-flex align-items-center flex-wrap">
+          <span class="status-caption mr-2">Active Plan</span>
+          <span class="plan-chip chip-indigo">{{ plan.name }}</span>
+        </div>
+        <p class="status-desc mb-0">{{ plan.description }}</p>
+      </div>
+    </div>
+
+    <!-- Quota progress -->
+    <div class="quota-box" *ngIf="maxQuota > 0">
+      <div class="d-flex justify-content-between align-items-center mb-1">
+        <span class="quota-label"><i class="fa fa-download mr-1"></i> RFQ Downloads</span>
+        <span class="quota-figure mono">{{ downloadsUsed }} / {{ maxQuota }}</span>
+      </div>
+      <div class="progress quota-progress"
+           role="progressbar"
+           [attr.aria-valuenow]="downloadsUsed"
+           aria-valuemin="0"
+           [attr.aria-valuemax]="maxQuota"
+           [attr.aria-label]="'RFQ downloads used out of ' + maxQuota">
+        <div class="progress-bar" [ngClass]="quotaBarClass" [style.width.%]="quotaPercent"></div>
+      </div>
+      <span class="quota-remaining">{{ remainingDownloads }} downloads remaining</span>
+    </div>
+
+    <div class="quota-box quota-unlimited" *ngIf="maxQuota === 0">
+      <span class="unlimited-title">Direct invitations only</span>
+      <span class="unlimited-sub">No marketplace download bundle on this plan</span>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-4 text-muted small">Loading plans…</div>
+
+  <!-- Plan cards -->
+  <div class="row" *ngIf="!loading">
+    <div class="col-lg-4 col-md-6 mb-4" *ngFor="let plan of plans; trackBy: trackByPlanId">
+      <div class="plan-card h-100" [class.plan-active]="isActive(plan)">
+        <div class="active-ribbon" *ngIf="isActive(plan)">Active Plan</div>
+
+        <div class="plan-body">
+          <span class="plan-subtext" *ngIf="plan.subtext">{{ plan.subtext }}</span>
+          <h6 class="plan-name">{{ plan.name }}</h6>
+
+          <div class="plan-pricing">
+            <span class="plan-price">{{ plan.price }}</span>
+            <span class="plan-billing" *ngIf="plan.billing">{{ plan.billing }}</span>
+          </div>
+
+          <p class="price-note" *ngIf="plan.priceNote">{{ plan.priceNote }}</p>
+
+          <p class="plan-desc" *ngIf="plan.description">{{ plan.description }}</p>
+
+          <div class="quota-line" *ngIf="plan.quota > 0">
+            <i class="fa fa-download mr-1"></i> {{ plan.quota }} RFQ downloads included
+          </div>
+
+          <div class="quota-line catalogue-line" *ngIf="plan.maxCatalogueProducts > 0">
+            <i class="fa fa-cubes mr-1"></i> Publish up to {{ plan.maxCatalogueProducts }} products
+          </div>
+
+          <hr>
+
+          <span class="feature-heading" *ngIf="plan.features && plan.features.length > 0">
+            Included capabilities
+          </span>
+          <ul class="feature-list">
+            <li *ngFor="let f of plan.features">
+              <i class="fa fa-check mr-2"></i><span>{{ f }}</span>
+            </li>
+          </ul>
+
+          <div class="limitation-block" *ngIf="plan.limitations && plan.limitations.length > 0">
+            <span class="limitation-heading">Tier note</span>
+            <ul class="limitation-list">
+              <li *ngFor="let l of plan.limitations">{{ l }}</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="plan-footer">
+          <button type="button"
+                  class="btn btn-sm w-100"
+                  [ngClass]="isActive(plan) ? 'btn-outline-success' : 'btn-primary'"
+                  [disabled]="isActive(plan) || processingPlanId === plan.id"
+                  (click)="subscribe(plan)">
+            <i class="fa mr-1" [ngClass]="isActive(plan) ? 'fa-shield' : 'fa-credit-card'"></i>
+            <span *ngIf="isActive(plan)">Active Plan</span>
+            <span *ngIf="!isActive(plan) && processingPlanId === plan.id">Redirecting to payment…</span>
+            <span *ngIf="!isActive(plan) && processingPlanId !== plan.id">Subscribe</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

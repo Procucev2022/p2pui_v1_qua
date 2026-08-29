@@ -1,6 +1,9 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { SourcingMode, ExtractedEntity } from '../models/buyer-dashboard.model';
 import { BuyerDashboardService } from '../services/buyer-dashboard.service';
+import { BuyerVendorService } from '../../buyer-vendors/services/buyer-vendor.service';
+import { BuyerVendor } from '../../buyer-vendors/models/buyer-vendor.model';
 
 interface VendorEntry {
   id: string;
@@ -11,7 +14,8 @@ interface VendorEntry {
   category: string;
   location: string;
   rating: number;
-  source: 'manual' | 'excel';
+  source: 'roster' | 'recommended';
+  selected: boolean;
 }
 
 @Component({
@@ -24,69 +28,75 @@ export class BuyerIngestionWizardComponent implements OnInit {
   @Output() complete = new EventEmitter<void>();
   @Output() cancel = new EventEmitter<void>();
 
-  activeStep: number = 1;
-  isProcessingDoc: boolean = false;
-  isSubmitting: boolean = false;
-  uploadedFileName: string = 'BOQ_Centrifugal_Pumps_HVAC_2026.xlsx';
-  ingestionMethod: 'upload' | 'email' = 'upload';
+  activeStep = 1;
+  isSubmitting = false;
+  loadingVendors = true;
+  uploadedFileName = '';
+  uploadedFile: File | null = null;
+  ingestionMethod: 'upload' | 'manual' = 'upload';
 
-  rfqTitle: string = 'Centrifugal Water Pumps & Industrial Valves Procurement';
-  rfqNumber: string = `RFQ-2026-00${Math.floor(430 + Math.random() * 50)}`;
-  selectedMode: SourcingMode = 'mode_2';
-  budget: number = 145000;
-  deliveryDate: string = '2026-09-25';
+  rfqTitle = '';
+  rfqNumber = '';
+  selectedMode: SourcingMode = 'mode_1';
+  budget: number = null;
+  deliveryDate = '';
+  specialInstruction = '';
 
-  entities: ExtractedEntity[] = [
-    {
-      id: 'ent-1',
-      itemName: 'Centrifugal Water Pump (500 GPM)',
-      quantity: 12,
-      unit: 'Units',
-      targetDate: '2026-09-15',
-      technicalSpecs: 'Stainless Steel Impeller (SS316), 15 HP Motor, ANSI Flanged, 150 PSI',
-      confidence: 98.4,
-      category: 'Heavy Mechanical'
-    },
-    {
-      id: 'ent-2',
-      itemName: 'Flanged Gate Valve (4-inch Class 150)',
-      quantity: 24,
-      unit: 'Units',
-      targetDate: '2026-09-18',
-      technicalSpecs: 'ASTM A216 WCB Cast Carbon Steel Body, 150# Raised Face Flange, Rising Stem',
-      confidence: 96.2,
-      category: 'Flow Control'
-    },
-    {
-      id: 'ent-3',
-      itemName: 'Flexible Metal Expansion Joints 4"',
-      quantity: 24,
-      unit: 'Pieces',
-      targetDate: '2026-09-25',
-      technicalSpecs: 'SS304 Bellows, ANSI 150 Class',
-      confidence: 94.8,
-      category: 'Piping & Fittings'
-    }
-  ];
+  /** Line items the buyer enters or confirms; nothing is pre-filled. */
+  entities: ExtractedEntity[] = [];
 
-  vendors: VendorEntry[] = [
-    { id: 'v-1', name: 'Apex Supplies Ltd.', contactPerson: 'Rajesh Nair', phone: '+91 98201 44820', email: 'rajesh@apexsupplies.in', category: 'Heavy Mechanical', location: 'Mumbai, MH', rating: 4.8, source: 'manual' },
-    { id: 'v-2', name: 'Kiran Valve Industries', contactPerson: 'Amit Kumar', phone: '+91 97653 21098', email: 'amit@kiranvalves.com', category: 'Flow Control', location: 'Ahmedabad, GJ', rating: 4.5, source: 'manual' },
-    { id: 'v-3', name: 'TechnoForce Engineering', contactPerson: 'Sunita Reddy', phone: '+91 87654 32109', email: 'sunita@technoforce.in', category: 'Electrical & Switchgear', location: 'Hyderabad, TS', rating: 4.7, source: 'manual' },
-    { id: 'v-4', name: 'Precision Pumps Pvt Ltd', contactPerson: 'Vikram Shah', phone: '+91 99876 54321', email: 'vikram@precisionpumps.co.in', category: 'Heavy Mechanical', location: 'Pune, MH', rating: 4.3, source: 'manual' }
-  ];
+  vendors: VendorEntry[] = [];
+  recommendedVendors: VendorEntry[] = [];
 
-  recommendedVendors = [
-    { id: 'rec-1', name: 'Delta Valve Systems', category: 'Flow Control', location: 'Pune, MH', rating: 4.8, matchScore: 96, proximity: 'Local Hub (<250km)' },
-    { id: 'rec-2', name: 'ElectroMech Pumps', category: 'Heavy Mechanical', location: 'Mumbai, MH', rating: 4.6, matchScore: 93, proximity: 'Local Hub (<250km)' },
-    { id: 'rec-3', name: 'Vanguard Heavy Engineering', category: 'Heavy Mechanical', location: 'Bangalore, KA', rating: 4.7, matchScore: 91, proximity: 'Regional Hub (<600km)' }
-  ];
+  constructor(
+    private buyerDashboardService: BuyerDashboardService,
+    private buyerVendorService: BuyerVendorService,
+    private toastr: ToastrService
+  ) {}
 
-  toastMessage: string = '';
+  ngOnInit(): void {
+    this.loadRoster();
+  }
 
-  constructor(private buyerDashboardService: BuyerDashboardService) {}
+  /** Loads the buyer's real vendor roster for targeting. */
+  private loadRoster(): void {
+    this.loadingVendors = true;
+    this.buyerVendorService.getVendors(0, 200).subscribe({
+      next: res => {
+        const list = (res && res.data && res.data.vendors) ? res.data.vendors : [];
+        this.vendors = list
+          .filter(v => !v.isProcucevVendor)
+          .map(v => this.toVendorEntry(v, 'roster'));
+        this.recommendedVendors = list
+          .filter(v => !!v.isProcucevVendor)
+          .map(v => this.toVendorEntry(v, 'recommended'));
+        this.loadingVendors = false;
+      },
+      error: () => {
+        this.vendors = [];
+        this.recommendedVendors = [];
+        this.loadingVendors = false;
+        this.toastr.error('Could not load your vendor roster', 'Error');
+      }
+    });
+  }
 
-  ngOnInit(): void {}
+  private toVendorEntry(v: BuyerVendor, source: 'roster' | 'recommended'): VendorEntry {
+    const location = [v.city, v.district, v.country].filter(p => !!p).join(', ');
+    return {
+      id: v.id || v.vendorCode,
+      name: v.vendorName,
+      contactPerson: '',
+      phone: v.phone1 || '',
+      email: '',
+      category: v.typeOfIndustry || '',
+      location: location,
+      rating: v.rating || 0,
+      source: source,
+      // Roster vendors are targeted by default in Mode 1.
+      selected: source === 'roster'
+    };
+  }
 
   setStep(step: number): void {
     if (step >= 1 && step <= 4) {
@@ -94,30 +104,43 @@ export class BuyerIngestionWizardComponent implements OnInit {
     }
   }
 
-  simulateUpload(event?: any): void {
+  onFileSelected(event: any): void {
     if (event && event.target && event.target.files && event.target.files[0]) {
-      this.uploadedFileName = event.target.files[0].name;
+      this.uploadedFile = event.target.files[0];
+      this.uploadedFileName = this.uploadedFile.name;
     }
-    this.isProcessingDoc = true;
-    setTimeout(() => {
-      this.isProcessingDoc = false;
-      this.activeStep = 2;
-      this.showToast('AI OCR Extraction Complete: 3 Line items parsed with 96.5% confidence.');
-    }, 1200);
+  }
+
+  get canProceedFromStep1(): boolean {
+    return !!this.rfqTitle.trim() && !!this.deliveryDate;
+  }
+
+  get canProceedFromStep2(): boolean {
+    return this.entities.length > 0
+      && this.entities.every(e => !!e.itemName && e.quantity > 0);
+  }
+
+  get selectedVendors(): VendorEntry[] {
+    return this.getTargetedVendors().filter(v => v.selected);
+  }
+
+  get canDispatch(): boolean {
+    return this.canProceedFromStep1
+      && this.canProceedFromStep2
+      && this.selectedVendors.length > 0;
   }
 
   handleAddEntity(): void {
-    const newEnt: ExtractedEntity = {
+    this.entities.push({
       id: `ent-${Date.now()}`,
-      itemName: 'New Industrial Specification Item',
-      quantity: 10,
-      unit: 'Units',
+      itemName: '',
+      quantity: null,
+      unit: '',
       targetDate: this.deliveryDate,
-      technicalSpecs: 'Specify ANSI / DIN / ASTM compliance specs',
-      confidence: 99.0,
-      category: 'Heavy Mechanical'
-    };
-    this.entities.push(newEnt);
+      technicalSpecs: '',
+      confidence: 0,
+      category: ''
+    } as ExtractedEntity);
   }
 
   handleDeleteEntity(id: string): void {
@@ -126,51 +149,54 @@ export class BuyerIngestionWizardComponent implements OnInit {
 
   selectMode(mode: SourcingMode): void {
     this.selectedMode = mode;
+    // Mode 1 sources from the client roster only; Modes 2 and 3 add the network.
+    if (mode === 'mode_1') {
+      this.recommendedVendors.forEach(v => v.selected = false);
+    }
   }
 
+  /** Mode 1 targets the roster; Modes 2 and 3 include Procucev network vendors. */
   getTargetedVendors(): VendorEntry[] {
     if (this.selectedMode === 'mode_1') {
       return this.vendors;
     }
-    return this.vendors;
+    return this.vendors.concat(this.recommendedVendors);
+  }
+
+  toggleVendor(vendor: VendorEntry): void {
+    vendor.selected = !vendor.selected;
   }
 
   handleDispatch(): void {
-    if (this.isSubmitting) return;
+    if (this.isSubmitting || !this.canDispatch) { return; }
     this.isSubmitting = true;
 
     const payload = {
-      rfqNumber: this.rfqNumber,
+      rfqNumber: this.rfqNumber || null,
       title: this.rfqTitle,
-      category: this.entities.length > 0 ? this.entities[0].category : 'Heavy Mechanical',
+      category: this.entities.length > 0 ? this.entities[0].category : '',
       sourcingStrategyMode: this.selectedMode,
       budget: this.budget,
       deliveryDate: this.deliveryDate,
-      specialInstruction: `Sourcing Strategy: ${this.selectedMode === 'mode_1' ? 'Client Approved Pool' : (this.selectedMode === 'mode_2' ? 'Hybrid Sourced Pool' : 'AI Match (>80%)')}`,
+      specialInstruction: this.specialInstruction,
       entities: this.entities,
-      targetedVendorNames: this.getTargetedVendors().map(v => v.name)
+      targetedVendorNames: this.selectedVendors.map(v => v.name)
     };
 
     this.buyerDashboardService.createRfq(payload).subscribe({
-      next: () => {
+      next: (res: any) => {
         this.isSubmitting = false;
-        this.showToast('RFQ Dispatched Successfully & Sourcing Strategy Mode Saved!');
-        setTimeout(() => {
-          this.complete.emit();
-        }, 800);
+        const rfq = res && res.data ? res.data.rfq : null;
+        this.toastr.success(
+          rfq && rfq.rfqNumber ? `RFQ ${rfq.rfqNumber} created and dispatched` : 'RFQ created and dispatched',
+          'Success'
+        );
+        this.complete.emit();
       },
       error: () => {
         this.isSubmitting = false;
-        this.showToast('RFQ Dispatched Successfully!');
-        setTimeout(() => {
-          this.complete.emit();
-        }, 800);
+        this.toastr.error('Failed to create the RFQ. Please try again.', 'Error');
       }
     });
-  }
-
-  showToast(msg: string): void {
-    this.toastMessage = msg;
-    setTimeout(() => this.toastMessage = '', 3500);
   }
 }

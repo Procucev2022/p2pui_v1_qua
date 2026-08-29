@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { RFQItem, QuoteComparison } from '../models/buyer-dashboard.model';
 import { BuyerDashboardService } from '../services/buyer-dashboard.service';
 
@@ -14,75 +15,44 @@ export class BuyerQuoteMatrixComponent implements OnInit {
 
   quotes: QuoteComparison[] = [];
   selectedQuoteForPo: QuoteComparison | null = null;
-  poModalOpen: boolean = false;
-  poApproverNotes: string = 'Approved based on AI Evaluation Matrix >94% match score & lowest compliant price.';
-  poSigned: boolean = false;
-  poShaSignature: string = '';
+  poModalOpen = false;
+  poApproverNotes = '';
+  poSigned = false;
+  poShaSignature = '';
+  poNumber = '';
+  approving = false;
 
-  constructor(private dashboardService: BuyerDashboardService) {}
+  constructor(
+    private dashboardService: BuyerDashboardService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
-    if (this.rfq && this.rfq.quotes && this.rfq.quotes.length > 0) {
-      this.quotes = this.rfq.quotes;
-    } else {
-      this.loadSampleQuotes();
-    }
+    this.quotes = (this.rfq && this.rfq.quotes) ? this.rfq.quotes : [];
   }
 
-  loadSampleQuotes(): void {
-    this.quotes = [
-      {
-        vendorId: 'v-1',
-        vendorName: 'Apex Supplies Ltd.',
-        vendorCategory: 'Client List',
-        unitPrice: 2850,
-        totalPrice: 34200,
-        leadTimeDays: 18,
-        aiMatchScore: 96,
-        isBestPrice: true,
-        isPreferred: true,
-        warrantyYears: 2,
-        complianceStatus: 'Fully Compliant',
-        paymentTerms: 'Net 30 Days',
-        remarks: 'Pre-negotiated annual roster vendor; 100% specs matched.'
-      },
-      {
-        vendorId: 'v-2',
-        vendorName: 'Kiran Valve Industries',
-        vendorCategory: 'Client List',
-        unitPrice: 3100,
-        totalPrice: 37200,
-        leadTimeDays: 21,
-        aiMatchScore: 92,
-        isBestPrice: false,
-        isPreferred: false,
-        warrantyYears: 2,
-        complianceStatus: 'Fully Compliant',
-        paymentTerms: 'Net 30 Days',
-        remarks: 'Standard catalogue item, prompt response.'
-      },
-      {
-        vendorId: 'v-3',
-        vendorName: 'Delta Valve Systems',
-        vendorCategory: 'Procucev - AI Rec',
-        unitPrice: 2920,
-        totalPrice: 35040,
-        leadTimeDays: 14,
-        aiMatchScore: 94,
-        isBestPrice: false,
-        isPreferred: false,
-        warrantyYears: 3,
-        complianceStatus: 'Fully Compliant',
-        paymentTerms: 'Net 45 Days',
-        remarks: 'AI Match: Proximity <250km, ISO 9001 certified.'
+  /** Lowest total price among received quotes. */
+  get bestPriceVendorId(): string | null {
+    if (this.quotes.length === 0) { return null; }
+    let best = this.quotes[0];
+    this.quotes.forEach(q => {
+      if (q.totalPrice > 0 && (best.totalPrice <= 0 || q.totalPrice < best.totalPrice)) {
+        best = q;
       }
-    ];
+    });
+    return best.totalPrice > 0 ? best.vendorId : null;
+  }
+
+  isBestPrice(quote: QuoteComparison): boolean {
+    return this.bestPriceVendorId === quote.vendorId;
   }
 
   openPoModal(quote: QuoteComparison): void {
     this.selectedQuoteForPo = quote;
     this.poSigned = false;
-    this.poShaSignature = 'c7d1e3a985f621b0e49c812d4a7f55e0921bc3d49f018a7c2b53e6144f5592a1';
+    this.poShaSignature = '';
+    this.poNumber = '';
+    this.poApproverNotes = '';
     this.poModalOpen = true;
   }
 
@@ -92,21 +62,31 @@ export class BuyerQuoteMatrixComponent implements OnInit {
   }
 
   confirmApprovePo(): void {
-    if (!this.selectedQuoteForPo) return;
-    this.poSigned = true;
-    const rfqNum = this.rfq ? this.rfq.rfqNumber : 'RFQ-2026-00421';
+    if (!this.selectedQuoteForPo || !this.rfq) { return; }
+    this.approving = true;
+
     this.dashboardService.approvePurchaseOrder({
-      rfqNumber: rfqNum,
+      rfqNumber: this.rfq.rfqNumber,
       vendorName: this.selectedQuoteForPo.vendorName,
       totalAmount: this.selectedQuoteForPo.totalPrice,
       unitPrice: this.selectedQuoteForPo.unitPrice,
       leadTime: this.selectedQuoteForPo.leadTimeDays,
       approverNotes: this.poApproverNotes
-    }).subscribe(() => {
-      setTimeout(() => {
-        this.closePoModal();
-        this.backToCommandCenter.emit();
-      }, 1200);
+    }).subscribe({
+      next: (res: any) => {
+        this.approving = false;
+        const po = res && res.data ? res.data.po : null;
+        if (po) {
+          this.poSigned = true;
+          this.poNumber = po.poNumber;
+          this.poShaSignature = po.sha256Signature;
+          this.toastr.success(`Purchase Order ${po.poNumber} approved`, 'Success');
+        }
+      },
+      error: () => {
+        this.approving = false;
+        this.toastr.error('Failed to approve purchase order', 'Error');
+      }
     });
   }
 }

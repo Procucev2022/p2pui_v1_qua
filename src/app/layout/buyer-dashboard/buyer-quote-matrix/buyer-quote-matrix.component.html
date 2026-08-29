@@ -100,7 +100,7 @@
   <!-- Side-by-Side Comparison Cards Grid -->
   <div class="row" *ngIf="quotes.length > 0">
     <div *ngFor="let q of quotes" class="col-lg-4 col-md-6 mb-4">
-      <div class="glass-panel quote-card h-100 p-4 d-flex flex-column justify-content-between position-relative" [ngClass]="{'border-highlight-best': q.isBestPrice}">
+      <div class="glass-panel quote-card h-100 p-4 d-flex flex-column justify-content-between position-relative" [ngClass]="{'border-highlight-best': isBestPrice(q)}">
         <div>
           <!-- Card Top Bar -->
           <div class="d-flex justify-content-between align-items-start mb-2">
@@ -113,7 +113,7 @@
           </div>
 
           <h4 class="vendor-card-title font-bold text-dark mb-1">{{ q.vendorName }}</h4>
-          <span *ngIf="q.isBestPrice" class="badge badge-soft-success text-success font-bold text-2xs mb-3 d-inline-block">
+          <span *ngIf="isBestPrice(q)" class="badge badge-soft-success text-success font-bold text-2xs mb-3 d-inline-block">
             <i class="fa fa-check mr-1"></i> Lowest Compliant Bid
           </span>
 
@@ -149,7 +149,7 @@
 
         <button
           class="btn btn-sm w-100"
-          [ngClass]="q.isBestPrice ? 'btn-emerald' : 'btn-primary'"
+          [ngClass]="isBestPrice(q) ? 'btn-emerald' : 'btn-primary'"
           (click)="openPoModal(q)"
         >
           <i class="fa fa-check-circle mr-1"></i> Award & Dispatch PO
@@ -185,7 +185,7 @@
           <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
             <div>
               <span class="text-2xs text-indigo font-bold text-uppercase">PROCUCEV FORMAL CONTRACT</span>
-              <h5 class="font-bold text-dark mb-0 text-sm">PO-2026-{{ (rfq?.rfqNumber || '00421').replace('RFQ-2026-', '') }}</h5>
+              <h5 class="font-bold text-dark mb-0 text-sm">{{ poNumber || 'Pending authorization' }}</h5>
             </div>
             <span class="badge badge-emerald font-bold p-1 px-2"><i class="fa fa-shield mr-1"></i> Verified & Compliant</span>
           </div>

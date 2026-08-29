@@ -1,110 +1,80 @@
-<div class="subscriptions-page-root">
+<div class="buyer-subs-root">
 
-  <!-- Toast Notification -->
-  <div *ngIf="toastMessage" class="toast-floating alert alert-success shadow-lg" role="alert">
-    <i class="fa fa-check-circle mr-2"></i> {{ toastMessage }}
-  </div>
-
-  <!-- Page Header -->
-  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4 header-container">
+  <div class="d-flex flex-wrap justify-content-between align-items-center pb-3 mb-4 border-bottom">
     <div>
-      <h2 class="main-page-title mb-1">Procurement Sourcing Mode Subscriptions</h2>
-      <p class="main-page-subtitle text-muted mb-0">
-        Compare subscription models, check trial quotas, and activate Version 1, 2, or 3 features.
+      <h5 class="subs-title mb-1">Sourcing Subscriptions</h5>
+      <p class="subs-subtitle mb-0">
+        Choose a sourcing plan. Payment is processed securely through Zoho Payments.
       </p>
     </div>
-    <div>
-      <button class="btn btn-reset-trial shadow-xs" (click)="handleResetTrial()">
-        <i class="fa fa-refresh mr-1.5 text-muted"></i> Reset to Trial (5 Free V1 RFQs)
-      </button>
+    <div class="current-plan-chip" *ngIf="currentPlan as cp">
+      <span class="chip-label">Active Plan</span>
+      <span class="chip-value">{{ cp.name }}</span>
+      <span class="chip-quota mono" *ngIf="cp.totalQuota > 0">
+        {{ cp.remainingQuota }} / {{ cp.totalQuota }} RFQs left
+      </span>
     </div>
   </div>
 
-  <!-- Alert Banner: Active Free Trial Status -->
-  <div class="trial-status-banner mb-4">
-    <div class="d-flex align-items-start gap-2.5">
-      <div class="banner-icon-wrapper mt-0.5">
-        <i class="fa fa-exclamation-circle text-orange-500"></i>
-      </div>
-      <div class="banner-body">
-        <div class="banner-heading mb-1">
-          <span class="gift-icon mr-1">🎁</span>
-          <strong class="banner-title text-orange-950">Active Free Trial Status</strong>
-        </div>
-        <p class="banner-description mb-0">
-          Your account has access to <strong>Version 1 (Roster Sourcing)</strong> for exactly <strong>{{ remainingFreeRFQs }} remaining RFQs</strong>. Sourcing via Version 2 (Hybrid Pool) or Version 3 (AI Autonomous) requires activating their respective subscriptions.
-        </p>
-      </div>
-    </div>
+  <div *ngIf="loading" class="text-center py-5 text-muted small">Loading subscription plans…</div>
+
+  <div *ngIf="!loading && plans.length === 0" class="empty-state">
+    <i class="fa fa-credit-card mb-2"></i>
+    <p class="mb-1">No buyer sourcing plans are published yet.</p>
+    <p class="empty-hint mb-0">
+      Buyer plans appear here once they are configured. Vendor plans are managed separately
+      in the vendor workspace.
+    </p>
   </div>
 
-  <!-- Subscription Cards Grid -->
-  <div class="row g-4 cards-grid">
-    <div *ngFor="let plan of plans" class="col-lg-4 col-md-6 mb-4">
-      <div
-        class="subscription-plan-card h-100 d-flex flex-column justify-content-between position-relative"
-        [ngClass]="{'active-card': activeSubscription === plan.id}"
-      >
-        <!-- Top Active Badge (Upper Right) -->
-        <div *ngIf="activeSubscription === plan.id" class="card-active-pill">
-          ACTIVE
+  <div class="row" *ngIf="!loading && plans.length > 0">
+    <div class="col-lg-4 col-md-6 mb-4" *ngFor="let plan of plans">
+      <div class="plan-card h-100" [class.plan-active]="isCurrent(plan)">
+        <div class="active-ribbon" *ngIf="isCurrent(plan)">Active</div>
+
+        <div class="plan-body">
+          <span class="plan-tag" *ngIf="plan.code">{{ plan.code }}</span>
+          <h6 class="plan-name">{{ plan.name }}</h6>
+
+          <div class="plan-pricing">
+            <span class="plan-price">{{ plan.price }}</span>
+            <span class="plan-billing" *ngIf="plan.period">{{ plan.period }}</span>
+          </div>
+
+          <p class="price-note" *ngIf="plan.priceNote">{{ plan.priceNote }}</p>
+
+          <p class="plan-desc" *ngIf="plan.description">{{ plan.description }}</p>
+
+          <div class="quota-line" *ngIf="plan.totalQuota > 0">
+            <i class="fa fa-file-text-o mr-1"></i>
+            {{ plan.totalQuota }} RFQs included
+          </div>
+
+          <hr>
+
+          <span class="feature-heading" *ngIf="plan.features && plan.features.length > 0">
+            Core benefits &amp; features
+          </span>
+          <ul class="feature-list">
+            <li *ngFor="let f of plan.features">
+              <i class="fa fa-check mr-2"></i><span>{{ f }}</span>
+            </li>
+          </ul>
         </div>
 
-        <div>
-          <!-- Tag / Subtitle -->
-          <div class="plan-tag-heading mb-2">
-            {{ plan.tag }}
-          </div>
-
-          <!-- Plan Title -->
-          <h3 class="plan-heading mb-3">
-            {{ plan.name }}
-          </h3>
-
-          <!-- Price Row -->
-          <div class="plan-pricing-row d-flex align-items-baseline gap-2 mb-3">
-            <span class="plan-price-amount">{{ plan.price }}</span>
-            <span class="plan-price-period text-muted">{{ plan.billing }}</span>
-          </div>
-
-          <!-- Description -->
-          <p class="plan-description text-muted mb-4">
-            {{ plan.description }}
-          </p>
-
-          <!-- Benefits & Features Section -->
-          <div class="features-section mb-4">
-            <div class="features-header-title mb-3">
-              CORE BENEFITS &amp; FEATURES:
-            </div>
-
-            <ul class="features-list list-unstyled mb-0">
-              <li *ngFor="let feat of plan.features" class="feature-item d-flex align-items-start mb-2.5">
-                <span class="check-icon-wrapper mr-2">
-                  <i class="fa fa-check text-emerald-600"></i>
-                </span>
-                <span class="feature-text">{{ feat }}</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Bottom Action Button -->
-        <div class="card-action-wrapper mt-3">
-          <button
-            class="btn w-100 plan-action-btn font-semibold"
-            [ngClass]="[plan.buttonClass, activeSubscription === plan.id && plan.id !== 'version_1' ? 'btn-plan-active-current' : '']"
-            (click)="handleSubscribe(plan)"
-          >
-            <i class="{{ plan.buttonIcon }} mr-1.5" *ngIf="plan.buttonIcon"></i>
-            <span *ngIf="activeSubscription === plan.id && plan.id === 'version_1'">Active Free Trial</span>
-            <span *ngIf="activeSubscription === plan.id && plan.id !== 'version_1'">Active Subscription</span>
-            <span *ngIf="activeSubscription !== plan.id">{{ plan.buttonLabel }}</span>
+        <div class="plan-footer">
+          <button type="button"
+                  class="btn btn-sm w-100"
+                  [ngClass]="isCurrent(plan) ? 'btn-outline-success' : 'btn-primary'"
+                  [disabled]="isCurrent(plan) || processingPlanId === plan.id"
+                  (click)="handleSubscribe(plan)">
+            <i class="fa mr-1" [ngClass]="isCurrent(plan) ? 'fa-shield' : 'fa-credit-card'"></i>
+            <span *ngIf="isCurrent(plan)">Active Plan</span>
+            <span *ngIf="!isCurrent(plan) && processingPlanId === plan.id">Redirecting to payment…</span>
+            <span *ngIf="!isCurrent(plan) && processingPlanId !== plan.id">Subscribe</span>
           </button>
         </div>
-
       </div>
     </div>
   </div>
-
 </div>

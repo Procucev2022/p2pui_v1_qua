@@ -69,6 +69,17 @@ export class AppApiConfig {
   public static BUYER_DASHBOARD_SUBSCRIPTIONS = '/rest/buyer/dashboard/subscriptions';
   public static BUYER_DASHBOARD_CREATE_RFQ = '/rest/buyer/dashboard/create-rfq';
 
+  // Vendor Workspace Dashboard
+  public static VENDOR_DASHBOARD_SUMMARY = '/rest/vendor/dashboard/summary';
+  public static VENDOR_DASHBOARD_OPPORTUNITIES = '/rest/vendor/dashboard/opportunities';
+  public static VENDOR_DASHBOARD_RFQ_DOWNLOAD = '/rest/vendor/dashboard/rfq/download';
+  public static VENDOR_DASHBOARD_QUOTATION = '/rest/vendor/dashboard/quotation';
+  public static VENDOR_DASHBOARD_CATALOGUE = '/rest/vendor/dashboard/catalogue';
+  public static VENDOR_DASHBOARD_CATALOGUE_SAVE = '/rest/vendor/dashboard/catalogue/save';
+  public static VENDOR_DASHBOARD_QUALIFICATION = '/rest/vendor/dashboard/qualification';
+  public static VENDOR_DASHBOARD_SUBSCRIPTIONS = '/rest/vendor/dashboard/subscriptions';
+  public static VENDOR_DASHBOARD_SUBSCRIBE = '/rest/vendor/dashboard/subscribe';
+
   public static OTPs_SENT ='/partialvendor/validateClient';
   public static VALIDATE_ALL_OTPS = '/partialvendor/validateAllOtps';
   public static VALIDATE_EMAIL_OTP = '/partialvendor/validateAllOtps';

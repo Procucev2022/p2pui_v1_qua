@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { CreateRfqService } from '../../category-mgr/services/create-rfq.service';
 
 interface MajorCategoryItem {
   name: string;
@@ -12,78 +14,139 @@ interface MajorCategoryItem {
 })
 export class BuyerProfileComponent implements OnInit {
 
-  companyName: string = 'Larsen & Toubro Limited';
-  brandName: string = 'L&T Heavy Engineering & Construction';
-  orgType: string = 'Public Limited';
-  panNumber: string = 'AAACL1234F';
-  gstNumber: string = '27AAACL1234F1Z5';
-  cinNumber: string = 'L28920MH1946PLC004768';
-  website: string = 'https://www.larsentoubro.com';
-  annualTurnover: string = '₹ 1,80,000 Cr+';
+  companyName = '';
+  brandName = '';
+  orgType = '';
+  panNumber = '';
+  gstNumber = '';
+  cinNumber = '';
+  website = '';
+  annualTurnover = '';
 
-  street: string = 'L&T House, Ballard Estate, N.M. Marg';
-  city: string = 'Mumbai';
-  state: string = 'Maharashtra';
-  pincode: string = '400001';
-  country: string = 'India';
+  street = '';
+  city = '';
+  state = '';
+  pincode = '';
+  country = '';
 
-  contactName: string = 'Rajesh Sharma';
-  contactDesignation: string = 'Chief Procurement Officer (CPO)';
-  contactEmail: string = 'buyer@procucev.com';
-  contactPhone: string = '+91 98201 44820';
+  contactName = '';
+  contactDesignation = '';
+  contactEmail = '';
+  contactPhone = '';
 
-  categorySearch: string = '';
-  toastMessage: string = '';
+  categorySearch = '';
+  loading = true;
+  loadingCategories = true;
+  saving = false;
 
-  categories: MajorCategoryItem[] = [
-    {
-      name: 'Engineering Spares - Mechanical',
-      minors: ['Bearings & Accessories', 'Compressors & Accessories', 'Pipes & Pipe Fittings', 'Pumps & Accessories', 'Valves & Fittings', 'Gaskets & Seals']
-    },
-    {
-      name: 'Engineering Spares - Electrical',
-      minors: ['Cables & Wires', 'Circuit Breakers & Switchgear', 'Distribution Panels', 'DG Sets & Parts', 'Transformers & Relays']
-    },
-    {
-      name: 'Civil Works & Infrastructure',
-      minors: ['Piling Works', 'Deep Excavation', 'Waterproofing Solutions', 'PEB Pre-Engineered Structures', 'Roofing & Cladding Sheets']
-    },
-    {
-      name: 'Information Technology & Automation',
-      minors: ['Enterprise Servers', 'Industrial Networking Hardware', 'DDC Building Controllers', 'SCADA & PLC Panels', 'ERP Software Modules']
+  /** Divisions and categories loaded from the master category service. */
+  categories: MajorCategoryItem[] = [];
+  selectedMinors: Record<string, string[]> = {};
+
+  constructor(
+    private createRfqService: CreateRfqService,
+    private toastr: ToastrService
+  ) {}
+
+  ngOnInit(): void {
+    this.loadOrganization();
+    this.loadDivisions();
+  }
+
+  /** Loads the buyer's saved organization record. */
+  private loadOrganization(): void {
+    const loggedId = localStorage.getItem('loggedId');
+    if (!loggedId) {
+      this.loading = false;
+      return;
     }
-  ];
 
-  selectedMinors: Record<string, string[]> = {
-    'Engineering Spares - Mechanical': ['Pumps & Accessories', 'Valves & Fittings', 'Pipes & Pipe Fittings'],
-    'Engineering Spares - Electrical': ['Circuit Breakers & Switchgear', 'Cables & Wires', 'Distribution Panels'],
-    'Civil Works & Infrastructure': ['PEB Pre-Engineered Structures', 'Roofing & Cladding Sheets'],
-    'Information Technology & Automation': ['Enterprise Servers', 'DDC Building Controllers']
-  };
+    this.loading = true;
+    this.createRfqService.getBuyerDataById({ id: loggedId }).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.companyName = res.companyName || '';
+          this.brandName = res.brandName || '';
+          this.orgType = res.orgType && res.orgType.typeName ? res.orgType.typeName : '';
+          this.panNumber = res.pan || '';
+          this.gstNumber = res.gstin || '';
+          this.cinNumber = res.cin || '';
+          this.website = res.website || '';
+          this.annualTurnover = res.annualTurnover || '';
+          this.street = res.address1 || '';
+          this.city = res.city || '';
+          this.state = res.state || '';
+          this.pincode = res.zipCode || '';
+          this.country = res.country || '';
+          this.contactName = res.contactPerson || '';
+          this.contactDesignation = res.designation || '';
+          this.contactEmail = res.email || '';
+          this.contactPhone = res.organizationPhonenumber || '';
+        }
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+        this.toastr.error('Could not load your organization profile', 'Error');
+      }
+    });
+  }
 
-  constructor() {}
+  /** Loads real divisions; categories load per division on expand. */
+  private loadDivisions(): void {
+    this.loadingCategories = true;
+    this.createRfqService.getGMTDivisions().subscribe({
+      next: (res: any) => {
+        const divisions: string[] = Array.isArray(res) ? res : [];
+        this.categories = divisions.map(d => ({ name: d, minors: [] }));
+        this.categories.forEach(c => this.loadMinorsFor(c.name));
+        this.loadingCategories = false;
+      },
+      error: () => {
+        this.categories = [];
+        this.loadingCategories = false;
+      }
+    });
+  }
 
-  ngOnInit(): void {}
+  private loadMinorsFor(major: string): void {
+    const node = this.categories.filter(c => c.name === major)[0];
+    if (!node || node.minors.length > 0) { return; }
+
+    this.createRfqService.getGMTCategoriesByDivision({ division: major }).subscribe({
+      next: (res: any) => {
+        node.minors = Array.isArray(res) ? res : [];
+      },
+      error: () => {
+        node.minors = [];
+      }
+    });
+  }
+
+  get filteredCategories(): MajorCategoryItem[] {
+    const term = (this.categorySearch || '').trim().toLowerCase();
+    if (!term) { return this.categories; }
+    return this.categories.filter(c =>
+      c.name.toLowerCase().indexOf(term) !== -1
+      || c.minors.some(m => m.toLowerCase().indexOf(term) !== -1)
+    );
+  }
 
   isMinorSelected(major: string, minor: string): boolean {
-    return !!(this.selectedMinors[major] && this.selectedMinors[major].includes(minor));
+    return !!(this.selectedMinors[major] && this.selectedMinors[major].indexOf(minor) !== -1);
   }
 
   isAllSelected(major: string): boolean {
-    const cat = this.categories.find(c => c.name === major);
-    if (!cat || !cat.minors.length) return false;
+    const cat = this.categories.filter(c => c.name === major)[0];
+    if (!cat || cat.minors.length === 0) { return false; }
     const selected = this.selectedMinors[major] || [];
-    return cat.minors.every(m => selected.includes(m));
+    return cat.minors.every(m => selected.indexOf(m) !== -1);
   }
 
   toggleSelectAll(major: string): void {
-    const cat = this.categories.find(c => c.name === major);
-    if (!cat) return;
-    if (this.isAllSelected(major)) {
-      this.selectedMinors[major] = [];
-    } else {
-      this.selectedMinors[major] = [...cat.minors];
-    }
+    const cat = this.categories.filter(c => c.name === major)[0];
+    if (!cat) { return; }
+    this.selectedMinors[major] = this.isAllSelected(major) ? [] : cat.minors.slice();
   }
 
   toggleMinor(major: string, minor: string): void {
@@ -98,12 +161,52 @@ export class BuyerProfileComponent implements OnInit {
     }
   }
 
-  saveProfile(): void {
-    this.showToast('Profile & Category Authorizations Updated Successfully.');
+  get isValid(): boolean {
+    return !!this.companyName.trim() && !!this.contactEmail.trim();
   }
 
-  showToast(msg: string): void {
-    this.toastMessage = msg;
-    setTimeout(() => this.toastMessage = '', 3500);
+  saveProfile(): void {
+    if (!this.isValid || this.saving) { return; }
+
+    const loggedId = localStorage.getItem('loggedId');
+    const orgId = localStorage.getItem('orgId');
+    if (!orgId) {
+      this.toastr.error('Your organization could not be resolved', 'Error');
+      return;
+    }
+
+    this.saving = true;
+    const payload: any = {
+      id: orgId,
+      userId: loggedId,
+      companyName: this.companyName,
+      brandName: this.brandName,
+      pan: this.panNumber,
+      gstin: this.gstNumber,
+      cin: this.cinNumber,
+      website: this.website,
+      annualTurnover: this.annualTurnover,
+      address1: this.street,
+      city: this.city,
+      state: this.state,
+      zipCode: this.pincode,
+      country: this.country,
+      contactPerson: this.contactName,
+      designation: this.contactDesignation,
+      email: this.contactEmail,
+      organizationPhonenumber: this.contactPhone,
+      selectedCategories: this.selectedMinors
+    };
+
+    this.createRfqService.updateBuyerData(payload).subscribe({
+      next: () => {
+        this.saving = false;
+        this.toastr.success('Profile and category authorizations saved', 'Success');
+      },
+      error: () => {
+        this.saving = false;
+        this.toastr.error('Could not save your profile', 'Error');
+      }
+    });
   }
 }

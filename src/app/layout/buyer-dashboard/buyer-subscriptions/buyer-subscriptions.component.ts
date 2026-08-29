@@ -1,17 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-
-export interface SubscriptionPlanDetail {
-  id: 'version_1' | 'version_2' | 'version_3';
-  tag: string;
-  name: string;
-  price: string;
-  billing: string;
-  description: string;
-  buttonLabel: string;
-  buttonIcon: string;
-  buttonClass: string;
-  features: string[];
-}
+import { ToastrService } from 'ngx-toastr';
+import { EncryDecryService } from 'src/app/shared/services';
+import { BuyerDashboardService } from '../services/buyer-dashboard.service';
+import { SubscriptionPlan } from '../models/buyer-dashboard.model';
 
 @Component({
   selector: 'app-buyer-subscriptions',
@@ -20,90 +11,104 @@ export interface SubscriptionPlanDetail {
 })
 export class BuyerSubscriptionsComponent implements OnInit {
 
-  activeSubscription: string = 'version_1';
-  remainingFreeRFQs: number = 5;
-  toastMessage: string = '';
+  plans: SubscriptionPlan[] = [];
+  loading = true;
+  processingPlanId: string | null = null;
+  loggedUserDetails: any = null;
 
-  plans: SubscriptionPlanDetail[] = [
-    {
-      id: 'version_1',
-      tag: 'ROSTER-BASED CHASING',
-      name: 'Version 1 Sourcing',
-      price: '$199',
-      billing: 'per user / month',
-      description: 'Streamline procurement across your pre-approved roster with automated working-hour follow-up pipelines.',
-      buttonLabel: 'Active Free Trial',
-      buttonIcon: 'fa fa-shield',
-      buttonClass: 'btn-plan-outline',
-      features: [
-        'Direct Sourcing from uploaded Excel/Manual buyer rosters',
-        'SMS outreach sent exactly 5 mins after email dispatch',
-        'Automatic Call chasing placed after 6 working hours',
-        'WhatsApp chaser interactive prompts after 12 working hours',
-        'Skips Sundays and operates strictly 8 AM - 7 PM IST Mon-Sat',
-        'OCR Quote extraction parsed directly from incoming vendor emails',
-        'Automatic halt of chasing sequence upon quote ingestion'
-      ]
-    },
-    {
-      id: 'version_2',
-      tag: 'HYBRID SOURCED NETWORK',
-      name: 'Version 2 Sourcing',
-      price: '$499',
-      billing: 'per user / month',
-      description: 'Expand your pool to Procucev Base Network suppliers. Evaluate vendors immediately post-quote.',
-      buttonLabel: 'Subscribe to Version 2',
-      buttonIcon: 'fa fa-bolt',
-      buttonClass: 'btn-plan-cyan',
-      features: [
-        'All features in Version 1 included',
-        'RFQ broadcast matches Procucev Pool network partners',
-        'Intelligent RFQ Category matching & Location proximity filter',
-        'Automatic classification of Buyer Upload vs. Network pool',
-        'Vendor evaluation triggers unlocked strictly after quote receipt',
-        'Interactive evaluation surveys to verify quality metrics post-bid',
-        'Real-time proximity-based targeted pool preview in Wizard'
-      ]
-    },
-    {
-      id: 'version_3',
-      tag: 'AUTONOMOUS SOURCING DESK',
-      name: 'Version 3 Sourcing',
-      price: '$999',
-      billing: 'per user / month',
-      description: 'Fully autonomous category manager desk. Full 360-degree audits and matrices active immediately.',
-      buttonLabel: 'Subscribe to Version 3',
-      buttonIcon: 'fa fa-bolt',
-      buttonClass: 'btn-plan-darkblue',
-      features: [
-        'All features in Version 1 & 2 included',
-        'Immediate 360-degree Vendor Audits active for all pool partners',
-        'Detailed remarks & documents OCR checked against each criteria',
-        'Interactive Comparative Quote Evaluation Matrices',
-        'Automatic PO generation & contract digital signature creation',
-        'Immutable Compliance Audit Log (SHA-256 integrity checkers)',
-        'Autonomous category agent operational monitoring Kanban desk'
-      ]
+  constructor(
+    private buyerDashboardService: BuyerDashboardService,
+    private encryDecryService: EncryDecryService,
+    private toastr: ToastrService
+  ) {}
+
+  ngOnInit(): void {
+    this.resolveLoggedUser();
+    this.loadPlans();
+  }
+
+  private resolveLoggedUser(): void {
+    try {
+      const raw = localStorage.getItem('logData');
+      if (raw) {
+        const temp = JSON.parse(this.encryDecryService.get('perm', raw));
+        this.loggedUserDetails = temp ? temp.details : null;
+      }
+    } catch (e) {
+      this.loggedUserDetails = null;
     }
-  ];
-
-  constructor() {}
-
-  ngOnInit(): void {}
-
-  handleSubscribe(plan: SubscriptionPlanDetail): void {
-    this.activeSubscription = plan.id;
-    this.showToast(`Subscription Activated: Successfully subscribed to ${plan.name} (${plan.price} ${plan.billing}).`);
   }
 
-  handleResetTrial(): void {
-    this.activeSubscription = 'version_1';
-    this.remainingFreeRFQs = 5;
-    this.showToast('Trial Restored: 5 Free Version 1 RFQs quota granted.');
+  private loadPlans(): void {
+    this.loading = true;
+    this.buyerDashboardService.getSubscriptions().subscribe({
+      next: list => {
+        this.plans = list || [];
+        this.loading = false;
+      },
+      error: () => {
+        this.plans = [];
+        this.loading = false;
+        this.toastr.error('Could not load subscription plans', 'Error');
+      }
+    });
   }
 
-  showToast(msg: string): void {
-    this.toastMessage = msg;
-    setTimeout(() => this.toastMessage = '', 4000);
+  get currentPlan(): SubscriptionPlan | null {
+    const found = this.plans.filter(p => p.isCurrent);
+    return found.length > 0 ? found[0] : null;
+  }
+
+  isCurrent(plan: SubscriptionPlan): boolean {
+    return !!plan.isCurrent;
+  }
+
+
+
+  /** Purchases go through the existing Zoho payment link endpoint. */
+  handleSubscribe(plan: SubscriptionPlan): void {
+    if (this.isCurrent(plan) || this.processingPlanId) { return; }
+
+    // A payable plan record is required to generate a Zoho payment link.
+    if (!plan.id) {
+      this.toastr.error(`${plan.name} is not configured for online payment yet`, 'Unavailable');
+      return;
+    }
+
+    if (!this.loggedUserDetails || !this.loggedUserDetails.username || !this.loggedUserDetails.phone) {
+      this.toastr.error('Your account is missing an email or phone number required for payment', 'Error');
+      return;
+    }
+
+    this.processingPlanId = plan.id;
+
+    this.buyerDashboardService.generatePaymentLink({
+      planId: plan.id,
+      userEmail: this.loggedUserDetails.username,
+      userPhone: this.loggedUserDetails.phone
+    }).subscribe({
+      next: (res: any) => {
+        this.processingPlanId = null;
+        if (res && res.paymentUrl) {
+          window.open(res.paymentUrl, '_self');
+        } else {
+          this.toastr.error('Payment link could not be generated', 'Error');
+        }
+      },
+      error: (err: any) => {
+        this.processingPlanId = null;
+        this.toastr.error(this.extractError(err), 'Payment failed');
+      }
+    });
+  }
+
+  /** AppException responses carry the reason in message or errorMessage. */
+  private extractError(err: any): string {
+    const body = err ? err.error : null;
+    if (body) {
+      if (body.message) { return body.message; }
+      if (body.errorMessage) { return body.errorMessage; }
+    }
+    return 'Could not start the payment for this plan';
   }
 }

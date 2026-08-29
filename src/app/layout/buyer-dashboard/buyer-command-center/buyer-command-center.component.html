@@ -543,7 +543,7 @@
           <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
             <div>
               <span class="text-2xs text-indigo font-bold text-uppercase">PROCUCEV ENTERPRISE BUYER</span>
-              <h4 class="font-bold text-dark text-sm mt-0.5 mb-0">PURCHASE ORDER: PO-2026-{{ poRfqNumber.replace('RFQ-2026-', '') }}</h4>
+              <h4 class="font-bold text-dark text-sm mt-0.5 mb-0">PURCHASE ORDER: {{ poNumber || 'Pending authorization' }}</h4>
               <p class="text-xs text-muted mb-0">Linked RFQ: <span class="mono text-indigo font-bold">{{ poRfqNumber }}</span></p>
             </div>
             <div class="text-right">
@@ -558,7 +558,7 @@
             <div class="col-6">
               <p class="text-2xs text-muted text-uppercase font-semibold mb-0.5">Contract Awarded To:</p>
               <p class="font-bold text-dark text-xs mb-0">{{ poVendorName }}</p>
-              <p class="text-2xs text-muted mb-0">Vendor ID: <span class="mono font-semibold">VN-APEX-4920</span></p>
+
               <p class="text-2xs text-muted mb-0">Payment Terms: Net 30 Days (Pre-negotiated)</p>
             </div>
             <div class="col-6">

@@ -33,8 +33,8 @@ export class BuyerCommandCenterComponent implements OnInit {
   selectedRFQForDeepDive: RFQItem | null = null;
 
   quickChaserModalOpen: boolean = false;
-  quickChaserRfqNumber: string = 'RFQ-2026-00421';
-  quickChaserVendorName: string = 'Apex Supplies Ltd.';
+  quickChaserRfqNumber: string = '';
+  quickChaserVendorName: string = '';
   quickChaserChannel: string = 'all';
   quickChaserMessage: string = '';
   isChaserSending: boolean = false;
@@ -45,9 +45,12 @@ export class BuyerCommandCenterComponent implements OnInit {
   poTotalAmount: number = 0;
   poUnitPrice: number = 0;
   poLeadTime: number = 0;
-  poApproverNotes: string = 'Approved based on AI Evaluation Matrix >94% match score & lowest compliant price.';
+  poApproverNotes: string = '';
   poSigned: boolean = false;
   poShaSignature: string = '';
+  poNumber: string = '';
+  poApproving: boolean = false;
+  loading: boolean = true;
 
   toastMessage: string = '';
   toastType: string = 'info';
@@ -59,16 +62,18 @@ export class BuyerCommandCenterComponent implements OnInit {
   }
 
   loadData(): void {
+    this.loading = true;
     this.dashboardService.getSummary().subscribe(s => this.summary = s);
     this.dashboardService.getPipelineRfqs().subscribe(r => {
-      this.rfqs = r;
+      this.rfqs = r || [];
+      this.loading = false;
       // Adjust current page if out of bounds
       if (this.pipelineCurrentPage > this.pipelineTotalPages) {
         this.pipelineCurrentPage = Math.max(1, this.pipelineTotalPages);
       }
     });
     this.dashboardService.getLiveFeed('all').subscribe(f => {
-      this.aiFeed = f;
+      this.aiFeed = f || [];
       this.applyFeedFilter();
     });
   }
@@ -190,15 +195,30 @@ export class BuyerCommandCenterComponent implements OnInit {
     });
   }
 
+  /** Awards against the lowest-priced received quote for this RFQ. */
   openPoModal(rfq: RFQItem): void {
-    const topQuote = rfq.quotes && rfq.quotes.length > 0 ? rfq.quotes[0] : null;
+    const quotes = rfq.quotes || [];
+    let topQuote = quotes.length > 0 ? quotes[0] : null;
+    quotes.forEach(q => {
+      if (topQuote && q.totalPrice > 0 && (topQuote.totalPrice <= 0 || q.totalPrice < topQuote.totalPrice)) {
+        topQuote = q;
+      }
+    });
+
+    if (!topQuote) {
+      this.showToast('No quotes received', `No vendor quotations available for ${rfq.rfqNumber} yet.`, 'warning');
+      return;
+    }
+
     this.poRfqNumber = rfq.rfqNumber;
-    this.poVendorName = topQuote ? topQuote.vendorName : 'Apex Supplies Ltd.';
-    this.poUnitPrice = topQuote ? topQuote.unitPrice : 2850;
-    this.poTotalAmount = topQuote ? topQuote.totalPrice : 34200;
-    this.poLeadTime = topQuote ? topQuote.leadTimeDays : 18;
+    this.poVendorName = topQuote.vendorName;
+    this.poUnitPrice = topQuote.unitPrice;
+    this.poTotalAmount = topQuote.totalPrice;
+    this.poLeadTime = topQuote.leadTimeDays;
     this.poSigned = false;
-    this.poShaSignature = 'c7d1e3a985f621b0e49c812d4a7f55e0921bc3d49f018a7c2b53e6144f5592a1';
+    this.poShaSignature = '';
+    this.poNumber = '';
+    this.poApproverNotes = '';
     this.poModalOpen = true;
   }
 
@@ -207,7 +227,7 @@ export class BuyerCommandCenterComponent implements OnInit {
   }
 
   confirmApprovePo(): void {
-    this.poSigned = true;
+    this.poApproving = true;
     this.dashboardService.approvePurchaseOrder({
       rfqNumber: this.poRfqNumber,
       vendorName: this.poVendorName,
@@ -215,12 +235,22 @@ export class BuyerCommandCenterComponent implements OnInit {
       unitPrice: this.poUnitPrice,
       leadTime: this.poLeadTime,
       approverNotes: this.poApproverNotes
-    }).subscribe(() => {
-      setTimeout(() => {
-        this.closePoModal();
-        this.showToast('Purchase Order Approved', `PO for ${this.poRfqNumber} generated and signed digitally.`, 'success');
-        this.loadData();
-      }, 1200);
+    }).subscribe({
+      next: (res: any) => {
+        this.poApproving = false;
+        const po = res && res.data ? res.data.po : null;
+        if (po) {
+          this.poSigned = true;
+          this.poNumber = po.poNumber;
+          this.poShaSignature = po.sha256Signature;
+          this.showToast('Purchase Order Approved', `${po.poNumber} generated and signed.`, 'success');
+          this.loadData();
+        }
+      },
+      error: () => {
+        this.poApproving = false;
+        this.showToast('Approval failed', 'Could not approve the purchase order.', 'error');
+      }
     });
   }
 

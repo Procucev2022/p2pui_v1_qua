@@ -155,4 +155,8 @@ export interface SubscriptionPlan {
   features: string[];
   remainingQuota: number;
   totalQuota: number;
+  /** False when the plan is not yet launched and cannot be purchased. */
+  available: boolean;
+  /** Tax or convenience-charge qualifier taken from the plan name. */
+  priceNote: string;
 }
