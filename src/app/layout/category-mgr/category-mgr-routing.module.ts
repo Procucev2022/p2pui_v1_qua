@@ -33,7 +33,7 @@ import { MyCategoryListComponent } from './my-category-list/my-category-list.com
 import { SubscriptionPaymentSuccessComponent } from './subscription-payment-success/subscription-payment-success.component';
 import { SubscriptionPaymentFailureComponent } from './subscription-payment-failure/subscription-payment-failure.component';
 import { CategoryMgrReportsComponent } from './category-mgr-reports/category-mgr-reports.component';
-const routes: Routes = [
+export const routes: Routes = [
     { path: '', redirectTo: 'procurequests', pathMatch: 'prefix' },
     { path: 'dashboard', component: CatMgrDashboardComponent },
     { path: 'clientreg', component: CatMgrClientRegstrComponent },

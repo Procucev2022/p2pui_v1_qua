@@ -55,6 +55,7 @@ export class AppApiConfig {
   public static GET_CLIENT_USER_BY_CLIENT = '/rest/gmt/getclientusersByclient';
   public static REJECT_GMT_FOR_REG_CLIENTS =   '/rest/gmt/ignoreSelfRegisterClient';
   public static ACCEPT_AND_SAVE_RFQ_BY_CM = '/rest/gmt/editAndResendRfqByCM';
+  public static UPDATE_DELIVERY_LOCATION = '/rest/gmt/updateDeliveryLocation';
   public static CHANGE_PASSWORD = '/rest/users/changePswd';
 
   // Analytics Endpoints
@@ -112,9 +113,6 @@ export class AppApiConfig {
     public static REFRESH_TOKEN_PATH = '/oauth/refreshToken';
     public static ACCESS_TOKEN = localStorage.getItem('at');
     public static loggedUserRole = 'Category Manager';
-    // https://p2pv1servicesdev-etfrcte5fhdvfrd4.centralindia-01.azurewebsites.net/authenticate
-    // public static apiEndpoint =  'https://p2pproduction1-gcbhcag6fpgedpb3.centralindia-01.azurewebsites.net/procucev';
-    // https://p2pprodservices.azurewebsites.net --- prod
 
 
 

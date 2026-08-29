@@ -1780,6 +1780,8 @@ describe('CategoryMgrVendorSummaryComponent', () => {
         { id: '1', status: { uiDisplay: 'New' }, quotationReceived: true, sourceType: 'T' },
         { id: '2', uiDisplay: 'Quoted', quotationReceived: false, sourceType: 'W' },
         { id: '3', uiDisplay: 'Open', quotationReceived: null, sourceType: null },
+        { id: '4', uiDisplay: 'Open', quotationReceived: true, sourceType: 'E' },
+        { id: '5', uiDisplay: 'Open', quotationReceived: true, sourceType: 'Custom' },
       ],
     }));
     c.getRFQSummary(0, 10, '', 'All');

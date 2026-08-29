@@ -166,6 +166,13 @@
                                     {{location.pincode}}
                                 </div>
                             </div>
+                            <div class="form-group row" *ngIf="viewRFQbyIDdetails.deliveryDate">
+                                <label for="deliveryDate" style="font-size: medium; font-weight: bolder;"
+                                    class="col-sm-5 col-form-label">Delivery Date:</label>
+                                <div class="col-sm-5 col-form-label">
+                                    {{viewRFQbyIDdetails.deliveryDate | date:'dd/MM/yyyy'}}
+                                </div>
+                            </div>
                         </mat-card>
                     </div>
                 </div>

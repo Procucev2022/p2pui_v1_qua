@@ -216,10 +216,14 @@ describe('EditRfqByIdModalComponent', () => {
   });
 
   it('should handle pincode status updates and every drag/drop handler', () => {
-    component.onupdatePincodeValidationStatus({ pincodeIsValid: false }, 0);
+    component.onupdatePincodeValidationStatus({ pincodeIsValid: false, pincode: '400002' }, 0);
     expect(component.viewRFQbyIDdetails.clientdeliverylocationrfq[0].isValidPincode).toBeFalse();
-    component.onupdatePincodeValidationStatus({ pincodeIsValid: true }, 0);
+    expect(component.viewRFQbyIDdetails.clientdeliverylocationrfq[0].pincode).toBe('400002');
+    component.onupdatePincodeValidationStatus({ pincodeIsValid: true, pincode: '560001', state: 'Karnataka', city: 'Bengaluru' }, 0);
     expect(component.viewRFQbyIDdetails.clientdeliverylocationrfq[0].isValidPincode).toBeTrue();
+    expect(component.viewRFQbyIDdetails.clientdeliverylocationrfq[0].pincode).toBe('560001');
+    expect(component.viewRFQbyIDdetails.clientdeliverylocationrfq[0].state).toBe('Karnataka');
+    expect(component.viewRFQbyIDdetails.clientdeliverylocationrfq[0].city).toBe('Bengaluru');
 
     const dragOverEvent: any = { preventDefault: jasmine.createSpy('preventDefault') };
     const dragEnterEvent: any = { preventDefault: jasmine.createSpy('preventDefault') };
