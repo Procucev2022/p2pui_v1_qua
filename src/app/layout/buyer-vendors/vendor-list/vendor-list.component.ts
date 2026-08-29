@@ -695,11 +695,7 @@ export class VendorListComponent implements OnInit, OnDestroy {
 
     reader.onload = (e: any) => {
       try {
-        const buffer = e.target.result;
-        const workbook = XLSX.read(buffer, { type: 'array' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const rawJson: any[] = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+        const rawJson = this.parseFileBuffer(e.target.result);
 
         if (!rawJson || rawJson.length === 0) {
           this.toastr.warning('The uploaded file is empty', 'Empty File');
@@ -719,6 +715,13 @@ export class VendorListComponent implements OnInit, OnDestroy {
     };
 
     reader.readAsArrayBuffer(file);
+  }
+
+  protected parseFileBuffer(buffer: ArrayBuffer): any[] {
+    const workbook = XLSX.read(buffer, { type: 'array' });
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    return XLSX.utils.sheet_to_json(worksheet, { defval: '' });
   }
 
   private parseAndValidateRows(rawJson: any[]): void {
