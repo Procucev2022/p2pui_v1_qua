@@ -64,6 +64,14 @@ export class BuyerSubscriptionsComponent implements OnInit {
   }
 
   /**
+   * A Zoho payment link can only be created for a plan that has a billing
+   * record, which the API signals by returning a non-empty id.
+   */
+  isPayable(plan: SubscriptionPlan): boolean {
+    return !!plan.id;
+  }
+
+  /**
    * Routes the plan purchase through the existing Zoho payment link flow.
    * The plan is activated by the Zoho webhook once payment clears.
    */
@@ -71,8 +79,11 @@ export class BuyerSubscriptionsComponent implements OnInit {
     if (this.isCurrent(plan) || this.processingPlanId) { return; }
 
     // A payable plan record is required to generate a Zoho payment link.
-    if (!plan.id) {
-      this.toastr.error(`${plan.name} is not configured for online payment yet`, 'Unavailable');
+    if (!this.isPayable(plan)) {
+      this.toastr.info(
+        `${plan.name} is not set up for online payment yet. Please contact your account manager.`,
+        'Contact sales'
+      );
       return;
     }
 
