@@ -137,4 +137,49 @@ describe('AnalyticsOverviewComponent', () => {
     component.exportData();
     expect(appendSpy).not.toHaveBeenCalled();
   });
+
+  it('should fall back to default values when metrics fields are missing', fakeAsync(() => {
+    setup();
+    analyticsService.getDashboardData.and.returnValue(of({ metrics: {}, sources: [], lifecycleStages: [] }));
+    fixture.detectChanges();
+    component.openMetricDetails('totalBuyers');
+    tick(0);
+    expect(component.selectedMetricDetail.value).toBe('0');
+    component.openMetricDetails('topCategory');
+    tick(0);
+    expect(component.selectedMetricDetail.value).toBe('N/A');
+    component.openMetricDetails('registrationSource');
+    tick(0);
+    expect(component.selectedMetricDetail.value).toBe('Channel Analytics');
+  }));
+
+  it('should export default 0 values when metric fields are missing', () => {
+    setup();
+    analyticsService.getDashboardData.and.returnValue(of({ metrics: {}, sources: [], lifecycleStages: [] }));
+    fixture.detectChanges();
+    const appendSpy = spyOn(document.body, 'appendChild').and.callThrough();
+    component.exportData();
+    expect(appendSpy).toHaveBeenCalled();
+  });
+
+  it('should move an existing backdrop element into body when opening and remove it when closing', fakeAsync(() => {
+    setup();
+    analyticsService.getDashboardData.and.returnValue(of(dashboardResponse));
+    fixture.detectChanges();
+
+    const wrapper = document.createElement('div');
+    document.body.appendChild(wrapper);
+    const backdrop = document.createElement('div');
+    backdrop.id = 'overview-modal-backdrop';
+    wrapper.appendChild(backdrop);
+
+    component.openMetricDetails('totalBuyers');
+    tick(0);
+    expect(backdrop.parentElement).toBe(document.body);
+
+    component.closeMetricDetails();
+    expect(backdrop.parentElement).toBeNull();
+
+    document.body.removeChild(wrapper);
+  }));
 });

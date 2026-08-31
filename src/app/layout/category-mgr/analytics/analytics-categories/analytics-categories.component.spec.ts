@@ -70,6 +70,18 @@ describe('AnalyticsCategoriesComponent', () => {
     expect(component.filteredCategories.length).toBe(2);
   });
 
+  it('should filter out categories without a matching subDescription', () => {
+    setup();
+    const noSubDescResponse = {
+      ...categoriesResponse,
+      categories: [{ name: 'Steel', activeRfqs: 10, buyers: 5, sellers: 3 }]
+    };
+    analyticsService.getCategoriesData.and.returnValue(of(noSubDescResponse));
+    fixture.detectChanges();
+    component.searchQuery = 'nomatch';
+    expect(component.filteredCategories.length).toBe(0);
+  });
+
   it('should paginate displayed categories', () => {
     setup();
     analyticsService.getCategoriesData.and.returnValue(of(categoriesResponse));
@@ -109,6 +121,25 @@ describe('AnalyticsCategoriesComponent', () => {
   it('should export data as CSV', () => {
     setup();
     analyticsService.getCategoriesData.and.returnValue(of(categoriesResponse));
+    fixture.detectChanges();
+    const clickSpy = jasmine.createSpy('click');
+    const originalCreateElement = document.createElement.bind(document);
+    spyOn(document, 'createElement').and.callFake((tag: string) => {
+      const el = originalCreateElement(tag) as any;
+      if (tag === 'a') {
+        el.click = clickSpy;
+      }
+      return el;
+    });
+    component.exportData();
+    expect(clickSpy).toHaveBeenCalled();
+  });
+
+  it('should export data as CSV when avgValue is missing', () => {
+    setup();
+    analyticsService.getCategoriesData.and.returnValue(
+      of({ ...categoriesResponse, categories: [{ name: 'NoAvg', activeRfqs: 1, buyers: 1, sellers: 1 }] })
+    );
     fixture.detectChanges();
     const clickSpy = jasmine.createSpy('click');
     const originalCreateElement = document.createElement.bind(document);
