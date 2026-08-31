@@ -25,7 +25,10 @@ jobs:
 
       - name: npm install, build, and test
         env:
-          BACKEND_URL: ${{ secrets.BACKEND_URL || 'https://p2pv1servicesdev-etfrcte5fhdvfrd4.centralindia-01.azurewebsites.net' }}
+          NODE_ENV: development
+          BACKEND_URL: ${{ secrets.DEV_BACKEND_URL || secrets.BACKEND_URL || 'https://p2pv1servicesdev-etfrcte5fhdvfrd4.centralindia-01.azurewebsites.net' }}
+          STORAGE_ENCRYPTION_KEY: ${{ secrets.DEV_STORAGE_ENCRYPTION_KEY || secrets.STORAGE_ENCRYPTION_KEY || 'perm' }}
+          BASIC_AUTH_TOKEN: ${{ secrets.DEV_BASIC_AUTH_TOKEN || secrets.BASIC_AUTH_TOKEN || 'Basic cHJvY3VjZXY6cHJvY3VjZXY=' }}
         run: |
           npm install --legacy-peer-deps
           npm run build --if-present
