@@ -250,7 +250,7 @@
                 <td><a href="mailto:{{ rec.email }}" class="text-primary">{{ rec.email }}</a></td>
                 <td class="text-muted">{{ rec.phone }}</td>
                 <td *ngIf="selectedStage.stageNumber >= 3" class="text-center font-weight-bold text-primary">
-                  <span class="badge badge-light border font-weight-bold">{{ rec.rfqCount || 1 }}</span>
+                  <span class="badge badge-light border font-weight-bold">{{ rec.rfqCount ?? 0 }}</span>
                 </td>
                 <td class="text-muted">{{ rec.lastActivity || rec.date || '—' }}</td>
                 <td>
