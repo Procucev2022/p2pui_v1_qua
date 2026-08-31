@@ -175,15 +175,17 @@ describe('AnalyticsCalendarComponent', () => {
     expect(rows[0].totalRfqs).toBeDefined();
   });
 
-  it('should fall back to "Week N" label when a week has no valid days', () => {
+  it('should fall back to "Day" prefix when monthName is empty', () => {
     setup();
-    // Only 1 day and a large offset so most week rows have zero valid cells
     analyticsService.getCalendarData.and.returnValue(
-      of({ ...calendarResponse, days: [{ day: 1, rfqs: 0, sellerSubmissions: 0, regB: 0, regS: 0 }], weeks: [], startDayOffset: 0, month: '' })
+      of({ ...calendarResponse, days: [{ day: 1, rfqs: 0, sellerSubmissions: 0, regB: 0, regS: 0 }], weeks: [], startDayOffset: 0 })
     );
     fixture.detectChanges();
+    component.monthName = '';
     const rows = component.weekRows;
     expect(rows.length).toBe(1);
     expect(rows[0].dateRange).toContain('Day');
   });
+
+
 });
