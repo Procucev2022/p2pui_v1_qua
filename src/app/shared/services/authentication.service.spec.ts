@@ -176,7 +176,8 @@ describe('AuthenticationService', () => {
       });
       const result = service.onSelectedSubscriptions('gmtName', data);
       expect(result).toBe(true);
-      expect(encryDecry.set).toHaveBeenCalled();
+      expect(encryDecry.set).toHaveBeenCalledTimes(1);
+      expect(encryDecry.set.calls.mostRecent().args).toEqual([JSON.stringify({ 'details': data })]);
       expect(localStorage.getItem('isLoggedin')).toBe('true');
       expect(router.navigate).toHaveBeenCalledWith(['/categorymgr/my-profile']);
       await flushNavigate();
@@ -219,6 +220,8 @@ describe('AuthenticationService', () => {
         org: { dpsName: SystemViewConfig.DPS_BASIC }
       });
       service.onSelectedSubscriptions('dpsName', data);
+      expect(encryDecry.set).toHaveBeenCalledTimes(1);
+      expect(encryDecry.set.calls.mostRecent().args).toEqual([JSON.stringify({ 'details': data })]);
       expect(router.navigate).toHaveBeenCalledWith(['login/passwordChange']);
     });
 

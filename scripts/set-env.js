@@ -113,6 +113,10 @@ function setEnvironment() {
   const prodConfig = resolveEnvConfig(true);
   const currentConfig = isProd ? prodConfig : devConfig;
 
+  if (!currentConfig.basicAuthToken) {
+    throw new Error(`BASIC_AUTH_TOKEN is required for ${isProd ? 'production' : 'development'} environment generation.`);
+  }
+
   const envDir = path.resolve(__dirname, '../src/environments');
   if (!fs.existsSync(envDir)) {
     fs.mkdirSync(envDir, { recursive: true });
