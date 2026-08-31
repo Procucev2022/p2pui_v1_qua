@@ -79,6 +79,20 @@ describe('AnalyticsConsoleComponent', () => {
     expect(component.chatMessages).toEqual([]);
   });
 
+  it('should build default dayWiseChats using fallback text when pocName/totalCredits/tier are missing', () => {
+    setup();
+    const bareCompany = { id: 'c3' };
+    analyticsService.searchCompanies.and.returnValue(of({ companies: [bareCompany] }));
+    fixture.detectChanges();
+    component.selectCompany(bareCompany);
+    const todayMsgs = component.dayWiseChats[0].messages;
+    expect(todayMsgs[0].senderName).toBe('Client');
+    expect(todayMsgs[1].text).toContain('Partner');
+    const yesterdayMsgs = component.dayWiseChats[1].messages;
+    expect(yesterdayMsgs[1].text).toContain('0 RFQ credits');
+    expect(yesterdayMsgs[1].text).toContain('Growth');
+  });
+
   it('should select a company and use provided chatMessages/dayWiseChats', () => {
     setup();
     analyticsService.searchCompanies.and.returnValue(of({ companies: [company2] }));

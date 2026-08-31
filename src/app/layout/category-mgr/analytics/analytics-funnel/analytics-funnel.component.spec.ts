@@ -84,7 +84,7 @@ describe('AnalyticsFunnelComponent', () => {
     expect(depleted.usersEntered).toBe(53);
   });
 
-  it('should not duplicate depleted-credit stage when already present', () => {
+  it('should not duplicate depleted-credit stage when already present via isAlert', () => {
     setup();
     const withDepleted = {
       stages: [{ stageNumber: 5, name: 'Sellers with Depleted Credit', isAlert: true, usersEntered: 10 }],
@@ -97,6 +97,20 @@ describe('AnalyticsFunnelComponent', () => {
     expect(depletedStages.length).toBe(1);
   });
 
+  it('should not duplicate depleted-credit stage when name contains "depleted" without isAlert', () => {
+    setup();
+    const withDepleted = {
+      stages: [{ stageNumber: 5, name: 'Sellers with Depleted Credit', usersEntered: 10 }],
+      summary: { totalEntered: 100 }
+    };
+    analyticsService.getFunnelData.and.returnValue(of(withDepleted));
+    component.activeTab = 'seller';
+    component.loadFunnel();
+    expect(component.stages.length).toBe(1);
+  });
+
+
+
   it('should use fallback defaults when summary/stages are missing for seller depleted stage', () => {
     setup();
     analyticsService.getFunnelData.and.returnValue(of({ stages: [], summary: null }));
@@ -105,6 +119,25 @@ describe('AnalyticsFunnelComponent', () => {
     const depleted = component.stages.find((s: any) => s.isAlert);
     expect(depleted).toBeTruthy();
     expect(depleted.usersEntered).toBe(53);
+  });
+
+  it('should default stages to empty array when response has no stages field', () => {
+    setup();
+    analyticsService.getFunnelData.and.returnValue(of({ summary: { totalEntered: 10 } }));
+    component.activeTab = 'buyer';
+    component.loadFunnel();
+    expect(component.stages).toEqual([]);
+  });
+
+  it('should render "—" convRateTotal when totalCohort resolves to a non-positive value', () => {
+    setup();
+    analyticsService.getFunnelData.and.returnValue(
+      of({ stages: [], summary: { totalEntered: -5, depletedCreditSellers: 10 } })
+    );
+    component.activeTab = 'seller';
+    component.loadFunnel();
+    const depleted = component.stages.find((s: any) => s.isAlert);
+    expect(depleted.convRateTotal).toBe('—');
   });
 
   it('should open stage modal and load stage details, then close it', () => {
@@ -139,6 +172,32 @@ describe('AnalyticsFunnelComponent', () => {
     analyticsService.getFunnelStageDetails.and.returnValue(of({ records: [] }));
     component.openStageModal({});
     expect(analyticsService.getFunnelStageDetails).toHaveBeenCalledWith('buyer', 1, '');
+  });
+
+  it('should not move stage modal backdrop when it is already attached to body', (done) => {
+    setup();
+    analyticsService.getFunnelStageDetails.and.returnValue(of({ records: [] }));
+    const backdrop = document.createElement('div');
+    backdrop.id = 'funnel-modal-backdrop';
+    document.body.appendChild(backdrop);
+    const appendSpy = spyOn(document.body, 'appendChild').and.callThrough();
+    component.openStageModal({ stageNumber: 1 });
+    setTimeout(() => {
+      expect(appendSpy).not.toHaveBeenCalledWith(backdrop);
+      document.body.removeChild(backdrop);
+      done();
+    }, 10);
+  });
+
+  it('should not remove stage modal backdrop on close when it is not attached to body', () => {
+    setup();
+    const backdrop = document.createElement('div');
+    backdrop.id = 'funnel-modal-backdrop';
+    const wrapper = document.createElement('div');
+    wrapper.appendChild(backdrop);
+    const removeSpy = spyOn(document.body, 'removeChild').and.callThrough();
+    component.closeStageModal();
+    expect(removeSpy).not.toHaveBeenCalled();
   });
 
   it('should filter stage records by search query across multiple fields', () => {
@@ -176,6 +235,30 @@ describe('AnalyticsFunnelComponent', () => {
     expect(clickSpy).toHaveBeenCalled();
   });
 
+  it('should export stage data handling null/undefined values and missing selectedStage', () => {
+    setup();
+    component.filteredRecords = [{ name: 'Acme', email: null, phone: undefined }];
+    component.selectedStage = null;
+    const clickSpy = jasmine.createSpy('click');
+    const originalCreateElement = document.createElement.bind(document);
+    let downloadAttr = '';
+    spyOn(document, 'createElement').and.callFake((tag: string) => {
+      const el = originalCreateElement(tag) as any;
+      if (tag === 'a') {
+        el.click = clickSpy;
+        const originalSetAttribute = el.setAttribute.bind(el);
+        el.setAttribute = (name: string, value: string) => {
+          if (name === 'download') downloadAttr = value;
+          return originalSetAttribute(name, value);
+        };
+      }
+      return el;
+    });
+    component.exportStageData();
+    expect(clickSpy).toHaveBeenCalled();
+    expect(downloadAttr).toContain('_stage_1_records.csv');
+  });
+
   it('should not export stage data when there are no filtered records', () => {
     setup();
     component.filteredRecords = [];
@@ -204,6 +287,39 @@ describe('AnalyticsFunnelComponent', () => {
     component.closeDropoffModal();
     expect(component.isDropoffModalOpen).toBe(false);
     expect(component.dropoffRecords).toEqual([]);
+  });
+
+  it('should open dropoff modal using default stage number when missing', () => {
+    setup();
+    analyticsService.getFunnelDropoffDetails.and.returnValue(of({ records: [], title: '' }));
+    component.openDropoffModal({ dropOffVolume: 5 });
+    expect(analyticsService.getFunnelDropoffDetails).toHaveBeenCalledWith('buyer', 2, '');
+  });
+
+  it('should not move dropoff modal backdrop when already attached to body', (done) => {
+    setup();
+    analyticsService.getFunnelDropoffDetails.and.returnValue(of({ records: [] }));
+    const backdrop = document.createElement('div');
+    backdrop.id = 'dropoff-modal-backdrop';
+    document.body.appendChild(backdrop);
+    const appendSpy = spyOn(document.body, 'appendChild').and.callThrough();
+    component.openDropoffModal({ stageNumber: 2, dropOffVolume: 20 });
+    setTimeout(() => {
+      expect(appendSpy).not.toHaveBeenCalledWith(backdrop);
+      document.body.removeChild(backdrop);
+      done();
+    }, 10);
+  });
+
+  it('should not remove dropoff modal backdrop on close when it is not attached to body', () => {
+    setup();
+    const backdrop = document.createElement('div');
+    backdrop.id = 'dropoff-modal-backdrop';
+    const wrapper = document.createElement('div');
+    wrapper.appendChild(backdrop);
+    const removeSpy = spyOn(document.body, 'removeChild').and.callThrough();
+    component.closeDropoffModal();
+    expect(removeSpy).not.toHaveBeenCalled();
   });
 
   it('should handle empty response and error for dropoff details', () => {
@@ -247,6 +363,30 @@ describe('AnalyticsFunnelComponent', () => {
     expect(clickSpy).toHaveBeenCalled();
   });
 
+  it('should export dropoff data handling null/undefined values and missing selectedDropoffStage', () => {
+    setup();
+    component.filteredDropoffRecords = [{ name: 'Acme', email: null, phone: undefined }];
+    component.selectedDropoffStage = null;
+    const clickSpy = jasmine.createSpy('click');
+    const originalCreateElement = document.createElement.bind(document);
+    let downloadAttr = '';
+    spyOn(document, 'createElement').and.callFake((tag: string) => {
+      const el = originalCreateElement(tag) as any;
+      if (tag === 'a') {
+        el.click = clickSpy;
+        const originalSetAttribute = el.setAttribute.bind(el);
+        el.setAttribute = (name: string, value: string) => {
+          if (name === 'download') downloadAttr = value;
+          return originalSetAttribute(name, value);
+        };
+      }
+      return el;
+    });
+    component.exportDropoffData();
+    expect(clickSpy).toHaveBeenCalled();
+    expect(downloadAttr).toContain('_stage_1_dropoff.csv');
+  });
+
   it('should not export dropoff data when there are no filtered records', () => {
     setup();
     component.filteredDropoffRecords = [];
@@ -267,6 +407,13 @@ describe('AnalyticsFunnelComponent', () => {
     component.activeTab = 'buyer';
     const info = component.getStageInfo({ stageNumber: 99, name: 'Unknown Stage' });
     expect(info.title).toBe('Unknown Stage');
+  });
+
+  it('should return "Stage Details" title and default stage number when name/stageNumber are missing', () => {
+    setup();
+    component.activeTab = 'buyer';
+    const info = component.getStageInfo({});
+    expect(info.title).toBe('Stage Details');
   });
 
   it('should return generic fallback stage info when stage is null', () => {
