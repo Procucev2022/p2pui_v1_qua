@@ -7,7 +7,7 @@ import { AnalyticsCategoriesComponent } from './analytics-categories/analytics-c
 import { AnalyticsCalendarComponent } from './analytics-calendar/analytics-calendar.component';
 import { AnalyticsConsoleComponent } from './analytics-console/analytics-console.component';
 
-const routes: Routes = [
+export const analyticsRoutes: Routes = [
   {
     path: '',
     component: AnalyticsComponent,
@@ -23,7 +23,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(analyticsRoutes)],
   exports: [RouterModule]
 })
 export class AnalyticsRoutingModule {}
