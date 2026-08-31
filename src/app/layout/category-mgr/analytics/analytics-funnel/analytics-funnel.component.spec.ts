@@ -174,6 +174,25 @@ describe('AnalyticsFunnelComponent', () => {
     expect(analyticsService.getFunnelStageDetails).toHaveBeenCalledWith('buyer', 1, '');
   });
 
+  it('should move stage modal backdrop into body when opening, and remove it when closing', (done) => {
+    setup();
+    analyticsService.getFunnelStageDetails.and.returnValue(of({ records: [] }));
+    const wrapper = document.createElement('div');
+    document.body.appendChild(wrapper);
+    const backdrop = document.createElement('div');
+    backdrop.id = 'funnel-modal-backdrop';
+    wrapper.appendChild(backdrop);
+
+    component.openStageModal({ stageNumber: 1 });
+    setTimeout(() => {
+      expect(backdrop.parentElement).toBe(document.body);
+      component.closeStageModal();
+      expect(backdrop.parentElement).toBeNull();
+      document.body.removeChild(wrapper);
+      done();
+    }, 10);
+  });
+
   it('should not move stage modal backdrop when it is already attached to body', (done) => {
     setup();
     analyticsService.getFunnelStageDetails.and.returnValue(of({ records: [] }));
@@ -296,6 +315,25 @@ describe('AnalyticsFunnelComponent', () => {
     expect(analyticsService.getFunnelDropoffDetails).toHaveBeenCalledWith('buyer', 2, '');
   });
 
+  it('should move dropoff modal backdrop into body when opening, and remove it when closing', (done) => {
+    setup();
+    analyticsService.getFunnelDropoffDetails.and.returnValue(of({ records: [] }));
+    const wrapper = document.createElement('div');
+    document.body.appendChild(wrapper);
+    const backdrop = document.createElement('div');
+    backdrop.id = 'dropoff-modal-backdrop';
+    wrapper.appendChild(backdrop);
+
+    component.openDropoffModal({ stageNumber: 2, dropOffVolume: 20 });
+    setTimeout(() => {
+      expect(backdrop.parentElement).toBe(document.body);
+      component.closeDropoffModal();
+      expect(backdrop.parentElement).toBeNull();
+      document.body.removeChild(wrapper);
+      done();
+    }, 10);
+  });
+
   it('should not move dropoff modal backdrop when already attached to body', (done) => {
     setup();
     analyticsService.getFunnelDropoffDetails.and.returnValue(of({ records: [] }));
@@ -411,7 +449,7 @@ describe('AnalyticsFunnelComponent', () => {
 
   it('should return "Stage Details" title and default stage number when name/stageNumber are missing', () => {
     setup();
-    component.activeTab = 'buyer';
+    (component as any).activeTab = 'unknownTab';
     const info = component.getStageInfo({});
     expect(info.title).toBe('Stage Details');
   });
