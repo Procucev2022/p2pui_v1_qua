@@ -12,7 +12,7 @@ export class CreateRfqService {
 
     constructor(private httpService: HttpClient, private encryDecryService: EncryDecryService) {
         const temp = JSON.parse(
-            this.encryDecryService.get('perm', localStorage.getItem('logData'))
+            this.encryDecryService.get(localStorage.getItem('logData'))
         );
         this.loggedUserDetails = temp.details;
     }
@@ -147,7 +147,6 @@ export class CreateRfqService {
     }
 
     updateSellerData(data: any) {
-        // return this.http.post('http://104.154.48.179:8080/authprocucev/rest1/vendor/submitVendorRegistration',data)
         return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.UPDATE_SELLER_DATA, data, {});
     }
 
@@ -157,7 +156,6 @@ export class CreateRfqService {
     }
 
     updateBuyerData(data: any) {
-        // return this.http.post('http://104.154.48.179:8080/authprocucev/rest1/vendor/submitVendorRegistration',data)
         return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.UPDATE_BUYER_DATA, data, {});
     }
 

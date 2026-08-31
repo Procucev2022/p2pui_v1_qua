@@ -17,7 +17,7 @@ export class MyCategoryListComponent implements OnInit {
 
   ngOnInit(): void {
     // Initialization logic here
-     let temp =  JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')) );
+     let temp =  JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')) );
         this.loggedUserDetails = temp.details;
     this.getUserInfo();
   }

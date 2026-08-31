@@ -40,7 +40,7 @@ export class LinkClientModalComponent implements OnInit {
         companyName: [''],
         city: [''],
       });
-      const temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
+      const temp = JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')));
       this.loggedUserDetails = temp.details;
       this.roleName = this.loggedUserDetails.role.roleName;
     }

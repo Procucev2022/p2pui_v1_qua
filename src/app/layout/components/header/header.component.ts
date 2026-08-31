@@ -66,7 +66,7 @@ export class HeaderComponent implements OnInit {
 
     ngOnInit() {
         this.pushRightClass = 'push-right';
-        const temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
+        const temp = JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')));
         this.loggedUserDetails = temp.details;
         this.currentView = localStorage.getItem('system-view')
         console.log('user data', this.loggedUserDetails);

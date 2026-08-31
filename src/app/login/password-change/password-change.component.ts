@@ -117,25 +117,6 @@ export class PasswordChangeComponent implements OnInit {
 
 
 
-    // let obj ={
-    //   active: true,
-    //   createdBy: "jaswanth",
-    //   createdTS: null,
-    //   deptName: null,
-    //   fullName: "Srikanth",
-    //   id: "4005",
-    //   lastModifiedBy: null,
-    //   lastModifiedTS: null,
-    //   listofPermission:  ["VENDOR MANAGER", "PC_VENDOR_SEARCH_PAGE_SEARCH", "SEARCH", "PC_VENDOR_APPROVALS_PAGE_VIEW", "APPROVALS", "PC_VENDOR_REQUEST_PAGE_VIEW", "REQUESTS", "PC_VENDOR_INVITE_PAGE_SEND_INVITE", "PC_VENDOR_INVITE_PAGE_VIEW", "PC_VENDOR_DASHBOARD_PAGE_REG_PENDING_VIEW", "PC_VENDOR_DASHBOARD_PAGE_APPROVE_PENDING_TAB_REJECT", "PC_VENDOR_DASHBOARD_PAGE_APPROVE_PENDING_TAB_PROFILE_VIEW", "PC_VENDOR_DASHBOARD_PAGE_APPROVE_PENDING_TAB_APPROVE", "PC_VENDOR_DASHBOARD_PAGE_APPROVE_PENDING_TAB_VIEW", "PC_VENDOR_DASHBOARD_PAGE_VENDORS_TAB_VIEW", "PC_VENDOR_DASHBOARD_PAGE_VIEW"],
-    //   org: {id: "3756ebe8-0fd9-4f21-bf3d-9827864b6cd9", createdBy: null, lastModifiedBy: null, createdTS: null, lastModifiedTS: "2020-05-09",
-    //   orgType: { description: 'Procucve'}},
-    //   role: {id: "5002", createdBy: "HARSHI", roleName: 'admin', lastModifiedBy: "JASHWANTH", createdTS: null, lastModifiedTS: null},
-    //   username: "srikanth@procucev.com"
-    // };
-    // const k = this.encryDecryService.set('perm', JSON.stringify({ 'details':  obj}));
-    // localStorage.setItem('logData', k);
-    // localStorage.setItem('isLoggedin', 'true')
-    // this.router.navigate(['/vendor/vendorReg'], {queryParams: { regId: '131121-131312'} });
   }
 
 
@@ -235,7 +216,7 @@ export class PasswordChangeComponent implements OnInit {
       if (data) {
         console.log('loggedUserData', data);
         const obj = Object.assign({}, data);
-        const k = this.encryDecryService.set('perm', JSON.stringify({ 'details': data }));
+        const k = this.encryDecryService.set(JSON.stringify({ 'details': data }));
         localStorage.setItem('logData', k);
         localStorage.setItem('orgId', data.org.id);
         localStorage.setItem('loggedId', data.id);

@@ -42,7 +42,7 @@ export class ViewPosComponent implements OnInit {
     private  poService: PoService, ) { }
 
   ngOnInit() {
-    const temp =  JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')) );
+    const temp =  JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')) );
     this.loggedUserDetails = temp.details;
     this.roleName = this.loggedUserDetails['role']['roleName'];
     console.log('userDetails', this.loggedUserDetails);

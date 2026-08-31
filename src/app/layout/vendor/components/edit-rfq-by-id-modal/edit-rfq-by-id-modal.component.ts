@@ -77,7 +77,7 @@ export class EditRfqByIdModalComponent implements OnInit {
         this.isShowItemsSectionOnly = this.viewRFQbyIDdetails.showItemsOnly;
         this.pageRecordSize = AppConfig.GRID_PAGE_INFO.initpageSize;
         this.pageOptions = AppConfig.GRID_PAGE_INFO.pageOptions;
-        const temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
+        const temp = JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')));
         this.loggedUserPermissions = temp.details.listofPermission;
         this.loggedUserDetails = temp.details;
         this.loggedUserName = this.loggedUserDetails.username;

@@ -149,7 +149,7 @@ export class BfsItemsListComponent implements OnInit {
         private dialog: MatDialog,
         private authService:AuthenticationService) {
 
-        const temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
+        const temp = JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')));
         this.loggedUserDetails = temp.details;
         this.roleName = this.loggedUserDetails.role.roleName;
         this.pageRecordSize = AppApiConfig.GRID_PAGE_INFO.initpageSize;

@@ -129,7 +129,7 @@ export class VendorProfileComponent {
     private fb: FormBuilder
   ) {
 
-    const temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
+    const temp = JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')));
     this.loggedUserDetails = temp.details;
     this.loggedUserName = this.loggedUserDetails.username;
     this.roleName = this.loggedUserDetails.role.roleName === 'Registration' ? 'Vendor' : this.loggedUserDetails.role.roleName;

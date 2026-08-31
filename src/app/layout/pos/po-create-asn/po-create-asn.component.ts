@@ -43,7 +43,7 @@ export class PoCreateAsnComponent implements OnInit {
   ngOnInit() {
     console.log('data asn', this.data);
     this.minDate = new Date();
-    const temp =  JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')) );
+    const temp =  JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')) );
     console.log('lgo', temp.details);
     this.loggedUserType = temp.details.role.roleName;
     this.loggedUserDetails = temp.details;

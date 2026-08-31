@@ -121,7 +121,7 @@ export class VendorRegComponent implements OnInit {
 
   ngOnInit() {
     // this.getCountries();
-    let temp =  JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')) );
+    let temp =  JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')) );
         this.loggedUserDetails = temp.details;
         console.log('usrDetails,', this.loggedUserDetails)
         console.log( localStorage.getItem('orgId'), 'rogId')

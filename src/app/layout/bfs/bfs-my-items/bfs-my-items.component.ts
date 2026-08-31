@@ -75,7 +75,7 @@ export class BfsMyItemsComponent implements OnInit {
     constructor(private encryDecryService: EncryDecryService, private converSer: ConvertToBase64Service, private bfsItemService: BfsItemsService, private toaster: ToastrService, private loaderService: LoaderService, private bfsItemsService: BfsItemsService,
         private dialog: MatDialog) {
 
-        const temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
+        const temp = JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')));
         this.loggedUserDetails = temp.details;
         this.roleName = this.loggedUserDetails.role.roleName;
         this.pageRecordSize = AppApiConfig.GRID_PAGE_INFO.initpageSize;

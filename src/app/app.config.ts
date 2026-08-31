@@ -1,4 +1,5 @@
 import { InjectionToken } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 export let APP_CONFIG = new InjectionToken('app.config');
 
@@ -10,8 +11,7 @@ export interface IAppConfig {
 }
 
 export const AppConfig: IAppConfig = {
-    // apiEndpoint: 'http://104.154.48.179:8080',
-    apiEndpoint: 'http://34.68.203.139:8080',
+    apiEndpoint: environment.apiEndpoint,
     loggedUserRole: 'Vendor',
     userRoles: [
         'Category Manager',

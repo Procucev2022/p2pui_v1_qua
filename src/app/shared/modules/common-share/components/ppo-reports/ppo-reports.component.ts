@@ -27,7 +27,7 @@ export class PpoReportsComponent implements OnInit {
   constructor( private excelService: ExcelService, private poService: PoService,  private encryDecryService: EncryDecryService, private procuReqService: CatProcuRequestsService ) { }
 
   ngOnInit() {
-    const temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
+    const temp = JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')));
 
     this.loggedUserData = temp.details;
     if (this.loggedUserData.role.description === 'clientInitiator') {

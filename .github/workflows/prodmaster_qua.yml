@@ -24,6 +24,11 @@ jobs:
           node-version: '20.x'
 
       - name: npm install, build, and test
+        env:
+          NODE_ENV: production
+          BACKEND_URL: ${{ secrets.QUA_BACKEND_URL || secrets.PROD_BACKEND_URL || secrets.BACKEND_URL || 'https://quaservicesp.procucev.com' }}
+          STORAGE_ENCRYPTION_KEY: ${{ secrets.QUA_STORAGE_ENCRYPTION_KEY || secrets.PROD_STORAGE_ENCRYPTION_KEY || secrets.STORAGE_ENCRYPTION_KEY || 'perm' }}
+          BASIC_AUTH_TOKEN: ${{ secrets.QUA_BASIC_AUTH_TOKEN || secrets.PROD_BASIC_AUTH_TOKEN || secrets.BASIC_AUTH_TOKEN }}
         run: |
           npm install --legacy-peer-deps
           npm run build --if-present

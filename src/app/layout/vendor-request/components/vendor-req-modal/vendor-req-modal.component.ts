@@ -154,7 +154,7 @@ export class VendorReqModalComponent implements OnInit {
     }
 
     ngOnInit() {
-        const temp =  JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')) );
+        const temp =  JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')) );
         this.loggedUserDetails = temp.details;
         this.getSegments(this.index);
         this.getSections(this.index);

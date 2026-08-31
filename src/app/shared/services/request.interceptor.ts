@@ -32,7 +32,6 @@ export class RequestInterceptor implements HttpInterceptor {
         if(req.url.includes(AppApiConfig.REFRESH_TOKEN_PATH)){
             console.log('req', req.body)
             //    const headers =new HttpHeaders({
-            //     'Authorization': 'Basic cHJvY3VjZXY6cHJvY3VjZXY=',
             //     'Access-Control-Allow-Origin': '*',
             //     'Content-Type' : 'application/x-www-form-urlencoded'
             // })
@@ -56,7 +55,6 @@ export class RequestInterceptor implements HttpInterceptor {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 'Access-Control-Allow-Origin': '*',
-                // 'Authorization': 'Basic cHJvY3VjZXY6cHJvY3VjZXY='
             });
             const authReq = req.clone({ headers });
             return next.handle(authReq);

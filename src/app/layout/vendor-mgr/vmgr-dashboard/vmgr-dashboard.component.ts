@@ -25,7 +25,7 @@ export class VmgrDashboardComponent implements OnInit {
 
   ngOnInit() {
     this.defaultPermissions = AppApiConfig.DEFAULT_PERMISSIONS;
-        let temp =  JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')) );
+        let temp =  JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')) );
 
         this.loggedUserPermissions = temp.details.listofPermission;
   }

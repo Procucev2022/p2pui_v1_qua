@@ -246,6 +246,20 @@ describe('PasswordChangeComponent', () => {
     component.getLoggerUserData();
   });
 
+  it('should encrypt logged user data with the configured-key overload', () => {
+    const data = {
+      id: 'u1',
+      org: { id: 'o1' },
+      role: { roleName: 'VendorManager' },
+      resetPassword: false,
+    };
+    auth.getLoggedUserData.and.returnValue(of(data));
+
+    component.getLoggerUserData();
+
+    expect(encry.set).toHaveBeenCalledOnceWith(JSON.stringify({ 'details': data }));
+  });
+
   it('should resetForm and numberOnly', () => {
     component.submitted = true;
     component.passwdForm.patchValue({ oldPwd: 'a', newPwd: strong, confirmPwd: strong });

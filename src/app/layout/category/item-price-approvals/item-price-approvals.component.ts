@@ -33,7 +33,7 @@ export class ItemPriceApprovalsComponent implements OnInit {
     this.pageOptions = AppConfig.GRID_PAGE_INFO.pageOptions;
     this.defaultPermissions = AppApiConfig.DEFAULT_PERMISSIONS;
     const temp = JSON.parse(
-      this.encryDecryService.get('perm', localStorage.getItem('logData'))
+      this.encryDecryService.get(localStorage.getItem('logData'))
     );
     this.loggedUserDetails = temp.details;
     this.loggedUserPermissions = this.loggedUserDetails.listofPermission;
