@@ -7,6 +7,7 @@ import { AuthenticationService } from './authentication.service';
 import { EncryDecryService } from './encry-decry.service';
 import { AppApiConfig } from '../constants/app-api.config';
 import { SystemViewConfig } from 'src/app/app.config';
+import { environment } from 'src/environments/environment';
 
 describe('AuthenticationService', () => {
   let service: AuthenticationService;
@@ -83,6 +84,7 @@ describe('AuthenticationService', () => {
     });
     const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.ACCESS_TOKEN_PATH);
     expect(req.request.method).toBe('POST');
+    expect(req.request.headers.get('Authorization')).toBe(environment.basicAuthToken);
     req.flush({ access_token: 'tok' });
   });
 
@@ -154,6 +156,7 @@ describe('AuthenticationService', () => {
     });
     const req = httpMock.expectOne(AppApiConfig.apiEndpoint + AppApiConfig.REFRESH_TOKEN_PATH);
     expect(req.request.method).toBe('POST');
+    expect(req.request.headers.get('Authorization')).toBe(environment.basicAuthToken);
     req.flush({ access_token: 'new-at', refresh_token: 'new-rt', expires_in: 100 });
     expect(localStorage.getItem('at')).toBe('new-at');
     expect(localStorage.getItem('rt')).toBe('new-rt');

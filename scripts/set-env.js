@@ -25,7 +25,7 @@ function parseEnvFile(filePath) {
   return envConfig;
 }
 
-function resolveEnvConfig(isProdMode) {
+function resolveEnvConfig(isProdMode, requireBasicAuth = true) {
   const rootDir = path.resolve(__dirname, '..');
 
   const envDefault = parseEnvFile(path.join(rootDir, '.env'));
@@ -56,7 +56,7 @@ function resolveEnvConfig(isProdMode) {
   const basicAuthToken =
     process.env.BASIC_AUTH_TOKEN ||
     scopedEnv.BASIC_AUTH_TOKEN;
-  if (!basicAuthToken) {
+  if (requireBasicAuth && !basicAuthToken) {
     throw new Error(`BASIC_AUTH_TOKEN is required for ${isProdMode ? 'production' : 'development'} configuration`);
   }
 
@@ -68,7 +68,7 @@ function resolveEnvConfig(isProdMode) {
   return {
     backendUrl: backendUrl.replace(/\/+$/, ''),
     storageEncryptionKey,
-    basicAuthToken,
+    basicAuthToken: basicAuthToken || '',
     proxyTarget: proxyTarget.replace(/\/+$/, '')
   };
 }
@@ -85,9 +85,10 @@ function setEnvironment() {
     process.env.PRODUCTION === 'true';
   const isProd = isProdArg || isProdEnv;
 
-  const devConfig = resolveEnvConfig(false);
-  const prodConfig = resolveEnvConfig(true);
-  const currentConfig = isProd ? prodConfig : devConfig;
+  const currentConfig = resolveEnvConfig(isProd);
+  const inactiveConfig = resolveEnvConfig(!isProd, false);
+  const devConfig = isProd ? inactiveConfig : currentConfig;
+  const prodConfig = isProd ? currentConfig : inactiveConfig;
 
   const envDir = path.resolve(__dirname, '../src/environments');
   if (!fs.existsSync(envDir)) {
