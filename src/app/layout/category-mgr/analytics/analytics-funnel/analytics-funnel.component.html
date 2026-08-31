@@ -291,10 +291,10 @@
                   <span class="badge badge-light border text-dark">{{ rec.category || 'General' }}</span>
                 </td>
                 <td *ngIf="selectedStage.stageNumber === 3" class="text-center font-weight-bold text-success">
-                  <span class="badge badge-light border font-weight-bold text-success">{{ rec.quotesCount || 1 }}</span>
+                  <span class="badge badge-light border font-weight-bold text-success">{{ rec.quotesCount ?? 0 }}</span>
                 </td>
                 <td *ngIf="selectedStage.stageNumber === 4">
-                  <span class="badge badge-primary font-weight-bold">{{ rec.planName || 'Pro Plan' }}</span>
+                  <span class="badge badge-primary font-weight-bold">{{ rec.planName ?? '—' }}</span>
                 </td>
                 <td *ngIf="selectedStage.isAlert" class="text-center font-weight-bold text-danger">
                   <span class="badge badge-danger">{{ rec.credits || 0 }} (Exhausted)</span>
