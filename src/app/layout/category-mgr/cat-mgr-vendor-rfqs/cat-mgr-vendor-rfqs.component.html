@@ -183,13 +183,15 @@
                     <span *ngIf="!expanded"><i class="fa fa-chevron-right"></i></span>
                 </button>
             </td>
-            <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
+            <td [style.width]="col.width" *ngFor="let col of columns" [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }" [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"  [title]="col.isExceedContent == true ? (col.field == 'rfqId' ? (rowData.displayRfqId || (rowData.rfqIcon ? rowData.rfqIcon + ' ' + rowData.rfqId : rowData.rfqId)) : rowData[col.field]): ''">
                     <span *ngIf="!col.isLink">
-                      <span *ngIf="col.field == 'rfqId'" class="row_{{rowData?.sourceType?.toUpperCase()}}"></span>
                             <span *ngIf="col.fieldType != 'date'"  >
                                 <span *ngIf="col.fieldType != 'date'">
                                     <span *ngIf="col.field == 'quotationReceived'" title="Work In Progress"> {{  rowData[col.field]}}</span>
-                                    <span *ngIf="col.field != 'quotationReceived'" >    {{rowData[col.field]}}</span>
+                                    <span *ngIf="col.field != 'quotationReceived'" >
+                                        <span *ngIf="col.field == 'rfqId'">{{rowData.displayRfqId || (rowData.rfqIcon ? rowData.rfqIcon + ' ' + rowData.rfqId : rowData.rfqId)}}</span>
+                                        <span *ngIf="col.field != 'rfqId'">{{rowData[col.field]}}</span>
+                                    </span>
                                 </span>
                                 <span class="blink" *ngIf="col.field=='rfqId' && (rowData.newCommentAvailableVendor == true)">
                                     <i class="fa fa-bell" aria-hidden="true"></i>

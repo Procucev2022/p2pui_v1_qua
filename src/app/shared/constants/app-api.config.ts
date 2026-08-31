@@ -1,6 +1,7 @@
+import { environment } from 'src/environments/environment';
+
 export class AppApiConfig {
-  public static apiEndpoint = 'https://p2pv1servicesdev-etfrcte5fhdvfrd4.centralindia-01.azurewebsites.net';
-// public static apiEndpoint = 'https://quaservicesp.procucev.com';
+  public static apiEndpoint = environment.baseURL;
   public static LOGGED_USER_PATH = '/rest/users/user/loggedUser';
   public static ACCESS_TOKEN_PATH = '/authenticate';
   public static GET_RFQS_FOR_NOPR_FOR_CLIENT_INITIATOR = "/rest/gmt/getNoPrRfqByClient";
@@ -57,6 +58,9 @@ export class AppApiConfig {
   public static UPDATE_DELIVERY_LOCATION = '/rest/gmt/updateDeliveryLocation';
   public static CHANGE_PASSWORD = '/rest/users/changePswd';
 
+  // Buyer Vendor Management
+  public static BUYER_VENDORS = '/rest/buyer/vendors';
+
   public static OTPs_SENT ='/partialvendor/validateClient';
   public static VALIDATE_ALL_OTPS = '/partialvendor/validateAllOtps';
   public static VALIDATE_EMAIL_OTP = '/partialvendor/validateAllOtps';
@@ -100,9 +104,6 @@ export class AppApiConfig {
     public static REFRESH_TOKEN_PATH = '/oauth/refreshToken';
     public static ACCESS_TOKEN = localStorage.getItem('at');
     public static loggedUserRole = 'Category Manager';
-    // https://p2pv1servicesdev-etfrcte5fhdvfrd4.centralindia-01.azurewebsites.net/authenticate
-    // public static apiEndpoint =  'https://p2pproduction1-gcbhcag6fpgedpb3.centralindia-01.azurewebsites.net/procucev';
-    // https://p2pprodservices.azurewebsites.net --- prod
 
 
 

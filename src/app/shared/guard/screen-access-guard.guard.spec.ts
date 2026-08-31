@@ -112,6 +112,15 @@ describe('ScreenAccessGuardGuard', () => {
     expect(result).toBe(true);
   });
 
+  it('should allow nested route access when base route is authorized', () => {
+    mockLogData('CategoryManager');
+    localStorage.setItem('system-view', SystemViewConfig.GMT_BASIC);
+    const baseAllowedUrl = GMT_SYSTEM_SCREENS_LIST['CategoryManager'][0];
+    const nestedUrl = `${baseAllowedUrl}/ai-profile/VND-001`;
+    const result = guard.canActivateChild({} as any, { url: nestedUrl } as any);
+    expect(result).toBe(true);
+  });
+
   it('navigateToUnAuthorized should navigate to unauthorizedAccess', () => {
     guard.navigateToUnAuthorized();
     expect(router.navigate).toHaveBeenCalledWith(['/login/unauthorizedAccess']);

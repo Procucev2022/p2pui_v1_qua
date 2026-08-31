@@ -33,7 +33,7 @@ import { MyCategoryListComponent } from './my-category-list/my-category-list.com
 import { SubscriptionPaymentSuccessComponent } from './subscription-payment-success/subscription-payment-success.component';
 import { SubscriptionPaymentFailureComponent } from './subscription-payment-failure/subscription-payment-failure.component';
 import { CategoryMgrReportsComponent } from './category-mgr-reports/category-mgr-reports.component';
-const routes: Routes = [
+export const routes: Routes = [
     { path: '', redirectTo: 'procurequests', pathMatch: 'prefix' },
     { path: 'dashboard', component: CatMgrDashboardComponent },
     { path: 'clientreg', component: CatMgrClientRegstrComponent },
@@ -68,7 +68,8 @@ const routes: Routes = [
     {   path: 'gmt-vendors', component: GmtVendorsListComponent},
     {path: 'payment-success', component: SubscriptionPaymentSuccessComponent},
     {path: 'payment-failure', component: SubscriptionPaymentFailureComponent},
-    {path: 'cat-mgr-reports', component: CategoryMgrReportsComponent}
+    {path: 'cat-mgr-reports', component: CategoryMgrReportsComponent},
+    {path: 'buyer-vendors', loadChildren: () => import('../buyer-vendors/buyer-vendors.module').then(m => m.BuyerVendorsModule)}
 ];
 @NgModule({
     imports: [RouterModule.forChild(routes)],
