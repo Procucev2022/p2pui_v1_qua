@@ -1,8 +1,0 @@
-{
-  "/oauth": {
-    "target": "https://p2pv1servicesdev-etfrcte5fhdvfrd4.centralindia-01.azurewebsites.net",
-    "secure": false,
-    "logLevel": "debug",
-    "changeOrigin": true
-  }
-}
