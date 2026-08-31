@@ -952,12 +952,17 @@ export class BuyerVendorDirectoryComponent implements OnInit, OnDestroy {
     this.vendorService.bulkCreateVendors(validVendors).subscribe({
       next: (res: any) => {
         this.isUploading = false;
-        const saved = res?.data?.savedCount ?? validVendors.length;
-        this.toastr.success(`${saved} vendors imported successfully.`, 'Success');
+        const savedCount = res?.data?.savedCount ?? validVendors.length;
+        this.toastr.success(`${savedCount} vendors imported successfully.`, 'Success');
         this.showUploadModal = false;
 
-        // Open AI Vendor Processing Pipeline modal tied directly to enrichment observable
-        this.startAiProcessingPipeline(validVendors);
+        // Enrich the persisted rows: their codes may have been suffixed to avoid
+        // colliding with vendors that already exist.
+        const savedVendors: BuyerVendor[] = res?.data?.vendors?.length
+          ? res.data.vendors
+          : validVendors;
+
+        this.startAiProcessingPipeline(savedVendors);
       },
       error: (err: any) => {
         this.isUploading = false;
@@ -1178,17 +1183,33 @@ export class BuyerVendorDirectoryComponent implements OnInit, OnDestroy {
       });
     } else {
       this.vendorService.createVendor(vendorPayload).subscribe({
-        next: () => {
+        next: (res) => {
           this.isSavingVendor = false;
           this.showAddVendorModal = false;
-          this.toastr.success(`Vendor "${vendorPayload.vendorName}" added to Master Directory.`, 'Vendor Registered');
-          this.startAiProcessingPipeline([vendorPayload]);
+
+          // The server assigns the final vendor code, suffixing it when the
+          // requested one is already taken. Enrich the saved record rather than
+          // the submitted payload, otherwise the AI profile is keyed on the
+          // original code and overwrites the existing vendor's entry.
+          const saved = (res && res.data && res.data.vendor) ? res.data.vendor : vendorPayload;
+
+          if (saved.vendorCode !== vendorPayload.vendorCode) {
+            this.toastr.info(
+              `Vendor code "${vendorPayload.vendorCode}" was already in use, so this vendor was registered as "${saved.vendorCode}".`,
+              'Vendor code adjusted'
+            );
+          } else {
+            this.toastr.success(`Vendor "${saved.vendorName}" added to Master Directory.`, 'Vendor Registered');
+          }
+
+          this.startAiProcessingPipeline([saved]);
         },
-        error: () => {
+        error: (err: any) => {
           this.isSavingVendor = false;
-          this.showAddVendorModal = false;
-          this.toastr.success(`Vendor "${vendorPayload.vendorName}" added to Master Directory.`, 'Vendor Registered');
-          this.startAiProcessingPipeline([vendorPayload]);
+          const msg = err && err.error && err.error.message
+            ? err.error.message
+            : 'Could not register the vendor. Please try again.';
+          this.toastr.error(msg, 'Error');
         }
       });
     }
