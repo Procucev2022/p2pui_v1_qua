@@ -75,11 +75,6 @@ export class CategoryMgrReportsComponent {
     this.isReportGenrateInProgress = false; // Reset report generation started status when a new sub-report is selected
   }
   generateReport() {
-
-    // https://p2pv1servicesdev-etfrcte5fhdvfrd4.centralindia-01.azurewebsites.net/rest/reports/seller-report?reportType=sellerReport&startDate=2026-04-01&endDate=2026-05-14
-
-    // /procucev/rest/reports/seller-report?startDate=2026-01-01&endDate=2026-05-01&requestType=sellerReport
-
     if (!(this.selectedSubReportId && this.startDate && this.endDate)) {
       this.toastService.warning('Please select a sub-report and date range to generate the report.');
       return;

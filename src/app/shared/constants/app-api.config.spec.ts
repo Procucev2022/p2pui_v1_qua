@@ -1,10 +1,12 @@
+import { environment } from 'src/environments/environment';
 import { AppApiConfig } from './app-api.config';
 
 describe('AppApiConfig', () => {
-  it('should define apiEndpoint', () => {
+  it('should define apiEndpoint matching environment configuration', () => {
     expect(AppApiConfig.apiEndpoint).toBeDefined();
     expect(typeof AppApiConfig.apiEndpoint).toBe('string');
     expect(AppApiConfig.apiEndpoint.length).toBeGreaterThan(0);
+    expect(AppApiConfig.apiEndpoint).toBe(environment.apiEndpoint);
   });
 
   it('should define authentication and user path constants', () => {

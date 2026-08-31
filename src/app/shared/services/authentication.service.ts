@@ -8,6 +8,8 @@ import { EncryDecryService } from './encry-decry.service';
 import { SystemViewConfig } from 'src/app/app.config';
 import { ToastrService } from 'ngx-toastr';
 
+import { environment } from 'src/environments/environment';
+
 /** Overridable page reload seam for unit tests (Karma cannot stub location.reload in Edge/Chrome). */
 export const AuthPageReload = {
   run: () => {
@@ -21,7 +23,7 @@ export const AuthPageReload = {
 
 const httpOptions = {
     headers: new HttpHeaders({
-        'Authorization': 'Basic cHJvY3VjZXY6cHJvY3VjZXY=',
+        'Authorization': environment.basicAuthToken,
         'Access-Control-Allow-Origin': '*'
     })
 };
@@ -40,13 +42,13 @@ export class AuthenticationService {
 
     public getAccessToken(req): Observable<any> {
         const formdata: FormData = new FormData();
-        formdata.append('username', req.userName);  // 'venu.gade@procucev.com');
-        formdata.append('password', req.userPassword); // 'Welcome@123');
+        formdata.append('username', req.userName);
+        formdata.append('password', req.userPassword);
         formdata.append('grant_type', 'password');
-        const payload: any  ={
-          username : req.userName,
-          password :  req.userPassword
-        }
+        const payload: any = {
+          username: req.userName,
+          password: req.userPassword
+        };
 
         return this.http
             .post<any>(AppApiConfig.apiEndpoint + AppApiConfig.ACCESS_TOKEN_PATH,
@@ -74,9 +76,7 @@ export class AuthenticationService {
 
 
     getLoggedUserData(req): Observable<any> {
-      //https://p2pv1servicesdev-etfrcte5fhdvfrd4.centralindia-01.azurewebsites.net/rest/users/user/loggedUser
       return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.LOGGED_USER_PATH, req, {});
-      // return this.http.post('https://p2pv1servicesdev-etfrcte5fhdvfrd4.centralindia-01.azurewebsites.net/rest/users/user/loggedUser', req, {});
     }
 
     saveLoggedUserData(req): Observable<any> {
@@ -320,15 +320,14 @@ export class AuthenticationService {
     }
 
     public getRefreshToken(): Observable<any> {
-
-        const formdata1: FormData = new FormData();  // 'venu.gade@procucev.com');
-        const rt =localStorage.getItem('rt');
-        console.log("RT TOKEN",rt)
-        formdata1.append('grant_type','refresh_token');
-        formdata1.append('refresh_token',rt);// 'Welcome@123');
+        const formdata1: FormData = new FormData();
+        const rt = localStorage.getItem('rt');
+        console.log("RT TOKEN", rt);
+        formdata1.append('grant_type', 'refresh_token');
+        formdata1.append('refresh_token', rt);
         let httpOptions1 = {
             headers: new HttpHeaders({
-                'Authorization': 'Basic cHJvY3VjZXY6cHJvY3VjZXY=',
+                'Authorization': environment.basicAuthToken,
                 'Access-Control-Allow-Origin': '*',
                 'Accept': 'application/json',
             })

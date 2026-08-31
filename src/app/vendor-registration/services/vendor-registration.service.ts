@@ -11,12 +11,10 @@ export class VendorRegistrationService {
     constructor(private http: HttpClient) { }
 
     saveVendorRegistration(data: any) {
-        //  return this.http.post('http://104.154.48.179:8080/authprocucev/rest1/vendor/newVendorRegistration',data)
         return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.NEW_VENDOR_REGISTRATION, data, {});
     }
 
     submitVendorRegistration(data: any) {
-        // return this.http.post('http://104.154.48.179:8080/authprocucev/rest1/vendor/submitVendorRegistration',data)
         return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.SUBMIT_VENDOR_REGISTRATION, data, {});
     }
 
@@ -47,7 +45,6 @@ export class VendorRegistrationService {
     }
 
     editVendor(data: any) {
-        // return this.http.post('http://104.154.48.179:8080/authprocucev/rest1/vendor/submitVendorRegistration',data)
         return this.http.post(AppApiConfig.apiEndpoint + AppApiConfig.EDIT_VENDOR, data, {});
     }
 
