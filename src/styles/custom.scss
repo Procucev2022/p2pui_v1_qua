@@ -1240,19 +1240,24 @@ input[type='radio'] {
 }
 
 /* Global Full-Screen Modal & Backdrop Rules */
-.modal-backdrop.show {
+.modal-backdrop.show,
+.modal-backdrop-custom {
     position: fixed !important;
+    inset: 0 !important;
     top: 0 !important;
     left: 0 !important;
     right: 0 !important;
     bottom: 0 !important;
     width: 100vw !important;
     height: 100vh !important;
-    min-width: 100% !important;
-    min-height: 100% !important;
-    background-color: rgba(12, 33, 70, 0.65) !important;
+    min-width: 100vw !important;
+    min-height: 100vh !important;
+    background-color: rgba(15, 23, 42, 0.6) !important;
     opacity: 1 !important;
-    z-index: 99990 !important;
+    z-index: 999990 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
 .modal.show {
@@ -1263,5 +1268,5 @@ input[type='radio'] {
     bottom: 0 !important;
     width: 100vw !important;
     height: 100vh !important;
-    z-index: 99999 !important;
-}
+    z-index: 999999 !important;
+}
