@@ -1,0 +1,231 @@
+<div class="quote-matrix-root">
+
+  <!-- Top Bar with Back Link and RFQ Selector -->
+  <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 pb-3 border-bottom mb-4">
+    <div>
+      <button class="btn-back d-flex align-items-center gap-1 text-xs text-muted mb-1 font-medium" (click)="backToCommandCenter.emit()">
+        <i class="fa fa-arrow-left mr-1"></i> Back to Command Center
+      </button>
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <h1 class="page-title mb-0">Comparative Quote Evaluation Matrix</h1>
+        <span class="badge badge-purple font-bold">Screen 1.3</span>
+      </div>
+      <p class="text-xs text-muted mb-0 mt-1">Side-by-side parametric evaluation of line-item vendor bids synthesized by QUA AI.</p>
+    </div>
+
+    <!-- Active RFQ Dropdown -->
+    <div class="d-flex align-items-center gap-2" *ngIf="rfq">
+      <span class="text-xs text-muted d-none d-sm-inline">Active RFQ:</span>
+      <select class="form-control form-control-sm font-bold mono" style="max-width: 320px;">
+        <option>{{ rfq.rfqNumber }} — {{ rfq.title }} ({{ quotes.length }} Quotes)</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- RFQ Context Strip with Multi-Channel Badges -->
+  <div class="glass-panel p-4 mb-4 rounded-xl" *ngIf="rfq">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+      <div class="d-flex align-items-center gap-3">
+        <div class="icon-box-purple p-2.5 rounded-xl text-indigo mr-2">
+          <i class="fa fa-th-list fa-lg"></i>
+        </div>
+        <div>
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <span class="font-bold text-dark text-sm mono">{{ rfq.rfqNumber }}</span>
+            <span class="badge badge-blue">{{ rfq.category }}</span>
+            <span class="badge badge-emerald font-bold d-flex align-items-center gap-1" *ngIf="rfq.chasingActive">
+              <span class="live-dot mr-1"></span> AI Chasing Active
+            </span>
+          </div>
+          <p class="text-xs text-muted mb-0 mt-0.5">{{ rfq.title }}</p>
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center gap-4 text-xs text-muted flex-wrap">
+        <div>
+          <span class="text-2xs text-uppercase d-block">Target Delivery</span>
+          <strong class="text-dark mono">{{ rfq.targetDeliveryDate }}</strong>
+        </div>
+        <div>
+          <span class="text-2xs text-uppercase d-block">Estimated Budget</span>
+          <strong class="text-emerald mono font-bold">${{ rfq.budget | number }}</strong>
+        </div>
+        <div>
+          <span class="text-2xs text-uppercase d-block">Bids Evaluated</span>
+          <strong class="text-indigo mono font-bold">{{ quotes.length }} Suppliers</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Multi-Channel Follow-up Status Strip -->
+    <div class="pt-2.5 border-top d-flex flex-wrap justify-content-between align-items-center gap-2 text-xs" *ngIf="rfq.followUpData">
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <span class="text-2xs font-bold text-muted text-uppercase">AI Follow-Up Status:</span>
+        <span class="stat-pill pill-purple" *ngIf="rfq.followUpData.callStats">
+          📞 Calls: {{ rfq.followUpData.callStats.connected }}/{{ rfq.followUpData.callStats.total }} Connected
+        </span>
+        <span class="stat-pill pill-emerald" *ngIf="rfq.followUpData.whatsappStats">
+          💬 WhatsApp: {{ rfq.followUpData.whatsappStats.read }}/{{ rfq.followUpData.whatsappStats.total }} Read
+        </span>
+        <span class="stat-pill pill-sky" *ngIf="rfq.followUpData.smsStats">
+          📱 SMS: {{ rfq.followUpData.smsStats.delivered }} Delivered
+        </span>
+      </div>
+      <span class="text-indigo font-bold text-xs" *ngIf="rfq.followUpData.respondedCount !== undefined">
+        Deep Dive Telemetry ({{ rfq.followUpData.respondedCount }}/{{ rfq.followUpData.totalInvited }} Responded) ↗
+      </span>
+    </div>
+  </div>
+
+  <!-- AI Recommended Top Award Banner -->
+  <div class="glass-panel p-4 mb-4 rounded-2xl banner-ai-award" *ngIf="quotes.length > 0">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
+      <div class="d-flex align-items-center gap-3">
+        <div class="award-star-box text-emerald mr-2">
+          <i class="fa fa-star fa-2x"></i>
+        </div>
+        <div>
+          <h5 class="font-bold text-dark mb-0">AI Recommended Award: {{ quotes[0].vendorName }}</h5>
+          <p class="text-xs text-muted mb-0 mt-0.5">
+            Optimal combination of {{ quotes[0].aiMatchScore }}% specification alignment, lowest compliant total rate (${{ quotes[0].totalPrice | number }}), and {{ quotes[0].leadTimeDays }}-day lead time commitment.
+          </p>
+        </div>
+      </div>
+      <button class="btn btn-emerald btn-sm shrink-0 px-4" (click)="openPoModal(quotes[0])">
+        <i class="fa fa-file-text-o mr-1"></i> Fast-Track PO Generation
+      </button>
+    </div>
+  </div>
+
+  <!-- Side-by-Side Comparison Cards Grid -->
+  <div class="row" *ngIf="quotes.length > 0">
+    <div *ngFor="let q of quotes" class="col-lg-4 col-md-6 mb-4">
+      <div class="glass-panel quote-card h-100 p-4 d-flex flex-column justify-content-between position-relative" [ngClass]="{'border-highlight-best': isBestPrice(q)}">
+        <div>
+          <!-- Card Top Bar -->
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <span class="badge" [ngClass]="q.vendorCategory === 'Client List' ? 'badge-blue' : 'badge-emerald'">
+              {{ q.vendorCategory }}
+            </span>
+            <span class="badge badge-emerald font-bold mono">
+              {{ q.aiMatchScore }}% AI Match
+            </span>
+          </div>
+
+          <h4 class="vendor-card-title font-bold text-dark mb-1">{{ q.vendorName }}</h4>
+          <span *ngIf="isBestPrice(q)" class="badge badge-soft-success text-success font-bold text-2xs mb-3 d-inline-block">
+            <i class="fa fa-check mr-1"></i> Lowest Compliant Bid
+          </span>
+
+          <!-- Price Box -->
+          <div class="price-box p-3 rounded-xl bg-light text-center mb-3">
+            <span class="text-2xs text-muted font-bold text-uppercase d-block">Total Bid Value</span>
+            <h2 class="font-black text-dark mono mb-0">${{ q.totalPrice | number }}</h2>
+            <small class="text-muted font-semibold">(${{ q.unitPrice | number }} / unit)</small>
+          </div>
+
+          <!-- Specs List -->
+          <ul class="list-unstyled text-xs space-y-2 mb-3 border-bottom pb-3">
+            <li class="d-flex justify-content-between py-1 border-bottom-subtle">
+              <span class="text-muted">Lead Time Commitment:</span>
+              <strong class="text-dark">{{ q.leadTimeDays }} Days</strong>
+            </li>
+            <li class="d-flex justify-content-between py-1 border-bottom-subtle">
+              <span class="text-muted">Technical Compliance:</span>
+              <span class="badge badge-emerald font-bold">{{ q.complianceStatus }}</span>
+            </li>
+            <li class="d-flex justify-content-between py-1 border-bottom-subtle">
+              <span class="text-muted">Payment Terms:</span>
+              <strong class="text-dark">{{ q.paymentTerms }}</strong>
+            </li>
+            <li class="d-flex justify-content-between py-1">
+              <span class="text-muted">Warranty Period:</span>
+              <strong class="text-dark">{{ q.warrantyYears }} Years</strong>
+            </li>
+          </ul>
+
+          <p class="text-2xs text-muted font-italic mb-3" *ngIf="q.remarks">{{ q.remarks }}</p>
+        </div>
+
+        <button
+          class="btn btn-sm w-100"
+          [ngClass]="isBestPrice(q) ? 'btn-emerald' : 'btn-primary'"
+          (click)="openPoModal(q)"
+        >
+          <i class="fa fa-check-circle mr-1"></i> Award & Dispatch PO
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="quotes.length === 0" class="glass-panel p-5 text-center text-muted">
+    <i class="fa fa-inbox fa-3x mb-2 text-indigo"></i>
+    <h5>No vendor quotes submitted for this RFQ yet</h5>
+    <p class="text-xs mb-0">Follow-up chasers are active. Bids will populate automatically as suppliers respond.</p>
+  </div>
+
+  <!-- Purchase Order Modal -->
+  <div *ngIf="poModalOpen && selectedQuoteForPo" class="modal-overlay">
+    <div class="modal-content glass-panel p-4 max-w-2xl">
+      <div class="d-flex justify-content-between align-items-center pb-3 border-bottom">
+        <div class="d-flex align-items-center gap-2">
+          <div class="po-icon-box p-2 rounded-lg bg-emerald-light text-emerald mr-2">
+            <i class="fa fa-file-text-o fa-lg"></i>
+          </div>
+          <div>
+            <h3 class="modal-heading mb-0 font-bold text-dark">Award Purchase Order: {{ selectedQuoteForPo.vendorName }}</h3>
+            <p class="text-xs text-muted mb-0">Formal Enterprise Contract Dispatch with SHA-256 Seal</p>
+          </div>
+        </div>
+        <button type="button" class="btn-close-modal" (click)="closePoModal()">&times;</button>
+      </div>
+
+      <div class="modal-body py-4 overflow-auto" style="max-height: 65vh;">
+        <div class="p-3.5 rounded-xl border bg-light mb-3 text-xs">
+          <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
+            <div>
+              <span class="text-2xs text-indigo font-bold text-uppercase">PROCUCEV FORMAL CONTRACT</span>
+              <h5 class="font-bold text-dark mb-0 text-sm">{{ poNumber || 'Pending authorization' }}</h5>
+            </div>
+            <span class="badge badge-emerald font-bold p-1 px-2"><i class="fa fa-shield mr-1"></i> Verified & Compliant</span>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <span class="text-2xs text-muted text-uppercase">Awardee:</span>
+              <div class="font-bold text-dark">{{ selectedQuoteForPo.vendorName }}</div>
+              <small class="text-muted">Payment: {{ selectedQuoteForPo.paymentTerms }}</small>
+            </div>
+            <div class="col-6">
+              <span class="text-2xs text-muted text-uppercase">Lead Time:</span>
+              <div class="font-bold text-dark">{{ selectedQuoteForPo.leadTimeDays }} Days</div>
+              <small class="text-muted">Total: ${{ selectedQuoteForPo.totalPrice | number }}</small>
+            </div>
+          </div>
+
+          <div class="p-2.5 rounded-lg bg-white border d-flex align-items-start gap-2 shadow-2xs">
+            <i class="fa fa-key text-indigo mr-2 mt-1"></i>
+            <div>
+              <span class="text-slate-800 font-semibold text-2xs">Cryptographic Audit Seal (SHA-256):</span>
+              <p class="mono text-indigo font-semibold text-2xs text-break mb-0 select-all">{{ poShaSignature }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group mb-0">
+          <label class="form-label-xs">Executive Approver Sign-off Note:</label>
+          <input type="text" class="form-control form-control-sm" [(ngModel)]="poApproverNotes">
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+        <button class="btn btn-secondary btn-sm mr-2" (click)="closePoModal()">Cancel</button>
+        <button class="btn btn-emerald btn-sm" [disabled]="poSigned" (click)="confirmApprovePo()">
+          <span *ngIf="poSigned"><i class="fa fa-check mr-1"></i> Signed & Dispatched</span>
+          <span *ngIf="!poSigned"><i class="fa fa-check-circle mr-1"></i> Authorize & Award PO</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

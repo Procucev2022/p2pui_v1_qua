@@ -1,0 +1,181 @@
+<div class="vendor-prof-root">
+
+  <!-- Header -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center pb-3 mb-3 border-bottom">
+    <div>
+      <h5 class="prof-title mb-1">
+        Vendor Profile &amp; Sourcing Scope
+        <span class="badge-screen">Screen 3.6</span>
+      </h5>
+      <p class="prof-subtitle mb-0">
+        Statutory credentials, registered address, and the category scope that drives RFQ matching.
+      </p>
+    </div>
+    <button type="button" class="btn btn-sm btn-success" [disabled]="!isValid || saving" (click)="save()">
+      <i class="fa fa-save mr-1"></i> {{ saving ? 'Saving…' : 'Save Profile' }}
+    </button>
+  </div>
+
+  <!-- Organization details -->
+  <div class="prof-panel mb-3">
+    <h6 class="panel-heading">Organization Details</h6>
+    <div class="row">
+      <div class="col-lg-4 col-md-6 mb-2">
+        <label class="field-label" for="companyName">Company name</label>
+        <input id="companyName" type="text" class="form-control form-control-sm"
+               [(ngModel)]="form.companyName" [ngModelOptions]="{ standalone: true }">
+      </div>
+      <div class="col-lg-4 col-md-6 mb-2">
+        <label class="field-label" for="brandName">Brand name</label>
+        <input id="brandName" type="text" class="form-control form-control-sm"
+               [(ngModel)]="form.brandName" [ngModelOptions]="{ standalone: true }">
+      </div>
+      <div class="col-lg-4 col-md-6 mb-2">
+        <label class="field-label" for="orgType">Organization type</label>
+        <select id="orgType" class="form-control form-control-sm"
+                [(ngModel)]="form.organizationType" [ngModelOptions]="{ standalone: true }">
+          <option *ngFor="let t of organizationTypes" [value]="t">{{ t }}</option>
+        </select>
+      </div>
+      <div class="col-lg-3 col-md-6 mb-2">
+        <label class="field-label" for="panNumber">PAN number</label>
+        <input id="panNumber" type="text" class="form-control form-control-sm"
+               [(ngModel)]="form.panNumber" [ngModelOptions]="{ standalone: true }">
+      </div>
+      <div class="col-lg-3 col-md-6 mb-2">
+        <label class="field-label" for="gstNumber">GST number</label>
+        <input id="gstNumber" type="text" class="form-control form-control-sm"
+               [(ngModel)]="form.gstNumber" [ngModelOptions]="{ standalone: true }">
+      </div>
+      <div class="col-lg-3 col-md-6 mb-2">
+        <label class="field-label" for="cinNumber">CIN number</label>
+        <input id="cinNumber" type="text" class="form-control form-control-sm"
+               [(ngModel)]="form.cinNumber" [ngModelOptions]="{ standalone: true }">
+      </div>
+      <div class="col-lg-3 col-md-6 mb-2">
+        <label class="field-label" for="msmeNumber">MSME number (optional)</label>
+        <input id="msmeNumber" type="text" class="form-control form-control-sm"
+               [(ngModel)]="form.msmeNumber" [ngModelOptions]="{ standalone: true }">
+      </div>
+      <div class="col-lg-6 col-md-6 mb-2">
+        <label class="field-label" for="website">Website</label>
+        <input id="website" type="url" class="form-control form-control-sm"
+               [(ngModel)]="form.website" [ngModelOptions]="{ standalone: true }">
+      </div>
+      <div class="col-lg-6 col-md-6 mb-2">
+        <label class="field-label" for="annualTurnover">Annual turnover</label>
+        <input id="annualTurnover" type="text" class="form-control form-control-sm"
+               [(ngModel)]="form.annualTurnover" [ngModelOptions]="{ standalone: true }">
+      </div>
+    </div>
+  </div>
+
+  <!-- Registered address -->
+  <div class="prof-panel mb-3">
+    <h6 class="panel-heading">Registered Address</h6>
+    <div class="row">
+      <div class="col-lg-5 col-md-6 mb-2">
+        <label class="field-label" for="street">Street</label>
+        <input id="street" type="text" class="form-control form-control-sm"
+               [(ngModel)]="form.street" [ngModelOptions]="{ standalone: true }">
+      </div>
+      <div class="col-lg-3 col-md-6 mb-2">
+        <label class="field-label" for="city">City</label>
+        <input id="city" type="text" class="form-control form-control-sm"
+               [(ngModel)]="form.city" [ngModelOptions]="{ standalone: true }">
+      </div>
+      <div class="col-lg-2 col-md-4 mb-2">
+        <label class="field-label" for="state">State</label>
+        <input id="state" type="text" class="form-control form-control-sm"
+               [(ngModel)]="form.state" [ngModelOptions]="{ standalone: true }">
+      </div>
+      <div class="col-lg-1 col-md-4 mb-2">
+        <label class="field-label" for="pincode">Pincode</label>
+        <input id="pincode" type="text" class="form-control form-control-sm"
+               [(ngModel)]="form.pincode" [ngModelOptions]="{ standalone: true }">
+      </div>
+      <div class="col-lg-1 col-md-4 mb-2">
+        <label class="field-label" for="country">Country</label>
+        <input id="country" type="text" class="form-control form-control-sm"
+               [(ngModel)]="form.country" [ngModelOptions]="{ standalone: true }">
+      </div>
+    </div>
+  </div>
+
+  <!-- Primary contact -->
+  <div class="prof-panel mb-3">
+    <h6 class="panel-heading">Primary Contact</h6>
+    <div class="row">
+      <div class="col-lg-3 col-md-6 mb-2">
+        <label class="field-label" for="contactName">Name</label>
+        <input id="contactName" type="text" class="form-control form-control-sm"
+               [(ngModel)]="form.contactName" [ngModelOptions]="{ standalone: true }">
+      </div>
+      <div class="col-lg-3 col-md-6 mb-2">
+        <label class="field-label" for="contactDesignation">Designation</label>
+        <input id="contactDesignation" type="text" class="form-control form-control-sm"
+               [(ngModel)]="form.contactDesignation" [ngModelOptions]="{ standalone: true }">
+      </div>
+      <div class="col-lg-3 col-md-6 mb-2">
+        <label class="field-label" for="contactEmail">Email</label>
+        <input id="contactEmail" type="email" class="form-control form-control-sm"
+               [(ngModel)]="form.contactEmail" [ngModelOptions]="{ standalone: true }">
+      </div>
+      <div class="col-lg-3 col-md-6 mb-2">
+        <label class="field-label" for="contactPhone">Phone</label>
+        <input id="contactPhone" type="tel" class="form-control form-control-sm"
+               [(ngModel)]="form.contactPhone" [ngModelOptions]="{ standalone: true }">
+      </div>
+    </div>
+  </div>
+
+  <!-- Sourcing categories -->
+  <div class="prof-panel">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+      <h6 class="panel-heading mb-0">Sourcing Category Scope</h6>
+      <span class="scope-summary">
+        {{ selectedMajors.length }} major &middot; {{ selectedMinorCount }} minor categories selected
+      </span>
+    </div>
+
+    <p class="scope-hint">
+      Selected categories determine which RFQs surface in your opportunity feed and how buyer matching ranks you.
+    </p>
+
+    <div *ngIf="loadingCategories" class="text-muted small py-3">Loading categories…</div>
+
+    <div *ngIf="!loadingCategories && categoryTree.length === 0" class="text-muted small py-3">
+      No sourcing categories are configured yet.
+    </div>
+
+    <div class="category-group" *ngFor="let cat of categoryTree">
+      <div class="custom-control custom-checkbox major-check">
+        <input type="checkbox" class="custom-control-input"
+               [id]="'major-' + cat.major"
+               [checked]="isMajorSelected(cat.major)"
+               (change)="toggleMajor(cat.major)">
+        <label class="custom-control-label major-label" [attr.for]="'major-' + cat.major">
+          {{ cat.major }}
+        </label>
+      </div>
+
+      <div class="minor-list" *ngIf="isMajorSelected(cat.major)">
+        <div class="text-muted small" *ngIf="getMinorsFor(cat.major).length === 0">
+          Loading categories…
+        </div>
+        <div class="custom-control custom-checkbox custom-control-inline minor-check"
+             *ngFor="let minor of getMinorsFor(cat.major)">
+          <input type="checkbox" class="custom-control-input"
+                 [id]="'minor-' + cat.major + '-' + minor"
+                 [checked]="isMinorSelected(cat.major, minor)"
+                 (change)="toggleMinor(cat.major, minor)">
+          <label class="custom-control-label minor-label"
+                 [attr.for]="'minor-' + cat.major + '-' + minor">
+            {{ minor }}
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

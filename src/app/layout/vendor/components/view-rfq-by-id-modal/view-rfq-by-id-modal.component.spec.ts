@@ -7,6 +7,7 @@ import {autoMock, defaultAppConfig, seedComponent, exerciseComponent, deepExerci
 import { APP_CONFIG } from 'src/app/app.config';
 import { ToastrService } from 'ngx-toastr';
 import { MAT_DIALOG_SCROLL_STRATEGY, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { CatProcuRequestsService } from 'src/app/layout/category-mgr/services/cat-procu-requests.service';
 
 describe('ViewRFQByIdModalComponent', () => {
   let component: ViewRFQByIdModalComponent;
@@ -35,9 +36,10 @@ describe('ViewRFQByIdModalComponent', () => {
         { provide: MatDialogRef, useValue: dialogRef },
         {
           provide: MAT_DIALOG_DATA,
-          useValue: { id: 'rfq1', showItemsOnly: false, hiddenCategory: false, items: [] },
+          useValue: { id: 'rfq1', showItemsOnly: false, hiddenCategory: false, items: [], rfqItem: [] }
         },
-        { provide: ToastrService, useValue: autoMock('ToastrService') }
+        { provide: ToastrService, useValue: autoMock('ToastrService') },
+        { provide: CatProcuRequestsService, useValue: { getVendorsByRfq: () => of({ data: [] }) } }
       ],
       schemas: [NO_ERRORS_SCHEMA]
     })

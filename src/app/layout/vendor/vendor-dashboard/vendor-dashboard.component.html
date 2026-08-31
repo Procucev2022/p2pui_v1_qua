@@ -1,136 +1,91 @@
-<!-- <div class="col-12">
-  <div class="row">
+<div class="vendor-dashboard-root">
 
-    <div class="col-12 page-title">
-      <h5>Dashboard</h5>
+  <!-- ── Vendor workspace screen cards navigation ── -->
+  <div class="workspace-nav-section mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-2 px-1">
+      <div class="d-flex align-items-center">
+        <span class="section-tag-badge">
+          <i class="fa fa-truck mr-1"></i> Vendor Operations Workspace
+        </span>
+        <span class="text-xs text-muted d-none d-md-inline ml-2">&middot; 6 Integrated Supplier Screens</span>
+      </div>
+
+      <div *ngIf="activeTab === 'quotation'">
+        <button type="button" class="btn btn-sm btn-outline-primary" (click)="setTab('opportunity-feed')">
+          <i class="fa fa-arrow-left mr-1"></i> Back to Opportunity Feed
+        </button>
+      </div>
     </div>
 
-    <div class="col-12 page-body-pane">
-      <div class="prqContainer row">
-        <div class="col-12">
-          <div>
-            <label class="col-12 c_rfq" style="text-align:left;"> RFQ : {{rfqName}}
-              <span style="float:right;">
-                <label class="col-12"> Client Name : {{clientName}}</label>
-              </span>
-            </label>
-            <label class="col-12 c_duedate"> Due Date : {{dueDate}}</label>
+    <div class="row screens-cards-grid">
+      <div *ngFor="let screen of screens" class="col-xl-2 col-lg-4 col-md-4 col-sm-6 mb-3">
+        <div class="screen-nav-card h-100 p-3 position-relative"
+             role="button"
+             tabindex="0"
+             [ngClass]="[screen.colorClass, activeTab === screen.id ? 'card-active' : 'card-inactive']"
+             (click)="setTab(screen.id)"
+             (keydown.enter)="setTab(screen.id)"
+             (keydown.space)="setTab(screen.id)">
+          <div class="card-top-accent"></div>
 
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="screen-num-pill mono">{{ screen.screenNum }}</span>
+            <span *ngIf="activeTab === screen.id" class="active-pulse-indicator">
+              <span class="pulse-ring"></span>
+              <span class="pulse-dot"></span>
+            </span>
           </div>
-          <p-table #rfqTable [columns]="rfqHeaders" [value]="rfqTableData" [scrollable]="true" sortMode="multiple"
-            [paginator]="true" [rows]="pageRecordSize" id="rfqTable" [rowsPerPageOptions]="pageOptions"
-            [style]="{width:'100%'}" exportFilename="ref details" [(selection)]="selectedData" [resizableColumns]="true"
-            [autoLayout]="true">
-            <ng-template pTemplate="caption">
-              <div class="searchPanel">
-                <button class="grid-button-row" mat-raised-button color="primary"
-                (click)="downloadBOQ()">Download BOQ</button>
-                <button class="grid-button-row" mat-raised-button color="primary"
-                (click)="raiseQuery()">Raise Query</button>
 
-                <input type="text" pInputText size="50" placeholder="Search.."
-                  (input)="rfqTable.filterGlobal($event.target.value, 'contains')" style="width:auto; float: right;" />
-              </div>
-            </ng-template>
-            <ng-template pTemplate="header" let-columns>
-              <tr>
-                <th style="width: 3em">
-                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                </th>
-                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-                  {{col.header}}
-                  <p-sortIcon [field]="col.field"></p-sortIcon>
-                </th>
-                <th>Actions</th>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-columns="columns" let-rowData>
-              <tr [pSelectableRow]="rowData">
-                <td style="width: 3em">
-                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
-                </td>
-                <td *ngFor="let col of columns">
-                  <span *ngIf="!col.isLink"> {{rowData[col.field]}}</span>
-                  <span *ngIf="col.isLink" class="cellLinkCls"> <a href="javascript:void(0);"
-                      (click)="getRFQs(rowData)"> {{rowData[col.field]}} </a></span>
-
-                </td>
-                <td>
-                  <span class="crud-icons">
-                    <img src="/assets/images/edit1.png"> Edit
-                  </span>
-                  <span class="crud-icons">
-                    <img src="/assets/images/eye.png"> View
-                  </span>
-                  <span class="crud-icons">
-                    <img src="/assets/images/delete.png"> Remove
-                  </span>
-                </td>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="emptymessage" let-columns>
-              <tr>
-                <td [attr.colspan]="5" style="text-align:center;">
-                  No Records Found.
-                </td>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="paginatorleft">
-              <div *ngIf="rfqTableData?.length > 0">
-                <app-page-info [totalRecords]="rfqTableData.length" [pageData]="paginatoryDetails"></app-page-info>
-              </div>
-            </ng-template>
-          </p-table>
-
-          <button type="button" id="i_terms&conditions" class="btn btn-secondary" >Terms & Conditions </button>
+          <div class="d-flex align-items-center mb-1">
+            <div class="screen-icon-box">
+              <i class="{{ screen.icon }} fa-lg"></i>
+            </div>
+            <div class="screen-text-content overflow-hidden ml-2">
+              <h6 class="screen-card-title mb-0 text-truncate">{{ screen.title }}</h6>
+              <span class="screen-card-subtitle text-muted text-truncate d-block">{{ screen.subtitle }}</span>
+            </div>
+          </div>
         </div>
-
       </div>
-
-      <div class="accordion">
-        <mat-accordion>
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                Comments
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <p>This is the primary content of the panel.</p>
-          </mat-expansion-panel>
-        </mat-accordion>
-      </div>
-
-      <div class="accordion">
-        <mat-accordion>
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                Quotation History
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <p>This is the primary content of the panel.</p>
-          </mat-expansion-panel>
-        </mat-accordion>
-      </div>
-
-      <div class="accordion">
-        <mat-accordion>
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                Quotes
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <p>This is the primary content of the panel.</p>
-          </mat-expansion-panel>
-        </mat-accordion>
-      </div>
-
-
     </div>
-
-
-
-
   </div>
-</div> -->
+
+  <!-- ── Screen content ── -->
+  <div class="screen-view-container">
+    <app-vendor-opportunity-feed
+      *ngIf="activeTab === 'opportunity-feed'"
+      [profile]="profile"
+      (navigateToBidForm)="openBidForm($event)"
+      (navigateToSubscriptions)="goToSubscriptions()"
+    ></app-vendor-opportunity-feed>
+
+    <app-vendor-quotations
+      *ngIf="activeTab === 'quotation'"
+      [opportunity]="selectedOpportunity"
+      (back)="setTab('opportunity-feed')"
+      (submitted)="onQuotationSubmitted()"
+    ></app-vendor-quotations>
+
+    <app-vendor-qualification
+      *ngIf="activeTab === 'qualification'"
+      [profile]="profile"
+      (back)="setTab('opportunity-feed')"
+    ></app-vendor-qualification>
+
+    <app-vendor-item-catalogue
+      *ngIf="activeTab === 'catalogue'"
+      [profile]="profile"
+      (navigateToSubscriptions)="goToSubscriptions()"
+    ></app-vendor-item-catalogue>
+
+    <app-vendor-subscription-center
+      *ngIf="activeTab === 'subscriptions'"
+      [profile]="profile"
+    ></app-vendor-subscription-center>
+
+    <app-vendor-profile-detail
+      *ngIf="activeTab === 'profile'"
+      [profile]="profile"
+    ></app-vendor-profile-detail>
+  </div>
+</div>

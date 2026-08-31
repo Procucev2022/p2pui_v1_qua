@@ -39,6 +39,14 @@ export class VendorFormComponent implements OnInit {
   }
 
   createForm(): FormGroup {
+    let defaultScope = 'Client Only';
+    try {
+      const userStr = localStorage.getItem('currentUser');
+      if (userStr && (userStr.includes('CategoryManager') || userStr.includes('Category Manager') || userStr.includes('VendorManager'))) {
+        defaultScope = 'Procucev Network';
+      }
+    } catch (e) {}
+
     return this.fb.group({
       vendorCode: ['', [Validators.required]],
       vendorName: ['', [Validators.required, Validators.minLength(3)]],
@@ -56,7 +64,7 @@ export class VendorFormComponent implements OnInit {
       typeOfBusiness: [''],
       typeOfIndustry: [''],
       vendorGroup: [''],
-      sourcingScope: ['Client Only']
+      sourcingScope: [defaultScope]
     });
   }
 

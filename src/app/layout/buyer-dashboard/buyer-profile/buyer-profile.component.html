@@ -1,0 +1,170 @@
+<div class="buyer-profile-root">
+
+
+  <!-- Header -->
+  <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+    <div>
+      <h1 class="page-title mb-1">Buyer Organization Profile & Sourcing Scope</h1>
+      <p class="page-subtitle text-muted mb-0">Manage statutory enterprise credentials, operational plant addresses, and multi-tier category authorizations</p>
+    </div>
+    <button type="button" class="btn btn-save-action" [disabled]="!isValid || saving" (click)="saveProfile()">
+      <i class="fa fa-floppy-o"></i> {{ saving ? 'Saving…' : 'Save Changes' }}
+    </button>
+  </div>
+
+  <!-- Section 1: Statutory & Corporate Identity -->
+  <div class="glass-panel p-4 mb-4 rounded-2xl">
+    <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+      <h5 class="section-heading font-bold text-dark mb-0">1. Statutory & Corporate Enterprise Identity</h5>
+      <span class="badge badge-emerald font-bold p-1.5 px-2.5 rounded-full"><i class="fa fa-shield mr-1"></i> Enterprise Verified</span>
+    </div>
+
+    <div class="row text-xs">
+      <div class="col-md-6 mb-3">
+        <label class="form-label-xs">Registered Enterprise Legal Name</label>
+        <input type="text" class="form-control form-control-sm font-bold" [(ngModel)]="companyName">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label-xs">Operating Division / Brand Name</label>
+        <input type="text" class="form-control form-control-sm" [(ngModel)]="brandName">
+      </div>
+      <div class="col-md-3 mb-3">
+        <label class="form-label-xs">Organization Structure Type</label>
+        <select class="form-control form-control-sm" [(ngModel)]="orgType">
+          <option value="Public Limited">Public Limited Company</option>
+          <option value="Private Limited">Private Limited Company</option>
+          <option value="Partnership">Partnership</option>
+          <option value="LLP">Limited Liability Partnership (LLP)</option>
+        </select>
+      </div>
+      <div class="col-md-3 mb-3">
+        <label class="form-label-xs">Company PAN</label>
+        <input type="text" class="form-control form-control-sm mono font-bold" [(ngModel)]="panNumber">
+      </div>
+      <div class="col-md-3 mb-3">
+        <label class="form-label-xs">GSTIN Identifier</label>
+        <input type="text" class="form-control form-control-sm mono font-bold text-indigo" [(ngModel)]="gstNumber">
+      </div>
+      <div class="col-md-3 mb-3">
+        <label class="form-label-xs">Corporate CIN</label>
+        <input type="text" class="form-control form-control-sm mono" [(ngModel)]="cinNumber">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label-xs">Corporate Website</label>
+        <input type="text" class="form-control form-control-sm" [(ngModel)]="website">
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label-xs">Annual Sourcing Turnover</label>
+        <input type="text" class="form-control form-control-sm mono font-bold" [(ngModel)]="annualTurnover">
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 2: Address & Procurement Officer -->
+  <div class="row mb-4">
+    <!-- Address -->
+    <div class="col-lg-6 mb-3 mb-lg-0">
+      <div class="glass-panel p-4 rounded-2xl h-100">
+        <h5 class="section-heading font-bold text-dark border-bottom pb-2 mb-3">2. Registered Address & Sourcing HQ</h5>
+        <div class="row text-xs">
+          <div class="col-12 mb-3">
+            <label class="form-label-xs">Street Address / Landmark</label>
+            <input type="text" class="form-control form-control-sm" [(ngModel)]="street">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label-xs">City / Hub</label>
+            <input type="text" class="form-control form-control-sm" [(ngModel)]="city">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label-xs">State</label>
+            <input type="text" class="form-control form-control-sm" [(ngModel)]="state">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label-xs">Pincode</label>
+            <input type="text" class="form-control form-control-sm mono font-bold" [(ngModel)]="pincode">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label-xs">Country</label>
+            <input type="text" class="form-control form-control-sm" [(ngModel)]="country">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Officer -->
+    <div class="col-lg-6">
+      <div class="glass-panel p-4 rounded-2xl h-100">
+        <h5 class="section-heading font-bold text-dark border-bottom pb-2 mb-3">3. Primary Procurement Officer & Desk</h5>
+        <div class="row text-xs">
+          <div class="col-md-6 mb-3">
+            <label class="form-label-xs">Officer Full Name</label>
+            <input type="text" class="form-control form-control-sm font-bold" [(ngModel)]="contactName">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label-xs">Official Designation</label>
+            <input type="text" class="form-control form-control-sm" [(ngModel)]="contactDesignation">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label-xs">Enterprise Buyer Email</label>
+            <input type="text" class="form-control form-control-sm font-bold" [(ngModel)]="contactEmail">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label-xs">Verified Contact Mobile</label>
+            <input type="text" class="form-control form-control-sm mono" [(ngModel)]="contactPhone">
+          </div>
+          <div class="col-12">
+            <div class="p-2.5 rounded-xl bg-light border d-flex justify-content-between align-items-center">
+              <span><i class="fa fa-link text-indigo mr-1"></i> ERP Integration Status:</span>
+              <span class="badge badge-emerald font-bold">SAP S/4HANA Connected</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 3: Category Tree -->
+  <div class="glass-panel p-4 rounded-2xl">
+    <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3 flex-wrap gap-2">
+      <div>
+        <h5 class="section-heading font-bold text-dark mb-0">4. Authorized Sourcing Category Tree</h5>
+        <small class="text-muted">Select specific major & minor categories allocated to this Buyer Desk for autonomous dispatch matching.</small>
+      </div>
+      <span class="badge badge-sky p-2 font-bold">{{ categories.length }} Major Divisions Active</span>
+    </div>
+
+    <div class="row">
+      <div *ngFor="let cat of filteredCategories" class="col-lg-6 mb-3">
+        <div class="p-3 rounded-xl border bg-light">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="font-bold text-dark text-xs mb-0 d-flex align-items-center">
+              <i class="fa fa-folder-open text-indigo mr-2"></i> {{ cat.name }}
+            </h6>
+            <button
+              type="button"
+              class="btn btn-xs btn-outline-primary font-semibold"
+              (click)="toggleSelectAll(cat.name)"
+            >
+              <i class="fa mr-1" [ngClass]="isAllSelected(cat.name) ? 'fa-check-square' : 'fa-square-o'"></i>
+              {{ isAllSelected(cat.name) ? 'Deselect All' : 'Select All' }}
+            </button>
+          </div>
+          <div class="category-select-grid">
+            <div
+              *ngFor="let minor of cat.minors"
+              class="category-select-item"
+              [ngClass]="{ 'selected': isMinorSelected(cat.name, minor) }"
+              (click)="toggleMinor(cat.name, minor)"
+            >
+              <div class="custom-checkbox" [ngClass]="{ 'checked': isMinorSelected(cat.name, minor) }">
+                <i class="fa fa-check" *ngIf="isMinorSelected(cat.name, minor)"></i>
+              </div>
+              <span class="category-name">{{ minor }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

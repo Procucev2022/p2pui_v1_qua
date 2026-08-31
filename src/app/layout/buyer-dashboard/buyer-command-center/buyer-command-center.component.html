@@ -1,0 +1,621 @@
+<div class="command-center-root">
+
+  <!-- Toast Notification -->
+  <div *ngIf="toastMessage" class="custom-toast alert alert-info" role="alert">
+    <i class="fa fa-info-circle mr-2"></i> {{ toastMessage }}
+  </div>
+
+  <!-- ── Header ── -->
+  <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+    <div>
+      <h1 class="page-title mb-1">Buyer Command Center</h1>
+      <p class="page-subtitle text-muted mb-0">Pipeline overview · Multi-channel follow-ups · Spend metrics</p>
+    </div>
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+      <button class="btn btn-primary btn-sm" (click)="navigateToWizard.emit()">
+        <i class="fa fa-plus mr-1"></i> New RFQ
+      </button>
+      <button class="btn btn-secondary btn-sm" (click)="navigateToWizard.emit()">
+        <i class="fa fa-cloud-upload mr-1"></i> Upload BOQ
+      </button>
+      <button class="btn btn-secondary btn-sm" (click)="showToast('Analytics Exported', 'Executive spend & procurement pipeline exported to Excel.', 'info')">
+        <i class="fa fa-download"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Subscription Quota Banner ── -->
+  <div class="glass-panel quota-banner p-4 mb-4 rounded-2xl">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3">
+      <div class="d-flex align-items-center gap-3">
+        <div class="banner-icon-box">
+          <i class="fa fa-credit-card text-indigo fa-lg"></i>
+        </div>
+        <div>
+          <div class="banner-title d-flex align-items-center flex-wrap gap-2">
+            <span>Sourcing Plan: {{ summary?.sourcingPlanName || 'Free Trial (Version 1)' }}</span>
+            <span class="quota-pill badge" *ngIf="summary?.remainingFreeRFQs !== undefined">
+              {{ summary.remainingFreeRFQs }} of 5 free V1 RFQs left
+            </span>
+          </div>
+          <p class="banner-desc text-muted mb-0 mt-1">
+            Your free trial lets you experience Version 1 (Client Roster sourcing) for up to 5 RFQs. Upgrade to subscribe to other modes.
+          </p>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-xs shrink-0" (click)="navigateToSubscriptions.emit()">
+        Manage Subscription <i class="fa fa-chevron-right ml-1"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── 3 KPI Cards ── -->
+  <div class="row mb-4">
+    <!-- Active RFQs -->
+    <div class="col-lg-4 col-md-6 mb-3 mb-lg-0">
+      <div class="kpi-card glass-panel p-4 position-relative">
+        <div class="d-flex justify-content-between align-items-center">
+          <span class="kpi-label">Active RFQs</span>
+          <i class="fa fa-file-text-o text-indigo"></i>
+        </div>
+        <div class="d-flex align-items-baseline justify-content-between mt-3">
+          <span class="kpi-value mono">{{ summary?.totalActiveRFQs ?? rfqs.length }}</span>
+          <span class="kpi-trend badge-emerald">
+            <i class="fa fa-line-chart mr-1"></i> Active Pipeline
+          </span>
+        </div>
+        <div class="kpi-bottom-stripe stripe-active-rfq"></div>
+      </div>
+    </div>
+
+    <!-- Pending Quotes -->
+    <div class="col-lg-4 col-md-6 mb-3 mb-lg-0">
+      <div class="kpi-card glass-panel p-4 position-relative">
+        <div class="d-flex justify-content-between align-items-center">
+          <span class="kpi-label">Pending Quotes</span>
+          <i class="fa fa-clock-o text-sky"></i>
+        </div>
+        <div class="d-flex align-items-baseline justify-content-between mt-3">
+          <span class="kpi-value mono">{{ summary?.totalPendingQuotes ?? 0 }}</span>
+          <span class="kpi-trend badge-sky">In Review</span>
+        </div>
+        <div class="kpi-bottom-stripe stripe-pending-quotes"></div>
+      </div>
+    </div>
+
+    <!-- Follow Ups Today -->
+    <div class="col-lg-4 col-md-12">
+      <div class="kpi-card glass-panel p-4 position-relative cursor-pointer" (click)="rfqs.length > 0 && openDeepDive(rfqs[0])">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center gap-1">
+            <span class="kpi-label">Follow Ups Today</span>
+            <span class="live-dot ml-1"></span>
+          </div>
+          <span class="deep-dive-link">Deep Dive <i class="fa fa-chevron-right ml-1"></i></span>
+        </div>
+        <div class="d-flex align-items-center justify-content-between mt-3 flex-wrap gap-2">
+          <span class="kpi-value mono">{{ summary?.totalFollowupsToday ?? 0 }}</span>
+          <div class="d-flex align-items-center gap-1.5 flex-wrap">
+            <span class="channel-chip chip-call">📞 {{ summary?.totalCalls ?? 0 }}</span>
+            <span class="channel-chip chip-wa">💬 {{ summary?.totalWhatsApp ?? 0 }}</span>
+            <span class="channel-chip chip-sms">📱 {{ summary?.totalSMS ?? 0 }}</span>
+            <span class="channel-chip chip-email">✉️ {{ summary?.totalEmails ?? 0 }}</span>
+          </div>
+        </div>
+        <div class="kpi-bottom-stripe stripe-followups"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Main Grid: Active Pipeline (60%) + Vendor Follow Up Status (40%) ── -->
+  <div class="row">
+
+    <!-- Pipeline Table (7 cols) with Pagination -->
+    <div class="col-lg-7 mb-4 mb-lg-0">
+      <div class="glass-panel overflow-hidden d-flex flex-column h-100">
+        <!-- Header -->
+        <div class="card-header-bar d-flex justify-content-between align-items-center px-4 py-3 border-bottom">
+          <div class="d-flex align-items-center gap-2">
+            <i class="fa fa-th-list text-indigo mr-1"></i>
+            <h2 class="section-title mb-0">Active Procurement Pipeline</h2>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <span class="badge badge-light border text-slate-700 px-2.5 py-1 text-2xs font-bold mono">
+              <i class="fa fa-database mr-1 text-indigo"></i> {{ rfqs.length }} Total Events
+            </span>
+          </div>
+        </div>
+
+        <!-- Pipeline Rows List -->
+        <div class="pipeline-list divide-y flex-grow-1">
+          <div *ngFor="let rfq of paginatedRfqs" class="pipeline-row px-4 py-3 cursor-pointer" (click)="openDeepDive(rfq)">
+            <!-- Row 1: RFQ Number, Score, Mode, Status, Action -->
+            <div class="d-flex justify-content-between align-items-center mb-1.5">
+              <div class="d-flex align-items-center gap-2 flex-wrap">
+                <span class="rfq-number mono font-bold">{{ rfq.rfqNumber }}</span>
+                <span *ngIf="rfq.aiScore" class="ai-score-badge font-bold">
+                  {{ rfq.aiScore }}%
+                </span>
+                <span class="mode-badge" [ngStyle]="getModeBadgeStyle(rfq.sourcingMode)">
+                  {{ getModeCode(rfq.sourcingMode) }}
+                </span>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="status-badge" [ngClass]="getStatusBadgeClass(rfq.status)">
+                  {{ rfq.status }}
+                </span>
+                <button
+                  *ngIf="rfq.status === 'AI Recommended'"
+                  class="btn btn-emerald btn-xs"
+                  (click)="$event.stopPropagation(); navigateToMatrix.emit(rfq)"
+                >
+                  <i class="fa fa-star mr-1"></i> Matrix
+                </button>
+                <button
+                  *ngIf="rfq.status !== 'AI Recommended'"
+                  class="btn-chevron"
+                  (click)="$event.stopPropagation(); openDeepDive(rfq)"
+                >
+                  <i class="fa fa-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Row 2: Title & Category -->
+            <div class="rfq-title font-medium text-slate-800">{{ rfq.title }}</div>
+            <div class="rfq-category text-xs text-muted mt-0.5">{{ rfq.category }}</div>
+
+            <!-- Row 3: Follow-up stats + Quotes Count -->
+            <div class="d-flex justify-content-between align-items-center mt-2.5">
+              <div class="d-flex align-items-center gap-1.5 flex-wrap" *ngIf="rfq.followUpData">
+                <span class="mini-stat-chip chip-purple" *ngIf="rfq.followUpData.callStats">
+                  📞 {{ rfq.followUpData.callStats.connected }}/{{ rfq.followUpData.callStats.total }}
+                </span>
+                <span class="mini-stat-chip chip-emerald" *ngIf="rfq.followUpData.whatsappStats">
+                  💬 {{ rfq.followUpData.whatsappStats.read }}/{{ rfq.followUpData.whatsappStats.total }}
+                </span>
+                <span class="mini-stat-chip chip-sky" *ngIf="rfq.followUpData.smsStats">
+                  📱 {{ rfq.followUpData.smsStats.delivered }}
+                </span>
+                <span class="responded-text text-indigo ml-1" *ngIf="rfq.followUpData.respondedCount !== undefined">
+                  {{ rfq.followUpData.respondedCount }}/{{ rfq.followUpData.totalInvited }} responded
+                </span>
+              </div>
+              <span *ngIf="!rfq.followUpData" class="text-xs text-muted font-italic">Queued</span>
+              <span class="quotes-count-pill mono font-bold">{{ rfq.quotesCount }} quotes</span>
+            </div>
+          </div>
+
+          <div *ngIf="rfqs.length === 0" class="p-4 text-center text-muted text-xs">
+            No active procurement pipeline events found.
+          </div>
+        </div>
+
+        <!-- ── Modern Enhanced Pagination Bar ── -->
+        <div class="pipeline-pagination-bar px-4 py-3 border-top d-flex justify-content-between align-items-center flex-wrap gap-2" *ngIf="rfqs.length > 0">
+          <div class="d-flex align-items-center gap-3 flex-wrap">
+            <span class="pagination-info text-xs text-muted">
+              Showing <strong class="text-slate-800 mono">{{ pipelineStartIndex }}–{{ pipelineEndIndex }}</strong> of <strong class="text-slate-800 mono">{{ rfqs.length }}</strong> events
+            </span>
+
+            <div class="page-size-wrapper d-flex align-items-center gap-1.5 pl-2 border-left">
+              <span class="text-2xs text-muted font-semibold text-uppercase">Per Page:</span>
+              <select class="form-control form-control-xs font-bold mono page-size-select" [value]="pipelinePageSize" (change)="onPageSizeChange($event)">
+                <option *ngFor="let opt of pageSizeOptions" [value]="opt">{{ opt }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="pagination-controls d-flex align-items-center gap-1.5">
+            <!-- First -->
+            <button
+              type="button"
+              class="btn-page-nav-pill btn-icon"
+              [disabled]="pipelineCurrentPage === 1"
+              (click)="goToPipelinePage(1)"
+              title="First Page"
+            >
+              <i class="fa fa-angle-double-left"></i>
+            </button>
+
+            <!-- Prev -->
+            <button
+              type="button"
+              class="btn-page-nav-pill"
+              [disabled]="pipelineCurrentPage === 1"
+              (click)="goToPipelinePage(pipelineCurrentPage - 1)"
+              title="Previous Page"
+            >
+              <i class="fa fa-chevron-left mr-1"></i> Prev
+            </button>
+
+            <!-- Page Number Badges with Smart Windowing & Ellipsis -->
+            <div class="page-numbers-group d-flex align-items-center gap-1 mx-1">
+              <ng-container *ngFor="let page of visiblePageNumbers">
+                <span *ngIf="page === '...'" class="pagination-ellipsis px-1.5 text-muted mono font-bold">...</span>
+                <button
+                  *ngIf="page !== '...'"
+                  type="button"
+                  class="btn-page-pill mono font-bold"
+                  [ngClass]="{'active': pipelineCurrentPage === page}"
+                  (click)="goToPipelinePage(page)"
+                >
+                  {{ page }}
+                </button>
+              </ng-container>
+            </div>
+
+            <!-- Next -->
+            <button
+              type="button"
+              class="btn-page-nav-pill"
+              [disabled]="pipelineCurrentPage >= pipelineTotalPages"
+              (click)="goToPipelinePage(pipelineCurrentPage + 1)"
+              title="Next Page"
+            >
+              Next <i class="fa fa-chevron-right ml-1"></i>
+            </button>
+
+            <!-- Last -->
+            <button
+              type="button"
+              class="btn-page-nav-pill btn-icon"
+              [disabled]="pipelineCurrentPage >= pipelineTotalPages"
+              (click)="goToPipelinePage(pipelineTotalPages)"
+              title="Last Page"
+            >
+              <i class="fa fa-angle-double-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Vendor Follow Up Status (5 cols) -->
+    <div class="col-lg-5">
+      <div class="glass-panel overflow-hidden d-flex flex-column h-100">
+        <!-- Header -->
+        <div class="card-header-bar d-flex justify-content-between align-items-center px-4 py-3 border-bottom">
+          <div class="d-flex align-items-center gap-2">
+            <span class="live-dot mr-1"></span>
+            <h2 class="section-title mb-0">Vendor Follow Up Status</h2>
+          </div>
+          <span class="live-pill font-bold mono text-xs">Live</span>
+        </div>
+
+        <!-- Channel Filter Tabs -->
+        <div class="channel-filter-bar px-4 py-2.5 border-bottom d-flex align-items-center gap-1.5 overflow-auto">
+          <button
+            class="filter-tab-btn btn btn-xs"
+            [ngClass]="feedChannelFilter === 'all' ? 'active-all' : 'inactive-tab'"
+            (click)="setFeedChannel('all')"
+          >
+            All ({{ aiFeed.length }})
+          </button>
+          <button
+            class="filter-tab-btn btn btn-xs"
+            [ngClass]="feedChannelFilter === 'call' ? 'active-call' : 'inactive-tab'"
+            (click)="setFeedChannel('call')"
+          >
+            <i class="fa fa-phone mr-1"></i> Calls
+          </button>
+          <button
+            class="filter-tab-btn btn btn-xs"
+            [ngClass]="feedChannelFilter === 'whatsapp' ? 'active-wa' : 'inactive-tab'"
+            (click)="setFeedChannel('whatsapp')"
+          >
+            <i class="fa fa-whatsapp mr-1"></i> WA
+          </button>
+          <button
+            class="filter-tab-btn btn btn-xs"
+            [ngClass]="feedChannelFilter === 'sms' ? 'active-sms' : 'inactive-tab'"
+            (click)="setFeedChannel('sms')"
+          >
+            <i class="fa fa-commenting mr-1"></i> SMS
+          </button>
+          <button
+            class="filter-tab-btn btn btn-xs"
+            [ngClass]="feedChannelFilter === 'email' ? 'active-email' : 'inactive-tab'"
+            (click)="setFeedChannel('email')"
+          >
+            <i class="fa fa-envelope mr-1"></i> Email (24h)
+          </button>
+          <button
+            class="filter-tab-btn btn btn-xs"
+            [ngClass]="feedChannelFilter === 'system' ? 'active-system' : 'inactive-tab'"
+            (click)="setFeedChannel('system')"
+          >
+            System
+          </button>
+        </div>
+
+        <!-- Feed List Stream -->
+        <div class="feed-stream flex-grow-1 p-3 overflow-auto" style="max-height: 480px;">
+          <div *ngFor="let item of filteredFeed" class="feed-stream-card p-3 mb-2 rounded-xl border">
+            <div class="d-flex justify-content-between align-items-start gap-2 mb-1">
+              <span class="feed-item-title font-bold text-xs" [ngClass]="getFeedItemColorClass(item)">
+                <i class="fa mr-1" [ngClass]="getFeedIconClass(item)"></i> {{ item.title }}
+              </span>
+              <span class="feed-timestamp mono text-muted text-2xs">{{ item.timestamp }}</span>
+            </div>
+            <p class="feed-item-msg text-xs text-secondary mb-1">{{ item.message }}</p>
+
+            <div *ngIf="item.channelDetails?.duration" class="feed-duration-badge mt-1 text-2xs font-semibold">
+              ⏱️ <span class="font-bold mono">{{ item.channelDetails?.duration }}</span> · Transcript logged
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-2 text-2xs text-muted">
+              <span *ngIf="item.recipient">Target: <strong class="text-slate-700">{{ item.recipient }}</strong></span>
+              <span *ngIf="item.rfqNumber" class="text-indigo font-bold mono cursor-pointer">
+                {{ item.rfqNumber }} ↗
+              </span>
+            </div>
+          </div>
+
+          <div *ngIf="filteredFeed.length === 0" class="p-4 text-center text-muted text-xs">
+            No live follow-up stream events for selected channel filter.
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="card-footer-bar px-4 py-2.5 border-top d-flex justify-content-between align-items-center text-xs text-muted">
+          <span><span class="live-dot mr-1"></span> Voice, WhatsApp & SMS</span>
+          <span class="text-indigo font-semibold">24/7 Active</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RFQ Follow-Up Multi-Channel Deep Dive Modal ── -->
+  <div *ngIf="deepDiveModalOpen && selectedRFQForDeepDive" class="modal-overlay">
+    <div class="modal-content glass-panel p-4 max-w-3xl">
+      <div class="d-flex justify-content-between align-items-center pb-3 border-bottom">
+        <div>
+          <h3 class="modal-heading mb-0 font-bold">RFQ Multi-Channel Follow-Up Deep Dive</h3>
+          <p class="text-xs text-muted mb-0">{{ selectedRFQForDeepDive.rfqNumber }} · {{ selectedRFQForDeepDive.title }}</p>
+        </div>
+        <button type="button" class="btn-close-modal" (click)="closeDeepDive()">&times;</button>
+      </div>
+
+      <div class="modal-body py-4 overflow-auto" style="max-height: 65vh;">
+        <!-- Sourcing Strategy Mode Banner in Deep Dive Modal -->
+        <div class="p-3 mb-3 rounded-xl border bg-light d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <span class="mode-badge-pill" [ngStyle]="getModeBadgeStyle(selectedRFQForDeepDive.sourcingMode)">
+                {{ getSourcingModeBadgePill(selectedRFQForDeepDive.sourcingMode) }}
+              </span>
+              <strong class="text-slate-800 text-sm">{{ getSourcingModeName(selectedRFQForDeepDive.sourcingMode) }}</strong>
+            </div>
+            <p class="text-xs text-muted mb-0">
+              {{ selectedRFQForDeepDive.sourcingMode === 'mode_3' ? 'Autonomous supplier matching & OCR evaluation (>80% score threshold)' : (selectedRFQForDeepDive.sourcingMode === 'mode_2' ? 'Trusted internal roster + Procucev high-performance verified network' : 'Restricted enterprise vendor master roster exclusivity') }}
+            </p>
+          </div>
+          <span class="badge badge-emerald px-2.5 py-1 text-xs">Strategy Active</span>
+        </div>
+
+        <!-- KPI Metrics Grid -->
+        <div class="row mb-3" *ngIf="selectedRFQForDeepDive.followUpData">
+          <div class="col-sm-3 mb-2" *ngIf="selectedRFQForDeepDive.followUpData.callStats">
+            <div class="metric-box p-3 rounded-xl border text-center">
+              <span class="text-2xs font-bold text-muted text-uppercase d-block">Voice Calls</span>
+              <h4 class="mb-0 font-bold text-purple mono">{{ selectedRFQForDeepDive.followUpData.callStats.connected }}/{{ selectedRFQForDeepDive.followUpData.callStats.total }}</h4>
+              <span class="text-2xs text-muted">Avg: {{ selectedRFQForDeepDive.followUpData.callStats.avgDuration }}</span>
+            </div>
+          </div>
+          <div class="col-sm-3 mb-2" *ngIf="selectedRFQForDeepDive.followUpData.whatsappStats">
+            <div class="metric-box p-3 rounded-xl border text-center">
+              <span class="text-2xs font-bold text-muted text-uppercase d-block">WhatsApp</span>
+              <h4 class="mb-0 font-bold text-emerald mono">{{ selectedRFQForDeepDive.followUpData.whatsappStats.read }}/{{ selectedRFQForDeepDive.followUpData.whatsappStats.total }}</h4>
+              <span class="text-2xs text-muted">Read Status</span>
+            </div>
+          </div>
+          <div class="col-sm-3 mb-2" *ngIf="selectedRFQForDeepDive.followUpData.smsStats">
+            <div class="metric-box p-3 rounded-xl border text-center">
+              <span class="text-2xs font-bold text-muted text-uppercase d-block">SMS Alerts</span>
+              <h4 class="mb-0 font-bold text-sky mono">{{ selectedRFQForDeepDive.followUpData.smsStats.delivered }}</h4>
+              <span class="text-2xs text-muted">Delivered</span>
+            </div>
+          </div>
+          <div class="col-sm-3 mb-2" *ngIf="selectedRFQForDeepDive.followUpData.totalInvited">
+            <div class="metric-box p-3 rounded-xl border text-center">
+              <span class="text-2xs font-bold text-muted text-uppercase d-block">Responses</span>
+              <h4 class="mb-0 font-bold text-success mono">{{ selectedRFQForDeepDive.followUpData.respondedCount }}/{{ selectedRFQForDeepDive.followUpData.totalInvited }}</h4>
+              <span class="text-2xs text-muted">Vendors</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vendor Table -->
+        <h6 class="font-bold text-dark text-xs text-uppercase mb-2">Invited Vendors Follow-up Status</h6>
+        <div class="table-responsive" *ngIf="selectedRFQForDeepDive.followUpData?.vendors?.length">
+          <table class="table table-bordered table-sm text-xs">
+            <thead class="bg-light">
+              <tr>
+                <th>Vendor Name</th>
+                <th>Contact</th>
+                <th>Voice Call</th>
+                <th>WhatsApp</th>
+                <th>Overall</th>
+                <th>Bid Status</th>
+                <th class="text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let v of selectedRFQForDeepDive.followUpData?.vendors">
+                <td class="font-bold">{{ v.vendorName }}</td>
+                <td>{{ v.contactPerson }} ({{ v.phone }})</td>
+                <td>
+                  <span class="badge" [ngClass]="v.callStatus === 'connected' ? 'badge-emerald' : 'badge-amber'">
+                    {{ v.callStatus || 'scheduled' }}
+                  </span>
+                  <small *ngIf="v.callDuration" class="d-block text-muted">{{ v.callDuration }}</small>
+                </td>
+                <td>
+                  <span class="badge" [ngClass]="v.whatsappStatus === 'read' ? 'badge-emerald' : 'badge-secondary'">
+                    {{ v.whatsappStatus || 'pending' }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge badge-sky">{{ v.overallStatus }}</span>
+                </td>
+                <td>
+                  <span class="badge" [ngClass]="v.bidStatus === 'Submitted' ? 'badge-emerald' : 'badge-light'">
+                    {{ v.bidStatus }}
+                  </span>
+                </td>
+                <td class="text-right">
+                  <button class="btn btn-xs btn-primary" (click)="openQuickChaser(selectedRFQForDeepDive.rfqNumber, v.vendorName)">
+                    <i class="fa fa-paper-plane mr-1"></i> Chase
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end pt-3 border-top">
+        <button class="btn btn-secondary btn-sm" (click)="closeDeepDive()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Multi-Channel Quick Chaser Modal ── -->
+  <div *ngIf="quickChaserModalOpen" class="modal-overlay">
+    <div class="modal-content glass-panel p-4 max-w-lg">
+      <div class="d-flex justify-content-between align-items-center pb-3 border-bottom">
+        <h3 class="modal-heading mb-0 font-bold">Trigger Manual Chaser</h3>
+        <button type="button" class="btn-close-modal" (click)="closeQuickChaser()">&times;</button>
+      </div>
+      <div class="modal-body py-3">
+        <div class="form-group mb-2">
+          <label class="form-label-xs">RFQ Number</label>
+          <input type="text" class="form-control form-control-sm" [value]="quickChaserRfqNumber" readonly>
+        </div>
+        <div class="form-group mb-2">
+          <label class="form-label-xs">Target Vendor</label>
+          <input type="text" class="form-control form-control-sm" [value]="quickChaserVendorName" readonly>
+        </div>
+        <div class="form-group mb-2">
+          <label class="form-label-xs">Chaser Channel</label>
+          <select class="form-control form-control-sm" [(ngModel)]="quickChaserChannel">
+            <option value="all">Multi-Channel (Voice + WhatsApp + SMS)</option>
+            <option value="call">Autonomous Voice Call Only</option>
+            <option value="whatsapp">WhatsApp Interactive Message Only</option>
+            <option value="sms">SMS Text Alert Only</option>
+          </select>
+        </div>
+        <div class="form-group mb-3">
+          <label class="form-label-xs">Custom Reminder Note</label>
+          <textarea class="form-control form-control-sm" rows="3" [(ngModel)]="quickChaserMessage"></textarea>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+        <button class="btn btn-secondary btn-sm mr-2" (click)="closeQuickChaser()">Cancel</button>
+        <button class="btn btn-primary btn-sm" [disabled]="isChaserSending" (click)="sendChaser()">
+          <span *ngIf="isChaserSending"><i class="fa fa-spinner fa-spin mr-1"></i> Sending...</span>
+          <span *ngIf="!isChaserSending"><i class="fa fa-paper-plane mr-1"></i> Dispatch Chaser</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Purchase Order Modal (Matching Modals.tsx 1:1) ── -->
+  <div *ngIf="poModalOpen" class="modal-overlay">
+    <div class="modal-content glass-panel p-4 max-w-2xl">
+      <div class="d-flex justify-content-between align-items-center pb-3 border-bottom">
+        <div class="d-flex align-items-center gap-2.5">
+          <div class="po-icon-box p-2 rounded-lg bg-emerald-light text-emerald mr-2">
+            <i class="fa fa-file-text-o fa-lg"></i>
+          </div>
+          <div>
+            <h3 class="modal-heading mb-0 font-bold text-dark">Purchase Order Generation & Dispatch</h3>
+            <p class="text-xs text-muted mb-0">Formal Enterprise Contract Dispatch to ERP & Vendor Master</p>
+          </div>
+        </div>
+        <button type="button" class="btn-close-modal" (click)="closePoModal()">&times;</button>
+      </div>
+
+      <div class="modal-body py-4 overflow-auto" style="max-height: 65vh;">
+        <!-- PO Document Canvas -->
+        <div class="po-canvas p-4 rounded-xl border bg-light mb-3 text-xs">
+          <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
+            <div>
+              <span class="text-2xs text-indigo font-bold text-uppercase">PROCUCEV ENTERPRISE BUYER</span>
+              <h4 class="font-bold text-dark text-sm mt-0.5 mb-0">PURCHASE ORDER: {{ poNumber || 'Pending authorization' }}</h4>
+              <p class="text-xs text-muted mb-0">Linked RFQ: <span class="mono text-indigo font-bold">{{ poRfqNumber }}</span></p>
+            </div>
+            <div class="text-right">
+              <span class="badge badge-emerald font-bold p-1 px-2.5 rounded-full">
+                <i class="fa fa-shield mr-1"></i> AI Verified & Compliant
+              </span>
+              <p class="text-2xs text-muted mt-1 mb-0">Issue Date: 19-Aug-2026</p>
+            </div>
+          </div>
+
+          <div class="row border-bottom pb-3 mb-3">
+            <div class="col-6">
+              <p class="text-2xs text-muted text-uppercase font-semibold mb-0.5">Contract Awarded To:</p>
+              <p class="font-bold text-dark text-xs mb-0">{{ poVendorName }}</p>
+
+              <p class="text-2xs text-muted mb-0">Payment Terms: Net 30 Days (Pre-negotiated)</p>
+            </div>
+            <div class="col-6">
+              <p class="text-2xs text-muted text-uppercase font-semibold mb-0.5">Delivery & Logistics:</p>
+              <p class="font-semibold text-slate-800 mb-0.5">Navi Mumbai Industrial Hub / CIF Site</p>
+              <p class="text-2xs text-muted mb-0">Lead Time Commitment: <strong class="text-emerald">{{ poLeadTime }} Days</strong></p>
+              <p class="text-2xs text-muted mb-0">Target Delivery: 15-Sep-2026</p>
+            </div>
+          </div>
+
+          <!-- Line Items -->
+          <div class="mb-3">
+            <p class="text-2xs text-muted text-uppercase font-semibold mb-1">Line-Item Summary</p>
+            <table class="table table-sm table-bordered bg-white mb-0 text-xs">
+              <thead class="bg-slate-100 text-muted text-2xs">
+                <tr>
+                  <th>Item Description</th>
+                  <th class="text-center">Qty</th>
+                  <th class="text-right">Unit Rate</th>
+                  <th class="text-right">Total ($)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Centrifugal Water Pump 500 GPM (15 HP Motor, ANSI Flanged)</td>
+                  <td class="text-center">12</td>
+                  <td class="text-right mono font-semibold">${{ poUnitPrice | number }}</td>
+                  <td class="text-right mono font-bold text-dark">${{ poTotalAmount | number }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- SHA-256 Digital Fingerprint -->
+          <div class="p-2.5 rounded-lg bg-white border d-flex align-items-start gap-2 shadow-2xs">
+            <i class="fa fa-key text-indigo mr-2 mt-1"></i>
+            <div>
+              <span class="text-slate-800 font-semibold text-2xs">Cryptographic Audit Seal (SHA-256):</span>
+              <p class="mono text-indigo font-semibold text-2xs text-break mb-0 select-all">{{ poShaSignature }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group mb-0">
+          <label class="form-label-xs">Executive Approver Sign-off Note:</label>
+          <input type="text" class="form-control form-control-sm" [(ngModel)]="poApproverNotes">
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+        <button class="btn btn-secondary btn-sm mr-2" (click)="closePoModal()">Cancel</button>
+        <button class="btn btn-emerald btn-sm" [disabled]="poSigned" (click)="confirmApprovePo()">
+          <span *ngIf="poSigned"><i class="fa fa-check mr-1"></i> Signed & Dispatched</span>
+          <span *ngIf="!poSigned"><i class="fa fa-check-circle mr-1"></i> Authorize & Award PO</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

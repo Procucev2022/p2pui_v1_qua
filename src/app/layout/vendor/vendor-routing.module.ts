@@ -14,6 +14,13 @@ import {ClientVendorComponent} from './client-vendor/client-vendor.component';
 const routes: Routes = [
   {path: '',  redirectTo: 'dashboard', pathMatch: 'prefix'},
   {path: 'dashboard', component: VendorDashboardComponent},
+  // Vendor workspace screens are hosted by the dashboard shell (tab resolved from the URL).
+  {path: 'opportunity-feed', component: VendorDashboardComponent},
+  {path: 'quotation-form', component: VendorDashboardComponent},
+  {path: 'qualification', component: VendorDashboardComponent},
+  {path: 'catalogue', component: VendorDashboardComponent},
+  {path: 'subscription-center', component: VendorDashboardComponent},
+  {path: 'vendor-profile', component: VendorDashboardComponent},
   {path: 'rfq', component: VendorRFQComponent},
   {path: 'quotsubmit', component: VendorQuotSubmComponent},
   {path: 'profile', component: VendorProfileComponent},

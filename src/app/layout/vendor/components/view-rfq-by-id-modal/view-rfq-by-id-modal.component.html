@@ -60,6 +60,29 @@
                             </div>
                         </div>
 
+                        <!-- Sourcing Strategy Mode Display -->
+                        <div class="form-group row" style="margin-top: 15px">
+                            <label style="font-size: medium; font-weight: bolder;"
+                                class="col-sm-5 col-form-label">Sourcing Strategy Mode</label>
+                            <div class="col-sm-7 content-value" style="padding: 7px 16px">
+                                <div class="sourcing-mode-display-box p-3 rounded">
+                                    <div class="d-flex align-items-center mb-1">
+                                        <span class="mode-badge mr-2 font-weight-bold"
+                                              [ngClass]="{'badge-v1': getSourcingModeKey() === 'mode_1', 'badge-v2': getSourcingModeKey() === 'mode_2', 'badge-v3': getSourcingModeKey() === 'mode_3'}">
+                                            {{ getSourcingModeVersion() }}
+                                        </span>
+                                        <strong style="color: #0f172a; font-size: 14px;">{{ getSourcingModeTitle() }}</strong>
+                                    </div>
+                                    <p class="text-muted mb-2" style="font-size: 12px; line-height: 1.35;">{{ getSourcingModeDesc() }}</p>
+                                    <div class="d-flex flex-wrap" style="gap: 6px;">
+                                        <span *ngFor="let bullet of getSourcingModeBullets()" class="badge-bullet-item">
+                                            <i class="fa fa-check text-success mr-1"></i>{{ bullet }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 <div>
@@ -129,7 +152,79 @@
                     </div>
                 </div>
 
-                <div *ngIf="viewRFQbyIDdetails.clientdeliverylocationrfq.length>0 && !isShowItemsSectionOnly">
+                <!-- RFQ Submitted To / Selected Vendors Section -->
+                <div class="mt-4" *ngIf="vendorDetailsList && vendorDetailsList.length > 0">
+                    <div class="table-title mb-2">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <h2>RFQ Submitted To / Selected Vendors</h2>
+                                <p><span class="dot"></span>{{ vendorDetailsList.length }} Vendors Associated with this RFQ</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p-table [columns]="vendorDetailsHeaders" [value]="vendorDetailsList"
+                             [paginator]="vendorDetailsList.length > 5" [rows]="5" [style]="{'width': '100%'}"
+                             [scrollable]="true">
+                        <ng-template pTemplate="header" let-columns>
+                            <tr>
+                                <th *ngFor="let col of columns" [style.width]="col.width">
+                                    {{ col.header }}
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-columns="columns">
+                            <tr>
+                                <!-- Vendor Name -->
+                                <td style="width: 200px;">
+                                    <div class="font-weight-bold d-flex align-items-center" style="color: #0f172a; gap: 8px;">
+                                        <i class="fa fa-building text-secondary" style="font-size: 13px;"></i>
+                                        <span>{{ rowData.companyName }}</span>
+                                    </div>
+                                </td>
+                                <!-- Vendor Code -->
+                                <td style="width: 130px;">
+                                    <span class="badge-vendor-code">
+                                        {{ rowData.vendorCode || 'N/A' }}
+                                    </span>
+                                </td>
+                                <!-- Vendor Type / Source -->
+                                <td style="width: 180px;">
+                                    <span *ngIf="rowData.vendorType === 'Buyer Uploaded' || rowData.vendorType === 'Buyer Uploaded Vendor'" class="badge badge-source-buyer">
+                                        <i class="fa fa-user-check mr-1"></i> Buyer Uploaded
+                                    </span>
+                                    <span *ngIf="rowData.vendorType !== 'Buyer Uploaded' && rowData.vendorType !== 'Buyer Uploaded Vendor'" class="badge badge-source-procucev">
+                                        <i class="fa fa-network-wired mr-1"></i> Procucev Vendor
+                                    </span>
+                                </td>
+                                <!-- Contact Information -->
+                                <td style="width: 220px; font-size: 12px; color: #475569;">
+                                    {{ rowData.contactInfo }}
+                                </td>
+                                <!-- RFQ Submission Status -->
+                                <td style="width: 170px;">
+                                    <span class="badge badge-pill" [ngClass]="{'badge-success': rowData.vendorStatus === 'Active' || rowData.vendorStatus === 'Registered', 'badge-info': rowData.vendorStatus === 'Invited' || rowData.vendorStatus === 'Quotation Dispatched' || rowData.vendorStatus === 'Submitted / Invited', 'badge-primary': rowData.vendorStatus === 'Quotation Received' || rowData.vendorStatus === 'Responded', 'badge-secondary': !rowData.vendorStatus}">
+                                        {{ rowData.vendorStatus || 'Submitted' }}
+                                    </span>
+                                </td>
+                                <!-- Submission Date / Time -->
+                                <td style="width: 180px; font-size: 12px; color: #334155; font-weight: 500;">
+                                    <i class="fa fa-clock text-muted mr-1" style="font-size: 11px;"></i>
+                                    {{ rowData.submissionDate ? (rowData.submissionDate | date: 'dd-MMM-yyyy hh:mm a') : '-' }}
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="6" class="text-center text-muted p-3">
+                                    No selected vendors found for this RFQ.
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+
+                <div *ngIf="viewRFQbyIDdetails.clientdeliverylocationrfq && viewRFQbyIDdetails.clientdeliverylocationrfq.length>0">
                     <div class="card" style="margin-top: 15px;">
                         <div class="col-12 page-title">
                             <h5>Delivery Address Location : </h5>

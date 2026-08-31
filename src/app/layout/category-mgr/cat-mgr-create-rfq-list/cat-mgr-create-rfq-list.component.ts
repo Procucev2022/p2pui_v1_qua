@@ -16,6 +16,8 @@ import { SystemViewConfig } from 'src/app/app.config';
 import { EditRfqByIdModalComponent } from '../../vendor/components/edit-rfq-by-id-modal/edit-rfq-by-id-modal.component';
 import { AuthenticationService } from 'src/app/shared/services/authentication.service';
 import { FormValidatationsService } from 'src/app/shared/services/form-validatations.service';
+import { BuyerVendorService } from '../../buyer-vendors/services/buyer-vendor.service';
+
 @Component({
     selector: 'app-cat-mgr-create-rfq-list',
     templateUrl: './cat-mgr-create-rfq-list.component.html',
@@ -25,6 +27,12 @@ export class CatMgrCreateRfqListComponent implements OnInit {
 
     rfqDataList: any = [];
     isCreateRFQView: boolean = false;
+    selectedSourcingStrategyMode: string = 'mode_1';
+    buyerRosterVendors: any[] = [];
+    isLoadingBuyerVendors: boolean = false;
+    recommendedProcucevVendors: any[] = [];
+    isLoadingRecommendedVendors: boolean = false;
+
     selectedData: any = [];
     paginatoryDetails: any;
     pageRecordSize: any;
@@ -175,7 +183,8 @@ export class CatMgrCreateRfqListComponent implements OnInit {
         private excelService: ExcelService,
         private loaderService: LoaderService,
         private authService: AuthenticationService,
-        private formValidatorService: FormValidatationsService
+        private formValidatorService: FormValidatationsService,
+        private buyerVendorService: BuyerVendorService
     ) {
 
     }
@@ -218,6 +227,111 @@ export class CatMgrCreateRfqListComponent implements OnInit {
 
         this.initialCalls();
         this.buildRFQForms();
+        this.loadBuyerUploadedVendors();
+        this.loadProcucevRecommendedVendors();
+    }
+
+    get isBuyerRole(): boolean {
+        return this.roleName === 'ClientInitiator' || this.roleName === 'Buyer' || this.roleName === 'ClientAdmin';
+    }
+
+    loadProcucevRecommendedVendors(category?: string) {
+        this.isLoadingRecommendedVendors = true;
+        this.buyerVendorService.getProcucevRecommendations(category, 100).subscribe({
+            next: (res: any) => {
+                this.isLoadingRecommendedVendors = false;
+                const vendors = (res && res.data && res.data.vendors) ? res.data.vendors : (Array.isArray(res) ? res : []);
+                if (vendors && vendors.length > 0) {
+                    this.recommendedProcucevVendors = vendors.map((v: any, idx: number) => {
+                        const vCode = v.vendorCode ? (String(v.vendorCode).startsWith('PRC-') ? v.vendorCode : 'PRC-' + v.vendorCode) : ('PRC-' + (1001 + idx));
+                        return {
+                            id: v.id || vCode,
+                            vendorCode: vCode,
+                            name: v.name || v.vendorName || 'Procucev Supplier',
+                            category: v.category || v.typeOfIndustry || v.typeOfBusiness || 'Industrial Supplies',
+                            location: v.location || (v.city ? `${v.city}, India` : 'India'),
+                            rating: v.rating || 4.8,
+                            matchScore: v.matchScore || 92,
+                            proximity: v.proximity || (v.city ? `Local Hub (${v.city})` : 'Regional Hub (<500km)')
+                        };
+                    });
+                } else {
+                    this.recommendedProcucevVendors = [];
+                }
+            },
+            error: (err) => {
+                this.isLoadingRecommendedVendors = false;
+                console.warn('Could not fetch dynamic Procucev recommendations', err);
+                this.recommendedProcucevVendors = [];
+            }
+        });
+    }
+
+    loadBuyerUploadedVendors() {
+        if (!this.isBuyerRole) {
+            return;
+        }
+        this.isLoadingBuyerVendors = true;
+        this.buyerVendorService.getVendors(0, 100).subscribe({
+            next: (res: any) => {
+                this.isLoadingBuyerVendors = false;
+                const rawVendors = (res && res.data && res.data.vendors) ? res.data.vendors : (Array.isArray(res) ? res : []);
+                if (rawVendors.length > 0) {
+                    this.buyerRosterVendors = rawVendors.map((v: any) => {
+                        const scopeOrStatusTag = v.sourcingScope || v.status || 'Active Roster';
+                        const locParts = [v.city, v.regionCode || v.state, v.country].filter(Boolean);
+                        const locationStr = locParts.length > 0 ? locParts.join(', ') : (v.city ? `${v.city}, India` : 'India');
+                        return {
+                            id: v.id || v.vendorCode,
+                            name: v.vendorName || v.companyName || 'Enterprise Supplier',
+                            category: v.typeOfIndustry || v.typeOfBusiness || v.industry || v.category || 'General Industrial',
+                            location: locationStr,
+                            matchReason: scopeOrStatusTag,
+                            proximity: v.city ? `Local Hub (${v.city})` : (v.proximity || ''),
+                            proximityMatch: true,
+                            status: v.status || 'ACTIVE',
+                            email: v.email || v.contactEmail || null,
+                            phone: v.phone1 || v.phone || v.mobileNo || null
+                        };
+                    });
+                } else {
+                    this.buyerRosterVendors = [];
+                }
+                this.loadProcucevRecommendedVendors();
+            },
+            error: (err) => {
+                this.isLoadingBuyerVendors = false;
+                console.warn('Could not load buyer uploaded vendors', err);
+                this.buyerRosterVendors = [];
+                this.loadProcucevRecommendedVendors();
+            }
+        });
+    }
+
+    getVendorInitials(name: string): string {
+        if (!name) return 'VN';
+        const parts = name.trim().split(/\s+/);
+        if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+        return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+
+    getVendorAvatarBg(name: string): string {
+        const colors = [
+            'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+            'linear-gradient(135deg, #0284c7 0%, #06b6d4 100%)',
+            'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+            'linear-gradient(135deg, #d97706 0%, #f59e0b 100%)',
+            'linear-gradient(135deg, #e11d48 0%, #f43f5e 100%)',
+            'linear-gradient(135deg, #7c2d12 0%, #c2410c 100%)',
+            'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)'
+        ];
+        if (!name) return colors[0];
+        let hash = 0;
+        for (let i = 0; i < name.length; i++) {
+            hash = name.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        const index = Math.abs(hash) % colors.length;
+        return colors[index];
     }
 
     getRfqData(){
@@ -383,7 +497,12 @@ export class CatMgrCreateRfqListComponent implements OnInit {
             this.deliveryForm.controls['pincode'].enable();
         });
     }
+    onSelectSourcingStrategyMode(mode: string) {
+        this.selectedSourcingStrategyMode = mode;
+    }
+
     resetScreen() {
+        this.selectedSourcingStrategyMode = 'mode_1';
         this.itemForm.reset();
         this.projectForm.reset();
         this.vendorForm.reset();
@@ -951,7 +1070,8 @@ export class CatMgrCreateRfqListComponent implements OnInit {
             "rfqDocument": this.attachements,
 
             "user": this.loggedUserDetails.id,
-            "sourceType":"T"
+            "sourceType":"T",
+            "sourcingStrategyMode": this.selectedSourcingStrategyMode
         };
         if(this.roleName == 'ClientInitiator'){
             if(this.isEditForm && !itemsList.some((item:any) => !!item.id)) {
@@ -991,6 +1111,54 @@ export class CatMgrCreateRfqListComponent implements OnInit {
     };
 
     buildVendorsForAPI() {
+        if (this.isBuyerRole) {
+            let combinedVendors: any[] = [];
+            if (this.buyerRosterVendors && this.buyerRosterVendors.length > 0) {
+                const rosterList = this.buyerRosterVendors.map((item: any, idx: number) => {
+                    let vendor: any = {
+                        "companyName": item.name,
+                        "companyId": item.vendorCode || item.id || ('VND-' + (1001 + idx)),
+                        "city": item.location ? item.location.split(',')[0].trim() : '',
+                        "email": item.email || null,
+                        "organizationPhonenumber": item.phone || null,
+                        "vendorcategory": item.category || null,
+                        "vendorType": "Buyer Uploaded",
+                        "requestType": 'Invite'
+                    };
+                    if (item.id && !String(item.id).startsWith('v-') && !String(item.id).startsWith('MANUAL')) {
+                        vendor["id"] = item.id;
+                    }
+                    return vendor;
+                });
+                combinedVendors = combinedVendors.concat(rosterList);
+            }
+
+            if ((this.selectedSourcingStrategyMode === 'mode_2' || this.selectedSourcingStrategyMode === 'Hybrid Sourced Pool' ||
+                 this.selectedSourcingStrategyMode === 'mode_3' || this.selectedSourcingStrategyMode === 'AI Match (>80%)') &&
+                this.recommendedProcucevVendors && this.recommendedProcucevVendors.length > 0) {
+                const recVendors = this.recommendedProcucevVendors.map((item: any, idx: number) => {
+                    let vendor: any = {
+                        "companyName": item.name,
+                        "companyId": item.vendorCode || item.id || ('PRC-' + (2001 + idx)),
+                        "city": item.location ? item.location.split(',')[0].trim() : '',
+                        "email": item.email || null,
+                        "organizationPhonenumber": item.phone || null,
+                        "vendorcategory": item.category || null,
+                        "vendorType": "Procucev Vendor",
+                        "requestType": 'Invite'
+                    };
+                    if (item.id && !String(item.id).startsWith('v-') && !String(item.id).startsWith('MANUAL')) {
+                        vendor["id"] = item.id;
+                    }
+                    return vendor;
+                });
+                combinedVendors = combinedVendors.concat(recVendors);
+            }
+
+            if (combinedVendors.length > 0) {
+                return combinedVendors;
+            }
+        }
         const vendorValue =  this.vendorGridData.gridValue.filter(ele => !ele.isSendRFQToVendorScreen);
         const vendors: any = vendorValue.map((item: any) => {
             let vendor;

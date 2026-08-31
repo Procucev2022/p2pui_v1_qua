@@ -218,7 +218,11 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
         };
         this.rfqservice.fetchRfqById(temp).subscribe((res: any) => {
             if (res) {
-                this.viewRFQByIdData = res || {};
+                this.viewRFQByIdData = {
+                    ...rowData,
+                    ...res,
+                    sourcingStrategyMode: res.sourcingStrategyMode || rowData.sourcingStrategyMode || rowData.sourcingMode
+                };
                 if (isEdit) {
                     this.onEditRfqDetails();
                 } else {
@@ -268,23 +272,6 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
         this.selectedData = [];
         const req = { "id": this.loggedUserDetails.org.id };
         this.rfqservice.getAllCategoryRFQByGMTVendors(req).subscribe(data => {
-            // const data =[
-            //     {
-            //     "id": "a4de0d8b-7e62-49b3-951b-eab71c55379e",
-            //     "rfqId": "ONE231107140613-R1002",
-            //     "desc": "TestPR2_07_11",
-            //     "closureDate": null,
-            //     "status":{"id": "6", "createdBy": "venu", "lastModifiedBy": null, "createdTS": null, uiDisplay: 'New'},
-            //     "deliveryLocation": null
-            //     },
-            //     {
-            //     "id": "78b7172f-27a7-4f43-a415-c41c2cd31522",
-            //     "rfqId": "ONE231107140613-R1001",
-            //     "desc": "TestPR2_07_11",
-            //     "closureDate": null,
-            //     "status":{"id": "6", "createdBy": "venu", "lastModifiedBy": null, "createdTS": null, uiDisplay: 'New'},
-            //     "deliveryLocation": null
-            //     }]
             if (Array.isArray(data)) {
                 this.rfqDataList = data.map((ele: any) => {
                     const desc = ele.query ? ele.query.split('|').join(" ") : '';
@@ -342,7 +329,11 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
         };
         this.rfqservice.fetchRfqById(temp).subscribe((res: any) => {
             if (res) {
-                this.viewRFQByIdData = res || {};
+                this.viewRFQByIdData = {
+                    ...rowData,
+                    ...res,
+                    sourcingStrategyMode: res.sourcingStrategyMode || rowData.sourcingStrategyMode || rowData.sourcingMode
+                };
                 this.viewRFQByIdModal();
             } else {
                 this.toastrService.error('Failed to Fetch data', 'Failure');

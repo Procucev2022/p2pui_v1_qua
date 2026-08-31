@@ -45,6 +45,12 @@ import { ForwardedVendorComponent } from '../vendor-mgr/forwarded-vendor/forward
 import { ClientVendorComponent } from './client-vendor/client-vendor.component';
 import { EditRfqByIdModalComponent } from './components/edit-rfq-by-id-modal/edit-rfq-by-id-modal.component';
 import { CommonShareModule } from 'src/app/shared/modules/common-share/common-share.module';
+import { VendorOpportunityFeedComponent } from './vendor-dashboard/vendor-opportunity-feed/vendor-opportunity-feed.component';
+import { VendorQuotationsComponent } from './vendor-dashboard/vendor-quotations/vendor-quotations.component';
+import { VendorQualificationComponent } from './vendor-dashboard/vendor-qualification/vendor-qualification.component';
+import { VendorItemCatalogueComponent } from './vendor-dashboard/vendor-item-catalogue/vendor-item-catalogue.component';
+import { VendorSubscriptionCenterComponent } from './vendor-dashboard/vendor-subscription-center/vendor-subscription-center.component';
+import { VendorProfileDetailComponent } from './vendor-dashboard/vendor-profile-detail/vendor-profile-detail.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -91,6 +97,14 @@ import { CommonShareModule } from 'src/app/shared/modules/common-share/common-sh
     ForwardedVendorComponent,
     ClientVendorComponent,
     EditRfqByIdModalComponent,
+
+    // Vendor workspace screens (3.1 - 3.6)
+    VendorOpportunityFeedComponent,
+    VendorQuotationsComponent,
+    VendorQualificationComponent,
+    VendorItemCatalogueComponent,
+    VendorSubscriptionCenterComponent,
+    VendorProfileDetailComponent,
 
   ],
   // entryComponents: [

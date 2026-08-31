@@ -1,7 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-//import { CatProcuRequestsService } from '../services/cat-procu-requests.service';
-import { AppConfig } from 'src/app/app.config';
-import { VendorService } from '../../../vendor-registration/services/vendor-service.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { VendorDashboardService } from './services/vendor-dashboard.service';
+import {
+  VendorOpportunity,
+  VendorProfileSummary
+} from './models/vendor-dashboard.model';
+
+export interface VendorScreenCard {
+  id: string;
+  screenNum: string;
+  title: string;
+  subtitle: string;
+  icon: string;
+  colorClass: string;
+}
 
 @Component({
   selector: 'app-vendor-dashboard',
@@ -10,67 +22,110 @@ import { VendorService } from '../../../vendor-registration/services/vendor-serv
 })
 export class VendorDashboardComponent implements OnInit {
 
-  rfqTableData: any;
-  selectedData: any;
-  rfqName = "RFQ Sample";
-  dueDate = "03-11-20";
-  clientName = "Client 1"
+  activeTab = 'opportunity-feed';
+  profile: VendorProfileSummary | null = null;
+  selectedOpportunity: VendorOpportunity | null = null;
 
-  rfqHeaders: any = [
-      { field: 'clientName', header: 'Client Name'  , isLink: true},
-      { field: 'prNo', header: 'PR No'  , isLink: false},
-      { field: 'description', header: 'Description' , isLink: false},
-      { field: 'dueDate', header: 'Due Date' , isLink: false},
-      { field: 'bidType', header: 'Bid Type' , isLink: false},
-      
+  screens: VendorScreenCard[] = [
+    {
+      id: 'opportunity-feed',
+      screenNum: 'Screen 3.1',
+      title: 'Opportunity Feed',
+      subtitle: 'Invitations & Marketplace',
+      icon: 'fa fa-th-large',
+      colorClass: 'screen-purple'
+    },
+    {
+      id: 'quotation',
+      screenNum: 'Screen 3.2',
+      title: 'Submit Quotation',
+      subtitle: 'Line-Item Bidding',
+      icon: 'fa fa-paper-plane',
+      colorClass: 'screen-blue'
+    },
+    {
+      id: 'qualification',
+      screenNum: 'Screen 3.3',
+      title: 'Mode 3 Qualification',
+      subtitle: '24-Criteria Scorecard',
+      icon: 'fa fa-check-square-o',
+      colorClass: 'screen-emerald'
+    },
+    {
+      id: 'catalogue',
+      screenNum: 'Screen 3.4',
+      title: 'Item Catalogue',
+      subtitle: 'SKUs, MOQs & Specs',
+      icon: 'fa fa-cubes',
+      colorClass: 'screen-indigo'
+    },
+    {
+      id: 'subscriptions',
+      screenNum: 'Screen 3.5',
+      title: 'Subscriptions',
+      subtitle: 'Plans & Download Quota',
+      icon: 'fa fa-credit-card',
+      colorClass: 'screen-cyan'
+    },
+    {
+      id: 'profile',
+      screenNum: 'Screen 3.6',
+      title: 'Vendor Profile',
+      subtitle: 'Credentials & Scope',
+      icon: 'fa fa-user-circle',
+      colorClass: 'screen-orange'
+    }
   ];
 
-  paginatoryDetails: any;
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private vendorDashboardService: VendorDashboardService
+  ) {}
 
+  ngOnInit(): void {
+    this.vendorDashboardService.getProfileSummary().subscribe(summary => {
+      this.profile = summary;
+    });
 
-  selectedRFQData: any;
-  rfqsList: Object;
-  pageRecordSize: any;
-  pageOptions: any;
+    const url = this.router.url;
+    if (url.indexOf('qualification') !== -1) {
+      this.activeTab = 'qualification';
+    } else if (url.indexOf('catalogue') !== -1) {
+      this.activeTab = 'catalogue';
+    } else if (url.indexOf('subscription') !== -1) {
+      this.activeTab = 'subscriptions';
+    } else if (url.indexOf('vendor-profile') !== -1) {
+      this.activeTab = 'profile';
+    } else if (url.indexOf('quotation') !== -1) {
+      this.activeTab = 'quotation';
+    }
 
-  constructor(private vendorService: VendorService) {}
-  
-
-  ngOnInit() {
-      this.pageRecordSize = AppConfig.GRID_PAGE_INFO.initpageSize;
-      this.pageOptions = AppConfig.GRID_PAGE_INFO.pageOptions;
-      this.getRfqData();
-  }
-
-  getRfqData() {
-    this.vendorService
-    .getRfqData()
-    .subscribe(data => {
-        this.rfqTableData = data  || [];
+    this.route.queryParams.subscribe(params => {
+      if (params['tab']) {
+        this.activeTab = params['tab'];
+      }
     });
   }
 
-  // getRFQs list
-  getRFQs(selectedRowData) {
-      this.selectedData = [selectedRowData];
-      this.selectedRFQData = Object.assign({}, selectedRowData);
+  setTab(tab: string): void {
+    this.activeTab = tab;
   }
 
-  getLineItems(event) {
-      console.log('clicked tab', event);
-
+  openBidForm(opp: VendorOpportunity): void {
+    this.selectedOpportunity = opp;
+    this.activeTab = 'quotation';
   }
 
-  onPage(event) {
-      //this.paginatorDetails = event;
+  onQuotationSubmitted(): void {
+    if (this.profile) {
+      this.profile.activeBids = this.profile.activeBids + 1;
     }
-
-  downloadBOQ(){
-    alert('downloading...')
   }
 
-  raiseQuery()
-  {
-    alert('Querry raised...')
+  goToSubscriptions(): void {
+    this.activeTab = 'subscriptions';
   }
+
+
 }

@@ -1,0 +1,108 @@
+<div class="vendor-eval-root">
+
+  <div class="d-flex flex-wrap justify-content-between align-items-center pb-3 mb-3 border-bottom">
+    <div>
+      <h5 class="eval-title mb-1">360&deg; Vendor Evaluation</h5>
+      <p class="eval-subtitle mb-0">
+        Mode 3 qualification scorecards for vendors on your roster.
+      </p>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-5 text-muted small">Loading vendor evaluations…</div>
+
+  <div *ngIf="!loading && evaluations.length === 0" class="empty-state">
+    <i class="fa fa-inbox mb-2"></i>
+    <p class="mb-1">No vendor evaluations yet.</p>
+    <p class="empty-hint mb-0">
+      Evaluations appear here once vendors on your roster complete the Mode 3 qualification questionnaire.
+    </p>
+  </div>
+
+  <div class="row" *ngIf="!loading && evaluations.length > 0">
+    <!-- Vendor list -->
+    <div class="col-lg-4 mb-3">
+      <div class="eval-list">
+        <button type="button"
+                class="eval-list-item"
+                *ngFor="let record of evaluations"
+                [class.active]="selected && selected.id === record.id"
+                (click)="select(record)">
+          <div class="d-flex justify-content-between align-items-start">
+            <div class="text-left">
+              <div class="list-vendor-name">{{ record.vendorName }}</div>
+              <div class="list-vendor-meta">{{ record.category }}</div>
+              <div class="list-vendor-meta" *ngIf="record.location">{{ record.location }}</div>
+            </div>
+            <span class="list-score mono" [ngClass]="getStatusClass(record)">
+              {{ isScored(record) ? (record.overallScore | number:'1.0-1') + '%' : '—' }}
+            </span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Scorecard detail -->
+    <div class="col-lg-8">
+      <div class="eval-detail" *ngIf="selected as record">
+        <div class="detail-header">
+          <div>
+            <h6 class="detail-name mb-1">{{ record.vendorName }}</h6>
+            <div class="detail-meta">
+              <span *ngIf="record.category">{{ record.category }}</span>
+              <span *ngIf="record.location">{{ record.location }}</span>
+              <span *ngIf="record.evaluatedDate">Evaluated {{ record.evaluatedDate }}</span>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="detail-score-label">Overall Score</div>
+            <div class="detail-score mono" [ngClass]="getStatusClass(record)">
+              {{ isScored(record) ? (record.overallScore | number:'1.0-1') + '%' : 'Not scored' }}
+            </div>
+            <span class="detail-status" [ngClass]="getStatusClass(record)" *ngIf="record.status">
+              {{ record.status }}
+            </span>
+          </div>
+        </div>
+
+        <div class="pending-note" *ngIf="!isScored(record)">
+          <i class="fa fa-info-circle mr-1"></i>
+          This vendor has not completed the Mode 3 qualification questionnaire, so no module scores are available yet.
+        </div>
+
+        <div class="table-responsive" *ngIf="isScored(record)">
+          <table class="table table-sm pillar-table">
+            <caption class="sr-only">Module scores contributing to the overall evaluation</caption>
+            <thead>
+              <tr>
+                <th scope="col">Module</th>
+                <th scope="col" class="text-center">Weight</th>
+                <th scope="col" class="text-center">Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of pillarWeights">
+                <td>{{ p.name }}</td>
+                <td class="text-center mono">{{ p.weight }}%</td>
+                <td class="text-center mono">{{ getPillarScore(record, p.key) | number:'1.0-1' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="highlights" *ngIf="record.keyHighlights">
+          <h6 class="highlights-heading">Key Highlights</h6>
+          <div class="highlight-row" *ngFor="let entry of record.keyHighlights | keyvalue">
+            <span class="highlight-key">{{ entry.key }}</span>
+            <span class="highlight-value">{{ entry.value }}</span>
+          </div>
+        </div>
+
+        <div class="risk-row" *ngIf="record.riskRating">
+          <span class="risk-label">Risk Rating</span>
+          <span class="risk-value">{{ record.riskRating }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

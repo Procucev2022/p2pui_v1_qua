@@ -61,17 +61,25 @@ export class BuyerVendorService {
     );
   }
 
+  bulkDeleteVendors(vendorCodes: string[]): Observable<any> {
+    return this.httpService.post<any>(
+      AppApiConfig.apiEndpoint + AppApiConfig.BUYER_VENDORS + '/bulk-delete', vendorCodes
+    );
+  }
+
   bulkCreateVendors(vendors: BuyerVendor[]): Observable<any> {
     return this.httpService.post<any>(
       AppApiConfig.apiEndpoint + AppApiConfig.BUYER_VENDORS + '/bulk', vendors
     );
   }
 
-  bulkDeleteVendors(vendorCodes: string[]): Observable<any> {
-    return this.httpService.post<any>(
-      AppApiConfig.apiEndpoint + AppApiConfig.BUYER_VENDORS + '/bulk-delete', vendorCodes
+  getProcucevRecommendations(category?: string, limit: number = 10): Observable<any> {
+    let params = new HttpParams().set('limit', limit.toString());
+    if (category && category.trim()) {
+      params = params.set('category', category.trim());
+    }
+    return this.httpService.get<any>(
+      AppApiConfig.apiEndpoint + AppApiConfig.BUYER_VENDOR_RECOMMENDATIONS, { params }
     );
   }
 }
-
-

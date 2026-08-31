@@ -1,0 +1,308 @@
+<div class="vendor-feed-root">
+
+  <!-- Header -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center pb-3 mb-3 border-bottom">
+    <div>
+      <h5 class="feed-title mb-1">
+        Vendor Workspace &amp; Opportunity Feed
+        <span class="badge-screen">Screen 3.1</span>
+      </h5>
+      <p class="feed-subtitle mb-0">
+        Enterprise buyer RFQ invitations, active bidding countdowns, and the open network sourcing feed.
+      </p>
+    </div>
+  </div>
+
+  <!-- Vendor profile summary -->
+  <div class="profile-card mb-3" *ngIf="profile">
+    <div class="d-flex flex-wrap justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <div class="profile-avatar"><i class="fa fa-truck"></i></div>
+        <div class="ml-3">
+          <div class="d-flex align-items-center flex-wrap">
+            <h6 class="mb-0 mr-2 profile-name">{{ profile.vendorName }}</h6>
+            <span class="pill pill-emerald mr-2" *ngIf="profile.verified">
+              <i class="fa fa-shield"></i> Verified Supplier
+            </span>
+            <span class="pill pill-amber mr-2" *ngIf="profile.rating > 0">
+              <i class="fa fa-star"></i> {{ profile.rating }} / 5.0 Rating
+            </span>
+            <span class="pill pill-indigo" *ngIf="profile.subscription">
+              {{ profile.subscription }}
+            </span>
+          </div>
+          <p class="profile-meta mb-0">
+            Vendor ID: <span class="mono">{{ profile.vendorCode }}</span>
+            &middot; Primary Category: {{ profile.primaryCategory }}
+          </p>
+        </div>
+      </div>
+
+      <div class="d-flex">
+        <div class="stat-box mr-2">
+          <span class="stat-label">Active Bids</span>
+          <span class="stat-value mono">{{ profile.activeBids }} Live</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">Awarded POs</span>
+          <span class="stat-value mono text-emerald">{{ profile.awardedPos }} Contracts</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Urgent reminder -->
+  <div class="urgent-banner mb-3" *ngIf="urgentOpportunity as urgent">
+    <div class="d-flex align-items-center">
+      <i class="fa fa-exclamation-triangle mr-2"></i>
+      <div>
+        <strong>Closing soon:</strong>
+        <span class="mono">{{ urgent.rfqNumber }}</span> closes within 24 hours.
+      </div>
+    </div>
+    <button type="button" class="btn btn-sm btn-warning font-weight-bold" (click)="submitBid(urgent)">
+      Submit Quote Now
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-4 text-muted small">Loading opportunities…</div>
+
+  <!-- ── Section 1: Direct invitations ── -->
+  <div class="feed-section mb-4" *ngIf="!loading">
+    <div class="d-flex flex-wrap justify-content-between align-items-center pb-2 mb-3 border-bottom">
+      <h6 class="section-heading mb-0">
+        <i class="fa fa-bolt text-indigo mr-1"></i>
+        Direct Invitations (Client Exclusive Pool)
+      </h6>
+      <span class="badge-count">{{ directInvitations.length }} Targeted RFQs</span>
+    </div>
+
+    <!-- Filters -->
+    <div class="filter-panel mb-3">
+      <div class="d-flex flex-wrap justify-content-between align-items-center mb-2">
+        <span class="filter-legend">
+          <i class="fa fa-building-o mr-1"></i> Direct Exclusive Sourcing Filters
+        </span>
+        <button type="button"
+                class="btn btn-sm catalogue-filter-btn"
+                [class.active]="directFilters.catalogueOnly"
+                (click)="toggleCatalogueFilter(directFilters)"
+                [attr.aria-pressed]="directFilters.catalogueOnly"
+                title="Show only RFQs matching items in your catalogue">
+          <i class="fa fa-cube mr-1"></i>
+          {{ directCatalogueMatchCount }} Catalogue Match<span *ngIf="directCatalogueMatchCount !== 1">es</span>
+          <span class="filter-state">{{ directFilters.catalogueOnly ? 'Filtered' : 'Filter RFQs' }}</span>
+        </button>
+      </div>
+
+      <div class="row">
+        <div class="col-lg col-md-4 col-sm-6 mb-2">
+          <label class="filter-label" for="dirCompany">Buyer Company</label>
+          <select id="dirCompany" class="form-control form-control-sm"
+                  [(ngModel)]="directFilters.buyerCompany"
+                  (ngModelChange)="onCompanyChange(directFilters)">
+            <option value="all">All Eligible Companies</option>
+            <option *ngFor="let c of eligibleCompanies" [value]="c">{{ c }}</option>
+          </select>
+        </div>
+        <div class="col-lg col-md-4 col-sm-6 mb-2">
+          <label class="filter-label" for="dirBuyer">Buyer Name</label>
+          <select id="dirBuyer" class="form-control form-control-sm"
+                  [(ngModel)]="directFilters.buyerName"
+                  [disabled]="directFilters.buyerCompany === 'all'">
+            <option value="all">
+              {{ directFilters.buyerCompany === 'all' ? 'Select Company First' : 'All Buyers in Company' }}
+            </option>
+            <option *ngFor="let b of getBuyerNames(directFilters.buyerCompany)" [value]="b">{{ b }}</option>
+          </select>
+        </div>
+        <div class="col-lg col-md-4 col-sm-6 mb-2">
+          <label class="filter-label" for="dirMajor">Major Category</label>
+          <select id="dirMajor" class="form-control form-control-sm"
+                  [(ngModel)]="directFilters.majorCategory"
+                  (ngModelChange)="onMajorChange(directFilters)">
+            <option value="all">All Major Categories</option>
+            <option *ngFor="let m of majorCategories" [value]="m">{{ m }}</option>
+          </select>
+        </div>
+        <div class="col-lg col-md-4 col-sm-6 mb-2">
+          <label class="filter-label" for="dirMinor">Minor Category</label>
+          <select id="dirMinor" class="form-control form-control-sm"
+                  [(ngModel)]="directFilters.minorCategory"
+                  [disabled]="directFilters.majorCategory === 'all'">
+            <option value="all">
+              {{ directFilters.majorCategory === 'all' ? 'Select Major First' : 'All Minor Categories' }}
+            </option>
+            <option *ngFor="let m of getMinorOptions(directFilters.majorCategory)" [value]="m">{{ m }}</option>
+          </select>
+        </div>
+        <div class="col-lg col-md-4 col-sm-6 mb-2">
+          <label class="filter-label" for="dirSearch">Search Specs</label>
+          <input id="dirSearch" type="text" class="form-control form-control-sm"
+                 placeholder="Specs, location, keywords…"
+                 [(ngModel)]="directFilters.searchTerm">
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="directInvitations.length === 0" class="empty-state">
+      No matching targeted RFQ invitations found for this selection.
+    </div>
+
+    <div class="row">
+      <div class="col-xl-6 col-lg-12 mb-3"
+           *ngFor="let opp of directInvitations; trackBy: trackByOppId">
+        <ng-container *ngTemplateOutlet="oppCard; context: { opp: opp }"></ng-container>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Section 2: Open network marketplace ── -->
+  <div class="feed-section" *ngIf="!loading">
+    <div class="d-flex flex-wrap justify-content-between align-items-center pb-2 mb-3 border-bottom">
+      <h6 class="section-heading mb-0">
+        <i class="fa fa-globe text-purple mr-1"></i>
+        Open Network Marketplace
+      </h6>
+      <span class="badge-count">{{ networkOpportunities.length }} Open RFQs</span>
+    </div>
+
+    <div class="quota-note mb-3" *ngIf="maxQuota > 0">
+      <i class="fa fa-download mr-1"></i>
+      RFQ Download Quota:
+      <strong class="mono">{{ profile.rfqDownloadsUsed }} / {{ maxQuota }}</strong>
+      <span *ngIf="quotaExhausted" class="text-danger ml-2">Quota exhausted — upgrade to continue.</span>
+    </div>
+
+    <div class="upgrade-note mb-3" *ngIf="maxQuota === 0">
+      <i class="fa fa-lock mr-1"></i>
+      Marketplace RFQs require an active subscription with an RFQ download bundle.
+      <button type="button" class="btn btn-link btn-sm p-0 ml-1" (click)="navigateToSubscriptions.emit()">
+        View plans
+      </button>
+    </div>
+
+    <div class="filter-panel mb-3">
+      <div class="d-flex flex-wrap justify-content-between align-items-center mb-2">
+        <span class="filter-legend">
+          <i class="fa fa-globe mr-1"></i> Open Network Sourcing Filters
+        </span>
+        <button type="button"
+                class="btn btn-sm catalogue-filter-btn"
+                [class.active]="networkFilters.catalogueOnly"
+                (click)="toggleCatalogueFilter(networkFilters)"
+                [attr.aria-pressed]="networkFilters.catalogueOnly"
+                title="Show only RFQs matching items in your catalogue">
+          <i class="fa fa-cube mr-1"></i>
+          {{ networkCatalogueMatchCount }} Catalogue Match<span *ngIf="networkCatalogueMatchCount !== 1">es</span>
+          <span class="filter-state">{{ networkFilters.catalogueOnly ? 'Filtered' : 'Filter RFQs' }}</span>
+        </button>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-4 col-md-6 mb-2">
+          <label class="filter-label" for="netMajor">Major Category</label>
+          <select id="netMajor" class="form-control form-control-sm"
+                  [(ngModel)]="networkFilters.majorCategory"
+                  (ngModelChange)="onMajorChange(networkFilters)">
+            <option value="all">All Major Categories</option>
+            <option *ngFor="let m of majorCategories" [value]="m">{{ m }}</option>
+          </select>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-2">
+          <label class="filter-label" for="netMinor">Minor Category</label>
+          <select id="netMinor" class="form-control form-control-sm"
+                  [(ngModel)]="networkFilters.minorCategory"
+                  [disabled]="networkFilters.majorCategory === 'all'">
+            <option value="all">
+              {{ networkFilters.majorCategory === 'all' ? 'Select Major First' : 'All Minor Categories' }}
+            </option>
+            <option *ngFor="let m of getMinorOptions(networkFilters.majorCategory)" [value]="m">{{ m }}</option>
+          </select>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-2">
+          <label class="filter-label" for="netSearch">Search Specs</label>
+          <input id="netSearch" type="text" class="form-control form-control-sm"
+                 placeholder="Specs, location, keywords…"
+                 [(ngModel)]="networkFilters.searchTerm">
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="networkOpportunities.length === 0" class="empty-state">
+      No matching open marketplace RFQs found for this selection.
+    </div>
+
+    <div class="row">
+      <div class="col-xl-6 col-lg-12 mb-3"
+           *ngFor="let opp of networkOpportunities; trackBy: trackByOppId">
+        <ng-container *ngTemplateOutlet="oppCard; context: { opp: opp }"></ng-container>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Shared opportunity card ── -->
+  <ng-template #oppCard let-opp="opp">
+    <div class="opp-card h-100"
+         [class.opp-locked]="isLocked(opp)"
+         [class.opp-match]="isPrimaryCategoryMatch(opp)">
+      <div class="d-flex flex-wrap align-items-center justify-content-between mb-2">
+        <div class="d-flex align-items-center flex-wrap">
+          <span class="opp-rfq mono mr-2">{{ opp.rfqNumber }}</span>
+          <span class="tag tag-emerald mr-1" *ngIf="isPrimaryCategoryMatch(opp)">Primary Category Match</span>
+          <span class="tag tag-violet mr-1" *ngIf="getCatalogueMatches(opp).length > 0">
+            <i class="fa fa-cube"></i>
+            {{ getCatalogueMatches(opp).length }} Catalogue Match<span *ngIf="getCatalogueMatches(opp).length > 1">es</span>
+          </span>
+        </div>
+        <span class="deadline-pill"
+              [class.deadline-urgent]="opp.daysRemaining >= 0 && opp.daysRemaining <= 2">
+          <i class="fa fa-clock-o mr-1"></i>
+          <ng-container *ngIf="opp.daysRemaining < 0">No deadline set</ng-container>
+          <ng-container *ngIf="opp.daysRemaining === 0">Closes today</ng-container>
+          <ng-container *ngIf="opp.daysRemaining > 0">{{ opp.daysRemaining }}d left</ng-container>
+        </span>
+      </div>
+
+      <h6 class="opp-title">{{ opp.title }}</h6>
+
+      <div class="opp-meta">
+        <span><i class="fa fa-building-o mr-1"></i>{{ opp.buyer }}</span>
+        <span><i class="fa fa-map-marker mr-1"></i>{{ opp.deliveryLocation }}</span>
+        <span *ngIf="opp.deadline"><i class="fa fa-calendar mr-1"></i>Due {{ opp.deadline }}</span>
+        <span *ngIf="opp.estimatedValue"><i class="fa fa-inr mr-1"></i>{{ opp.estimatedValue }}</span>
+      </div>
+
+      <div class="opp-categories" *ngIf="opp.majorCategory">
+        <span class="cat-chip">{{ opp.majorCategory }}</span>
+        <span class="cat-chip" *ngIf="opp.minorCategory">{{ opp.minorCategory }}</span>
+      </div>
+
+      <div class="line-item-summary" *ngIf="opp.lineItems && opp.lineItems.length > 0">
+        <span class="line-item-count">{{ opp.lineItems.length }} line item<span *ngIf="opp.lineItems.length > 1">s</span></span>
+        <ul class="line-item-list">
+          <li *ngFor="let li of opp.lineItems">
+            {{ li.description }} &mdash; <strong>{{ li.quantity }} {{ li.unit }}</strong>
+          </li>
+        </ul>
+      </div>
+
+      <div class="opp-actions">
+        <button type="button" class="btn btn-sm btn-primary mr-2"
+                (click)="submitBid(opp)"
+                [disabled]="isLocked(opp)">
+          <i class="fa fa-paper-plane mr-1"></i> Submit Quotation
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-secondary mr-2" (click)="downloadRfq(opp)">
+          <i class="fa fa-download mr-1"></i> Email BOQ &amp; Specs
+        </button>
+
+      </div>
+
+      <div class="locked-overlay-note" *ngIf="isLocked(opp)">
+        <i class="fa fa-lock mr-1"></i> Requires Connect or Select plan
+      </div>
+    </div>
+  </ng-template>
+
+</div>

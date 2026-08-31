@@ -17,6 +17,9 @@ function createLayoutRouteImporters(): Record<string, () => Promise<any>> {
     category: () => import('./category/category.module'),
     config: () => import('./configurations/configurations.module'),
     bfs: () => import('./bfs/bfs.module'),
+    'buyer-dashboard': () => import('./buyer-dashboard/buyer-dashboard.module'),
+    'subscriptions': () => import('./buyer-subscriptions/buyer-subscriptions.module'),
+    'buyer-subscriptions': () => import('./buyer-subscriptions/buyer-subscriptions.module'),
   };
 }
 

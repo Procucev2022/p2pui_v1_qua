@@ -1,0 +1,262 @@
+<div class="vendor-qual-root">
+
+  <!-- Header -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center pb-3 mb-3 border-bottom">
+    <div>
+      <h5 class="qual-title mb-1">
+        Mode 3 360&deg; Vendor Qualification Questionnaire
+        <span class="badge-screen">Screen 3.3</span>
+      </h5>
+      <p class="qual-subtitle mb-0">
+        Capability evaluation across 24 criteria. A score of
+        {{ 80 }}% or above unlocks automatic direct RFQ dispatch.
+      </p>
+    </div>
+    <button type="button" class="btn btn-sm btn-outline-secondary" (click)="back.emit()">
+      <i class="fa fa-arrow-left mr-1"></i> Back to Workspace
+    </button>
+  </div>
+
+  <!-- ══ Form view ══ -->
+  <ng-container *ngIf="!evaluationResult">
+
+    <!-- Live score bar -->
+    <div class="score-bar mb-3">
+      <div>
+        <div class="score-bar-label">
+          <i class="fa fa-bolt mr-1"></i>
+          {{ profile?.vendorName || 'Vendor' }} &mdash; Live AI Capability Rating
+        </div>
+        <div class="score-bar-step">
+          Step {{ activeModuleIndex + 1 }} of {{ modules.length }}:
+          <strong>{{ activeModuleMeta.name }}</strong> ({{ activeModuleMeta.weight }}% weight)
+        </div>
+      </div>
+      <div class="d-flex align-items-center">
+        <div class="text-right mr-3">
+          <div class="score-caption">Live Computed Score</div>
+          <div class="score-value mono">{{ totalScore }}%</div>
+        </div>
+        <span class="status-chip" [ngClass]="statusClass">{{ currentStatus }}</span>
+      </div>
+    </div>
+
+    <!-- Module tabs -->
+    <div class="module-tabs mb-3" role="tablist">
+      <button *ngFor="let m of modules; let i = index"
+              type="button"
+              role="tab"
+              class="module-tab"
+              [ngClass]="[m.colorClass, activeModule === m.id ? 'tab-active' : '']"
+              [attr.aria-selected]="activeModule === m.id"
+              (click)="setActiveModule(m.id)">
+        <span class="tab-index">{{ i + 1 }}</span>
+        <span class="tab-name">{{ m.name }}</span>
+        <span class="tab-score mono">{{ getModuleTotals(m.id).weighted }}/{{ m.weight }}</span>
+      </button>
+    </div>
+
+    <!-- Active module card -->
+    <div class="module-card">
+      <div class="d-flex flex-wrap justify-content-between align-items-center pb-3 mb-3 border-bottom">
+        <div>
+          <div class="d-flex align-items-center">
+            <span class="module-code mono mr-2">{{ activeModuleMeta.id }}</span>
+            <h6 class="mb-0 module-heading">
+              {{ activeModuleMeta.code }}: {{ activeModuleMeta.name }}
+            </h6>
+          </div>
+          <p class="module-hint mb-0">
+            Weight <strong>{{ activeModuleMeta.weight }}%</strong> of the overall score.
+            Select a compliance rating, attach evidence, and add justification remarks for each criterion.
+          </p>
+        </div>
+        <span class="pillar-score mono">
+          Module Score: {{ getModuleTotals(activeModuleMeta.id).weighted }} / {{ activeModuleMeta.weight }} pts
+        </span>
+      </div>
+
+      <div class="row">
+        <div class="col-xl-6 col-lg-12 mb-3"
+             *ngFor="let q of activeQuestions; trackBy: trackByRefId">
+          <div class="question-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="q-ref mono">{{ q.refId }}</span>
+              <span class="q-points mono" [class.q-unanswered]="q.score < 0">
+                <ng-container *ngIf="q.score >= 0">
+                  +{{ q.weightedScore }} pts ({{ q.score }}/5)
+                </ng-container>
+                <ng-container *ngIf="q.score < 0">Not answered</ng-container>
+              </span>
+            </div>
+
+            <label class="q-criteria" [attr.for]="q.refId + '-score'">{{ q.criteria }}</label>
+
+            <div class="form-group mb-2">
+              <label class="q-field-label" [attr.for]="q.refId + '-score'">Compliance rating</label>
+              <select class="form-control form-control-sm"
+                      [id]="q.refId + '-score'"
+                      [ngModel]="q.score"
+                      (ngModelChange)="onScoreChange(q, $event)"
+                      [ngModelOptions]="{ standalone: true }">
+                <option [ngValue]="-1" disabled>Select a compliance option…</option>
+                <option *ngFor="let opt of q.options" [ngValue]="opt.value">
+                  {{ opt.label }} ({{ opt.value }} pts)
+                </option>
+              </select>
+            </div>
+
+            <div class="attachment-box mb-2">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="attach-label">
+                  <i class="fa fa-paperclip mr-1"></i> Evidence document
+                </span>
+                <span class="attach-status" [class.verified]="!!q.attachmentName">
+                  {{ q.attachmentName ? 'Attached' : 'Not attached' }}
+                </span>
+              </div>
+              <div class="attach-file mono" *ngIf="q.attachmentName">{{ q.attachmentName }}</div>
+              <label class="btn btn-sm btn-outline-secondary attach-btn mb-0"
+                     [attr.for]="q.refId + '-file'">
+                <i class="fa fa-upload mr-1"></i>
+                {{ q.attachmentName ? 'Replace file' : 'Attach file' }}
+              </label>
+              <input type="file"
+                     class="sr-only-file"
+                     [id]="q.refId + '-file'"
+                     (change)="onFileSelected(q, $event)">
+            </div>
+
+            <div class="form-group mb-0">
+              <label class="q-field-label" [attr.for]="q.refId + '-remarks'">Justification remarks</label>
+              <textarea class="form-control form-control-sm"
+                        [id]="q.refId + '-remarks'"
+                        rows="2"
+                        placeholder="Explain how the attached evidence supports this rating…"
+                        [(ngModel)]="q.remarks"
+                        [ngModelOptions]="{ standalone: true }"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stepper actions -->
+      <div class="d-flex flex-wrap justify-content-between align-items-center pt-3 mt-2 border-top">
+        <button type="button" class="btn btn-sm btn-outline-secondary"
+                [disabled]="isFirstModule"
+                (click)="prevModule()">
+          <i class="fa fa-chevron-left mr-1"></i> Previous Module
+        </button>
+
+        <span class="attach-summary">
+          {{ attachmentsVerifiedCount }} / {{ questions.length }} evidence documents attached
+        </span>
+
+        <button type="button" class="btn btn-sm btn-primary"
+                *ngIf="!isLastModule"
+                (click)="nextModule()">
+          Next Module <i class="fa fa-chevron-right ml-1"></i>
+        </button>
+
+        <button type="button" class="btn btn-sm btn-success"
+                *ngIf="isLastModule"
+                [disabled]="submitting"
+                (click)="submit()">
+          <i class="fa fa-paper-plane mr-1"></i>
+          {{ submitting ? 'Evaluating…' : 'Submit for AI Evaluation' }}
+        </button>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- ══ Result view ══ -->
+  <div class="result-panel" *ngIf="evaluationResult as result">
+    <div class="result-header" [ngClass]="statusClass">
+      <div>
+        <div class="result-caption">AI Evaluation Complete</div>
+        <h4 class="result-score mono mb-1">{{ result.overallScore }}%</h4>
+        <span class="status-chip" [ngClass]="statusClass">{{ result.status }}</span>
+      </div>
+      <div class="result-meta text-right">
+        <div><strong>{{ result.vendorName }}</strong></div>
+        <div>{{ result.category }}</div>
+        <div class="mono">{{ result.submissionDate }}</div>
+      </div>
+    </div>
+
+    <div class="system-action">
+      <strong>System action:</strong> {{ result.systemAction }}
+    </div>
+
+    <h6 class="breakdown-heading">Module Score Breakdown</h6>
+    <div class="table-responsive">
+      <table class="table table-sm breakdown-table">
+        <caption class="sr-only">Weighted score by qualification module</caption>
+        <thead>
+          <tr>
+            <th scope="col">Module</th>
+            <th scope="col" class="text-center">Avg Score (of 5)</th>
+            <th scope="col" class="text-center">Weight</th>
+            <th scope="col" class="text-center">Weighted Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let m of modules">
+            <td>{{ m.code }}: {{ m.name }}</td>
+            <td class="text-center mono">{{ getModuleTotals(m.id).avg }}</td>
+            <td class="text-center mono">{{ m.weight }}%</td>
+            <td class="text-center mono">{{ getModuleTotals(m.id).weighted }}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th scope="row">Total</th>
+            <th class="text-center"></th>
+            <th class="text-center mono">100%</th>
+            <th class="text-center mono">{{ result.overallScore }}</th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <h6 class="breakdown-heading">Criteria Detail</h6>
+    <div class="table-responsive">
+      <table class="table table-sm breakdown-table">
+        <caption class="sr-only">Score and evidence for each qualification criterion</caption>
+        <thead>
+          <tr>
+            <th scope="col">Ref</th>
+            <th scope="col">Criteria</th>
+            <th scope="col" class="text-center">Score</th>
+            <th scope="col" class="text-center">Weighted</th>
+            <th scope="col">Evidence</th>
+            <th scope="col">Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let q of result.questionBreakdown; trackBy: trackByRefId">
+            <td class="mono">{{ q.refId }}</td>
+            <td>{{ q.criteria }}</td>
+            <td class="text-center mono">{{ q.score < 0 ? '—' : q.score }}</td>
+            <td class="text-center mono">{{ q.weightedScore }}</td>
+            <td>
+              <span *ngIf="q.attachmentName" class="mono attach-cell">{{ q.attachmentName }}</span>
+              <span *ngIf="!q.attachmentName" class="text-muted">Not attached</span>
+            </td>
+            <td class="remarks-cell">{{ q.remarks || '—' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="d-flex justify-content-end pt-2">
+      <button type="button" class="btn btn-sm btn-outline-secondary mr-2" (click)="resetForm()">
+        <i class="fa fa-refresh mr-1"></i> Start New Assessment
+      </button>
+      <button type="button" class="btn btn-sm btn-primary" (click)="back.emit()">
+        Back to Workspace
+      </button>
+    </div>
+  </div>
+
+</div>

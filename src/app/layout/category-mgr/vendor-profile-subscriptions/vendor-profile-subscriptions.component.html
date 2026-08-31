@@ -102,13 +102,13 @@
                                 <li  >
                                     <span>
                                         <span class="label-text">Subscription Price</span>
-                                        <span class="label-vakue strike-off">{{card.planName.includes('CONNECT')? (card?.subscriptionPrice.toString() | currency: 'INR') : 'XX'}}</span>
+                                        <span class="label-vakue strike-off">{{ card?.subscriptionPrice?.toString() | currency: 'INR' }}</span>
                                     </span>
                                 </li>
                                 <li  >
                                     <span>
                                         <span class="label-text">Launch Offer Price**</span>
-                                        <span class="label-vakue">{{card.planName.includes('CONNECT')? (card?.launchOfferPrice.toString() | currency: 'INR') : 'XX'}}<sup style="color:green ;padding:3px;font-size: 14px !important;">#</sup></span>
+                                        <span class="label-vakue">{{ card?.launchOfferPrice?.toString() | currency: 'INR' }}<sup style="color:green ;padding:3px;font-size: 14px !important;">#</sup></span>
                                     </span>
                                 </li>
                             </ul>
@@ -116,14 +116,9 @@
                         </div>
 
                         <div class="col-12">
-                            <button class="btn btn-subscription"  *ngIf="card.planName.includes('CONNECT')"
-                                (click)="updateSubscription(card)" type="button"> {{isMatchedPlan(card.id)  ? 'Selected':
-                                'Subscribe'}}</button>
-
-                                   <button class="btn btn-subscription" style="opacity: 0.6; cursor: not-allowed; pointer-events: none;"  *ngIf="!card.planName.includes('CONNECT')"
-                                  type="button"> {{isMatchedPlan(card.id) && card.planName.includes('CONNECT') ? 'Selected':
-                                'Coming Soon'}}</button>
-                            
+                            <button class="btn btn-subscription"
+                                (click)="updateSubscription(card)" type="button">
+                                {{ isMatchedPlan(card.id) ? 'Selected' : 'Subscribe' }}</button>
                         </div>
                     </div>
                 </div>
