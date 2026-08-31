@@ -7,10 +7,25 @@ import * as CryptoJS from 'crypto-js';
 })
 export class EncryDecryService {
 
+  private static readonly LEGACY_KEY = 'perm';
+
   constructor() { }
 
   private getKey(keys?: string): string {
     return keys || environment.storageEncryptionKey;
+  }
+
+  private decryptWith(keyStr: string, encryptedValue: string): string {
+    const key = CryptoJS.enc.Utf8.parse(keyStr);
+    const iv = CryptoJS.enc.Utf8.parse(keyStr);
+    const decrypted = CryptoJS.AES.decrypt(encryptedValue, key, {
+        keySize: 128 / 8,
+        iv: iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7
+    });
+
+    return decrypted.toString(CryptoJS.enc.Utf8);
   }
 
   // The set method is use for encrypt the value.
@@ -40,15 +55,25 @@ export class EncryDecryService {
     const hasExplicitKey = arguments.length > 1;
     const keyStr = this.getKey(hasExplicitKey ? keysOrValue : undefined);
     const encryptedValue = hasExplicitKey ? value : keysOrValue;
-    const key = CryptoJS.enc.Utf8.parse(keyStr);
-    const iv = CryptoJS.enc.Utf8.parse(keyStr);
-    const decrypted = CryptoJS.AES.decrypt(encryptedValue, key, {
-        keySize: 128 / 8,
-        iv: iv,
-        mode: CryptoJS.mode.CBC,
-        padding: CryptoJS.pad.Pkcs7
-    });
 
-    return decrypted.toString(CryptoJS.enc.Utf8);
+    let decrypted = '';
+    try {
+      decrypted = this.decryptWith(keyStr, encryptedValue);
+    } catch {
+      decrypted = '';
+    }
+
+    // Legacy fallback: data encrypted before the key became configurable
+    // used the fixed legacy key, so retry with it instead of breaking
+    // already logged-in sessions.
+    if (!decrypted && !hasExplicitKey && keyStr !== EncryDecryService.LEGACY_KEY) {
+      try {
+        decrypted = this.decryptWith(EncryDecryService.LEGACY_KEY, encryptedValue);
+      } catch {
+        decrypted = '';
+      }
+    }
+
+    return decrypted;
   }
 }

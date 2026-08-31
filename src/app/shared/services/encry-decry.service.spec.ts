@@ -1,4 +1,5 @@
 import { EncryDecryService } from './encry-decry.service';
+import { environment } from 'src/environments/environment';
 
 describe('EncryDecryService', () => {
   let service: EncryDecryService;
@@ -40,5 +41,35 @@ describe('EncryDecryService', () => {
     const encrypted = service.set(key, payload);
     const decrypted = service.get(key, encrypted);
     expect(JSON.parse(decrypted)).toEqual(JSON.parse(payload));
+  });
+
+  describe('legacy key fallback', () => {
+    const originalKey = environment.storageEncryptionKey;
+
+    afterEach(() => {
+      environment.storageEncryptionKey = originalKey;
+    });
+
+    it('should decrypt legacy perm-encrypted data when configured key differs', () => {
+      const plain = 'legacy-session-payload';
+      const legacyEncrypted = service.set('perm', plain);
+
+      environment.storageEncryptionKey = 'new-configured-key';
+      const decrypted = service.get(legacyEncrypted);
+      expect(decrypted).toEqual(plain);
+    });
+
+    it('should return empty string when value cannot be decrypted with any key', () => {
+      environment.storageEncryptionKey = 'new-configured-key';
+      const decrypted = service.get('not-a-valid-ciphertext');
+      expect(decrypted).toEqual('');
+    });
+
+    it('should not fall back to legacy key when an explicit key is provided', () => {
+      const plain = 'explicit-key-payload';
+      const legacyEncrypted = service.set('perm', plain);
+      const decrypted = service.get('another-explicit-key', legacyEncrypted);
+      expect(decrypted).not.toEqual(plain);
+    });
   });
 });

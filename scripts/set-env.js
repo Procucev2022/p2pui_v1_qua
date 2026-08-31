@@ -71,6 +71,32 @@ function resolveEnvConfig(isProdMode) {
   };
 }
 
+function resolveFileMode() {
+  const rootDir = path.resolve(__dirname, '..');
+
+  const devFilesEnv = {
+    ...parseEnvFile(path.join(rootDir, '.env')),
+    ...parseEnvFile(path.join(rootDir, '.env.local'))
+  };
+  const prodFilesEnv = {
+    ...parseEnvFile(path.join(rootDir, '.env.prod')),
+    ...parseEnvFile(path.join(rootDir, '.env.prod.local'))
+  };
+
+  const fileEnv =
+    devFilesEnv.NODE_ENV !== undefined || devFilesEnv.PRODUCTION !== undefined
+      ? devFilesEnv
+      : prodFilesEnv;
+
+  if (fileEnv.NODE_ENV === 'production' || fileEnv.PRODUCTION === 'true') {
+    return true;
+  }
+  if (fileEnv.NODE_ENV !== undefined || fileEnv.PRODUCTION !== undefined) {
+    return false;
+  }
+  return null;
+}
+
 function setEnvironment() {
   const args = process.argv.slice(2);
   const isProdArg =
@@ -81,7 +107,7 @@ function setEnvironment() {
     process.env.NODE_ENV === 'production' ||
     process.env.ENV === 'prod' ||
     process.env.PRODUCTION === 'true';
-  const isProd = isProdArg || isProdEnv;
+  const isProd = isProdArg || isProdEnv || resolveFileMode() === true;
 
   const devConfig = resolveEnvConfig(false);
   const prodConfig = resolveEnvConfig(true);
