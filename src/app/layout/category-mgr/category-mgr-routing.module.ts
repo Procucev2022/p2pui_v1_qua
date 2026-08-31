@@ -69,7 +69,6 @@ const routes: Routes = [
     {path: 'payment-success', component: SubscriptionPaymentSuccessComponent},
     {path: 'payment-failure', component: SubscriptionPaymentFailureComponent},
     {path: 'cat-mgr-reports', component: CategoryMgrReportsComponent},
-    {path: 'buyer-vendors', loadChildren: () => import('../buyer-vendors/buyer-vendors.module').then(m => m.BuyerVendorsModule)},
     {path: 'analytics', loadChildren: () => import('./analytics/analytics.module').then(m => m.AnalyticsModule)}
 ];
 @NgModule({
