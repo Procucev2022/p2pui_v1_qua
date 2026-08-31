@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AnalyticsService } from '../../services/analytics.service';
 
 @Component({
@@ -6,7 +6,7 @@ import { AnalyticsService } from '../../services/analytics.service';
   templateUrl: './analytics-categories.component.html',
   styleUrls: ['./analytics-categories.component.scss']
 })
-export class AnalyticsCategoriesComponent implements OnInit {
+export class AnalyticsCategoriesComponent implements OnInit, OnDestroy {
   categories: any[] = [];
   stats: any = { totalCategories: 0, activeBuyers: 0, registeredSellers: 0, openRfqs: 0 };
   searchQuery: string = '';
@@ -15,11 +15,16 @@ export class AnalyticsCategoriesComponent implements OnInit {
   isLoading: boolean = true;
   currentPage: number = 1;
   itemsPerPage: number = 10;
+  private modalBackdropEl: HTMLElement | null = null;
 
   constructor(private analyticsService: AnalyticsService) {}
 
   ngOnInit(): void {
     this.loadCategories();
+  }
+
+  ngOnDestroy(): void {
+    this.cleanupBodyModal();
   }
 
   loadCategories(): void {
@@ -62,10 +67,26 @@ export class AnalyticsCategoriesComponent implements OnInit {
   openDrawer(cat: any): void {
     this.selectedCategory = cat;
     this.isDrawerOpen = true;
+    setTimeout(() => {
+      const el = document.getElementById('category-modal-backdrop');
+      if (el && el.parentElement !== document.body) {
+        this.modalBackdropEl = el;
+        document.body.appendChild(el);
+      }
+    }, 0);
   }
 
   closeDrawer(): void {
+    this.cleanupBodyModal();
     this.isDrawerOpen = false;
+  }
+
+  private cleanupBodyModal(): void {
+    const el = document.getElementById('category-modal-backdrop') || this.modalBackdropEl;
+    if (el && el.parentElement === document.body) {
+      document.body.removeChild(el);
+    }
+    this.modalBackdropEl = null;
   }
 
   exportData(): void {

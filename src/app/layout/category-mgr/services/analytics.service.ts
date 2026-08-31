@@ -26,6 +26,10 @@ export class AnalyticsService {
     return this.http.get(`${AppApiConfig.apiEndpoint + AppApiConfig.GET_ANALYTICS_FUNNEL_DETAILS}?type=${type}&stage=${stageNumber}&q=${encodeURIComponent(search)}`);
   }
 
+  getFunnelDropoffDetails(type: string = 'buyer', stageNumber: number = 2, search: string = ''): Observable<any> {
+    return this.http.get(`${AppApiConfig.apiEndpoint + AppApiConfig.GET_ANALYTICS_FUNNEL_DROPOFF}?type=${type}&stage=${stageNumber}&q=${encodeURIComponent(search)}`);
+  }
+
   getCalendarData(year?: number, month?: number): Observable<any> {
     let url = AppApiConfig.apiEndpoint + AppApiConfig.GET_ANALYTICS_CALENDAR;
     if (year && month) {

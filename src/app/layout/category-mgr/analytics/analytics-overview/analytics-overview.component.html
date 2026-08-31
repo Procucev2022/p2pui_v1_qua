@@ -3,15 +3,8 @@
   <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 gap-2">
     <div>
       <h3 class="font-weight-bold text-dark mb-1">Platform Overview</h3>
-      <p class="text-muted small mb-0">Enterprise-wide conversion, demand activity, and RFQ pipeline metrics from Spring Boot backend.</p>
     </div>
     <div class="d-flex align-items-center gap-2">
-      <select [(ngModel)]="selectedRange" class="form-control form-control-sm mr-2 w-auto">
-        <option value="Last 30 Days (Jul 26 - Aug 24)">Last 30 Days (Jul 26 - Aug 24)</option>
-        <option value="Current Month (August)">Current Month (August)</option>
-        <option value="Previous Month (July)">Previous Month (July)</option>
-        <option value="Year to Date (2026)">Year to Date (2026)</option>
-      </select>
       <button (click)="exportData()" class="btn btn-sm btn-primary">
         <i class="fa fa-download mr-1"></i> Export
       </button>
@@ -31,7 +24,7 @@
     <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 mb-4">
       <!-- Total Buyers -->
       <div class="col mb-3">
-        <div class="card h-100 p-3 stat-card">
+        <div class="card h-100 p-3 stat-card" (click)="openMetricDetails('totalBuyers')" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">Total Buyers</span>
             <i class="fa fa-users text-primary"></i>
@@ -45,7 +38,7 @@
 
       <!-- Total Sellers -->
       <div class="col mb-3">
-        <div class="card h-100 p-3 stat-card">
+        <div class="card h-100 p-3 stat-card" (click)="openMetricDetails('totalSellers')" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">Total Sellers</span>
             <i class="fa fa-building text-primary"></i>
@@ -59,7 +52,7 @@
 
       <!-- Active Buyers -->
       <div class="col mb-3">
-        <div class="card h-100 p-3 stat-card">
+        <div class="card h-100 p-3 stat-card" (click)="openMetricDetails('activeBuyers')" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">Active Buyers</span>
             <i class="fa fa-check-circle text-primary"></i>
@@ -71,19 +64,19 @@
 
       <!-- Inactive Buyers -->
       <div class="col mb-3">
-        <div class="card h-100 p-3 stat-card">
+        <div class="card h-100 p-3 stat-card" (click)="openMetricDetails('inactiveBuyers')" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">Inactive Buyers</span>
             <i class="fa fa-user-times text-muted"></i>
           </div>
           <div class="stat-value text-dark font-weight-bold">{{ metrics.inactiveBuyers?.value | number }}</div>
-          <span class="stat-change text-muted small mt-1">{{ metrics.inactiveBuyers?.change }}</span>
+          <span class="stat-change text-muted small mt-1">{{ metrics.inactiveBuyers?.percentOfTotal || metrics.inactiveBuyers?.change }}</span>
         </div>
       </div>
 
       <!-- Total RFQs -->
       <div class="col mb-3">
-        <div class="card h-100 p-3 stat-card">
+        <div class="card h-100 p-3 stat-card" (click)="openMetricDetails('totalRfqs')" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">Total RFQs</span>
             <i class="fa fa-file-text-o text-primary"></i>
@@ -97,7 +90,7 @@
 
       <!-- RFQs with Quotes -->
       <div class="col mb-3">
-        <div class="card h-100 p-3 stat-card">
+        <div class="card h-100 p-3 stat-card" (click)="openMetricDetails('rfqsWithQuotes')" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">RFQs with Quotes</span>
             <i class="fa fa-check-square-o text-primary"></i>
@@ -107,23 +100,9 @@
         </div>
       </div>
 
-      <!-- Total Seller Submissions -->
-      <div class="col mb-3">
-        <div class="card h-100 p-3 stat-card">
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <span class="stat-label">Seller Submissions</span>
-            <i class="fa fa-paper-plane text-primary"></i>
-          </div>
-          <div class="stat-value text-dark font-weight-bold">{{ metrics.sellerSubmissions?.value | number }}</div>
-          <span class="stat-change text-primary font-weight-bold mt-1">
-            <i class="fa fa-arrow-up mr-1"></i>{{ metrics.sellerSubmissions?.change }}
-          </span>
-        </div>
-      </div>
-
       <!-- RFQs Without Quotes -->
       <div class="col mb-3">
-        <div class="card h-100 p-3 stat-card border-danger-left bg-light-danger">
+        <div class="card h-100 p-3 stat-card border-danger-left bg-light-danger" (click)="openMetricDetails('rfqsWithoutQuotes')" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">RFQs W/O Quotes</span>
             <i class="fa fa-exclamation-triangle text-danger"></i>
@@ -133,11 +112,25 @@
         </div>
       </div>
 
+      <!-- Total Seller Submissions -->
+      <div class="col mb-3">
+        <div class="card h-100 p-3 stat-card" (click)="openMetricDetails('sellerSubmissions')" title="Click to view details">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="stat-label">Seller Submissions Number</span>
+            <i class="fa fa-paper-plane text-primary"></i>
+          </div>
+          <div class="stat-value text-dark font-weight-bold">{{ metrics.sellerSubmissions?.value | number }}</div>
+          <span class="stat-change text-primary font-weight-bold mt-1">
+            <i class="fa fa-arrow-up mr-1"></i>{{ metrics.sellerSubmissions?.change }}
+          </span>
+        </div>
+      </div>
+
       <!-- Seller Subs -->
       <div class="col mb-3">
-        <div class="card h-100 p-3 stat-card">
+        <div class="card h-100 p-3 stat-card" (click)="openMetricDetails('sellerSubs')" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-2">
-            <span class="stat-label">Seller Subs</span>
+            <span class="stat-label">Seller Subscribe Value</span>
             <i class="fa fa-rupee text-primary"></i>
           </div>
           <div class="stat-value text-dark font-weight-bold">{{ metrics.sellerSubs?.value }}</div>
@@ -149,7 +142,7 @@
 
       <!-- Pending Credits -->
       <div class="col mb-3">
-        <div class="card h-100 p-3 stat-card">
+        <div class="card h-100 p-3 stat-card" (click)="openMetricDetails('pendingCredits')" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">Pending Credits</span>
             <i class="fa fa-credit-card text-primary"></i>
@@ -161,7 +154,7 @@
 
       <!-- Repeat Buyers -->
       <div class="col mb-3">
-        <div class="card h-100 p-3 stat-card">
+        <div class="card h-100 p-3 stat-card" (click)="openMetricDetails('repeatBuyers')" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">Repeat Buyers</span>
             <i class="fa fa-repeat text-primary"></i>
@@ -173,7 +166,7 @@
 
       <!-- Top Category -->
       <div class="col mb-3">
-        <div class="card h-100 p-3 stat-card">
+        <div class="card h-100 p-3 stat-card" (click)="openMetricDetails('topCategory')" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">Top Category</span>
             <i class="fa fa-cube text-primary"></i>
@@ -188,7 +181,7 @@
     <div class="row mb-4">
       <!-- Registration Source -->
       <div class="col-lg-6 mb-3">
-        <div class="card p-4 h-100 shadow-sm border-0">
+        <div class="card p-4 h-100 shadow-sm border-0 stat-card" (click)="openMetricDetails('registrationSource')" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="font-weight-bold mb-0">Registration Source</h5>
             <div class="d-flex align-items-center">
@@ -238,7 +231,7 @@
 
       <!-- RFQ Lifecycle Status -->
       <div class="col-lg-6 mb-3">
-        <div class="card p-4 h-100 shadow-sm border-0">
+        <div class="card p-4 h-100 shadow-sm border-0 stat-card" (click)="openMetricDetails('lifecycleStatus')" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="font-weight-bold mb-0">RFQ Lifecycle Status</h5>
             <span class="badge badge-light text-muted">Pipeline Total: {{ metrics.totalRfqs?.value }}</span>
@@ -270,4 +263,85 @@
       </div>
     </div>
   </div>
+
+  <!-- Metric In-Depth Detail Modal Dialog -->
+  <div *ngIf="isModalOpen && selectedMetricDetail" id="overview-modal-backdrop" class="modal-backdrop-custom" (click)="closeMetricDetails()">
+    <div class="modal-dialog-custom" (click)="$event.stopPropagation()">
+      <!-- Modal Header -->
+      <div class="d-flex justify-content-between align-items-center p-3 px-4 border-bottom bg-light">
+        <div class="d-flex align-items-center">
+          <div class="icon-circle-lg mr-3" [ngClass]="selectedMetricDetail.bgClass">
+            <i class="fa {{ selectedMetricDetail.icon }}" [ngClass]="selectedMetricDetail.colorClass"></i>
+          </div>
+          <div>
+            <div class="d-flex align-items-center">
+              <h5 class="font-weight-bold text-dark mb-0 mr-2">{{ selectedMetricDetail.title }}</h5>
+              <span class="badge badge-secondary small font-weight-normal">{{ selectedMetricDetail.category }}</span>
+            </div>
+            <small class="text-muted">Platform Metric Deep Dive & Analytics</small>
+          </div>
+        </div>
+        <button type="button" class="close text-muted" (click)="closeMetricDetails()" aria-label="Close" style="outline: none;">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-4 modal-body-custom">
+        <!-- Top Stat Banner -->
+        <div class="p-3 mb-4 rounded border bg-light-soft d-flex flex-wrap align-items-center justify-content-between">
+          <div>
+            <div class="text-uppercase text-muted font-weight-bold" style="font-size: 11px; letter-spacing: 0.5px;">Current Metric Value</div>
+            <div class="stat-value font-weight-bold text-dark mt-1">
+              <span *ngIf="selectedMetricDetail.isFormattedNumber">{{ selectedMetricDetail.value | number }}</span>
+              <span *ngIf="!selectedMetricDetail.isFormattedNumber">{{ selectedMetricDetail.value }}</span>
+            </div>
+          </div>
+          <div>
+            <span *ngIf="selectedMetricDetail.change" class="badge badge-primary px-3 py-2" style="font-size: 13px;">
+              <i class="fa fa-arrow-up mr-1"></i> {{ selectedMetricDetail.change }} vs prev
+            </span>
+            <span *ngIf="selectedMetricDetail.subtitle" class="badge badge-info px-3 py-2" style="font-size: 13px;">
+              {{ selectedMetricDetail.subtitle }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Metric Details Sections -->
+        <div class="row">
+          <!-- What is it -->
+          <div class="col-md-12 mb-3">
+            <div class="detail-card p-3 border rounded">
+              <h6 class="font-weight-bold text-dark mb-2 d-flex align-items-center">
+                <i class="fa fa-info-circle text-primary mr-2"></i> What is {{ selectedMetricDetail.title }}?
+              </h6>
+              <p class="text-muted mb-0" style="font-size: 13.5px; line-height: 1.6;">
+                {{ selectedMetricDetail.whatIs }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Condition & Calculation -->
+          <div class="col-md-12 mb-2">
+            <div class="detail-card p-3 border rounded" style="background-color: #fcfdfe;">
+              <h6 class="font-weight-bold text-dark mb-2 d-flex align-items-center">
+                <i class="fa fa-cogs text-warning mr-2"></i> Condition & Calculation Rules
+              </h6>
+              <p class="text-dark mb-0 font-weight-500" style="font-size: 13.5px; line-height: 1.6;">
+                {{ selectedMetricDetail.condition }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-3 px-4 border-top bg-light d-flex justify-content-end">
+        <button type="button" class="btn btn-sm btn-secondary px-3" (click)="closeMetricDetails()">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
+
