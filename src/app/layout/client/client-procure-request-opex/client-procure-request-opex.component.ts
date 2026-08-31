@@ -104,7 +104,7 @@ export class ClientProcureRequestOpexComponent implements OnInit, OnDestroy {
         this.secondPageOptions = AppApiConfig.GRID_PAGE_INFO.pageOptions;
 
         this.defaultPermissions = AppApiConfig.DEFAULT_PERMISSIONS;
-        const temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
+        const temp = JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')));
         this.loggedUserDetails = temp.details;
         console.log(this.loggedUserDetails);
         this.loggedUserPermissions = this.loggedUserDetails.listofPermission;

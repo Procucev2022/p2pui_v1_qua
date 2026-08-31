@@ -27,7 +27,7 @@ export class VendorProfileSubscriptionsComponent {
     private toastrService: ToastrService,
     private createRfqService: CreateRfqService,
   ) {
-    const temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
+    const temp = JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')));
     this.loggedUserDetails = temp.details;
     this.createRfqService.getSubscriptionsList().subscribe((res: any) => {
       this.subscriptionPlansList = res.data && res.data.plans ? res.data.plans : []

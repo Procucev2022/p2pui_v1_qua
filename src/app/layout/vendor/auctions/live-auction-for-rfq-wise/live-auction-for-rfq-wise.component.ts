@@ -70,7 +70,7 @@ export class LiveAuctionForRfqWiseComponent implements OnInit , OnDestroy {
   ngOnInit() {
     this.isEditBidAmount = false;
     this.defaultPermissions = AppApiConfig.DEFAULT_PERMISSIONS;
-    const temp =  JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')) );
+    const temp =  JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')) );
     this.loggedUserDetails = temp.details;
     this.selectedRow = this.data.selectData.acceptedTerms;
     this.auctionBidAndVendorData = this.data.bidAuctionVendorData;

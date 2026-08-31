@@ -28,7 +28,7 @@ export class AddOrEditVendorModalComponent implements OnInit {
     private converSer: ConvertToBase64Service) { }
   ngOnInit() {
     this.isNewVendor = !this.data ? true : false;
-    const temp =  JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')) );
+    const temp =  JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')) );
     this.loggedUserDetails = temp.details.role.roleName;
     if (this.loggedUserDetails === 'VendorManager3') {
       this.vendoryEntryType = 'bulkEntry';

@@ -13,9 +13,9 @@ describe('environment configuration', () => {
       expect(environment.apiEndpoint).toBe(environment.baseURL);
     });
 
-    it('should have storageEncryptionKey and basicAuthToken defined', () => {
+    it('should have storageEncryptionKey and basicAuthToken properties', () => {
       expect(environment.storageEncryptionKey).toBeTruthy();
-      expect(environment.basicAuthToken).toBeTruthy();
+      expect(environment.basicAuthToken).toBeDefined();
     });
   });
 
@@ -30,9 +30,9 @@ describe('environment configuration', () => {
       expect(prodEnvironment.apiEndpoint).toBe(prodEnvironment.baseURL);
     });
 
-    it('should have storageEncryptionKey and basicAuthToken defined', () => {
+    it('should have storageEncryptionKey and basicAuthToken properties', () => {
       expect(prodEnvironment.storageEncryptionKey).toBeTruthy();
-      expect(prodEnvironment.basicAuthToken).toBeTruthy();
+      expect(prodEnvironment.basicAuthToken).toBeDefined();
     });
   });
 });

@@ -61,7 +61,7 @@ export class ViewPrModalComponent implements OnInit {
     this.pageRecordSize = AppApiConfig.GRID_PAGE_INFO.initpageSize;
     this.pageOptions = AppApiConfig.GRID_PAGE_INFO.pageOptions;
     this.defaultPermissions = AppApiConfig.DEFAULT_PERMISSIONS;
-    let temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
+    let temp = JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')));
     this.loggedUser = temp.details;
     this.loggedUserPermissions = temp.details.listofPermission;
 

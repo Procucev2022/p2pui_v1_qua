@@ -29,7 +29,7 @@ export class ScreenAccessGuardGuard implements CanActivateChild {
         childRoute: ActivatedRouteSnapshot,
         state: RouterStateSnapshot): boolean {
         if(localStorage.getItem('logData')){
-            const temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
+            const temp = JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')));
             this.loggedUserPermissions = temp.details.listofPermission;
             this.loggedUserDetails = temp.details;
             this.loggedUserName = this.loggedUserDetails.username;

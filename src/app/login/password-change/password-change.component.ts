@@ -216,7 +216,7 @@ export class PasswordChangeComponent implements OnInit {
       if (data) {
         console.log('loggedUserData', data);
         const obj = Object.assign({}, data);
-        const k = this.encryDecryService.set('perm', JSON.stringify({ 'details': data }));
+        const k = this.encryDecryService.set(JSON.stringify({ 'details': data }));
         localStorage.setItem('logData', k);
         localStorage.setItem('orgId', data.org.id);
         localStorage.setItem('loggedId', data.id);

@@ -64,7 +64,7 @@ export class CatMgrVendorCatalogueComponent implements OnInit {
         this.pageRecordSize = AppApiConfig.GRID_PAGE_INFO.initpageSize;
         this.pageOptions = AppApiConfig.GRID_PAGE_INFO.pageOptions;
         this.defaultPermissions = AppApiConfig.DEFAULT_PERMISSIONS;
-        const temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
+        const temp = JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')));
         this.loggedUserPermissions = temp.details.listofPermission;
         this.loggedUserDetails = temp.details;
         this.loggedUserName = this.loggedUserDetails.username;

@@ -4,5 +4,5 @@ export const environment = {
   baseURL: 'https://quaservicesp.procucev.com',
   apiEndpoint: 'https://quaservicesp.procucev.com',
   storageEncryptionKey: 'perm',
-  basicAuthToken: 'Basic cHJvY3VjZXY6cHJvY3VjZXY='
+  basicAuthToken: ''
 };

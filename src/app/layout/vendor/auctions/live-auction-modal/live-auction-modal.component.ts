@@ -30,7 +30,7 @@ export class LiveAuctionModalComponent implements OnInit {
 
   ngOnInit() {
     this.defaultPermissions = AppApiConfig.DEFAULT_PERMISSIONS;
-    const temp =  JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')) );
+    const temp =  JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')) );
     this.loggedUserDetails = temp.details;
 
     this.loggedUserPermissions = this.loggedUserDetails.listofPermission;

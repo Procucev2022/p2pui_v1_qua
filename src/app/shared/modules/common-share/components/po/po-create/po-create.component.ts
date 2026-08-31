@@ -63,7 +63,7 @@ model :any ={
     this.advance = false;
     this.pageRecordSize = AppApiConfig.GRID_PAGE_INFO.initpageSize;
     this.pageOptions = AppApiConfig.GRID_PAGE_INFO.pageOptions;
-    const temp =  JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')) );
+    const temp =  JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')) );
     this.loggedUserDetails = temp.details;
     this.roleName = this.loggedUserDetails['role']['roleName'];
     console.log('userDetails', this.loggedUserDetails);

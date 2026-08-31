@@ -28,7 +28,7 @@ export class PrReportsComponent implements OnInit {
   ngOnInit() {
     // this.userName = 'undefined';
     // this.department = 'undefined';
-    const temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
+    const temp = JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')));
     this.loggedUserData = temp.details;
     if (this.loggedUserData.role.description === 'clientInitiator') {
       this.getUserNames();

@@ -4,5 +4,5 @@ export const environment = {
   baseURL: 'https://p2pv1servicesdev-etfrcte5fhdvfrd4.centralindia-01.azurewebsites.net',
   apiEndpoint: 'https://p2pv1servicesdev-etfrcte5fhdvfrd4.centralindia-01.azurewebsites.net',
   storageEncryptionKey: 'perm',
-  basicAuthToken: 'Basic cHJvY3VjZXY6cHJvY3VjZXY='
+  basicAuthToken: ''
 };

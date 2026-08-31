@@ -241,7 +241,7 @@ export class PrItemsGridPanelCapexComponent implements OnInit {
         this.getLinkedItemsByClient();
         this.getLinkedVendorsByClient();
         this.createNonItemForm();
-        const temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
+        const temp = JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')));
         this.loggedUserDetails = temp.details;
         this.roleName = this.loggedUserDetails.role.roleName;
         this.catService.getRegionsByOrgId({id: this.loggedUserDetails.org.id}).subscribe((res:any)=>{

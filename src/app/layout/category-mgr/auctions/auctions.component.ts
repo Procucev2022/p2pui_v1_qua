@@ -190,7 +190,7 @@ export class AuctionsComponent implements OnInit {
     ngOnInit() {
         this.currentDate = new Date();
         this.defaultPermissions = AppApiConfig.DEFAULT_PERMISSIONS;
-        const temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
+        const temp = JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')));
         console.log('lgo', temp.details);
         this.loggedUserDetails = temp.details;
         this.loggedUserType = temp.details.role.roleName;

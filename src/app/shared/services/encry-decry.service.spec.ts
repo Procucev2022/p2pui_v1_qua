@@ -25,12 +25,12 @@ describe('EncryDecryService', () => {
 
   it('should encrypt and decrypt using default environment key when key is omitted', () => {
     const plain = 'test-default-key-payload';
-    const encrypted = service.set(undefined, plain);
+    const encrypted = service.set(plain);
 
     expect(encrypted).toBeTruthy();
     expect(encrypted).not.toEqual(plain);
 
-    const decrypted = service.get(undefined, encrypted);
+    const decrypted = service.get(encrypted);
     expect(decrypted).toEqual(plain);
   });
 

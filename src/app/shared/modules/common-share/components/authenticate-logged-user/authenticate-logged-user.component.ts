@@ -17,7 +17,7 @@ export class AuthenticateLoggedUserComponent implements OnInit {
     loggedUserDetails: any;
     loggedUserName: any;
     constructor(private dialogRef: MatDialogRef<AuthenticateLoggedUserComponent>, private encryDecryService: EncryDecryService, private createRfqService: CreateRfqService, private toaster: ToastrService) {
-        const temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
+        const temp = JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')));
         this.loggedUserPermissions = temp.details.listofPermission;
         this.loggedUserDetails = temp.details;
         this.loggedUserName = this.loggedUserDetails.username ? this.loggedUserDetails.username : '';

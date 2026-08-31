@@ -35,7 +35,7 @@ export class ClientAnalyticsInfoComponent implements OnInit {
     this.prfDate = new Date(dateBefore7Days)
     this.prtDate= new Date();
     this.defaultPermissions = AppApiConfig.DEFAULT_PERMISSIONS;
-    const temp =  JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')) );
+    const temp =  JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')) );
     this.loggedUserDetails = temp.details;
 
     this.getChartDetails(prfDate, prtDate)
