@@ -263,7 +263,7 @@ export class VendorAiProfileComponent implements OnInit {
     this.toastr.info(`Downloading '${doc.name}'...`, 'Document Download');
   }
 
-  editVendorDetails(): void {
+editVendorDetails(): void {
     if (this.vendor) {
       this.router.navigate(['/categorymgr/buyer-vendors', this.vendor.id || this.vendor.vendorCode, 'edit']);
     }
