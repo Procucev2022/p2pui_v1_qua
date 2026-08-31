@@ -83,6 +83,7 @@
       <div class="w-auto">
         <input
           [(ngModel)]="searchQuery"
+          (ngModelChange)="currentPage = 1"
           type="text"
           placeholder="Search categories..."
           class="form-control form-control-sm"
