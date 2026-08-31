@@ -33,7 +33,7 @@ jobs:
           BASIC_AUTH_TOKEN: ${{ vars.BASIC_AUTH_TOKEN || vars.QUA_BASIC_AUTH_TOKEN || vars.PROD_BASIC_AUTH_TOKEN || secrets.QUA_BASIC_AUTH_TOKEN || secrets.PROD_BASIC_AUTH_TOKEN || secrets.BASIC_AUTH_TOKEN || '' }}
           PROXY_TARGET: ${{ vars.PROXY_TARGET || vars.BACKEND_URL || secrets.BACKEND_URL || 'https://quaservicesp.procucev.com' }}
         run: |
-          npm install --legacy-peer-deps
+          npm install --legacy-peer-deps --include=dev
           npm run build --if-present
 
       - name: Upload artifact for deployment job
