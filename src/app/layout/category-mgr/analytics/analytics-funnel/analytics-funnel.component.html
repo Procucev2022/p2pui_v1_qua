@@ -41,9 +41,13 @@
         <ng-container *ngFor="let stage of stages; let i = index; let isLast = last">
           <!-- Stage Box -->
           <div class="stage-card flex-fill p-3 border rounded-lg bg-white position-relative text-center w-100 hover-shadow"
+               role="button"
+               tabindex="0"
                [class.goal-card]="stage.isGoal"
                [class.alert-card]="stage.isAlert"
                (click)="openStageModal(stage)"
+               (keydown.enter)="openStageModal(stage)"
+               (keydown.space)="openStageModal(stage); $event.preventDefault()"
                title="Click to view all {{ activeTab === 'seller' ? 'sellers' : 'buyers' }} in this stage">
             <span *ngIf="stage.isGoal" class="badge badge-primary position-absolute top-right-badge">GOAL</span>
             <span *ngIf="stage.isAlert" class="badge badge-danger position-absolute top-right-badge">ALERT</span>
