@@ -252,20 +252,27 @@ export class AnalyticsOverviewComponent implements OnInit {
 
   exportData(): void {
     if (!this.metrics) return;
-    const csvContent =
-      'data:text/csv;charset=utf-8,' +
-      'Metric,Value\n' +
-      `Total Buyers,${this.metrics.totalBuyers?.value || 0}\n` +
-      `Total Sellers,${this.metrics.totalSellers?.value || 0}\n` +
-      `Active Buyers,${this.metrics.activeBuyers?.value || 0}\n` +
-      `Total RFQs,${this.metrics.totalRfqs?.value || 0}\n` +
-      `RFQs with Quotes,${this.metrics.rfqsWithQuotes?.value || 0}\n` +
-      `Seller Submissions Number,${this.metrics.sellerSubmissions?.value || 0}\n` +
-      `RFQs Without Quotes,${this.metrics.rfqsWithoutQuotes?.value || 0}\n` +
-      `Seller Subscribe Value,${this.metrics.sellerSubs?.value || 0}\n` +
-      `Pending Credits,${this.metrics.pendingCredits?.value || 0}\n` +
-      `Repeat Buyers,${this.metrics.repeatBuyers?.value || 0}\n` +
-      `Top Category,${this.metrics.topCategory?.name || 'N/A'}\n`;
+    const escapeCsvCell = (value: any): string => {
+      const text = String(value ?? '');
+      const safeText = /^[=+\-@]/.test(text) ? `'${text}` : text;
+      return `"${safeText.replace(/"/g, '""')}"`;
+    };
+    const rows = [
+      ['Metric', 'Value'],
+      ['Total Buyers', this.metrics.totalBuyers?.value ?? 0],
+      ['Total Sellers', this.metrics.totalSellers?.value ?? 0],
+      ['Active Buyers', this.metrics.activeBuyers?.value ?? 0],
+      ['Total RFQs', this.metrics.totalRfqs?.value ?? 0],
+      ['RFQs with Quotes', this.metrics.rfqsWithQuotes?.value ?? 0],
+      ['Seller Submissions Number', this.metrics.sellerSubmissions?.value ?? 0],
+      ['RFQs Without Quotes', this.metrics.rfqsWithoutQuotes?.value ?? 0],
+      ['Seller Subscribe Value', this.metrics.sellerSubs?.value ?? 0],
+      ['Pending Credits', this.metrics.pendingCredits?.value ?? 0],
+      ['Repeat Buyers', this.metrics.repeatBuyers?.value ?? 0],
+      ['Top Category', this.metrics.topCategory?.name ?? 'N/A']
+    ];
+    const csvContent = 'data:text/csv;charset=utf-8,' +
+      rows.map((row) => row.map(escapeCsvCell).join(',')).join('\n');
 
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
