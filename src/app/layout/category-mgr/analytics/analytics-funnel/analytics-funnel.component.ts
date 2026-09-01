@@ -102,15 +102,16 @@ export class AnalyticsFunnelComponent implements OnInit {
 
   loadFunnel(): void {
     this.isLoading = true;
+    const requestedTab = this.activeTab;
     const requestId = ++this.loadRequestId;
-    this.analyticsService.getFunnelData(this.activeTab).subscribe({
+    this.analyticsService.getFunnelData(requestedTab).subscribe({
       next: (res: any) => {
         if (requestId !== this.loadRequestId) return;
         if (res) {
           this.stages = res.stages || [];
           this.summary = res.summary || null;
 
-          if (this.activeTab === 'seller') {
+          if (requestedTab === 'seller') {
             const hasDepletedStage = this.stages.some((s: any) => s.isAlert || s.name?.toLowerCase().includes('depleted'));
             if (!hasDepletedStage && this.summary && this.summary.depletedCreditSellers !== undefined && this.summary.depletedCreditSellers !== null) {
               const depletedCount = this.summary.depletedCreditSellers;

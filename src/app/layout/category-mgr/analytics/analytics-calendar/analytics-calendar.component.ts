@@ -71,6 +71,13 @@ export class AnalyticsCalendarComponent implements OnInit {
     });
   }
 
+  handleCurrentMonth(): void {
+    const now = new Date();
+    this.currentYear = now.getFullYear();
+    this.currentMonth = now.getMonth() + 1;
+    this.loadCalendar();
+  }
+
   handlePrevMonth(): void {
     if (this.currentMonth === 1) {
       this.currentYear--;

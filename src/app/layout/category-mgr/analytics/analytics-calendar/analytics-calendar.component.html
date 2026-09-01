@@ -29,7 +29,7 @@
       <!-- Navigation buttons -->
       <div class="btn-group btn-group-sm shadow-2xs">
         <button (click)="handlePrevMonth()" class="btn btn-outline-secondary font-weight-bold" title="Previous Month">‹</button>
-        <button (click)="currentYear = todayYear; currentMonth = todayMonth; loadCalendar()" class="btn btn-light font-weight-bold">Current</button>
+        <button (click)="handleCurrentMonth()" class="btn btn-light font-weight-bold">Current</button>
         <button (click)="handleNextMonth()" class="btn btn-outline-secondary font-weight-bold" title="Next Month">›</button>
       </div>
     </div>
