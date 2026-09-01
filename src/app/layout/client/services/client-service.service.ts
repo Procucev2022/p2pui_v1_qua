@@ -34,11 +34,9 @@ export class ClientService {
     return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.GET_PR_ITEMS_BY_ID, data, {});
   }
   getPrById(data) {
-    // return this.httpService.post('http://34.68.203.139:8080/procucev/rest/client/getPRById',data,{})
     return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.GET_PR_BY_ID, data, {});
   }
   getSquareFeetPrById(data) {
-    // return this.httpService.post('http://34.68.203.139:8080/procucev/rest/client/getPRById',data,{})
     return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.GET_SQR_FEET_PR_BY_ID, data, {});
   }
 
@@ -48,23 +46,19 @@ export class ClientService {
 
 
   getRfqwiseAuctionIdsByPR(data) {
-    // return this.httpService.post('http://34.68.203.139:8080/procucev/rest/client/getPRById',data,{})
     return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.GET_RFQ_AUCTION_ID_BY_PR, data, {});
   }
   getRFQWiseSummary(data) {
-    // return this.httpService.post('http://34.68.203.139:8080/procucev/rest/client/getPRById',data,{})
     return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.GET_RFQ_WISE_SUMMARY, data, {});
   }
 
 
   getCapexExcelSummary(data) {
-    // return this.httpService.post('http://34.68.203.139:8080/procucev/rest/client/getPRById',data,{})
     return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.GET_CAPEX_EXCEL_SUMMARY, data, {});
   }
 
 
   getItemWiseSummary(data) {
-    // return this.httpService.post('http://34.68.203.139:8080/procucev/rest/client/getPRById',data,{})
     return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.GET_ITEM_WISE_SUMMARY, data, {});
   }
 

@@ -140,7 +140,7 @@ export class CategoryMgrVendorSummaryComponent {
         this.pageRecordSize = this.pageSize; //AppApiConfig.GRID_PAGE_INFO.initpageSize;
         this.pageOptions = AppApiConfig.GRID_PAGE_INFO.pageOptions; //[10, 25,50,100, 500, 1000]
         this.defaultPermissions = AppApiConfig.DEFAULT_PERMISSIONS;
-        const temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
+        const temp = JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')));
         this.loggedUserDetails = temp.details;
         this.loggedUserPermissions = temp.details.listofPermission;
         this.currentRole = this.loggedUserDetails.role.roleName;
@@ -150,8 +150,7 @@ export class CategoryMgrVendorSummaryComponent {
     }
 
     onSearchCriteriaChange(){
-        this.searchTextValue = '';
-        this.toastrService.warning('Search text cleared. Please enter new search text based on selected criteria.', 'Warning');
+        this.globalSearch();
     }
         
     
@@ -167,10 +166,14 @@ export class CategoryMgrVendorSummaryComponent {
     }
 
     globalSearch() {
-        if(this.searchTextValue) {
-           this.getVendorDataForGlobalSearch();
+        if(this.searchTextValue && this.searchTextValue.trim() !== '') {
+            if (!this.searchBy) {
+                this.toastrService.warning('Please select search criteria', 'Warning');
+                return;
+            }
+            this.getVendorDataForGlobalSearch();
         } else {
-            this.toastrService.warning('Please enter search text', 'Warning');
+            this.getRFQSummary(this.startPage, this.pageSize, '', this.sourceType);
         }
     }
 

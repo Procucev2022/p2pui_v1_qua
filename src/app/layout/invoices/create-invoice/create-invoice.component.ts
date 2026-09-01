@@ -49,7 +49,7 @@ export class CreateInvoiceComponent implements OnInit {
     private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    const temp =  JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')) );
+    const temp =  JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')) );
     this.loggedUserType = temp.details.role.roleName;
     this.loggedUserDetails = temp.details;
     this.getASNItems();

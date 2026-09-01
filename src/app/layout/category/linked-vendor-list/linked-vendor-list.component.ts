@@ -55,7 +55,7 @@ export class LinkedVendorListComponent implements OnInit {
     this.getLinkedVendorListByItemId();
     this.defaultPermissions = AppApiConfig.DEFAULT_PERMISSIONS;
     const temp = JSON.parse(
-      this.encryDecryService.get('perm', localStorage.getItem('logData'))
+      this.encryDecryService.get(localStorage.getItem('logData'))
     );
     this.loggedUserDetails = temp.details;
     this.isAnalyticsScreenShow =this.loggedUserDetails.role.roleName == 'VendorManager' || this.loggedUserDetails.role.roleName == "CategoryManager" ;

@@ -33,7 +33,7 @@ export class CreateEditAdvancePaymentRequestsComponent implements OnInit {
   ngOnInit() {
     console.log('data', this.data);
     const temp = JSON.parse(
-      this.encryDecryService.get('perm', localStorage.getItem('logData'))
+      this.encryDecryService.get(localStorage.getItem('logData'))
     );
     this.loggedUserDetails = temp.details;
     this.roleName = this.loggedUserDetails.role.roleName === 'Registration' ? 'Vendor' : this.loggedUserDetails.role.roleName;

@@ -28,7 +28,7 @@ export class AuctionsChartComponent implements OnInit {
     const prtDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd')
     this.auctionFromDate = new Date(dateBefore7Days)
     this.auctionToDate= new Date();
-    const temp =  JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')) );
+    const temp =  JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')) );
     this.loggedUserDetails = temp.details;
     this.getChartDetails(prfDate, prtDate)
   }

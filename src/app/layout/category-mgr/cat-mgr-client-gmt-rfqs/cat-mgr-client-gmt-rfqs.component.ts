@@ -110,7 +110,7 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
         this.pageRecordSize = AppApiConfig.GRID_PAGE_INFO.initpageSize;
         this.pageOptions = AppApiConfig.GRID_PAGE_INFO.pageOptions;
         this.defaultPermissions = AppApiConfig.DEFAULT_PERMISSIONS;
-        const temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
+        const temp = JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')));
         this.loggedUserDetails = temp.details;
         this.loggedUserPermissions = temp.details.listofPermission;
         this.currentRole = this.loggedUserDetails.role.roleName;
@@ -134,8 +134,7 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
     }
 
     onSearchCriteriaChange() {
-        this.searchTextValue = '';
-        this.toastrService.warning('Search text cleared. Please enter new search text based on selected criteria.', 'Warning');
+        this.globalSearch();
     }
 
         
@@ -150,10 +149,14 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
 
     }
     globalSearch() {
-        if(this.searchTextValue) {
-           this.getRFQsByCategoryManagerForGlobalSearch();
+        if(this.searchTextValue && this.searchTextValue.trim() !== '') {
+            if (!this.searchBy) {
+                this.toastrService.warning('Please select search criteria', 'Warning');
+                return;
+            }
+            this.getRFQsByCategoryManagerForGlobalSearch();
         } else {
-            this.toastrService.warning('Please enter search text', 'Warning');
+            this.getRfqsByCategoryManager(this.startPage, this.pageSize);
         }
     }
 

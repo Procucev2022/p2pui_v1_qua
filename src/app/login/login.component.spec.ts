@@ -689,6 +689,16 @@ describe('LoginComponent', () => {
       component.getLoggerUserData();
     });
 
+    it('encrypts logged user data with the configured-key overload', () => {
+      const data = userPayload('VendorManager');
+      auth.saveLoggedUserData.and.returnValue(of({}));
+      auth.getLoggedUserData.and.returnValue(of(data));
+
+      component.getLoggerUserData();
+
+      expect(encry.set).toHaveBeenCalledOnceWith(JSON.stringify({ 'details': data }));
+    });
+
     it('viewPassword, forgotpassword and registerVendor navigate or toggle', () => {
       component.visiblePassword = false;
       component.viewPassword();

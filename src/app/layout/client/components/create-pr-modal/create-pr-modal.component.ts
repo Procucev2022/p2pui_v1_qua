@@ -136,7 +136,7 @@ export class CreatePrModalComponent implements OnInit {
     ngOnInit() {
         this.dragAreaClass = 'dragarea';
         this.loggedUserData = JSON.parse(
-            this.encryDecryService.get('perm', localStorage.getItem('logData'))
+            this.encryDecryService.get(localStorage.getItem('logData'))
         );
         this.deptName =
             this.loggedUserData.details.department == null

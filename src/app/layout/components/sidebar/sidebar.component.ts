@@ -136,7 +136,7 @@ export class SidebarComponent implements OnInit {
         this.pushRightClass = 'push-right';
         this.defaultPermissions = AppApiConfig.DEFAULT_PERMISSIONS;
         this.DEfAULT_OWN_PERMISSIONS_LIST = AppApiConfig.OWN_PERMISSIONS_LIST;
-        let temp =  JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')) );
+        let temp =  JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')) );
         this.loggedUserDetails = temp.details;
         console.log('loggedUserDetails..',this.loggedUserDetails)
         this.loggedUserOwnPermissions = this.loggedUserDetails.ownPermissions || [];

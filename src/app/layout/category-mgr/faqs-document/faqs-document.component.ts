@@ -16,7 +16,7 @@ export class FaqsDocumentComponent implements OnInit {
   constructor(private encryDecryService: EncryDecryService) { }
 
   ngOnInit() {
-    const temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
+    const temp = JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')));
         this.loggedUserPermissions = temp.details.listofPermission;
         this.loggedUserDetails = temp.details;
         this.loggedUserName = this.loggedUserDetails.username;

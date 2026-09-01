@@ -28,7 +28,7 @@ export class PrLeadTimeChartComponent implements OnInit {
     const prTimeToDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd')
     this.prTimeFromDate=  new Date(dateBefore7Days)
     this.prTimeToDate= new Date();
-    const temp =  JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')) );
+    const temp =  JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')) );
     this.loggedUserDetails = temp.details;
     this.getChartDetails(prTimeFromDate,prTimeToDate);
 

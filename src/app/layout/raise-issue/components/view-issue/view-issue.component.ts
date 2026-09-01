@@ -32,7 +32,7 @@ export class ViewIssueComponent implements OnInit {
         });
         this.vendorProDoc = this.data.vendorprocucevdocuments
         //this.commentsList = this.data.answer;
-        let temp =  JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')) );
+        let temp =  JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')) );
         this.loggedUserData = temp;
         console.log(this.loggedUserData);
 

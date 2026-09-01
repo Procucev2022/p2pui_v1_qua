@@ -50,7 +50,7 @@ export class ProCpxVendorSummaryComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        const temp = JSON.parse(this.encryDecryService.get('perm', localStorage.getItem('logData')));
+        const temp = JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')));
         this.loggedUserDetails = temp ? temp.details : null;
         this.pageRecordSize = AppConfig.GRID_PAGE_INFO.initpageSize;
         this.pageOptions = AppConfig.GRID_PAGE_INFO.pageOptions;

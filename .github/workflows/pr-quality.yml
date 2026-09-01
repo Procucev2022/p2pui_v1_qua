@@ -24,6 +24,7 @@ jobs:
     timeout-minutes: 90
     env:
       NODE_OPTIONS: '--max-old-space-size=8192'
+      BASIC_AUTH_TOKEN: 'Basic dGVzdDp0ZXN0'
 
     steps:
       - name: Checkout
