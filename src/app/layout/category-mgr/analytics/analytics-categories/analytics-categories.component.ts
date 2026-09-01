@@ -90,10 +90,17 @@ export class AnalyticsCategoriesComponent implements OnInit, OnDestroy {
   }
 
   exportData(): void {
+    const escapeCsvCell = (value: any): string => {
+      const text = String(value ?? '');
+      const safeText = /^[=+\-@]/.test(text) ? `'${text}` : text;
+      return `"${safeText.replace(/"/g, '""')}"`;
+    };
     const csvContent =
       'data:text/csv;charset=utf-8,' +
       'Category,Active RFQs,Buyers,Sellers,Avg Demand\n' +
-      this.categories.map((c) => `"${c.name}",${c.activeRfqs},${c.buyers},${c.sellers},"${c.avgValue || ''}"`).join('\n');
+      this.categories
+        .map((c) => [c.name, c.activeRfqs, c.buyers, c.sellers, c.avgValue].map(escapeCsvCell).join(','))
+        .join('\n');
 
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
