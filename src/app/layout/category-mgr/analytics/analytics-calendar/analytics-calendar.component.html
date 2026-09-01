@@ -66,7 +66,10 @@
               <!-- Non-empty Day Cell -->
               <div *ngIf="day"
                    class="col-8-cell p-2 border-right bg-white min-h-cell position-relative cursor-pointer"
+                   role="button" tabindex="0"
                    (click)="handleCellClick(day.day)"
+                   (keydown.enter)="handleCellClick(day.day)"
+                   (keydown.space)="handleCellClick(day.day); $event.preventDefault()"
                    [class.active-cell]="selectedDay && selectedDay.day === day.day && isDrawerOpen">
                 <!-- Cell Header -->
                 <div class="d-flex justify-content-between align-items-center mb-1">
