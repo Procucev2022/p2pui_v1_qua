@@ -128,7 +128,7 @@ export class AnalyticsOverviewComponent implements OnInit {
         subtitle: this.metrics?.rfqsWithQuotes?.tag || 'Competitive RFQs',
         isFormattedNumber: true,
         whatIs: 'RFQs that have successfully received one or more competitive commercial bids or price quotations from registered sellers.',
-        condition: 'Published RFQs where seller submission count is &ge; 1 within the designated bidding and quotation window.'
+        condition: 'Published RFQs where seller submission count is ≥ 1 within the designated bidding and quotation window.'
       },
       sellerSubmissions: {
         title: 'Seller Submissions Number',
