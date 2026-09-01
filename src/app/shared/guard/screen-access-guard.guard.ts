@@ -87,7 +87,9 @@ export class ScreenAccessGuardGuard implements CanActivateChild {
         if (!allowedScreens) {
             return false;
         }
-        return allowedScreens.some(screen => url === screen || url.startsWith(screen + '/'));
+        return allowedScreens.some(screen =>
+            url === screen || (screen === '/categorymgr/analytics' && url.startsWith(`${screen}/`))
+        );
     }
 
     navigateToUnAuthorized() {
