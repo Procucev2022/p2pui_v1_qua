@@ -24,7 +24,11 @@
     <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 mb-4">
       <!-- Total Buyers -->
       <div class="col mb-3">
-        <div class="card h-100 p-3 stat-card" (click)="openMetricDetails('totalBuyers')" title="Click to view details">
+        <div class="card h-100 p-3 stat-card" role="button" tabindex="0"
+             (click)="openMetricDetails('totalBuyers')"
+             (keydown.enter)="openMetricDetails('totalBuyers')"
+             (keydown.space)="openMetricDetails('totalBuyers'); $event.preventDefault()"
+             title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">Total Buyers</span>
             <i class="fa fa-users text-primary"></i>
