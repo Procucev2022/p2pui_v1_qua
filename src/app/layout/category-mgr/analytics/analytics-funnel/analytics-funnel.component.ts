@@ -110,10 +110,8 @@ export class AnalyticsFunnelComponent implements OnInit {
           if (this.activeTab === 'seller') {
             const hasDepletedStage = this.stages.some((s: any) => s.isAlert || s.name?.toLowerCase().includes('depleted'));
             if (!hasDepletedStage) {
-              const depletedCount = (this.summary && this.summary.depletedCreditSellers !== undefined)
-                ? this.summary.depletedCreditSellers
-                : 53;
-              const totalCohort = (this.summary && this.summary.totalEntered) || (this.stages[0]?.usersEntered) || 189;
+              const depletedCount = this.summary?.depletedCreditSellers ?? 0;
+              const totalCohort = this.summary?.totalEntered ?? this.stages[0]?.usersEntered ?? 0;
               this.stages.push({
                 stageNumber: 5,
                 name: 'Sellers with Depleted Credit',
