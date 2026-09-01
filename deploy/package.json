@@ -1,0 +1,13 @@
+{
+  "name": "p2pui-static-host",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Runtime manifest for the deployed Angular build. Copied into dist/p2pui-gmtbfs/ at deploy time so Azure App Service (Linux) starts the static server instead of the Angular CLI dev server.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

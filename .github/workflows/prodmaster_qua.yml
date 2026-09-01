@@ -24,23 +24,67 @@ jobs:
         with:
           node-version: '20.x'
 
-      - name: npm install, build, and test
+      - name: npm install and build
         env:
           NODE_ENV: production
           PRODUCTION: 'true'
-          BACKEND_URL: ${{ vars.BACKEND_URL || vars.QUA_BACKEND_URL || vars.PROD_BACKEND_URL || secrets.QUA_BACKEND_URL || secrets.PROD_BACKEND_URL || secrets.BACKEND_URL || 'https://quaservicesp.procucev.com' }}
-          STORAGE_ENCRYPTION_KEY: ${{ vars.STORAGE_ENCRYPTION_KEY || vars.QUA_STORAGE_ENCRYPTION_KEY || vars.PROD_STORAGE_ENCRYPTION_KEY || secrets.QUA_STORAGE_ENCRYPTION_KEY || secrets.PROD_STORAGE_ENCRYPTION_KEY || secrets.STORAGE_ENCRYPTION_KEY || 'perm' }}
-          BASIC_AUTH_TOKEN: ${{ vars.BASIC_AUTH_TOKEN || vars.QUA_BASIC_AUTH_TOKEN || vars.PROD_BASIC_AUTH_TOKEN || secrets.QUA_BASIC_AUTH_TOKEN || secrets.PROD_BASIC_AUTH_TOKEN || secrets.BASIC_AUTH_TOKEN || '' }}
+          # Fail the build rather than deploy production with a default key.
+          REQUIRE_RUNTIME_SECRETS: 'true'
+          #
+          # BACKEND URL: environment-specific ONLY.
+          # These are passed under their own names (not collapsed into
+          # BACKEND_URL) so scripts/set-env.js can tell a production-specific
+          # value from a generic one and refuse the generic one.
+          #
+          # The generic `vars.BACKEND_URL` and the previously hardcoded
+          # 'https://quaservicesp.procucev.com' fallback are intentionally gone:
+          # a repository-level BACKEND_URL is visible to every environment, so
+          # either fallback could silently point production at the wrong backend
+          # while the deployment still reported success.
+          #
+          # REQUIRED: set QUA_BACKEND_URL (or PROD_BACKEND_URL) on the
+          # "production" environment, e.g. https://quaservicesp.procucev.com
+          QUA_BACKEND_URL: ${{ vars.QUA_BACKEND_URL || secrets.QUA_BACKEND_URL }}
+          PROD_BACKEND_URL: ${{ vars.PROD_BACKEND_URL || secrets.PROD_BACKEND_URL }}
+          #
+          # NO FALLBACK on the security-sensitive values. Previously these ended
+          # in `|| 'perm'` and `|| ''`, which meant a missing production secret
+          # silently shipped the legacy hardcoded encryption key and an empty
+          # Authorization header. When these resolve to empty,
+          # scripts/set-env.js now aborts the build with a clear message.
+          STORAGE_ENCRYPTION_KEY: ${{ vars.QUA_STORAGE_ENCRYPTION_KEY || secrets.QUA_STORAGE_ENCRYPTION_KEY || vars.PROD_STORAGE_ENCRYPTION_KEY || secrets.PROD_STORAGE_ENCRYPTION_KEY || vars.STORAGE_ENCRYPTION_KEY || secrets.STORAGE_ENCRYPTION_KEY }}
+          BASIC_AUTH_TOKEN: ${{ vars.QUA_BASIC_AUTH_TOKEN || secrets.QUA_BASIC_AUTH_TOKEN || vars.PROD_BASIC_AUTH_TOKEN || secrets.PROD_BASIC_AUTH_TOKEN || vars.BASIC_AUTH_TOKEN || secrets.BASIC_AUTH_TOKEN }}
           PROXY_TARGET: ${{ vars.PROXY_TARGET || vars.BACKEND_URL || secrets.BACKEND_URL || 'https://quaservicesp.procucev.com' }}
         run: |
           npm install --legacy-peer-deps --include=dev
-          npm run build --if-present
+          npm run build -- --configuration=production
+
+      # The Angular application is emitted to dist/p2pui-gmtbfs. Azure must
+      # receive THAT directory as the site root - not the repository root.
+      # server.js serves it on Linux, web.config serves it on Windows/IIS, and
+      # the runtime package.json replaces the app manifest so Azure can never
+      # fall back to `npm start` -> `ng serve --port 4201`.
+      - name: Stage Azure deployment package
+        run: |
+          set -euo pipefail
+          DIST_DIR="dist/p2pui-gmtbfs"
+          test -f "$DIST_DIR/index.html" || { echo "::error::Angular build output missing at $DIST_DIR"; exit 1; }
+          cp deploy/server.js    "$DIST_DIR/server.js"
+          cp deploy/web.config   "$DIST_DIR/web.config"
+          cp deploy/package.json "$DIST_DIR/package.json"
+          echo "Staged deployment package contents:"
+          ls -la "$DIST_DIR"
+
+      - name: Verify deployment package
+        run: node scripts/verify-deploy-package.js dist/p2pui-gmtbfs
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: .
+          # Only the built application, so no source, node_modules, .git or
+          # generated environment files leave the build job.
+          path: dist/p2pui-gmtbfs
 
   deploy:
     runs-on: ubuntu-latest
@@ -55,7 +99,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: node-app
-      
+          path: site
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -69,4 +114,4 @@ jobs:
         with:
           app-name: 'qua'
           slot-name: 'Production'
-          package: .
+          package: site
