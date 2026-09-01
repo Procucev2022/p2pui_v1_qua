@@ -199,7 +199,11 @@ export class AnalyticsFunnelComponent implements OnInit {
     const headers = Object.keys(this.filteredRecords[0]).join(',');
     const rows = this.filteredRecords.map((rec: any) => {
       return Object.values(rec)
-        .map((val: any) => `"${String(val !== null && val !== undefined ? val : '').replace(/"/g, '""')}"`)
+        .map((val: any) => {
+          const text = String(val ?? '');
+          const safeText = /^[=+\-@]/.test(text) ? `'${text}` : text;
+          return `"${safeText.replace(/"/g, '""')}"`;
+        })
         .join(',');
     });
     const csvContent = 'data:text/csv;charset=utf-8,' + [headers, ...rows].join('\n');
