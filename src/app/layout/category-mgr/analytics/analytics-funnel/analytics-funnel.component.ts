@@ -11,6 +11,7 @@ export class AnalyticsFunnelComponent implements OnInit {
   stages: any[] = [];
   summary: any = null;
   isLoading: boolean = true;
+  private loadRequestId = 0;
 
   isModalOpen: boolean = false;
   selectedStage: any = null;
@@ -101,16 +102,18 @@ export class AnalyticsFunnelComponent implements OnInit {
 
   loadFunnel(): void {
     this.isLoading = true;
+    const requestId = ++this.loadRequestId;
     this.analyticsService.getFunnelData(this.activeTab).subscribe({
       next: (res: any) => {
+        if (requestId !== this.loadRequestId) return;
         if (res) {
           this.stages = res.stages || [];
           this.summary = res.summary || null;
 
           if (this.activeTab === 'seller') {
             const hasDepletedStage = this.stages.some((s: any) => s.isAlert || s.name?.toLowerCase().includes('depleted'));
-            if (!hasDepletedStage) {
-              const depletedCount = this.summary?.depletedCreditSellers ?? 0;
+            if (!hasDepletedStage && this.summary && this.summary.depletedCreditSellers !== undefined && this.summary.depletedCreditSellers !== null) {
+              const depletedCount = this.summary.depletedCreditSellers;
               const totalCohort = this.summary?.totalEntered ?? this.stages[0]?.usersEntered ?? 0;
               this.stages.push({
                 stageNumber: 5,
@@ -129,6 +132,7 @@ export class AnalyticsFunnelComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
+        if (requestId !== this.loadRequestId) return;
         console.error('Funnel loading error:', err);
         this.isLoading = false;
       }
@@ -196,13 +200,16 @@ export class AnalyticsFunnelComponent implements OnInit {
 
   exportStageData(): void {
     if (!this.filteredRecords || this.filteredRecords.length === 0) return;
-    const headers = Object.keys(this.filteredRecords[0]).join(',');
+    const escapeCsvCell = (value: any): string => {
+      const text = String(value ?? '');
+      const safeText = /^[=+\-@]/.test(text) ? `'${text}` : text;
+      return `"${safeText.replace(/"/g, '""')}"`;
+    };
+    const headers = Object.keys(this.filteredRecords[0]).map(escapeCsvCell).join(',');
     const rows = this.filteredRecords.map((rec: any) => {
       return Object.values(rec)
         .map((val: any) => {
-          const text = String(val ?? '');
-          const safeText = /^[=+\-@]/.test(text) ? `'${text}` : text;
-          return `"${safeText.replace(/"/g, '""')}"`;
+          return escapeCsvCell(val);
         })
         .join(',');
     });
@@ -278,10 +285,15 @@ export class AnalyticsFunnelComponent implements OnInit {
 
   exportDropoffData(): void {
     if (!this.filteredDropoffRecords || this.filteredDropoffRecords.length === 0) return;
-    const headers = Object.keys(this.filteredDropoffRecords[0]).join(',');
+    const escapeCsvCell = (value: any): string => {
+      const text = String(value ?? '');
+      const safeText = /^[=+\-@]/.test(text) ? `'${text}` : text;
+      return `"${safeText.replace(/"/g, '""')}"`;
+    };
+    const headers = Object.keys(this.filteredDropoffRecords[0]).map(escapeCsvCell).join(',');
     const rows = this.filteredDropoffRecords.map((rec: any) => {
       return Object.values(rec)
-        .map((val: any) => `"${String(val !== null && val !== undefined ? val : '').replace(/"/g, '""')}"`)
+        .map((val: any) => escapeCsvCell(val))
         .join(',');
     });
     const csvContent = 'data:text/csv;charset=utf-8,' + [headers, ...rows].join('\n');

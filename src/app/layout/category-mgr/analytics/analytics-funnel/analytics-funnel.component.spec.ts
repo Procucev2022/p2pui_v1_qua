@@ -111,14 +111,12 @@ describe('AnalyticsFunnelComponent', () => {
 
 
 
-  it('should use fallback defaults when summary/stages are missing for seller depleted stage', () => {
+  it('should omit depleted-credit stage when the API omits depleted-credit data', () => {
     setup();
     analyticsService.getFunnelData.and.returnValue(of({ stages: [], summary: null }));
     component.activeTab = 'seller';
     component.loadFunnel();
-    const depleted = component.stages.find((s: any) => s.isAlert);
-    expect(depleted).toBeTruthy();
-    expect(depleted.usersEntered).toBe(53);
+    expect(component.stages).toEqual([]);
   });
 
   it('should default stages to empty array when response has no stages field', () => {

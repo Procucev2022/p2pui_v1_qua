@@ -189,7 +189,7 @@ export class AnalyticsOverviewComponent implements OnInit {
         subtitle: this.metrics?.repeatBuyers?.tag || 'Loyalty Rate',
         isFormattedNumber: false,
         whatIs: 'The proportion and volume of enterprise client buyers who regularly return to place multiple purchase requests.',
-        condition: 'Registered buyer accounts having &ge; 2 completed or active RFQs/POs created over their account lifetime.'
+        condition: 'Registered buyer accounts having ≥ 2 completed or active RFQs/POs created over their account lifetime.'
       },
       topCategory: {
         title: 'Top Category',

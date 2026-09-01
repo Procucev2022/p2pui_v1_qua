@@ -14,6 +14,7 @@ export class AnalyticsConsoleComponent implements OnInit {
   chatMessages: any[] = [];
   isLoading: boolean = true;
   isSendingChat: boolean = false;
+  private searchRequestId = 0;
 
   activeTab: 'rfqs' | 'accounts' | 'quotes' | 'subscription' | 'whatsapp' = 'rfqs';
   dayWiseChats: any[] = [];
@@ -30,8 +31,10 @@ export class AnalyticsConsoleComponent implements OnInit {
 
   search(): void {
     this.isLoading = true;
+    const requestId = ++this.searchRequestId;
     this.analyticsService.searchCompanies(this.searchQuery).subscribe({
       next: (res: any) => {
+        if (requestId !== this.searchRequestId) return;
         if (res && res.companies) {
           this.companies = res.companies;
           if (this.companies.length > 0) {
@@ -43,6 +46,7 @@ export class AnalyticsConsoleComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
+        if (requestId !== this.searchRequestId) return;
         console.error('Search error:', err);
         this.isLoading = false;
       }

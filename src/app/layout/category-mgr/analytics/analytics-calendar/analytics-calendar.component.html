@@ -29,7 +29,7 @@
       <!-- Navigation buttons -->
       <div class="btn-group btn-group-sm shadow-2xs">
         <button (click)="handlePrevMonth()" class="btn btn-outline-secondary font-weight-bold" title="Previous Month">‹</button>
-        <button (click)="currentYear = 2026; currentMonth = 8; loadCalendar()" class="btn btn-light font-weight-bold">Current</button>
+        <button (click)="currentYear = todayYear; currentMonth = todayMonth; loadCalendar()" class="btn btn-light font-weight-bold">Current</button>
         <button (click)="handleNextMonth()" class="btn btn-outline-secondary font-weight-bold" title="Next Month">›</button>
       </div>
     </div>
@@ -101,7 +101,10 @@
 
             <!-- Weekly Summary Column Cell -->
             <div class="col-week-summary p-2 min-h-cell cursor-pointer d-flex flex-column justify-content-between"
+                 role="button" tabindex="0"
                  (click)="handleWeekClick(week)"
+                 (keydown.enter)="handleWeekClick(week)"
+                 (keydown.space)="handleWeekClick(week); $event.preventDefault()"
                  [class.active-week-cell]="selectedWeek && selectedWeek.weekNumber === week.weekNumber && isWeekDrawerOpen"
                  title="Click to view weekly aggregate details">
               <div>
@@ -243,7 +246,9 @@
           </thead>
           <tbody>
             <ng-container *ngFor="let day of selectedWeek.cells">
-              <tr *ngIf="day" class="cursor-pointer hover-highlight" (click)="handleCellClick(day.day)">
+              <tr *ngIf="day" class="cursor-pointer hover-highlight" (click)="handleCellClick(day.day)"
+                  tabindex="0" (keydown.enter)="handleCellClick(day.day)"
+                  (keydown.space)="handleCellClick(day.day); $event.preventDefault()">
                 <td class="font-weight-bold">{{ day.dateStr }}</td>
                 <td class="text-right">{{ day.regB }}</td>
                 <td class="text-right">{{ day.regS }}</td>

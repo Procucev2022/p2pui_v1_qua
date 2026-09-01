@@ -78,8 +78,11 @@
           <!-- Drop-off Badge Connector (Only between funnel stages, not before alert card) -->
           <div *ngIf="!isLast && stages[i + 1] && !stages[i + 1].isAlert" class="d-flex flex-column align-items-center justify-content-center my-2 my-lg-0 px-2 shrink-0">
             <span
+              role="button" tabindex="0"
               class="badge badge-danger-soft px-3 py-1 font-weight-bold shadow-2xs cursor-pointer"
               (click)="$event.stopPropagation(); openDropoffModal(stages[i + 1])"
+              (keydown.enter)="$event.stopPropagation(); openDropoffModal(stages[i + 1])"
+              (keydown.space)="$event.stopPropagation(); openDropoffModal(stages[i + 1]); $event.preventDefault()"
               title="Click to view records that dropped off"
             >
               ↓ {{ stages[i + 1].dropOffVolume | number }} ({{ stages[i + 1].dropOffRate }})
@@ -117,9 +120,12 @@
               <td class="text-right font-weight-bold text-primary">{{ s.usersEntered | number }}</td>
               <td class="text-right font-weight-bold text-danger">
                 <span
+                  role="button" tabindex="0"
                   *ngIf="s.dropOffVolume !== null && s.dropOffVolume > 0; else noDropoff"
                   class="cursor-pointer text-underline-hover"
                   (click)="$event.stopPropagation(); openDropoffModal(s)"
+                  (keydown.enter)="$event.stopPropagation(); openDropoffModal(s)"
+                  (keydown.space)="$event.stopPropagation(); openDropoffModal(s); $event.preventDefault()"
                   title="Click to view records that dropped off"
                 >
                   {{ s.dropOffVolume | number }}

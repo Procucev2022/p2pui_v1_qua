@@ -42,7 +42,7 @@
 
       <!-- Total Sellers -->
       <div class="col mb-3">
-        <div class="card h-100 p-3 stat-card" (click)="openMetricDetails('totalSellers')" title="Click to view details">
+        <div class="card h-100 p-3 stat-card" role="button" tabindex="0" (click)="openMetricDetails('totalSellers')" (keydown.enter)="openMetricDetails('totalSellers')" (keydown.space)="openMetricDetails('totalSellers'); $event.preventDefault()" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">Total Sellers</span>
             <i class="fa fa-building text-primary"></i>
@@ -56,7 +56,7 @@
 
       <!-- Active Buyers -->
       <div class="col mb-3">
-        <div class="card h-100 p-3 stat-card" (click)="openMetricDetails('activeBuyers')" title="Click to view details">
+        <div class="card h-100 p-3 stat-card" role="button" tabindex="0" (click)="openMetricDetails('activeBuyers')" (keydown.enter)="openMetricDetails('activeBuyers')" (keydown.space)="openMetricDetails('activeBuyers'); $event.preventDefault()" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">Active Buyers</span>
             <i class="fa fa-check-circle text-primary"></i>
@@ -68,7 +68,7 @@
 
       <!-- Inactive Buyers -->
       <div class="col mb-3">
-        <div class="card h-100 p-3 stat-card" (click)="openMetricDetails('inactiveBuyers')" title="Click to view details">
+        <div class="card h-100 p-3 stat-card" role="button" tabindex="0" (click)="openMetricDetails('inactiveBuyers')" (keydown.enter)="openMetricDetails('inactiveBuyers')" (keydown.space)="openMetricDetails('inactiveBuyers'); $event.preventDefault()" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">Inactive Buyers</span>
             <i class="fa fa-user-times text-muted"></i>
@@ -80,7 +80,7 @@
 
       <!-- Total RFQs -->
       <div class="col mb-3">
-        <div class="card h-100 p-3 stat-card" (click)="openMetricDetails('totalRfqs')" title="Click to view details">
+        <div class="card h-100 p-3 stat-card" role="button" tabindex="0" (click)="openMetricDetails('totalRfqs')" (keydown.enter)="openMetricDetails('totalRfqs')" (keydown.space)="openMetricDetails('totalRfqs'); $event.preventDefault()" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">Total RFQs</span>
             <i class="fa fa-file-text-o text-primary"></i>
@@ -94,7 +94,7 @@
 
       <!-- RFQs with Quotes -->
       <div class="col mb-3">
-        <div class="card h-100 p-3 stat-card" (click)="openMetricDetails('rfqsWithQuotes')" title="Click to view details">
+        <div class="card h-100 p-3 stat-card" role="button" tabindex="0" (click)="openMetricDetails('rfqsWithQuotes')" (keydown.enter)="openMetricDetails('rfqsWithQuotes')" (keydown.space)="openMetricDetails('rfqsWithQuotes'); $event.preventDefault()" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">RFQs with Quotes</span>
             <i class="fa fa-check-square-o text-primary"></i>
@@ -106,7 +106,7 @@
 
       <!-- RFQs Without Quotes -->
       <div class="col mb-3">
-        <div class="card h-100 p-3 stat-card border-danger-left bg-light-danger" (click)="openMetricDetails('rfqsWithoutQuotes')" title="Click to view details">
+        <div class="card h-100 p-3 stat-card border-danger-left bg-light-danger" role="button" tabindex="0" (click)="openMetricDetails('rfqsWithoutQuotes')" (keydown.enter)="openMetricDetails('rfqsWithoutQuotes')" (keydown.space)="openMetricDetails('rfqsWithoutQuotes'); $event.preventDefault()" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">RFQs W/O Quotes</span>
             <i class="fa fa-exclamation-triangle text-danger"></i>
@@ -118,7 +118,7 @@
 
       <!-- Total Seller Submissions -->
       <div class="col mb-3">
-        <div class="card h-100 p-3 stat-card" (click)="openMetricDetails('sellerSubmissions')" title="Click to view details">
+        <div class="card h-100 p-3 stat-card" role="button" tabindex="0" (click)="openMetricDetails('sellerSubmissions')" (keydown.enter)="openMetricDetails('sellerSubmissions')" (keydown.space)="openMetricDetails('sellerSubmissions'); $event.preventDefault()" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">Seller Submissions Number</span>
             <i class="fa fa-paper-plane text-primary"></i>
@@ -132,7 +132,7 @@
 
       <!-- Seller Subs -->
       <div class="col mb-3">
-        <div class="card h-100 p-3 stat-card" (click)="openMetricDetails('sellerSubs')" title="Click to view details">
+        <div class="card h-100 p-3 stat-card" role="button" tabindex="0" (click)="openMetricDetails('sellerSubs')" (keydown.enter)="openMetricDetails('sellerSubs')" (keydown.space)="openMetricDetails('sellerSubs'); $event.preventDefault()" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">Seller Subscribe Value</span>
             <i class="fa fa-rupee text-primary"></i>
@@ -146,7 +146,7 @@
 
       <!-- Pending Credits -->
       <div class="col mb-3">
-        <div class="card h-100 p-3 stat-card" (click)="openMetricDetails('pendingCredits')" title="Click to view details">
+        <div class="card h-100 p-3 stat-card" role="button" tabindex="0" (click)="openMetricDetails('pendingCredits')" (keydown.enter)="openMetricDetails('pendingCredits')" (keydown.space)="openMetricDetails('pendingCredits'); $event.preventDefault()" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">Pending Credits</span>
             <i class="fa fa-credit-card text-primary"></i>
@@ -158,7 +158,7 @@
 
       <!-- Repeat Buyers -->
       <div class="col mb-3">
-        <div class="card h-100 p-3 stat-card" (click)="openMetricDetails('repeatBuyers')" title="Click to view details">
+        <div class="card h-100 p-3 stat-card" role="button" tabindex="0" (click)="openMetricDetails('repeatBuyers')" (keydown.enter)="openMetricDetails('repeatBuyers')" (keydown.space)="openMetricDetails('repeatBuyers'); $event.preventDefault()" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">Repeat Buyers</span>
             <i class="fa fa-repeat text-primary"></i>
@@ -170,7 +170,7 @@
 
       <!-- Top Category -->
       <div class="col mb-3">
-        <div class="card h-100 p-3 stat-card" (click)="openMetricDetails('topCategory')" title="Click to view details">
+        <div class="card h-100 p-3 stat-card" role="button" tabindex="0" (click)="openMetricDetails('topCategory')" (keydown.enter)="openMetricDetails('topCategory')" (keydown.space)="openMetricDetails('topCategory'); $event.preventDefault()" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="stat-label">Top Category</span>
             <i class="fa fa-cube text-primary"></i>
@@ -185,7 +185,7 @@
     <div class="row mb-4">
       <!-- Registration Source -->
       <div class="col-lg-6 mb-3">
-        <div class="card p-4 h-100 shadow-sm border-0 stat-card" (click)="openMetricDetails('registrationSource')" title="Click to view details">
+        <div class="card p-4 h-100 shadow-sm border-0 stat-card" role="button" tabindex="0" (click)="openMetricDetails('registrationSource')" (keydown.enter)="openMetricDetails('registrationSource')" (keydown.space)="openMetricDetails('registrationSource'); $event.preventDefault()" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="font-weight-bold mb-0">Registration Source</h5>
             <div class="d-flex align-items-center">
@@ -235,7 +235,7 @@
 
       <!-- RFQ Lifecycle Status -->
       <div class="col-lg-6 mb-3">
-        <div class="card p-4 h-100 shadow-sm border-0 stat-card" (click)="openMetricDetails('lifecycleStatus')" title="Click to view details">
+        <div class="card p-4 h-100 shadow-sm border-0 stat-card" role="button" tabindex="0" (click)="openMetricDetails('lifecycleStatus')" (keydown.enter)="openMetricDetails('lifecycleStatus')" (keydown.space)="openMetricDetails('lifecycleStatus'); $event.preventDefault()" title="Click to view details">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="font-weight-bold mb-0">RFQ Lifecycle Status</h5>
             <span class="badge badge-light text-muted">Pipeline Total: {{ metrics.totalRfqs?.value }}</span>
@@ -348,4 +348,3 @@
     </div>
   </div>
 </div>
-

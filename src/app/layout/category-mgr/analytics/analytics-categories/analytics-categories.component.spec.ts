@@ -51,6 +51,14 @@ describe('AnalyticsCategoriesComponent', () => {
     expect(component.categories).toEqual([]);
   });
 
+  it('should retain defaults when the response has no categories or stats', () => {
+    setup();
+    analyticsService.getCategoriesData.and.returnValue(of({ categories: [], stats: null }));
+    fixture.detectChanges();
+    expect(component.categories).toEqual([]);
+    expect(component.stats.totalCategories).toBe(0);
+  });
+
   it('should handle error from getCategoriesData', () => {
     setup();
     analyticsService.getCategoriesData.and.returnValue(throwError(() => new Error('fail')));

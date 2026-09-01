@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { of, throwError } from 'rxjs';
+import { of, throwError, Subject } from 'rxjs';
 import { AnalyticsCalendarComponent } from './analytics-calendar.component';
 import { AnalyticsService } from '../../services/analytics.service';
 import { autoMock } from 'src/testing/test-helpers';
@@ -65,6 +65,17 @@ describe('AnalyticsCalendarComponent', () => {
     analyticsService.getCalendarData.and.returnValue(throwError(() => new Error('fail')));
     fixture.detectChanges();
     expect(component.isLoading).toBe(false);
+  });
+
+  it('should ignore a stale calendar response', () => {
+    setup();
+    const first = new Subject<any>();
+    analyticsService.getCalendarData.and.returnValues(first.asObservable(), of(calendarResponse));
+    component.loadCalendar();
+    component.currentMonth = 9;
+    component.loadCalendar();
+    first.next({ ...calendarResponse, month: 'Stale' });
+    expect(component.monthName).toBe('August 2026');
   });
 
   it('should default selectedDay when no rfqs present', () => {

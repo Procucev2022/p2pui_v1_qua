@@ -13,9 +13,9 @@ export class AnalyticsCalendarComponent implements OnInit {
   selectedWeek: any = null;
   isDrawerOpen: boolean = false;
   isWeekDrawerOpen: boolean = false;
-  currentYear: number = 2026;
-  currentMonth: number = 8;
-  monthName: string = 'August 2026';
+  currentYear: number = new Date().getFullYear();
+  currentMonth: number = new Date().getMonth() + 1;
+  monthName: string = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
   startDayOffset: number = 6;
   availableMonths: any[] = [
     { year: 2026, month: 8, label: 'August 2026' },
@@ -29,6 +29,9 @@ export class AnalyticsCalendarComponent implements OnInit {
     { year: 2025, month: 12, label: 'December 2025' }
   ];
   isLoading: boolean = true;
+  private loadRequestId = 0;
+  readonly todayYear = new Date().getFullYear();
+  readonly todayMonth = new Date().getMonth() + 1;
 
   constructor(private analyticsService: AnalyticsService) {}
 
@@ -38,8 +41,10 @@ export class AnalyticsCalendarComponent implements OnInit {
 
   loadCalendar(): void {
     this.isLoading = true;
+    const requestId = ++this.loadRequestId;
     this.analyticsService.getCalendarData(this.currentYear, this.currentMonth).subscribe({
       next: (res: any) => {
+        if (requestId !== this.loadRequestId) return;
         if (res) {
           this.days = res.days || [];
           this.weeks = res.weeks || [];
@@ -59,6 +64,7 @@ export class AnalyticsCalendarComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
+        if (requestId !== this.loadRequestId) return;
         console.error('Calendar load error:', err);
         this.isLoading = false;
       }
