@@ -37,7 +37,12 @@
             No companies found.
           </div>
 
-          <div *ngFor="let c of companies" (click)="selectCompany(c)" class="company-list-item p-3 border-bottom cursor-pointer" [class.active-item]="selectedCompany?.id === c.id">
+          <div *ngFor="let c of companies" (click)="selectCompany(c)"
+               (keydown.enter)="selectCompany(c)"
+               (keydown.space)="selectCompany(c); $event.preventDefault()"
+               role="button" tabindex="0"
+               class="company-list-item p-3 border-bottom cursor-pointer"
+               [class.active-item]="selectedCompany?.id === c.id">
             <div class="d-flex justify-content-between align-items-center mb-1">
               <span class="font-weight-bold text-dark text-truncate mr-2">{{ c.name }}</span>
               <span class="badge {{ c.orgType === 'Seller' ? 'badge-success' : 'badge-primary' }} font-weight-bold">
