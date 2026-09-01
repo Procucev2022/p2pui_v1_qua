@@ -112,8 +112,7 @@ export class VendorChooseModalPopupComponent implements OnChanges, OnInit{
     // }
   }
   onSearchCriteriaChanges(){
-    this.onSearchCriteriaChange.emit()
-
+    this.globalSearchs();
   }
 
   onSearchCriteriaChange1(criteriaType: string, criteriaValue: string) {

@@ -364,8 +364,7 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
     }
 
     onSearchCriteriaChange() {
-        this.searchTextValue = '';
-        this.toaster.warning('Search text cleared. Please enter new search text based on selected criteria.', 'Warning');
+        this.globalSearch({});
     }
 
         
@@ -381,10 +380,16 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
     }
 
     globalSearch(event:any) {
-        if(event.searchTextValue) {
-           this.getVendorsListBySearch(event);
+        const searchText = event?.searchTextValue !== undefined ? event.searchTextValue : this.searchTextValue;
+        const searchBy = event?.searchBy !== undefined ? event.searchBy : this.searchBy;
+        if(searchText && searchText.trim() !== '') {
+            if (!searchBy) {
+                this.toaster.warning('Please select search criteria', 'Warning');
+                return;
+            }
+            this.getVendorsListBySearch({ searchBy: searchBy, searchTextValue: searchText });
         } else {
-            this.toaster.warning('Please enter search text', 'Warning');
+            this.getVendorList(this.startPage, this.pageSize);
         }
     }
 
