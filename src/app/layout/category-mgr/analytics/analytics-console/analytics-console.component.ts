@@ -98,7 +98,7 @@ export class AnalyticsConsoleComponent implements OnInit {
           id: 'msg-err',
           sender: 'agent',
           senderName: 'Procucev Bot',
-          text: 'Thank you for your message. An agent will respond shortly.',
+          text: 'Message could not be sent. Please try again.',
           time: 'Just now'
         });
         this.isSendingChat = false;
