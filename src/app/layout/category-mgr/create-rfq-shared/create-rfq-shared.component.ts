@@ -382,6 +382,8 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
     globalSearch(event:any) {
         const searchText = event?.searchTextValue !== undefined ? event.searchTextValue : this.searchTextValue;
         const searchBy = event?.searchBy !== undefined ? event.searchBy : this.searchBy;
+        this.searchBy = searchBy;
+        this.searchTextValue = searchText;
         if(searchText && searchText.trim() !== '') {
             if (!searchBy) {
                 this.toaster.warning('Please select search criteria', 'Warning');
