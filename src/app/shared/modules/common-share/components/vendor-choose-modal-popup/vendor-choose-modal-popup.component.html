@@ -31,7 +31,7 @@
                
                 <div class="col-5">
                     <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
-                  (input)="onInlineSearch($event.target.value)" *ngIf="searchCriteria != 'Global'" />
+                  (input)="onInlineSearch($event.target.value)" (paste)="onInlineSearch($event.clipboardData?.getData('text') || $event.target.value)" (change)="onInlineSearch($event.target.value)" *ngIf="searchCriteria != 'Global'" />
                   <ng-container *ngIf="searchCriteria == 'Global'"> 
                   <label>Search By:</label>
                   <select [(ngModel)]="searchBy" class="form-control" style="width: 200px; display: inline-block; margin-left: 10px;" (change)="onSearchCriteriaChanges()">
@@ -39,7 +39,7 @@
                       <option *ngFor="let option of searchDropdownOptions" [value]="option.value">{{option.label}}</option>
                   </select>
                   <input class="main-input" type="text" pInputText size="50" placeholder="Search Text.."
-                        [(ngModel)]="searchTextValue" (input)="globalSearchs()" />
+                        [(ngModel)]="searchTextValue" (input)="globalSearchs()" (paste)="onPasteSearch($event)" (change)="globalSearchs()" />
                   
                     </ng-container>
                   </div>
