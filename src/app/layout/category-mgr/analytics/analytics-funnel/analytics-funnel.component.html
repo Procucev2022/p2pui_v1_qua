@@ -1,0 +1,490 @@
+<div class="funnel-view">
+  <!-- Header -->
+  <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 gap-2">
+    <div>
+      <h3 class="font-weight-bold text-dark mb-1">Conversion Funnel</h3>
+      <p class="text-muted small mb-0">Stage-by-stage conversion metrics and drop-off rates for platform participants.</p>
+    </div>
+
+    <!-- Toggle Buyer vs Seller -->
+    <div class="btn-group btn-group-toggle shadow-sm bg-white p-1 rounded border">
+      <button
+        (click)="setTab('buyer')"
+        [class.btn-primary]="activeTab === 'buyer'"
+        [class.btn-light]="activeTab !== 'buyer'"
+        class="btn btn-sm font-weight-bold"
+      >
+        <i class="fa fa-user mr-1"></i> Buyer Funnel
+      </button>
+      <button
+        (click)="setTab('seller')"
+        [class.btn-primary]="activeTab === 'seller'"
+        [class.btn-light]="activeTab !== 'seller'"
+        class="btn btn-sm font-weight-bold"
+      >
+        <i class="fa fa-building mr-1"></i> Seller Funnel
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Loading funnel...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading">
+    <!-- Horizontal Funnel Stages Flow Card -->
+    <div class="card shadow-sm border-0 p-4 mb-4">
+      <div class="d-flex flex-column flex-lg-row align-items-center justify-content-between gap-3">
+        <ng-container *ngFor="let stage of stages; let i = index; let isLast = last">
+          <!-- Stage Box -->
+          <div class="stage-card flex-fill p-3 border rounded-lg bg-white position-relative text-center w-100 hover-shadow"
+               role="button"
+               tabindex="0"
+               [class.goal-card]="stage.isGoal"
+               [class.alert-card]="stage.isAlert"
+               (click)="openStageModal(stage)"
+               (keydown.enter)="openStageModal(stage)"
+               (keydown.space)="openStageModal(stage); $event.preventDefault()"
+               title="Click to view all {{ activeTab === 'seller' ? 'sellers' : 'buyers' }} in this stage">
+            <span *ngIf="stage.isGoal" class="badge badge-primary position-absolute top-right-badge">GOAL</span>
+            <span *ngIf="stage.isAlert" class="badge badge-danger position-absolute top-right-badge">ALERT</span>
+            <div class="icon-circle mb-2 mx-auto"
+                 [class.bg-primary]="stage.isGoal"
+                 [class.text-white]="stage.isGoal"
+                 [class.bg-danger]="stage.isAlert"
+                 [class.text-white]="stage.isAlert">
+              <i class="fa {{ stage.isAlert ? 'fa-exclamation-triangle' : stage.icon === 'person' ? 'fa-user' : stage.icon === 'manage_search' ? 'fa-search' : stage.icon === 'description' ? 'fa-file-text' : stage.icon === 'autorenew' ? 'fa-repeat' : stage.icon === 'store' ? 'fa-building' : (stage.icon === 'inventory_2' || stage.icon === 'category') ? 'fa-cubes' : stage.icon === 'request_quote' ? 'fa-money' : 'fa-trophy' }}"></i>
+            </div>
+            <span class="text-muted small text-uppercase font-weight-bold d-block">
+              {{ stage.isGoal ? 'Final Stage' : stage.isAlert ? 'Credit Status' : 'Stage ' + stage.stageNumber }}
+            </span>
+            <h6 class="font-weight-bold text-dark my-1">{{ stage.name }}</h6>
+            <h3 class="font-weight-bold my-2" [class.text-primary]="!stage.isAlert" [class.text-danger]="stage.isAlert">
+              {{ stage.usersEntered | number }}
+            </h3>
+            <span class="small" [class.text-muted]="!stage.isAlert" [class.text-danger]="stage.isAlert">
+              {{ i === 0 ? 'Total Cohort' : stage.isAlert ? 'Credits Exhausted' : stage.convRatePrev + ' conversion' }}
+            </span>
+            <div class="mt-2">
+              <span class="badge badge-light border text-primary small font-weight-bold" style="font-size: 10px;">
+                <i class="fa fa-list mr-1"></i> View List
+              </span>
+            </div>
+          </div>
+
+          <!-- Drop-off Badge Connector (Only between funnel stages, not before alert card) -->
+          <div *ngIf="!isLast && stages[i + 1] && !stages[i + 1].isAlert" class="d-flex flex-column align-items-center justify-content-center my-2 my-lg-0 px-2 shrink-0">
+            <span
+              role="button" tabindex="0"
+              class="badge badge-danger-soft px-3 py-1 font-weight-bold shadow-2xs cursor-pointer"
+              (click)="$event.stopPropagation(); openDropoffModal(stages[i + 1])"
+              (keydown.enter)="$event.stopPropagation(); openDropoffModal(stages[i + 1])"
+              (keydown.space)="$event.stopPropagation(); openDropoffModal(stages[i + 1]); $event.preventDefault()"
+              title="Click to view records that dropped off"
+            >
+              ↓ {{ stages[i + 1].dropOffVolume | number }} ({{ stages[i + 1].dropOffRate }})
+            </span>
+            <span class="text-muted tiny text-uppercase font-weight-bold mt-1">dropped</span>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Stage Metrics Breakdown Table -->
+    <div class="card shadow-sm border-0 overflow-hidden">
+      <div class="card-header bg-white border-bottom p-3">
+        <h5 class="font-weight-bold mb-0">Stage Metrics Breakdown</h5>
+        <span class="text-muted small">Detailed drop-off volume, retention rates, and cumulative conversion. Click any row to view full participants list.</span>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="thead-light">
+            <tr class="small text-muted text-uppercase">
+              <th>Stage #</th>
+              <th>Stage Name</th>
+              <th class="text-right">Users Entered</th>
+              <th class="text-right">Drop-off Vol.</th>
+              <th class="text-right">Drop-off Rate</th>
+              <th class="text-right">Conv. (Prev)</th>
+              <th class="text-right">Conv. (Total)</th>
+              <th class="text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of stages" class="table-clickable-row" (click)="openStageModal(s)" title="Click to view details">
+              <td class="font-weight-bold">{{ s.stageNumber }}</td>
+              <td class="font-weight-bold text-dark">{{ s.name }}</td>
+              <td class="text-right font-weight-bold text-primary">{{ s.usersEntered | number }}</td>
+              <td class="text-right font-weight-bold text-danger">
+                <span
+                  role="button" tabindex="0"
+                  *ngIf="s.dropOffVolume !== null && s.dropOffVolume > 0; else noDropoff"
+                  class="cursor-pointer text-underline-hover"
+                  (click)="$event.stopPropagation(); openDropoffModal(s)"
+                  (keydown.enter)="$event.stopPropagation(); openDropoffModal(s)"
+                  (keydown.space)="$event.stopPropagation(); openDropoffModal(s); $event.preventDefault()"
+                  title="Click to view records that dropped off"
+                >
+                  {{ s.dropOffVolume | number }}
+                </span>
+                <ng-template #noDropoff>{{ s.dropOffVolume !== null ? (s.dropOffVolume | number) : '—' }}</ng-template>
+              </td>
+              <td class="text-right font-weight-bold text-danger">{{ s.dropOffRate || '—' }}</td>
+              <td class="text-right font-weight-bold text-dark">{{ s.convRatePrev || '—' }}</td>
+              <td class="text-right font-weight-bold text-success">{{ s.convRateTotal }}</td>
+              <td class="text-center">
+                <button class="btn btn-outline-primary btn-sm py-0 px-2 font-weight-bold" style="font-size: 11px;">
+                  View
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stage Drilldown Modal Dialog -->
+  <div *ngIf="isModalOpen && selectedStage" id="funnel-modal-backdrop" class="modal-backdrop-custom" (click)="closeStageModal()">
+    <div class="modal-dialog-custom" (click)="$event.stopPropagation()">
+      <!-- Modal Header -->
+      <div class="d-flex justify-content-between align-items-center p-3 border-bottom bg-light">
+        <div class="d-flex align-items-center">
+          <div class="icon-circle mr-3" [class.bg-primary]="!selectedStage.isAlert" [class.text-white]="!selectedStage.isAlert" [class.bg-danger]="selectedStage.isAlert" [class.text-white]="selectedStage.isAlert">
+            <i class="fa {{ selectedStage.isAlert ? 'fa-exclamation-triangle' : activeTab === 'seller' ? 'fa-building' : 'fa-user' }}"></i>
+          </div>
+          <div>
+            <div class="d-flex align-items-center gap-2">
+              <h5 class="font-weight-bold text-dark mb-0 mr-2">{{ selectedStage.name }}</h5>
+              <span class="badge {{ selectedStage.isAlert ? 'badge-danger' : 'badge-primary' }}">
+                {{ (stageRecords.length || selectedStage.usersEntered) | number }} Participants
+              </span>
+              <!-- Question Mark Info Button inside Details Modal -->
+              <button type="button"
+                      class="btn btn-sm btn-info-circle ml-2"
+                      (click)="toggleDetailsInfo()"
+                      title="Click to view what is {{ selectedStage.name }} and condition rules">
+                <i class="fa fa-question"></i>
+              </button>
+            </div>
+            <span class="text-muted small">
+              {{ activeTab === 'seller' ? 'Registered Seller Accounts' : 'Buyer User Accounts' }} in this conversion stage
+            </span>
+          </div>
+        </div>
+        <button type="button" class="btn btn-light btn-sm rounded-circle" (click)="closeStageModal()">&times;</button>
+      </div>
+
+      <!-- Expandable Stage Info & Rules Banner inside Drilldown Modal -->
+      <div *ngIf="isDetailsInfoExpanded" class="p-3 bg-light-primary border-bottom animate-fadeIn">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <span class="badge badge-primary font-weight-bold">{{ getStageInfo(selectedStage).category }}</span>
+          <button type="button" class="btn btn-link btn-sm text-muted p-0" (click)="toggleDetailsInfo()">
+            <i class="fa fa-times"></i> Close Info
+          </button>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-2 mb-md-0">
+            <h6 class="font-weight-bold text-primary mb-1 small text-uppercase">
+              <i class="fa fa-info-circle mr-1"></i> What is {{ selectedStage.name }}?
+            </h6>
+            <p class="small text-dark mb-0 line-height-base">{{ getStageInfo(selectedStage).whatIs }}</p>
+          </div>
+          <div class="col-md-6">
+            <h6 class="font-weight-bold text-success mb-1 small text-uppercase">
+              <i class="fa fa-check-circle mr-1"></i> Condition & Qualification Rules
+            </h6>
+            <p class="small text-dark mb-0 font-italic">{{ getStageInfo(selectedStage).condition }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Controls (Search & Export) -->
+      <div class="p-3 bg-white border-bottom d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <div class="input-group" style="max-width: 350px;">
+          <div class="input-group-prepend">
+            <span class="input-group-text bg-light border-right-0"><i class="fa fa-search text-muted"></i></span>
+          </div>
+          <input
+            type="text"
+            class="form-control border-left-0 bg-light"
+            placeholder="Search by name, company, email, phone..."
+            [(ngModel)]="modalSearchQuery"
+            (ngModelChange)="filterRecords()"
+          />
+        </div>
+        <div class="d-flex align-items-center">
+          <span class="text-muted small mr-3 font-weight-bold">Showing {{ filteredRecords.length }} of {{ stageRecords.length }}</span>
+          <button (click)="exportStageData()" class="btn btn-outline-secondary btn-sm font-weight-bold">
+            <i class="fa fa-download mr-1"></i> Export CSV
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Body / Table -->
+      <div class="modal-body p-0 overflow-auto" style="max-height: 55vh;">
+        <!-- Loading State in Modal -->
+        <div *ngIf="isModalLoading" class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading participants...</span>
+          </div>
+          <p class="text-muted small mt-2">Fetching live database participants...</p>
+        </div>
+
+        <!-- Records Table -->
+        <div *ngIf="!isModalLoading && filteredRecords.length > 0" class="table-responsive">
+          <!-- Buyer Table -->
+          <table *ngIf="activeTab === 'buyer'" class="table table-hover table-striped mb-0 small">
+            <thead class="thead-light">
+              <tr class="text-muted text-uppercase font-weight-bold" style="font-size: 11px;">
+                <th>#</th>
+                <th>User / Name</th>
+                <th>Company / Org</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th *ngIf="selectedStage.stageNumber >= 3" class="text-center">RFQ Count</th>
+                <th>{{ selectedStage.stageNumber >= 3 ? 'Last Activity' : 'Registered Date' }}</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let rec of filteredRecords; let idx = index">
+                <td class="text-muted font-weight-bold">{{ idx + 1 }}</td>
+                <td class="font-weight-bold text-dark">
+                  <i class="fa fa-user-circle text-primary mr-1"></i>{{ rec.name }}
+                </td>
+                <td class="text-muted">{{ rec.companyName || '—' }}</td>
+                <td><a href="mailto:{{ rec.email }}" class="text-primary">{{ rec.email }}</a></td>
+                <td class="text-muted">{{ rec.phone }}</td>
+                <td *ngIf="selectedStage.stageNumber >= 3" class="text-center font-weight-bold text-primary">
+                  <span class="badge badge-light border font-weight-bold">{{ rec.rfqCount || 1 }}</span>
+                </td>
+                <td class="text-muted">{{ rec.lastActivity || rec.date || '—' }}</td>
+                <td>
+                  <span class="badge {{ (rec.isActive === 1 || rec.isActive === true) ? 'badge-success' : 'badge-light' }}">
+                    {{ (rec.isActive === 1 || rec.isActive === true) ? 'Active' : 'Inactive' }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Seller Table -->
+          <table *ngIf="activeTab === 'seller'" class="table table-hover table-striped mb-0 small">
+            <thead class="thead-light">
+              <tr class="text-muted text-uppercase font-weight-bold" style="font-size: 11px;">
+                <th>#</th>
+                <th>Company / Org Name</th>
+                <th>Contact Person</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th *ngIf="selectedStage.stageNumber === 2">Category</th>
+                <th *ngIf="selectedStage.stageNumber === 3" class="text-center">Quotes Placed</th>
+                <th *ngIf="selectedStage.stageNumber === 4">Plan Tier</th>
+                <th *ngIf="selectedStage.isAlert" class="text-center">RFQ Credits</th>
+                <th>{{ selectedStage.stageNumber === 3 ? 'Last Quote' : 'Reg Date' }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let rec of filteredRecords; let idx = index">
+                <td class="text-muted font-weight-bold">{{ idx + 1 }}</td>
+                <td class="font-weight-bold text-dark">
+                  <i class="fa fa-building text-primary mr-1"></i>{{ rec.name }}
+                </td>
+                <td class="text-muted">{{ rec.contactPerson || '—' }}</td>
+                <td><a href="mailto:{{ rec.email }}" class="text-primary">{{ rec.email }}</a></td>
+                <td class="text-muted">{{ rec.phone }}</td>
+                <td *ngIf="selectedStage.stageNumber === 2">
+                  <span class="badge badge-light border text-dark">{{ rec.category || 'General' }}</span>
+                </td>
+                <td *ngIf="selectedStage.stageNumber === 3" class="text-center font-weight-bold text-success">
+                  <span class="badge badge-light border font-weight-bold text-success">{{ rec.quotesCount || 1 }}</span>
+                </td>
+                <td *ngIf="selectedStage.stageNumber === 4">
+                  <span class="badge badge-primary font-weight-bold">{{ rec.planName || 'Pro Plan' }}</span>
+                </td>
+                <td *ngIf="selectedStage.isAlert" class="text-center font-weight-bold text-danger">
+                  <span class="badge badge-danger">{{ rec.credits || 0 }} (Exhausted)</span>
+                </td>
+                <td class="text-muted">{{ rec.lastActivity || rec.date || '—' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Empty State in Modal -->
+        <div *ngIf="!isModalLoading && filteredRecords.length === 0" class="text-center py-5 text-muted">
+          <i class="fa fa-search fa-2x mb-2 text-muted"></i>
+          <p class="mb-0">No matching participants found for "{{ modalSearchQuery }}".</p>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-3 bg-light border-top d-flex justify-content-between align-items-center">
+        <button type="button" class="btn btn-outline-info btn-sm font-weight-bold" (click)="toggleDetailsInfo()">
+          <i class="fa fa-question-circle mr-1"></i> {{ isDetailsInfoExpanded ? 'Hide Stage Info' : 'Stage Info & Rules' }}
+        </button>
+        <button type="button" class="btn btn-secondary btn-sm px-3 font-weight-bold" (click)="closeStageModal()">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Drop-off Records Modal Dialog -->
+  <div *ngIf="isDropoffModalOpen && selectedDropoffStage" id="dropoff-modal-backdrop" class="modal-backdrop-custom" (click)="closeDropoffModal()">
+    <div class="modal-dialog-custom" (click)="$event.stopPropagation()">
+      <!-- Modal Header -->
+      <div class="d-flex justify-content-between align-items-center p-3 border-bottom bg-light">
+        <div class="d-flex align-items-center">
+          <div class="icon-circle mr-3 bg-danger text-white">
+            <i class="fa fa-arrow-down"></i>
+          </div>
+          <div>
+            <h5 class="font-weight-bold text-dark mb-0">{{ dropoffTitle || ('Dropped Off Before: ' + selectedDropoffStage.name) }}</h5>
+            <span class="text-muted small">
+              {{ (dropoffRecords.length || selectedDropoffStage.dropOffVolume) | number }} {{ activeTab === 'seller' ? 'sellers' : 'buyers' }} did not progress to this stage
+            </span>
+          </div>
+        </div>
+        <button type="button" class="btn btn-light btn-sm rounded-circle" (click)="closeDropoffModal()">&times;</button>
+      </div>
+
+      <!-- Modal Controls (Search & Export) -->
+      <div class="p-3 bg-white border-bottom d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <div class="input-group" style="max-width: 350px;">
+          <div class="input-group-prepend">
+            <span class="input-group-text bg-light border-right-0"><i class="fa fa-search text-muted"></i></span>
+          </div>
+          <input
+            type="text"
+            class="form-control border-left-0 bg-light"
+            placeholder="Search by name, company, email, phone..."
+            [(ngModel)]="dropoffSearchQuery"
+            (ngModelChange)="filterDropoffRecords()"
+          />
+        </div>
+        <div class="d-flex align-items-center">
+          <span class="text-muted small mr-3 font-weight-bold">Showing {{ filteredDropoffRecords.length }} of {{ dropoffRecords.length }}</span>
+          <button (click)="exportDropoffData()" class="btn btn-outline-secondary btn-sm font-weight-bold">
+            <i class="fa fa-download mr-1"></i> Export CSV
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Body / Table -->
+      <div class="modal-body p-0 overflow-auto" style="max-height: 55vh;">
+        <div *ngIf="isDropoffLoading" class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading dropped off records...</span>
+          </div>
+          <p class="text-muted small mt-2">Fetching live database records...</p>
+        </div>
+
+        <div *ngIf="!isDropoffLoading && filteredDropoffRecords.length > 0" class="table-responsive">
+          <table class="table table-hover table-striped mb-0 small">
+            <thead class="thead-light">
+              <tr class="text-muted text-uppercase font-weight-bold" style="font-size: 11px;">
+                <th>#</th>
+                <th>Name</th>
+                <th>{{ activeTab === 'seller' ? 'Contact Person' : 'Company / Org' }}</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Last Activity / Reg Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let rec of filteredDropoffRecords; let idx = index">
+                <td class="text-muted font-weight-bold">{{ idx + 1 }}</td>
+                <td class="font-weight-bold text-dark">
+                  <i class="fa {{ activeTab === 'seller' ? 'fa-building' : 'fa-user-circle' }} text-danger mr-1"></i>{{ rec.name }}
+                </td>
+                <td class="text-muted">{{ rec.contactPerson || rec.companyName || '—' }}</td>
+                <td><a href="mailto:{{ rec.email }}" class="text-primary">{{ rec.email }}</a></td>
+                <td class="text-muted">{{ rec.phone }}</td>
+                <td class="text-muted">{{ rec.lastActivity || rec.date || '—' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div *ngIf="!isDropoffLoading && filteredDropoffRecords.length === 0" class="text-center py-5 text-muted">
+          <i class="fa fa-search fa-2x mb-2 text-muted"></i>
+          <p class="mb-0">No matching dropped off records found{{ dropoffSearchQuery ? ' for "' + dropoffSearchQuery + '"' : '' }}.</p>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-3 bg-light border-top text-right">
+        <button type="button" class="btn btn-secondary btn-sm px-3 font-weight-bold" (click)="closeDropoffModal()">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Standalone Stage Information / Definition Modal -->
+  <div *ngIf="isInfoModalOpen && selectedInfoStage" class="modal-backdrop-custom modal-backdrop-info" (click)="closeStageInfo()">
+    <div class="modal-dialog-custom modal-dialog-info" (click)="$event.stopPropagation()">
+      <!-- Header -->
+      <div class="p-3 border-bottom d-flex justify-content-between align-items-center bg-light">
+        <div class="d-flex align-items-center">
+          <div class="icon-circle mr-2 bg-primary text-white" style="width: 32px; height: 32px; font-size: 14px;">
+            <i class="fa fa-question"></i>
+          </div>
+          <div>
+            <span class="badge badge-light border text-primary small font-weight-bold mr-2">{{ getStageInfo(selectedInfoStage).category }}</span>
+            <span class="font-weight-bold text-dark">{{ getStageInfo(selectedInfoStage).title }}</span>
+          </div>
+        </div>
+        <button type="button" class="btn btn-light btn-sm rounded-circle" (click)="closeStageInfo()">&times;</button>
+      </div>
+
+      <!-- Body -->
+      <div class="p-4 bg-white">
+        <!-- Participant Count Banner -->
+        <div class="p-3 bg-light rounded border mb-3 d-flex align-items-center justify-content-between">
+          <div>
+            <span class="text-muted small d-block">Stage Participants</span>
+            <h4 class="font-weight-bold text-primary mb-0">{{ selectedInfoStage.usersEntered | number }}</h4>
+          </div>
+          <div>
+            <span class="badge {{ selectedInfoStage.isAlert ? 'badge-danger' : 'badge-primary' }} px-2 py-1">
+              {{ selectedInfoStage.isGoal ? 'Goal Stage' : selectedInfoStage.isAlert ? 'Alert Condition' : 'Stage ' + (selectedInfoStage.stageNumber || 1) }}
+            </span>
+          </div>
+        </div>
+
+        <!-- What is this -->
+        <div class="mb-3">
+          <label class="font-weight-bold text-dark small text-uppercase mb-1 d-flex align-items-center">
+            <i class="fa fa-info-circle text-primary mr-1"></i> What is {{ selectedInfoStage.name }}?
+          </label>
+          <p class="text-muted mb-0 small line-height-base">
+            {{ getStageInfo(selectedInfoStage).whatIs }}
+          </p>
+        </div>
+
+        <!-- Condition -->
+        <div class="mb-0 p-3 rounded bg-light border-left-primary">
+          <label class="font-weight-bold text-dark small text-uppercase mb-1 d-flex align-items-center">
+            <i class="fa fa-filter text-primary mr-1"></i> Condition & Qualification Rules
+          </label>
+          <p class="text-dark mb-0 small font-italic">
+            {{ getStageInfo(selectedInfoStage).condition }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="p-3 bg-light border-top text-right">
+        <button type="button" class="btn btn-primary btn-sm px-4 font-weight-bold" (click)="closeStageInfo()">
+          Got it
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

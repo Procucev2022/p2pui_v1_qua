@@ -1,0 +1,89 @@
+.badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.calendar-grid-wrapper {
+  min-width: 850px;
+}
+
+.col-8-cell {
+  width: 12.5%;
+  flex: 0 0 12.5%;
+  max-width: 12.5%;
+}
+
+.col-week-summary {
+  width: 12.5%;
+  flex: 0 0 12.5%;
+  max-width: 12.5%;
+  background-color: #f7faff !important;
+  border-left: 2px solid #d0e1fd !important;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: #eaf2ff !important;
+  }
+}
+
+.active-week-cell {
+  border: 2px solid #0058be !important;
+  background-color: #eaf2ff !important;
+}
+
+.min-h-cell {
+  min-height: 104px;
+}
+
+.bg-light-faded {
+  background-color: #fbfcfd !important;
+}
+
+.bg-light-primary {
+  background-color: #e8f1fd;
+}
+
+.bg-light-success {
+  background-color: #e6f7ed;
+}
+
+.active-cell {
+  border: 2px solid #0058be !important;
+  background-color: #f8fbff !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.drawer-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1040;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.slide-drawer {
+  width: 100%;
+  max-width: 440px;
+  height: 100%;
+  overflow-y: auto;
+  z-index: 1050;
+  animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
