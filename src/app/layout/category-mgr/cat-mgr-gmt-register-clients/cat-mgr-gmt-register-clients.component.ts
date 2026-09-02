@@ -16,30 +16,34 @@ import swal from 'sweetalert2';
 })
 export class CatMgrGmtRegisterClientsComponent implements OnInit {
     isLoaded: boolean = false;
+    sourceList = [
+        { label: 'Web App', value: 'Web App' },
+        { label: 'WhatsApp', value: 'WhatsApp' }
+    ];
+    cached_clientList = [];
     clientTableHeaders: any = [
-        { field: 'companyId', header: 'Company Id', isLink: true, isExceedContent: false, width: '155px' },
+        { field: 'fullName', header: 'User Name', isLink: false, isExceedContent: true, width: '165px' },
         { field: 'companyName', header: 'Company Name', isLink: false, isExceedContent: true, width: '165px' },
-        { field: 'clientSector', header: 'Sector', isLink: false, isExceedContent: true, width: '145px' },
-        { field: 'pan', header: 'PAN', isLink: false, isExceedContent: true, width: '125px' },
-        { field: 'organizationPhonenumber', header: 'Phone Number', isLink: false, isExceedContent: true, width: '125px' },
-        { field: 'address1', header: 'City', isLink: false, isExceedContent: true, width: '165px' },
+        { field: 'phone', header: 'Phone Number', isLink: false, isExceedContent: true, width: '165px' },
+        { field: 'username', header: 'User Email', isLink: false, isExceedContent: true, width: '165px' },
+        { field: 'createdTS', header: 'Reg. Date', isLink: false, fieldType: 'date', isExceedContent: true, width: '215px' },
         { field: 'status', header: 'Status', isLink: false, isExceedContent: true, width: '135px' },
+        { field: 'sourceType', header: 'Source Type', isLink: false, isExceedContent: false, width: '165px' },
     ];
 
-    userTableHeaders =[
+    userTableHeaders = [
         { field: 'fullName', header: 'Name', fieldType: 'text', isLink: false, isExceedContent: true, width: '165px' },
         { field: 'username', header: 'Email Id', fieldType: 'text', isLink: true, isExceedContent: true, width: '225px' },
-        // { field: 'clientSector', header: 'Sector', fieldType: 'text', isLink: false, isExceedContent: true, width: '165px' },
         { field: 'phone', header: 'Phone Number', fieldType: 'text', isLink: false, isExceedContent: true, width: '165px' },
         { field: 'createdTS', header: 'created Time', fieldType: 'date', isLink: false, isExceedContent: false, width: '165px' },
         { field: 'status', header: 'Status', fieldType: 'text', isLink: false, isExceedContent: false, width: '135px' },
     ];
-    usersList =[];
+    usersList = [];
     clientsList = [];
     selectedClientData: any;
     pageRecordSize: number;
     pageOptions: number[];
-    defaultPermissions:any;
+    defaultPermissions: any;
     loggedUserPermissions: any;
     loggedUserDetails: any;
     loggedUserName: any;
@@ -49,8 +53,8 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
     roleName: any;
     currentView: any;
     isGMTView: boolean;
-    @ViewChild('editClientTemplateRef')editClientTemplateRef:any;
-    @ViewChild('editUserTemplateRef')editUserTemplateRef:any;
+    @ViewChild('editClientTemplateRef') editClientTemplateRef: any;
+    @ViewChild('editUserTemplateRef') editUserTemplateRef: any;
     clientForm: FormGroup;
     userForm: FormGroup;
     sectors = [
@@ -58,8 +62,8 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
         "Other Manufacturing", "Other Services", "Others"
     ];
     selectedUserData: any;
-    constructor(private createRfqService: CreateRfqService, private encryDecryService:EncryDecryService,
-        private catProcService: CatProcuRequestsService, private toaster: ToastrService,     private dialog: MatDialog,) { }
+    constructor(private createRfqService: CreateRfqService, private encryDecryService: EncryDecryService,
+        private catProcService: CatProcuRequestsService, private toaster: ToastrService, private dialog: MatDialog) { }
 
     ngOnInit() {
         this.pageRecordSize = AppApiConfig.GRID_PAGE_INFO.initpageSize;
@@ -69,11 +73,11 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
         this.loggedUserPermissions = temp.details.listofPermission;
         this.loggedUserDetails = temp.details;
         this.loggedUserName = this.loggedUserDetails.username;
-        this.roleName =this.loggedUserDetails.role.roleName;
+        this.roleName = this.loggedUserDetails.role.roleName;
         this.getRegClients();
-        this.currentView = !localStorage.getItem('system-view') ? JSON.parse(localStorage.getItem('system-view')): localStorage.getItem('system-view');
+        this.currentView = !localStorage.getItem('system-view') ? JSON.parse(localStorage.getItem('system-view')) : localStorage.getItem('system-view');
 
-        this.isGMTView = [SystemViewConfig.GMT_BASIC , SystemViewConfig.GMT_BASIC_PLUS].includes(this.currentView)? true: false;
+        this.isGMTView = [SystemViewConfig.GMT_BASIC, SystemViewConfig.GMT_BASIC_PLUS].includes(this.currentView) ? true : false;
         this.clientForm = new FormGroup({
             address1: new FormControl('', Validators.required),
             organizationPhonenumber: new FormControl('', Validators.required),
@@ -85,167 +89,169 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
             username: new FormControl(this.loggedUserName, Validators.required),
             phone: new FormControl('', Validators.required),
             fullName: new FormControl('', Validators.required)
-        })
+        });
     }
 
-    onAcceptUserByClient(rowData: any, isAceept:boolean) {
-        if(isAceept){
+    onSourceTypeChange(value) {
+        if (value) {
+            this.clientsList = this.cached_clientList.filter(ele => ele.sourceType == value);
+        } else {
+            this.clientsList = this.cached_clientList;
+        }
+    }
+
+    onAcceptUserByClient(rowData: any, isAceept: boolean) {
+        if (isAceept) {
             this.createRfqService.acceptGMTRegisteredClient({ 'id': rowData.id }).subscribe((res: any) => {
                 if (res && res.status == 'Success') {
                     this.toaster.success(res.message, 'Success');
-                    this.getUsersByClient();
                     this.getRegClients();
-                }else{
+                } else {
                     this.toaster.error(res.message, 'Error');
-
                 }
             });
-        }else{
-            this.createRfqService. ignoreGMTRegisteredClient({ 'id': rowData.id }).subscribe((res: any) => {
+        } else {
+            this.createRfqService.ignoreGMTRegisteredClient({ 'id': rowData.id }).subscribe((res: any) => {
                 if (res && res.status == 'Success') {
                     this.toaster.success(res.message, 'Success');
-                    this.getUsersByClient();
-                }else{
+                    this.getRegClients();
+                } else {
                     this.toaster.error(res.message, 'Error');
-
                 }
             });
         }
-
     }
-
-
 
     getCloseClients(selectedRowData, event) {
         this.expandedRows = {};
+        this.isShowChildGrid = false;
     }
 
     getClients(selectedRowData, event) {
+        this.isShowChildGrid = false;
         this.expandedRows = {};
         const thisRef = this;
-        this.usersList =[];
+        this.usersList = [];
         thisRef.expandedRows[selectedRowData.id] = 1;
 
         this.selectedData = [selectedRowData];
         this.selectedClientData = Object.assign({}, selectedRowData);
-       this.getUsersByClient();
-        // this.rfqId = event.srcElement.lastChild.data;
-        // console.log('event data', event.srcElement.lastChild.data);
-        // this.childGridEle.nativeElement.scrollIntoView({ behavior: 'smooth' });
+        this.getUsersByClient();
     }
 
-    getUsersByClient(){
-        this.isShowChildGrid = false;
-        this.catProcService.getClientUserByClient({id: this.selectedClientData.id}).subscribe((res:any)=>{
-            this.usersList = Array.isArray(res)? res.map(ele =>{ return {...ele, status: ele.clientStatus.uiDisplay}}): [];
+    getUsersByClient() {
+        this.catProcService.getClientUserByClient({ id: this.selectedClientData.id }).subscribe((res: any) => {
+            this.usersList = Array.isArray(res) ? res.map(ele => { return { ...ele, status: ele.clientStatus.uiDisplay } }) : [];
+            this.isShowChildGrid = true;
         });
-        setTimeout(() => {
-            this.isShowChildGrid =true;
-        }, 500);
     }
 
     getRegClients() {
-        this.createRfqService.getGMTRegisteredClients().subscribe((res: any) => {
+        this.createRfqService.getGMTRegisteredClientsWithUser().subscribe((res: any) => {
             if (res) {
-                this.clientsList =  Array.isArray(res)? res.map(ele =>{ return {...ele, status: ele.clientStatus ?ele.clientStatus.uiDisplay: '-'}}): [];
+                this.clientsList = Array.isArray(res) ? res.map(ele => {
+                    const phoneNumber = ele.phone || ele.organizationPhonenumber || ele.phoneNumber || '';
+                    return {
+                        ...ele,
+                        phone: phoneNumber,
+                        organizationPhonenumber: phoneNumber,
+                        status: ele.clientStatus ? ele.clientStatus.uiDisplay : '-',
+                        sourceType: ele.sourceType ? (ele.sourceType == 'T' ? 'Web App' : (ele.sourceType == 'W' ? 'WhatsApp' : ele.sourceType)) : 'Web App'
+                    };
+                }) : [];
+                this.cached_clientList = this.clientsList;
                 this.isLoaded = true;
             }
-        })
+        });
     }
 
     onGridAction(event: any) {
-        console.log(event)
+        console.log(event);
     }
 
-    onEditClient(rowData:any, isClient){
-
+    onEditClient(rowData: any, isClient) {
         const dialogConfig = new MatDialogConfig();
-
-        // dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
         dialogConfig.minHeight = '70vh';
         dialogConfig.maxWidth = 'none';
         dialogConfig.width = '30%';
 
-        if(isClient){
+        if (isClient) {
             this.selectedClientData = rowData;
             this.clientForm.patchValue({
                 companyName: rowData.companyName,
                 address1: rowData.address1,
                 organizationPhonenumber: rowData.organizationPhonenumber,
-                clientSector: rowData.clientSector ? rowData.clientSector: '',
+                clientSector: rowData.clientSector ? rowData.clientSector : '',
                 pan: rowData.pan
-            })
+            });
             const dialogRef = this.dialog.open(this.editClientTemplateRef, dialogConfig).afterClosed().subscribe(result => { console.log(result); });
-        }else{
+        } else {
             this.selectedUserData = rowData;
             this.userForm.patchValue({
                 username: rowData.username,
                 fullName: rowData.fullName,
                 phone: rowData.phone,
-            })
+            });
             const dialogRef = this.dialog.open(this.editUserTemplateRef, dialogConfig).afterClosed().subscribe(result => { console.log(result); });
-
         }
-
     }
-
 
     resetForm() {
         this.userForm.reset();
         this.clientForm.reset();
     }
 
-    updateClientDetails(){
-        if(this.clientForm.valid){
-            const obj:any ={
+    updateClientDetails() {
+        if (this.clientForm.valid) {
+            const obj: any = {
                 id: this.selectedClientData.id,
                 ...this.clientForm.value,
-        };
+            };
 
-            this.createRfqService.updateClientDetails(obj).subscribe((res:any)=>{
+            this.createRfqService.updateClientDetails(obj).subscribe((res: any) => {
                 if (res.status == 'Success') {
                     this.toaster.success(res.message, 'Success');
                     this.dialog.closeAll();
                     this.getRegClients();
                 } else {
-                    this.toaster.error(res.message, 'Failed')
+                    this.toaster.error(res.message, 'Failed');
                 }
-            })
-        }else{
-            this.toaster.warning("Please fill the all the details", "Warning")
+            });
+        } else {
+            this.toaster.warning("Please fill the all the details", "Warning");
         }
     }
-    updateUserDetails(){
-        const isEmailChanged = this.selectedUserData.username && this.selectedUserData.username == this.userForm.value.username ? true: false;
-        if(this.userForm.valid){
-            const obj:any ={
+
+    updateUserDetails() {
+        const isEmailChanged = this.selectedUserData.username && this.selectedUserData.username == this.userForm.value.username ? true : false;
+        if (this.userForm.valid) {
+            const obj: any = {
                 id: this.selectedUserData.id,
                 ...this.userForm.value,
-            pan: this.selectedClientData.pan,
-            emailMatched: isEmailChanged
+                pan: this.selectedClientData.pan,
+                emailMatched: isEmailChanged
+            };
 
-        };
-
-            this.createRfqService.updateUserDetails(obj).subscribe((res:any)=>{
+            this.createRfqService.updateUserDetails(obj).subscribe((res: any) => {
                 if (res.status == 'Success') {
                     this.toaster.success(res.message, 'Success');
                     this.dialog.closeAll();
-                    if(!isEmailChanged){
+                    if (!isEmailChanged) {
                         this.getRegClients();
                     }
                     this.getUsersByClient();
                 } else {
-                    this.toaster.error(res.message, 'Failed')
+                    this.toaster.error(res.message, 'Failed');
                 }
-            })
-        }else{
-            this.toaster.warning("Please fill the all the details", "Warning")
+            });
+        } else {
+            this.toaster.warning("Please fill the all the details", "Warning");
         }
     }
 
-    deleteUser(rowData:any){
-        const obj = {id: rowData.id}
+    deleteUser(rowData: any) {
+        const obj = { id: rowData.id };
         swal({
             title: '<h6>Please Confirm!!<h6>',
             html: `<h4>Are you sure you want to Delete User<br /> <b>${rowData.fullName}</b> ?</h4>`,
@@ -254,19 +260,18 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
             cancelButtonColor: '#d63636',
             showCancelButton: true,
             reverseButtons: true
-           }).then((result) => {
+        }).then((result) => {
             if (result.value) {
-                this.createRfqService.deleteUser(obj).subscribe((res:any)=>{
+                this.createRfqService.deleteUser(obj).subscribe((res: any) => {
                     if (res.statusCode == 'Success') {
                         this.toaster.success('User Deleted Successfully!', 'Success');
                         this.dialog.closeAll();
                         this.getUsersByClient();
                     } else {
-                        this.toaster.error('User Deletion failed', 'Failed')
+                        this.toaster.error('User Deletion failed', 'Failed');
                     }
-                })
+                });
             }
-          });
+        });
     }
-
 }
