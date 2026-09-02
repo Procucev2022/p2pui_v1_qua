@@ -217,7 +217,14 @@ export class VendorChooseModalPopupComponent implements OnChanges, OnInit{
   }
 
   globalSearchs(){
-    this.globalSearch.emit({'searchMode': this.searchBy,'searchTextValue': this.searchTextValue, 'searchBy': this.searchBy})
+    const cleanSearchText = this.searchTextValue ? this.searchTextValue.trim() : '';
+    this.globalSearch.emit({'searchMode': this.searchBy, 'searchTextValue': cleanSearchText, 'searchBy': this.searchBy});
+  }
+
+  onPasteSearch(event: ClipboardEvent) {
+    setTimeout(() => {
+      this.globalSearchs();
+    }, 50);
   }
 
   // for selected multiple vendors

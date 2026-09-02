@@ -38,20 +38,12 @@ export class CreateRfqService {
     }
 
      getAllVendorsBySearchCriteria(searchType, searchValue) {
-    if(searchValue){
-                searchValue = encodeURIComponent(searchValue);
-            }
-            if(searchType){
-                searchType = encodeURIComponent(searchType);
-            }
-        
-            // add params only when they are present
             const params: any = {};
             if (searchValue) {
-                params.searchValue = searchValue;
+                params.searchValue = searchValue.trim();
             }
             if (searchType) {
-                params.searchType = searchType;
+                params.searchType = searchType.trim();
             }
         return this.httpService.get(AppApiConfig.apiEndpoint + AppApiConfig.GET_ALL_VENDORS_BY_SEARCH_CRITERIA, {params})
     }
