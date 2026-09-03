@@ -1,0 +1,264 @@
+<div class="calendar-view position-relative">
+  <!-- Top Header with Month Selection -->
+  <div class="d-flex flex-column flex-md-row align-items-md-end justify-content-between mb-4 gap-2">
+    <div>
+      <div class="d-flex align-items-center gap-3 mb-1">
+        <h3 class="font-weight-bold text-dark mb-0 mr-3">{{ monthName }}</h3>
+        <!-- Month Dropdown -->
+        <select
+          [ngModel]="currentYear + '-' + currentMonth"
+          (ngModelChange)="handleMonthSelect($event)"
+          class="form-control form-control-sm w-auto font-weight-bold"
+        >
+          <option *ngFor="let m of availableMonths" [value]="m.year + '-' + m.month">
+            {{ m.label }}
+          </option>
+        </select>
+      </div>
+      <p class="text-muted small mb-0">Conversion activity and acquisition metrics from live database transactions.</p>
+    </div>
+
+    <div class="d-flex align-items-center gap-3">
+      <!-- Legend -->
+      <div class="d-flex align-items-center gap-3 bg-white px-3 py-2 rounded border shadow-2xs mr-2">
+        <span class="small text-muted mr-2"><span class="badge-dot bg-primary mr-1"></span>High</span>
+        <span class="small text-muted mr-2"><span class="badge-dot bg-secondary mr-1"></span>Avg</span>
+        <span class="small text-muted"><span class="badge-dot bg-danger mr-1"></span>Low</span>
+      </div>
+
+      <!-- Navigation buttons -->
+      <div class="btn-group btn-group-sm shadow-2xs">
+        <button (click)="handlePrevMonth()" class="btn btn-outline-secondary font-weight-bold" title="Previous Month">‹</button>
+        <button (click)="handleCurrentMonth()" class="btn btn-light font-weight-bold">Current</button>
+        <button (click)="handleNextMonth()" class="btn btn-outline-secondary font-weight-bold" title="Next Month">›</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Loading calendar...</span>
+    </div>
+  </div>
+
+  <!-- Calendar Grid Table Card -->
+  <div *ngIf="!isLoading" class="card shadow-sm border-0 overflow-hidden mb-4">
+    <div class="table-responsive">
+      <div class="calendar-grid-wrapper">
+        <!-- Weekday Header (8 Columns) -->
+        <div class="row no-gutters bg-light border-bottom text-center py-2 font-weight-bold small text-muted text-uppercase">
+          <div class="col-8-cell">Sun</div>
+          <div class="col-8-cell">Mon</div>
+          <div class="col-8-cell">Tue</div>
+          <div class="col-8-cell">Wed</div>
+          <div class="col-8-cell">Thu</div>
+          <div class="col-8-cell">Fri</div>
+          <div class="col-8-cell">Sat</div>
+          <div class="col-week-summary text-primary font-weight-bold">Weekly Summary</div>
+        </div>
+
+        <!-- Week Rows -->
+        <ng-container *ngFor="let week of weekRows">
+          <div class="row no-gutters border-bottom">
+            <!-- 7 Days in Week -->
+            <ng-container *ngFor="let day of week.cells">
+              <!-- Non-empty Day Cell -->
+              <div *ngIf="day"
+                   class="col-8-cell p-2 border-right bg-white min-h-cell position-relative cursor-pointer"
+                   role="button" tabindex="0"
+                   (click)="handleCellClick(day.day)"
+                   (keydown.enter)="handleCellClick(day.day)"
+                   (keydown.space)="handleCellClick(day.day); $event.preventDefault()"
+                   [class.active-cell]="selectedDay && selectedDay.day === day.day && isDrawerOpen">
+                <!-- Cell Header -->
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <span *ngIf="day.statusLevel === 'high'" class="badge-dot bg-primary" title="High Activity"></span>
+                  <span *ngIf="day.statusLevel === 'low'" class="badge-dot bg-danger" title="Low Activity"></span>
+                  <span *ngIf="day.statusLevel !== 'high' && day.statusLevel !== 'low'"></span>
+                  <span class="font-weight-bold text-dark small">{{ day.day }}</span>
+                </div>
+
+                <!-- Cell Body with Activity Pills -->
+                <div class="p-1 bg-light rounded small text-muted d-flex justify-content-between mb-1">
+                  <span>Reg</span>
+                  <strong class="text-dark">{{ day.regB }}/{{ day.regS }}</strong>
+                </div>
+                <div class="p-1 bg-light-primary rounded small text-primary d-flex justify-content-between mb-1">
+                  <span>RFQs</span>
+                  <strong>{{ day.rfqs }}</strong>
+                </div>
+                <div *ngIf="day.sellerSubmissions > 0" class="p-1 bg-light-success rounded small text-success d-flex justify-content-between">
+                  <span>Quotes</span>
+                  <strong>{{ day.sellerSubmissions }}</strong>
+                </div>
+              </div>
+
+              <!-- Faded/Empty Day Cell -->
+              <div *ngIf="!day" class="col-8-cell p-2 border-right bg-light-faded min-h-cell">
+              </div>
+            </ng-container>
+
+            <!-- Weekly Summary Column Cell -->
+            <div class="col-week-summary p-2 min-h-cell cursor-pointer d-flex flex-column justify-content-between"
+                 role="button" tabindex="0"
+                 (click)="handleWeekClick(week)"
+                 (keydown.enter)="handleWeekClick(week)"
+                 (keydown.space)="handleWeekClick(week); $event.preventDefault()"
+                 [class.active-week-cell]="selectedWeek && selectedWeek.weekNumber === week.weekNumber && isWeekDrawerOpen"
+                 title="Click to view weekly aggregate details">
+              <div>
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <span class="badge badge-primary small font-weight-bold">W{{ week.weekNumber }}</span>
+                  <span class="small font-weight-bold text-muted text-truncate" style="font-size: 10px;">{{ week.dateRange }}</span>
+                </div>
+                <div class="p-1 bg-white rounded small border d-flex justify-content-between mb-1" style="font-size: 11px;">
+                  <span class="text-muted">RFQs:</span>
+                  <strong class="text-primary">{{ week.totalRfqs }}</strong>
+                </div>
+                <div class="p-1 bg-white rounded small border d-flex justify-content-between mb-1" style="font-size: 11px;">
+                  <span class="text-muted">Quotes:</span>
+                  <strong class="text-success">{{ week.totalSubmissions }}</strong>
+                </div>
+              </div>
+              <div class="text-muted small font-weight-bold text-right" style="font-size: 10px;">
+                Reg: {{ week.totalRegB }}/{{ week.totalRegS }}
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day Activity Slide-over Drawer -->
+  <div *ngIf="isDrawerOpen && selectedDay" class="drawer-backdrop" (click)="isDrawerOpen = false">
+    <aside class="slide-drawer bg-white shadow-lg p-4" (click)="$event.stopPropagation()">
+      <div class="d-flex justify-content-between align-items-center pb-3 border-bottom mb-3">
+        <div>
+          <span class="text-primary small text-uppercase font-weight-bold">Day Activity Details</span>
+          <h4 class="font-weight-bold text-dark mb-0">{{ selectedDay.dateStr }}</h4>
+        </div>
+        <button (click)="isDrawerOpen = false" class="btn btn-light btn-sm rounded-circle">&times;</button>
+      </div>
+
+      <!-- Bento Summary (4 Cards including Number of Seller Submissions) -->
+      <div class="row text-center mb-4">
+        <div class="col-6 col-sm-3 mb-2">
+          <div class="p-2 border rounded bg-light h-100">
+            <small class="text-muted font-weight-bold d-block">Buyers</small>
+            <h5 class="font-weight-bold text-dark mb-0">{{ selectedDay.regB }}</h5>
+          </div>
+        </div>
+        <div class="col-6 col-sm-3 mb-2">
+          <div class="p-2 border rounded bg-light h-100">
+            <small class="text-muted font-weight-bold d-block">Sellers</small>
+            <h5 class="font-weight-bold text-dark mb-0">{{ selectedDay.regS }}</h5>
+          </div>
+        </div>
+        <div class="col-6 col-sm-3 mb-2">
+          <div class="p-2 border rounded bg-light h-100">
+            <small class="text-muted font-weight-bold d-block">RFQs</small>
+            <h5 class="font-weight-bold text-primary mb-0">{{ selectedDay.rfqs }}</h5>
+          </div>
+        </div>
+        <div class="col-6 col-sm-3 mb-2">
+          <div class="p-2 border rounded bg-light h-100">
+            <small class="text-muted font-weight-bold d-block">Quotes</small>
+            <h5 class="font-weight-bold text-success mb-0">{{ selectedDay.sellerSubmissions || 0 }}</h5>
+          </div>
+        </div>
+      </div>
+
+      <!-- Acquisition Channels -->
+      <h6 class="text-muted small text-uppercase font-weight-bold mb-2">Acquisition Breakdown</h6>
+      <div *ngFor="let src of selectedDay.sources" class="mb-3">
+        <div class="d-flex justify-content-between small font-weight-bold mb-1">
+          <span>{{ src.source }}</span>
+          <span>{{ src.percent }}%</span>
+        </div>
+        <div class="progress" style="height: 6px;">
+          <div class="progress-bar bg-primary" [style.width.%]="src.percent"></div>
+        </div>
+      </div>
+
+      <!-- Activity Timeline -->
+      <h6 class="text-muted small text-uppercase font-weight-bold mt-4 mb-2">Activity Timeline</h6>
+      <div *ngFor="let log of selectedDay.activityLogs" class="p-2 border rounded bg-light mb-2 small">
+        <span class="badge badge-primary mr-1">{{ log.time }}</span>
+        <span>{{ log.text }}</span>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Weekly Summary Slide-over Drawer -->
+  <div *ngIf="isWeekDrawerOpen && selectedWeek" class="drawer-backdrop" (click)="isWeekDrawerOpen = false">
+    <aside class="slide-drawer bg-white shadow-lg p-4" (click)="$event.stopPropagation()">
+      <div class="d-flex justify-content-between align-items-center pb-3 border-bottom mb-3">
+        <div>
+          <span class="text-primary small text-uppercase font-weight-bold">Weekly Summary Details</span>
+          <h4 class="font-weight-bold text-dark mb-0">Week {{ selectedWeek.weekNumber }}</h4>
+          <span class="text-muted small font-weight-bold">{{ selectedWeek.dateRange }}</span>
+        </div>
+        <button (click)="isWeekDrawerOpen = false" class="btn btn-light btn-sm rounded-circle">&times;</button>
+      </div>
+
+      <!-- Bento Summary for Week -->
+      <div class="row text-center mb-4">
+        <div class="col-6 col-sm-3 mb-2">
+          <div class="p-2 border rounded bg-light h-100">
+            <small class="text-muted font-weight-bold d-block">Buyers</small>
+            <h5 class="font-weight-bold text-dark mb-0">{{ selectedWeek.totalRegB }}</h5>
+          </div>
+        </div>
+        <div class="col-6 col-sm-3 mb-2">
+          <div class="p-2 border rounded bg-light h-100">
+            <small class="text-muted font-weight-bold d-block">Sellers</small>
+            <h5 class="font-weight-bold text-dark mb-0">{{ selectedWeek.totalRegS }}</h5>
+          </div>
+        </div>
+        <div class="col-6 col-sm-3 mb-2">
+          <div class="p-2 border rounded bg-light h-100">
+            <small class="text-muted font-weight-bold d-block">RFQs</small>
+            <h5 class="font-weight-bold text-primary mb-0">{{ selectedWeek.totalRfqs }}</h5>
+          </div>
+        </div>
+        <div class="col-6 col-sm-3 mb-2">
+          <div class="p-2 border rounded bg-light h-100">
+            <small class="text-muted font-weight-bold d-block">Quotes</small>
+            <h5 class="font-weight-bold text-success mb-0">{{ selectedWeek.totalSubmissions }}</h5>
+          </div>
+        </div>
+      </div>
+
+      <!-- Weekly Day Breakdown -->
+      <h6 class="text-muted small text-uppercase font-weight-bold mb-2">Daily Breakdown for this Week</h6>
+      <div class="table-responsive">
+        <table class="table table-sm table-bordered small mb-0">
+          <thead class="thead-light">
+            <tr>
+              <th>Date</th>
+              <th class="text-right">Buyers</th>
+              <th class="text-right">Sellers</th>
+              <th class="text-right">RFQs</th>
+              <th class="text-right">Quotes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let day of selectedWeek.cells">
+              <tr *ngIf="day" class="cursor-pointer hover-highlight" (click)="handleCellClick(day.day)"
+                  tabindex="0" (keydown.enter)="handleCellClick(day.day)"
+                  (keydown.space)="handleCellClick(day.day); $event.preventDefault()">
+                <td class="font-weight-bold">{{ day.dateStr }}</td>
+                <td class="text-right">{{ day.regB }}</td>
+                <td class="text-right">{{ day.regS }}</td>
+                <td class="text-right font-weight-bold text-primary">{{ day.rfqs }}</td>
+                <td class="text-right font-weight-bold text-success">{{ day.sellerSubmissions || 0 }}</td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </aside>
+  </div>
+</div>

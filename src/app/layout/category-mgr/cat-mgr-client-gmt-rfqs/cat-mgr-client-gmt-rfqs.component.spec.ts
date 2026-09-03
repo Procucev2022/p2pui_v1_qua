@@ -486,11 +486,13 @@ describe('CatMgrClientGmtRfqsComponent', () => {
     expect(c.rfqDataList).toEqual([]);
 
     c.onSearchMode('Inline');
-    c.searchTextValue = '';
+    c.searchTextValue = 'r1';
+    c.searchBy = '';
     c.globalSearch();
     expect(toastrService.warning).toHaveBeenCalled();
 
     c.searchTextValue = 'r1';
+    c.searchBy = 'rfqid';
     rfqservice.getAllClientRFQsByGMTForCMandCM2ByGlobalSearch.and.returnValue(
       of({ status: 'Success', data: [{ id: 'r1' }], totalRecords: 1 })
     );

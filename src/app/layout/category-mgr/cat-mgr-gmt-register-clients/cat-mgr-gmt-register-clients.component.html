@@ -5,10 +5,17 @@
         <p><span class="dot"></span>{{clientsList.length}} Total</p>
       </div>
       <div class="col-sm-6">
+        <div class="form-group" style="display: flex;float: right; align-items: center; gap: 10px;">
+           <label>Source Type:</label>
+            <select class="form-control" style="width: 200px;" (change)="onSourceTypeChange($event.target.value)">
+                <option value="">All</option>
+                <option *ngFor="let source of sourceList" [value]="source.value">{{source.label}}</option>
+            </select>
+        </div>
       </div>
     </div>
   </div>
-<div class="row col-12">
+<div class="col-12">
 
         <div class="row">
 
@@ -19,7 +26,7 @@
                 <p-table [ngClass]="{  'gmt-container': isGMTView}" #clientTableRef [columns]="clientTableHeaders" [value]="clientsList"  dataKey="id"
        sortMode="multiple"  [paginator]="true" [rows]="pageRecordSize" id="rfqTable" [rowsPerPageOptions]="pageOptions"
         [style]="{'width': '100%'}" exportFilename="roles details" [(selection)]="selectedData"
-         [scrollable]="true" [scrollHeight]="'calc(100vh - 214px)'" [expandedRowKeys]="expandedRows">
+         [scrollable]="true" [scrollHeight]="'calc(100vh  - 205px)'"  >
          <ng-template pTemplate="caption">
             <div class="table-search">
               <div class="row">
@@ -27,62 +34,62 @@
                   <input class="main-input" type="text" pInputText size="50" placeholder="Search..."
                     (input)="clientTableRef.filterGlobal($event.target.value, 'contains')" />
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-6 " style="display: flex; justify-content: flex-end;">
+                    <div class=" displayFlex-align" style="font-size: 18px !important; ">
+                        <span class="green  ">
+                         <i class="fa fa-check-circle green cursor-pointer" aria-hidden="true" style="font-size: 20px;" ></i> - <span style="margin-left: 8px;">Accept</span>
+                              
+                    </span>
+                    <span class="red ml-3   ">
+                          <i class="fa fa-times-circle-o red cursor-pointer" aria-hidden="true" style="font-size: 20px;" ></i> - <span style="  margin-left: 8px;">Reject</span>
+                    </span>
+                    </div>
+                    
                 </div>
               </div>
             </div>
           </ng-template>
          <ng-template pTemplate="header" let-columns>
                         <tr>
-                            <th style="width: 3em"></th>
+                             
                             <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.width]="col.width">
                                 {{col.header}}
                             </th>
-                            <th style="width: 4rem;">Actions</th>
+                            <th style="width: 8rem;">Actions</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
                         <tr [pSelectableRow]="rowData">
-                            <td style="width: 3em;">
-                                <button type="button" pButton pRipple [pRowToggler]="rowData"
-                                (click)="expanded ? getCloseClients(rowData,$event) : getClients(rowData,$event)"
-                                class="grid-expand">
-                                <span *ngIf="expanded"><i class="fa fa-chevron-down"></i></span>
-                                    <span *ngIf="!expanded"><i class="fa fa-chevron-right"></i></span>
-                                </button>
-                            </td>
+                            
                             <td [style.width]="col.width" *ngFor="let col of columns"
                                 [ngClass]="{'table-cell-overflow-ellipse-desc': col.isExceedContent }"
                                 [ngStyle]="{'max-width': col.isExceedContent ? col.width: 'auto'}"
                                 [title]="col.isExceedContent == true ?  rowData[col.field]: ''">
-                                {{rowData[col.field]}}
+                                  <span *ngIf="col.fieldType == 'date'" [title]="rowData[col.field] | date:'dd-MMM-yyyy hh:mm a'">
+                                    {{rowData[col.field] | date: 'dd-MMM-yyyy'}}
+                                </span>
+                                <span *ngIf="col.fieldType != 'date'">
+                                    <span *ngIf="col.field == 'sourceType'">
+                                        <img width="30" height="30" src="/assets/images/new/{{rowData[col.field] == 'Web App' ? 'web.png' : 'wapp.png'}}" />
+                                    </span>
+                                    {{rowData[col.field]}}
+                                </span>
                                 <span class="blink" *ngIf="col.field=='companyId' && (rowData.newClientStatus && rowData.newClientStatus == true)">
                                     <i class="fa fa-bell" aria-hidden="true"></i>
                                 </span>
                             </td>
-                        <td style="width: 4rem;">
-                            <img class="cursor-pointer" src="/assets/images/new/edit-data.png"  width="28" style="width:28px;margin-right: 10px;" title="Edit Client"  (click)="onEditClient(rowData, true)">
+                        <td style="width: 8rem;"  >
+                            <span *ngIf="!(rowData.status == 'Accepted' || rowData.status =='Ignored')" style="font-size: 2rem;">
+                                <i class="fa fa-check-circle green cursor-pointer mr-2" title="Accept" aria-hidden="true" (click)="onAcceptUserByClient(rowData, true)"></i> 
+                                <i class="fa fa-times-circle-o red cursor-pointer" title="Reject" aria-hidden="true" (click)="onAcceptUserByClient(rowData, false)"></i>
+                            </span>
                         </td>
                         </tr>
-                    </ng-template>
-                    <ng-template pTemplate="rowexpansion" let-rowData>
-                        <tr class="child-grid" *ngIf="selectedData.length ==1">
-                            <td colspan="9">
-                                <div #childGridEle *ngIf="isShowChildGrid">
-
-                                    <mat-tab-group class="" >
-                                        <mat-tab label="Users">
-                                            <ng-container *ngTemplateOutlet="clientUsersRef"></ng-container>
-                                        </mat-tab>
-                                    </mat-tab-group>
-                                </div>
-                            </td>
-                        </tr>
-                    </ng-template>
+                    </ng-template> 
                     <ng-template pTemplate="emptymessage" let-columns>
                         <tr>
-                            <td [attr.colspan]="itemCartTableHeaders.length" style="text-align:center;">
-                               {{gridData.gridEmptyMsg}}
+                            <td [attr.colspan]="clientTableHeaders.length" style="text-align:center;">
+                               No Data Available
                             </td>
                         </tr>
                     </ng-template>
