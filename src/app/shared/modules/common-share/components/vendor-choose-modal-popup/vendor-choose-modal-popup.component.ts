@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AppApiConfig } from 'src/app/shared/constants/app-api.config';
 import { EncryDecryService } from 'src/app/shared/services';
 import { FormValidatationsService } from 'src/app/shared/services/form-validatations.service';
+import { CreateRfqService } from 'src/app/layout/category-mgr/services/create-rfq.service';
 
 @Component({
   selector: 'app-vendor-choose-modal-popup',
@@ -43,11 +44,14 @@ export class VendorChooseModalPopupComponent implements OnChanges, OnInit{
   searchCity: string = '';
   vendorForm: FormGroup;
   isNoVendorFound: boolean;
+  categoryList: any = [];
+
   constructor(public dialogRef: MatDialogRef<VendorChooseModalPopupComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data,
     private encryDecryService: EncryDecryService,
     private toaster: ToastrService,
-    private formValidatorService: FormValidatationsService) { }
+    private formValidatorService: FormValidatationsService,
+    private createRfqService: CreateRfqService) { }
 
     ngOnInit() { 
     this.defaultPermissions = AppApiConfig.DEFAULT_PERMISSIONS;
@@ -56,6 +60,13 @@ export class VendorChooseModalPopupComponent implements OnChanges, OnInit{
     this.roleName = this.loggedUserDetails.role.roleName;
     this.loggedUserPermissions = this.loggedUserDetails.listofPermission;
     this.buildVendorForm();
+    this.loadCategories();
+  }
+
+  loadCategories() {
+    this.createRfqService.getGMTCategories().subscribe((res: any) => {
+      this.categoryList = Array.isArray(res) ? res : [];
+    });
   }
 
   
@@ -83,6 +94,7 @@ export class VendorChooseModalPopupComponent implements OnChanges, OnInit{
 
   buildVendorForm() {
     // Initialize the vendor form here
+    const defaultCategory = this.parentData && this.parentData.category ? this.parentData.category : '';
     this.vendorForm = new FormGroup({
       companyName: new FormControl('', Validators.required),
       city: new FormControl('', Validators.required),
@@ -91,7 +103,8 @@ export class VendorChooseModalPopupComponent implements OnChanges, OnInit{
       name: new FormControl('', [Validators.required, this.formValidatorService.alphabetValidator]),
       gstin: new FormControl('', [Validators.required]),
       products: new FormControl('', [Validators.required]),
-      pinCode: new FormControl('', [Validators.required, this.formValidatorService.pincodeValidator])
+      pinCode: new FormControl('', [Validators.required, this.formValidatorService.pincodeValidator]),
+      vendorcategory: new FormControl(defaultCategory, [Validators.required])
     });
   }
   
@@ -104,12 +117,14 @@ export class VendorChooseModalPopupComponent implements OnChanges, OnInit{
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
     console.log('Changes in Modal Popup:', changes);
-    this.vendorCartTableHeaders =this.parentData.vendorHeaders || [];
-    // if (changes['parentData']) {
-    //   this.vendorList = changes['parentData'].currentValue.vendorList || [];
-      this.cache_vendorList = [...this.vendorList]; // Cache the original vendor list 
-      console.log('Vendors List in Modal Popup:', this.vendorList);
-    // }
+    this.vendorCartTableHeaders = this.parentData ? (this.parentData.vendorHeaders || []) : [];
+    if (this.parentData && this.parentData.category && this.vendorForm) {
+      if (!this.vendorForm.get('vendorcategory')?.value) {
+        this.vendorForm.patchValue({ vendorcategory: this.parentData.category });
+      }
+    }
+    this.cache_vendorList = [...this.vendorList]; // Cache the original vendor list 
+    console.log('Vendors List in Modal Popup:', this.vendorList);
   }
   onSearchCriteriaChanges(){
     this.globalSearchs();

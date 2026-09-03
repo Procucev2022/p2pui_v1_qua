@@ -176,16 +176,22 @@
                       <input class="form-control" formControlName="products" placeholder="Products" />
                       <span style="color:red" *ngIf="vendorCtrls.products.invalid && vendorCtrls.products.touched">Enter Valid Products</span>
                   </div>
-
+                  <div class="col-4 mb-1">
+                      <label class="form-label required">Category</label>
+                      <input class="form-control" list="categoryOptionsModal" formControlName="vendorcategory" placeholder="Search / Select Category" />
+                      <datalist id="categoryOptionsModal">
+                        <option *ngFor="let cat of categoryList" [value]="cat.categoryName || cat.category || cat"></option>
+                      </datalist>
+                      <span style="color:red" *ngIf="vendorCtrls.vendorcategory.invalid && vendorCtrls.vendorcategory.touched">Enter Valid Category</span>
+                  </div>
                   <div class="col-4 mb-1">
                       <label class="form-label required">Pin Code</label>
                       <input class="form-control" formControlName="pinCode" placeholder="Pin Code"  />
                       <span style="color:red" *ngIf="vendorCtrls.pinCode.invalid && vendorCtrls.pinCode.touched">Enter Valid Pin Code</span>
                   </div>
-                  <div class="col-4 mt-3 btn-block btn-group" style="display: flex;align-items: end; ">
+                  <div class="col-12 mt-3 text-right" style="display: flex; justify-content: flex-end; align-items: center; width: 100%;">
                       <button class="btn btn-red" type="reset">Reset</button>
                       <button class="btn btn-blue ml-3" type="submit" [disabled]="!vendorForm.valid" >  Add Vendor</button>
-
                   </div>
                 </div>
               </form>
