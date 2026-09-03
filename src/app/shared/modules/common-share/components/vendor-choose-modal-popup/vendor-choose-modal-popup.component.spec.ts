@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA, ChangeDetectorRef, SimpleChange } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { VendorChooseModalPopupComponent } from './vendor-choose-modal-popup.component';
@@ -50,7 +51,7 @@ describe('VendorChooseModalPopupComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [VendorChooseModalPopupComponent],
-      imports: [CommonModule, FormsModule, ReactiveFormsModule],
+      imports: [CommonModule, FormsModule, ReactiveFormsModule, HttpClientTestingModule],
       providers: [
         { provide: APP_CONFIG, useValue: defaultAppConfig },
         { provide: ChangeDetectorRef, useValue: autoMock('ChangeDetectorRef') },
