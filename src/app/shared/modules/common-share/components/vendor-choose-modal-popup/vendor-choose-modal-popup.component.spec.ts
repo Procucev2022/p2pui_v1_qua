@@ -152,6 +152,7 @@ describe('VendorChooseModalPopupComponent', () => {
       gstin: 'G',
       products: 'P',
       pinCode: '500001',
+      vendorcategory: '',
     });
     component.onAddVendorsToCart();
     expect(dialogRef.close).toHaveBeenCalled();
