@@ -103,19 +103,23 @@ describe('VendorChooseModalPopupComponent', () => {
     seedComponent(component as any);
   });
 
-  it('should init form and ngOnChanges', () => {
+  it('should init form and ngOnChanges with parentData category', () => {
+    component.parentData = { category: 'IT', vendorHeaders: [{ title: 'H1' }] };
     component.ngOnInit();
     expect(component.roleName).toBe('CategoryManager');
     expect(component.vendorForm).toBeTruthy();
     expect(component.vendorCtrls.companyName).toBeTruthy();
+
+    component.vendorForm.patchValue({ vendorcategory: '' });
     component.ngOnChanges({
       vendorList: new SimpleChange(null, vendors, true),
     });
     expect(component.vendorCartTableHeaders.length).toBe(1);
     expect(component.cache_vendorList.length).toBe(2);
+    expect(component.vendorForm.get('vendorcategory')?.value).toBe('IT');
   });
 
-  it('should inline search and criteria filters', () => {
+  it('should inline search and criteria filters including city', () => {
     component.cache_vendorList = [...vendors];
     component.onInlineSearch('');
     expect(component.vendorList.length).toBe(2);
@@ -125,17 +129,28 @@ describe('VendorChooseModalPopupComponent', () => {
 
     component.cached_vendorList = [...vendors];
     component.searchVendorName = 'Ac';
+    component.searchEmailId = 'a@x.com';
+    component.searchMobileNo = '9876543210';
     component.onSearchCriteriaChange1('vendorName', 'Ac');
     component.onSearchCriteriaChange1('emailId', '');
     component.onSearchCriteriaChange1('emailId', 'a@');
-    component.searchEmailId = 'a@x.com';
     component.onSearchCriteriaChange1('mobile', '');
-    component.searchMobileNo = '987';
     component.onSearchCriteriaChange1('mobile', '987');
     component.onSearchCriteriaChange1('city', '');
+    expect(component.vendorList.length).toBe(1);
     component.onSearchCriteriaChange1('city', 'Hyd');
+    expect(component.vendorList.length).toBe(1);
     component.onSearchCriteriaChange1('other', 'x');
     component.onSearchCriteriaChanges();
+  });
+
+  it('should trigger paste search callback', (done) => {
+    spyOn(component, 'globalSearchs');
+    component.onPasteSearch({} as ClipboardEvent);
+    setTimeout(() => {
+      expect(component.globalSearchs).toHaveBeenCalled();
+      done();
+    }, 100);
   });
 
   it('should add vendors via form and row with duplicate guard', () => {

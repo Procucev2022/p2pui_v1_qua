@@ -183,6 +183,12 @@ export class VendorChooseModalPopupComponent implements OnChanges, OnInit{
           );
           return;
         }
+        this.vendorList = this.cached_vendorList.filter(vendor =>
+          vendor.city.toLowerCase().includes(criteriaValue.toLowerCase()) &&
+          vendor.companyName.toLowerCase().includes(this.searchVendorName.toLowerCase()) &&
+          vendor.email.toLowerCase().includes(this.searchEmailId.toLowerCase()) &&
+          vendor.mobileNo.includes(this.searchMobileNo)
+        );
         break;
       default:
         this.vendorList = [...this.cached_vendorList]; // Reset to original list if no criteria matches

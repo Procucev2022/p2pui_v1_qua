@@ -72,7 +72,9 @@ export function autoMock(name: string): any {
 
   return new Proxy({} as any, {
     get: (t: any, prop: PropertyKey) => {
-      if (prop === 'then' || typeof prop === 'symbol') return undefined;
+      if (prop === 'then' || typeof prop === 'symbol') {
+        return undefined;
+      }
       const key = String(prop);
 
       if (key === 'events') {
@@ -182,7 +184,9 @@ export const defaultAppConfig = {
 function safeSet(c: any, key: string, value: any): void {
   try {
     const desc = Object.getOwnPropertyDescriptor(c, key);
-    if (desc && desc.get && !desc.set) return;
+    if (desc && desc.get && !desc.set) {
+      return;
+    }
     if (c[key] == null || c[key] === undefined) {
       c[key] = value;
     }
@@ -192,7 +196,9 @@ function safeSet(c: any, key: string, value: any): void {
 }
 
 export function seedComponent(c: any): void {
-  if (!c || typeof c !== 'object') return;
+  if (!c || typeof c !== 'object') {
+    return;
+  }
   const sampleRow = {
     id: '1',
     name: 'n',
@@ -219,8 +225,13 @@ export function seedComponent(c: any): void {
     certificates: [{ fileName: 'c.pdf', file: 'AAA' }],
   });
   safeSet(c, 'loggedUserDetails', successPayload());
-  safeSet(c, 'loggedUserPermissions', []);
-  safeSet(c, 'selectedData', [{ ...sampleRow, auctionEndtime: new Date(Date.now() + 3600000).toISOString(), auctionStarttime: new Date(Date.now() - 3600000).toISOString(), auctionstatus: { status: 'AUCTION_LIVE' }, id_0: '1' }]);
+  safeSet(c, 'selectedData', [{
+    ...sampleRow,
+    auctionEndtime: new Date(Date.now() + 3600000).toISOString(),
+    auctionStarttime: new Date(Date.now() - 3600000).toISOString(),
+    auctionstatus: { status: 'AUCTION_LIVE' },
+    id_0: '1',
+  }]);
   safeSet(c, 'selectedRows', [sampleRow]);
   safeSet(c, 'formData', {});
   safeSet(c, 'itemGridData', { gridValue: [sampleRow], columnDefs: [] });
@@ -234,19 +245,52 @@ export function seedComponent(c: any): void {
   safeSet(c, 'exportColumnsFour', colDef);
   safeSet(c, 'exportColumnsFive', colDef);
   safeSet(c, 'exportColumnsSix', colDef);
-  safeSet(c, 'rfqwisedata', { description: 'D', startpricevalue: '100', minimumBidReductionPrice: '10', leadingPrice: '90', savings: '10', bids: [{ d1: 'v1', d2: 'v2', dataKey: '1' }] });
-  safeSet(c, 'itemwiseAuctionData', [{ description: 'D', startpricevalue: '100', minimumBidReductionPrice: '10', leadingPrice: '90', savings: '10', bids: [{ d1: 'v1', d2: 'v2', dataKey: '1' }] }]);
+  safeSet(c, 'rfqwisedata', {
+    description: 'D',
+    startpricevalue: '100',
+    minimumBidReductionPrice: '10',
+    leadingPrice: '90',
+    savings: '10',
+    bids: [{ d1: 'v1', d2: 'v2', dataKey: '1' }],
+  });
+  safeSet(c, 'itemwiseAuctionData', [{
+    description: 'D',
+    startpricevalue: '100',
+    minimumBidReductionPrice: '10',
+    leadingPrice: '90',
+    savings: '10',
+    bids: [{ d1: 'v1', d2: 'v2', dataKey: '1' }],
+  }]);
   safeSet(c, 'aucvendorsdata', [{ d1: 'v1', d2: 'v2', dataKey: '1' }]);
   safeSet(c, 'quoteitemdata', [{ description: 'D', quote: [{ d1: 'v1', d2: 'v2', dataKey: '1' }] }]);
   safeSet(c, 'qoutationByRfqData', [{ d1: 'v1', d2: 'v2', dataKey: '1' }]);
   safeSet(c, 'classificationList', [
-    { typeName: 'Product', hsnCode: '1234', segmentName: 'Seg1', familyName: 'Fam1', className: 'Class1', commodityName: 'Com1', organization: { id: 'o1' } },
-    { typeName: 'Service', sacCode: '5678', section: 'Sec1', heading: 'Head1', groupdescription: 'Grp1', sac: 'Sac1', organization: { id: 'o1' } }
+    {
+      typeName: 'Product', hsnCode: '1234', segmentName: 'Seg1', familyName: 'Fam1',
+      className: 'Class1', commodityName: 'Com1', organization: { id: 'o1' }
+    },
+    { typeName: 'Service', sacCode: '5678', section: 'Sec1', heading: 'Head1', groupdescription: 'Grp1', sac: 'Sac1', organization: { id: 'o1' } },
   ]);
   safeSet(c, 'selectedAuctionData', { id: '1', auctionCategory: 'item wise' });
-  safeSet(c, 'viewPrByIdList', { id: '1', pritems: [{ serialNo: 1, description: 'Item 1', brand: 'B1', unitofMeasures: 'PCS', quantity: 5, price: 10 }], clientdeliverylocation: [{ address: 'A', city: 'C', state: 'S' }], org: { id: 'o1' } });
-  safeSet(c, 'prDetails', { id: '1', pritems: [{ serialNo: 1, description: 'Item 1', brand: 'B1', unitofMeasures: 'PCS', quantity: 5, price: 10 }], clientdeliverylocation: [{ address: 'A', city: 'C', state: 'S' }], org: { id: 'o1' } });
-  safeSet(c, 'ppoData', { id: '1', ppoitems: [{ serialNo: 1, description: 'Item 1', brand: 'B1', unitofMeasures: 'PCS', quantity: 5, price: 10, org: { id: 'o1' } }], clientdeliverylocation: [{ address: 'A', city: 'C', state: 'S' }], pr: { prId: 'PR1' }, org: { id: 'o1' } });
+  safeSet(c, 'viewPrByIdList', {
+    id: '1',
+    pritems: [{ serialNo: 1, description: 'Item 1', brand: 'B1', unitofMeasures: 'PCS', quantity: 5, price: 10 }],
+    clientdeliverylocation: [{ address: 'A', city: 'C', state: 'S' }],
+    org: { id: 'o1' },
+  });
+  safeSet(c, 'prDetails', {
+    id: '1',
+    pritems: [{ serialNo: 1, description: 'Item 1', brand: 'B1', unitofMeasures: 'PCS', quantity: 5, price: 10 }],
+    clientdeliverylocation: [{ address: 'A', city: 'C', state: 'S' }],
+    org: { id: 'o1' },
+  });
+  safeSet(c, 'ppoData', {
+    id: '1',
+    ppoitems: [{ serialNo: 1, description: 'Item 1', brand: 'B1', unitofMeasures: 'PCS', quantity: 5, price: 10, org: { id: 'o1' } }],
+    clientdeliverylocation: [{ address: 'A', city: 'C', state: 'S' }],
+    pr: { prId: 'PR1' },
+    org: { id: 'o1' },
+  });
   safeSet(c, 'rfqData', { id: '1', items: [{ id: 'i1', vendorId: 'v1' }], lineItems: [{ id: 'i1' }] });
   safeSet(c, 'createPRformList', [{ description: 'Item 1', uom: 'PCS', price: '100', isBoqItem: false }]);
   safeSet(c, 'singleVendorform', [{ companyName: 'V1', contactPerson: 'P1', email: 'v1@test.com', phone: '123' }]);
@@ -256,7 +300,11 @@ export function seedComponent(c: any): void {
   safeSet(c, 'hsncodeList', ['Seg1', 'Fam1', 'Class1', 'Com1']);
   safeSet(c, 'saccodeList', ['Grp1', 'Head1', 'Sac1', 'Sec1']);
   const fakeForm = {
-    value: { id: '1', name: 'n', itemCode: 'IC1', email: 'a@b.com', password: 'x', prDescription: 'Desc', dueDate: '2025-12-31', prCorrespond: 'Capex', singleVendor: true, suggestNewVendor: true, rateCardAvailable: true, futureRequirement: 'Yes', priority: 'High', brand_0: 'B', quantity_0: '1', description_0: 'D', unitofMeasures_0: 'PCS', city_0: 'C', address_0: 'A', state_0: 'S' },
+    value: {
+      id: '1', name: 'n', itemCode: 'IC1', email: 'a@b.com', password: 'x', prDescription: 'Desc', dueDate: '2025-12-31',
+      prCorrespond: 'Capex', singleVendor: true, suggestNewVendor: true, rateCardAvailable: true, futureRequirement: 'Yes',
+      priority: 'High', brand_0: 'B', quantity_0: '1', description_0: 'D', unitofMeasures_0: 'PCS', city_0: 'C', address_0: 'A', state_0: 'S',
+    },
     valid: true,
     invalid: false,
     reset: () => undefined,
@@ -319,10 +367,11 @@ export function seedComponent(c: any): void {
     for (const key of Object.keys(c)) {
       try {
         const val = c[key];
-        if (val !== null && val !== undefined) continue;
+        if (val !== null && val !== undefined) { continue; }
         const lk = key.toLowerCase();
-        if (lk.includes('form')) safeSet(c, key, fakeForm);
-        else if (
+        if (lk.includes('form')) {
+          safeSet(c, key, fakeForm);
+        } else if (
           lk.includes('list') ||
           lk.includes('rows') ||
           lk.includes('items') ||
@@ -375,7 +424,10 @@ const ARG_SETS: any[][] = [
       target: { value: 'x', files: [sampleFile], checked: true },
     },
   ],
-  [{ id: '1', name: 'n', status: 'Open', org: { id: 'o1' }, bfsDocuments: [], vendorId: 'v1', ID: '1', uom: { description: 'KG' }, vendorData: ['v1'] }],
+  [{
+    id: '1', name: 'n', status: 'Open', org: { id: 'o1' }, bfsDocuments: [], vendorId: 'v1', ID: '1',
+    uom: { description: 'KG' }, vendorData: ['v1'],
+  }],
   [1, 2],
   [{ id: '1' }, { id: '2' }],
   ['add', { id: '1', action: null }],
@@ -430,7 +482,7 @@ function invokeAll(c: any, names: Set<string>): void {
 
 /** Best-effort exercise of instance methods for coverage (swallows errors). */
 export function exerciseComponent(c: any): void {
-  if (!c) return;
+  if (!c) { return; }
   const _clog = console.log;
   const _cwarn = console.warn;
   try {
@@ -468,11 +520,11 @@ function _exerciseComponentBody(c: any): void {
   let proto = Object.getPrototypeOf(c);
   while (proto && proto !== Object.prototype) {
     for (const n of Object.getOwnPropertyNames(proto)) {
-      if (n.startsWith('_')) continue;
-      if (skipName(n)) continue;
+      if (n.startsWith('_')) { continue; }
+      if (skipName(n)) { continue; }
       try {
         const d = Object.getOwnPropertyDescriptor(proto, n);
-        if (d && typeof d.value === 'function') names.add(n);
+        if (d && typeof d.value === 'function') { names.add(n); }
       } catch {
         /* ignore */
       }
@@ -631,7 +683,7 @@ function _exerciseComponentBody(c: any): void {
   }
 
   try {
-    if (typeof c.ngOnDestroy === 'function') c.ngOnDestroy();
+    if (typeof c.ngOnDestroy === 'function') { c.ngOnDestroy(); }
   } catch {
     /* ignore */
   }
@@ -674,10 +726,10 @@ function rebindServiceSpies(c: any, mode: 'object' | 'array' | 'failure'): void 
   try {
     for (const key of Object.keys(c)) {
       const svc = c[key];
-      if (!svc || typeof svc !== 'object') continue;
+      if (!svc || typeof svc !== 'object') { continue; }
       for (const m of commonMethods) {
         try {
-          void svc[m];
+          const _m = svc[m];
         } catch {
           /* ignore */
         }
@@ -704,7 +756,7 @@ function rebindServiceSpies(c: any, mode: 'object' | 'array' | 'failure'): void 
  * methods with realistic args and both success/failure service payloads.
  */
 export function deepExerciseComponent(c: any): void {
-  if (!c) return;
+  if (!c) { return; }
   const _clog = console.log;
   try {
     console.log = () => undefined;
@@ -718,7 +770,7 @@ export function deepExerciseComponent(c: any): void {
     (window as any).setInterval = () => 1;
     (window as any).setTimeout = (fn: any) => {
       try {
-        if (typeof fn === 'function') fn();
+        if (typeof fn === 'function') { fn(); }
       } catch {
         /* ignore */
       }
@@ -841,7 +893,7 @@ function _deepExerciseBody(c: any): void {
   for (const mode of ['array', 'object', 'failure'] as const) {
     rebindServiceSpies(c, mode);
     for (const name of major) {
-      if (typeof c[name] !== 'function') continue;
+      if (typeof c[name] !== 'function') { continue; }
       for (const args of [[], [row], [ev, row], ['add', row], [row, 0, true, true], [0, 'certificatesArray']]) {
         try {
           c[name](...args);
@@ -855,9 +907,9 @@ function _deepExerciseBody(c: any): void {
   try {
     c.roleName = 'Category Manager';
     rebindServiceSpies(c, 'array');
-    if (typeof c.searchVendor === 'function') c.searchVendor();
-    if (typeof c.ngOnInit === 'function') c.ngOnInit();
-    if (typeof c.globalSearch === 'function') c.globalSearch();
+    if (typeof c.searchVendor === 'function') { c.searchVendor(); }
+    if (typeof c.ngOnInit === 'function') { c.ngOnInit(); }
+    if (typeof c.globalSearch === 'function') { c.globalSearch(); }
   } catch {
     /* ignore */
   }
