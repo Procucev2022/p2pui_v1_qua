@@ -30,7 +30,7 @@
           </ng-container>
                
                 <div class="col-5">
-                    <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
+                    <input class="main-input" type="text" pInputText size="50" placeholder="Search inline or paste up to 100 emails/names.."
                   (input)="onInlineSearch($event.target.value)" (paste)="onInlineSearch($event.clipboardData?.getData('text') || $event.target.value)" (change)="onInlineSearch($event.target.value)" *ngIf="searchCriteria != 'Global'" />
                   <ng-container *ngIf="searchCriteria == 'Global'"> 
                   <label>Search By:</label>
@@ -38,7 +38,7 @@
                       <option value="">Select Search Criteria</option>
                       <option *ngFor="let option of searchDropdownOptions" [value]="option.value">{{option.label}}</option>
                   </select>
-                  <input class="main-input" type="text" pInputText size="50" placeholder="Search Text.."
+                  <input class="main-input" type="text" pInputText size="50" placeholder="Search or paste up to 100 emails/names (comma/semicolon/space separated).."
                         [(ngModel)]="searchTextValue" (input)="globalSearchs()" (paste)="onPasteSearch($event)" (change)="globalSearchs()" />
                   
                     </ng-container>

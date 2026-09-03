@@ -65,19 +65,28 @@ export class VendorChooseModalPopupComponent implements OnChanges, OnInit{
             return;
         }
 
-        // Local filtering for current page
-        const searchLower = searchValue.toLowerCase();
+        const tokens = searchValue.split(/[,;\r\n\t]+/)
+            .map(t => t.trim())
+            .filter(t => t.length > 0);
+        const distinctTokens = Array.from(new Set(tokens)).slice(0, 100);
+
+        if (distinctTokens.length === 0) {
+            this.vendorList = [...this.cache_vendorList];
+            return;
+        }
+
         const filtered = this.cache_vendorList.filter((item: any) => {
-            //contains for any of the fields in the item
             return Object.values(item).some((val: any) => {
                 if (val && typeof val === 'string') {
-                    return val.toLowerCase().includes(searchLower);
+                    const lowerVal = val.toLowerCase();
+                    return distinctTokens.some(token => lowerVal.includes(token.toLowerCase()));
                 }
+                return false;
             });
         });
 
-        console.log('Inline search results:', filtered);
-        this.vendorList = [...filtered]
+        console.log('Inline search results for distinct tokens:', distinctTokens.length, filtered);
+        this.vendorList = [...filtered];
     }
  
 
@@ -222,6 +231,14 @@ export class VendorChooseModalPopupComponent implements OnChanges, OnInit{
   }
 
   onPasteSearch(event: ClipboardEvent) {
+    const pastedText = event.clipboardData ? event.clipboardData.getData('text') : '';
+    if (pastedText) {
+      const items = pastedText.split(/[,;\r\n\t]+/).map(item => item.trim()).filter(item => item.length > 0);
+      const uniqueItems = Array.from(new Set(items));
+      if (uniqueItems.length > 100) {
+        this.toaster.info(`Pasted ${uniqueItems.length} search items. Searching the top 100 items.`, 'Notice');
+      }
+    }
     setTimeout(() => {
       this.globalSearchs();
     }, 50);
