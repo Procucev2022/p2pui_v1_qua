@@ -818,7 +818,7 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
                     "companyName": item.companyName,
                     "organizationPhonenumber": item.mobileNo,
                     "email": item.email, 
-                    "vendorcategory": null,
+                    "vendorcategory": item.vendorcategory ? item.vendorcategory : (item.category ? item.category : null),
                     "subCategory": null,
                     "requestType": this.isRFQFORWARD ? 'Forward' : 'Invite',
                     "gstin": item.gstin? item.gstin: null,
@@ -951,7 +951,9 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
                 }else{
                    if(this.vendorGridData.gridValue.findIndex(ele => ele.companyName == event[0].companyName) == -1){
                        this.vendorGridData.gridValue.push({companyName: event[0].companyName, email: event[0].email, mobileNo: event[0].mobileNo, city: event[0].city,
-                        name: event[0].name, gstin: event[0].gstin, pinCode: event[0].pinCode, products: event[0].products, id: 'MANUALENTRYID_' + new Date().getTime()});
+                        name: event[0].name, gstin: event[0].gstin, pinCode: event[0].pinCode, products: event[0].products,
+                        vendorcategory: event[0].vendorcategory || event[0].category || this.selectedRFQData?.category || '',
+                        id: 'MANUALENTRYID_' + new Date().getTime()});
                    }else{
                         this.toaster.warning("Already this vendor added to Cart, Pls Check!", 'Warning');
                         return;
