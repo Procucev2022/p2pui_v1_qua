@@ -212,7 +212,7 @@ export class VendorChooseModalPopupComponent implements OnChanges, OnInit{
   onAddVendor(rowData: any) {
 
     // write logic for vendorGridData.gridValue is content this rowData
-    const index =  this.vendorGridData.gridValue.findIndex((existedVendor:any) => existedVendor.id == rowData.id);
+    const index =  this.vendorGridData.gridValue.findIndex((existedVendor:any) => existedVendor.id === rowData.id);
     if(index > -1){
       this.toaster.warning("Sorry, Selected Vendor Already added in Cart", "warning");
       return;
@@ -256,10 +256,10 @@ export class VendorChooseModalPopupComponent implements OnChanges, OnInit{
     }
    
     const cartVendorIds = this.vendorGridData.gridValue.map((cartVendor:any)=> cartVendor.id)
-    const selectedVendorsRemovingCartVendors = this.selectedData.filter((selectedVendor:any) => cartVendorIds.findIndex(id => id ==selectedVendor.id)<= -1);
+    const selectedVendorsRemovingCartVendors = this.selectedData.filter((selectedVendor:any) => cartVendorIds.findIndex(id => id === selectedVendor.id) <= -1);
     
      // Proceed with adding selected vendors to cart
-    if(selectedVendorsRemovingCartVendors.length == 0){
+    if(selectedVendorsRemovingCartVendors.length === 0){
       this.toaster.warning("Sorry, Selected Vendors Already added in Cart", "warning");
       return;
     }

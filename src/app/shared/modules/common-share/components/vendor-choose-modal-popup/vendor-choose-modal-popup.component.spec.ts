@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA, ChangeDetectorRef, SimpleChange } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { of } from 'rxjs';
 import { VendorChooseModalPopupComponent } from './vendor-choose-modal-popup.component';
 import { autoMock, defaultAppConfig, seedComponent } from '../../../../../../testing/test-helpers';
 import { APP_CONFIG } from 'src/app/app.config';
@@ -245,5 +246,32 @@ describe('VendorChooseModalPopupComponent', () => {
 
     expect(component.validateEmail('ok@test.com')).toBe(true);
     expect(component.validateEmail('nope')).toBe(false);
+  });
+
+  it('should cover all null/falsy edge branches', () => {
+    const rfqService: any = (component as any).createRfqService;
+    spyOn(rfqService, 'getGMTCategories').and.returnValue(of(null));
+    component.loadCategories();
+    expect(component.categoryList).toEqual([]);
+
+    component.parentData = null;
+    component.buildVendorForm();
+    component.ngOnChanges({
+      vendorList: new SimpleChange(null, vendors, false),
+    });
+    expect(component.vendorCartTableHeaders).toEqual([]);
+
+    component.cache_vendorList = [
+      { id: 1, name: 'Acme', nullVal: null, numVal: 100 },
+      { id: 2, name: null, boolVal: false },
+    ];
+    component.onInlineSearch('acme');
+    expect(component.vendorList.length).toBe(1);
+
+    component.searchTextValue = '';
+    component.searchBy = 'vendorName';
+    spyOn(component.globalSearch, 'emit');
+    component.globalSearchs();
+    expect(component.globalSearch.emit).toHaveBeenCalledWith({ searchMode: 'vendorName', searchTextValue: '', searchBy: 'vendorName' });
   });
 });
