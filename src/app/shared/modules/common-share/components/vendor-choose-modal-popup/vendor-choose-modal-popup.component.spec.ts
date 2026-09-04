@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA, ChangeDetectorRef, SimpleChange } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { of } from 'rxjs';
 import { VendorChooseModalPopupComponent } from './vendor-choose-modal-popup.component';
 import { autoMock, defaultAppConfig, seedComponent } from '../../../../../../testing/test-helpers';
 import { APP_CONFIG } from 'src/app/app.config';
@@ -50,7 +52,7 @@ describe('VendorChooseModalPopupComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [VendorChooseModalPopupComponent],
-      imports: [CommonModule, FormsModule, ReactiveFormsModule],
+      imports: [CommonModule, FormsModule, ReactiveFormsModule, HttpClientTestingModule],
       providers: [
         { provide: APP_CONFIG, useValue: defaultAppConfig },
         { provide: ChangeDetectorRef, useValue: autoMock('ChangeDetectorRef') },
@@ -102,19 +104,23 @@ describe('VendorChooseModalPopupComponent', () => {
     seedComponent(component as any);
   });
 
-  it('should init form and ngOnChanges', () => {
+  it('should init form and ngOnChanges with parentData category', () => {
+    component.parentData = { category: 'IT', vendorHeaders: [{ title: 'H1' }] };
     component.ngOnInit();
     expect(component.roleName).toBe('CategoryManager');
     expect(component.vendorForm).toBeTruthy();
     expect(component.vendorCtrls.companyName).toBeTruthy();
+
+    component.vendorForm.patchValue({ vendorcategory: '' });
     component.ngOnChanges({
       vendorList: new SimpleChange(null, vendors, true),
     });
     expect(component.vendorCartTableHeaders.length).toBe(1);
     expect(component.cache_vendorList.length).toBe(2);
+    expect(component.vendorForm.get('vendorcategory')?.value).toBe('IT');
   });
 
-  it('should inline search and criteria filters', () => {
+  it('should inline search and criteria filters including city', () => {
     component.cache_vendorList = [...vendors];
     component.onInlineSearch('');
     expect(component.vendorList.length).toBe(2);
@@ -124,17 +130,28 @@ describe('VendorChooseModalPopupComponent', () => {
 
     component.cached_vendorList = [...vendors];
     component.searchVendorName = 'Ac';
+    component.searchEmailId = 'a@x.com';
+    component.searchMobileNo = '9876543210';
     component.onSearchCriteriaChange1('vendorName', 'Ac');
     component.onSearchCriteriaChange1('emailId', '');
     component.onSearchCriteriaChange1('emailId', 'a@');
-    component.searchEmailId = 'a@x.com';
     component.onSearchCriteriaChange1('mobile', '');
-    component.searchMobileNo = '987';
     component.onSearchCriteriaChange1('mobile', '987');
     component.onSearchCriteriaChange1('city', '');
+    expect(component.vendorList.length).toBe(1);
     component.onSearchCriteriaChange1('city', 'Hyd');
+    expect(component.vendorList.length).toBe(1);
     component.onSearchCriteriaChange1('other', 'x');
     component.onSearchCriteriaChanges();
+  });
+
+  it('should trigger paste search callback', (done) => {
+    spyOn(component, 'globalSearchs');
+    component.onPasteSearch({} as ClipboardEvent);
+    setTimeout(() => {
+      expect(component.globalSearchs).toHaveBeenCalled();
+      done();
+    }, 100);
   });
 
   it('should add vendors via form and row with duplicate guard', () => {
@@ -151,6 +168,7 @@ describe('VendorChooseModalPopupComponent', () => {
       gstin: 'G',
       products: 'P',
       pinCode: '500001',
+      vendorcategory: 'Cat 1',
     });
     component.onAddVendorsToCart();
     expect(dialogRef.close).toHaveBeenCalled();
@@ -228,5 +246,32 @@ describe('VendorChooseModalPopupComponent', () => {
 
     expect(component.validateEmail('ok@test.com')).toBe(true);
     expect(component.validateEmail('nope')).toBe(false);
+  });
+
+  it('should cover all null/falsy edge branches', () => {
+    const rfqService: any = (component as any).createRfqService;
+    spyOn(rfqService, 'getGMTCategories').and.returnValue(of(null));
+    component.loadCategories();
+    expect(component.categoryList).toEqual([]);
+
+    component.parentData = null;
+    component.buildVendorForm();
+    component.ngOnChanges({
+      vendorList: new SimpleChange(null, vendors, false),
+    });
+    expect(component.vendorCartTableHeaders).toEqual([]);
+
+    component.cache_vendorList = [
+      { id: 1, name: 'Acme', nullVal: null, numVal: 100 },
+      { id: 2, name: null, boolVal: false },
+    ];
+    component.onInlineSearch('acme');
+    expect(component.vendorList.length).toBe(1);
+
+    component.searchTextValue = '';
+    component.searchBy = 'vendorName';
+    spyOn(component.globalSearch, 'emit');
+    component.globalSearchs();
+    expect(component.globalSearch.emit).toHaveBeenCalledWith({ searchMode: 'vendorName', searchTextValue: '', searchBy: 'vendorName' });
   });
 });

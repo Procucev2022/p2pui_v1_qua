@@ -152,6 +152,24 @@ export const environment = {
       secure: false,
       logLevel: 'debug',
       changeOrigin: true
+    },
+    '/rest': {
+      target: currentConfig.proxyTarget,
+      secure: false,
+      logLevel: 'debug',
+      changeOrigin: true
+    },
+    '/partialvendor': {
+      target: currentConfig.proxyTarget,
+      secure: false,
+      logLevel: 'debug',
+      changeOrigin: true
+    },
+    '/mobile': {
+      target: currentConfig.proxyTarget,
+      secure: false,
+      logLevel: 'debug',
+      changeOrigin: true
     }
   };
   fs.writeFileSync(proxyPath, JSON.stringify(proxyConfig, null, 2) + '\n', 'utf8');
