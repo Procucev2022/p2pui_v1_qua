@@ -30,6 +30,7 @@ export class VendorChooseModalPopupComponent implements OnChanges, OnInit{
   @Output() globalSearch: EventEmitter<any> = new EventEmitter(); 
   @Output() closeDialogWithData: EventEmitter<any> = new EventEmitter();
   @Output() onSearchCriteriaChange: EventEmitter<any> = new EventEmitter();
+  @Input('notFoundEmails') notFoundEmails: string[] = [];
   @Input('searchCriteria') searchCriteria: string;
   cache_vendorList:any =[];
   vendorCartTableHeaders: any = [];
@@ -237,12 +238,58 @@ export class VendorChooseModalPopupComponent implements OnChanges, OnInit{
 
   }
 
+  processMultiEmailSearch(rawText: string) {
+    if (!rawText || rawText.trim() === '') {
+      this.searchTextValue = '';
+      this.globalSearch.emit({'searchMode': this.searchBy, 'searchTextValue': '', 'searchBy': this.searchBy});
+      return;
+    }
+
+    const tokens = rawText.split(/[\r\n,;]+|\s+/);
+    const validEmails: string[] = [];
+    const seen = new Set<string>();
+
+    for (let token of tokens) {
+      token = token.trim();
+      if (token) {
+        const lower = token.toLowerCase();
+        if (!seen.has(lower)) {
+          seen.add(lower);
+          validEmails.push(token);
+        }
+      }
+    }
+
+    if (validEmails.length > 20) {
+      this.toaster.info('Limited to maximum 20 email IDs per search.', 'Info');
+      validEmails.splice(20);
+    }
+
+    const formattedSearchText = validEmails.join(', ');
+    this.searchTextValue = formattedSearchText;
+    this.globalSearch.emit({'searchMode': this.searchBy, 'searchTextValue': formattedSearchText, 'searchBy': this.searchBy});
+  }
+
   globalSearchs(){
+    if (this.searchCriteria === 'Global' && this.searchBy === 'email' && this.searchTextValue) {
+      if (this.searchTextValue.includes(',') || this.searchTextValue.includes('\n') || this.searchTextValue.includes(';') || this.searchTextValue.includes(' ')) {
+        this.processMultiEmailSearch(this.searchTextValue);
+        return;
+      }
+    }
     const cleanSearchText = this.searchTextValue ? this.searchTextValue.trim() : '';
     this.globalSearch.emit({'searchMode': this.searchBy, 'searchTextValue': cleanSearchText, 'searchBy': this.searchBy});
   }
 
   onPasteSearch(event: ClipboardEvent) {
+    if (this.searchCriteria === 'Global' && this.searchBy === 'email') {
+      const pastedText = event.clipboardData?.getData('text');
+      if (pastedText) {
+        event.preventDefault();
+        this.processMultiEmailSearch(pastedText);
+        return;
+      }
+    }
     setTimeout(() => {
       this.globalSearchs();
     }, 50);

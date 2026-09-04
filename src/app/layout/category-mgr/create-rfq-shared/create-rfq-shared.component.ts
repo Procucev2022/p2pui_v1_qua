@@ -176,6 +176,7 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
     searchTextValue: string = '';
     
     searchBy: any = '';
+    notFoundEmails: string[] = [];
 
     @Input() rfqDetails: any;
     @Output() onCloseRFQForwardScreen = new EventEmitter();
@@ -391,16 +392,24 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
             }
             this.getVendorsListBySearch({ searchBy: searchBy, searchTextValue: searchText });
         } else {
+            this.notFoundEmails = [];
             this.getVendorList(this.startPage, this.pageSize);
         }
     }
 
     getVendorsListBySearch(event:any){
         this.createRFQService.getAllVendorsBySearchCriteria(event.searchBy, event.searchTextValue).subscribe((res: any) => {
-            if (Array.isArray(res.data)) {
-                this.vendorListObjs = res.data;
-                this.vendorList = res.data //res.map(ele => ele.companyName);
-                this.totalRecords = res.totalRecords;
+            if (res) {
+                if (Array.isArray(res.data)) {
+                    this.vendorListObjs = res.data;
+                    this.vendorList = res.data;
+                    this.totalRecords = res.totalRecords || res.data.length;
+                } else {
+                    this.vendorListObjs = [];
+                    this.vendorList = [];
+                    this.totalRecords = 0;
+                }
+                this.notFoundEmails = Array.isArray(res.notFoundEmails) ? res.notFoundEmails : [];
             }
         })
     }

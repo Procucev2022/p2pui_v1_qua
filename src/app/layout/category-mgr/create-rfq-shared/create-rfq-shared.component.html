@@ -112,7 +112,7 @@
         </div>
         <div class="modal-body">
             <p>Please choose vendors from the list below:</p>
-            <div class=" " *ngIf="vendorList && vendorList.length > 0">
+            <div class=" " *ngIf="vendorList">
             <app-vendor-choose-modal-popup [vendorList]="vendorList"
                         [parentData]="{
                             companyId: companyId,
@@ -131,6 +131,7 @@
             (onSearchCriteriaChange)="onSearchCriteriaChange($event)"
             [searchTextValue]="searchTextValue"
             [searchBy]="searchBy"
+            [notFoundEmails]="notFoundEmails"
             (globalSearch)="globalSearch($event)"
             (closeDialogWithData)="closeDialogWithData($event)"
             [vendorGridData]="vendorGridData"
