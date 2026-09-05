@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { AppApiConfig } from 'src/app/shared/constants/app-api.config';
+import { INDIA_STATES, INDIA_STATE_CITIES_MAP } from 'src/app/shared/constants/india-location-master';
 import { EncryDecryService } from 'src/app/shared/services';
 import { FormValidatationsService } from 'src/app/shared/services/form-validatations.service';
 import { CreateRfqService } from 'src/app/layout/category-mgr/services/create-rfq.service';
@@ -30,6 +31,7 @@ export class VendorChooseModalPopupComponent implements OnChanges, OnInit{
   @Output() globalSearch: EventEmitter<any> = new EventEmitter(); 
   @Output() closeDialogWithData: EventEmitter<any> = new EventEmitter();
   @Output() onSearchCriteriaChange: EventEmitter<any> = new EventEmitter();
+  @Input('notFoundEmails') notFoundEmails: string[] = [];
   @Input('searchCriteria') searchCriteria: string;
   cache_vendorList:any =[];
   vendorCartTableHeaders: any = [];
@@ -125,9 +127,6 @@ export class VendorChooseModalPopupComponent implements OnChanges, OnInit{
     }
     this.cache_vendorList = [...this.vendorList]; // Cache the original vendor list 
     console.log('Vendors List in Modal Popup:', this.vendorList);
-  }
-  onSearchCriteriaChanges(){
-    this.globalSearchs();
   }
 
   onSearchCriteriaChange1(criteriaType: string, criteriaValue: string) {
@@ -237,12 +236,162 @@ export class VendorChooseModalPopupComponent implements OnChanges, OnInit{
 
   }
 
+  processMultiValueSearch(rawText: string) {
+    if (!rawText || rawText.trim() === '') {
+      this.searchTextValue = '';
+      this.globalSearch.emit({'searchMode': this.searchBy, 'searchTextValue': '', 'searchBy': this.searchBy, 'isBulk': false});
+      return;
+    }
+
+    const regex = this.searchBy === 'email' ? /[\r\n,;]+|\s+/ : /[\r\n,;]+/;
+    const tokens = rawText.split(regex);
+    const validTokens: string[] = [];
+    const seen = new Set<string>();
+
+    for (let token of tokens) {
+      token = token.trim();
+      if (token) {
+        const lower = token.toLowerCase();
+        if (!seen.has(lower)) {
+          seen.add(lower);
+          validTokens.push(token);
+        }
+      }
+    }
+
+    if (validTokens.length > 20) {
+      this.toaster.info('Limited to maximum 20 items per bulk search.', 'Info');
+      validTokens.splice(20);
+    }
+
+    const formattedSearchText = validTokens.join(', ');
+    this.searchTextValue = formattedSearchText;
+    this.globalSearch.emit({
+      'searchMode': this.searchBy,
+      'searchTextValue': formattedSearchText,
+      'searchBy': this.searchBy,
+      'isBulk': validTokens.length > 1,
+      'totalEntered': validTokens.length
+    });
+  }
+
+  processMultiEmailSearch(rawText: string) {
+    this.processMultiValueSearch(rawText);
+  }
+
+  statesList: string[] = INDIA_STATES;
+  selectedCategory: string = '';
+  selectedState: string = '';
+  selectedCity: string = '';
+  dependentCities: string[] = [];
+  isLoadingCities: boolean = false;
+
+  onSearchCriteriaChanges(){
+    if (this.searchBy === 'vendorcategory' || this.searchBy === 'category') {
+      this.selectedCategory = '';
+      this.selectedState = '';
+      this.selectedCity = '';
+      this.dependentCities = [];
+      this.searchTextValue = '';
+      this.vendorList = [];
+      this.totalRecords = 0;
+    } else {
+      this.globalSearchs();
+    }
+  }
+
+  onCategorySelectChange(categoryName: string): void {
+    this.selectedCategory = categoryName;
+    this.selectedState = '';
+    this.selectedCity = '';
+    this.dependentCities = [];
+    this.searchTextValue = categoryName;
+    this.vendorList = [];
+    this.totalRecords = 0;
+  }
+
+  onStateSelectChange(stateName: string): void {
+    this.selectedState = stateName;
+    this.selectedCity = '';
+    this.dependentCities = [];
+    this.vendorList = [];
+    this.totalRecords = 0;
+
+    if (stateName === 'ALL') {
+      this.selectedCity = 'ALL';
+      this.triggerCategorySearch();
+      return;
+    }
+
+    if (stateName && INDIA_STATE_CITIES_MAP[stateName]) {
+      this.dependentCities = [...INDIA_STATE_CITIES_MAP[stateName]];
+    }
+
+    if (this.selectedCategory && stateName) {
+      this.isLoadingCities = true;
+      this.createRfqService.getCitiesByVendorCategory(this.selectedCategory).subscribe(
+        (res: any) => {
+          this.isLoadingCities = false;
+          const dbCities = res && res.data ? res.data : (Array.isArray(res) ? res : []);
+          if (Array.isArray(dbCities) && dbCities.length > 0) {
+            const masterCities = this.dependentCities;
+            const combined = new Set([...masterCities, ...dbCities]);
+            this.dependentCities = Array.from(combined);
+          }
+        },
+        () => {
+          this.isLoadingCities = false;
+        }
+      );
+    }
+  }
+
+  onDependentCitySelectChange(cityName: string): void {
+    this.selectedCity = cityName;
+    this.triggerCategorySearch();
+  }
+
+  triggerCategorySearch(): void {
+    if (!this.selectedCategory) {
+      this.toaster.warning('Please select a Category', 'Warning');
+      return;
+    }
+    const stateParam = (this.selectedState === 'ALL' || !this.selectedState) ? '' : this.selectedState;
+    const cityParam = (this.selectedCity === 'ALL' || !this.selectedCity) ? '' : this.selectedCity;
+    this.globalSearch.emit({
+      'searchMode': this.searchBy,
+      'searchTextValue': this.selectedCategory,
+      'searchBy': this.searchBy,
+      'state': stateParam,
+      'city': cityParam,
+      'isBulk': false
+    });
+  }
+
   globalSearchs(){
+    if (this.searchBy === 'vendorcategory' || this.searchBy === 'category') {
+      this.triggerCategorySearch();
+      return;
+    }
+    if (this.searchCriteria === 'Global' && this.searchTextValue) {
+      if (this.searchTextValue.includes(',') || this.searchTextValue.includes('\n') || this.searchTextValue.includes(';') || (this.searchBy === 'email' && this.searchTextValue.includes(' '))) {
+        this.processMultiValueSearch(this.searchTextValue);
+        return;
+      }
+    }
     const cleanSearchText = this.searchTextValue ? this.searchTextValue.trim() : '';
-    this.globalSearch.emit({'searchMode': this.searchBy, 'searchTextValue': cleanSearchText, 'searchBy': this.searchBy});
+    this.globalSearch.emit({'searchMode': this.searchBy, 'searchTextValue': cleanSearchText, 'searchBy': this.searchBy, 'isBulk': false});
   }
 
   onPasteSearch(event: ClipboardEvent) {
+    if (this.searchCriteria === 'Global') {
+      const pastedText = event.clipboardData?.getData('text');
+      if (pastedText && (pastedText.includes(',') || pastedText.includes('\n') || pastedText.includes(';') || (this.searchBy === 'email' && pastedText.includes(' ')))) {
+        event.preventDefault();
+        this.processMultiValueSearch(pastedText);
+        return;
+      }
+    }
     setTimeout(() => {
       this.globalSearchs();
     }, 50);
