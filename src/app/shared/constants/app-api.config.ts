@@ -24,6 +24,7 @@ export class AppApiConfig {
   public static GET_ALL_VENDORS =  "/rest/gmt/getAllVendors";
   public static GET_ALL_VENDORS_BY_PAGINATION = '/rest/gmt/getAllVendors';
   public static GET_ALL_VENDORS_BY_SEARCH_CRITERIA= '/rest/gmt/getAllVendorsSearch';
+  public static GET_CITIES_BY_VENDOR_CATEGORY= '/rest/gmt/getCitiesByVendorCategory';
   public static GET_All_VENDORS_BY_CATEGORY ="/rest/gmt/getAllVendorsByCategory";
   public static GET_VENDORS_BY_RFQ_ID_FOR_GMT = '/rest/gmt/getVendorsByGmtRFQ';
   public static ACCEPT_GMT_VENDOR_BY_CM = "/rest/gmt/approveVendor";

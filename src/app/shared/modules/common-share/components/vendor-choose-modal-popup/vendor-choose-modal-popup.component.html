@@ -34,12 +34,32 @@
                   (input)="onInlineSearch($event.target.value)" (paste)="onInlineSearch($event.clipboardData?.getData('text') || $event.target.value)" (change)="onInlineSearch($event.target.value)" *ngIf="searchCriteria != 'Global'" />
                   <ng-container *ngIf="searchCriteria == 'Global'"> 
                   <label>Search By:</label>
-                  <select [(ngModel)]="searchBy" class="form-control" style="width: 200px; display: inline-block; margin-left: 10px;" (change)="onSearchCriteriaChanges()">
+                  <select [(ngModel)]="searchBy" class="form-control" style="width: 170px; display: inline-block; margin-left: 5px;" (change)="onSearchCriteriaChanges()">
                       <option value="">Select Search Criteria</option>
                       <option *ngFor="let option of searchDropdownOptions" [value]="option.value">{{option.label}}</option>
                   </select>
-                  <input class="main-input" type="text" pInputText size="50" placeholder="Search Text.."
+                  <input class="main-input ml-2" type="text" pInputText size="40" placeholder="Search Text.."
+                        *ngIf="searchBy !== 'vendorcategory' && searchBy !== 'category'"
                         [(ngModel)]="searchTextValue" (input)="globalSearchs()" (paste)="onPasteSearch($event)" (change)="globalSearchs()" />
+
+                  <ng-container *ngIf="searchBy === 'vendorcategory' || searchBy === 'category'">
+                    <select [(ngModel)]="selectedCategory" class="form-control ml-2" style="width: 160px; display: inline-block;" (change)="onCategorySelectChange($event.target.value)">
+                      <option value="">Select Category</option>
+                      <option *ngFor="let cat of categoryList" [value]="cat.categoryName || cat.category || cat">{{ cat.categoryName || cat.category || cat }}</option>
+                    </select>
+
+                    <select [(ngModel)]="selectedState" class="form-control ml-2" style="width: 150px; display: inline-block;" [disabled]="!selectedCategory" (change)="onStateSelectChange($event.target.value)">
+                      <option value="">Select State</option>
+                      <option value="ALL">Select All State</option>
+                      <option *ngFor="let st of statesList" [value]="st">{{ st }}</option>
+                    </select>
+
+                    <select [(ngModel)]="selectedCity" class="form-control ml-2" style="width: 140px; display: inline-block;" [disabled]="!selectedState || isLoadingCities" (change)="onDependentCitySelectChange($event.target.value)">
+                      <option value="">Select City</option>
+                      <option value="ALL">Select All City</option>
+                      <option *ngFor="let c of dependentCities" [value]="c">{{ c }}</option>
+                    </select>
+                  </ng-container>
                   
                     </ng-container>
                   </div>
