@@ -272,6 +272,6 @@ describe('VendorChooseModalPopupComponent', () => {
     component.searchBy = 'vendorName';
     spyOn(component.globalSearch, 'emit');
     component.globalSearchs();
-    expect(component.globalSearch.emit).toHaveBeenCalledWith({ searchMode: 'vendorName', searchTextValue: '', searchBy: 'vendorName' });
+    expect(component.globalSearch.emit).toHaveBeenCalledWith({ searchMode: 'vendorName', searchTextValue: '', searchBy: 'vendorName', isBulk: false });
   });
 });
