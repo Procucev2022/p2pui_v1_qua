@@ -88,10 +88,10 @@
                                     <input type="email" required id="email" class="form-control" name="email"
                                         placeholder="Company Email Id" formControlName="email"
                                         [disabled]="isOTPVerified || isOTPSent">
-
-
-
                                 </div>
+                                <span style="color: #fb9898; font-size: 12px;" *ngIf="clientRegForm.controls['email']?.errors?.typoDomain">
+                                    Please enter a valid email domain (check for typos like @gmile.com)
+                                </span>
                                 <span style="color: green;" *ngIf="isOTPVerified">EMail Verified</span>
 
                                 <div>
@@ -186,6 +186,8 @@
 
             <li *ngIf="(clientRegForm.controls.email.errors?.required)" style="color: #fb9898;">
                 Email is required</li>
+            <li *ngIf="clientRegForm.controls.email.errors?.typoDomain" style="color: #fb9898;">
+                Please enter a valid email domain (check for typos like @gmile.com)</li>
             <li *ngIf="(clientRegForm.controls.email.errors?.invalid || clientRegForm.controls.email.errors?.invalidEmail)"
                 style="color: #fb9898;">Please enter valid Email id</li>
             <li *ngIf="clientRegForm?.controls?.pan?.touched && clientRegForm?.controls?.pan?.errors?.pattern ">
