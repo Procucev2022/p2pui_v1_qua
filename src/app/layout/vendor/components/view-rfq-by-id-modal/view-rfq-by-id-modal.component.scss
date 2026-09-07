@@ -75,3 +75,77 @@
         width: 302px;
     }
 }
+
+.ai-token-card {
+    background: linear-gradient(135deg, #f0f7ff 0%, #e6f0fa 100%);
+    border: 1px solid #c7e0f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 109, 213, 0.08);
+
+    .ai-token-header {
+        border-bottom: 1px solid #d9e9f7;
+        padding-bottom: 8px;
+
+        .ai-token-icon {
+            font-size: 1.2rem;
+            color: #006dd5;
+        }
+
+        .ai-token-title {
+            color: #1a365d;
+            font-size: 0.95rem;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-info {
+            background-color: #e1effe;
+            color: #1e429f;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        .ai-token-cost {
+            font-size: 0.9rem;
+            .text-success {
+                color: #0e9f6e !important;
+                font-weight: 700;
+            }
+        }
+    }
+
+    .ai-token-metrics {
+        margin-top: 10px;
+
+        .metric-box {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 8px 6px;
+            transition: transform 0.15s ease;
+
+            &.highlight {
+                background: #f8fbff;
+                border-color: #93c5fd;
+            }
+
+            .metric-label {
+                font-size: 0.72rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                color: #64748b;
+                margin-bottom: 2px;
+            }
+
+            .metric-value {
+                font-size: 1.05rem;
+                color: #1e293b;
+            }
+
+            .text-primary {
+                color: #006dd5 !important;
+            }
+        }
+    }
+}
