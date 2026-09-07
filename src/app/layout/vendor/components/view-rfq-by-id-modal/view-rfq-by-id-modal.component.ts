@@ -28,7 +28,7 @@ export class ViewRFQByIdModalComponent implements OnInit {
 
    isEmailRfq(): boolean {
        const source = (this.viewRFQbyIDdetails?.sourceType || '').toUpperCase().trim();
-       return source === 'EMAIL';
+       return source === 'EMAIL' || source === 'E' || source === 'MAIL';
    }
 
    rfqDetailsHeaders: any = [

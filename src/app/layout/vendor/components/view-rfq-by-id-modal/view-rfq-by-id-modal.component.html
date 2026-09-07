@@ -136,13 +136,6 @@
                         </div>
                         <mat-card class="col-12" *ngFor="let location of viewRFQbyIDdetails.clientdeliverylocationrfq; let i = index;">
 
-                            <div class="form-group row" *ngIf="isEmailRfq() && location.address">
-                                <label for="address" style="font-size: medium; font-weight: bolder;"
-                                    class="col-sm-5 col-form-label">Address (from Email):</label>
-                                <div class="col-sm-5 col-form-label">
-                                    {{location.address}}
-                                </div>
-                            </div>
                             <div class="form-group row">
                                 <label for="city" style="font-size: medium; font-weight: bolder;"
                                     class="col-sm-5 col-form-label">City</label>

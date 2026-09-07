@@ -461,11 +461,17 @@ describe('ViewRFQByIdModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should return true for isEmailRfq only when sourceType is EMAIL', () => {
+  it('should return true for isEmailRfq only when sourceType is EMAIL, E, or MAIL', () => {
     component.viewRFQbyIDdetails = { sourceType: 'EMAIL' };
     expect(component.isEmailRfq()).toBeTrue();
 
     component.viewRFQbyIDdetails = { sourceType: 'email' };
+    expect(component.isEmailRfq()).toBeTrue();
+
+    component.viewRFQbyIDdetails = { sourceType: 'E' };
+    expect(component.isEmailRfq()).toBeTrue();
+
+    component.viewRFQbyIDdetails = { sourceType: 'MAIL' };
     expect(component.isEmailRfq()).toBeTrue();
 
     component.viewRFQbyIDdetails = { sourceType: 'PORTAL' };
