@@ -136,14 +136,13 @@
                         </div>
                         <mat-card class="col-12" *ngFor="let location of viewRFQbyIDdetails.clientdeliverylocationrfq; let i = index;">
 
-                            <!-- <div class="form-group row">
+                            <div class="form-group row" *ngIf="isEmailRfq() && location.address">
                                 <label for="address" style="font-size: medium; font-weight: bolder;"
-                                    class="col-sm-5 col-form-label">Address</label>
+                                    class="col-sm-5 col-form-label">Address (from Email):</label>
                                 <div class="col-sm-5 col-form-label">
                                     {{location.address}}
-
                                 </div>
-                            </div> -->
+                            </div>
                             <div class="form-group row">
                                 <label for="city" style="font-size: medium; font-weight: bolder;"
                                     class="col-sm-5 col-form-label">City</label>
@@ -171,6 +170,41 @@
                                     class="col-sm-5 col-form-label">Delivery Date:</label>
                                 <div class="col-sm-5 col-form-label">
                                     {{viewRFQbyIDdetails.deliveryDate | date:'dd/MM/yyyy'}}
+                                </div>
+                            </div>
+
+                            <!-- AI Token Consumption Widget (Email RFQs Only) -->
+                            <div *ngIf="isEmailRfq() && viewRFQbyIDdetails.aiTokenUsage" class="ai-token-card mt-3 p-3">
+                                <div class="ai-token-header d-flex align-items-center justify-content-between mb-2">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa fa-microchip ai-token-icon mr-2" aria-hidden="true"></i>
+                                        <span class="ai-token-title font-weight-bold">RFQ AI Token Consumption</span>
+                                        <span class="badge badge-info ml-2">{{ viewRFQbyIDdetails.aiTokenUsage.modelName || 'gemini-2.5-flash' }}</span>
+                                    </div>
+                                    <div class="ai-token-cost">
+                                        <span class="text-muted mr-1">Est. Cost:</span>
+                                        <span class="font-weight-bold text-success">{{ viewRFQbyIDdetails.aiTokenUsage.formattedCost || '$0.0000' }}</span>
+                                    </div>
+                                </div>
+                                <div class="row text-center ai-token-metrics">
+                                    <div class="col-4">
+                                        <div class="metric-box">
+                                            <span class="metric-label text-muted d-block">Prompt Tokens</span>
+                                            <span class="metric-value font-weight-bold">{{ (viewRFQbyIDdetails.aiTokenUsage.promptTokens | number) || 0 }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="metric-box">
+                                            <span class="metric-label text-muted d-block">Candidate Tokens</span>
+                                            <span class="metric-value font-weight-bold">{{ (viewRFQbyIDdetails.aiTokenUsage.candidateTokens | number) || 0 }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="metric-box highlight">
+                                            <span class="metric-label text-muted d-block">Total Tokens</span>
+                                            <span class="metric-value font-weight-bold text-primary">{{ (viewRFQbyIDdetails.aiTokenUsage.totalTokens | number) || 0 }}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </mat-card>

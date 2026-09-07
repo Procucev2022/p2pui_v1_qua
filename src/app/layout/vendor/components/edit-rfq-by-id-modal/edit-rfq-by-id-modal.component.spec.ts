@@ -442,4 +442,21 @@ describe('EditRfqByIdModalComponent', () => {
     expect(component.viewRFQbyIDdetails.rfqItem[0].category).toBe('Hardware');
     expect(itemDialogClose).toHaveBeenCalled();
   });
+
+  it('should return true for isEmailRfq only when sourceType is EMAIL', () => {
+    component.viewRFQbyIDdetails.sourceType = 'EMAIL';
+    expect(component.isEmailRfq()).toBeTrue();
+
+    component.viewRFQbyIDdetails.sourceType = 'email';
+    expect(component.isEmailRfq()).toBeTrue();
+
+    component.viewRFQbyIDdetails.sourceType = 'PORTAL';
+    expect(component.isEmailRfq()).toBeFalse();
+
+    component.viewRFQbyIDdetails.sourceType = 'WhatsApp';
+    expect(component.isEmailRfq()).toBeFalse();
+
+    component.viewRFQbyIDdetails.sourceType = null;
+    expect(component.isEmailRfq()).toBeFalse();
+  });
 });

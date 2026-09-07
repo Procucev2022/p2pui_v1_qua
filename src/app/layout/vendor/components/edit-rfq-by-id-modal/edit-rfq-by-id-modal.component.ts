@@ -63,6 +63,11 @@ export class EditRfqByIdModalComponent implements OnInit {
         console.log(this.viewRFQbyIDdetails);
     }
 
+    isEmailRfq(): boolean {
+        const source = (this.viewRFQbyIDdetails?.sourceType || '').toUpperCase().trim();
+        return source === 'EMAIL';
+    }
+
     rfqDetailsHeaders: any = [
 
         { field: 'description', header: 'Description', isLink: false, fieldType: 'text', width: '120px' },
