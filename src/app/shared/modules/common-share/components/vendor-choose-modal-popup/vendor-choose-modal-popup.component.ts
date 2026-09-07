@@ -306,16 +306,18 @@ export class VendorChooseModalPopupComponent implements OnChanges, OnInit{
     this.selectedCity = '';
     this.dependentCities = [];
     this.searchTextValue = categoryName;
-    this.vendorList = [];
-    this.totalRecords = 0;
+    if (categoryName && categoryName.trim() !== '') {
+      this.triggerCategorySearch();
+    } else {
+      this.vendorList = [];
+      this.totalRecords = 0;
+    }
   }
 
   onStateSelectChange(stateName: string): void {
     this.selectedState = stateName;
     this.selectedCity = '';
     this.dependentCities = [];
-    this.vendorList = [];
-    this.totalRecords = 0;
 
     if (stateName === 'ALL') {
       this.selectedCity = 'ALL';
@@ -344,6 +346,8 @@ export class VendorChooseModalPopupComponent implements OnChanges, OnInit{
         }
       );
     }
+
+    this.triggerCategorySearch();
   }
 
   onDependentCitySelectChange(cityName: string): void {
