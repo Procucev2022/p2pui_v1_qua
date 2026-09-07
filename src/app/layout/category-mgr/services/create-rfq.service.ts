@@ -37,7 +37,7 @@ export class CreateRfqService {
         return this.httpService.get(AppApiConfig.apiEndpoint + AppApiConfig.GET_ALL_VENDORS_BY_PAGINATION+ `?page=${page}&size=${size}`);
     }
 
-     getAllVendorsBySearchCriteria(searchType, searchValue) {
+     getAllVendorsBySearchCriteria(searchType, searchValue, city?: string, state?: string) {
             const params: any = {};
             if (searchValue) {
                 params.searchValue = searchValue.trim();
@@ -45,7 +45,18 @@ export class CreateRfqService {
             if (searchType) {
                 params.searchType = searchType.trim();
             }
+            if (city && city.trim() !== '') {
+                params.city = city.trim();
+            }
+            if (state && state.trim() !== '') {
+                params.state = state.trim();
+            }
         return this.httpService.get(AppApiConfig.apiEndpoint + AppApiConfig.GET_ALL_VENDORS_BY_SEARCH_CRITERIA, {params})
+    }
+
+    getCitiesByVendorCategory(category: string): Observable<any> {
+        const params: any = { category: category ? category.trim() : '' };
+        return this.httpService.get(AppApiConfig.apiEndpoint + AppApiConfig.GET_CITIES_BY_VENDOR_CATEGORY, {params});
     }
 
     sendRFQ(req: any): Observable<any> {

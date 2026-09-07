@@ -95,6 +95,56 @@ describe('CreateRfqService', () => {
     req.flush({ ok: true });
   });
 
+  it('should call getAllVendorsBySearchCriteria with city and state parameters', () => {
+    service.getAllVendorsBySearchCriteria('category', 'Hardware', 'Mumbai', 'Maharashtra').subscribe((res: any) => {
+      expect(res).toEqual({ ok: true });
+    });
+    const req = httpMock.expectOne((r) => {
+      return r.url.includes(AppApiConfig.GET_ALL_VENDORS_BY_SEARCH_CRITERIA) &&
+             r.params.get('city') === 'Mumbai' &&
+             r.params.get('state') === 'Maharashtra' &&
+             r.params.get('searchType') === 'category' &&
+             r.params.get('searchValue') === 'Hardware';
+    });
+    expect(req.request.method).toBe('GET');
+    req.flush({ ok: true });
+  });
+
+  it('should call getAllVendorsBySearchCriteria with blank city and state without adding them to params', () => {
+    service.getAllVendorsBySearchCriteria('category', 'Hardware', '   ', '   ').subscribe((res: any) => {
+      expect(res).toEqual({ ok: true });
+    });
+    const req = httpMock.expectOne((r) => {
+      return r.url.includes(AppApiConfig.GET_ALL_VENDORS_BY_SEARCH_CRITERIA) &&
+             !r.params.has('city') &&
+             !r.params.has('state');
+    });
+    expect(req.request.method).toBe('GET');
+    req.flush({ ok: true });
+  });
+
+  it('should call getCitiesByVendorCategory with and without category', () => {
+    service.getCitiesByVendorCategory('Hardware').subscribe((res: any) => {
+      expect(res).toEqual({ cities: ['Mumbai'] });
+    });
+    const req1 = httpMock.expectOne((r) => {
+      return r.url.includes(AppApiConfig.GET_CITIES_BY_VENDOR_CATEGORY) &&
+             r.params.get('category') === 'Hardware';
+    });
+    expect(req1.request.method).toBe('GET');
+    req1.flush({ cities: ['Mumbai'] });
+
+    service.getCitiesByVendorCategory(null).subscribe((res: any) => {
+      expect(res).toEqual({ cities: [] });
+    });
+    const req2 = httpMock.expectOne((r) => {
+      return r.url.includes(AppApiConfig.GET_CITIES_BY_VENDOR_CATEGORY) &&
+             r.params.get('category') === '';
+    });
+    expect(req2.request.method).toBe('GET');
+    req2.flush({ cities: [] });
+  });
+
   it('should call sendRFQ', () => {
     service.sendRFQ({ id: 1 }).subscribe((res: any) => {
       expect(res).toEqual({ ok: true });

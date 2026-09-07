@@ -712,6 +712,15 @@ describe('ClientRegisterComponent', () => {
       expect(component.numberOnly({ which: 40 })).toBe(false);
       expect(component.hasAnyErrors()).toBeDefined();
     });
+
+    it('strictEmailValidator should validate valid emails, invalid emails, and typo domains', () => {
+      const validator = strictEmailValidator();
+      expect(validator(new FormControl(''))).toBeNull();
+      expect(validator(new FormControl('valid.user@gmail.com'))).toBeNull();
+      expect(validator(new FormControl('notanemail'))).toEqual({ invalidEmail: true });
+      expect(validator(new FormControl('user@gmile.com'))).toEqual({ typoDomain: true, domain: 'gmile.com' });
+      expect(validator(new FormControl('user@yaho.com'))).toEqual({ typoDomain: true, domain: 'yaho.com' });
+    });
   });
 
 });
