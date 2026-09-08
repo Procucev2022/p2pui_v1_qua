@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
 import { AppApiConfig } from 'src/app/shared/constants/app-api.config';
 import { EncryDecryService } from 'src/app/shared/services';
 
@@ -137,12 +138,21 @@ export class CreateRfqService {
         return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.ACCEPT_AND_SAVE_RFQ_BY_CM, rowData, {})
     }
 
-    getGMTDivisions() {
-        return this.httpService.get(AppApiConfig.apiEndpoint + AppApiConfig.GET_ALL_DIVISIONS_GMT, {})
+    private divisionsCache$: Observable<any> | null = null;
+    private categoriesCache$: Observable<any> | null = null;
+
+    getGMTDivisions(): Observable<any> {
+        if (!this.divisionsCache$) {
+            this.divisionsCache$ = this.httpService.get(AppApiConfig.apiEndpoint + AppApiConfig.GET_ALL_DIVISIONS_GMT, {}).pipe(shareReplay(1));
+        }
+        return this.divisionsCache$;
     }
 
-    getGMTCategories() {
-        return this.httpService.get(AppApiConfig.apiEndpoint + AppApiConfig.GET_ALL_CATEGORIES_GMT, {})
+    getGMTCategories(): Observable<any> {
+        if (!this.categoriesCache$) {
+            this.categoriesCache$ = this.httpService.get(AppApiConfig.apiEndpoint + AppApiConfig.GET_ALL_CATEGORIES_GMT, {}).pipe(shareReplay(1));
+        }
+        return this.categoriesCache$;
     }
 
     getGMTCategoriesByDivision(data: any) {
