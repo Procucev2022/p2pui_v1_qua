@@ -176,7 +176,7 @@
                                     </div>
                                     <div class="ai-token-cost">
                                         <span class="text-muted mr-1">Est. Cost:</span>
-                                        <span class="font-weight-bold text-success">{{ viewRFQbyIDdetails.aiTokenUsage.formattedCost || '$0.0000' }}</span>
+                                        <span class="font-weight-bold text-success">{{ viewRFQbyIDdetails.aiTokenUsage.formattedCost || '$0.0000' }}<span *ngIf="viewRFQbyIDdetails.aiTokenUsage.formattedCostInr" class="text-muted font-weight-normal ml-1">({{ viewRFQbyIDdetails.aiTokenUsage.formattedCostInr }})</span></span>
                                     </div>
                                 </div>
                                 <div class="row text-center ai-token-metrics">
