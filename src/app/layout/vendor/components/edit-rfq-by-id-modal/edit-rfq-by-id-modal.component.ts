@@ -36,6 +36,7 @@ export class EditRfqByIdModalComponent implements OnInit {
     itemDialogRef: MatDialogRef<any> | null = null;
     selectedItemCategory: string = '';
     minDate: Date = new Date();
+    showAiTokenConsumption: boolean = false;
 
 
 
