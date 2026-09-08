@@ -193,9 +193,9 @@
                       <span style="color:red" *ngIf="vendorCtrls.name.errors?.alphabetOnly && vendorCtrls.name.touched">Enter Valid Name</span>
                   </div>
                   <div class="col-4 mb-1">
-                      <label class="form-label required">GSTIN<span><i>(Format: 88AAAAA8888A8AA)</i></span></label>
+                      <label class="form-label">GSTIN<span><i>(Format: 88AAAAA8888A8AA)</i></span></label>
                       <input class="form-control" formControlName="gstin" placeholder="GSTIN"   />
-                      <span style="color:red" *ngIf="vendorCtrls.gstin.errors?.required && vendorCtrls.gstin.touched">Enter Valid GSTIN</span>
+                      <span style="color:red" *ngIf="vendorCtrls.gstin.invalid && vendorCtrls.gstin.touched">Enter Valid GSTIN</span>
                   </div> 
                   <div class="col-4 mb-1">
                       <label class="form-label required">Products</label>

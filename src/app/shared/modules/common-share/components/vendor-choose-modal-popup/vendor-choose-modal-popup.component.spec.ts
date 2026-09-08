@@ -165,7 +165,7 @@ describe('VendorChooseModalPopupComponent', () => {
       mobileNo: '9876543210',
       email: 'n@x.com',
       name: 'Name',
-      gstin: 'G',
+      gstin: '',
       products: 'P',
       pinCode: '500001',
       vendorcategory: 'Cat 1',
@@ -180,6 +180,26 @@ describe('VendorChooseModalPopupComponent', () => {
     component.vendorGridData = { gridValue: [] };
     component.onAddVendor(vendors[0]);
     expect(dialogRef.close).toHaveBeenCalled();
+  });
+
+  it('should validate GSTIN as optional but enforce format if provided', () => {
+    component.ngOnInit();
+    const gstinCtrl = component.vendorForm.get('gstin');
+
+    // Empty GSTIN is valid
+    gstinCtrl.setValue('');
+    expect(gstinCtrl.valid).toBeTrue();
+    expect(gstinCtrl.errors).toBeNull();
+
+    // Valid 15-character GSTIN format is valid
+    gstinCtrl.setValue('27AAPFU0939F1ZV');
+    expect(gstinCtrl.valid).toBeTrue();
+    expect(gstinCtrl.errors).toBeNull();
+
+    // Invalid GSTIN format is invalid
+    gstinCtrl.setValue('invalid-gstin');
+    expect(gstinCtrl.invalid).toBeTrue();
+    expect(gstinCtrl.errors?.invalidGstin).toBeTrue();
   });
 
   it('should addToCart and page/search emitters', () => {
