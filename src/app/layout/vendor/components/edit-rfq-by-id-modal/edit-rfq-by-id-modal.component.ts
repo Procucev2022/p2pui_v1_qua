@@ -36,6 +36,7 @@ export class EditRfqByIdModalComponent implements OnInit {
     itemDialogRef: MatDialogRef<any> | null = null;
     selectedItemCategory: string = '';
     minDate: Date = new Date();
+    showAiTokenConsumption: boolean = false;
 
 
 
@@ -65,7 +66,7 @@ export class EditRfqByIdModalComponent implements OnInit {
 
     isEmailRfq(): boolean {
         const source = (this.viewRFQbyIDdetails?.sourceType || '').toUpperCase().trim();
-        return source === 'EMAIL';
+        return source === 'EMAIL' || source === 'E' || source === 'MAIL';
     }
 
     rfqDetailsHeaders: any = [

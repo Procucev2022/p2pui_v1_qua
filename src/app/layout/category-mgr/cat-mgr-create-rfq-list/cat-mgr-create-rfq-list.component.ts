@@ -433,7 +433,10 @@ export class CatMgrCreateRfqListComponent implements OnInit {
 
         this.rfqservice.fetchRfqById(temp).subscribe((res: any) => {
             if (res) {
-                this.viewRFQByIdData = res || {};
+                this.viewRFQByIdData = { ...rowData, ...(res || {}) };
+                if (!this.viewRFQByIdData.sourceType && rowData.sourceType) {
+                    this.viewRFQByIdData.sourceType = rowData.sourceType;
+                }
                 if(isEdit){
 
                     this.onEditRfqDetails();

@@ -17,6 +17,7 @@ export class ViewRFQByIdModalComponent implements OnInit {
     selectedData: any;
   viewRFQbyIDdetails: any;
     isShowItemsSectionOnly: boolean =false;
+    showAiTokenConsumption: boolean = false;
 
   constructor( private dialogRef: MatDialogRef<ViewRFQByIdModalComponent>,
     @Inject(MAT_DIALOG_DATA) data,
@@ -28,7 +29,7 @@ export class ViewRFQByIdModalComponent implements OnInit {
 
    isEmailRfq(): boolean {
        const source = (this.viewRFQbyIDdetails?.sourceType || '').toUpperCase().trim();
-       return source === 'EMAIL';
+       return source === 'EMAIL' || source === 'E' || source === 'MAIL';
    }
 
    rfqDetailsHeaders: any = [

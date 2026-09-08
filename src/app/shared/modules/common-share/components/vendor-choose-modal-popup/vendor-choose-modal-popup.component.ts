@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Inject, Input, OnChanges, OnInit, Optional, Output, SimpleChanges } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { AppApiConfig } from 'src/app/shared/constants/app-api.config';
@@ -7,6 +7,18 @@ import { INDIA_STATES, INDIA_STATE_CITIES_MAP } from 'src/app/shared/constants/i
 import { EncryDecryService } from 'src/app/shared/services';
 import { FormValidatationsService } from 'src/app/shared/services/form-validatations.service';
 import { CreateRfqService } from 'src/app/layout/category-mgr/services/create-rfq.service';
+
+export function gstinValidator(): ValidatorFn {
+  const GSTIN_REGEX = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value = control.value;
+    if (!value || (typeof value === 'string' && value.trim() === '')) {
+      return null;
+    }
+    return GSTIN_REGEX.test(value.trim().toUpperCase()) ? null : { invalidGstin: true };
+  };
+}
 
 @Component({
   selector: 'app-vendor-choose-modal-popup',
@@ -103,7 +115,7 @@ export class VendorChooseModalPopupComponent implements OnChanges, OnInit{
       mobileNo: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]),
       email: new FormControl('', [Validators.required, Validators.email]) ,
       name: new FormControl('', [Validators.required, this.formValidatorService.alphabetValidator]),
-      gstin: new FormControl('', [Validators.required]),
+      gstin: new FormControl('', [gstinValidator()]),
       products: new FormControl('', [Validators.required]),
       pinCode: new FormControl('', [Validators.required, this.formValidatorService.pincodeValidator]),
       vendorcategory: new FormControl(defaultCategory, [Validators.required])
