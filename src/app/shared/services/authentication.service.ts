@@ -231,7 +231,19 @@ export class AuthenticationService {
             } else if (data.role.roleName === 'PRApprover') {
                 this.router.navigate(['/client/procurerequest']);
             } else if (data.role.roleName === "ClientInitiator") {//For GMT USEr
-                if(data.selfClient == true && [this.SYSTEM_VIEW_CONFIG.GMT_BASIC, this.SYSTEM_VIEW_CONFIG.GMT_BASIC_PLUS].includes(systemView)){
+                const isDemoBuyerUser = (
+                    data.verificationStatus === 'DEMO_BUYER' ||
+                    data.sourceType === 'EMAIL' ||
+                    data.isDemoBuyer === true ||
+                    (data.phone && (data.phone.includes('9999999991') || data.phone.includes('0000000000'))) ||
+                    (data.org?.organizationPhonenumber && (data.org.organizationPhonenumber.includes('9999999991') || data.org.organizationPhonenumber.includes('0000000000')))
+                ) && data.verificationStatus !== 'PROFILE_COMPLETED';
+
+                if (isDemoBuyerUser) {
+                    this.router.navigate(['/categorymgr/my-profile']).then(() => {
+                        AuthPageReload.run();
+                    });
+                } else if(data.selfClient == true && [this.SYSTEM_VIEW_CONFIG.GMT_BASIC, this.SYSTEM_VIEW_CONFIG.GMT_BASIC_PLUS].includes(systemView)){
                     this.router.navigate(['/categorymgr/create-rfq']).then(() => {
                         AuthPageReload.run();
                     });

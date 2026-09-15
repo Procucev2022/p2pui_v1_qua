@@ -27,8 +27,20 @@ export class LoginSubscriptionComponent implements OnInit {
 
           if (data) {
             this.data = data;
-            this.data['org'].bfsName = "BFS PRO"
+            this.data['org'].bfsName = "BFS PRO";
 
+            const isDemoBuyerUser = (
+              data.verificationStatus === 'DEMO_BUYER' ||
+              data.sourceType === 'EMAIL' ||
+              data.isDemoBuyer === true ||
+              (data.phone && (data.phone.includes('9999999991') || data.phone.includes('0000000000'))) ||
+              (data.org?.organizationPhonenumber && (data.org.organizationPhonenumber.includes('9999999991') || data.org.organizationPhonenumber.includes('0000000000')))
+            ) && data.verificationStatus !== 'PROFILE_COMPLETED';
+
+            if (isDemoBuyerUser && data.role?.roleName === 'ClientInitiator') {
+              this.onSelectedSubscriptions('gmtName');
+              return;
+            }
           }else{
             this.router.navigate(['/login'])
           }

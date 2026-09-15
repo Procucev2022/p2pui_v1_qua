@@ -322,6 +322,21 @@ export class LoginComponent implements OnInit {
         if (data.resetPassword && localStorage.getItem('orgId')) {
           this.router.navigate(['login/passwordChange']);
         } else {
+          const isDemoBuyerUser = (
+            data.verificationStatus === 'DEMO_BUYER' ||
+            data.sourceType === 'EMAIL' ||
+            data.isDemoBuyer === true ||
+            (data.phone && (data.phone.includes('9999999991') || data.phone.includes('0000000000'))) ||
+            (data.org?.organizationPhonenumber && (data.org.organizationPhonenumber.includes('9999999991') || data.org.organizationPhonenumber.includes('0000000000')))
+          ) && data.verificationStatus !== 'PROFILE_COMPLETED';
+
+          if (isDemoBuyerUser && data.role.roleName === 'ClientInitiator') {
+            const systemView = data.org?.gmtName ? data.org.gmtName.trim() : 'GMT Basic';
+            localStorage.setItem('system-view', systemView);
+            localStorage.setItem('isLoggedin', 'true');
+            this.router.navigate(['/categorymgr/my-profile']);
+            return;
+          }
 
           localStorage.setItem('system-view', null)
 

@@ -224,6 +224,21 @@ export class PasswordChangeComponent implements OnInit {
           this.router.navigate(['login/passwordChange']);
         } else {
           localStorage.setItem('isLoggedin', 'true');
+          const isDemoBuyerUser = (
+            data.verificationStatus === 'DEMO_BUYER' ||
+            data.sourceType === 'EMAIL' ||
+            data.isDemoBuyer === true ||
+            (data.phone && (data.phone.includes('9999999991') || data.phone.includes('0000000000'))) ||
+            (data.org?.organizationPhonenumber && (data.org.organizationPhonenumber.includes('9999999991') || data.org.organizationPhonenumber.includes('0000000000')))
+          ) && data.verificationStatus !== 'PROFILE_COMPLETED';
+
+          if (isDemoBuyerUser && data.role.roleName === 'ClientInitiator') {
+            const systemView = data.org?.gmtName ? data.org.gmtName.trim() : 'GMT Basic';
+            localStorage.setItem('system-view', systemView);
+            this.router.navigate(['/categorymgr/my-profile']);
+            return;
+          }
+
           if (['Vendor', 'PartialVendor', 'Registration', 'CategoryManager', 'CategoryManager2', 'ClientInitiator'].includes(data.role.roleName)) {
             this.router.navigate(['/login/subscription-login']);
           } else if (data.role.roleName === 'VendorManager') {

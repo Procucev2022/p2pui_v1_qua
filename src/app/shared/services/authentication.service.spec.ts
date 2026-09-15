@@ -294,6 +294,18 @@ describe('AuthenticationService', () => {
       await flushNavigate();
     });
 
+    it('should navigate demo buyer ClientInitiator to /categorymgr/my-profile', async () => {
+      const data = buildUser({
+        selfClient: true,
+        role: { roleName: 'ClientInitiator' },
+        verificationStatus: 'DEMO_BUYER',
+        org: { gmtName: SystemViewConfig.GMT_BASIC }
+      });
+      service.onSelectedSubscriptions('gmtName', data);
+      expect(router.navigate).toHaveBeenCalledWith(['/categorymgr/my-profile']);
+      await flushNavigate();
+    });
+
     it('should navigate ClientInitiator non-self DPS to procurerequest', async () => {
       const data = buildUser({
         selfClient: false,

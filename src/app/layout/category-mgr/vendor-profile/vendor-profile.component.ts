@@ -169,6 +169,29 @@ export class VendorProfileComponent {
     this.loggedUserName = this.loggedUserDetails.username;
     this.roleName = this.loggedUserDetails.role.roleName === 'Registration' ? 'Vendor' : this.loggedUserDetails.role.roleName;
     this.isBuyer = this.loggedUserDetails.role.roleName === 'ClientInitiator';
+
+    const isDemoDetected = (
+      this.loggedUserDetails?.verificationStatus === 'DEMO_BUYER' ||
+      this.loggedUserDetails?.sourceType === 'EMAIL' ||
+      (this.loggedUserDetails?.phone && (
+        this.loggedUserDetails.phone.includes('9999999991') ||
+        this.loggedUserDetails.phone.includes('0000000000')
+      )) ||
+      (this.loggedUserDetails?.org?.organizationPhonenumber && (
+        this.loggedUserDetails.org.organizationPhonenumber.includes('9999999991') ||
+        this.loggedUserDetails.org.organizationPhonenumber.includes('0000000000')
+      ))
+    ) && this.loggedUserDetails?.verificationStatus !== 'PROFILE_COMPLETED';
+
+    if (isDemoDetected) {
+      this.isDemoBuyer = true;
+      this.isMobileOTPVerified = false;
+      this.isEmailOTPVerified = true;
+    }
+    if (this.loggedUserDetails?.resetPassword === true) {
+      this.needsPasswordChange = true;
+    }
+
     this.buildVendorForm();
     if (this.loggedUserDetails) {
       if (this.isBuyer) {
@@ -308,6 +331,26 @@ export class VendorProfileComponent {
     if (this.loggedUserDetails?.resetPassword === true) {
       this.needsPasswordChange = true;
     }
+    const isDemoDetected = (
+      this.loggedUserDetails?.verificationStatus === 'DEMO_BUYER' ||
+      this.loggedUserDetails?.sourceType === 'EMAIL' ||
+      (this.loggedUserDetails?.phone && (
+        this.loggedUserDetails.phone.includes('9999999991') ||
+        this.loggedUserDetails.phone.includes('0000000000')
+      )) ||
+      (this.loggedUserDetails?.org?.organizationPhonenumber && (
+        this.loggedUserDetails.org.organizationPhonenumber.includes('9999999991') ||
+        this.loggedUserDetails.org.organizationPhonenumber.includes('0000000000')
+      ))
+    ) && this.loggedUserDetails?.verificationStatus !== 'PROFILE_COMPLETED';
+
+    if (isDemoDetected) {
+      this.isDemoBuyer = true;
+      this.isEmailOTPVerified = true;
+      this.vendorForm.get('organizationPhonenumber')?.enable();
+      this.vendorForm.get('companyName')?.enable();
+    }
+
     if (email) {
       this.createRfqService.getBuyerProfileStatus(email).subscribe((res: any) => {
         if (res && res.data) {
@@ -316,10 +359,12 @@ export class VendorProfileComponent {
           if (data.resetPassword === true) {
             this.needsPasswordChange = true;
           }
-          if ((data.isDemoBuyer === true || data.verificationStatus === 'DEMO_BUYER' || data.isDemoPhone === true)
-              && data.verificationStatus !== 'PROFILE_COMPLETED') {
+          if (data.verificationStatus === 'PROFILE_COMPLETED') {
+            this.isDemoBuyer = false;
+            this.isMobileOTPVerified = true;
+          } else if (data.isDemoBuyer === true || data.verificationStatus === 'DEMO_BUYER' || data.isDemoPhone === true || isDemoDetected) {
             this.isDemoBuyer = true;
-            this.isMobileOTPVerified = false;
+            this.isEmailOTPVerified = true;
             this.vendorForm.get('organizationPhonenumber')?.enable();
             this.vendorForm.get('companyName')?.enable();
             const currentPhone = this.vendorForm.get('organizationPhonenumber')?.value;
@@ -329,9 +374,9 @@ export class VendorProfileComponent {
           }
         }
       }, () => {
-        if ((this.loggedUserDetails?.verificationStatus === 'DEMO_BUYER' || this.loggedUserDetails?.sourceType === 'EMAIL')
-            && this.loggedUserDetails?.verificationStatus !== 'PROFILE_COMPLETED') {
+        if (isDemoDetected) {
           this.isDemoBuyer = true;
+          this.isEmailOTPVerified = true;
           this.vendorForm.get('organizationPhonenumber')?.enable();
           this.vendorForm.get('companyName')?.enable();
         }
