@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Optional } from '@angular/core';
 import { EncryDecryService } from 'src/app/shared/services';
+import { AuthenticationService } from 'src/app/shared/services/authentication.service';
 import { VendorRegistrationService } from 'src/app/vendor-registration/services/vendor-registration.service';
 import { CreateRfqService } from '../services/create-rfq.service';
 import { ToastrService } from 'ngx-toastr';
@@ -121,12 +122,46 @@ export class VendorProfileComponent {
   loggedUserName: any;
   isBuyer: boolean = false;
   isValidPincode: boolean = false;
+
+  // Demo buyer verification properties
+  isDemoBuyer: boolean = false;
+  isMobileOTPSent: boolean = false;
+  isMobileOTPVerified: boolean = false;
+  mobileOtpValue: string = '';
+  isSendingOtp: boolean = false;
+  isVerifyingOtp: boolean = false;
+  enableResendOtpBtn: boolean = false;
+  resendCountdown: number = 30;
+  resendInterval: any = null;
+
+  isEmailOTPSent: boolean = false;
+  isEmailOTPVerified: boolean = false;
+  emailOtpValue: string = '';
+  isSendingEmailOtp: boolean = false;
+  isVerifyingEmailOtp: boolean = false;
+  enableResendEmailOtpBtn: boolean = false;
+  resendEmailCountdown: number = 30;
+  resendEmailInterval: any = null;
+
+  pendingRfqsCount: number = 0;
+
+  // Demo buyer password change properties
+  needsPasswordChange: boolean = false;
+  changePwdObj = {
+    oldPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  };
+  isUpdatingPassword: boolean = false;
+  passwordChangedSuccess: boolean = false;
+
   constructor(private vendorRegSer: VendorRegistrationService, private encryDecryService: EncryDecryService,
     private dialog: MatDialog,
     private rfqservice: RfqService,
     private toastrService: ToastrService,
     private createRfqService: CreateRfqService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    @Optional() private authService?: AuthenticationService
   ) {
 
     const temp = JSON.parse(this.encryDecryService.get(localStorage.getItem('logData')));
@@ -137,9 +172,10 @@ export class VendorProfileComponent {
     this.buildVendorForm();
     if (this.loggedUserDetails) {
       if (this.isBuyer) {
-        this.getBuyerDataById(this.loggedUserDetails.id)
+        this.getBuyerDataById(this.loggedUserDetails.id);
+        this.checkDemoBuyerStatus();
       } else {
-        this.getVendorById(this.loggedUserDetails.org.id)
+        this.getVendorById(this.loggedUserDetails.org.id);
       }
     }
 
@@ -267,6 +303,214 @@ export class VendorProfileComponent {
     return true;
   }
 
+  checkDemoBuyerStatus() {
+    const email = this.loggedUserName;
+    if (this.loggedUserDetails?.resetPassword === true) {
+      this.needsPasswordChange = true;
+    }
+    if (email) {
+      this.createRfqService.getBuyerProfileStatus(email).subscribe((res: any) => {
+        if (res && res.data) {
+          const data = res.data;
+          this.pendingRfqsCount = data.pendingRfqsCount || 0;
+          if (data.resetPassword === true) {
+            this.needsPasswordChange = true;
+          }
+          if ((data.isDemoBuyer === true || data.verificationStatus === 'DEMO_BUYER' || data.isDemoPhone === true)
+              && data.verificationStatus !== 'PROFILE_COMPLETED') {
+            this.isDemoBuyer = true;
+            this.isMobileOTPVerified = false;
+            this.vendorForm.get('organizationPhonenumber')?.enable();
+            this.vendorForm.get('companyName')?.enable();
+            const currentPhone = this.vendorForm.get('organizationPhonenumber')?.value;
+            if (currentPhone && (currentPhone.includes('9999999991') || currentPhone.includes('0000000000'))) {
+              this.vendorForm.get('organizationPhonenumber')?.setValue('');
+            }
+          }
+        }
+      }, () => {
+        if ((this.loggedUserDetails?.verificationStatus === 'DEMO_BUYER' || this.loggedUserDetails?.sourceType === 'EMAIL')
+            && this.loggedUserDetails?.verificationStatus !== 'PROFILE_COMPLETED') {
+          this.isDemoBuyer = true;
+          this.vendorForm.get('organizationPhonenumber')?.enable();
+          this.vendorForm.get('companyName')?.enable();
+        }
+      });
+    }
+  }
+
+  submitPasswordChange() {
+    if (!this.changePwdObj.oldPassword) {
+      this.toastrService.error('Please enter your current temporary password.', 'Current Password Required');
+      return;
+    }
+    if (!this.changePwdObj.newPassword || this.changePwdObj.newPassword.length < 8) {
+      this.toastrService.error('New password must be at least 8 characters long.', 'Password Too Short');
+      return;
+    }
+    if (this.changePwdObj.newPassword !== this.changePwdObj.confirmPassword) {
+      this.toastrService.error('New password and confirm password do not match.', 'Mismatch');
+      return;
+    }
+    if (!this.authService) {
+      this.toastrService.error('Authentication service not available.', 'Error');
+      return;
+    }
+    const phone = this.vendorForm.get('organizationPhonenumber')?.value || this.loggedUserDetails?.phone || '';
+    const rawPhone = phone ? phone.toString().replace(/[^0-9]/g, '') : '';
+    const obj = {
+      userName: this.loggedUserName,
+      phone: rawPhone,
+      password: this.changePwdObj.oldPassword,
+      newpassword: this.changePwdObj.newPassword
+    };
+    this.isUpdatingPassword = true;
+    this.authService.updatePassword(obj).subscribe((res: any) => {
+      this.isUpdatingPassword = false;
+      if (res && (res.status === 'Success' || res.status === 'SUCCESS' || res.statusCode === 200)) {
+        this.toastrService.success('Password updated successfully! Your account is now secured.', 'Success');
+        this.needsPasswordChange = false;
+        this.passwordChangedSuccess = true;
+        this.changePwdObj = { oldPassword: '', newPassword: '', confirmPassword: '' };
+        if (this.loggedUserDetails) {
+          this.loggedUserDetails.resetPassword = false;
+          const k = this.encryDecryService.set(JSON.stringify({ 'details': this.loggedUserDetails }));
+          localStorage.setItem('logData', k);
+        }
+      } else {
+        this.toastrService.error(res?.message || 'Failed to update password.', 'Error');
+      }
+    }, (err: any) => {
+      this.isUpdatingPassword = false;
+      const msg = err?.error?.message || err?.message || 'Failed to update password. Please check your current password.';
+      this.toastrService.error(msg, 'Error');
+    });
+  }
+
+  sendMobileOtp() {
+    const rawPhone = this.vendorForm.get('organizationPhonenumber')?.value;
+    const phone = rawPhone ? rawPhone.toString().replace(/[^0-9]/g, '') : '';
+    if (!phone || phone.length !== 10) {
+      this.toastrService.error('Please enter a valid 10-digit mobile number.', 'Invalid Mobile');
+      return;
+    }
+    if (phone === '9999999991' || phone === '0000000000') {
+      this.toastrService.error('Please enter your actual mobile number, not the placeholder.', 'Invalid Mobile');
+      return;
+    }
+    this.isSendingOtp = true;
+    const email = this.loggedUserName;
+    this.createRfqService.sendBuyerPhoneOtp(email, phone).subscribe((res: any) => {
+      this.isSendingOtp = false;
+      this.isMobileOTPSent = true;
+      this.toastrService.success(res.message || 'OTP sent to mobile number.', 'Success');
+      this.startResendTimer();
+    }, (err) => {
+      this.isSendingOtp = false;
+      const msg = err?.error?.message || err?.message || 'Failed to send OTP to mobile.';
+      this.toastrService.error(msg, 'Error');
+    });
+  }
+
+  verifyMobileOtp() {
+    const rawPhone = this.vendorForm.get('organizationPhonenumber')?.value;
+    const phone = rawPhone ? rawPhone.toString().replace(/[^0-9]/g, '') : '';
+    const otp = this.mobileOtpValue ? this.mobileOtpValue.trim() : '';
+    if (!otp || otp.length < 4) {
+      this.toastrService.error('Please enter a valid OTP.', 'Invalid OTP');
+      return;
+    }
+    this.isVerifyingOtp = true;
+    const email = this.loggedUserName;
+    this.createRfqService.verifyBuyerPhoneOtp(email, phone, otp).subscribe((res: any) => {
+      this.isVerifyingOtp = false;
+      this.isMobileOTPVerified = true;
+      this.vendorForm.get('organizationPhonenumber')?.disable();
+      this.toastrService.success('Mobile number verified successfully!', 'Verified');
+    }, (err) => {
+      this.isVerifyingOtp = false;
+      const msg = err?.error?.message || err?.message || 'Invalid or expired OTP.';
+      this.toastrService.error(msg, 'Verification Failed');
+    });
+  }
+
+  startResendTimer() {
+    this.enableResendOtpBtn = false;
+    this.resendCountdown = 30;
+    if (this.resendInterval) {
+      clearInterval(this.resendInterval);
+    }
+    this.resendInterval = setInterval(() => {
+      this.resendCountdown--;
+      if (this.resendCountdown <= 0) {
+        clearInterval(this.resendInterval);
+        this.enableResendOtpBtn = true;
+      }
+    }, 1000);
+  }
+
+  sendEmailOtp() {
+    const email = this.loggedUserName;
+    if (!email) {
+      this.toastrService.error('User email not found.', 'Error');
+      return;
+    }
+    this.isSendingEmailOtp = true;
+    this.createRfqService.sendBuyerEmailOtp(email).subscribe((res: any) => {
+      this.isSendingEmailOtp = false;
+      this.isEmailOTPSent = true;
+      this.toastrService.success(res.message || 'OTP sent to your email address.', 'Success');
+      this.startResendEmailTimer();
+    }, (err) => {
+      this.isSendingEmailOtp = false;
+      const msg = err?.error?.message || err?.message || 'Failed to send OTP to email.';
+      this.toastrService.error(msg, 'Error');
+    });
+  }
+
+  verifyEmailOtp() {
+    const email = this.loggedUserName;
+    const otp = this.emailOtpValue ? this.emailOtpValue.trim() : '';
+    if (!otp || otp.length < 4) {
+      this.toastrService.error('Please enter a valid OTP.', 'Invalid OTP');
+      return;
+    }
+    this.isVerifyingEmailOtp = true;
+    this.createRfqService.verifyBuyerEmailOtp(email, otp).subscribe((res: any) => {
+      this.isVerifyingEmailOtp = false;
+      this.isEmailOTPVerified = true;
+      this.toastrService.success('Email verified successfully!', 'Verified');
+    }, (err) => {
+      this.isVerifyingEmailOtp = false;
+      const msg = err?.error?.message || err?.message || 'Invalid or expired OTP.';
+      this.toastrService.error(msg, 'Verification Failed');
+    });
+  }
+
+  startResendEmailTimer() {
+    this.enableResendEmailOtpBtn = false;
+    this.resendEmailCountdown = 30;
+    if (this.resendEmailInterval) {
+      clearInterval(this.resendEmailInterval);
+    }
+    this.resendEmailInterval = setInterval(() => {
+      this.resendEmailCountdown--;
+      if (this.resendEmailCountdown <= 0) {
+        clearInterval(this.resendEmailInterval);
+        this.enableResendEmailOtpBtn = true;
+      }
+    }, 1000);
+  }
+
+  ngOnDestroy() {
+    if (this.resendInterval) {
+      clearInterval(this.resendInterval);
+    }
+    if (this.resendEmailInterval) {
+      clearInterval(this.resendEmailInterval);
+    }
+  }
+
   onItemSelected(event, index) {
     const obj = { "division": event.target.value };
     this.createRfqService.getGMTCategoriesByDivision(obj).subscribe((res: any) => {
@@ -386,6 +630,18 @@ export class VendorProfileComponent {
     this.isShowDivisions = false;
     if (!this.vendorForm) return;
     this.vendorForm.patchValue(this.vendorRegObj);
+    if (this.isDemoBuyer) {
+      this.vendorForm.get('companyName')?.enable();
+      if (this.isMobileOTPVerified) {
+        this.vendorForm.get('organizationPhonenumber')?.disable();
+      } else {
+        this.vendorForm.get('organizationPhonenumber')?.enable();
+        const currentPhone = this.vendorForm.get('organizationPhonenumber')?.value;
+        if (currentPhone && (currentPhone.includes('9999999991') || currentPhone.includes('0000000000'))) {
+          this.vendorForm.get('organizationPhonenumber')?.setValue('');
+        }
+      }
+    }
     if (this.vendorRegObj.branches && !this.isBuyer) {
       const skillsArray = this.vendorForm.get('branches') as FormArray;
       skillsArray.clear(); // Clear existing controls if any
@@ -636,6 +892,19 @@ export class VendorProfileComponent {
       return;
     }
 
+    if (this.isDemoBuyer && !this.isMobileOTPVerified) {
+      this.toastrService.error('Please verify your mobile number with OTP before completing your profile.', 'Mobile Verification Required');
+      return;
+    }
+    if (this.isDemoBuyer && !this.isEmailOTPVerified) {
+      this.toastrService.error('Please verify your email address with OTP before completing your profile.', 'Email Verification Required');
+      return;
+    }
+    if (this.isDemoBuyer && !this.isValidPincode) {
+      this.toastrService.error('Please click Validate to verify your Pincode.', 'Pincode Validation Required');
+      return;
+    }
+
     const obj = this.vendorForm.getRawValue();
     obj.id = this.vendorRegObj.id;
     obj.subscriptionPlan = this.selectedSubscription ? { id: this.selectedSubscription.id } : '';
@@ -659,7 +928,7 @@ export class VendorProfileComponent {
       });
     }
     obj.divisionCategories = divisionCategoriesList;
-    if (obj.divisionCategories.length < 1) {
+    if (obj.divisionCategories.length < 1 && this.isShowDivisions && !this.isDemoBuyer) {
       this.toastrService.error('Please select at least one division and category', 'Error');
       return;
     }
@@ -667,6 +936,43 @@ export class VendorProfileComponent {
       obj.id = this.vendorRegObj.id;
       obj.userId = this.vendorRegObj.userId;
       delete obj.subscriptionPlan;
+
+      if (this.isDemoBuyer) {
+        const rawPhone = this.vendorForm.get('organizationPhonenumber')?.value;
+        const phone = rawPhone ? rawPhone.toString().replace(/[^0-9]/g, '') : '';
+        const completionPayload = {
+          email: this.loggedUserName,
+          phone: phone,
+          fullName: obj.companyName || this.loggedUserDetails?.fullName,
+          companyName: obj.companyName,
+          address1: obj.address1,
+          city: this.vendorForm.get('city')?.value || obj.city,
+          state: this.vendorForm.get('state')?.value || obj.state,
+          pincode: obj.zipCode,
+          gstin: obj.gstin
+        };
+        this.createRfqService.completeBuyerProfile(completionPayload).subscribe((res: any) => {
+          this.createRfqService.updateBuyerData(obj).subscribe(() => {});
+          this.toastrService.success('Profile completed and verified successfully! Your pending RFQ is now being processed.', 'Success');
+          this.isDemoBuyer = false;
+          this.isMobileOTPVerified = true;
+          const normalizedPhone = '+91' + phone;
+          localStorage.setItem('loggedUserMobile', normalizedPhone);
+          if (this.loggedUserDetails) {
+            this.loggedUserDetails.verificationStatus = 'PROFILE_COMPLETED';
+            this.loggedUserDetails.phone = normalizedPhone;
+            const k = this.encryDecryService.set(JSON.stringify({ 'details': this.loggedUserDetails }));
+            localStorage.setItem('logData', k);
+          }
+          this.getBuyerDataById(this.loggedUserDetails.id);
+          this.isEdit = false;
+          this.isFirstScreen = true;
+        }, (error) => {
+          this.toastrService.error(error?.error?.message || 'Error while completing buyer profile', 'Error');
+        });
+        return;
+      }
+
       this.createRfqService.updateBuyerData(obj).subscribe((res: any) => {
         this.toastrService.success('Buyer Updated Successfully', 'Success');
         this.getBuyerDataById(this.loggedUserDetails.id)

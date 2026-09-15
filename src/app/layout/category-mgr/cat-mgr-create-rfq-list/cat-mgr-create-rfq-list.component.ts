@@ -3,6 +3,7 @@ import { AppApiConfig } from 'src/app/shared/constants/app-api.config';
 import { RfqService } from '../../vendor/services/rfq.service';
 import { EncryDecryService } from './../../../shared/services/encry-decry.service';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ConvertToBase64Service } from 'src/app/shared/modules/common-share/services/convert-to-base64.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -161,6 +162,7 @@ export class CatMgrCreateRfqListComponent implements OnInit {
     isShowPincodeControl: boolean;
     isForwardRFQ: boolean;
     isNewVendorEntry: boolean;
+    isDemoBuyer: boolean = false;
 
     constructor(
         private encryDecryService: EncryDecryService,
@@ -175,7 +177,8 @@ export class CatMgrCreateRfqListComponent implements OnInit {
         private excelService: ExcelService,
         private loaderService: LoaderService,
         private authService: AuthenticationService,
-        private formValidatorService: FormValidatationsService
+        private formValidatorService: FormValidatationsService,
+        private router: Router
     ) {
 
     }
@@ -215,9 +218,20 @@ export class CatMgrCreateRfqListComponent implements OnInit {
             ];
         }
         this.getRfqData();
+        this.checkDemoBuyerStatus();
 
         this.initialCalls();
         this.buildRFQForms();
+    }
+
+    checkDemoBuyerStatus() {
+        if (this.loggedUserDetails?.username) {
+            this.createRFQService.getBuyerProfileStatus(this.loggedUserDetails.username).subscribe((res: any) => {
+                if (res && res.data) {
+                    this.isDemoBuyer = !!res.data.isDemoBuyer;
+                }
+            }, () => {});
+        }
     }
 
     getRfqData(){
@@ -367,6 +381,11 @@ export class CatMgrCreateRfqListComponent implements OnInit {
     }
 
     onCreateRfq() {
+        if (this.isDemoBuyer) {
+            this.toaster.warning("Account verification pending. Please complete your profile and verify your mobile number with OTP before creating RFQs.", "Verification Required");
+            this.router.navigate(['/categorymgr/my-profile']);
+            return;
+        }
         this.isCreateRFQView = true;
         this.currentStep =1;
         this.isSendRFQToVendorScreen = false;
@@ -956,6 +975,11 @@ export class CatMgrCreateRfqListComponent implements OnInit {
             "user": this.loggedUserDetails.id,
             "sourceType":"T"
         };
+        if (this.isDemoBuyer) {
+            this.toaster.warning("Account verification pending. Please complete your profile and verify your mobile number with OTP before creating RFQs.", "Verification Required");
+            this.router.navigate(['/categorymgr/my-profile']);
+            return;
+        }
         if(this.roleName == 'ClientInitiator'){
             if(this.isEditForm && !itemsList.some((item:any) => !!item.id)) {
                 if(this.divisionsList.find(ele => ele == projectFormData.division)   ){

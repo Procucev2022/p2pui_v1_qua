@@ -12,6 +12,59 @@
       </div>
     </div>
     <div  >
+        <!-- Demo Buyer Notice Banner -->
+        <div class="col-12 mb-3" *ngIf="isDemoBuyer">
+            <div class="alert alert-warning p-3 d-flex align-items-center" style="background: #fff8e5; border: 1px solid #ffe08a; border-left: 5px solid #f59f00; border-radius: 4px; color: #664d03;">
+                <i class="fa fa-exclamation-circle fa-2x mr-3" style="color: #f59f00;"></i>
+                <div>
+                    <h5 class="mb-1 font-weight-bold" style="font-size: 1.1rem; color: #d97706;">Account Verification Pending (Active for 1 Hour)</h5>
+                    <p class="mb-0" style="font-size: 0.95rem;">
+                        Your account was created via Email RFQ. This temporary account and password are <b>active for 1 hour only</b>. Please change your temporary password below, <b>verify your mobile number with OTP</b>, validate your <b>Pincode</b>, and click <b>Complete Profile & Activate RFQ</b> to activate your account.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Password Change Card for Demo Buyers / Required Reset -->
+        <div class="col-12 mb-4" *ngIf="isDemoBuyer || needsPasswordChange">
+            <div class="card shadow-sm" style="border: 1px solid #c7d2fe; background: #f8faff; border-radius: 6px;">
+                <div class="card-header bg-white d-flex align-items-center justify-content-between" style="border-bottom: 1px solid #e0e7ff; padding: 12px 20px;">
+                    <div class="d-flex align-items-center">
+                        <i class="fa fa-key mr-2 text-primary" style="font-size: 1.2rem;"></i>
+                        <h6 class="mb-0 font-weight-bold text-dark" style="font-size: 1rem;">Set Permanent Account Password</h6>
+                        <span class="badge badge-warning ml-2" *ngIf="needsPasswordChange" style="background: #fef3c7; color: #92400e; font-size: 0.75rem; border: 1px solid #fcd34d; padding: 4px 8px;">Action Required</span>
+                        <span class="badge badge-success ml-2" *ngIf="passwordChangedSuccess" style="background: #d1fae5; color: #065f46; font-size: 0.75rem; padding: 4px 8px;">Password Updated</span>
+                    </div>
+                    <small class="text-muted"><i class="fa fa-clock-o mr-1"></i>Temporary password expires in 1 hour</small>
+                </div>
+                <div class="card-body py-3 px-4">
+                    <p class="text-muted mb-3" style="font-size: 0.88rem;">
+                        Please create your permanent password to replace the temporary password sent to your email.
+                    </p>
+                    <div class="row align-items-end">
+                        <div class="col-md-3 mb-2">
+                            <label class="font-weight-bold" style="font-size: 0.85rem;">Current / Temp Password <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control form-control-sm" [(ngModel)]="changePwdObj.oldPassword" [ngModelOptions]="{standalone: true}" placeholder="Enter temp password" />
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <label class="font-weight-bold" style="font-size: 0.85rem;">New Password <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control form-control-sm" [(ngModel)]="changePwdObj.newPassword" [ngModelOptions]="{standalone: true}" placeholder="Min 8 characters" />
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <label class="font-weight-bold" style="font-size: 0.85rem;">Confirm New Password <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control form-control-sm" [(ngModel)]="changePwdObj.confirmPassword" [ngModelOptions]="{standalone: true}" placeholder="Re-enter new password" />
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <button type="button" class="btn btn-primary btn-sm btn-block" (click)="submitPasswordChange()" [disabled]="isUpdatingPassword">
+                                <span *ngIf="isUpdatingPassword"><i class="fa fa-spinner fa-spin"></i> Updating...</span>
+                                <span *ngIf="!isUpdatingPassword"><i class="fa fa-check mr-1"></i> Update Password</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <form class="row" (ngSubmit)="updateVendorForm()"  [formGroup]="vendorForm" novalidate>
             <div class="col-6">
                 <div class="form-group ">
@@ -23,13 +76,99 @@
              <div class="col-6">
                 <div class="form-group">
                     <label for="name" class="required">EMail Id</label>
-                    <input type="text" class="form-control" formControlName="email" disabled/>
+                    
+                    <!-- Standard display for regular users -->
+                    <input *ngIf="!isDemoBuyer" type="text" class="form-control" formControlName="email" disabled/>
+
+                    <!-- Interactive Email + OTP for Demo Buyers -->
+                    <div *ngIf="isDemoBuyer">
+                        <div class="input-group" style="display: flex;">
+                            <input type="text" class="form-control" formControlName="email" readonly
+                                   style="font-weight: 500; background-color: #f8f9fa;" />
+                            <div class="input-group-append" *ngIf="!isEmailOTPVerified">
+                                <button type="button" class="btn btn-primary" (click)="sendEmailOtp()"
+                                        [disabled]="isSendingEmailOtp || (isEmailOTPSent && !enableResendEmailOtpBtn)" style="min-width: 110px; border-top-left-radius: 0; border-bottom-left-radius: 0;">
+                                    <span *ngIf="isSendingEmailOtp"><i class="fa fa-spinner fa-spin"></i> Sending...</span>
+                                    <span *ngIf="!isSendingEmailOtp && !isEmailOTPSent">Send OTP</span>
+                                    <span *ngIf="!isSendingEmailOtp && isEmailOTPSent && !enableResendEmailOtpBtn">Resend ({{resendEmailCountdown}}s)</span>
+                                    <span *ngIf="!isSendingEmailOtp && isEmailOTPSent && enableResendEmailOtpBtn">Resend OTP</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Email OTP Input Row -->
+                        <div class="mt-2" *ngIf="isEmailOTPSent && !isEmailOTPVerified">
+                            <div class="input-group" style="display: flex; max-width: 350px;">
+                                <input type="text" class="form-control" [value]="emailOtpValue" (input)="emailOtpValue = $event.target.value"
+                                       placeholder="Enter 6-digit Email OTP" maxlength="6" (keypress)="numberOnly($event)" style="border-color: #007bff;" />
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-success" (click)="verifyEmailOtp()" [disabled]="isVerifyingEmailOtp || !emailOtpValue">
+                                        <span *ngIf="isVerifyingEmailOtp"><i class="fa fa-spinner fa-spin"></i> Verifying...</span>
+                                        <span *ngIf="!isVerifyingEmailOtp">Verify OTP</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <small class="text-muted" style="font-size: 12px;">Enter the verification OTP sent to your email.</small>
+                        </div>
+
+                        <!-- Email Verified Badge -->
+                        <div class="mt-1" *ngIf="isEmailOTPVerified">
+                            <span class="text-success font-weight-bold" style="font-size: 13px;">
+                                <i class="fa fa-check-circle text-success mr-1"></i> Email Verified
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
              <div class="col-6">
                 <div class="form-group">
-                    <label for="name" class="required">Mobile Number</label>
-                    <input type="text" class="form-control" formControlName="organizationPhonenumber" disabled/>
+                    <label for="organizationPhonenumber" class="required">Mobile Number</label>
+                    
+                    <!-- Standard display for regular users -->
+                    <input *ngIf="!isDemoBuyer" type="text" class="form-control" formControlName="organizationPhonenumber" disabled/>
+
+                    <!-- Interactive Mobile + OTP for Demo Buyers -->
+                    <div *ngIf="isDemoBuyer">
+                        <div class="input-group" style="display: flex;">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text font-weight-bold" style="background: #e9ecef; font-size: 13px; height: 100%; display: flex; align-items: center; border-top-right-radius: 0; border-bottom-right-radius: 0;">IND +91</span>
+                            </div>
+                            <input type="text" class="form-control" formControlName="organizationPhonenumber"
+                                   placeholder="Enter 10-digit mobile number" maxlength="10" (keypress)="numberOnly($event)"
+                                   [readonly]="isMobileOTPVerified" style="font-weight: 500; border-radius: 0;" />
+                            <div class="input-group-append" *ngIf="!isMobileOTPVerified">
+                                <button type="button" class="btn btn-primary" (click)="sendMobileOtp()"
+                                        [disabled]="isSendingOtp || (isMobileOTPSent && !enableResendOtpBtn)" style="min-width: 110px; border-top-left-radius: 0; border-bottom-left-radius: 0;">
+                                    <span *ngIf="isSendingOtp"><i class="fa fa-spinner fa-spin"></i> Sending...</span>
+                                    <span *ngIf="!isSendingOtp && !isMobileOTPSent">Send OTP</span>
+                                    <span *ngIf="!isSendingOtp && isMobileOTPSent && !enableResendOtpBtn">Resend ({{resendCountdown}}s)</span>
+                                    <span *ngIf="!isSendingOtp && isMobileOTPSent && enableResendOtpBtn">Resend OTP</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- OTP Input Row -->
+                        <div class="mt-2" *ngIf="isMobileOTPSent && !isMobileOTPVerified">
+                            <div class="input-group" style="display: flex; max-width: 350px;">
+                                <input type="text" class="form-control" [value]="mobileOtpValue" (input)="mobileOtpValue = $event.target.value"
+                                       placeholder="Enter 6-digit Mobile OTP" maxlength="6" (keypress)="numberOnly($event)" style="border-color: #007bff;" />
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-success" (click)="verifyMobileOtp()" [disabled]="isVerifyingOtp || !mobileOtpValue">
+                                        <span *ngIf="isVerifyingOtp"><i class="fa fa-spinner fa-spin"></i> Verifying...</span>
+                                        <span *ngIf="!isVerifyingOtp">Verify OTP</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <small class="text-muted" style="font-size: 12px;">Enter the verification OTP sent via SMS to your mobile.</small>
+                        </div>
+
+                        <!-- Verified Badge -->
+                        <div class="mt-1" *ngIf="isMobileOTPVerified">
+                            <span class="text-success font-weight-bold" style="font-size: 13px;">
+                                <i class="fa fa-check-circle text-success mr-1"></i> Mobile Number Verified
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-6">
@@ -169,7 +308,7 @@
             
             
             <div class="col-12 mt-3 mb-3" style="display: flex; direction: rtl;">
-                   <button type="button" class="btn btn-blue" (click)="updateVendorForm()">Update My Profile </button>
+                   <button type="button" class="btn btn-blue" (click)="updateVendorForm()">{{ isDemoBuyer ? 'Complete Profile & Activate RFQ' : 'Update My Profile' }}</button>
                 <button type="button" class="btn btn-red" (click)="resetToOriginalState()">Reset </button>
             </div>
         </form>

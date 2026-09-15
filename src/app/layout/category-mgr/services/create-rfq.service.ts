@@ -211,4 +211,29 @@ export class CreateRfqService {
     updateDeliveryLocation(data: any): Observable<any> {
         return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.UPDATE_DELIVERY_LOCATION, data, {});
     }
+
+    // Buyer Email Profile Completion Endpoints
+    getBuyerProfileStatus(email: string): Observable<any> {
+        return this.httpService.get(AppApiConfig.apiEndpoint + '/rfq/email/buyer/status?email=' + encodeURIComponent(email), {});
+    }
+
+    sendBuyerPhoneOtp(email: string, phone: string): Observable<any> {
+        return this.httpService.post(AppApiConfig.apiEndpoint + '/rfq/email/buyer/send-phone-otp', { email, phone }, {});
+    }
+
+    verifyBuyerPhoneOtp(email: string, phone: string, otp: string): Observable<any> {
+        return this.httpService.post(AppApiConfig.apiEndpoint + '/rfq/email/buyer/verify-phone-otp', { email, phone, otp }, {});
+    }
+
+    sendBuyerEmailOtp(email: string): Observable<any> {
+        return this.httpService.post(AppApiConfig.apiEndpoint + '/rfq/email/buyer/send-email-otp', { email }, {});
+    }
+
+    verifyBuyerEmailOtp(email: string, otp: string): Observable<any> {
+        return this.httpService.post(AppApiConfig.apiEndpoint + '/rfq/email/buyer/verify-email-otp', { email, otp }, {});
+    }
+
+    completeBuyerProfile(data: any): Observable<any> {
+        return this.httpService.post(AppApiConfig.apiEndpoint + '/rfq/email/buyer/complete-profile', data, {});
+    }
 }

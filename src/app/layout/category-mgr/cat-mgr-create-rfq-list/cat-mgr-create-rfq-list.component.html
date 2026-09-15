@@ -1,4 +1,13 @@
 <div class="col-12 pad-nill">
+    <!-- Notice for Unverified Email Buyers -->
+    <div class="alert alert-warning mb-3" *ngIf="isDemoBuyer" style="border-left: 5px solid #ff9800; background: #fff8e1; color: #856404; padding: 12px 18px; border-radius: 4px; margin-bottom: 15px; font-size: 14px; display: flex; align-items: center; justify-content: space-between;">
+        <div>
+            <i class="fa fa-exclamation-triangle mr-2" style="font-size: 16px; color: #e65100;"></i>
+            <strong>Account Verification Pending:</strong> Your account was created via Email RFQ. Creating new RFQs is locked until your profile and mobile number are verified with OTP.
+        </div>
+        <a routerLink="/categorymgr/my-profile" class="btn btn-sm btn-warning" style="font-weight: 600; color: #fff; background: #e65100; border: none; padding: 6px 14px; border-radius: 4px; text-decoration: none; white-space: nowrap;">Complete Profile Now</a>
+    </div>
+
     <div class="table-title">
         <div class="row">
             <div class="col-sm-6">
@@ -11,7 +20,8 @@
                     width: 180px;
                     vertical-align: middle;
                     text-align: center;
-                    display: inline-flex;" [ngClass]="{  'btn-blue': !isGMTView, 'btn-createRFQ': isGMTView}"
+                    display: inline-flex;" [ngClass]="{  'btn-blue': !isGMTView, 'btn-createRFQ': isGMTView, 'btn-secondary': isDemoBuyer}"
+                    [title]="isDemoBuyer ? 'Complete profile verification to create RFQs' : 'Create RFQ'"
                     (click)="onCreateRfq()"><i
                         class="fa fa-plus"></i> <span>Create RFQ</span></button>
             </div>
