@@ -186,7 +186,7 @@ export class VendorProfileComponent {
     if (isDemoDetected) {
       this.isDemoBuyer = true;
       this.isMobileOTPVerified = false;
-      this.isEmailOTPVerified = true;
+      this.isEmailOTPVerified = false;
     }
     if (this.loggedUserDetails?.resetPassword === true) {
       this.needsPasswordChange = true;
@@ -194,6 +194,9 @@ export class VendorProfileComponent {
 
     this.buildVendorForm();
     if (this.loggedUserDetails) {
+      if (this.loggedUserName) {
+        this.vendorForm.get('email')?.setValue(this.loggedUserName);
+      }
       if (this.isBuyer) {
         this.getBuyerDataById(this.loggedUserDetails.id);
         this.checkDemoBuyerStatus();
@@ -346,9 +349,12 @@ export class VendorProfileComponent {
 
     if (isDemoDetected) {
       this.isDemoBuyer = true;
-      this.isEmailOTPVerified = true;
+      this.isEmailOTPVerified = false;
       this.vendorForm.get('organizationPhonenumber')?.enable();
       this.vendorForm.get('companyName')?.enable();
+      if (email && !this.vendorForm.get('email')?.value) {
+        this.vendorForm.get('email')?.setValue(email);
+      }
     }
 
     if (email) {
@@ -359,12 +365,17 @@ export class VendorProfileComponent {
           if (data.resetPassword === true) {
             this.needsPasswordChange = true;
           }
+          if (data.email && !this.vendorForm.get('email')?.value) {
+            this.vendorForm.get('email')?.setValue(data.email);
+          }
           if (data.verificationStatus === 'PROFILE_COMPLETED') {
             this.isDemoBuyer = false;
             this.isMobileOTPVerified = true;
+            this.isEmailOTPVerified = true;
           } else if (data.isDemoBuyer === true || data.verificationStatus === 'DEMO_BUYER' || data.isDemoPhone === true || isDemoDetected) {
             this.isDemoBuyer = true;
-            this.isEmailOTPVerified = true;
+            this.isEmailOTPVerified = !!data.isEmailVerified;
+            this.isMobileOTPVerified = !!data.isPhoneVerified;
             this.vendorForm.get('organizationPhonenumber')?.enable();
             this.vendorForm.get('companyName')?.enable();
             const currentPhone = this.vendorForm.get('organizationPhonenumber')?.value;
@@ -376,7 +387,7 @@ export class VendorProfileComponent {
       }, () => {
         if (isDemoDetected) {
           this.isDemoBuyer = true;
-          this.isEmailOTPVerified = true;
+          this.isEmailOTPVerified = false;
           this.vendorForm.get('organizationPhonenumber')?.enable();
           this.vendorForm.get('companyName')?.enable();
         }
@@ -495,7 +506,7 @@ export class VendorProfileComponent {
   }
 
   sendEmailOtp() {
-    const email = this.loggedUserName;
+    const email = this.loggedUserName || this.vendorForm.get('email')?.value;
     if (!email) {
       this.toastrService.error('User email not found.', 'Error');
       return;
@@ -514,7 +525,7 @@ export class VendorProfileComponent {
   }
 
   verifyEmailOtp() {
-    const email = this.loggedUserName;
+    const email = this.loggedUserName || this.vendorForm.get('email')?.value;
     const otp = this.emailOtpValue ? this.emailOtpValue.trim() : '';
     if (!otp || otp.length < 4) {
       this.toastrService.error('Please enter a valid OTP.', 'Invalid OTP');
