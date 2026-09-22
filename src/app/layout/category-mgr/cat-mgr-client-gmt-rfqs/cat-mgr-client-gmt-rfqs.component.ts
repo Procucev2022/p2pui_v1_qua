@@ -124,7 +124,7 @@ export class CatMgrClientGmtRfqsComponent implements OnInit, OnDestroy {
             debounceTime(400),
             distinctUntilChanged()
         ).subscribe(() => {
-            this.executeGlobalSearch();
+            this.globalSearch();
         });
     }
 
@@ -147,6 +147,10 @@ export class CatMgrClientGmtRfqsComponent implements OnInit, OnDestroy {
     }
 
     onSearchCriteriaChange() {
+        this.globalSearch();
+    }
+
+    onSearchInput() {
         this.globalSearchSubject.next(this.searchTextValue);
     }
 
@@ -162,10 +166,6 @@ export class CatMgrClientGmtRfqsComponent implements OnInit, OnDestroy {
 
     }
     globalSearch() {
-        this.globalSearchSubject.next(this.searchTextValue);
-    }
-
-    executeGlobalSearch() {
         if(this.searchTextValue && this.searchTextValue.trim() !== '') {
             if (!this.searchBy) {
                 this.toastrService.warning('Please select search criteria', 'Warning');
