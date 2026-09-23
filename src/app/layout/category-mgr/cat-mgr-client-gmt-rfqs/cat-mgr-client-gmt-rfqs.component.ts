@@ -1,4 +1,6 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { EncryDecryService } from 'src/app/shared/services';
 import { RfqService } from '../../vendor/services/rfq.service';
 import { ToastrService } from 'ngx-toastr';
@@ -12,8 +14,9 @@ import { EditRfqByIdModalComponent } from '../../vendor/components/edit-rfq-by-i
     templateUrl: './cat-mgr-client-gmt-rfqs.component.html',
     styleUrls: ['./cat-mgr-client-gmt-rfqs.component.scss']
 })
-export class CatMgrClientGmtRfqsComponent implements OnInit {
+export class CatMgrClientGmtRfqsComponent implements OnInit, OnDestroy {
 
+    private globalSearchSubject = new Subject<string>();
     @ViewChild('raiseQueryRef') raiseQueryRef: any;
     @ViewChild('h1') h1: ElementRef;
     rfqDataList: any = [];
@@ -95,7 +98,7 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
     searchDropdownOptions = [
         { label: 'By RFQ ID', value: 'rfqid' },
         { label: 'By Description', value: 'description' },
-        { label: 'By Vendor Name', value: 'companyname' },
+        { label: 'By Company Name', value: 'companyname' },
         { label: 'By Phone Number', value: 'contactnumber' }
     ];
     searchTextValue: string = '';
@@ -117,6 +120,16 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
         this.intialCall();
         this.isGMTView = localStorage.getItem('system-view') ? this.GMT_VIEWS.includes(localStorage.getItem('system-view')) : false;
 
+        this.globalSearchSubject.pipe(
+            debounceTime(400),
+            distinctUntilChanged()
+        ).subscribe(() => {
+            this.globalSearch();
+        });
+    }
+
+    ngOnDestroy() {
+        this.globalSearchSubject.complete();
     }
 
     intialCall() {
@@ -137,6 +150,10 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
         this.globalSearch();
     }
 
+    onSearchInput() {
+        this.globalSearchSubject.next(this.searchTextValue);
+    }
+
         
     onSearchMode(searchMode: string){
         this.searchCriteria = searchMode;
@@ -152,6 +169,9 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
         if(this.searchTextValue && this.searchTextValue.trim() !== '') {
             if (!this.searchBy) {
                 this.toastrService.warning('Please select search criteria', 'Warning');
+                return;
+            }
+            if (this.searchTextValue.trim().length < 2) {
                 return;
             }
             this.getRFQsByCategoryManagerForGlobalSearch();

@@ -117,7 +117,7 @@
                             <option *ngFor="let option of searchDropdownOptions" [value]="option.value">{{option.label}}</option>
                         </select>
                         <input class="main-input" type="text" pInputText size="50" placeholder="Search Text.."
-                             [(ngModel)]="searchTextValue" (input)="globalSearch()" />
+                             [(ngModel)]="searchTextValue" (input)="onSearchInput()" />
                     </ng-container>
                 </div>
                 <div class="col-sm-6">
