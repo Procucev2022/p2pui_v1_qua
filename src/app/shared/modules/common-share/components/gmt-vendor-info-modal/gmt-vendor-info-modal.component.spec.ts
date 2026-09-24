@@ -4,7 +4,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CreateRfqService } from 'src/app/layout/category-mgr/services/create-rfq.service';
 import { ToastrService } from 'ngx-toastr';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { GmtVendorInfoModalComponent } from './gmt-vendor-info-modal.component';
 import { autoMock, defaultAppConfig, seedComponent, exerciseComponent } from '../../../../../../testing/test-helpers';
 import { APP_CONFIG } from 'src/app/app.config';
@@ -13,6 +13,7 @@ import { MAT_DIALOG_SCROLL_STRATEGY } from '@angular/material/dialog';
 describe('GmtVendorInfoModalComponent', () => {
   let component: GmtVendorInfoModalComponent;
   let fixture: ComponentFixture<GmtVendorInfoModalComponent>;
+  let createRfqService: any;
 
   beforeEach(async () => {
     localStorage.setItem('logData', 'x');
@@ -23,6 +24,10 @@ describe('GmtVendorInfoModalComponent', () => {
     localStorage.setItem('system-view', 'GMT Basic');
     localStorage.setItem('perm', 'x');
 
+    createRfqService = {
+      updateSellerData: jasmine.createSpy('updateSellerData').and.returnValue(of({ status: 'Success' })),
+      updateBuyerData: jasmine.createSpy('updateBuyerData').and.returnValue(of({ status: 'Success' }))
+    };
 
     await TestBed.configureTestingModule({
       declarations: [GmtVendorInfoModalComponent],
@@ -33,7 +38,7 @@ describe('GmtVendorInfoModalComponent', () => {
         DatePipe,
         { provide: MAT_DIALOG_SCROLL_STRATEGY, useValue: () => ({ attach: () => undefined, enable: () => undefined, disable: () => undefined, detach: () => undefined }) },
         FormBuilder,
-        { provide: CreateRfqService, useValue: { updateSellerData: () => of({}), updateBuyerData: () => of({}) } },
+        { provide: CreateRfqService, useValue: createRfqService },
         { provide: ToastrService, useValue: { success: () => {}, error: () => {} } }
       ],
       schemas: [NO_ERRORS_SCHEMA]
@@ -76,7 +81,7 @@ describe('GmtVendorInfoModalComponent', () => {
 
   it('should toggle edit mode and save vendor info', () => {
     component.vendorInfo = { id: 'v1', companyName: 'Old', email: 'test@example.com' };
-    component.selectedVendor = { vendorUuid: 'v1', vendorName: 'Old' };
+    component.selectedVendor = { vendorUuid: 'v1', vendorName: 'Old', companyName: 'Old' };
     component.startEdit();
     expect(component.isEditing).toBeTrue();
     expect(component.editForm.get('companyName')?.value).toBe('Old');
@@ -90,5 +95,121 @@ describe('GmtVendorInfoModalComponent', () => {
     expect(component.isEditing).toBeFalse();
     expect(component.vendorInfo.companyName).toBe('New Company');
     expect(component.selectedVendor.vendorName).toBe('New Company');
+    expect(component.selectedVendor.companyName).toBe('New Company');
+  });
+
+  it('should handle saveVendorInfo validation errors and missing orgId', () => {
+    component.vendorInfo = null;
+    component.selectedVendor = null;
+    component.startEdit();
+    component.editForm.get('companyName')?.setValue('');
+    component.saveVendorInfo();
+    expect(component.isEditing).toBeTrue();
+
+    component.editForm.get('companyName')?.setValue('Valid Name');
+    component.editForm.get('email')?.setValue('valid@example.com');
+    component.saveVendorInfo();
+    expect(component.isEditing).toBeTrue();
+
+    // orgId fallback via selectedVendor.id and null form values
+    component.selectedVendor = { id: 'fallback-id' };
+    component.editForm = {
+      invalid: false,
+      value: { companyName: null, email: null, organizationPhonenumber: null, zipCode: null, city: null }
+    } as any;
+    component.saveVendorInfo();
+    expect(component.isEditing).toBeFalse();
+  });
+
+  it('should handle buyer update and error callbacks in saveVendorInfo', () => {
+    // Test seller error branch
+    component.isVendor = true;
+    component.selectedVendor = { vendorUuid: 'v1', vendorName: 'Seller' };
+    component.vendorInfo = null;
+    component.startEdit();
+    component.editForm.patchValue({
+      companyName: 'Seller Co',
+      email: 'seller@test.com',
+      organizationPhonenumber: '',
+      zipCode: '',
+      city: ''
+    });
+    createRfqService.updateSellerData.and.returnValue(throwError(() => new Error('seller error')));
+    component.saveVendorInfo();
+    expect(component.isSaving).toBeFalse();
+
+    // Test buyer update and buyer error branch
+    component.isVendor = false;
+    component.selectedVendor = { id: 'b1', companyName: 'Buyer Corp' };
+    component.vendorInfo = { id: 'b1', companyName: 'Buyer Corp', email: 'buyer@example.com' };
+    component.startEdit();
+    component.editForm.patchValue({
+      companyName: 'Buyer Updated',
+      email: 'buyer@example.com',
+      organizationPhonenumber: null,
+      zipCode: null,
+      city: null
+    });
+    createRfqService.updateBuyerData.and.returnValue(of({ status: 'Success' }));
+    component.saveVendorInfo();
+    expect(component.isEditing).toBeFalse();
+
+    // Error on buyer
+    createRfqService.updateBuyerData.and.returnValue(throwError(() => new Error('buyer error')));
+    component.startEdit();
+    component.saveVendorInfo();
+    expect(component.isSaving).toBeFalse();
+  });
+
+  it('should cover initForm fallbacks and partial selectedVendor', () => {
+    // initForm with selectedVendor.companyName only
+    component.vendorInfo = null;
+    component.selectedVendor = { companyName: 'Only Company Name' };
+    component.initForm();
+    expect(component.editForm.get('companyName')?.value).toBe('Only Company Name');
+
+    // initForm with empty fallback
+    component.vendorInfo = null;
+    component.selectedVendor = null;
+    component.initForm();
+    expect(component.editForm.get('companyName')?.value).toBe('');
+
+    // saveVendorInfo with only selectedVendor.vendorName
+    createRfqService.updateSellerData.and.returnValue(of({ status: 'Success' }));
+    component.isVendor = true;
+    component.vendorInfo = null;
+    component.selectedVendor = { vendorUuid: 'u1', vendorName: 'VName' };
+    component.startEdit();
+    component.editForm.patchValue({
+      companyName: 'Updated Name',
+      email: 'u@test.com',
+      organizationPhonenumber: '123',
+      zipCode: '10001',
+      city: 'NY'
+    });
+    component.saveVendorInfo();
+    expect(component.selectedVendor.vendorName).toBe('Updated Name');
+
+    // saveVendorInfo with only selectedVendor.companyName
+    component.vendorInfo = null;
+    component.selectedVendor = { vendorUuid: 'u2', companyName: 'CName' };
+    component.startEdit();
+    component.editForm.patchValue({
+      companyName: 'Updated Name 2',
+      email: 'u2@test.com'
+    });
+    component.saveVendorInfo();
+    expect(component.selectedVendor.companyName).toBe('Updated Name 2');
+
+    // saveVendorInfo with no selectedVendor (vendorInfo only)
+    component.vendorInfo = { id: 'v-only', companyName: 'VOnly', email: 'vo@test.com' };
+    component.selectedVendor = null;
+    component.startEdit();
+    component.editForm.patchValue({
+      companyName: 'VOnly Updated',
+      email: 'vo@test.com'
+    });
+    component.saveVendorInfo();
+    expect(component.vendorInfo.companyName).toBe('VOnly Updated');
   });
 });
