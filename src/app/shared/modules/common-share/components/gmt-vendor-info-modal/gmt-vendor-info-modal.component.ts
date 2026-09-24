@@ -55,9 +55,9 @@ export class GmtVendorInfoModalComponent implements OnInit {
             return;
         }
 
-        const orgId = this.vendorInfo?.id || this.selectedVendor?.vendorUuid || this.selectedVendor?.id;
+        const orgId = this.vendorInfo?.id || this.selectedVendor?.companyId || this.selectedVendor?.vendorUuid || this.selectedVendor?.id;
         if (!orgId) {
-            this.toastr.error('Unable to find vendor ID', 'Error');
+            this.toastr.error(`Unable to find ${this.isVendor ? 'vendor' : 'buyer'} ID`, 'Error');
             return;
         }
 

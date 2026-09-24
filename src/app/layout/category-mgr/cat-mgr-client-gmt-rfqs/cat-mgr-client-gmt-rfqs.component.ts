@@ -88,6 +88,7 @@ export class CatMgrClientGmtRfqsComponent implements OnInit, OnDestroy {
     isSendRFQ: boolean = false;
     selectedVendor: any;
     vendorInfo: any;
+    isModalVendor: boolean = true;
     isRFQFORWARD: boolean;
     startPage: number = 0;
     pageSize: number = 100;
@@ -627,7 +628,7 @@ export class CatMgrClientGmtRfqsComponent implements OnInit, OnDestroy {
     }
 
     getVendorInfo(rowData: any, key: string) {
-
+        this.isModalVendor = key !== 'companyId';
         this.selectedVendor = rowData;
         this.rfqservice.getVendorInfoById({ id: rowData[key] }).subscribe((res: any) => {
             if (res) {
@@ -648,11 +649,20 @@ export class CatMgrClientGmtRfqsComponent implements OnInit, OnDestroy {
     onVendorUpdated(updatedData: any) {
         if (this.selectedVendor && updatedData?.companyName) {
             this.selectedVendor.vendorName = updatedData.companyName;
+            this.selectedVendor.companyName = updatedData.companyName;
         }
         if (this.vendorsList && Array.isArray(this.vendorsList) && updatedData?.id) {
             this.vendorsList.forEach((v: any) => {
                 if (v.vendorUuid == updatedData.id || v.id == updatedData.id) {
                     v.vendorName = updatedData.companyName;
+                    v.companyName = updatedData.companyName;
+                }
+            });
+        }
+        if (this.rfqDataList && Array.isArray(this.rfqDataList) && updatedData?.id) {
+            this.rfqDataList.forEach((rfq: any) => {
+                if (rfq.companyId == updatedData.id) {
+                    rfq.companyName = updatedData.companyName;
                 }
             });
         }
