@@ -404,5 +404,5 @@
 
 
 <ng-template #vendorInfoTemplate>
-    <app-gmt-vendor-info-modal [selectedVendor]="selectedVendor" [vendorInfo]="vendorInfo" [isVendor]="true"></app-gmt-vendor-info-modal>
+    <app-gmt-vendor-info-modal [selectedVendor]="selectedVendor" [vendorInfo]="vendorInfo" [isVendor]="isModalVendor" (vendorUpdated)="onVendorUpdated($event)"></app-gmt-vendor-info-modal>
 </ng-template>
