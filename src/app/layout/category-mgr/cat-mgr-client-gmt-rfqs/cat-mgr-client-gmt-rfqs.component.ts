@@ -644,4 +644,17 @@ export class CatMgrClientGmtRfqsComponent implements OnInit, OnDestroy {
             }
         })
     }
+
+    onVendorUpdated(updatedData: any) {
+        if (this.selectedVendor && updatedData?.companyName) {
+            this.selectedVendor.vendorName = updatedData.companyName;
+        }
+        if (this.vendorsList && Array.isArray(this.vendorsList) && updatedData?.id) {
+            this.vendorsList.forEach((v: any) => {
+                if (v.vendorUuid == updatedData.id || v.id == updatedData.id) {
+                    v.vendorName = updatedData.companyName;
+                }
+            });
+        }
+    }
 }

@@ -79,7 +79,7 @@
                                 </span>
                             </td>
                         <td style="width: 8rem;"  >
-                            <span *ngIf="!(rowData.status == 'Accepted' || rowData.status =='Ignored')" style="font-size: 2rem;">
+                            <span *ngIf="!(rowData.status == 'Accepted' || rowData.status == 'Ignored' || rowData.status == 'Ignore')" style="font-size: 2rem;">
                                 <i class="fa fa-check-circle green cursor-pointer mr-2" title="Accept" aria-hidden="true" (click)="onAcceptUserByClient(rowData, true)"></i> 
                                 <i class="fa fa-times-circle-o red cursor-pointer" title="Reject" aria-hidden="true" (click)="onAcceptUserByClient(rowData, false)"></i>
                             </span>
@@ -129,8 +129,8 @@
                     <img class="cursor-pointer" src="/assets/images/new/edit-data.png"  width="28" style="width:28px;margin-right: 10px; margin-left: 10px;" title="Edit User"  (click)="onEditClient(rowData, false)">
                     <img class="cursor-pointer" src="/assets/images/delete.png"  width="28" style="width:28px;margin-right: 10px;" title="Delete User"  (click)="deleteUser(rowData)">
 
-                    <button class=" btn btn-blue"  (click)="onAcceptUserByClient(rowData, true)" [disabled]="rowData.status == 'Accepted' || rowData.status == 'Ignored'" [ngStyle]="{'opacity': rowData.status == 'Accepted' || rowData.status == 'Ignored'? '0.4': '1'}">Accept</button>
-                    <button class=" btn btn-orange"  (click)="onAcceptUserByClient(rowData, false)" [disabled]="rowData.status == 'Accepted' || rowData.status == 'Ignored'" [ngStyle]="{'opacity': rowData.status == 'Accepted' || rowData.status == 'Ignored' ? '0.4': '1'}">Reject</button>
+                    <button class=" btn btn-blue"  (click)="onAcceptUserByClient(rowData, true)" [disabled]="rowData.status == 'Accepted' || rowData.status == 'Ignored' || rowData.status == 'Ignore'" [ngStyle]="{'opacity': (rowData.status == 'Accepted' || rowData.status == 'Ignored' || rowData.status == 'Ignore') ? '0.4' : '1'}">Accept</button>
+                    <button class=" btn btn-orange"  (click)="onAcceptUserByClient(rowData, false)" [disabled]="rowData.status == 'Accepted' || rowData.status == 'Ignored' || rowData.status == 'Ignore'" [ngStyle]="{'opacity': (rowData.status == 'Accepted' || rowData.status == 'Ignored' || rowData.status == 'Ignore') ? '0.4' : '1'}">Reject</button>
                     <span class="crud-icons">
                       </span>
                 </td>

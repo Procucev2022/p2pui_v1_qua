@@ -605,6 +605,12 @@ describe('CatMgrClientGmtRfqsComponent', () => {
     rfqservice.getVendorInfoById.and.returnValue(of(null));
     c.getVendorInfo({ vendorUuid: 'v2' }, 'vendorUuid');
 
+    c.selectedVendor = { vendorName: 'Old' };
+    c.vendorsList = [{ vendorUuid: 'v1', vendorName: 'Old' }];
+    c.onVendorUpdated({ id: 'v1', companyName: 'New' });
+    expect(c.selectedVendor.vendorName).toBe('New');
+    expect(c.vendorsList[0].vendorName).toBe('New');
+
     localStorage.removeItem('system-view');
     try { c.ngOnInit(); } catch (e) { /* ignore */ }
     localStorage.setItem('system-view', 'GMT Basic');

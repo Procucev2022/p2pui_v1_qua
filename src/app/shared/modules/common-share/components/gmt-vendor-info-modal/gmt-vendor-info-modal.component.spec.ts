@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { CreateRfqService } from 'src/app/layout/category-mgr/services/create-rfq.service';
+import { ToastrService } from 'ngx-toastr';
 import { of } from 'rxjs';
 import { GmtVendorInfoModalComponent } from './gmt-vendor-info-modal.component';
 import { autoMock, defaultAppConfig, seedComponent, exerciseComponent } from '../../../../../../testing/test-helpers';
@@ -23,12 +26,15 @@ describe('GmtVendorInfoModalComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [GmtVendorInfoModalComponent],
-      imports: [CommonModule],
+      imports: [CommonModule, ReactiveFormsModule],
       providers: [
         { provide: APP_CONFIG, useValue: defaultAppConfig },
         { provide: ChangeDetectorRef, useValue: autoMock('ChangeDetectorRef') },
         DatePipe,
-        { provide: MAT_DIALOG_SCROLL_STRATEGY, useValue: () => ({ attach: () => undefined, enable: () => undefined, disable: () => undefined, detach: () => undefined }) }
+        { provide: MAT_DIALOG_SCROLL_STRATEGY, useValue: () => ({ attach: () => undefined, enable: () => undefined, disable: () => undefined, detach: () => undefined }) },
+        FormBuilder,
+        { provide: CreateRfqService, useValue: { updateSellerData: () => of({}), updateBuyerData: () => of({}) } },
+        { provide: ToastrService, useValue: { success: () => {}, error: () => {} } }
       ],
       schemas: [NO_ERRORS_SCHEMA]
     })
@@ -66,5 +72,23 @@ describe('GmtVendorInfoModalComponent', () => {
   it('should exercise component API for coverage', () => {
     exerciseComponent(component as any);
     expect(component).toBeTruthy();
+  });
+
+  it('should toggle edit mode and save vendor info', () => {
+    component.vendorInfo = { id: 'v1', companyName: 'Old', email: 'test@example.com' };
+    component.selectedVendor = { vendorUuid: 'v1', vendorName: 'Old' };
+    component.startEdit();
+    expect(component.isEditing).toBeTrue();
+    expect(component.editForm.get('companyName')?.value).toBe('Old');
+
+    component.cancelEdit();
+    expect(component.isEditing).toBeFalse();
+
+    component.startEdit();
+    component.editForm.get('companyName')?.setValue('New Company');
+    component.saveVendorInfo();
+    expect(component.isEditing).toBeFalse();
+    expect(component.vendorInfo.companyName).toBe('New Company');
+    expect(component.selectedVendor.vendorName).toBe('New Company');
   });
 });
