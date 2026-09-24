@@ -105,6 +105,13 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
             this.createRfqService.acceptGMTRegisteredClient({ 'id': rowData.id }).subscribe((res: any) => {
                 if (res && res.status == 'Success') {
                     this.toaster.success(res.message, 'Success');
+                    rowData.status = 'Accepted';
+                    if (rowData.clientStatus) {
+                        rowData.clientStatus.uiDisplay = 'Accepted';
+                        rowData.clientStatus.status = 'USER_ACCEPTED';
+                    } else {
+                        rowData.clientStatus = { uiDisplay: 'Accepted', status: 'USER_ACCEPTED' };
+                    }
                     this.getRegClients();
                 } else {
                     this.toaster.error(res.message, 'Error');
@@ -114,6 +121,13 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
             this.createRfqService.ignoreGMTRegisteredClient({ 'id': rowData.id }).subscribe((res: any) => {
                 if (res && res.status == 'Success') {
                     this.toaster.success(res.message, 'Success');
+                    rowData.status = 'Ignored';
+                    if (rowData.clientStatus) {
+                        rowData.clientStatus.uiDisplay = 'Ignored';
+                        rowData.clientStatus.status = 'USER_IGNORED';
+                    } else {
+                        rowData.clientStatus = { uiDisplay: 'Ignored', status: 'USER_IGNORED' };
+                    }
                     this.getRegClients();
                 } else {
                     this.toaster.error(res.message, 'Error');
@@ -141,7 +155,21 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
 
     getUsersByClient() {
         this.catProcService.getClientUserByClient({ id: this.selectedClientData.id }).subscribe((res: any) => {
-            this.usersList = Array.isArray(res) ? res.map(ele => { return { ...ele, status: ele.clientStatus.uiDisplay } }) : [];
+            this.usersList = Array.isArray(res) ? res.map(ele => {
+                let statusDisplay = '-';
+                if (ele && ele.clientStatus) {
+                    if (ele.clientStatus.uiDisplay) {
+                        statusDisplay = ele.clientStatus.uiDisplay;
+                    } else if (ele.clientStatus.status === 'USER_ACCEPTED') {
+                        statusDisplay = 'Accepted';
+                    } else if (ele.clientStatus.status === 'USER_IGNORED') {
+                        statusDisplay = 'Ignored';
+                    } else {
+                        statusDisplay = ele.clientStatus.status;
+                    }
+                }
+                return { ...ele, status: statusDisplay };
+            }) : [];
             this.isShowChildGrid = true;
         });
     }
@@ -151,11 +179,23 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
             if (res) {
                 this.clientsList = Array.isArray(res) ? res.map(ele => {
                     const phoneNumber = ele.phone || ele.organizationPhonenumber || ele.phoneNumber || '';
+                    let statusDisplay = '-';
+                    if (ele.clientStatus) {
+                        if (ele.clientStatus.uiDisplay) {
+                            statusDisplay = ele.clientStatus.uiDisplay;
+                        } else if (ele.clientStatus.status === 'USER_ACCEPTED') {
+                            statusDisplay = 'Accepted';
+                        } else if (ele.clientStatus.status === 'USER_IGNORED') {
+                            statusDisplay = 'Ignored';
+                        } else {
+                            statusDisplay = ele.clientStatus.status;
+                        }
+                    }
                     return {
                         ...ele,
                         phone: phoneNumber,
                         organizationPhonenumber: phoneNumber,
-                        status: ele.clientStatus ? ele.clientStatus.uiDisplay : '-',
+                        status: statusDisplay,
                         sourceType: ele.sourceType ? (ele.sourceType == 'T' ? 'Web App' : (ele.sourceType == 'W' ? 'WhatsApp' : ele.sourceType)) : 'Web App'
                     };
                 }) : [];
