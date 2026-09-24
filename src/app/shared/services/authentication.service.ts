@@ -99,7 +99,9 @@ export class AuthenticationService {
         if(sysValue== 'gmtName' && (data.role.roleName === 'Vendor' || data.role.roleName ==='Registration'|| data.role.roleName ==='PartialVendor')){
             // if(['53e49cdc-97c3-4479-a20f-625d9d391c4e','44c34e52-c326-447f-a4af-cf611603a6d8'].includes(data.org.id)){ // temp logic for partialVendor
                 localStorage.setItem('system-view', null);
-                const systemView = data.org[sysValue] ? data.org[sysValue].trim('') : null;
+                const systemView = (data.org && data.org[sysValue] && data.org[sysValue].trim() !== '')
+                    ? data.org[sysValue].trim()
+                    : (sysValue === 'gmtName' ? this.SYSTEM_VIEW_CONFIG.GMT_BASIC : null);
 
                 console.log('loggedUserData', data);
                 const obj = Object.assign({}, data);
@@ -188,7 +190,9 @@ export class AuthenticationService {
         //     return true;
         // }
         localStorage.setItem('system-view', null);
-        const systemView = data.org[sysValue] ? data.org[sysValue].trim('') : null;
+        const systemView = (data.org && data.org[sysValue] && data.org[sysValue].trim() !== '')
+            ? data.org[sysValue].trim()
+            : (sysValue === 'gmtName' ? this.SYSTEM_VIEW_CONFIG.GMT_BASIC : (sysValue === 'bfsName' ? this.SYSTEM_VIEW_CONFIG.BFS_PRO : null));
 
         console.log('loggedUserData', data);
         const obj = Object.assign({}, data);
