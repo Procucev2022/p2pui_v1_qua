@@ -170,7 +170,7 @@ export class CatMgrClientGmtRfqsComponent implements OnInit, OnDestroy {
                 this.toastrService.warning('Please select search criteria', 'Warning');
                 return;
             }
-            if (this.searchTextValue.trim().length < 3) {
+            if (this.searchTextValue.trim().length < 2) {
                 return;
             }
             this.getRFQsByCategoryManagerForGlobalSearch();
