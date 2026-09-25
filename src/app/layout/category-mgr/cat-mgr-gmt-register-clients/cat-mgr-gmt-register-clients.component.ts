@@ -112,7 +112,6 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
                     } else {
                         rowData.clientStatus = { uiDisplay: 'Accepted', status: 'USER_ACCEPTED' };
                     }
-                    this.getRegClients();
                 } else {
                     this.toaster.error(res.message, 'Error');
                 }
@@ -128,7 +127,6 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
                     } else {
                         rowData.clientStatus = { uiDisplay: 'Ignored', status: 'USER_IGNORED' };
                     }
-                    this.getRegClients();
                 } else {
                     this.toaster.error(res.message, 'Error');
                 }
