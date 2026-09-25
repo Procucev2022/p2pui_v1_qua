@@ -122,7 +122,7 @@ export class CatMgrClientGmtRfqsComponent implements OnInit, OnDestroy {
         this.isGMTView = localStorage.getItem('system-view') ? this.GMT_VIEWS.includes(localStorage.getItem('system-view')) : false;
 
         this.globalSearchSubject.pipe(
-            debounceTime(400),
+            debounceTime(500),
             distinctUntilChanged()
         ).subscribe(() => {
             this.globalSearch();
@@ -140,11 +140,9 @@ export class CatMgrClientGmtRfqsComponent implements OnInit, OnDestroy {
     }
 
     onPageChange(event) {
-        this.startPage = event.first > 0 ? event.first / event.rows + 1 : 0;
+        this.startPage = Math.floor(event.first / event.rows);
         this.pageSize = event.rows;
-        const pageSize = event.rows * this.startPage <= this.totalRecords ? event.rows :
-            (this.startPage <= 1 ? this.totalRecords - event.rows : this.totalRecords - (this.startPage - 1) * event.rows);
-        this.getRfqsByCategoryManager(this.startPage, pageSize);
+        this.getRfqsByCategoryManager(this.startPage, this.pageSize);
     }
 
     onSearchCriteriaChange() {
