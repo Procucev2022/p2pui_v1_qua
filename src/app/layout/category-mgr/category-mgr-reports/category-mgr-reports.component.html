@@ -20,13 +20,13 @@
 <div class="input-container row"  >
     <div class="col-4 form-group">
         <label>Start Date</label>
-            <p-calendar [(ngModel)]="startDate" [maxDate]="todayDate" placeholder="DD-MM-YYYY" dateFormat="dd-mm-yy" showIcon="true" ></p-calendar>
+            <p-calendar [(ngModel)]="startDate" placeholder="DD-MM-YYYY" dateFormat="dd-mm-yy" showIcon="true" appendTo="body"></p-calendar>
 
     </div>
     <div class="col-4 form-group">
         <label>End Date</label>
             <p-calendar [(ngModel)]="endDate" placeholder="DD-MM-YYYY" dateFormat="dd-mm-yy" showIcon="true" 
-            [minDate]="startDate" [maxDate]="todayDate"></p-calendar>
+            [minDate]="startDate" appendTo="body"></p-calendar>
     </div>
     <div class="col-4 form-group buttonCls">
         <button pButton [disabled]="!selectedSubReportId || !startDate || !endDate" type="button" label="Generate Report" (click)="generateReport()"></button>
