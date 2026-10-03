@@ -68,22 +68,54 @@ export class CategoryMgrReportsComponent {
   onReportSelect(report: any) {
     // Logic to handle report selection
     this.selectedReport = report;
-    this.subReports = report.subReports || [];
-    this.selectedSubReportId = null; // Reset sub-report selection when a new report is selected
+    this.subReports = (report && report.subReports) || [];
+    this.selectedSubReportId = this.subReports.length > 0 ? this.subReports[0].id : null;
     this.isReportExported = false; // Reset export status when a new sub-report is selected
     this.isReportGenerated = false; // Reset report generation status when a new sub-report is selected
     this.isReportGenrateInProgress = false; // Reset report generation started status when a new sub-report is selected
   }
+  formatSelectedDate(date: any): string {
+    if (!date) {
+      return '';
+    }
+    if (date instanceof Date) {
+      return isNaN(date.getTime()) ? '' : (this.datePipe.transform(date, 'yyyy-MM-dd') || '');
+    }
+    if (typeof date === 'string') {
+      const trimmed = date.trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+        return trimmed;
+      }
+      const parts = trimmed.split(/[-/]/);
+      if (parts.length === 3 && parts[0].length === 2 && parts[2].length === 4) {
+        // dd-MM-yyyy -> yyyy-MM-dd
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
+      }
+      const parsed = new Date(trimmed);
+      return isNaN(parsed.getTime()) ? '' : (this.datePipe.transform(parsed, 'yyyy-MM-dd') || '');
+    }
+    const parsed = new Date(date);
+    return isNaN(parsed.getTime()) ? '' : (this.datePipe.transform(parsed, 'yyyy-MM-dd') || '');
+  }
+
   generateReport() {
     if (!(this.selectedSubReportId && this.startDate && this.endDate)) {
       this.toastService.warning('Please select a sub-report and date range to generate the report.');
       return;
     }
 
+    const startDateFormatted = this.formatSelectedDate(this.startDate);
+    const endDateFormatted = this.formatSelectedDate(this.endDate);
+
+    if (!startDateFormatted || !endDateFormatted) {
+      this.toastService.warning('Please select a valid date range to generate the report.');
+      return;
+    }
+
     const reportData = {
       reportId: this.selectedSubReportId,
-      startDate: this.datePipe.transform(new Date(this.startDate), 'yyyy-MM-dd'),
-      endDate: this.datePipe.transform(new Date(this.endDate), 'yyyy-MM-dd'),
+      startDate: startDateFormatted,
+      endDate: endDateFormatted,
     };
     let reportType: any = ''
     switch (this.selectedSubReportId) {
@@ -109,33 +141,48 @@ export class CategoryMgrReportsComponent {
     }
     // Logic to generate the report based on selected report and date range
     console.log('Generating report with data:', reportData);
-    this.createRfqService.getReportData(reportData, reportType).subscribe((response) => {
-      this.reportDataList = response || [];
-      this.isReportGenrateInProgress = true;
+    this.isReportGenrateInProgress = true;
+    this.isReportGenerated = false;
+    this.isReportExported = false;
 
-      if (this.reportDataList && this.reportDataList.length > 0) {
-        setTimeout(() => {
+    this.createRfqService.getReportData(reportData, reportType).subscribe({
+      next: (response) => {
+        this.reportDataList = response || [];
+
+        if (this.reportDataList && this.reportDataList.length > 0) {
+          setTimeout(() => {
+            this.isReportGenerated = true;
+            this.isReportExported = false;
+            this.isReportGenrateInProgress = false;
+            const excelColumnHeaders: string[] = Array.from(
+              new Set(this.reportDataList.flatMap((item: any) => Object.keys(item || {})))
+            );
+            this.exportAsXLSX(excelColumnHeaders);
+          }, 3000);
+        } else {
           this.isReportGenerated = true;
           this.isReportExported = false;
           this.isReportGenrateInProgress = false;
-          const excelColumnHeaders = Object.keys(this.reportDataList[0]);
-          this.exportAsXLSX(excelColumnHeaders);
-        }, 3000);
-      } else {
+        }
 
-        this.isReportGenerated = true;
-        this.isReportExported = false;
+        console.log('Report data received:', this.reportDataList);
+      },
+      error: (error) => {
         this.isReportGenrateInProgress = false;
+        this.isReportGenerated = false;
+        console.error('Error generating report:', error);
+        this.toastService.error('Failed to generate report. Please try again.');
       }
-
-      console.log('Report data received:', this.reportDataList);
     });
 
   }
 
   exportAsXLSX(excelColumnHeaders: string[]): void {
     this.excelData = [];
-    this.reportDataList.forEach((data, i) => {
+    (this.reportDataList || []).forEach((data) => {
+      if (!data) {
+        return;
+      }
       excelColumnHeaders.forEach((header) => {
         if (!data.hasOwnProperty(header)) {
           data[header] = ''; // Add missing property with empty value
