@@ -1,0 +1,21 @@
+<div class="analytics-container p-3">
+  <!-- Analytics Navigation Sub-Header Bar -->
+  <div class="analytics-nav-bar bg-white rounded-lg shadow-sm border mb-4 p-2 d-flex flex-wrap align-items-center justify-content-between">
+    <div class="d-flex flex-wrap gap-2">
+      <a
+        *ngFor="let tab of navTabs"
+        [routerLink]="tab.route"
+        routerLinkActive="active-tab"
+        class="nav-tab-btn btn btn-sm mr-2 mb-1 text-decoration-none"
+      >
+        <i class="fa {{ tab.icon }} mr-1"></i>
+        <span>{{ tab.label }}</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Router Outlet for Child Views -->
+  <div class="analytics-content-wrapper">
+    <router-outlet></router-outlet>
+  </div>
+</div>

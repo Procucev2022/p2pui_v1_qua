@@ -113,6 +113,10 @@ export class ClientRegisterComponent implements OnInit {
             this.toaster.warning("Please enter  email id", 'Warning');
             return false;
         }
+        if(this.clientRegForm.controls.email.errors?.typoDomain){
+            this.toaster.warning("Please enter a valid email domain (check for typos like @gmile.com)", 'Warning');
+            return false;
+        }
         if(this.clientRegForm.controls.email.errors ){
             this.toaster.warning("Please enter valid email id", 'Warning');
             return false;
@@ -132,13 +136,11 @@ export class ClientRegisterComponent implements OnInit {
             this.isOTPSent = true;
             this.isOTPVerified = false;
             const reqPayload = {
-                tempEmail: sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail') : '',
-                tempPhone: sessionStorage.getItem('tempPhone') ? sessionStorage.getItem('tempPhone') : '',
-                "companyName": clientRegForm.companyName,
-                "organizationPhonenumber": clientRegForm.organizationPhonenumber,
-                "email": clientRegForm.email,
-
-
+                tempEmail: '',
+                tempPhone: '',
+                "companyName": clientRegForm.companyName.trim(),
+                "organizationPhonenumber": clientRegForm.organizationPhonenumber.trim(),
+                "email": clientRegForm.email.trim().toLowerCase(),
             }
 
             this.vendorRegSer.sendAllOTPs(reqPayload).subscribe((res: any) => {
@@ -195,16 +197,17 @@ export class ClientRegisterComponent implements OnInit {
             this.toaster.warning("Please enter valid 6digits Mobile OTP", 'Warning');
             return;
         }
-        if (this.clientRegForm.getRawValue().organizationPhonenumber && this.clientRegForm.getRawValue().email && this.clientRegForm.getRawValue().companyName &&
-            this.clientRegForm.getRawValue().emailOtp && this.clientRegForm.getRawValue().mobileOtp) {
+        const rawValues = this.clientRegForm.getRawValue();
+        if (rawValues.organizationPhonenumber && rawValues.email && rawValues.companyName &&
+            rawValues.emailOtp && rawValues.mobileOtp) {
             let obj: any = {
-                "companyName": this.clientRegForm.getRawValue().companyName,
-                "organizationPhonenumber": this.clientRegForm.getRawValue().organizationPhonenumber,
-                "email": this.clientRegForm.getRawValue().email,
-                "emailOtp": this.clientRegForm.value.emailOtp.toString(),
-                "mobileOtp": this.clientRegForm.value.mobileOtp.toString(),
-                "tempEmail": sessionStorage.getItem('tempEMail') ? sessionStorage.getItem('tempEMail') : '',
-                "tempPhone": sessionStorage.getItem('tempPhone') ? sessionStorage.getItem('tempPhone') : '',
+                "companyName": rawValues.companyName.trim(),
+                "organizationPhonenumber": rawValues.organizationPhonenumber.trim(),
+                "email": rawValues.email.trim().toLowerCase(),
+                "emailOtp": this.clientRegForm.value.emailOtp.toString().trim(),
+                "mobileOtp": this.clientRegForm.value.mobileOtp.toString().trim(),
+                "tempEmail": '',
+                "tempPhone": '',
             }
 
             this.vendorRegSer.validateAllOTPs(obj).subscribe((res: any) => {
@@ -364,6 +367,10 @@ export class ClientRegisterComponent implements OnInit {
                 }   
                 return;
             }
+            if(this.clientRegForm.controls['email'].errors?.typoDomain){
+                this.toaster.error('Please enter a valid email domain (check for typos like @gmile.com)', 'Failure'); 
+                return;
+            }
             if(this.clientRegForm.controls['email'].errors){
                 this.toaster.error('Please enter valid Email', 'Failure'); 
                 return;
@@ -387,10 +394,10 @@ export class ClientRegisterComponent implements OnInit {
             // const splitGST = this.clientRegForm.getRawValue().pan.split('');
             // const pan = splitGST.slice(2, splitGST.length-3).join('')
             const requestObject = {
-                'name': regData.name,
-                'companyName': regData.companyName,
-                'organizationPhonenumber': regData.organizationPhonenumber,
-                'email': regData.email,
+                'name': regData.name.trim(),
+                'companyName': regData.companyName.trim(),
+                'organizationPhonenumber': regData.organizationPhonenumber.trim(),
+                'email': regData.email.trim().toLowerCase(),
                 'clientSector': '',
                 'pan': '',
                 'india': regData.india,
@@ -455,9 +462,20 @@ export function tenDigitPhoneNumberValidator(): ValidatorFn {
 
 export function strictEmailValidator(): ValidatorFn {
   const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const TYPO_DOMAINS = [
+    'gmile.com', 'gmai.com', 'gmial.com', 'gamil.com', 'gmal.com',
+    'yaho.com', 'yahooo.com', 'hotmial.com', 'outlok.com', 'redifmail.com'
+  ];
   return (control: AbstractControl): ValidationErrors | null => {
     const value = control.value;
     if (!value) return null;
-    return EMAIL_REGEX.test(value) ? null : { invalidEmail: true };
+    if (!EMAIL_REGEX.test(value)) {
+      return { invalidEmail: true };
+    }
+    const domain = value.substring(value.lastIndexOf('@') + 1).toLowerCase().trim();
+    if (TYPO_DOMAINS.includes(domain)) {
+      return { typoDomain: true, domain };
+    }
+    return null;
   };
 }

@@ -74,8 +74,13 @@ export class ProCpxVendorPPOsComponent implements OnInit, OnChanges {
         }
     }
 
-    onRate(event, rowData) {
-        console.log("eve, row", event, rowData)
+    onRate(event?: any, rowData?: any) {
+        if (!rowData) {
+            return;
+        }
+        if (event && event.value !== undefined) {
+            rowData.rating = event.value;
+        }
     }
 
     editRating(rowData, flag) {

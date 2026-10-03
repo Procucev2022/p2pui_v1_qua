@@ -27,7 +27,10 @@ export class LoginSubscriptionComponent implements OnInit {
 
           if (data) {
             this.data = data;
-            this.data['org'].bfsName = "BFS PRO"
+            if (this.data['org']) {
+              this.data['org'].bfsName = "BFS PRO";
+              this.data['org'].gmtName = (this.data['org'].gmtName && this.data['org'].gmtName.trim()) ? this.data['org'].gmtName.trim() : "GMT Basic";
+            }
 
           }else{
             this.router.navigate(['/login'])

@@ -31,15 +31,35 @@
                
                 <div class="col-5">
                     <input class="main-input" type="text" pInputText size="50" placeholder="Search.."
-                  (input)="onInlineSearch($event.target.value)" *ngIf="searchCriteria != 'Global'" />
+                  (input)="onInlineSearch($event.target.value)" (paste)="onInlineSearch($event.clipboardData?.getData('text') || $event.target.value)" (change)="onInlineSearch($event.target.value)" *ngIf="searchCriteria != 'Global'" />
                   <ng-container *ngIf="searchCriteria == 'Global'"> 
                   <label>Search By:</label>
-                  <select [(ngModel)]="searchBy" class="form-control" style="width: 200px; display: inline-block; margin-left: 10px;" (change)="onSearchCriteriaChanges()">
-                      <option value="" disabled selected>Select Search Criteria</option>
+                  <select [(ngModel)]="searchBy" class="form-control" style="width: 170px; display: inline-block; margin-left: 5px;" (change)="onSearchCriteriaChanges()">
+                      <option value="">Select Search Criteria</option>
                       <option *ngFor="let option of searchDropdownOptions" [value]="option.value">{{option.label}}</option>
                   </select>
-                  <input class="main-input" type="text" pInputText size="50" placeholder="Search Text.."
-                        [(ngModel)]="searchTextValue" (input)="globalSearchs()" />
+                  <input class="main-input ml-2" type="text" pInputText size="40" placeholder="Search Text.."
+                        *ngIf="searchBy !== 'vendorcategory' && searchBy !== 'category'"
+                        [(ngModel)]="searchTextValue" (input)="globalSearchs()" (paste)="onPasteSearch($event)" (change)="globalSearchs()" />
+
+                  <ng-container *ngIf="searchBy === 'vendorcategory' || searchBy === 'category'">
+                    <select [(ngModel)]="selectedCategory" class="form-control ml-2" style="width: 160px; display: inline-block;" (change)="onCategorySelectChange($event.target.value)">
+                      <option value="">Select Category</option>
+                      <option *ngFor="let cat of categoryList" [value]="cat.categoryName || cat.category || cat">{{ cat.categoryName || cat.category || cat }}</option>
+                    </select>
+
+                    <select [(ngModel)]="selectedState" class="form-control ml-2" style="width: 150px; display: inline-block;" [disabled]="!selectedCategory" (change)="onStateSelectChange($event.target.value)">
+                      <option value="">Select State</option>
+                      <option value="ALL">Select All State</option>
+                      <option *ngFor="let st of statesList" [value]="st">{{ st }}</option>
+                    </select>
+
+                    <select [(ngModel)]="selectedCity" class="form-control ml-2" style="width: 140px; display: inline-block;" [disabled]="!selectedState || isLoadingCities" (change)="onDependentCitySelectChange($event.target.value)">
+                      <option value="">Select City</option>
+                      <option value="ALL">Select All City</option>
+                      <option *ngFor="let c of dependentCities" [value]="c">{{ c }}</option>
+                    </select>
+                  </ng-container>
                   
                     </ng-container>
                   </div>
@@ -82,6 +102,12 @@
       </div>
       <div class="col-12">
         <b><em style="color:orange">Note:</em> If you trying to use search filters, already selected vendors will be cleared.</b>
+      </div>
+      <div class="col-12 mt-2" *ngIf="notFoundEmails && notFoundEmails.length > 0">
+        <div class="alert alert-warning" style="margin-bottom: 0;">
+          <strong>Notice:</strong> The following vendor email ID(s) were not found in the database:
+          <span style="font-weight: 600;">{{ notFoundEmails.join(', ') }}</span>
+        </div>
       </div>
       </div>
     </div>
@@ -167,25 +193,31 @@
                       <span style="color:red" *ngIf="vendorCtrls.name.errors?.alphabetOnly && vendorCtrls.name.touched">Enter Valid Name</span>
                   </div>
                   <div class="col-4 mb-1">
-                      <label class="form-label required">GSTIN<span><i>(Format: 88AAAAA8888A8AA)</i></span></label>
+                      <label class="form-label">GSTIN<span><i>(Format: 88AAAAA8888A8AA)</i></span></label>
                       <input class="form-control" formControlName="gstin" placeholder="GSTIN"   />
-                      <span style="color:red" *ngIf="vendorCtrls.gstin.errors?.required && vendorCtrls.gstin.touched">Enter Valid GSTIN</span>
+                      <span style="color:red" *ngIf="vendorCtrls.gstin.invalid && vendorCtrls.gstin.touched">Enter Valid GSTIN</span>
                   </div> 
                   <div class="col-4 mb-1">
                       <label class="form-label required">Products</label>
                       <input class="form-control" formControlName="products" placeholder="Products" />
                       <span style="color:red" *ngIf="vendorCtrls.products.invalid && vendorCtrls.products.touched">Enter Valid Products</span>
                   </div>
-
+                  <div class="col-4 mb-1">
+                      <label class="form-label required">Category</label>
+                      <input class="form-control" list="categoryOptionsModal" formControlName="vendorcategory" placeholder="Search / Select Category" />
+                      <datalist id="categoryOptionsModal">
+                        <option *ngFor="let cat of categoryList" [value]="cat.categoryName || cat.category || cat"></option>
+                      </datalist>
+                      <span style="color:red" *ngIf="vendorCtrls.vendorcategory.invalid && vendorCtrls.vendorcategory.touched">Enter Valid Category</span>
+                  </div>
                   <div class="col-4 mb-1">
                       <label class="form-label required">Pin Code</label>
                       <input class="form-control" formControlName="pinCode" placeholder="Pin Code"  />
                       <span style="color:red" *ngIf="vendorCtrls.pinCode.invalid && vendorCtrls.pinCode.touched">Enter Valid Pin Code</span>
                   </div>
-                  <div class="col-4 mt-3 btn-block btn-group" style="display: flex;align-items: end; ">
+                  <div class="col-12 mt-3 text-right" style="display: flex; justify-content: flex-end; align-items: center; width: 100%;">
                       <button class="btn btn-red" type="reset">Reset</button>
                       <button class="btn btn-blue ml-3" type="submit" [disabled]="!vendorForm.valid" >  Add Vendor</button>
-
                   </div>
                 </div>
               </form>

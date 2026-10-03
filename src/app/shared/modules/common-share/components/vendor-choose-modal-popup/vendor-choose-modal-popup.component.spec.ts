@@ -1,6 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA, ChangeDetectorRef, SimpleChange } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { of, throwError } from 'rxjs';
 import { VendorChooseModalPopupComponent } from './vendor-choose-modal-popup.component';
 import { autoMock, defaultAppConfig, seedComponent } from '../../../../../../testing/test-helpers';
 import { APP_CONFIG } from 'src/app/app.config';
@@ -50,7 +52,7 @@ describe('VendorChooseModalPopupComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [VendorChooseModalPopupComponent],
-      imports: [CommonModule, FormsModule, ReactiveFormsModule],
+      imports: [CommonModule, FormsModule, ReactiveFormsModule, HttpClientTestingModule],
       providers: [
         { provide: APP_CONFIG, useValue: defaultAppConfig },
         { provide: ChangeDetectorRef, useValue: autoMock('ChangeDetectorRef') },
@@ -102,19 +104,23 @@ describe('VendorChooseModalPopupComponent', () => {
     seedComponent(component as any);
   });
 
-  it('should init form and ngOnChanges', () => {
+  it('should init form and ngOnChanges with parentData category', () => {
+    component.parentData = { category: 'IT', vendorHeaders: [{ title: 'H1' }] };
     component.ngOnInit();
     expect(component.roleName).toBe('CategoryManager');
     expect(component.vendorForm).toBeTruthy();
     expect(component.vendorCtrls.companyName).toBeTruthy();
+
+    component.vendorForm.patchValue({ vendorcategory: '' });
     component.ngOnChanges({
       vendorList: new SimpleChange(null, vendors, true),
     });
     expect(component.vendorCartTableHeaders.length).toBe(1);
     expect(component.cache_vendorList.length).toBe(2);
+    expect(component.vendorForm.get('vendorcategory')?.value).toBe('IT');
   });
 
-  it('should inline search and criteria filters', () => {
+  it('should inline search and criteria filters including city', () => {
     component.cache_vendorList = [...vendors];
     component.onInlineSearch('');
     expect(component.vendorList.length).toBe(2);
@@ -124,17 +130,28 @@ describe('VendorChooseModalPopupComponent', () => {
 
     component.cached_vendorList = [...vendors];
     component.searchVendorName = 'Ac';
+    component.searchEmailId = 'a@x.com';
+    component.searchMobileNo = '9876543210';
     component.onSearchCriteriaChange1('vendorName', 'Ac');
     component.onSearchCriteriaChange1('emailId', '');
     component.onSearchCriteriaChange1('emailId', 'a@');
-    component.searchEmailId = 'a@x.com';
     component.onSearchCriteriaChange1('mobile', '');
-    component.searchMobileNo = '987';
     component.onSearchCriteriaChange1('mobile', '987');
     component.onSearchCriteriaChange1('city', '');
+    expect(component.vendorList.length).toBe(1);
     component.onSearchCriteriaChange1('city', 'Hyd');
+    expect(component.vendorList.length).toBe(1);
     component.onSearchCriteriaChange1('other', 'x');
     component.onSearchCriteriaChanges();
+  });
+
+  it('should trigger paste search callback', (done) => {
+    spyOn(component, 'globalSearchs');
+    component.onPasteSearch({} as ClipboardEvent);
+    setTimeout(() => {
+      expect(component.globalSearchs).toHaveBeenCalled();
+      done();
+    }, 100);
   });
 
   it('should add vendors via form and row with duplicate guard', () => {
@@ -148,9 +165,10 @@ describe('VendorChooseModalPopupComponent', () => {
       mobileNo: '9876543210',
       email: 'n@x.com',
       name: 'Name',
-      gstin: 'G',
+      gstin: '',
       products: 'P',
       pinCode: '500001',
+      vendorcategory: 'Cat 1',
     });
     component.onAddVendorsToCart();
     expect(dialogRef.close).toHaveBeenCalled();
@@ -162,6 +180,26 @@ describe('VendorChooseModalPopupComponent', () => {
     component.vendorGridData = { gridValue: [] };
     component.onAddVendor(vendors[0]);
     expect(dialogRef.close).toHaveBeenCalled();
+  });
+
+  it('should validate GSTIN as optional but enforce format if provided', () => {
+    component.ngOnInit();
+    const gstinCtrl = component.vendorForm.get('gstin');
+
+    // Empty GSTIN is valid
+    gstinCtrl.setValue('');
+    expect(gstinCtrl.valid).toBeTrue();
+    expect(gstinCtrl.errors).toBeNull();
+
+    // Valid 15-character GSTIN format is valid
+    gstinCtrl.setValue('27AAPFU0939F1ZV');
+    expect(gstinCtrl.valid).toBeTrue();
+    expect(gstinCtrl.errors).toBeNull();
+
+    // Invalid GSTIN format is invalid
+    gstinCtrl.setValue('invalid-gstin');
+    expect(gstinCtrl.invalid).toBeTrue();
+    expect(gstinCtrl.errors?.invalidGstin).toBeTrue();
   });
 
   it('should addToCart and page/search emitters', () => {
@@ -229,4 +267,199 @@ describe('VendorChooseModalPopupComponent', () => {
     expect(component.validateEmail('ok@test.com')).toBe(true);
     expect(component.validateEmail('nope')).toBe(false);
   });
+
+  it('should cover all null/falsy edge branches', () => {
+    const rfqService: any = (component as any).createRfqService;
+    spyOn(rfqService, 'getGMTCategories').and.returnValue(of(null));
+    component.loadCategories();
+    expect(component.categoryList).toEqual([]);
+
+    component.parentData = null;
+    component.buildVendorForm();
+    component.ngOnChanges({
+      vendorList: new SimpleChange(null, vendors, false),
+    });
+    expect(component.vendorCartTableHeaders).toEqual([]);
+
+    component.cache_vendorList = [
+      { id: 1, name: 'Acme', nullVal: null, numVal: 100 },
+      { id: 2, name: null, boolVal: false },
+    ];
+    component.onInlineSearch('acme');
+    expect(component.vendorList.length).toBe(1);
+
+    component.searchTextValue = '';
+    component.searchBy = 'vendorName';
+    spyOn(component.globalSearch, 'emit');
+    component.globalSearchs();
+    expect(component.globalSearch.emit).toHaveBeenCalledWith({ searchMode: 'vendorName', searchTextValue: '', searchBy: 'vendorName', isBulk: false });
+  });
+
+  it('should handle processMultiValueSearch and processMultiEmailSearch for various delimiters and bulk limits', () => {
+    spyOn(component.globalSearch, 'emit');
+
+    component.searchBy = 'email';
+    component.processMultiValueSearch('');
+    expect(component.globalSearch.emit).toHaveBeenCalledWith({
+      searchMode: 'email',
+      searchTextValue: '',
+      searchBy: 'email',
+      isBulk: false
+    });
+
+    component.processMultiValueSearch('   ');
+    expect(component.searchTextValue).toBe('');
+
+    component.processMultiValueSearch('vendor1@test.com');
+    expect(component.globalSearch.emit).toHaveBeenCalledWith({
+      searchMode: 'email',
+      searchTextValue: 'vendor1@test.com',
+      searchBy: 'email',
+      isBulk: false,
+      totalEntered: 1
+    });
+
+    component.processMultiValueSearch('v1@test.com, v2@test.com; v1@test.com\nv3@test.com v4@test.com');
+    expect(component.searchTextValue).toBe('v1@test.com, v2@test.com, v3@test.com, v4@test.com');
+    expect(component.globalSearch.emit).toHaveBeenCalledWith({
+      searchMode: 'email',
+      searchTextValue: 'v1@test.com, v2@test.com, v3@test.com, v4@test.com',
+      searchBy: 'email',
+      isBulk: true,
+      totalEntered: 4
+    });
+
+    component.searchBy = 'sellerName';
+    component.processMultiValueSearch('Acme Corp, Beta Ltd, Gamma Inc');
+    expect(component.searchTextValue).toBe('Acme Corp, Beta Ltd, Gamma Inc');
+
+    const manyEmails = Array.from({ length: 25 }, (_, i) => `test${i}@domain.com`).join(', ');
+    component.searchBy = 'email';
+    component.processMultiValueSearch(manyEmails);
+    expect(toaster.info).toHaveBeenCalledWith('Limited to maximum 20 items per bulk search.', 'Info');
+    expect(component.searchTextValue.split(', ').length).toBe(20);
+
+    spyOn(component, 'processMultiValueSearch');
+    component.processMultiEmailSearch('a@b.com, c@d.com');
+    expect(component.processMultiValueSearch).toHaveBeenCalledWith('a@b.com, c@d.com');
+  });
+
+  it('should handle category and location cascading changes', () => {
+    spyOn(component.globalSearch, 'emit');
+
+    component.searchBy = 'category';
+    component.selectedCategory = 'Cat1';
+    component.onSearchCriteriaChanges();
+    expect(component.selectedCategory).toBe('');
+    expect(component.selectedState).toBe('');
+    expect(component.selectedCity).toBe('');
+    expect(component.dependentCities).toEqual([]);
+
+    component.searchBy = 'sellerName';
+    spyOn(component, 'globalSearchs');
+    component.onSearchCriteriaChanges();
+    expect(component.globalSearchs).toHaveBeenCalled();
+
+    component.onCategorySelectChange('Electrical');
+    expect(component.selectedCategory).toBe('Electrical');
+    expect(component.searchTextValue).toBe('Electrical');
+
+    component.selectedCategory = '';
+    component.triggerCategorySearch();
+    expect(toaster.warning).toHaveBeenCalledWith('Please select a Category', 'Warning');
+
+    component.selectedCategory = 'Electrical';
+    component.selectedState = 'Maharashtra';
+    component.selectedCity = 'Mumbai';
+    component.triggerCategorySearch();
+    expect(component.globalSearch.emit).toHaveBeenCalledWith({
+      searchMode: 'sellerName',
+      searchTextValue: 'Electrical',
+      searchBy: 'sellerName',
+      state: 'Maharashtra',
+      city: 'Mumbai',
+      isBulk: false
+    });
+
+    component.selectedState = 'ALL';
+    component.selectedCity = 'ALL';
+    component.triggerCategorySearch();
+    expect(component.globalSearch.emit).toHaveBeenCalledWith({
+      searchMode: 'sellerName',
+      searchTextValue: 'Electrical',
+      searchBy: 'sellerName',
+      state: '',
+      city: '',
+      isBulk: false
+    });
+
+    spyOn(component, 'triggerCategorySearch');
+    component.onDependentCitySelectChange('Pune');
+    expect(component.selectedCity).toBe('Pune');
+    expect(component.triggerCategorySearch).toHaveBeenCalled();
+  });
+
+  it('should handle onStateSelectChange with ALL, state map, and getCitiesByVendorCategory', () => {
+    component.selectedCategory = 'Machinery';
+    const rfqService: any = (component as any).createRfqService;
+
+    spyOn(component, 'triggerCategorySearch');
+    component.onStateSelectChange('ALL');
+    expect(component.selectedState).toBe('ALL');
+    expect(component.selectedCity).toBe('ALL');
+    expect(component.triggerCategorySearch).toHaveBeenCalled();
+
+    spyOn(rfqService, 'getCitiesByVendorCategory').and.returnValue(of({ data: ['CustomCity1', 'CustomCity2'] }));
+    component.onStateSelectChange('Karnataka');
+    expect(component.selectedState).toBe('Karnataka');
+    expect(component.dependentCities).toContain('CustomCity1');
+    expect(component.isLoadingCities).toBeFalse();
+
+    rfqService.getCitiesByVendorCategory.and.returnValue(of(['DirectCity']));
+    component.onStateSelectChange('Karnataka');
+    expect(component.dependentCities).toContain('DirectCity');
+
+    rfqService.getCitiesByVendorCategory.and.returnValue(throwError(() => new Error('fail')));
+    component.onStateSelectChange('Karnataka');
+    expect(component.isLoadingCities).toBeFalse();
+  });
+
+  it('should handle globalSearchs and onPasteSearch edge cases', fakeAsync(() => {
+    spyOn(component.globalSearch, 'emit');
+
+    component.searchBy = 'vendorcategory';
+    component.selectedCategory = 'Plumbing';
+    component.globalSearchs();
+    expect(component.globalSearch.emit).toHaveBeenCalledWith(jasmine.objectContaining({
+      searchTextValue: 'Plumbing'
+    }));
+
+    component.searchBy = 'email';
+    component.searchCriteria = 'Global';
+    component.searchTextValue = 'test1@a.com, test2@b.com';
+    spyOn(component, 'processMultiValueSearch');
+    component.globalSearchs();
+    expect(component.processMultiValueSearch).toHaveBeenCalledWith('test1@a.com, test2@b.com');
+
+    const pasteEventWithDelimiters: any = {
+      clipboardData: {
+        getData: (type: string) => 'val1, val2, val3'
+      },
+      preventDefault: jasmine.createSpy('preventDefault')
+    };
+    component.onPasteSearch(pasteEventWithDelimiters);
+    expect(pasteEventWithDelimiters.preventDefault).toHaveBeenCalled();
+    expect(component.processMultiValueSearch).toHaveBeenCalledWith('val1, val2, val3');
+
+    spyOn(component, 'globalSearchs');
+    const pasteEventNormal: any = {
+      clipboardData: {
+        getData: (type: string) => 'simple'
+      },
+      preventDefault: jasmine.createSpy('preventDefault')
+    };
+    component.onPasteSearch(pasteEventNormal);
+    tick(60);
+    expect(component.globalSearchs).toHaveBeenCalled();
+  }));
 });

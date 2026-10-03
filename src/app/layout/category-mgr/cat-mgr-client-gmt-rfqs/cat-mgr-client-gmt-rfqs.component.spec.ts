@@ -493,6 +493,7 @@ describe('CatMgrClientGmtRfqsComponent', () => {
 
     c.searchBy = 'rfqid';
     c.searchTextValue = 'r1';
+    c.searchBy = 'rfqid';
     rfqservice.getAllClientRFQsByGMTForCMandCM2ByGlobalSearch.and.returnValue(
       of({ status: 'Success', data: [{ id: 'r1' }], totalRecords: 1 })
     );
@@ -603,8 +604,21 @@ describe('CatMgrClientGmtRfqsComponent', () => {
     rfqservice.getVendorInfoById.and.returnValue(of({ id: 'info' }));
     c.vendorInfoTemplate = {};
     c.getVendorInfo({ vendorUuid: 'v1' }, 'vendorUuid');
+    expect(c.isModalVendor).toBeTrue();
+    c.getVendorInfo({ companyId: 'c1' }, 'companyId');
+    expect(c.isModalVendor).toBeFalse();
     rfqservice.getVendorInfoById.and.returnValue(of(null));
     c.getVendorInfo({ vendorUuid: 'v2' }, 'vendorUuid');
+
+    c.selectedVendor = { vendorName: 'Old', companyName: 'Old' };
+    c.vendorsList = [{ vendorUuid: 'v1', vendorName: 'Old' }];
+    c.rfqDataList = [{ companyId: 'v1', companyName: 'Old' }];
+    c.onVendorUpdated({ id: 'v1', companyName: 'New' });
+    expect(c.selectedVendor.vendorName).toBe('New');
+    expect(c.selectedVendor.companyName).toBe('New');
+    expect(c.vendorsList[0].vendorName).toBe('New');
+    expect(c.vendorsList[0].companyName).toBe('New');
+    expect(c.rfqDataList[0].companyName).toBe('New');
 
     localStorage.removeItem('system-view');
     try { c.ngOnInit(); } catch (e) { /* ignore */ }

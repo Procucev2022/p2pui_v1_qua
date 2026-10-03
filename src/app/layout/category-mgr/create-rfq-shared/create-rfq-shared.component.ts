@@ -14,6 +14,7 @@ import { ViewRFQByIdModalComponent } from '../../vendor/components/view-rfq-by-i
 import { RfqService } from '../../vendor/services/rfq.service';
 import { CatProcuRequestsService } from '../services';
 import { CreateRfqService } from '../services/create-rfq.service';
+import { BulkVendorSelectionModalComponent } from 'src/app/shared/modules/common-share/components/bulk-vendor-selection-modal/bulk-vendor-selection-modal.component';
 
 @Component({
   selector: 'app-create-rfq-shared',
@@ -171,11 +172,13 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
         { label: 'By Email', value: 'email' },
         { label: 'By City', value: 'city' },
         { label: 'By Vendor Name', value: 'sellerName' },
-        { label: 'By Phone Number', value: 'mobileNumber' }
+        { label: 'By Phone Number', value: 'mobileNumber' },
+        { label: 'By Category', value: 'vendorcategory' }
     ];
     searchTextValue: string = '';
     
     searchBy: any = '';
+    notFoundEmails: string[] = [];
 
     @Input() rfqDetails: any;
     @Output() onCloseRFQForwardScreen = new EventEmitter();
@@ -360,7 +363,11 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
         this.pageSize = event.rows;
         const pageSize = event.rows * this.startPage <= this.totalRecords ? event.rows :
             (this.startPage <= 1 ? this.totalRecords - event.rows : this.totalRecords - (this.startPage - 1) * event.rows);
-        this.getVendorList(this.startPage, this.pageSize);
+        if (this.searchCriteria === 'Global' && this.searchTextValue && this.searchTextValue.trim() !== '') {
+            this.getVendorsListBySearch({ searchBy: this.searchBy, searchTextValue: this.searchTextValue });
+        } else {
+            this.getVendorList(this.startPage, this.pageSize);
+        }
     }
 
     onSearchCriteriaChange() {
@@ -382,25 +389,65 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
     globalSearch(event:any) {
         const searchText = event?.searchTextValue !== undefined ? event.searchTextValue : this.searchTextValue;
         const searchBy = event?.searchBy !== undefined ? event.searchBy : this.searchBy;
+        const city = event?.city !== undefined ? event.city : '';
+        const state = event?.state !== undefined ? event.state : '';
+        this.searchBy = searchBy;
+        this.searchTextValue = searchText;
         if(searchText && searchText.trim() !== '') {
             if (!searchBy) {
                 this.toaster.warning('Please select search criteria', 'Warning');
                 return;
             }
-            this.getVendorsListBySearch({ searchBy: searchBy, searchTextValue: searchText });
+            this.getVendorsListBySearch({ searchBy: searchBy, searchTextValue: searchText, city: city, state: state, isBulk: event?.isBulk, totalEntered: event?.totalEntered });
         } else {
+            this.notFoundEmails = [];
             this.getVendorList(this.startPage, this.pageSize);
         }
     }
 
     getVendorsListBySearch(event:any){
-        this.createRFQService.getAllVendorsBySearchCriteria(event.searchBy, event.searchTextValue).subscribe((res: any) => {
-            if (Array.isArray(res.data)) {
-                this.vendorListObjs = res.data;
-                this.vendorList = res.data //res.map(ele => ele.companyName);
-                this.totalRecords = res.totalRecords;
+        this.createRFQService.getAllVendorsBySearchCriteria(event.searchBy, event.searchTextValue, event.city, event.state).subscribe((res: any) => {
+            if (res) {
+                if (Array.isArray(res.data)) {
+                    this.vendorListObjs = res.data;
+                    this.vendorList = res.data;
+                    this.totalRecords = res.totalRecords || res.data.length;
+                } else {
+                    this.vendorListObjs = [];
+                    this.vendorList = [];
+                    this.totalRecords = 0;
+                }
+                this.notFoundEmails = Array.isArray(res.notFoundEmails) ? res.notFoundEmails : [];
+                const notFoundItems = Array.isArray(res.notFoundItems) ? res.notFoundItems : this.notFoundEmails;
+                const totalEntered = res.totalEntered || event.totalEntered || (event.searchTextValue ? event.searchTextValue.split(/[\r\n,;]+/).filter((t: string) => t.trim()).length : 0);
+
+                const isBulkSearch = event.isBulk || totalEntered > 1 || (event.searchTextValue && (event.searchTextValue.includes(',') || event.searchTextValue.includes('\n') || event.searchTextValue.includes(';')));
+
+                if (isBulkSearch) {
+                    this.openBulkVendorSelectionModal(this.vendorList, totalEntered, notFoundItems);
+                }
             }
-        })
+        });
+    }
+
+    openBulkVendorSelectionModal(vendorList: any[], totalEntered: number, notFoundItems: string[]) {
+        const existingCartVendorIds = (this.vendorGridData?.gridValue || []).map((v: any) => v.id);
+        const dialogRef = this.dialog.open(BulkVendorSelectionModalComponent, {
+            width: '850px',
+            data: {
+                vendorList: vendorList,
+                totalEntered: totalEntered,
+                notFoundItems: notFoundItems,
+                existingCartVendorIds: existingCartVendorIds
+            }
+        });
+
+        dialogRef.afterClosed().subscribe((result: any) => {
+            if (result && result.action === 'addVendors' && Array.isArray(result.selectedVendors)) {
+                this.onAddNewVendor(result.selectedVendors);
+                this.toaster.success(`${result.selectedVendors.length} vendor(s) added to cart successfully.`, 'Success');
+            }
+        });
     }
 
     onSendRFQ(rowData: any) {
@@ -816,7 +863,7 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
                     "companyName": item.companyName,
                     "organizationPhonenumber": item.mobileNo,
                     "email": item.email, 
-                    "vendorcategory": null,
+                    "vendorcategory": item.vendorcategory ? item.vendorcategory : (item.category ? item.category : null),
                     "subCategory": null,
                     "requestType": this.isRFQFORWARD ? 'Forward' : 'Invite',
                     "gstin": item.gstin? item.gstin: null,
@@ -949,7 +996,9 @@ export class CreateRFQSharedComponent implements OnInit , OnChanges {
                 }else{
                    if(this.vendorGridData.gridValue.findIndex(ele => ele.companyName == event[0].companyName) == -1){
                        this.vendorGridData.gridValue.push({companyName: event[0].companyName, email: event[0].email, mobileNo: event[0].mobileNo, city: event[0].city,
-                        name: event[0].name, gstin: event[0].gstin, pinCode: event[0].pinCode, products: event[0].products, id: 'MANUALENTRYID_' + new Date().getTime()});
+                        name: event[0].name, gstin: event[0].gstin, pinCode: event[0].pinCode, products: event[0].products,
+                        vendorcategory: event[0].vendorcategory || event[0].category || this.selectedRFQData?.category || '',
+                        id: 'MANUALENTRYID_' + new Date().getTime()});
                    }else{
                         this.toaster.warning("Already this vendor added to Cart, Pls Check!", 'Warning');
                         return;

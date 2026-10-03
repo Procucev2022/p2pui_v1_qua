@@ -2210,5 +2210,100 @@ describe('CreateRFQSharedComponent', () => {
     } catch (e) { /* keep suite green */ }
   });
 
+  it('should cover global search with location, bulk search, and bulk vendor selection modal', () => {
+    const createService = TestBed.inject(CreateRfqService) as any;
+    const dialog = TestBed.inject(MatDialog) as any;
+    const toaster = (component as any).toaster;
+
+    // 1. onPageChange with Global criteria and searchTextValue
+    createService.getAllVendorsBySearchCriteria.and.returnValue(of({
+      data: [{ id: 'v1', name: 'Vendor 1' }, { id: 'v2', name: 'Vendor 2' }],
+      totalRecords: 2,
+      notFoundItems: ['missing@test.com'],
+      totalEntered: 3
+    }));
+
+    component.searchCriteria = 'Global';
+    component.searchTextValue = 'vendor1';
+    component.searchBy = 'sellerName';
+    const searchSpy = spyOn(component, 'getVendorsListBySearch').and.callThrough();
+    component.onPageChange({ first: 10, rows: 10 });
+    expect(searchSpy).toHaveBeenCalledWith({
+      searchBy: 'sellerName',
+      searchTextValue: 'vendor1'
+    });
+
+    // onPageChange with Inline or empty search
+    component.searchTextValue = '';
+    spyOn(component, 'getVendorList');
+    component.onPageChange({ first: 0, rows: 10 });
+    expect(component.getVendorList).toHaveBeenCalled();
+
+    // 2. globalSearch with city, state, isBulk
+    spyOn(component, 'openBulkVendorSelectionModal');
+    component.globalSearch({
+      searchBy: 'category',
+      searchTextValue: 'Machinery',
+      city: 'Mumbai',
+      state: 'Maharashtra',
+      isBulk: true,
+      totalEntered: 3
+    });
+
+    expect(createService.getAllVendorsBySearchCriteria).toHaveBeenCalledWith(
+      'category', 'Machinery', 'Mumbai', 'Maharashtra'
+    );
+    expect(component.openBulkVendorSelectionModal).toHaveBeenCalledWith(
+      jasmine.any(Array), 3, ['missing@test.com']
+    );
+
+    // globalSearch without searchBy warning
+    component.searchBy = '';
+    component.globalSearch({ searchBy: '', searchTextValue: 'abc' });
+    expect(toaster.warning).toHaveBeenCalledWith('Please select search criteria', 'Warning');
+
+    // globalSearch with empty searchText resets to getVendorList
+    component.globalSearch({ searchBy: 'category', searchTextValue: '' });
+    expect(component.getVendorList).toHaveBeenCalled();
+
+    // 3. getVendorsListBySearch non-array res.data and notFoundEmails fallback
+    createService.getAllVendorsBySearchCriteria.and.returnValue(of({
+      data: null,
+      notFoundEmails: ['nf@email.com']
+    }));
+    (component.openBulkVendorSelectionModal as jasmine.Spy).calls.reset();
+    component.getVendorsListBySearch({
+      searchBy: 'email',
+      searchTextValue: 'v1@test.com, v2@test.com',
+      isBulk: false
+    });
+    expect(component.vendorList).toEqual([]);
+    expect(component.totalRecords).toBe(0);
+    expect(component.openBulkVendorSelectionModal).toHaveBeenCalledWith([], 2, ['nf@email.com']);
+
+    // 4. openBulkVendorSelectionModal with modal actions
+    (component.openBulkVendorSelectionModal as jasmine.Spy).and.callThrough();
+    const afterClosedSubject = of({
+      action: 'addVendors',
+      selectedVendors: [{ id: 'v1', name: 'Vendor 1' }]
+    });
+    dialog.open.and.returnValue({
+      afterClosed: () => afterClosedSubject
+    });
+    spyOn(component, 'onAddNewVendor');
+
+    component.vendorGridData = { gridValue: [{ id: 'existing1' }] } as any;
+    component.openBulkVendorSelectionModal([{ id: 'v1' }], 1, []);
+    expect(dialog.open).toHaveBeenCalled();
+    expect(component.onAddNewVendor).toHaveBeenCalledWith([{ id: 'v1', name: 'Vendor 1' }]);
+    expect(toaster.success).toHaveBeenCalledWith('1 vendor(s) added to cart successfully.', 'Success');
+
+    // Dialog cancelled / non-addVendors action
+    dialog.open.and.returnValue({
+      afterClosed: () => of({ action: 'cancel' })
+    });
+    component.openBulkVendorSelectionModal([{ id: 'v1' }], 1, []);
+  });
+
 });
 

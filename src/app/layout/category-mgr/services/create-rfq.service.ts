@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
 import { AppApiConfig } from 'src/app/shared/constants/app-api.config';
 import { EncryDecryService } from 'src/app/shared/services';
 
@@ -37,23 +38,26 @@ export class CreateRfqService {
         return this.httpService.get(AppApiConfig.apiEndpoint + AppApiConfig.GET_ALL_VENDORS_BY_PAGINATION+ `?page=${page}&size=${size}`);
     }
 
-     getAllVendorsBySearchCriteria(searchType, searchValue) {
-    if(searchValue){
-                searchValue = encodeURIComponent(searchValue);
-            }
-            if(searchType){
-                searchType = encodeURIComponent(searchType);
-            }
-        
-            // add params only when they are present
+     getAllVendorsBySearchCriteria(searchType, searchValue, city?: string, state?: string) {
             const params: any = {};
             if (searchValue) {
-                params.searchValue = searchValue;
+                params.searchValue = searchValue.trim();
             }
             if (searchType) {
-                params.searchType = searchType;
+                params.searchType = searchType.trim();
+            }
+            if (city && city.trim() !== '') {
+                params.city = city.trim();
+            }
+            if (state && state.trim() !== '') {
+                params.state = state.trim();
             }
         return this.httpService.get(AppApiConfig.apiEndpoint + AppApiConfig.GET_ALL_VENDORS_BY_SEARCH_CRITERIA, {params})
+    }
+
+    getCitiesByVendorCategory(category: string): Observable<any> {
+        const params: any = { category: category ? category.trim() : '' };
+        return this.httpService.get(AppApiConfig.apiEndpoint + AppApiConfig.GET_CITIES_BY_VENDOR_CATEGORY, {params});
     }
 
     sendRFQ(req: any): Observable<any> {
@@ -134,12 +138,21 @@ export class CreateRfqService {
         return this.httpService.post(AppApiConfig.apiEndpoint + AppApiConfig.ACCEPT_AND_SAVE_RFQ_BY_CM, rowData, {})
     }
 
-    getGMTDivisions() {
-        return this.httpService.get(AppApiConfig.apiEndpoint + AppApiConfig.GET_ALL_DIVISIONS_GMT, {})
+    private divisionsCache$: Observable<any> | null = null;
+    private categoriesCache$: Observable<any> | null = null;
+
+    getGMTDivisions(): Observable<any> {
+        if (!this.divisionsCache$) {
+            this.divisionsCache$ = this.httpService.get(AppApiConfig.apiEndpoint + AppApiConfig.GET_ALL_DIVISIONS_GMT, {}).pipe(shareReplay(1));
+        }
+        return this.divisionsCache$;
     }
 
-    getGMTCategories() {
-        return this.httpService.get(AppApiConfig.apiEndpoint + AppApiConfig.GET_ALL_CATEGORIES_GMT, {})
+    getGMTCategories(): Observable<any> {
+        if (!this.categoriesCache$) {
+            this.categoriesCache$ = this.httpService.get(AppApiConfig.apiEndpoint + AppApiConfig.GET_ALL_CATEGORIES_GMT, {}).pipe(shareReplay(1));
+        }
+        return this.categoriesCache$;
     }
 
     getGMTCategoriesByDivision(data: any) {

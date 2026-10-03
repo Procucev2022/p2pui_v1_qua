@@ -1,4 +1,6 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { EncryDecryService } from 'src/app/shared/services';
 import { RfqService } from '../../vendor/services/rfq.service';
 import { ToastrService } from 'ngx-toastr';
@@ -12,8 +14,9 @@ import { EditRfqByIdModalComponent } from '../../vendor/components/edit-rfq-by-i
     templateUrl: './cat-mgr-client-gmt-rfqs.component.html',
     styleUrls: ['./cat-mgr-client-gmt-rfqs.component.scss']
 })
-export class CatMgrClientGmtRfqsComponent implements OnInit {
+export class CatMgrClientGmtRfqsComponent implements OnInit, OnDestroy {
 
+    private globalSearchSubject = new Subject<string>();
     @ViewChild('raiseQueryRef') raiseQueryRef: any;
     @ViewChild('h1') h1: ElementRef;
     rfqDataList: any = [];
@@ -85,6 +88,7 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
     isSendRFQ: boolean = false;
     selectedVendor: any;
     vendorInfo: any;
+    isModalVendor: boolean = true;
     isRFQFORWARD: boolean;
     startPage: number = 0;
     pageSize: number = 100;
@@ -95,7 +99,7 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
     searchDropdownOptions = [
         { label: 'By RFQ ID', value: 'rfqid' },
         { label: 'By Description', value: 'description' },
-        { label: 'By Vendor Name', value: 'companyname' },
+        { label: 'By Company Name', value: 'companyname' },
         { label: 'By Phone Number', value: 'contactnumber' }
     ];
     searchTextValue: string = '';
@@ -117,6 +121,16 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
         this.intialCall();
         this.isGMTView = localStorage.getItem('system-view') ? this.GMT_VIEWS.includes(localStorage.getItem('system-view')) : false;
 
+        this.globalSearchSubject.pipe(
+            debounceTime(500),
+            distinctUntilChanged()
+        ).subscribe(() => {
+            this.globalSearch();
+        });
+    }
+
+    ngOnDestroy() {
+        this.globalSearchSubject.complete();
     }
 
     intialCall() {
@@ -126,15 +140,17 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
     }
 
     onPageChange(event) {
-        this.startPage = event.first > 0 ? event.first / event.rows + 1 : 0;
+        this.startPage = Math.floor(event.first / event.rows);
         this.pageSize = event.rows;
-        const pageSize = event.rows * this.startPage <= this.totalRecords ? event.rows :
-            (this.startPage <= 1 ? this.totalRecords - event.rows : this.totalRecords - (this.startPage - 1) * event.rows);
-        this.getRfqsByCategoryManager(this.startPage, pageSize);
+        this.getRfqsByCategoryManager(this.startPage, this.pageSize);
     }
 
     onSearchCriteriaChange() {
         this.globalSearch();
+    }
+
+    onSearchInput() {
+        this.globalSearchSubject.next(this.searchTextValue);
     }
 
         
@@ -152,6 +168,9 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
         if(this.searchTextValue && this.searchTextValue.trim() !== '') {
             if (!this.searchBy) {
                 this.toastrService.warning('Please select search criteria', 'Warning');
+                return;
+            }
+            if (this.searchTextValue.trim().length < 2) {
                 return;
             }
             this.getRFQsByCategoryManagerForGlobalSearch();
@@ -607,7 +626,7 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
     }
 
     getVendorInfo(rowData: any, key: string) {
-
+        this.isModalVendor = key !== 'companyId';
         this.selectedVendor = rowData;
         this.rfqservice.getVendorInfoById({ id: rowData[key] }).subscribe((res: any) => {
             if (res) {
@@ -623,5 +642,27 @@ export class CatMgrClientGmtRfqsComponent implements OnInit {
                 })
             }
         })
+    }
+
+    onVendorUpdated(updatedData: any) {
+        if (this.selectedVendor && updatedData?.companyName) {
+            this.selectedVendor.vendorName = updatedData.companyName;
+            this.selectedVendor.companyName = updatedData.companyName;
+        }
+        if (this.vendorsList && Array.isArray(this.vendorsList) && updatedData?.id) {
+            this.vendorsList.forEach((v: any) => {
+                if (v.vendorUuid == updatedData.id || v.id == updatedData.id) {
+                    v.vendorName = updatedData.companyName;
+                    v.companyName = updatedData.companyName;
+                }
+            });
+        }
+        if (this.rfqDataList && Array.isArray(this.rfqDataList) && updatedData?.id) {
+            this.rfqDataList.forEach((rfq: any) => {
+                if (rfq.companyId == updatedData.id) {
+                    rfq.companyName = updatedData.companyName;
+                }
+            });
+        }
     }
 }

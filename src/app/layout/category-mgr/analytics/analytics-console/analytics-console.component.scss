@@ -1,0 +1,101 @@
+.company-list-body {
+  max-height: 650px;
+  overflow-y: auto;
+}
+
+.company-list-item {
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: #f8fbff;
+  }
+
+  &.active-item {
+    background-color: #e8f1fd;
+    border-left: 4px solid #0058be;
+  }
+}
+
+/* WhatsApp Day-wise Chat Window */
+.whatsapp-chat-container {
+  height: 380px;
+  overflow-y: auto;
+  background-color: #efeae2;
+  background-image: radial-gradient(#d1d7db 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.day-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin: 1.25rem 0;
+
+  .day-badge {
+    background-color: #ffffff;
+    color: #54656f;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(11, 20, 26, 0.15);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+}
+
+.chat-bubble {
+  max-width: 75%;
+  border-radius: 8px;
+  position: relative;
+  box-shadow: 0 1px 1.5px rgba(11, 20, 26, 0.13);
+
+  &.chat-bubble-user {
+    background-color: #d9fdd3;
+    color: #111b21;
+    border-top-right-radius: 0;
+  }
+
+  &.chat-bubble-agent {
+    background-color: #ffffff;
+    color: #111b21;
+    border-top-left-radius: 0;
+  }
+}
+
+.bg-success-soft {
+  background-color: #e6f4ea;
+  border: 1px solid #ceead6;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.tiny {
+  font-size: 10px;
+}
+
+.console-nav-tabs {
+  border-bottom: 2px solid #e9ecef;
+  .nav-link {
+    border: none;
+    color: #6c757d;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover {
+      color: #0058be;
+    }
+
+    &.active {
+      color: #0058be;
+      border-bottom: 3px solid #0058be;
+      background: transparent;
+    }
+  }
+}

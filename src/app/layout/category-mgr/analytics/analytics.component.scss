@@ -1,0 +1,32 @@
+.analytics-container {
+  background-color: #f7f9fb;
+  min-height: calc(100vh - 80px);
+}
+
+.analytics-nav-bar {
+  border: 1px solid #e0e3e5;
+  border-radius: 10px;
+}
+
+.nav-tab-btn {
+  color: #45464d;
+  background-color: #f2f4f6;
+  border: 1px solid #d8dadc;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: #e6e8ea;
+    color: #191c1e;
+  }
+
+  &.active-tab {
+    background-color: #0058be !important;
+    color: #ffffff !important;
+    border-color: #0058be !important;
+    box-shadow: 0 2px 6px rgba(0, 88, 190, 0.25);
+  }
+}

@@ -117,7 +117,7 @@
                             <option *ngFor="let option of searchDropdownOptions" [value]="option.value">{{option.label}}</option>
                         </select>
                         <input class="main-input" type="text" pInputText size="50" placeholder="Search Text.."
-                             [(ngModel)]="searchTextValue" (input)="globalSearch()" />
+                             [(ngModel)]="searchTextValue" (input)="onSearchInput()" />
                     </ng-container>
                 </div>
                 <div class="col-sm-6">
@@ -404,5 +404,5 @@
 
 
 <ng-template #vendorInfoTemplate>
-    <app-gmt-vendor-info-modal [selectedVendor]="selectedVendor" [vendorInfo]="vendorInfo" [isVendor]="true"></app-gmt-vendor-info-modal>
+    <app-gmt-vendor-info-modal [selectedVendor]="selectedVendor" [vendorInfo]="vendorInfo" [isVendor]="isModalVendor" (vendorUpdated)="onVendorUpdated($event)"></app-gmt-vendor-info-modal>
 </ng-template>

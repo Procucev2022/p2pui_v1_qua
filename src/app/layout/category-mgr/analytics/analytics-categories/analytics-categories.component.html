@@ -1,0 +1,255 @@
+<div class="categories-view position-relative">
+  <!-- Header -->
+  <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 gap-2">
+    <div>
+      <h3 class="font-weight-bold text-dark mb-1">Category Analysis</h3>
+      <p class="text-muted small mb-0">Monitor high-level procurement categories and drill down for specific RFQ insights from MySQL database.</p>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <button (click)="exportData()" class="btn btn-sm btn-primary">
+        <i class="fa fa-download mr-1"></i> Export Data
+      </button>
+    </div>
+  </div>
+
+  <!-- 4 KPI Cards -->
+  <div class="row mb-4">
+    <!-- Total Categories -->
+    <div class="col-md-3 mb-3">
+      <div class="card p-3 shadow-sm border-0 h-100 d-flex flex-row justify-content-between align-items-center">
+        <div>
+          <span class="text-muted small font-weight-bold text-uppercase">Total Categories</span>
+          <h3 class="font-weight-bold text-dark my-1">{{ stats.totalCategories | number }}</h3>
+          <span class="text-primary small font-weight-bold">Active in DB</span>
+        </div>
+        <div class="icon-box bg-primary-soft text-primary">
+          <i class="fa fa-th-large"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Buyers -->
+    <div class="col-md-3 mb-3">
+      <div class="card p-3 shadow-sm border-0 h-100 d-flex flex-row justify-content-between align-items-center">
+        <div>
+          <span class="text-muted small font-weight-bold text-uppercase">Active Buyers</span>
+          <h3 class="font-weight-bold text-dark my-1">{{ stats.activeBuyers | number }}</h3>
+          <span class="text-primary small font-weight-bold">Enterprise accounts</span>
+        </div>
+        <div class="icon-box bg-primary-soft text-primary">
+          <i class="fa fa-users"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Registered Sellers -->
+    <div class="col-md-3 mb-3">
+      <div class="card p-3 shadow-sm border-0 h-100 d-flex flex-row justify-content-between align-items-center">
+        <div>
+          <span class="text-muted small font-weight-bold text-uppercase">Registered Sellers</span>
+          <h3 class="font-weight-bold text-dark my-1">{{ stats.registeredSellers | number }}</h3>
+          <span class="text-muted small font-weight-bold">— Verified suppliers</span>
+        </div>
+        <div class="icon-box bg-primary-soft text-primary">
+          <i class="fa fa-building"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Open RFQs -->
+    <div class="col-md-3 mb-3">
+      <div class="card p-3 shadow-sm border-0 h-100 d-flex flex-row justify-content-between align-items-center border-left-danger">
+        <div>
+          <span class="text-muted small font-weight-bold text-uppercase">Open RFQs</span>
+          <h3 class="font-weight-bold text-dark my-1">{{ stats.openRfqs | number }}</h3>
+          <span class="text-danger small font-weight-bold">
+            <i class="fa fa-exclamation-triangle mr-1"></i>Active Bidding in DB
+          </span>
+        </div>
+        <div class="icon-box bg-danger-soft text-danger">
+          <i class="fa fa-file-text"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categories Table Card -->
+  <div class="card shadow-sm border-0 overflow-hidden mb-4">
+    <div class="card-header bg-white border-bottom p-3 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+      <div>
+        <h5 class="font-weight-bold mb-0">Top-Level Categories</h5>
+        <span class="text-muted small">Select any category to open the detailed subcategory drill-down.</span>
+      </div>
+      <div class="w-auto">
+        <input
+          [(ngModel)]="searchQuery"
+          (ngModelChange)="currentPage = 1"
+          type="text"
+          placeholder="Search categories..."
+          class="form-control form-control-sm"
+        />
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="thead-light">
+          <tr class="small text-muted text-uppercase">
+            <th>Category Name</th>
+            <th class="text-right">Buyers</th>
+            <th class="text-right">Sellers</th>
+            <th class="text-right">Active RFQs</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cat of displayedCategories" (click)="openDrawer(cat)" (keydown.enter)="openDrawer(cat)" (keydown.space)="$event.preventDefault(); openDrawer(cat)" tabindex="0" class="cursor-pointer" [class.table-active]="selectedCategory?.id === cat.id && isDrawerOpen">
+            <td>
+              <div class="d-flex align-items-center">
+                <div class="cat-icon-badge mr-2">
+                  <i class="fa fa-cube text-primary"></i>
+                </div>
+                <div>
+                  <div class="font-weight-bold text-dark">{{ cat.name }}</div>
+                  <small class="text-muted text-truncate d-block" style="max-width: 320px;">{{ cat.subDescription }}</small>
+                </div>
+              </div>
+            </td>
+            <td class="text-right font-weight-bold text-dark">{{ cat.buyers | number }}</td>
+            <td class="text-right font-weight-bold text-dark">{{ cat.sellers | number }}</td>
+            <td class="text-right font-weight-bold text-primary">{{ cat.activeRfqs }}</td>
+            <td class="text-center">
+              <span class="badge badge-pill" [ngClass]="cat.status === 'High Vol' ? 'badge-danger' : 'badge-primary'">
+                {{ cat.status }}
+              </span>
+            </td>
+            <td class="text-center">
+              <button type="button" class="btn btn-sm btn-outline-primary px-2 py-1" (click)="$event.stopPropagation(); openDrawer(cat)"
+                      [attr.aria-label]="'View details for ' + cat.name">
+                View <i class="fa fa-chevron-right ml-1"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Table Footer with Conditional Pagination -->
+    <div class="card-footer bg-white border-top p-3 d-flex justify-content-between align-items-center small text-muted">
+      <span>
+        {{ filteredCategories.length === 0 ? 'No categories found' : totalPages <= 1 ? 'Showing all ' + filteredCategories.length + ' categories from MySQL DB' : 'Showing ' + ((currentPage - 1) * itemsPerPage + 1) + ' - ' + (currentPage * itemsPerPage > filteredCategories.length ? filteredCategories.length : currentPage * itemsPerPage) + ' of ' + filteredCategories.length + ' categories' }}
+      </span>
+      <div *ngIf="totalPages > 1" class="btn-group btn-group-sm">
+        <button [disabled]="currentPage === 1" (click)="currentPage = currentPage - 1" class="btn btn-outline-secondary">‹</button>
+        <button class="btn btn-primary">{{ currentPage }}</button>
+        <button [disabled]="currentPage === totalPages" (click)="currentPage = currentPage + 1" class="btn btn-outline-secondary">›</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subcategory Centered Modal Dialog -->
+  <div *ngIf="isDrawerOpen && selectedCategory" id="category-modal-backdrop" class="modal-backdrop-custom" (click)="closeDrawer()">
+    <div class="modal-dialog-custom" (click)="$event.stopPropagation()">
+      
+      <!-- Modal Header -->
+      <div class="d-flex justify-content-between align-items-center p-3 px-4 border-bottom bg-light">
+        <div class="d-flex align-items-center">
+          <div class="cat-icon-badge mr-3 bg-primary text-white" style="width: 42px; height: 42px; font-size: 18px; border-radius: 10px;">
+            <i class="fa {{ selectedCategory.icon }}"></i>
+          </div>
+          <div>
+            <span class="text-primary small text-uppercase font-weight-bold d-block">Subcategory Analysis</span>
+            <div class="d-flex align-items-center gap-2">
+              <h5 class="font-weight-bold text-dark mb-0 mr-2">{{ selectedCategory.name }}</h5>
+              <span class="badge badge-primary">{{ selectedCategory.subcategories?.length || 0 }} Subcategories</span>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-light btn-sm rounded-circle" (click)="closeDrawer()">&times;</button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-4 flex-grow-1 overflow-auto" style="max-height: 65vh;">
+        
+        <!-- Summary KPI Bento Grid -->
+        <div class="row mb-4">
+          <div class="col-md-4 mb-2">
+            <div class="p-3 border rounded-lg bg-light text-center h-100">
+              <small class="text-muted font-weight-bold d-block text-uppercase">Total Subcategories</small>
+              <h4 class="font-weight-bold text-dark my-1">{{ selectedCategory.subcategories?.length || 0 }}</h4>
+              <span class="small text-muted">Active in DB</span>
+            </div>
+          </div>
+          <div class="col-md-4 mb-2">
+            <div class="p-3 border rounded-lg bg-light text-center h-100">
+              <small class="text-muted font-weight-bold d-block text-uppercase">Total RFQs Created</small>
+              <h4 class="font-weight-bold text-primary my-1">{{ selectedCategory.activeRfqs | number }}</h4>
+              <span class="small text-success font-weight-bold">Live Demand</span>
+            </div>
+          </div>
+          <div class="col-md-4 mb-2">
+            <div class="p-3 border rounded-lg bg-light text-center h-100">
+              <small class="text-muted font-weight-bold d-block text-uppercase">Avg. Demand Volume</small>
+              <h4 class="font-weight-bold text-dark my-1">{{ selectedCategory.avgValue || '100 Units' }}</h4>
+              <span class="small text-muted">Per transaction</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Subcategories Breakdown Section -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="font-weight-bold text-dark mb-0 text-uppercase small">Subcategories Breakdown</h6>
+          <span class="small text-muted font-weight-bold">Showing {{ selectedCategory.subcategories?.length || 0 }} items</span>
+        </div>
+
+        <div class="table-responsive border rounded-lg">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="bg-light text-muted small text-uppercase">
+              <tr>
+                <th class="py-3 px-3">Subcategory Name</th>
+                <th class="py-3 text-center">Buyers</th>
+                <th class="py-3 text-center">Sellers</th>
+                <th class="py-3 text-center">RFQs</th>
+                <th class="py-3 text-right pr-3">Demand Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let sub of selectedCategory.subcategories">
+                <td class="px-3 py-3 font-weight-bold text-dark">
+                  <div class="d-flex align-items-center">
+                    <i class="fa fa-tag text-muted mr-2"></i>
+                    <span>{{ sub.name }}</span>
+                  </div>
+                </td>
+                <td class="text-center py-3">
+                  <span class="badge badge-light font-weight-bold">{{ sub.buyers }}</span>
+                </td>
+                <td class="text-center py-3">
+                  <span class="badge badge-light font-weight-bold">{{ sub.sellers }}</span>
+                </td>
+                <td class="text-center py-3">
+                  <span class="badge badge-primary font-weight-bold">{{ sub.rfqs }}</span>
+                </td>
+                <td class="text-right py-3 pr-3">
+                  <span class="badge {{ sub.demandStatus === 'High Demand' ? 'badge-primary' : 'badge-light text-muted' }} font-weight-bold">
+                    {{ sub.demandStatus }}
+                  </span>
+                </td>
+              </tr>
+              <tr *ngIf="!selectedCategory.subcategories || selectedCategory.subcategories.length === 0">
+                <td colspan="5" class="text-center py-4 text-muted">No subcategories found for this category.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="d-flex justify-content-end align-items-center p-3 px-4 border-top bg-light">
+        <button type="button" class="btn btn-secondary px-4 font-weight-bold" (click)="closeDrawer()">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>

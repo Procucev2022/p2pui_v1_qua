@@ -92,6 +92,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TreeTableModule } from 'primeng/treetable';
 import { PincodeControlComponent } from './components/pincode-control/pincode-control.component';
 import { VendorChooseModalPopupComponent } from './components/vendor-choose-modal-popup/vendor-choose-modal-popup.component';
+import { BulkVendorSelectionModalComponent } from './components/bulk-vendor-selection-modal/bulk-vendor-selection-modal.component';
 
 // import { AgGridAngular } from 'ag-grid-angular';
 @NgModule({
@@ -148,7 +149,7 @@ import { VendorChooseModalPopupComponent } from './components/vendor-choose-moda
         GmtVendorInfoModalComponent,
         DownloadAttachmentsComponent, QuotCompareViewComponent,
         CapexCatMgrQuoteComparComponent,
-        ProCpxVendorSummaryComponent,ProCpxVendorPPOsComponent, ProCpxVendorSummaryClientsComponent, ProCpxVendorSummaryLayoutComponent, VendorViewModelComponent, PincodeControlComponent, VendorChooseModalPopupComponent],
+        ProCpxVendorSummaryComponent,ProCpxVendorPPOsComponent, ProCpxVendorSummaryClientsComponent, ProCpxVendorSummaryLayoutComponent, VendorViewModelComponent, PincodeControlComponent, VendorChooseModalPopupComponent, BulkVendorSelectionModalComponent],
     exports: [
         DialogModule,
         CommonModule,

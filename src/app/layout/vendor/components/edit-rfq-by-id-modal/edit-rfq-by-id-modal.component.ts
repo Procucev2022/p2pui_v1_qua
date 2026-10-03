@@ -36,6 +36,7 @@ export class EditRfqByIdModalComponent implements OnInit {
     itemDialogRef: MatDialogRef<any> | null = null;
     selectedItemCategory: string = '';
     minDate: Date = new Date();
+    showAiTokenConsumption: boolean = false;
 
 
 
@@ -61,6 +62,11 @@ export class EditRfqByIdModalComponent implements OnInit {
             this.viewRFQbyIDdetails.clientdeliverylocationrfq = this.viewRFQbyIDdetails.clientdeliverylocationrfq.map(loc => ({ ...loc, isValidPincode: true }));
         }
         console.log(this.viewRFQbyIDdetails);
+    }
+
+    isEmailRfq(): boolean {
+        const source = (this.viewRFQbyIDdetails?.sourceType || '').toUpperCase().trim();
+        return source === 'EMAIL' || source === 'E' || source === 'MAIL';
     }
 
     rfqDetailsHeaders: any = [

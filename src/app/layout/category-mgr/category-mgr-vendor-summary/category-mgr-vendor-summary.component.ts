@@ -180,14 +180,23 @@ export class CategoryMgrVendorSummaryComponent {
     getVendorDataForGlobalSearch(){
         this.rfqservice.getVendorSummaryForGlobalSearch(this.searchBy, this.searchTextValue).subscribe((res: any) => {
             if (res.status == 'Success') {
-                this.rfqDataList = res.data || [];
-                this.totalRecords = res.totalRecords || 0;
+                const data = Array.isArray(res.data) ? res.data : [];
+                this.rfqDataList = data.map((ele: any) => {
+                    const status_display = ele['status'] && ele['status']['uiDisplay'] ? ele.status.uiDisplay : (ele.uiDisplay || '');
+                    return {
+                        ...ele,
+                        status_ui_display: status_display,
+                        quotationReceived: ele.quotationReceived === true ? 'YES' : (ele.quotationReceived || 'WIP'),
+                        rfqsCreated: ele.rfqsCreated !== undefined ? ele.rfqsCreated : ele.rfqCredits,
+                        rfqsConsumed: ele.rfqsConsumed !== undefined ? ele.rfqsConsumed : ele.rfqUsedCount,
+                        vendorName: ele.companyName || ele.vendorName
+                    };
+                });
+                this.totalRecords = res.totalRecords !== undefined ? res.totalRecords : this.rfqDataList.length;
             } else {
                 this.toastrService.error('Failed to Fetch data', 'Failure');
             }
         });
-    
-
     }
 
     onPageChange(event) {
@@ -195,7 +204,11 @@ export class CategoryMgrVendorSummaryComponent {
         this.pageSize = event.rows ;
         const pageSize = event.rows * this.startPage <= this.totalRecords ? event.rows :
         ( this.startPage <=1? this.totalRecords - event.rows : this.totalRecords -(this.startPage-1) *event.rows );
-        this.getRFQSummary(this.startPage, pageSize, this.searchText, this.sourceType);
+        if (this.searchCriteria === 'Global' && this.searchTextValue && this.searchTextValue.trim() !== '') {
+            this.getVendorDataForGlobalSearch();
+        } else {
+            this.getRFQSummary(this.startPage, pageSize, this.searchText, this.sourceType);
+        }
     }
 
     searchByText(value) {

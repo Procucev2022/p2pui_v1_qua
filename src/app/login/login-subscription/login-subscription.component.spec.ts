@@ -90,6 +90,7 @@ describe('LoginSubscriptionComponent', () => {
   it('should hydrate data on init', () => {
     component.ngOnInit();
     expect(component.data.org.bfsName).toBe('BFS PRO');
+    expect(component.data.org.gmtName).toBe('GMT Basic');
   });
 
   it('should navigate to login when data missing', () => {

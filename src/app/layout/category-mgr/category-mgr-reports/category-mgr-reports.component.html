@@ -3,8 +3,8 @@
 <div class="reports-container">
     
     <div *ngFor="let report of reports">
-        <input type="radio" [value]="report.id" name="report" (click)="onReportSelect(report)" id="report-{{ report.id }}"> 
-        <label class="report-label" for="report-{{ report.id }}">{{ report.title }}</label>
+        <input type="radio" [value]="report.id" [checked]="selectedReport?.id === report.id" name="report" (click)="onReportSelect(report)" id="report-{{ report.id }}"> 
+        <label class="report-label" [class.active]="selectedReport?.id === report.id" for="report-{{ report.id }}">{{ report.title }}</label>
         
     </div>
     
@@ -12,21 +12,21 @@
 <div class="subreports-container">
     <div class="sub-report" *ngIf="selectedReport && subReports.length > 0">
         <div class="sub-report-item" *ngFor="let subReport of subReports">
-            <input type="radio" [value]="subReport.id" name="subReport" (change)="onSubReportSelect(subReport.id)" id="subreport-{{ subReport.id }}"> 
-            <label class="sub-report-label" for="subreport-{{ subReport.id }}">{{ subReport.title }}</label>
+            <input type="radio" [value]="subReport.id" [checked]="selectedSubReportId === subReport.id" name="subReport" (change)="onSubReportSelect(subReport.id)" id="subreport-{{ subReport.id }}"> 
+            <label class="sub-report-label" [class.active]="selectedSubReportId === subReport.id" for="subreport-{{ subReport.id }}">{{ subReport.title }}</label>
         </div>
     </div>
 </div>
 <div class="input-container row"  >
     <div class="col-4 form-group">
         <label>Start Date</label>
-            <p-calendar [(ngModel)]="startDate" [maxDate]="todayDate" placeholder="DD-MM-YYYY" dateFormat="dd-mm-yy" showIcon="true" ></p-calendar>
+            <p-calendar [(ngModel)]="startDate" placeholder="DD-MM-YYYY" dateFormat="dd-mm-yy" showIcon="true" appendTo="body"></p-calendar>
 
     </div>
     <div class="col-4 form-group">
         <label>End Date</label>
             <p-calendar [(ngModel)]="endDate" placeholder="DD-MM-YYYY" dateFormat="dd-mm-yy" showIcon="true" 
-            [minDate]="startDate" [maxDate]="todayDate"></p-calendar>
+            [minDate]="startDate" appendTo="body"></p-calendar>
     </div>
     <div class="col-4 form-group buttonCls">
         <button pButton [disabled]="!selectedSubReportId || !startDate || !endDate" type="button" label="Generate Report" (click)="generateReport()"></button>

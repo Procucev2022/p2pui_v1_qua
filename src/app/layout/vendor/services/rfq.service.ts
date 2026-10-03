@@ -91,20 +91,12 @@ export class RfqService {
     }
 
     getVendorSummaryForGlobalSearch(searchType, searchValue) {
-        if(searchValue){
-            searchValue = encodeURIComponent(searchValue);
-        }
-        if(searchType){
-            searchType = encodeURIComponent(searchType);
-        }
-       
-        // add params only when they are present
         const params: any = {};
         if (searchValue) {
-            params.searchValue = searchValue;
+            params.searchValue = searchValue.trim();
         }
         if (searchType) {
-            params.searchType = searchType;
+            params.searchType = searchType.trim();
         }
         return this.http.get(AppApiConfig.apiEndpoint + AppApiConfig.CAT_MGR_VENDOR_SUMMARY_FOR_GLOBAL_SEARCH, { params })
     }
