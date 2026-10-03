@@ -78,28 +78,24 @@ export class CategoryMgrReportsComponent {
     if (!date) {
       return '';
     }
-    if (date instanceof Date && !isNaN(date.getTime())) {
-      return this.datePipe.transform(date, 'yyyy-MM-dd') || '';
+    if (date instanceof Date) {
+      return isNaN(date.getTime()) ? '' : (this.datePipe.transform(date, 'yyyy-MM-dd') || '');
     }
     if (typeof date === 'string') {
-      if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-        return date;
+      const trimmed = date.trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+        return trimmed;
       }
-      const parts = date.split(/[-/]/);
-      if (parts.length === 3) {
-        if (parts[0].length === 2 && parts[2].length === 4) {
-          // dd-MM-yyyy -> yyyy-MM-dd
-          return `${parts[2]}-${parts[1]}-${parts[0]}`;
-        } else if (parts[0].length === 4 && parts[2].length === 2) {
-          return `${parts[0]}-${parts[1]}-${parts[2]}`;
-        }
+      const parts = trimmed.split(/[-/]/);
+      if (parts.length === 3 && parts[0].length === 2 && parts[2].length === 4) {
+        // dd-MM-yyyy -> yyyy-MM-dd
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
       }
-      const parsed = new Date(date);
-      if (!isNaN(parsed.getTime())) {
-        return this.datePipe.transform(parsed, 'yyyy-MM-dd') || '';
-      }
+      const parsed = new Date(trimmed);
+      return isNaN(parsed.getTime()) ? '' : (this.datePipe.transform(parsed, 'yyyy-MM-dd') || '');
     }
-    return this.datePipe.transform(date, 'yyyy-MM-dd') || '';
+    const parsed = new Date(date);
+    return isNaN(parsed.getTime()) ? '' : (this.datePipe.transform(parsed, 'yyyy-MM-dd') || '');
   }
 
   generateReport() {
@@ -183,7 +179,10 @@ export class CategoryMgrReportsComponent {
 
   exportAsXLSX(excelColumnHeaders: string[]): void {
     this.excelData = [];
-    this.reportDataList.forEach((data, i) => {
+    (this.reportDataList || []).forEach((data) => {
+      if (!data) {
+        return;
+      }
       excelColumnHeaders.forEach((header) => {
         if (!data.hasOwnProperty(header)) {
           data[header] = ''; // Add missing property with empty value
