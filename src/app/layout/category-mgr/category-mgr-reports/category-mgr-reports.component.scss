@@ -125,7 +125,8 @@ text-align: center;
 font-size: 1.5rem !important;
 }
 
-.reports-container input[type="radio"]:checked + .report-label {
+.reports-container input[type="radio"]:checked + .report-label,
+.report-label.active {
   background: #007bff;
   color: #fff;
   box-shadow: 0 3px 8px rgba(0,123,255,0.3);
@@ -153,7 +154,8 @@ font-size: 1.5rem !important;
     font-size: 1.5rem !important;
 }
 
-.sub-report input[type="radio"]:checked + .sub-report-label {
+.sub-report input[type="radio"]:checked + .sub-report-label,
+.sub-report-label.active {
   background: #007bff;
   color: #fff;
   box-shadow: 0 3px 8px rgba(0,123,255,0.3);
