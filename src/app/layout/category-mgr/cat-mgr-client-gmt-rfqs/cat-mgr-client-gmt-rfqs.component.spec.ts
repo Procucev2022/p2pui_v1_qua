@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { of } from 'rxjs';
@@ -462,7 +462,7 @@ describe('CatMgrClientGmtRfqsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('targeted state-method coverage for search/RFQ branches', () => {
+  it('targeted state-method coverage for search/RFQ branches', fakeAsync(() => {
     const c: any = component;
     c.loggedUserDetails = { org: { id: 'o1' }, role: { roleName: 'CategoryManager' }, listofPermission: [] };
     c.startPage = 0;
@@ -486,11 +486,12 @@ describe('CatMgrClientGmtRfqsComponent', () => {
     expect(c.rfqDataList).toEqual([]);
 
     c.onSearchMode('Inline');
-    c.searchTextValue = 'r1';
     c.searchBy = '';
+    c.searchTextValue = 'test';
     c.globalSearch();
     expect(toastrService.warning).toHaveBeenCalled();
 
+    c.searchBy = 'rfqid';
     c.searchTextValue = 'r1';
     c.searchBy = 'rfqid';
     rfqservice.getAllClientRFQsByGMTForCMandCM2ByGlobalSearch.and.returnValue(
@@ -560,6 +561,7 @@ describe('CatMgrClientGmtRfqsComponent', () => {
     rfqservice.getVendorsByRFQIdForGMT.and.returnValue(of({ status: 'Failure' }));
     rfqservice.getItemsByRFQIdForGMT.and.returnValue(of(null));
     c.getVendorsByRfq();
+    tick(350);
     c.getLineItemsByRFQ();
 
     rfqservice.acceptVendorByCM.and.returnValue(of({ status: 'Success', message: 'ok' }));
@@ -627,8 +629,9 @@ describe('CatMgrClientGmtRfqsComponent', () => {
     } catch (e) {
       /* ignore */
     }
+    flush();
     expect(component).toBeTruthy();
-  });
+  }));
 
 
   it('targeted deepExercise state-method coverage', () => {
