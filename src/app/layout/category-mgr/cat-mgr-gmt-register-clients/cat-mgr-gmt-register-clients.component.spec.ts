@@ -91,6 +91,7 @@ describe('CatMgrGmtRegisterClientsComponent', () => {
       { id: '3', phoneNumber: '5555555555', clientStatus: { status: 'USER_ACCEPTED' }, sourceType: 'CustomApp' },
       { id: '4', clientStatus: { status: 'USER_IGNORED' } },
       { id: '5', clientStatus: { status: 'PENDING' } },
+      { id: '6', clientStatus: { status: 'CLIENT_USER_APPROVED' } },
     ];
     if (createRfqService.getGMTRegisteredClients?.and) {
       createRfqService.getGMTRegisteredClients.and.returnValue(of(list));
@@ -99,7 +100,8 @@ describe('CatMgrGmtRegisterClientsComponent', () => {
       createRfqService.getGMTRegisteredClientsWithUser.and.returnValue(of(list));
     }
     component.ngOnInit();
-    expect(component.clientsList.length).toBe(5);
+    expect(component.clientsList.length).toBe(6);
+    expect(component.clientsList[5].status).toBe('Approved');
     (component as any).onSourceTypeChange?.('Web App');
     (component as any).onSourceTypeChange?.('');
 
@@ -128,6 +130,14 @@ describe('CatMgrGmtRegisterClientsComponent', () => {
     createRfqService.acceptGMTRegisteredClient.and.returnValue(
       of({ status: 'Success', message: 'ok' })
     );
+    component.cached_clientList = [
+      { id: '1', clientStatus: { uiDisplay: 'Pending' } },
+      { id: '2', clientStatus: null }
+    ];
+    component.usersList = [
+      { id: '1', clientStatus: { uiDisplay: 'Pending' } },
+      { id: '2', clientStatus: null }
+    ];
     const rowAcceptWithStatus: any = { id: '1', clientStatus: { uiDisplay: 'Pending' } };
     component.onAcceptUserByClient(rowAcceptWithStatus, true);
     expect(rowAcceptWithStatus.status).toBe('Accepted');
@@ -149,6 +159,14 @@ describe('CatMgrGmtRegisterClientsComponent', () => {
     createRfqService.ignoreGMTRegisteredClient.and.returnValue(
       of({ status: 'Success', message: 'ok' })
     );
+    component.cached_clientList = [
+      { id: '3', clientStatus: { uiDisplay: 'Pending' } },
+      { id: '4', clientStatus: null }
+    ];
+    component.usersList = [
+      { id: '3', clientStatus: { uiDisplay: 'Pending' } },
+      { id: '4', clientStatus: null }
+    ];
     const rowIgnoreWithStatus: any = { id: '3', clientStatus: { uiDisplay: 'Pending' } };
     component.onAcceptUserByClient(rowIgnoreWithStatus, false);
     expect(rowIgnoreWithStatus.status).toBe('Ignored');
@@ -174,7 +192,8 @@ describe('CatMgrGmtRegisterClientsComponent', () => {
         { id: 'u2', clientStatus: { status: 'USER_ACCEPTED' } },
         { id: 'u3', clientStatus: { status: 'USER_IGNORED' } },
         { id: 'u4', clientStatus: { status: 'REJECTED' } },
-        { id: 'u5', clientStatus: null }
+        { id: 'u5', clientStatus: null },
+        { id: 'u6', clientStatus: { status: 'CLIENT_USER_APPROVED' } }
       ])
     );
     component.getClients({ id: 'c1' }, {});
@@ -183,6 +202,7 @@ describe('CatMgrGmtRegisterClientsComponent', () => {
     expect(component.usersList[3].status).toBe('Ignored');
     expect(component.usersList[4].status).toBe('REJECTED');
     expect(component.usersList[5].status).toBe('-');
+    expect(component.usersList[6].status).toBe('Approved');
 
     catProcService.getClientUserByClient.and.returnValue(of({ status: 'Failure' }));
     component.getUsersByClient();
