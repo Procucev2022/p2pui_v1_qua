@@ -112,6 +112,30 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
                     } else {
                         rowData.clientStatus = { uiDisplay: 'Accepted', status: 'USER_ACCEPTED' };
                     }
+                    if (this.cached_clientList && this.cached_clientList.length) {
+                        const cached = this.cached_clientList.find(c => c && c.id === rowData.id);
+                        if (cached) {
+                            cached.status = 'Accepted';
+                            if (cached.clientStatus) {
+                                cached.clientStatus.uiDisplay = 'Accepted';
+                                cached.clientStatus.status = 'USER_ACCEPTED';
+                            } else {
+                                cached.clientStatus = { uiDisplay: 'Accepted', status: 'USER_ACCEPTED' };
+                            }
+                        }
+                    }
+                    if (this.usersList && this.usersList.length) {
+                        const child = this.usersList.find(u => u && u.id === rowData.id);
+                        if (child) {
+                            child.status = 'Accepted';
+                            if (child.clientStatus) {
+                                child.clientStatus.uiDisplay = 'Accepted';
+                                child.clientStatus.status = 'USER_ACCEPTED';
+                            } else {
+                                child.clientStatus = { uiDisplay: 'Accepted', status: 'USER_ACCEPTED' };
+                            }
+                        }
+                    }
                 } else {
                     this.toaster.error(res.message, 'Error');
                 }
@@ -126,6 +150,30 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
                         rowData.clientStatus.status = 'USER_IGNORED';
                     } else {
                         rowData.clientStatus = { uiDisplay: 'Ignored', status: 'USER_IGNORED' };
+                    }
+                    if (this.cached_clientList && this.cached_clientList.length) {
+                        const cached = this.cached_clientList.find(c => c && c.id === rowData.id);
+                        if (cached) {
+                            cached.status = 'Ignored';
+                            if (cached.clientStatus) {
+                                cached.clientStatus.uiDisplay = 'Ignored';
+                                cached.clientStatus.status = 'USER_IGNORED';
+                            } else {
+                                cached.clientStatus = { uiDisplay: 'Ignored', status: 'USER_IGNORED' };
+                            }
+                        }
+                    }
+                    if (this.usersList && this.usersList.length) {
+                        const child = this.usersList.find(u => u && u.id === rowData.id);
+                        if (child) {
+                            child.status = 'Ignored';
+                            if (child.clientStatus) {
+                                child.clientStatus.uiDisplay = 'Ignored';
+                                child.clientStatus.status = 'USER_IGNORED';
+                            } else {
+                                child.clientStatus = { uiDisplay: 'Ignored', status: 'USER_IGNORED' };
+                            }
+                        }
                     }
                 } else {
                     this.toaster.error(res.message, 'Error');
@@ -160,6 +208,8 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
                         statusDisplay = ele.clientStatus.uiDisplay;
                     } else if (ele.clientStatus.status === 'USER_ACCEPTED') {
                         statusDisplay = 'Accepted';
+                    } else if (ele.clientStatus.status === 'CLIENT_USER_APPROVED') {
+                        statusDisplay = 'Approved';
                     } else if (ele.clientStatus.status === 'USER_IGNORED') {
                         statusDisplay = 'Ignored';
                     } else {
@@ -183,6 +233,8 @@ export class CatMgrGmtRegisterClientsComponent implements OnInit {
                             statusDisplay = ele.clientStatus.uiDisplay;
                         } else if (ele.clientStatus.status === 'USER_ACCEPTED') {
                             statusDisplay = 'Accepted';
+                        } else if (ele.clientStatus.status === 'CLIENT_USER_APPROVED') {
+                            statusDisplay = 'Approved';
                         } else if (ele.clientStatus.status === 'USER_IGNORED') {
                             statusDisplay = 'Ignored';
                         } else {
